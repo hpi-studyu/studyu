@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import 'DashboardTask.dart';
+import 'dashboard_task.dart';
 
 class VideoTask extends DashboardTask {
   final String _asset;

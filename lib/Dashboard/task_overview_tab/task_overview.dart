@@ -1,21 +1,21 @@
-import 'package:app/Tasks/PainRaitingTask.dart';
-import 'package:app/Tasks/VideoTask.dart';
 import 'package:flutter/material.dart';
 
-import 'CalendarRow.dart';
-import 'TaskBox.dart';
+import '../../Tasks/pain_rating_task.dart';
+import '../../Tasks/video_task.dart';
+import 'calendar_row.dart';
+import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
   @override
-  createState() => _TaskOverviewState();
+  _TaskOverviewState createState() => _TaskOverviewState();
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
-  DateTime _startDate = DateTime.now().subtract(Duration(days: 6));
-  DateTime _endDate = DateTime.now().add(Duration(days: 6));
+  final DateTime _startDate = DateTime.now().subtract(Duration(days: 6));
+  final DateTime _endDate = DateTime.now().add(Duration(days: 6));
 
-  onSelect(data) {
-    print("Selected Date -> $data");
+  void onSelect(DateTime date) {
+    print("Selected Date -> $date");
   }
 
   @override

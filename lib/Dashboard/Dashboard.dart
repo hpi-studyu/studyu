@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'AccountManagement.dart';
-import 'TaskOverviewTab/TaskOverview.dart';
+
+import 'account_management.dart';
+import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
-  createState() => _DashboardScreenState();
+  _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<Widget> _screens = [
+  final List<Widget> _screens = [
     TaskOverview(),
     AccountManagement(),
     Scaffold(),
   ];
   int _currentIndex = 0;
 
-  onTabTapped(int index) {
+  void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });

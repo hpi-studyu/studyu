@@ -1,9 +1,9 @@
-import 'Welcome/StudySelection.dart';
-import 'Welcome/Welcome.dart';
-import 'Welcome/About.dart';
-import 'Dashboard/Dashboard.dart';
-
 import 'package:flutter/material.dart';
+
+import 'Dashboard/dashboard.dart';
+import 'Welcome/about.dart';
+import 'Welcome/study_selection.dart';
+import 'Welcome/welcome.dart';
 
 void main() {
   runApp(MyApp());

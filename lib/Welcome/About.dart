@@ -11,7 +11,7 @@ class AboutScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text("This could be your advertisement."),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             FlatButton(
               onPressed: () => Navigator.pushReplacementNamed(context, "studySelection"),
               color: Theme.of(context).primaryColor,

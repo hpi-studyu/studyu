@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Contact extends StatelessWidget {
+class Help extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Contact"),
+      child: Text("HELP!!!!1!1!"),
     );
   }
 }

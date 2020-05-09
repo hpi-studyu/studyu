@@ -9,12 +9,7 @@ class CalendarRow extends StatefulWidget {
   final int itemsAtOnce;
   final Function onDatePressed;
 
-  const CalendarRow(
-      {Key key,
-      this.startDate,
-      this.endDate,
-      this.itemsAtOnce = 5,
-      this.onDatePressed})
+  const CalendarRow({Key key, this.startDate, this.endDate, this.itemsAtOnce = 5, this.onDatePressed})
       : super(key: key);
 
   @override
@@ -24,12 +19,9 @@ class CalendarRow extends StatefulWidget {
 class _CalendarRowState extends State<CalendarRow> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      double spacing = constraints.maxWidth / 50;
-      double itemSize =
-          (constraints.maxWidth - (widget.itemsAtOnce - 1) * spacing) /
-              widget.itemsAtOnce;
+    return LayoutBuilder(builder: (context, constraints) {
+      final spacing = constraints.maxWidth / 50;
+      final itemSize = (constraints.maxWidth - (widget.itemsAtOnce - 1) * spacing) / widget.itemsAtOnce;
       return Padding(
         padding: EdgeInsets.only(top: 5, bottom: 5),
         child: Container(
@@ -37,7 +29,7 @@ class _CalendarRowState extends State<CalendarRow> {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: widget.endDate.difference(widget.startDate).inDays + 1,
-            itemBuilder: (BuildContext _context, int i) {
+            itemBuilder: (_context, i) {
               return DayTile(
                 date: widget.startDate.add(Duration(days: i)),
                 selected: false,
@@ -45,7 +37,7 @@ class _CalendarRowState extends State<CalendarRow> {
                 onPressed: widget.onDatePressed,
               );
             },
-            separatorBuilder: (BuildContext context, int index) {
+            separatorBuilder: (context, index) {
               return SizedBox(
                 width: spacing,
               );
@@ -63,9 +55,7 @@ class DayTile extends StatefulWidget {
   final double itemSize;
   final Function onPressed;
 
-  const DayTile(
-      {Key key, this.date, this.selected, this.itemSize, this.onPressed})
-      : super(key: key);
+  const DayTile({Key key, this.date, this.selected, this.itemSize, this.onPressed}) : super(key: key);
 
   @override
   State<DayTile> createState() => _DayTileState();
@@ -77,12 +67,12 @@ class _DayTileState extends State<DayTile> {
   bool selected;
 
   @override
-  initState() {
+  void initState() {
     selected = widget.selected;
     super.initState();
   }
 
-  toggleSelect() {
+  void toggleSelect() {
     setState(() {
       selected = !selected;
     });
@@ -98,8 +88,7 @@ class _DayTileState extends State<DayTile> {
       child: Container(
         color: selected == true ? Colors.green : null,
         width: widget.itemSize,
-        child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints innerConstraints) {
+        child: LayoutBuilder(builder: (context, innerConstraints) {
           return Stack(
             fit: StackFit.expand,
             children: <Widget>[
@@ -117,8 +106,7 @@ class _DayTileState extends State<DayTile> {
                 padding: EdgeInsets.all(innerConstraints.maxWidth / 5),
                 child: FittedBox(
                   child: Center(
-                    child: Text((widget.date.day < 10 ? '0' : '') +
-                        widget.date.day.toString()),
+                    child: Text((widget.date.day < 10 ? '0' : '') + widget.date.day.toString()),
                   ),
                 ),
               ),
