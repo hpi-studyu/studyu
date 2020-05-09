@@ -15,14 +15,14 @@ class StudySelectionScreen extends StatelessWidget {
               textColor: Theme.of(context).secondaryHeaderColor,
               child: Text("Tea vs. Coffee"),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             FlatButton(
               onPressed: () => print("Weed vs. Alcohol"),
               color: Theme.of(context).primaryColor,
               textColor: Theme.of(context).secondaryHeaderColor,
               child: Text("Weed vs. Alcohol"),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             FlatButton(
               onPressed: () => Navigator.pushNamed(context, "dashboard"),
               color: Theme.of(context).primaryColor,

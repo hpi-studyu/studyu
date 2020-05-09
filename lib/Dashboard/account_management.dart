@@ -10,9 +10,9 @@ class AccountManagement extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Text("Peter"),
-          SizedBox(height: 20,),
+          SizedBox(height: 20),
           Text("Müller"),
-          SizedBox(height: 20,),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
-import 'DashboardTask.dart';
+import 'dashboard_task.dart';
 
 class PainRatingTask extends DashboardTask {
   PainRatingTask(String title, String description) : super(title, description);
@@ -20,15 +20,14 @@ class _PainRatingTaskState extends State<PainRatingTask> {
   }
 
   RPNavigableOrderedTask createSurvey() {
-    RPSliderAnswerFormat painScaleAnswerFormat =
-    RPSliderAnswerFormat.withParams(0, 10, divisions: 10);
-    RPQuestionStep painRatingQuestionStep = RPQuestionStep.withAnswerFormat(
+    final painScaleAnswerFormat = RPSliderAnswerFormat.withParams(0, 10, divisions: 10);
+    final painRatingQuestionStep = RPQuestionStep.withAnswerFormat(
       "painRatingQuestionStepID",
       "How would you rate your pain today? (0 = no pain, 10 = extreme pain)",
       painScaleAnswerFormat,
     );
 
-    RPCompletionStep completionStep = RPCompletionStep("completionStepID")
+    final completionStep = RPCompletionStep("completionStepID")
       ..title = 'Thank you for your input'
       ..text = '';
 
