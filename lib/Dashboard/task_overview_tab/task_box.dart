@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../Tasks/dashboard_task.dart';
+import '../../tasks/dashboard_task.dart';
 
 class TaskBox extends StatefulWidget {
   final DashboardTask task;
