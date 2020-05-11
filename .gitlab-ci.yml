@@ -1,11 +1,30 @@
 image: cirrusci/flutter:beta
 
 stages:
+  - build
+  - analyze
   - test
 
-flutter_test:
-  stage: test
+build:
+  stage: build
   script:
-    - flutter test
+    - flutter build aot
   tags:
     - flutter
+    - android
+
+unit_test:
+  stage: test
+  script:
+    - flutter test test/*
+  tags:
+    - flutter
+    - android
+    
+analyze:
+  stage: analyze
+  script:
+    - flutter analyze
+  tags:
+    - flutter
+    - android
