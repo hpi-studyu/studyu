@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../Tasks/pain_rating_task.dart';
-import '../../Tasks/video_task.dart';
+import '../../tasks/pain_rating_task.dart';
+import '../../tasks/video_task.dart';
 import 'calendar_row.dart';
 import 'task_box.dart';
 
