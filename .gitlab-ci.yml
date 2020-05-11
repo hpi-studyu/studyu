@@ -1,0 +1,9 @@
+stages:
+  - test
+
+flutter_test:
+  stage: test
+  script:
+    - flutter test
+  tags:
+    - flutter
