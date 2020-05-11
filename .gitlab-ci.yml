@@ -1,3 +1,5 @@
+image: cirrusci/flutter:beta
+
 stages:
   - test
 
