@@ -1,6 +1,5 @@
-# app
-
-A new Flutter project.
+# N of 1 app built at HPI with ❤
+[![Codemagic build status](https://api.codemagic.io/apps/5eb97aaca6d15e5cf61b1cfb/5eb97aaca6d15e5cf61b1cfa/status_badge.svg)](https://codemagic.io/apps/5eb97aaca6d15e5cf61b1cfb/5eb97aaca6d15e5cf61b1cfa/latest_build)
 
 ## Getting Started
 
