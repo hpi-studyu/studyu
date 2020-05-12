@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../tasks/dashboard_task.dart';
+import '../../util/localization.dart';
 
 class TaskBox extends StatefulWidget {
   final DashboardTask task;
@@ -56,7 +57,7 @@ class _TaskBoxState extends State<TaskBox> {
                     color: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).secondaryHeaderColor,
                     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => widget.task)),
-                    child: Text('Complete!'),
+                    child: Text(Nof1Localizations.of(context).translate("complete"),),
                   ),
                 )
               ],

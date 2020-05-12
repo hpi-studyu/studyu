@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../tasks/pain_rating_task.dart';
 import '../../tasks/video_task.dart';
+import '../../util/localization.dart';
 import 'calendar_row.dart';
 import 'task_box.dart';
 
@@ -29,13 +30,13 @@ class _TaskOverviewState extends State<TaskOverview> {
           itemsAtOnce: 8,
         ),
         TaskBox(VideoTask(
-          'Video test',
-          'This is a video test',
+          Nof1Localizations.of(context).translate("video_task"),
+          Nof1Localizations.of(context).translate("video_test"),
           'assets/rick-roll.mp4',
         )),
         TaskBox(PainRatingTask(
-          'Survey test',
-          'This is a survey test',
+          Nof1Localizations.of(context).translate("survey"),
+          Nof1Localizations.of(context).translate("survey_test"),
         )),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../util/localization.dart';
 import 'account_management.dart';
 import 'task_overview_tab/task_overview.dart';
 
@@ -26,7 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(Nof1Localizations.of(context).translate("dashboard")),
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -35,15 +36,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text("Home"),
+            title: Text(Nof1Localizations.of(context).translate("home")),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text("Profile"),
+            title: Text(Nof1Localizations.of(context).translate("profile")),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.phone),
-            title: Text("Contact"),
+            title: Text(Nof1Localizations.of(context).translate("contact")),
           )
         ],
       ),
