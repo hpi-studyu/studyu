@@ -1,5 +1,6 @@
-import 'package:app/util/localization.dart';
 import 'package:flutter/material.dart';
+
+import '../util/localization.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
