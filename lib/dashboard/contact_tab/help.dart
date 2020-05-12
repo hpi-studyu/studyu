@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../util/localization.dart';
+
 class Help extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("HELP!!!!1!1!"),
+      child: Text(Nof1Localizations.of(context).translate("help"),),
     );
   }
 }

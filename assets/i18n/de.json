@@ -1,0 +1,30 @@
+{
+  "what_is_nof1": "Was ist N of 1?",
+  "get_started": "Los geht's",
+
+  "tea_vs_coffee": "Tee vs. Kaffee",
+  "weed_vs_alcohol": "Gras vs. Alkohol",
+  "back_pain": "Rückenschmerzen",
+
+  "about": "Hier könnte Ihre Werbung stehen.",
+
+  "video_task": "Videoaufgabe",
+  "finished": "Fertig",
+
+  "how_would_you_rate_your_pain_today": "Wie würden Sie heute Ihren Schmerz bewerten? (0 = kein Schmerz, 10 = extreme Schmerzen)",
+  "thank_you_for_your_input": "Danke für Ihre Eingaben",
+
+  "dashboard": "Dashboard",
+  "home": "Home",
+  "profile": "Profil",
+  "contact": "Kontakt",
+
+  "survey": "Umfrage",
+
+  "complete": "Ausführen!",
+
+  "help": "Hilfe!!!!1!1!",
+
+  "video_test": "Das ist ein Videotest",
+  "survey_test": "Das ist ein Umfragetest"
+}

@@ -1,3 +1,4 @@
+import 'package:app/util/localization.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -16,14 +17,14 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () => Navigator.pushNamed(context, "about"),
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).secondaryHeaderColor,
-                child: Text("What is N of 1?"),
+                child: Text(Nof1Localizations.of(context).translate("what_is_nof1")),
               ),
               SizedBox(height: 20),
               FlatButton(
                 onPressed: () => Navigator.pushReplacementNamed(context, "studySelection"),
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).secondaryHeaderColor,
-                child: Text("Get started"),
+                child: Text(Nof1Localizations.of(context).translate("get_started")),
               )
             ],
           ),

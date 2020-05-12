@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'dashboard/dashboard.dart';
+import 'util/localization.dart';
 import 'welcome/about.dart';
 import 'welcome/study_selection.dart';
 import 'welcome/welcome.dart';
@@ -24,6 +26,15 @@ class MyApp extends StatelessWidget {
         "studySelection": (context) => StudySelectionScreen(),
         "dashboard": (context) => DashboardScreen(),
       },
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('de', ''),
+      ],
+      localizationsDelegates: [
+        Nof1Localizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
     );
   }
 }

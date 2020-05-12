@@ -1,0 +1,30 @@
+{
+  "what_is_nof1": "What is N of 1?",
+  "get_started": "Get started",
+
+  "tea_vs_coffee": "Tea vs. Coffee",
+  "weed_vs_alcohol": "Weed vs. Alcohol",
+  "back_pain": "Back pain",
+
+  "about": "This could be your advertisement.",
+
+  "video_task": "Video task",
+  "finished": "Finished",
+
+  "how_would_you_rate_your_pain_today": "How would you rate your pain today? (0 = no pain, 10 = extreme pain)",
+  "thank_you_for_your_input": "Thank you for your input",
+
+  "dashboard": "Dashboard",
+  "home": "Home",
+  "profile": "Profile",
+  "contact": "Contact",
+
+  "survey": "Survey",
+
+  "complete": "Complete!",
+
+  "help": "HELP!!!!1!1!",
+
+  "video_test": "This is a video test",
+  "survey_test": "This is a survey test"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
+import '../util/localization.dart';
 import 'dashboard_task.dart';
 
 class PainRatingTask extends DashboardTask {
@@ -23,12 +24,12 @@ class _PainRatingTaskState extends State<PainRatingTask> {
     final painScaleAnswerFormat = RPSliderAnswerFormat.withParams(0, 10, divisions: 10);
     final painRatingQuestionStep = RPQuestionStep.withAnswerFormat(
       "painRatingQuestionStepID",
-      "How would you rate your pain today? (0 = no pain, 10 = extreme pain)",
+      Nof1Localizations.of(context).translate("how_would_you_rate_your_pain_today"),
       painScaleAnswerFormat,
     );
 
     final completionStep = RPCompletionStep("completionStepID")
-      ..title = 'Thank you for your input'
+      ..title = Nof1Localizations.of(context).translate("thank_you_for_your_input")
       ..text = '';
 
     return RPNavigableOrderedTask(

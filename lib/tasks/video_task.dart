@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../util/localization.dart';
 import 'dashboard_task.dart';
 
 class VideoTask extends DashboardTask {
@@ -33,7 +34,7 @@ class _VideoTaskState extends State<VideoTask> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video task'),
+        title: Text(Nof1Localizations.of(context).translate("video_task")),
       ),
       body: Center(
         child: Column(
@@ -56,7 +57,7 @@ class _VideoTaskState extends State<VideoTask> {
               color: Theme.of(context).primaryColor,
               textColor: Theme.of(context).secondaryHeaderColor,
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Finished'),
+              child: Text(Nof1Localizations.of(context).translate("finished")),
             )
           ],
         ),
