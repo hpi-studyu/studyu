@@ -6,19 +6,20 @@ import 'package:flutter/services.dart';
 
 class Nof1Localizations {
   final Locale locale;
+  final bool testing;
 
-  Nof1Localizations(this.locale);
+  Nof1Localizations(this.locale, {this.testing = false});
 
   static Nof1Localizations of(BuildContext context) {
     return Localizations.of<Nof1Localizations>(context, Nof1Localizations);
   }
 
   static const LocalizationsDelegate<Nof1Localizations> delegate =
-  _Nof1LocalizationsDelegate();
+  Nof1LocalizationsDelegate();
 
   Map<String, String> _localizedStrings;
 
-  Future<bool> load() async {
+  Future<Nof1Localizations> load() async {
     var jsonString = await rootBundle.loadString('assets/i18n/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
 
@@ -26,17 +27,26 @@ class Nof1Localizations {
       return MapEntry(key, value.toString());
     });
 
-    return true;
+    return Nof1Localizations(locale);
+  }
+
+  Future<Nof1Localizations> loadTest(Locale locale) async {
+    return Nof1Localizations(locale);
   }
 
   String translate(String key) {
+    if (testing) {
+      return key;
+    }
     return _localizedStrings[key];
   }
 }
 
-class _Nof1LocalizationsDelegate
+class Nof1LocalizationsDelegate
     extends LocalizationsDelegate<Nof1Localizations> {
-  const _Nof1LocalizationsDelegate();
+  const Nof1LocalizationsDelegate({this.testing = false});
+
+  final bool testing;
 
   @override
   bool isSupported(Locale locale) {
@@ -45,11 +55,15 @@ class _Nof1LocalizationsDelegate
 
   @override
   Future<Nof1Localizations> load(Locale locale) async {
-    var localizations = Nof1Localizations(locale);
-    await localizations.load();
+    var localizations = Nof1Localizations(locale, testing: testing);
+    if (testing) {
+      await localizations.loadTest(locale);
+    } else {
+      await localizations.load();
+    }
     return localizations;
   }
 
   @override
-  bool shouldReload(_Nof1LocalizationsDelegate old) => false;
+  bool shouldReload(Nof1LocalizationsDelegate old) => false;
 }
