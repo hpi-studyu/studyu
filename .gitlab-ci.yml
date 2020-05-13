@@ -10,7 +10,7 @@ build:
   script:
     - flutter build aot
   tags:
-    - flutter
+    - app
     - android
 
 unit_test:
@@ -18,7 +18,7 @@ unit_test:
   script:
     - flutter test test/*
   tags:
-    - flutter
+    - app
     - android
     
 analyze:
@@ -26,5 +26,5 @@ analyze:
   script:
     - flutter analyze
   tags:
-    - flutter
+    - app
     - android
