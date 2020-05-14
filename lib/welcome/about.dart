@@ -15,7 +15,7 @@ class AboutScreen extends StatelessWidget {
             Text(Nof1Localizations.of(context).translate("about")),
             SizedBox(height: 20),
             FlatButton(
-              onPressed: () => Navigator.pushReplacementNamed(context, "studySelection"),
+              onPressed: () => Navigator.pushReplacementNamed(context, "/studySelection"),
               color: Theme.of(context).primaryColor,
               textColor: Theme.of(context).secondaryHeaderColor,
               child: Text(Nof1Localizations.of(context).translate("get_started")),

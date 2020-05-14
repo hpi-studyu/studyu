@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
 import 'account_management.dart';
@@ -11,7 +12,10 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final List<Widget> _screens = [
-    TaskOverview(),
+    ChangeNotifierProvider(
+      create: (context) => TaskOverviewModel(),
+      child: TaskOverview(),
+    ),
     AccountManagement(),
     Scaffold(),
   ];

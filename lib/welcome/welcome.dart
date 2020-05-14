@@ -15,14 +15,14 @@ class WelcomeScreen extends StatelessWidget {
               Image(image: AssetImage('assets/fancy_logo.png')),
               SizedBox(height: 20),
               FlatButton(
-                onPressed: () => Navigator.pushNamed(context, "about"),
+                onPressed: () => Navigator.pushNamed(context, "/about"),
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).secondaryHeaderColor,
                 child: Text(Nof1Localizations.of(context).translate("what_is_nof1")),
               ),
               SizedBox(height: 20),
               FlatButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, "studySelection"),
+                onPressed: () => Navigator.pushReplacementNamed(context, "/studySelection"),
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).secondaryHeaderColor,
                 child: Text(Nof1Localizations.of(context).translate("get_started")),

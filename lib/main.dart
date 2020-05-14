@@ -19,12 +19,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "welcome",
+      initialRoute: "/welcome",
       routes: <String, WidgetBuilder>{
-        "welcome": (context) => WelcomeScreen(),
-        "about": (context) => AboutScreen(),
-        "studySelection": (context) => StudySelectionScreen(),
-        "dashboard": (context) => DashboardScreen(),
+        "/welcome": (context) => WelcomeScreen(),
+        "/about": (context) => AboutScreen(),
+        "/studySelection": (context) => StudySelectionScreen(),
+        "/dashboard": (context) => DashboardScreen(),
       },
       supportedLocales: [
         Locale('en', 'US'),
