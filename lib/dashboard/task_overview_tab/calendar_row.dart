@@ -56,32 +56,42 @@ class _CalendarRowState extends State<CalendarRow> {
     return Container(
       color: Colors.red.withOpacity(0.3),
       child: Padding(
-        padding: EdgeInsets.all(spacing),
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemCount: days.length,
-          itemBuilder: (_context, i) {
-            var date = days[i];
-            var tile = DayTile(
-              date: date,
-              selected: selectedTile?.date == date,
-            );
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedTile = tile;
-                });
-                widget.onDatePressed(date);
+        padding: EdgeInsets.only(top: widget.height/10, bottom: widget.height/10),
+        child: Row(
+          children: <Widget> [
+          SizedBox(
+          width: spacing,
+        ),
+            ListView.separated(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: days.length,
+              itemBuilder: (_context, i) {
+                var date = days[i];
+                var tile = DayTile(
+                  date: date,
+                  selected: selectedTile?.date == date,
+                );
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedTile = tile;
+                    });
+                    widget.onDatePressed(date);
+                  },
+                  child: tile,
+                );
               },
-              child: tile,
-            );
-          },
-          separatorBuilder: (context, index) {
-            return SizedBox(
+              separatorBuilder: (context, index) {
+                return SizedBox(
+                  width: spacing,
+                );
+              },
+            ),
+            SizedBox(
               width: spacing,
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
