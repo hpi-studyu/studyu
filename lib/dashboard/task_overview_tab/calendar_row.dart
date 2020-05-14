@@ -164,7 +164,8 @@ class _DayTileState extends State<DayTile> {
               Consumer<TaskOverviewModel>(
                 builder: (context, taskOverviewModel, child) => ClipOval(
                   child: Container(
-                    color: taskOverviewModel.selectedDate.isSameDate(widget.date) ? Colors.green[300] : Colors.grey[300],
+                    color: taskOverviewModel.selectedDate.isSameDate(widget.date) ? Colors.green[300] :
+                    widget.date.isEarlierDateThan(taskOverviewModel.currentDate) ? Colors.grey[400] : Colors.white,
                     child: Padding(
                       padding: EdgeInsets.all(innerConstraints.maxWidth / 5),
                       child: FittedBox(
