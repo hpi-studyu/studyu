@@ -26,7 +26,6 @@ class _TaskOverviewState extends State<TaskOverview> {
         CalendarRow(
           startDate: _startDate,
           endDate: _endDate,
-          onDatePressed: onSelect,
           height: 70,
         ),
         TaskBox(VideoTask(
@@ -40,5 +39,16 @@ class _TaskOverviewState extends State<TaskOverview> {
         )),
       ],
     );
+  }
+}
+
+class TaskOverviewModel extends ChangeNotifier {
+  DateTime _selectedDate = DateTime.now();
+
+  DateTime get selectedDate => _selectedDate;
+
+  void setDate(DateTime date) {
+    _selectedDate = date;
+    notifyListeners();
   }
 }

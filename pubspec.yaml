@@ -33,6 +33,7 @@ dependencies:
   material_design_icons_flutter:
   research_package:
   video_player:
+  provider:
 
 dev_dependencies:
   flutter_test:

@@ -26,7 +26,7 @@ class StudySelectionScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             FlatButton(
-              onPressed: () => Navigator.pushNamed(context, "dashboard"),
+              onPressed: () => Navigator.pushNamed(context, "/dashboard"),
               color: Theme.of(context).primaryColor,
               textColor: Theme.of(context).secondaryHeaderColor,
               child: Text(Nof1Localizations.of(context).translate("back_pain")),

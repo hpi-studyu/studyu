@@ -2,15 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../util/extensions.dart';
+import 'task_overview.dart';
 
 class CalendarRow extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
   final double height;
-  final Function onDatePressed;
   final Function getProgress;
 
-  const CalendarRow({Key key, @required this.startDate, @required this.endDate, @required this.height, this.onDatePressed, this.getProgress}) : super(key: key);
+  const CalendarRow({Key key, @required this.startDate, @required this.endDate, @required this.height, this.getProgress}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CalendarRowState();
@@ -19,15 +22,18 @@ class CalendarRow extends StatefulWidget {
 class _CalendarRowState extends State<CalendarRow> {
   List<List<DateTime>> _cycles;
   int _selectedCycle;
-  DayTile selectedTile;
 
   @override
   void initState() {
     _cycles = getCycles(widget.startDate, widget.endDate);
-    var today = DateTime.now();
-    _selectedCycle = _cycles.indexWhere((element) => element.first.difference(today).inDays <= 0 && element.last.difference(today).inDays >= 0);
-    print(_selectedCycle);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    var selected = Provider.of<TaskOverviewModel>(context, listen: false).selectedDate;
+    _selectedCycle = selected != null ? _cycles.indexWhere((element) => element.first.difference(selected).inDays <= 0 && element.last.difference(selected).inDays >= 0) : 0;
+    super.didChangeDependencies();
   }
 
   static List<List<DateTime>> getCycles(DateTime start, DateTime end) {
@@ -56,30 +62,25 @@ class _CalendarRowState extends State<CalendarRow> {
     return Container(
       color: Colors.red.withOpacity(0.3),
       child: Padding(
-        padding: EdgeInsets.only(top: widget.height/10, bottom: widget.height/10),
+        padding: EdgeInsets.only(top: widget.height / 10, bottom: widget.height / 10),
         child: Row(
-          children: <Widget> [
-          SizedBox(
-          width: spacing,
-        ),
+          children: <Widget>[
+            SizedBox(
+              width: spacing,
+            ),
             ListView.separated(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
               itemCount: days.length,
               itemBuilder: (_context, i) {
                 var date = days[i];
-                var tile = DayTile(
-                  date: date,
-                  selected: selectedTile?.date == date,
-                );
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      selectedTile = tile;
-                    });
-                    widget.onDatePressed(date);
+                    Provider.of<TaskOverviewModel>(context, listen: false).setDate(date);
                   },
-                  child: tile,
+                  child: DayTile(
+                    date: date,
+                  ),
                 );
               },
               separatorBuilder: (context, index) {
@@ -112,7 +113,9 @@ class _CalendarRowState extends State<CalendarRow> {
             itemBuilder: (_context, i) {
               if (i != _selectedCycle) {
                 return GestureDetector(
-                  onTap: () => setState((){_selectedCycle = i;}),
+                  onTap: () => setState(() {
+                    _selectedCycle = i;
+                  }),
                   child: AspectRatio(
                     aspectRatio: 1.5,
                     child: Container(
@@ -138,10 +141,9 @@ class _CalendarRowState extends State<CalendarRow> {
 
 class DayTile extends StatefulWidget {
   final DateTime date;
-  final bool selected;
   final Function getData;
 
-  const DayTile({Key key, @required this.date, this.selected, this.getData}) : super(key: key);
+  const DayTile({Key key, @required this.date, this.getData}) : super(key: key);
 
   @override
   State<DayTile> createState() => _DayTileState();
@@ -150,26 +152,19 @@ class DayTile extends StatefulWidget {
 class _DayTileState extends State<DayTile> {
   final Random random = Random();
 
-  bool selected;
-
-  @override
-  void initState() {
-    selected = widget.selected;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: LayoutBuilder(builder: (context, innerConstraints) {
-            return Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                ClipOval(
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: LayoutBuilder(builder: (context, innerConstraints) {
+          return Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Consumer<TaskOverviewModel>(
+                builder: (context, taskOverviewModel, child) => ClipOval(
                   child: Container(
-                    color: selected == true ? Colors.green[300] : Colors.grey[300],
+                    color: taskOverviewModel.selectedDate.isSameDate(widget.date) ? Colors.green[300] : Colors.grey[300],
                     child: Padding(
                       padding: EdgeInsets.all(innerConstraints.maxWidth / 5),
                       child: FittedBox(
@@ -180,20 +175,21 @@ class _DayTileState extends State<DayTile> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(innerConstraints.maxWidth / 20),
-                  child: FittedBox(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        value: random.nextDouble(), //widget.getData != null ? widget.getData(widget.date) : null ?? 0,
-                      ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(innerConstraints.maxWidth / 20),
+                child: FittedBox(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      value: random.nextDouble(), //widget.getData != null ? widget.getData(widget.date) : null ?? 0,
                     ),
                   ),
                 ),
-              ],
-            );
-          }),
-        ),
+              ),
+            ],
+          );
+        }),
+      ),
     );
   }
 }
