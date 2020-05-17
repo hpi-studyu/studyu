@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Nof1Localizations {
   final Locale locale;
@@ -50,7 +51,7 @@ class Nof1LocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'de'].contains(locale.languageCode);
+    return AppLanguage.supportedLocales.map((e) => e.languageCode).contains(locale.languageCode);
   }
 
   @override
@@ -66,4 +67,38 @@ class Nof1LocalizationsDelegate
 
   @override
   bool shouldReload(Nof1LocalizationsDelegate old) => false;
+}
+
+class AppLanguage extends ChangeNotifier {
+  Locale _appLocale;
+
+  static const List<Locale> supportedLocales = [
+    Locale("en"),
+    Locale("de"),
+  ];
+
+  Locale get appLocal => _appLocale;
+  void fetchLocale() async {
+    var prefs = await SharedPreferences.getInstance();
+    var pref = prefs.getString("language_code");
+    _appLocale = pref != null ? Locale(pref) : null;
+  }
+
+  void changeLanguage(Locale type) async {
+    var prefs = await SharedPreferences.getInstance();
+    if (_appLocale == type) {
+      return;
+    }
+    if (type == Locale("de")) {
+      _appLocale = Locale("de");
+      await prefs.setString("language_code", "de");
+    } else if (type == Locale("en")){
+      _appLocale = Locale("en");
+      await prefs.setString("language_code", "en");
+    } else {
+      _appLocale = null;
+      await prefs.setString("language_code", null);
+    }
+    notifyListeners();
+  }
 }
