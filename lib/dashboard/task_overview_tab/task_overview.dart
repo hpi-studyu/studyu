@@ -12,7 +12,7 @@ class TaskOverview extends StatefulWidget {
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
-  final DateTime _startDate = DateTime.now().subtract(Duration(days: 6));
+  final DateTime _startDate = DateTime.now().subtract(Duration(days: 8));
   final DateTime _endDate = DateTime.now().add(Duration(days: 60));
 
   void onSelect(DateTime date) {
