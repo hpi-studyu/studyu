@@ -1,12 +1,12 @@
-import 'package:Nof1/models/models.dart';
-import 'package:Nof1/util/localization.dart';
-import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
 import '../dashboard/dashboard.dart';
 import '../database/models/question.dart';
 import '../database/repository.dart';
+import '../models/models.dart';
+import '../util/localization.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
@@ -21,9 +21,8 @@ class EligibilityCheckScreen extends StatefulWidget {
 class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
   void resultCallback(RPTaskResult result) {
     final formStepResult = result.getStepResultForIdentifier('onboardingFormStepID');
-    Function eq = const ListEquality().equals;
     final resultValues = formStepResult.results.values.map((result) => result.results['answer'][0].value).toList();
-    if (eq(resultValues, [0, 1, 1])) {
+    if (listEquals(resultValues, [0, 1, 1])) {
       Navigator.replaceRouteBelow(context,
           anchorRoute: widget.route, newRoute: MaterialPageRoute(builder: (context) => DashboardScreen()));
       //changeStatus(true);
