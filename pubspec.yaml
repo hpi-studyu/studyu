@@ -39,9 +39,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   effective_dart:
+  flutter_launcher_icons:
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+flutter_icons:
+  image_path: 'assets/images/icon.png'
+  android: true
+  ios: true
 
 # The following section is specific to Flutter.
 flutter:
