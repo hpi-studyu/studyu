@@ -47,8 +47,10 @@ class _VideoTaskState extends State<VideoTask> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Chewie(
-              controller: _chewieController,
+            Expanded(
+              child: Chewie(
+                controller: _chewieController,
+              ),
             ),
             FlatButton(
               color: theme.primaryColor,
