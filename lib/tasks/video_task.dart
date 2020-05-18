@@ -52,9 +52,7 @@ class _VideoTaskState extends State<VideoTask> {
                 controller: _chewieController,
               ),
             ),
-            FlatButton(
-              color: theme.primaryColor,
-              textColor: theme.secondaryHeaderColor,
+            RaisedButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(Nof1Localizations.of(context).translate("finished")),
             )

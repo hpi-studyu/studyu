@@ -14,19 +14,15 @@ class WelcomeScreen extends StatelessWidget {
             children: <Widget>[
               Image(image: AssetImage('assets/images/icon.png'), height: 200),
               SizedBox(height: 20),
-              FlatButton(
+              RaisedButton(
                 onPressed: () => Navigator.pushNamed(context, "/about"),
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).secondaryHeaderColor,
                 child: Text(Nof1Localizations.of(context).translate("what_is_nof1")),
               ),
               SizedBox(height: 20),
-              FlatButton(
+              RaisedButton(
                 onPressed: () => Navigator.pushReplacementNamed(context, "/studySelection"),
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).secondaryHeaderColor,
                 child: Text(Nof1Localizations.of(context).translate("get_started")),
-              )
+              ),
             ],
           ),
         ),

@@ -13,21 +13,17 @@ class StudySelectionScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FlatButton(
+            RaisedButton(
               onPressed: () => print("Tea vs. Coffee"),
-              color: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).secondaryHeaderColor,
               child: Text(Nof1Localizations.of(context).translate("tea_vs_coffee")),
             ),
             SizedBox(height: 20),
-            FlatButton(
+            RaisedButton(
               onPressed: () => print("Weed vs. Alcohol"),
-              color: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).secondaryHeaderColor,
               child: Text(Nof1Localizations.of(context).translate("weed_vs_alcohol")),
             ),
             SizedBox(height: 20),
-            FlatButton(
+            RaisedButton(
               onPressed: () {
                 kIsWeb
                     ? Navigator.push(context, MaterialPageRoute(builder: (_context) {
@@ -42,9 +38,7 @@ class StudySelectionScreen extends StatelessWidget {
                               SizedBox(
                                 height: 20,
                               ),
-                              FlatButton(
-                                color: Theme.of(context).primaryColor,
-                                textColor: Theme.of(context).secondaryHeaderColor,
+                              RaisedButton(
                                 onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
                                 child: Text("Continue"),
                               )
@@ -59,8 +53,6 @@ class StudySelectionScreen extends StatelessWidget {
                                   route: ModalRoute.of(context),
                                 )));
               },
-              color: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).secondaryHeaderColor,
               child: Text(Nof1Localizations.of(context).translate("back_pain")),
             )
           ],

@@ -53,11 +53,11 @@ class _TaskBoxState extends State<TaskBox> {
                 ),
                 Spacer(),
                 Center(
-                  child: FlatButton(
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).secondaryHeaderColor,
+                  child: RaisedButton(
                     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => widget.task)),
-                    child: Text(Nof1Localizations.of(context).translate("complete"),),
+                    child: Text(
+                      Nof1Localizations.of(context).translate("complete"),
+                    ),
                   ),
                 )
               ],
