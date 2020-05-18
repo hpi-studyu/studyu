@@ -1,4 +1,4 @@
-package com.example.app
+package de.hpi.dhc.nof1
 
 import io.flutter.embedding.android.FlutterActivity
 
