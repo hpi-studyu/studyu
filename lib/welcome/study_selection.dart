@@ -9,7 +9,7 @@ import '../util/localization.dart';
 class StudySelectionScreen extends StatelessWidget {
   final _availableStudies = [Study("tea_vs_coffee"), Study("weed_vs_alcohol"), Study("back_pain")];
 
-  void navigateToEligibilityCheck(BuildContext context) {
+  void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) {
     if (kIsWeb) {
       Navigator.push(context, MaterialPageRoute(builder: _buildWebCompatScreen));
     } else {
@@ -17,6 +17,7 @@ class StudySelectionScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => EligibilityCheckScreen(
+                    study: selectedStudy,
                     route: ModalRoute.of(context),
                   )));
     }
@@ -55,7 +56,7 @@ class StudySelectionScreen extends StatelessWidget {
                 child: ListTile(
                   onTap: () {
                     print(Nof1Localizations.of(context).translate(_availableStudies[index].id));
-                    navigateToEligibilityCheck(context);
+                    navigateToEligibilityCheck(context, _availableStudies[index]);
                   },
                   title: Center(child: Text(Nof1Localizations.of(context).translate(_availableStudies[index].id))),
                   leading: _availableStudies[index].id == "weed_vs_alcohol"
