@@ -15,8 +15,7 @@ class Nof1Localizations {
     return Localizations.of<Nof1Localizations>(context, Nof1Localizations);
   }
 
-  static const LocalizationsDelegate<Nof1Localizations> delegate =
-  Nof1LocalizationsDelegate();
+  static const LocalizationsDelegate<Nof1Localizations> delegate = Nof1LocalizationsDelegate();
 
   Map<String, String> _localizedStrings;
 
@@ -43,8 +42,7 @@ class Nof1Localizations {
   }
 }
 
-class Nof1LocalizationsDelegate
-    extends LocalizationsDelegate<Nof1Localizations> {
+class Nof1LocalizationsDelegate extends LocalizationsDelegate<Nof1Localizations> {
   const Nof1LocalizationsDelegate({this.testing = false});
 
   final bool testing;
@@ -73,14 +71,14 @@ class AppLanguage extends ChangeNotifier {
   Locale _appLocale;
 
   static const List<Locale> supportedLocales = [
-    Locale("en"),
-    Locale("de"),
+    Locale('en'),
+    Locale('de'),
   ];
 
   Locale get appLocal => _appLocale;
   void fetchLocale() async {
     var prefs = await SharedPreferences.getInstance();
-    var pref = prefs.getString("language_code");
+    var pref = prefs.getString('language_code');
     _appLocale = pref != null ? Locale(pref) : null;
   }
 
@@ -89,15 +87,15 @@ class AppLanguage extends ChangeNotifier {
     if (_appLocale == type) {
       return;
     }
-    if (type == Locale("de")) {
-      _appLocale = Locale("de");
-      await prefs.setString("language_code", "de");
-    } else if (type == Locale("en")){
-      _appLocale = Locale("en");
-      await prefs.setString("language_code", "en");
+    if (type == Locale('de')) {
+      _appLocale = Locale('de');
+      await prefs.setString('language_code', 'de');
+    } else if (type == Locale('en')) {
+      _appLocale = Locale('en');
+      await prefs.setString('language_code', 'en');
     } else {
       _appLocale = null;
-      await prefs.setString("language_code", null);
+      await prefs.setString('language_code', null);
     }
     notifyListeners();
   }

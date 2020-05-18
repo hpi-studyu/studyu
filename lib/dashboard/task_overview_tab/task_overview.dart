@@ -16,7 +16,7 @@ class _TaskOverviewState extends State<TaskOverview> {
   final DateTime _endDate = DateTime.now().add(Duration(days: 60));
 
   void onSelect(DateTime date) {
-    print("Selected Date -> $date");
+    print('Selected Date -> $date');
   }
 
   @override
@@ -29,13 +29,13 @@ class _TaskOverviewState extends State<TaskOverview> {
           height: 70,
         ),
         TaskBox(VideoTask(
-          Nof1Localizations.of(context).translate("video_task"),
-          Nof1Localizations.of(context).translate("video_test"),
+          Nof1Localizations.of(context).translate('video_task'),
+          Nof1Localizations.of(context).translate('video_test'),
           'assets/rick-roll.mp4',
         )),
         TaskBox(PainRatingTask(
-          Nof1Localizations.of(context).translate("survey"),
-          Nof1Localizations.of(context).translate("survey_test"),
+          Nof1Localizations.of(context).translate('survey'),
+          Nof1Localizations.of(context).translate('survey_test'),
         )),
       ],
     );

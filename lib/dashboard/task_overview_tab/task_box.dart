@@ -56,7 +56,7 @@ class _TaskBoxState extends State<TaskBox> {
                   child: RaisedButton(
                     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => widget.task)),
                     child: Text(
-                      Nof1Localizations.of(context).translate("complete"),
+                      Nof1Localizations.of(context).translate('complete'),
                     ),
                   ),
                 )

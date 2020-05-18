@@ -23,13 +23,13 @@ class _PainRatingTaskState extends State<PainRatingTask> {
   RPNavigableOrderedTask createSurvey() {
     final painScaleAnswerFormat = RPSliderAnswerFormat.withParams(0, 10, divisions: 10);
     final painRatingQuestionStep = RPQuestionStep.withAnswerFormat(
-      "painRatingQuestionStepID",
-      Nof1Localizations.of(context).translate("how_would_you_rate_your_pain_today"),
+      'painRatingQuestionStepID',
+      Nof1Localizations.of(context).translate('how_would_you_rate_your_pain_today'),
       painScaleAnswerFormat,
     );
 
-    final completionStep = RPCompletionStep("completionStepID")
-      ..title = Nof1Localizations.of(context).translate("thank_you_for_your_input")
+    final completionStep = RPCompletionStep('completionStepID')
+      ..title = Nof1Localizations.of(context).translate('thank_you_for_your_input')
       ..text = '';
 
     return RPNavigableOrderedTask(

@@ -5,12 +5,11 @@ import 'package:provider/provider.dart';
 import '../util/localization.dart';
 
 class AccountManagement extends StatefulWidget {
-
   @override
-  _AccountManagementState createState() =>_AccountManagementState();
+  _AccountManagementState createState() => _AccountManagementState();
 }
-  class _AccountManagementState extends State<AccountManagement> {
 
+class _AccountManagementState extends State<AccountManagement> {
   Locale _selectedValue;
 
   @override
@@ -30,7 +29,7 @@ class AccountManagement extends StatefulWidget {
     }
 
     dropDownItems.add(DropdownMenuItem(
-      child: Text("System"),
+      child: Text('System'),
       value: null,
     ));
 
@@ -63,9 +62,9 @@ class AccountManagement extends StatefulWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           getDropdownRow(context),
-          Text("Peter"),
+          Text('Peter'),
           SizedBox(height: 20),
-          Text("Müller"),
+          Text('Müller'),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

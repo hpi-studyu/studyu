@@ -42,7 +42,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
               );
             } else {
               return Center(
-                child: Text("No Questions"),
+                child: Text('No Questions'),
               );
             }
           } else {
@@ -62,7 +62,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
     final questionSteps = questions.map((question) {
       final choices = [RPChoice.withParams(question.option1, 0), RPChoice.withParams(question.option2, 1)];
       final answerFormat = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, choices);
-      return RPQuestionStep.withAnswerFormat("question${question.id}", question.question, answerFormat);
+      return RPQuestionStep.withAnswerFormat('question${question.id}', question.question, answerFormat);
     }).toList();
 
     final onboardingFormStep = RPFormStep.withTitle('onboardingFormStepID', questionSteps, 'Onboarding');

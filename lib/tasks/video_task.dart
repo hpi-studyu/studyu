@@ -37,11 +37,9 @@ class _VideoTaskState extends State<VideoTask> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate("video_task")),
+        title: Text(Nof1Localizations.of(context).translate('video_task')),
       ),
       body: Center(
         child: Column(
@@ -54,7 +52,7 @@ class _VideoTaskState extends State<VideoTask> {
             ),
             RaisedButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(Nof1Localizations.of(context).translate("finished")),
+              child: Text(Nof1Localizations.of(context).translate('finished')),
             )
           ],
         ),
