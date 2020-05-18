@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../util/localization.dart';
@@ -27,12 +28,15 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      persistentFooterButtons: [
-        FlatButton(
-          onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
-          child: Text('Skip to Dashboard'),
-        ),
-      ],
+      // Only display button in debug
+      persistentFooterButtons: kReleaseMode
+          ? []
+          : [
+              FlatButton(
+                onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
+                child: Text('Skip to Dashboard'),
+              ),
+            ],
     );
   }
 }
