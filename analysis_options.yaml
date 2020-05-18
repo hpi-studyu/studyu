@@ -1,7 +1,26 @@
 include: package:effective_dart/analysis_options.1.2.0.yaml
 
+# All lints: https://dart-lang.github.io/linter/lints/
 linter:
   rules:
     public_member_api_docs: false
     lines_longer_than_80_chars: false
+    # additional lints from pedantic: https://pub.dev/packages/pedantic
+    no_duplicate_case_values: true
+    always_declare_return_types: true
+    always_require_non_null_named_parameters: true
+    annotate_overrides: true
+    avoid_shadowing_type_parameters: true
+    empty_catches: true
+    null_closures: true
+    prefer_conditional_assignment: true
+    prefer_contains: true
+    prefer_for_elements_to_map_fromIterable: true
+    prefer_if_null_operators: true
+    prefer_is_empty: true
     prefer_single_quotes: true
+    prefer_spread_collections: true
+    recursive_getters: true
+    unnecessary_const: true
+    unnecessary_null_in_if_null_operators: true
+    use_function_type_syntax_for_parameters: true
