@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'dashboard/dashboard.dart';
+import 'theme.dart';
 import 'util/localization.dart';
 import 'welcome/about.dart';
 import 'welcome/study_selection.dart';
@@ -29,9 +30,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return MaterialApp(
           title: 'Nof1 Initial app',
-          theme: ThemeData(
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
+          theme: theme,
           initialRoute: "/welcome",
           routes: <String, WidgetBuilder>{
             "/welcome": (context) => WelcomeScreen(),
