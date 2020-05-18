@@ -26,6 +26,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  chewie:
   cupertino_icons:
   material_design_icons_flutter:
   path_provider:

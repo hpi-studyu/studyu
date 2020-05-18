@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -14,24 +15,30 @@ class VideoTask extends DashboardTask {
 }
 
 class _VideoTaskState extends State<VideoTask> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
+  VideoPlayerController _videoPlayerController;
+  ChewieController _chewieController;
 
   @override
   void initState() {
-    _controller = VideoPlayerController.asset(widget._asset);
-    _initializeVideoPlayerFuture = _controller.initialize();
     super.initState();
+    _videoPlayerController = VideoPlayerController.asset(widget._asset);
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoInitialize: true,
+    );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate("video_task")),
@@ -40,41 +47,16 @@ class _VideoTaskState extends State<VideoTask> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            FutureBuilder(
-              future: _initializeVideoPlayerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  );
-                } else {
-                  return CircularProgressIndicator();
-                }
-              },
+            Chewie(
+              controller: _chewieController,
             ),
             FlatButton(
-              color: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).secondaryHeaderColor,
+              color: theme.primaryColor,
+              textColor: theme.secondaryHeaderColor,
               onPressed: () => Navigator.of(context).pop(),
               child: Text(Nof1Localizations.of(context).translate("finished")),
             )
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              // If the video is paused, play it.
-              _controller.play();
-            }
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
         ),
       ),
     );
