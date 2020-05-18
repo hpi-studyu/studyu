@@ -10,8 +10,7 @@ class WelcomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image(image: AssetImage('assets/images/icon.png'), height: 200),
               SizedBox(height: 20),
