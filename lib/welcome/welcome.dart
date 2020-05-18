@@ -23,15 +23,16 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () => Navigator.pushReplacementNamed(context, "/studySelection"),
                 child: Text(Nof1Localizations.of(context).translate("get_started")),
               ),
-              SizedBox(height: 20),
-              RaisedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
-                child: Text('Skip to Dashboard'),
-              ),
             ],
           ),
         ),
       ),
+      persistentFooterButtons: [
+        FlatButton(
+          onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
+          child: Text('Skip to Dashboard'),
+        ),
+      ],
     );
   }
 }
