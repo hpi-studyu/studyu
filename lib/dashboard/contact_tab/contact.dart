@@ -6,7 +6,9 @@ class Contact extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(Nof1Localizations.of(context).translate("contact"),),
+      child: Text(
+        Nof1Localizations.of(context).translate('contact'),
+      ),
     );
   }
 }

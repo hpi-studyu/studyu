@@ -31,7 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate("dashboard")),
+        title: Text(Nof1Localizations.of(context).translate('dashboard')),
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -40,15 +40,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text(Nof1Localizations.of(context).translate("home")),
+            title: Text(Nof1Localizations.of(context).translate('home')),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text(Nof1Localizations.of(context).translate("profile")),
+            title: Text(Nof1Localizations.of(context).translate('profile')),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.phone),
-            title: Text(Nof1Localizations.of(context).translate("contact")),
+            title: Text(Nof1Localizations.of(context).translate('contact')),
           )
         ],
       ),

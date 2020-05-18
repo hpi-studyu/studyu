@@ -12,11 +12,11 @@ class AboutScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(Nof1Localizations.of(context).translate("about")),
+            Text(Nof1Localizations.of(context).translate('about')),
             SizedBox(height: 20),
             RaisedButton(
-              onPressed: () => Navigator.pushReplacementNamed(context, "/studySelection"),
-              child: Text(Nof1Localizations.of(context).translate("get_started")),
+              onPressed: () => Navigator.pushReplacementNamed(context, '/studySelection'),
+              child: Text(Nof1Localizations.of(context).translate('get_started')),
             ),
           ],
         ),

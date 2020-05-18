@@ -17,7 +17,7 @@ class QuestionDao {
 
     List<Map<String, dynamic>> result;
     if (id != null) {
-        result = await db.query(questionTable, columns: columns, where: "id = ?", whereArgs: [id.toString()]);
+      result = await db.query(questionTable, columns: columns, where: 'id = ?', whereArgs: [id.toString()]);
     } else {
       result = await db.query(questionTable, columns: columns);
     }

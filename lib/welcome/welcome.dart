@@ -16,13 +16,13 @@ class WelcomeScreen extends StatelessWidget {
               Image(image: AssetImage('assets/images/icon.png'), height: 200),
               SizedBox(height: 20),
               RaisedButton(
-                onPressed: () => Navigator.pushNamed(context, "/about"),
-                child: Text(Nof1Localizations.of(context).translate("what_is_nof1")),
+                onPressed: () => Navigator.pushNamed(context, '/about'),
+                child: Text(Nof1Localizations.of(context).translate('what_is_nof1')),
               ),
               SizedBox(height: 20),
               RaisedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, "/studySelection"),
-                child: Text(Nof1Localizations.of(context).translate("get_started")),
+                onPressed: () => Navigator.pushReplacementNamed(context, '/studySelection'),
+                child: Text(Nof1Localizations.of(context).translate('get_started')),
               ),
             ],
           ),
@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
           ? []
           : [
               FlatButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
+                onPressed: () => Navigator.pushReplacementNamed(context, '/dashboard'),
                 child: Text('Skip to Dashboard'),
               ),
             ],

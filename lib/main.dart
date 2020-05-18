@@ -31,12 +31,12 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Nof1 Initial app',
           theme: theme,
-          initialRoute: "/welcome",
+          initialRoute: '/welcome',
           routes: <String, WidgetBuilder>{
-            "/welcome": (context) => WelcomeScreen(),
-            "/about": (context) => AboutScreen(),
-            "/studySelection": (context) => StudySelectionScreen(),
-            "/dashboard": (context) => DashboardScreen(),
+            '/welcome': (context) => WelcomeScreen(),
+            '/about': (context) => AboutScreen(),
+            '/studySelection': (context) => StudySelectionScreen(),
+            '/dashboard': (context) => DashboardScreen(),
           },
           locale: model.appLocal,
           supportedLocales: AppLanguage.supportedLocales,

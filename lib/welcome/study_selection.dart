@@ -7,7 +7,7 @@ import '../onboarding/eligibility_check.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  final _availableStudies = [Study("tea_vs_coffee"), Study("weed_vs_alcohol"), Study("back_pain")];
+  final _availableStudies = [Study('tea_vs_coffee'), Study('weed_vs_alcohol'), Study('back_pain')];
 
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) {
     if (kIsWeb) {
@@ -36,8 +36,8 @@ class StudySelectionScreen extends StatelessWidget {
             height: 20,
           ),
           RaisedButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, "/dashboard"),
-            child: Text("Continue"),
+            onPressed: () => Navigator.pushReplacementNamed(context, '/dashboard'),
+            child: Text('Continue'),
           )
         ],
       ),
@@ -59,10 +59,10 @@ class StudySelectionScreen extends StatelessWidget {
                     navigateToEligibilityCheck(context, _availableStudies[index]);
                   },
                   title: Center(child: Text(Nof1Localizations.of(context).translate(_availableStudies[index].id))),
-                  leading: _availableStudies[index].id == "weed_vs_alcohol"
+                  leading: _availableStudies[index].id == 'weed_vs_alcohol'
                       ? Icon(MdiIcons.cannabis)
                       : Icon(MdiIcons.accountHeart),
-                  trailing: _availableStudies[index].id == "weed_vs_alcohol"
+                  trailing: _availableStudies[index].id == 'weed_vs_alcohol'
                       ? Icon(MdiIcons.glassMugVariant)
                       : Icon(MdiIcons.pill),
                 ),
