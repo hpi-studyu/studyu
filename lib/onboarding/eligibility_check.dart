@@ -60,13 +60,11 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
         footnote: '(1) Important footnote')
       ..text = 'This survey decides, whether you are eligible for the back pain study.';
 
-    final questionSteps = <RPQuestionStep>[];
-
-    for (var question in questions) {
+    final questionSteps = questions.map((question) {
       final choices = [RPChoice.withParams(question.option1, 0), RPChoice.withParams(question.option2, 1)];
       final answerFormat = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, choices);
-      questionSteps.add(RPQuestionStep.withAnswerFormat("question${question.id}", question.question, answerFormat));
-    }
+      return RPQuestionStep.withAnswerFormat("question${question.id}", question.question, answerFormat);
+    }).toList();
 
     final onboardingFormStep = RPFormStep.withTitle('onboardingFormStepID', questionSteps, 'Onboarding');
 
