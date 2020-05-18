@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../util/localization.dart';
@@ -12,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Image(image: AssetImage('assets/fancy_logo.png')),
+              Image(image: AssetImage('assets/images/icon.png'), height: 200),
               SizedBox(height: 20),
               FlatButton(
                 onPressed: () => Navigator.pushNamed(context, "/about"),
