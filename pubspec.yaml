@@ -1,5 +1,5 @@
-name: app
-description: A new Flutter project.
+name: Nof1
+description: An app to facilitate N-of-1 trails
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -26,17 +26,14 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons:
   material_design_icons_flutter:
-  research_package:
-  video_player:
-  provider:
-  sqflite:
   path_provider:
+  provider:
+  research_package:
   shared_preferences:
+  sqflite:
+  video_player:
 
 dev_dependencies:
   flutter_test:
