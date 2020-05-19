@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:research_package/research_package.dart';
 
 import '../util/localization.dart';
 import 'dashboard_task.dart';
 
 class PainRatingTask extends DashboardTask {
-  PainRatingTask(String title, String description) : super(title, description);
+  PainRatingTask(String title, String description)
+      : super(title, description, icon: Icon(MdiIcons.orderBoolAscendingVariant));
 
   @override
   State<PainRatingTask> createState() => _PainRatingTaskState();
