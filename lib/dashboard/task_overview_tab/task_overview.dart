@@ -1,6 +1,6 @@
-import 'package:Nof1/tasks/pain_rating_task.dart';
 import 'package:flutter/material.dart';
 
+import '../../tasks/pain_rating_task.dart';
 import '../../tasks/video_task.dart';
 import '../../util/localization.dart';
 import 'calendar_row.dart';
