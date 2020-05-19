@@ -30,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
       ),
       // Only display button in debug
       persistentFooterButtons: kReleaseMode
-          ? []
+          ? null
           : [
               FlatButton(
                 onPressed: () => Navigator.pushReplacementNamed(context, '/dashboard'),
