@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons:
   material_design_icons_flutter:
   path_provider:
+  pimp_my_button:
   provider:
   research_package:
   shared_preferences:
