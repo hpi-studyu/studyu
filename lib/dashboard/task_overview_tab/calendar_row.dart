@@ -13,7 +13,9 @@ class CalendarRow extends StatefulWidget {
   final double height;
   final Function getProgress;
 
-  const CalendarRow({Key key, @required this.startDate, @required this.endDate, @required this.height, this.getProgress}) : super(key: key);
+  const CalendarRow(
+      {Key key, @required this.startDate, @required this.endDate, @required this.height, this.getProgress})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CalendarRowState();
@@ -32,7 +34,10 @@ class _CalendarRowState extends State<CalendarRow> {
   @override
   void didChangeDependencies() {
     var selected = Provider.of<TaskOverviewModel>(context, listen: false).selectedDate;
-    _selectedCycle = selected != null ? _cycles.indexWhere((element) => element.first.difference(selected).inDays <= 0 && element.last.difference(selected).inDays >= 0) : 0;
+    _selectedCycle = selected != null
+        ? _cycles.indexWhere((element) =>
+            element.first.difference(selected).inDays <= 0 && element.last.difference(selected).inDays >= 0)
+        : 0;
     super.didChangeDependencies();
   }
 
@@ -41,9 +46,7 @@ class _CalendarRowState extends State<CalendarRow> {
       return null;
     }
 
-    var cycles = <List<DateTime>>[
-      []
-    ];
+    var cycles = <List<DateTime>>[[]];
     var timeLeft = end.difference(start).inDays;
 
     while (timeLeft > -1) {
@@ -164,8 +167,11 @@ class _DayTileState extends State<DayTile> {
               Consumer<TaskOverviewModel>(
                 builder: (context, taskOverviewModel, child) => ClipOval(
                   child: Container(
-                    color: taskOverviewModel.selectedDate.isSameDate(widget.date) ? Colors.green[300] :
-                    widget.date.isEarlierDateThan(taskOverviewModel.currentDate) ? Colors.grey[400] : Colors.white,
+                    color: taskOverviewModel.selectedDate.isSameDate(widget.date)
+                        ? Colors.green[300]
+                        : widget.date.isEarlierDateThan(taskOverviewModel.currentDate)
+                            ? Colors.grey[400]
+                            : Colors.white,
                     child: Padding(
                       padding: EdgeInsets.all(innerConstraints.maxWidth / 5),
                       child: FittedBox(

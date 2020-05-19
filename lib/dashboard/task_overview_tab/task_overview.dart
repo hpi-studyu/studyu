@@ -1,6 +1,6 @@
+import 'package:Nof1/tasks/pain_rating_task.dart';
 import 'package:flutter/material.dart';
 
-import '../../tasks/pain_rating_task.dart';
 import '../../tasks/video_task.dart';
 import '../../util/localization.dart';
 import 'calendar_row.dart';
@@ -28,15 +28,24 @@ class _TaskOverviewState extends State<TaskOverview> {
           endDate: _endDate,
           height: 70,
         ),
-        TaskBox(VideoTask(
-          Nof1Localizations.of(context).translate('video_task'),
-          Nof1Localizations.of(context).translate('video_test'),
-          'assets/rick-roll.mp4',
-        )),
-        TaskBox(PainRatingTask(
-          Nof1Localizations.of(context).translate('survey'),
-          Nof1Localizations.of(context).translate('survey_test'),
-        )),
+        Expanded(
+          child: ListView(
+            children: [
+              TaskBox(VideoTask(
+                Nof1Localizations.of(context).translate('video_task'),
+                Nof1Localizations.of(context).translate('video_test'),
+                'assets/rick-roll.mp4',
+              )),
+              // duplicate for testing purposes
+              ...List.filled(
+                  20,
+                  TaskBox(PainRatingTask(
+                    Nof1Localizations.of(context).translate('survey'),
+                    Nof1Localizations.of(context).translate('survey_test'),
+                  )))
+            ],
+          ),
+        ),
       ],
     );
   }

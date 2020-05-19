@@ -8,7 +8,7 @@ import 'dashboard_task.dart';
 class VideoTask extends DashboardTask {
   final String _asset;
 
-  VideoTask(title, description, this._asset) : super(title, description);
+  VideoTask(title, description, this._asset) : super(title, description, icon: Icon(Icons.ondemand_video));
 
   @override
   State<VideoTask> createState() => _VideoTaskState();
