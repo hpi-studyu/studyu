@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
@@ -70,8 +71,8 @@ class _AccountManagementState extends State<AccountManagement> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Icon(Icons.camera_alt),
-              Icon(Icons.face),
+              Icon(MdiIcons.instagram),
+              Icon(MdiIcons.facebook),
             ],
           ),
         ],
