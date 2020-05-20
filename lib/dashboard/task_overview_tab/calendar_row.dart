@@ -62,8 +62,8 @@ class _CalendarRowState extends State<CalendarRow> {
   }
 
   Widget getCycleWidget(List<DateTime> days, double spacing) {
-    return Container(
-      color: Colors.red.withOpacity(0.3),
+    return Card(
+      color: Colors.red[200],
       child: Padding(
         padding: EdgeInsets.only(top: widget.height / 10, bottom: widget.height / 10),
         child: Row(
@@ -115,14 +115,23 @@ class _CalendarRowState extends State<CalendarRow> {
             itemCount: _cycles.length,
             itemBuilder: (_context, i) {
               if (i != _selectedCycle) {
+                var cycle = _cycles[i];
+                var start = '${cycle.first.day}.${cycle.first.month}.';
+                var end = '${cycle.last.day}.${cycle.last.month}.';
                 return GestureDetector(
                   onTap: () => setState(() {
                     _selectedCycle = i;
                   }),
                   child: AspectRatio(
                     aspectRatio: 1.5,
-                    child: Container(
+                    child: Card(
                       color: Colors.green,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: spacing / 5, bottom: spacing / 5),
+                        child: Center(
+                          child: Text('$start\n-\n$end', textAlign: TextAlign.center,),
+                        ),
+                      )
                     ),
                   ),
                 );
