@@ -29,6 +29,7 @@ dependencies:
   chewie:
   cupertino_icons:
   material_design_icons_flutter:
+  parse_server_sdk:
   path_provider:
   pimp_my_button:
   provider:
