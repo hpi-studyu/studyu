@@ -24,7 +24,7 @@ void main() async {
   if (response.success) {
     print('Connection to Parse server successful');
   } else {
-    print("Failed establishing connection to Parse server");
+    print('Failed establishing connection to Parse server');
   }
 
   runApp(MyApp(

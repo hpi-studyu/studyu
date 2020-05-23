@@ -6,7 +6,6 @@ import '../dashboard/dashboard.dart';
 import '../database/models/models.dart';
 import '../database/models/question.dart';
 import '../database/repository.dart';
-import '../util/localization.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
