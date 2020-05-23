@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
 import '../dashboard/dashboard.dart';
+import '../database/models/models.dart';
 import '../database/models/question.dart';
 import '../database/repository.dart';
-import '../models/models.dart';
 import '../util/localization.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
@@ -54,10 +54,10 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
   RPNavigableOrderedTask createOnboarding(BuildContext context, List<Question> questions, Study study) {
     final instructionStep = RPInstructionStep(
         identifier: 'instructionID',
-        title: Nof1Localizations.of(context).translate(study.id),
-        detailText: 'This is detailText',
+        title: study.title,
+        detailText: study.description,
         footnote: '(1) Important footnote')
-      ..text = 'This survey decides, whether you are eligible for the back pain study.';
+      ..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
 
     final questionSteps = questions.map((question) {
       final choices = [RPChoice.withParams(question.option1, 0), RPChoice.withParams(question.option2, 1)];

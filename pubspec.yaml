@@ -37,6 +37,7 @@ dependencies:
   shared_preferences:
   sqflite:
   video_player:
+  xml:
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,7 @@ flutter:
      - assets/
      - assets/images/
      - assets/i18n/
+     - assets/studies/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

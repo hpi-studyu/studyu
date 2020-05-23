@@ -1,4 +1,4 @@
-import 'dao.dart';
+import 'daos/dao.dart';
 import 'models/question.dart';
 
 class QuestionRepository {
