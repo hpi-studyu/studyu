@@ -2,12 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../models/models.dart';
+import '../database/daos/study_dao.dart';
+import '../database/models/models.dart';
 import '../onboarding/eligibility_check.dart';
-import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  final _availableStudies = [Study('tea_vs_coffee'), Study('weed_vs_alcohol'), Study('back_pain')];
+  /*final _availableStudies = [
+    Study('1', 'tea_vs_coffee', ''),
+    Study('', 'weed_vs_alcohol', ''),
+    Study('', 'back_pain', '')
+  ];*/
 
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) {
     if (kIsWeb) {
@@ -48,26 +52,31 @@ class StudySelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _availableStudies.length,
-            itemBuilder: (context, index) {
-              return Center(
-                child: ListTile(
-                  onTap: () {
-                    print(Nof1Localizations.of(context).translate(_availableStudies[index].id));
-                    navigateToEligibilityCheck(context, _availableStudies[index]);
-                  },
-                  title: Center(child: Text(Nof1Localizations.of(context).translate(_availableStudies[index].id))),
-                  leading: _availableStudies[index].id == 'weed_vs_alcohol'
-                      ? Icon(MdiIcons.cannabis)
-                      : Icon(MdiIcons.accountHeart),
-                  trailing: _availableStudies[index].id == 'weed_vs_alcohol'
-                      ? Icon(MdiIcons.glassMugVariant)
-                      : Icon(MdiIcons.pill),
-                ),
-              );
-            }),
+        child: FutureBuilder(
+          future: StudyDao().getAllStudies(),
+          builder: (_context, snapshot) {
+            return snapshot.hasData
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      final Study currentStudy = snapshot.data[index];
+                      return Center(
+                        child: ListTile(
+                          onTap: () {
+                            print(currentStudy);
+                            navigateToEligibilityCheck(context, currentStudy);
+                          },
+                          title: Center(child: Text(currentStudy.title)),
+                          subtitle: Center(child: Text(currentStudy.description),),
+                          leading: currentStudy.id == '2' ? Icon(MdiIcons.cannabis) : Icon(MdiIcons.accountHeart),
+                          trailing: currentStudy.id == '2' ? Icon(MdiIcons.glassMugVariant) : Icon(MdiIcons.pill),
+                        ),
+                      );
+                    })
+                : CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }
