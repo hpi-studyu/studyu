@@ -36,13 +36,10 @@ class _TaskOverviewState extends State<TaskOverview> {
                 Nof1Localizations.of(context).translate('video_test'),
                 'assets/rick-roll.mp4',
               )),
-              // duplicate for testing purposes
-              ...List.filled(
-                  20,
-                  TaskBox(PainRatingTask(
-                    Nof1Localizations.of(context).translate('survey'),
-                    Nof1Localizations.of(context).translate('survey_test'),
-                  )))
+              TaskBox(PainRatingTask(
+                Nof1Localizations.of(context).translate('survey'),
+                Nof1Localizations.of(context).translate('survey_test'),
+              ))
             ],
           ),
         ),
