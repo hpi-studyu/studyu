@@ -57,25 +57,27 @@ class _AccountManagementState extends State<AccountManagement> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          getDropdownRow(context),
-          Text('Peter'),
-          SizedBox(height: 20),
-          Text('Müller'),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Icon(MdiIcons.instagram),
-              Icon(MdiIcons.facebook),
-            ],
-          ),
-        ],
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            getDropdownRow(context),
+            Text('Peter'),
+            SizedBox(height: 20),
+            Text('Müller'),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Icon(MdiIcons.instagram),
+                Icon(MdiIcons.facebook),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

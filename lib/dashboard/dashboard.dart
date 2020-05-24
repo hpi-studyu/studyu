@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
@@ -32,6 +33,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('dashboard')),
+        actions: [
+          IconButton(
+            tooltip: Nof1Localizations.of(context).translate('contact'),
+            icon: Icon(MdiIcons.commentAccount),
+            onPressed: () {
+              print('Show contact screen');
+            },
+          ),
+          SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountManagement()));
+            },
+            child: CircleAvatar(
+              child: ClipOval(
+                child: Icon(Icons.person),
+              ),
+            ),
+          ),
+        ],
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
