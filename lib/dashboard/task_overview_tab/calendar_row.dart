@@ -128,7 +128,7 @@ class _CalendarRowState extends State<CalendarRow> {
                       color: Colors.green,
                       child: Padding(
                         padding: EdgeInsets.only(top: spacing / 5, bottom: spacing / 5),
-                        child: Center(
+                        child: FittedBox(
                           child: Text('$start\n-\n$end', textAlign: TextAlign.center,),
                         ),
                       )
