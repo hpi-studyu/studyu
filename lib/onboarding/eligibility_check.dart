@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
-import '../dashboard/dashboard.dart';
 import '../database/models/models.dart';
 import '../database/models/question.dart';
 import '../database/repository.dart';
@@ -18,14 +17,11 @@ class EligibilityCheckScreen extends StatefulWidget {
 }
 
 class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
-  void resultCallback(RPTaskResult result) {
+  void resultCallback(BuildContext context, RPTaskResult result) {
     final formStepResult = result.getStepResultForIdentifier('onboardingFormStepID');
     final resultValues = formStepResult.results.values.map((result) => result.results['answer'][0].value).toList();
-    if (listEquals(resultValues, [0, 1, 1])) {
-      Navigator.replaceRouteBelow(context,
-          anchorRoute: widget.route, newRoute: MaterialPageRoute(builder: (context) => DashboardScreen()));
-      //changeStatus(true);
-    }
+    final isEligible = listEquals(resultValues, [0, 1, 1]);
+    Navigator.of(context).pop(isEligible);
   }
 
   @override
@@ -37,7 +33,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
             if (snapshot.hasData) {
               return RPUITask(
                 task: createOnboarding(context, snapshot.data, widget.study),
-                onSubmit: resultCallback,
+                onSubmit: (result) => resultCallback(context, result),
               );
             } else {
               return Center(
@@ -70,8 +66,9 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
       ..title = 'Thank You!'
       ..text = 'Continue for your results.';
 
-    final backPainSurveyTask =
-        RPNavigableOrderedTask('backPainSurveyTaskID', [instructionStep, onboardingFormStep, completionStep]);
+    final backPainSurveyTask = RPNavigableOrderedTask(
+        'backPainSurveyTaskID', [instructionStep, onboardingFormStep, completionStep],
+        closeAfterFinished: false);
 
     return backPainSurveyTask;
   }

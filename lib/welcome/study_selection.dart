@@ -13,17 +13,26 @@ class StudySelectionScreen extends StatelessWidget {
     Study('', 'back_pain', '')
   ];*/
 
-  void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) {
+  void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
     if (kIsWeb) {
       Navigator.push(context, MaterialPageRoute(builder: _buildWebCompatScreen));
     } else {
-      Navigator.push(
+      final isEligible = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => EligibilityCheckScreen(
                     study: selectedStudy,
                     route: ModalRoute.of(context),
                   )));
+      if (isEligible) {
+        print('Patient is eligible');
+        Navigator.of(context).pushReplacementNamed('/dashboard');
+      } else {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('You are not eligible for this study. Please select a different one.'),
+          duration: Duration(seconds: 30),
+        ));
+      }
     }
   }
 
@@ -68,7 +77,7 @@ class StudySelectionScreen extends StatelessWidget {
                             navigateToEligibilityCheck(context, currentStudy);
                           },
                           title: Center(child: Text(currentStudy.title)),
-                          subtitle: Center(child: Text(currentStudy.description),),
+                          subtitle: Center(child: Text(currentStudy.description)),
                           leading: currentStudy.id == '2' ? Icon(MdiIcons.cannabis) : Icon(MdiIcons.accountHeart),
                           trailing: currentStudy.id == '2' ? Icon(MdiIcons.glassMugVariant) : Icon(MdiIcons.pill),
                         ),
