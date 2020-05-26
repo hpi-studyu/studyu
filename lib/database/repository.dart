@@ -1,5 +1,5 @@
 import 'daos/dao.dart';
-import 'models/questions/question.dart';
+import 'models/questionnaire/questions/question.dart';
 
 class QuestionRepository {
   final QuestionDao questionDao = QuestionDao();

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
 import '../database/models/models.dart';
-import '../database/models/questions/multiple_choice.dart';
+import '../database/models/questionnaire/questions/multiple_choice_question.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;

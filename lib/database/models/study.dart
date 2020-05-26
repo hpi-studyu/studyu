@@ -1,9 +1,9 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
+import 'questionnaire/questions/question.dart';
+
 /*
-import 'condition.dart';
 import 'intervention.dart';*/
-import 'questions/question.dart';
 
 class Study extends ParseObject implements ParseCloneable {
 

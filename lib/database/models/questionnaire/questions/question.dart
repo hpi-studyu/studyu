@@ -1,7 +1,9 @@
-import 'multiple_choice.dart';
+import 'multiple_choice_question.dart';
 
 class Question {
-  static const String type = null;
+
+  static const String questionType = null;
+  String get type => questionType;
 
   int id;
   String question;
@@ -16,7 +18,7 @@ class Question {
   factory Question.fromJson(Map<String, dynamic> data) {
     if (!data.containsKey('type')) throw 'Missing question type!';
     switch (data['type']) {
-      case MultipleChoiceQuestion.type:
+      case MultipleChoiceQuestion.questionType:
         return MultipleChoiceQuestion.fromJson(data);
       default:
         throw 'Unknown question type!';
@@ -31,6 +33,6 @@ class Question {
 
   @override
   String toString() {
-    return '(${super.toString()} id: $id, question: $question)';
+    return toJson().toString();
   }
 }

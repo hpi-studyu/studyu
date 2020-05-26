@@ -3,10 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'question.dart';
 
 class MultipleChoiceQuestion extends Question {
+
+  static const String questionType = 'multiple';
+  @override
+  String get type => questionType;
+
   bool multiple;
   List<Choice> choices;
-
-  static const String type = 'multiple';
 
   MultipleChoiceQuestion(int id, String question, this.choices, {@required this.multiple}) : super(id, question);
 
@@ -20,11 +23,6 @@ class MultipleChoiceQuestion extends Question {
         'multiple': multiple,
         'choices': choices.map((choice) => choice.toJson()).toList()
       });
-
-  @override
-  String toString() {
-    return '${super.toString()}, multiple: $multiple, choices: $choices';
-  }
 }
 
 class Choice {
@@ -42,9 +40,4 @@ class Choice {
         'id': id,
         'value': value
       };
-
-  @override
-  String toString() {
-    return '(${super.toString()} id: $id, value: $value)';
-  }
 }
