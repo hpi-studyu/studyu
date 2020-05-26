@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'question.dart';
+import 'questions/question.dart';
 
 @immutable
 abstract class Answer {

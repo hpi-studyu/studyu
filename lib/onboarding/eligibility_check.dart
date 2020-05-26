@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
 import '../database/models/models.dart';
-import '../database/models/question.dart';
-import '../database/repository.dart';
+import '../database/models/questions/multiple_choice.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
@@ -19,46 +18,46 @@ class EligibilityCheckScreen extends StatefulWidget {
 class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
   void resultCallback(BuildContext context, RPTaskResult result) {
     final formStepResult = result.getStepResultForIdentifier('onboardingFormStepID');
-    final resultValues = formStepResult.results.values.map((result) => result.results['answer'][0].value).toList();
-    final isEligible = listEquals(resultValues, [0, 1, 1]);
+    var isEligible = false;
+    if (formStepResult != null) {
+      final resultValues = formStepResult.results.values.map((result) => result.results['answer'][0].value).toList();
+      isEligible = listEquals(resultValues, [
+        0,
+        1,
+        1
+      ]);
+    }
     Navigator.of(context).pop(isEligible);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: QuestionRepository().getQuestions(),
-        builder: (_context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return RPUITask(
-                task: createOnboarding(context, snapshot.data, widget.study),
-                onSubmit: (result) => resultCallback(context, result),
-              );
-            } else {
-              return Center(
-                child: Text('No Questions'),
-              );
-            }
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+    return RPUITask(
+      task: createOnboarding(context, widget.study),
+      onSubmit: (result) => resultCallback(context, result),
+    );
   }
 
-  RPNavigableOrderedTask createOnboarding(BuildContext context, List<Question> questions, Study study) {
-    final instructionStep = RPInstructionStep(
-        identifier: 'instructionID',
-        title: study.title,
-        detailText: study.description,
-        footnote: '(1) Important footnote')
-      ..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
+  RPNavigableOrderedTask createOnboarding(BuildContext context, Study study) {
+    final instructionStep = RPInstructionStep(identifier: 'instructionID', title: study.title, detailText: study.description, footnote: '(1) Important footnote')..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
 
-    final questionSteps = questions.map((question) {
-      final choices = [RPChoice.withParams(question.option1, 0), RPChoice.withParams(question.option2, 1)];
-      final answerFormat = RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, choices);
-      return RPQuestionStep.withAnswerFormat('question${question.id}', question.question, answerFormat);
-    }).toList();
+    final questionSteps = study.eligibility
+        .map((question) {
+          switch (question.runtimeType) {
+            case MultipleChoiceQuestion:
+              final choices = <RPChoice>[];
+              for (var choice in (question as MultipleChoiceQuestion).choices) {
+                final choiceStep = RPChoice.withParams(choice.value, choice.id);
+                choices.add(choiceStep);
+              }
+              final answerFormat = RPChoiceAnswerFormat.withParams((question as MultipleChoiceQuestion).multiple ? ChoiceAnswerStyle.MultipleChoice : ChoiceAnswerStyle.SingleChoice, choices);
+              return RPQuestionStep.withAnswerFormat('question${question.id}', question.question, answerFormat);
+            default:
+              return null;
+          }
+        })
+        .where((element) => element != null)
+        .toList();
 
     final onboardingFormStep = RPFormStep.withTitle('onboardingFormStepID', questionSteps, 'Onboarding');
 
@@ -66,9 +65,16 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
       ..title = 'Thank You!'
       ..text = 'Continue for your results.';
 
-    final backPainSurveyTask = RPNavigableOrderedTask(
-        'backPainSurveyTaskID', [instructionStep, onboardingFormStep, completionStep],
-        closeAfterFinished: false);
+    final steps = [
+      instructionStep,
+      completionStep
+    ];
+
+    if (questionSteps.isNotEmpty) {
+      steps.insert(1, onboardingFormStep);
+    }
+
+    final backPainSurveyTask = RPNavigableOrderedTask('backPainSurveyTaskID', steps, closeAfterFinished: false);
 
     return backPainSurveyTask;
   }
