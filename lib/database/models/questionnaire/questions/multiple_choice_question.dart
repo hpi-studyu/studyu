@@ -40,4 +40,9 @@ class Choice {
         'id': id,
         'value': value
       };
+
+  @override
+  String toString() {
+    return '(${super.toString()} id: $id, value: $value)';
+  }
 }

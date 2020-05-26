@@ -16,16 +16,17 @@ class MultipleChoiceCondition extends Condition {
   MultipleChoiceCondition(int questionId, this.choiceIds) : super(questionId);
 
   MultipleChoiceCondition.fromJson(Map<String, dynamic> data) : super.fromJsonScaffold(data) {
-    choiceIds = data['choiceIds'];
+    choiceIds = Set.from(data['choiceIds']);
   }
 
   @override
   Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {
-        'choiceIds': choiceIds
+        'choiceIds': choiceIds.toList()
       });
 
   @override
   bool checkAnswer(Answer answer) {
-    return super.checkAnswer(answer) && (answer as MultipleChoiceAnswer).choices?.map((choice) => choice.id)?.toSet() == choiceIds;
+    var comp = (answer as MultipleChoiceAnswer).choices?.map((choice) => choice.id)?.toSet();
+    return super.checkAnswer(answer) && comp.length == choiceIds.length && comp.containsAll(choiceIds);
   }
 }

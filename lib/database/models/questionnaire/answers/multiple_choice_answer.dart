@@ -15,12 +15,12 @@ class MultipleChoiceAnswer extends Answer {
   MultipleChoiceAnswer(int id, DateTime timestamp, int questionId, this.choices) : super(id, timestamp, questionId);
 
   MultipleChoiceAnswer.fromJson(Map<String, dynamic> data) : super.fromJsonScaffold(data) {
-    choices = data['choices'];
+    choices = Set.from(data['choices']);
   }
 
   @override
   Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {
-    'choices': choices
+    'choices': choices.toList()
   });
 
 }

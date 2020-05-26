@@ -1,8 +1,10 @@
-import 'package:flutter/foundation.dart' show listEquals;
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
 import '../database/models/models.dart';
+import '../database/models/questionnaire/answers/multiple_choice_answer.dart';
 import '../database/models/questionnaire/questions/multiple_choice_question.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
@@ -20,12 +22,19 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
     final formStepResult = result.getStepResultForIdentifier('onboardingFormStepID');
     var isEligible = false;
     if (formStepResult != null) {
-      final resultValues = formStepResult.results.values.map((result) => result.results['answer'][0].value).toList();
-      isEligible = listEquals(resultValues, [
-        0,
-        1,
-        1
-      ]);
+      var answers = HashMap();
+      formStepResult.results.forEach((key, value) {
+        final stepResult = (value as RPStepResult);
+        switch (stepResult.answerFormat.runtimeType) {
+          case RPChoiceAnswerFormat:
+            answers[int.parse(key)] = MultipleChoiceAnswer(int.parse(key), DateTime.now(), int.parse(key), Set.from((stepResult.results['answer'] as List<RPChoice>).map<Choice>((choice) => Choice(choice.value, choice.text)).toList()));
+            break;
+          default:
+            return null;
+        }
+      });
+
+      isEligible = !widget.study.conditions.map<bool>((condition) => condition.checkAnswer(answers[condition.questionId])).any((element) => element == false);
     }
     Navigator.of(context).pop(isEligible);
   }
@@ -51,7 +60,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
                 choices.add(choiceStep);
               }
               final answerFormat = RPChoiceAnswerFormat.withParams((question as MultipleChoiceQuestion).multiple ? ChoiceAnswerStyle.MultipleChoice : ChoiceAnswerStyle.SingleChoice, choices);
-              return RPQuestionStep.withAnswerFormat('question${question.id}', question.question, answerFormat);
+              return RPQuestionStep.withAnswerFormat('${question.id}', question.question, answerFormat);
             default:
               return null;
           }
