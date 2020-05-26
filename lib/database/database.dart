@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'models/question.dart';
+//import 'models/questions/question.dart';
 
 final String questionTable = 'Question';
 
@@ -35,14 +35,14 @@ class DatabaseProvider {
         'option2 TEXT '
         ')');
 
-    await db.insert(
+    /*await db.insert(
         questionTable,
         Question(id: 0, question: 'Have you had back pain in the last 2 weeks?', option1: 'yes', option2: 'no')
             .toDatabaseMap());
     await db.insert(
         questionTable, Question(id: 1, question: 'Are you pregnant?', option1: 'yes', option2: 'no').toDatabaseMap());
     await db.insert(questionTable,
-        Question(id: 2, question: 'Select the best number.', option1: '12', option2: '42').toDatabaseMap());
+        Question(id: 2, question: 'Select the best number.', option1: '12', option2: '42').toDatabaseMap());*/
   }
 
   void onUpgrade(Database db, int oldVersion, int newVersion) {

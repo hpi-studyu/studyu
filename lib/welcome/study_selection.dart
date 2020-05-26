@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -7,16 +7,11 @@ import '../database/models/models.dart';
 import '../onboarding/eligibility_check.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  /*final _availableStudies = [
-    Study('1', 'tea_vs_coffee', ''),
-    Study('', 'weed_vs_alcohol', ''),
-    Study('', 'back_pain', '')
-  ];*/
 
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
-    if (kIsWeb) {
+    /*if (kIsWeb) {
       Navigator.push(context, MaterialPageRoute(builder: _buildWebCompatScreen));
-    } else {
+    } else {*/
       final isEligible = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -33,10 +28,10 @@ class StudySelectionScreen extends StatelessWidget {
           duration: Duration(seconds: 30),
         ));
       }
-    }
+    /*}*/
   }
 
-  Widget _buildWebCompatScreen(BuildContext context) {
+  /*Widget _buildWebCompatScreen(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -55,7 +50,7 @@ class StudySelectionScreen extends StatelessWidget {
         ],
       ),
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +68,6 @@ class StudySelectionScreen extends StatelessWidget {
                       return Center(
                         child: ListTile(
                           onTap: () {
-                            print(currentStudy);
                             navigateToEligibilityCheck(context, currentStudy);
                           },
                           title: Center(child: Text(currentStudy.title)),
