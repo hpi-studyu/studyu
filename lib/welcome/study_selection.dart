@@ -28,6 +28,7 @@ class StudySelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: Center(
         child: FutureBuilder(
@@ -39,17 +40,17 @@ class StudySelectionScreen extends StatelessWidget {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       final Study currentStudy = snapshot.data[index];
-                      return Center(
-                        child: ListTile(
+                      return ListTile(
+                          contentPadding: EdgeInsets.all(16),
                           onTap: () {
                             navigateToEligibilityCheck(context, currentStudy);
                           },
-                          title: Center(child: Text(currentStudy.title)),
+                          title: Center(
+                              child: Text(currentStudy.title,
+                                  style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
                           subtitle: Center(child: Text(currentStudy.description)),
-                          leading: currentStudy.id == '2' ? Icon(MdiIcons.cannabis) : Icon(MdiIcons.accountHeart),
-                          trailing: currentStudy.id == '2' ? Icon(MdiIcons.glassMugVariant) : Icon(MdiIcons.pill),
-                        ),
-                      );
+                          leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
+                              color: theme.primaryColor));
                     })
                 : CircularProgressIndicator();
           },

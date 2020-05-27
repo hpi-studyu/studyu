@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const primaryColor = Colors.teal;
-const accentColor = Colors.blueAccent;
+const primaryColor = Colors.blue;
+const accentColor = Colors.orange;
 
 ThemeData get theme => ThemeData(
       brightness: Brightness.light,

@@ -7,13 +7,13 @@ import 'questionnaire/questions/question.dart';
 import 'intervention.dart';*/
 
 class Study extends ParseObject implements ParseCloneable {
-
   static const _keyTableName = 'Study';
   static const keyId = 'study_id';
   static const keyTitle = 'title';
   static const keyDescription = 'description';
   static const keyEligibility = 'eligibility';
   static const keyConditions = 'conditions';
+  static const keyIconName = 'icon_name';
 
   /*List<Question> eligibility = [];
   List<Condition> conditions = [];
@@ -24,7 +24,7 @@ class Study extends ParseObject implements ParseCloneable {
   Study.clone() : this();
 
   @override
-  Study clone(Map<String, dynamic> map)  => Study.clone()..fromJson(map);
+  Study clone(Map<String, dynamic> map) => Study.clone()..fromJson(map);
 
   String get id => get<String>(keyId);
   set id(String id) => set<String>(keyId, id);
@@ -32,10 +32,16 @@ class Study extends ParseObject implements ParseCloneable {
   set title(String title) => set<String>(keyTitle, title);
   String get description => get<String>(keyDescription);
   set description(String description) => set<String>(keyDescription, description);
-  List<Question> get eligibility => get<List<dynamic>>(keyEligibility)?.map((e) => Question.fromJson(e))?.toList() ?? [];
-  set eligibility(List<Question> eligibility) => set<List<Map<String, dynamic>>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
-  List<Condition> get conditions => get<List<dynamic>>(keyConditions)?.map((e) => Condition.fromJson(e))?.toList() ?? [];
-  set conditions(List<Condition> conditions) => set<List<Map<String, dynamic>>>(keyConditions, conditions.map((e) => e.toJson()).toList());
+  String get iconName => get<String>(keyIconName);
+  set iconName(String iconName) => set<String>(keyIconName, iconName);
+  List<Question> get eligibility =>
+      get<List<dynamic>>(keyEligibility)?.map((e) => Question.fromJson(e))?.toList() ?? [];
+  set eligibility(List<Question> eligibility) =>
+      set<List<Map<String, dynamic>>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
+  List<Condition> get conditions =>
+      get<List<dynamic>>(keyConditions)?.map((e) => Condition.fromJson(e))?.toList() ?? [];
+  set conditions(List<Condition> conditions) =>
+      set<List<Map<String, dynamic>>>(keyConditions, conditions.map((e) => e.toJson()).toList());
 
   @override
   String toString() {
