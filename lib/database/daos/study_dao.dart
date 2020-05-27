@@ -1,5 +1,5 @@
+import '../models/models.dart';
 import '../models/questionnaire/eligibility.dart';
-import '../models/study.dart';
 
 const filename = 'assets/studies/scratch.xml';
 
@@ -29,6 +29,14 @@ class StudyDao {
       return response.results.first is Eligibility ? response.results.first : null;
     }
     return null;
+  }
+
+  Future<StudyDetails> getStudyDetails(Study study) async {
+    //TODO replace mock
+    var interventions = [Intervention('Medication'), Intervention('Exercise'), Intervention('Weed')];
+    var studyDetails = StudyDetails();
+    studyDetails.interventions = interventions;
+    return studyDetails;
   }
 
   /*Future<List<Study>> getAllStudies() async {
