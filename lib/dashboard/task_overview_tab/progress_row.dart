@@ -12,7 +12,7 @@ class ProgressRow extends StatefulWidget {
 }
 
 class _ProgressRowState extends State<ProgressRow> {
-  Widget _buildInterventionSegment(BuildContext context, Intervention intervention) {
+  Widget _buildInterventionSegment(BuildContext context, Intervention intervention, bool isCurrent) {
     final theme = Theme.of(context);
     return Expanded(
         child: Column(
@@ -26,7 +26,7 @@ class _ProgressRowState extends State<ProgressRow> {
                     ));
           },
           elevation: 0,
-          fillColor: theme.accentColor,
+          fillColor: isCurrent ? theme.accentColor : theme.primaryColor,
           child: Icon(
             intervention.name == 'Exercise' ? MdiIcons.dumbbell : MdiIcons.pill,
             color: Colors.white,
@@ -57,7 +57,11 @@ class _ProgressRowState extends State<ProgressRow> {
             children: [
               Icon(MdiIcons.run, size: 30),
               SizedBox(width: 8),
-              ...widget.plannedInterventions.map((i) => _buildInterventionSegment(context, i)),
+              ...widget.plannedInterventions.asMap().entries.map((entry) {
+                // mock one active intervention week
+                final idx = entry.key;
+                return _buildInterventionSegment(context, entry.value, idx == 1);
+              }),
               SizedBox(width: 8),
               Icon(MdiIcons.flagCheckered, size: 30),
             ],
