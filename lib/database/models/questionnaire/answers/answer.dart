@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 import 'multiple_choice_answer.dart';
 
 class Answer {
