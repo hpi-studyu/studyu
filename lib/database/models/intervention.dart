@@ -4,8 +4,12 @@ class Intervention {
 
   Intervention(this.name);
 
-  Intervention.fromJson(Map<String, dynamic> data);
+  Intervention.fromJson(Map<String, dynamic> data) {
+    name = data['name'];
+  }
 
-  Map<String, dynamic> toJson() => {};
+  Map<String, dynamic> toJson() => {
+    'name': name
+  };
 
 }
