@@ -77,11 +77,8 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                           ),
                           RaisedButton(
                             child: Text(Nof1Localizations.of(context).translate('finished')),
-                            //TODO add navigation to dashboard with "selected"
-                            onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => DashboardScreen(
-                                      interventions: selected,
-                                    ))),
+                            onPressed: () => Navigator.of(context).pushReplacementNamed(DashboardScreen.routeName,
+                                arguments: DashboardScreenArguments(selected)),
                           ),
                         ],
                       ),

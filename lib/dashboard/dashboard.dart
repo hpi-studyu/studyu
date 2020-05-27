@@ -8,7 +8,15 @@ import 'account_management.dart';
 import 'contact_tab/contact.dart';
 import 'task_overview_tab/task_overview.dart';
 
+class DashboardScreenArguments {
+  final List<Intervention> selectedInterventions;
+
+  DashboardScreenArguments(this.selectedInterventions);
+}
+
 class DashboardScreen extends StatefulWidget {
+  static const routeName = '/dashboard';
+
   final List<Intervention> interventions;
 
   const DashboardScreen({Key key, this.interventions}) : super(key: key);
