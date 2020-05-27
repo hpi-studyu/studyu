@@ -25,16 +25,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               print('Show contact screen');
             },
           ),
-          SizedBox(width: 8),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountManagement()));
-            },
-            child: CircleAvatar(
-              child: ClipOval(
-                child: Icon(Icons.person),
-              ),
-            ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountManagement())),
           ),
         ],
       ),
