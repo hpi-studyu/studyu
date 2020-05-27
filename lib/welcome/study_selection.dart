@@ -7,50 +7,24 @@ import '../database/models/models.dart';
 import '../onboarding/eligibility_check.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
-    /*if (kIsWeb) {
-      Navigator.push(context, MaterialPageRoute(builder: _buildWebCompatScreen));
-    } else {*/
-      final isEligible = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EligibilityCheckScreen(
-                    study: selectedStudy,
-                    route: ModalRoute.of(context),
-                  )));
-      if (isEligible) {
-        print('Patient is eligible');
-        Navigator.of(context).pushReplacementNamed('/dashboard');
-      } else {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('You are not eligible for this study. Please select a different one.'),
-          duration: Duration(seconds: 30),
-        ));
-      }
-    /*}*/
+    final isEligible = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EligibilityCheckScreen(
+                  study: selectedStudy,
+                  route: ModalRoute.of(context),
+                )));
+    if (isEligible) {
+      print('Patient is eligible');
+      Navigator.of(context).pushReplacementNamed('/dashboard');
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('You are not eligible for this study. Please select a different one.'),
+        duration: Duration(seconds: 30),
+      ));
+    }
   }
-
-  /*Widget _buildWebCompatScreen(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            "Web doesn't support DB yet.",
-            style: Theme.of(context).textTheme.headline3,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          RaisedButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/dashboard'),
-            child: Text('Continue'),
-          )
-        ],
-      ),
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
