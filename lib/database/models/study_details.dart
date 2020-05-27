@@ -13,9 +13,9 @@ class StudyDetails extends ParseObject implements ParseCloneable {
   @override
   StudyDetails clone(Map<String, dynamic> map) => StudyDetails.clone()..fromJson(map);
 
-  List<Intervention> get eligibility =>
+  List<Intervention> get interventions =>
       get<List<dynamic>>(keyInterventions)?.map((e) => Intervention.fromJson(e))?.toList() ?? [];
 
-  set eligibility(List<Intervention> eligibility) =>
+  set interventions(List<Intervention> eligibility) =>
       set<List<Map<String, dynamic>>>(keyInterventions, eligibility.map((e) => e.toJson()).toList());
 }
