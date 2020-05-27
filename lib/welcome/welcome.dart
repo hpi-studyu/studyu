@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
               Image(image: AssetImage('assets/images/icon.png'), height: 200),
               SizedBox(height: 20),
               RaisedButton(
-                onPressed: () => Navigator.pushNamed(context, '/about'),
+                onPressed: () => Navigator.pushReplacementNamed(context, '/about'),
                 child: Text(Nof1Localizations.of(context).translate('what_is_nof1')),
               ),
               SizedBox(height: 20),
