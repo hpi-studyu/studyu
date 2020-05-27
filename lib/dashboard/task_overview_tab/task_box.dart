@@ -7,7 +7,7 @@ import '../../tasks/dashboard_task.dart';
 class TaskBox extends StatefulWidget {
   final DashboardTask task;
 
-  TaskBox(this.task);
+  TaskBox({@required this.task});
 
   @override
   State<TaskBox> createState() => _TaskBoxState();
