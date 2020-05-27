@@ -18,7 +18,7 @@ class StudySelectionScreen extends StatelessWidget {
                 )));
     if (isEligible) {
       print('Patient is eligible');
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => InterventionSelection(
