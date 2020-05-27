@@ -2,9 +2,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'questionnaire/conditions/condition.dart';
 import 'questionnaire/questions/question.dart';
-
-/*
-import 'intervention.dart';*/
+import 'study_details.dart';
 
 class Study extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'Study';
@@ -14,6 +12,7 @@ class Study extends ParseObject implements ParseCloneable {
   static const keyEligibility = 'eligibility';
   static const keyConditions = 'conditions';
   static const keyIconName = 'icon_name';
+  static const keyStudyDetails = 'study_details';
 
   /*List<Question> eligibility = [];
   List<Condition> conditions = [];
@@ -42,6 +41,8 @@ class Study extends ParseObject implements ParseCloneable {
       get<List<dynamic>>(keyConditions)?.map((e) => Condition.fromJson(e))?.toList() ?? [];
   set conditions(List<Condition> conditions) =>
       set<List<Map<String, dynamic>>>(keyConditions, conditions.map((e) => e.toJson()).toList());
+  StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
+  set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
 
   @override
   String toString() {
