@@ -12,22 +12,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final List<Widget> _screens = [
-    ChangeNotifierProvider(
-      create: (context) => TaskOverviewModel(),
-      child: TaskOverview(),
-    ),
-    AccountManagement(),
-    Scaffold(),
-  ];
-  int _currentIndex = 0;
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,24 +38,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: onTabTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text(Nof1Localizations.of(context).translate('home')),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text(Nof1Localizations.of(context).translate('profile')),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.phone),
-            title: Text(Nof1Localizations.of(context).translate('contact')),
-          )
-        ],
+      body: ChangeNotifierProvider(
+        create: (context) => TaskOverviewModel(),
+        child: TaskOverview(),
       ),
     );
   }
