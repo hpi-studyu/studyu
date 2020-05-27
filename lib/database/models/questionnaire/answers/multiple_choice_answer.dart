@@ -5,7 +5,6 @@ import '../questions/multiple_choice_question.dart';
 import 'answer.dart';
 
 class MultipleChoiceAnswer extends Answer {
-
   static const String answerType = MultipleChoiceQuestion.questionType;
   @override
   String get type => answerType;
