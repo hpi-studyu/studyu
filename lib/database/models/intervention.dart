@@ -1,6 +1,8 @@
 class Intervention {
+  
+  String name;
 
-  Intervention();
+  Intervention(this.name);
 
   Intervention.fromJson(Map<String, dynamic> data);
 
