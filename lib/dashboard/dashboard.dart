@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
 import 'account_management.dart';
+import 'contact_tab/contact.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -12,22 +13,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final List<Widget> _screens = [
-    ChangeNotifierProvider(
-      create: (context) => TaskOverviewModel(),
-      child: TaskOverview(),
-    ),
-    AccountManagement(),
-    Scaffold(),
-  ];
-  int _currentIndex = 0;
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,40 +23,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
             tooltip: Nof1Localizations.of(context).translate('contact'),
             icon: Icon(MdiIcons.commentAccount),
             onPressed: () {
-              print('Show contact screen');
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Contact()));
             },
           ),
-          SizedBox(width: 8),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountManagement()));
-            },
-            child: CircleAvatar(
-              child: ClipOval(
-                child: Icon(Icons.person),
-              ),
-            ),
+          IconButton(
+            tooltip: Nof1Localizations.of(context).translate('settings'),
+            icon: Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Settings())),
           ),
         ],
       ),
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: onTabTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text(Nof1Localizations.of(context).translate('home')),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text(Nof1Localizations.of(context).translate('profile')),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.phone),
-            title: Text(Nof1Localizations.of(context).translate('contact')),
-          )
-        ],
+      body: ChangeNotifierProvider(
+        create: (context) => TaskOverviewModel(),
+        child: TaskOverview(),
       ),
     );
   }
