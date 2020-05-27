@@ -1,5 +1,4 @@
-//import 'package:flutter/services.dart' show rootBundle;
-//import 'package:xml/xml.dart' as xml;
+import '../models/questionnaire/eligibility.dart';
 import '../models/study.dart';
 
 const filename = 'assets/studies/scratch.xml';
@@ -19,6 +18,15 @@ class StudyDao {
     var response = await Study().getAll();
     if (response.success) {
       return response.results.map((study) => study is Study ? study : null).toList();
+    }
+    return [];
+  }
+
+  Future<Eligibility> getEligibility(Study study) async {
+    //TODO add to study
+    var response = await Eligibility().getObject(null);
+    if (response.success && response.results.isNotEmpty) {
+      return response.results.first is Eligibility ? response.results.first : null;
     }
     return null;
   }
