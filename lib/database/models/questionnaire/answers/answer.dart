@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'multiple_choice_answer.dart';
 
 class Answer {
-
   static const String answerType = null;
   String get type => answerType;
 
@@ -40,12 +39,5 @@ class Answer {
   String toString() {
     return toJson().toString();
   }
-
-}
-
-class BooleanAnswer extends Answer {
-  bool answerValue;
-
-  BooleanAnswer(int id, DateTime timestamp, int questionId, {@required this.answerValue}) : super(id, timestamp, questionId);
 
 }
