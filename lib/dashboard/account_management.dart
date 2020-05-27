@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
 
-class AccountManagement extends StatefulWidget {
+class Settings extends StatefulWidget {
   @override
-  _AccountManagementState createState() => _AccountManagementState();
+  _SettingsState createState() => _SettingsState();
 }
 
-class _AccountManagementState extends State<AccountManagement> {
+class _SettingsState extends State<Settings> {
   Locale _selectedValue;
 
   @override
@@ -57,7 +57,9 @@ class _AccountManagementState extends State<AccountManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('settings')),
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

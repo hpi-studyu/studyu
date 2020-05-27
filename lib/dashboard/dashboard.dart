@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
 import 'account_management.dart';
+import 'contact_tab/contact.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -22,12 +23,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             tooltip: Nof1Localizations.of(context).translate('contact'),
             icon: Icon(MdiIcons.commentAccount),
             onPressed: () {
-              print('Show contact screen');
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Contact()));
             },
           ),
           IconButton(
+            tooltip: Nof1Localizations.of(context).translate('settings'),
             icon: Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountManagement())),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Settings())),
           ),
         ],
       ),
