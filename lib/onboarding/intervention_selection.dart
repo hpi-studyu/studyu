@@ -1,3 +1,4 @@
+import 'package:Nof1/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -77,7 +78,10 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                           RaisedButton(
                             child: Text(Nof1Localizations.of(context).translate('finished')),
                             //TODO add navigation to dashboard with "selected"
-                            onPressed: () => null,
+                            onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                builder: (context) => DashboardScreen(
+                                      interventions: selected,
+                                    ))),
                           ),
                         ],
                       ),
