@@ -9,13 +9,8 @@ import '../routes.dart';
 
 class StudySelectionScreen extends StatelessWidget {
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
-    final isEligible = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EligibilityCheckScreen(
-                  study: selectedStudy,
-                  route: ModalRoute.of(context),
-                )));
+    final isEligible = await Navigator.pushNamed(context, Routes.eligibilityCheck,
+        arguments: EligibilityCheckScreenArguments(selectedStudy));
     if (isEligible != null && isEligible) {
       print('Patient is eligible');
       Navigator.pushReplacementNamed(context, Routes.interventionSelection,
