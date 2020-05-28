@@ -3,8 +3,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 
 import '../database/models/intervention.dart';
+import '../routes.dart';
 import '../util/localization.dart';
-import 'contact_tab/contact.dart';
 import 'settings.dart';
 import 'task_overview_tab/task_overview.dart';
 
@@ -56,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             tooltip: Nof1Localizations.of(context).translate('contact'),
             icon: Icon(MdiIcons.commentAccount),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Contact()));
+              Navigator.of(context).pushNamed(Routes.contact);
             },
           ),
           IconButton(
