@@ -31,24 +31,18 @@ class _InterventionSelectionState extends State<InterventionSelection> {
             contentPadding: EdgeInsets.all(16),
             onTap: () {
               setState(() {
-                if (!selected
-                    .map<String>((intervention) => intervention.name)
-                    .contains(intervention.name)) {
+                if (!selected.map<String>((intervention) => intervention.name).contains(intervention.name)) {
                   selected.add(intervention);
                   if (selected.length > 2) selected.removeAt(0);
                 } else {
-                  selected
-                      .removeWhere((contained) => contained.name == intervention.name);
+                  selected.removeWhere((contained) => contained.name == intervention.name);
                 }
               });
             },
             title: Center(
-              child: Text(intervention.name,
-                  style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
+              child: Text(intervention.name, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
             ),
-            trailing: selected
-                .map<String>((intervention) => intervention.name)
-                .contains(intervention.name)
+            trailing: selected.map<String>((intervention) => intervention.name).contains(intervention.name)
                 ? Icon(MdiIcons.check)
                 : null,
           );
@@ -75,8 +69,7 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                 SizedBox(
                   height: 20,
                 ),
-                study.studyDetails != null &&
-                    study.studyDetails.interventions.isNotEmpty
+                study.studyDetails != null && study.studyDetails.interventions.isNotEmpty
                     ? buildInterventionSelectionList(study.studyDetails.interventions)
                     : Text('No interventions available.'),
                 SizedBox(
@@ -84,8 +77,8 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                 ),
                 RaisedButton(
                   child: Text(Nof1Localizations.of(context).translate('finished')),
-                  onPressed: () => Navigator.of(context).pushReplacementNamed(DashboardScreen.routeName,
-                      arguments: DashboardScreenArguments(selected)),
+                  onPressed: () => Navigator.of(context)
+                      .pushReplacementNamed(DashboardScreen.routeName, arguments: DashboardScreenArguments(selected)),
                 ),
               ],
             ),
@@ -101,7 +94,11 @@ class _InterventionSelectionState extends State<InterventionSelection> {
           future: StudyDao().getStudyWithStudyDetails(widget.study),
           builder: (_context, snapshot) {
             if (snapshot.hasError) {
-              Timer(Duration(seconds: 4,), () => Navigator.pushReplacementNamed(context, '/studySelection'));
+              Timer(
+                  Duration(
+                    seconds: 4,
+                  ),
+                  () => Navigator.pushReplacementNamed(context, '/studySelection'));
               return Center(
                 child: Text('An error occurred!'),
               );
