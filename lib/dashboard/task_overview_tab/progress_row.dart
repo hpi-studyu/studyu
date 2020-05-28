@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../database/models/intervention.dart';
+import '../dashboard.dart';
 
 class ProgressRow extends StatefulWidget {
-  final List<Intervention> plannedInterventions;
+  final List<PlannedIntervention> plannedInterventions;
 
   const ProgressRow({Key key, this.plannedInterventions}) : super(key: key);
   @override
@@ -12,7 +14,7 @@ class ProgressRow extends StatefulWidget {
 }
 
 class _ProgressRowState extends State<ProgressRow> {
-  Widget _buildInterventionSegment(BuildContext context, Intervention intervention, bool isCurrent) {
+  Widget _buildInterventionSegment(BuildContext context, PlannedIntervention plannedIntervention, bool isCurrent) {
     final theme = Theme.of(context);
     return Expanded(
         child: Column(
@@ -23,15 +25,14 @@ class _ProgressRowState extends State<ProgressRow> {
             showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                      title: Text('$Intervention: ${intervention.name}'),
+                      title: Text('$Intervention: ${plannedIntervention.intervention.name}'),
                     ));
           },
           elevation: 0,
           fillColor: isCurrent ? theme.accentColor : theme.primaryColor,
           child: Icon(
-            intervention.name == 'Exercise' ? MdiIcons.dumbbell : MdiIcons.pill,
+            plannedIntervention.intervention.name == 'Exercise' ? MdiIcons.dumbbell : MdiIcons.pill,
             color: Colors.white,
-            size: 18,
           ),
           shape: CircleBorder(),
         ),
