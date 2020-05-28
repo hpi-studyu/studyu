@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../dashboard/dashboard.dart';
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
+import '../routes.dart';
 import '../util/localization.dart';
 
 class InterventionSelection extends StatefulWidget {
@@ -78,7 +79,7 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                 RaisedButton(
                   child: Text(Nof1Localizations.of(context).translate('finished')),
                   onPressed: () => Navigator.of(context)
-                      .pushReplacementNamed(DashboardScreen.routeName, arguments: DashboardScreenArguments(selected)),
+                      .pushReplacementNamed(Routes.dashboard, arguments: DashboardScreenArguments(selected)),
                 ),
               ],
             ),
@@ -103,7 +104,7 @@ class _InterventionSelectionState extends State<InterventionSelection> {
               );
             }
             if (snapshot.hasError) {
-              Timer(Duration(seconds: 4), () => Navigator.pushReplacementNamed(context, '/studySelection'));
+              Timer(Duration(seconds: 4), () => Navigator.pushReplacementNamed(context, Routes.studySelection));
               return Center(child: Text('An error occurred!'));
             }
 

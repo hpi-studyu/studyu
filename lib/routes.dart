@@ -28,7 +28,7 @@ class Routes {
       case studySelection:
         return MaterialPageRoute(builder: (_) => StudySelectionScreen());
       case interventionSelection:
-        return MaterialPageRoute(builder: (_) => InterventionSelectionScreen());
+        return MaterialPageRoute(builder: (_) => InterventionSelection());
       case contact:
         return MaterialPageRoute(builder: (_) => Contact());
       case appSettings:
