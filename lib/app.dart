@@ -3,13 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 
-import 'dashboard/dashboard.dart';
 import 'environments/environment.dart';
+import 'routes.dart';
 import 'theme.dart';
 import 'util/localization.dart';
-import 'welcome/about.dart';
-import 'welcome/study_selection.dart';
-import 'welcome/welcome.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -57,13 +54,8 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           title: 'Nof1 Initial app',
           theme: theme,
-          initialRoute: '/welcome',
-          routes: <String, WidgetBuilder>{
-            '/welcome': (context) => WelcomeScreen(),
-            '/about': (context) => AboutScreen(),
-            '/studySelection': (context) => StudySelectionScreen(),
-            DashboardScreen.routeName: (context) => DashboardScreen(),
-          },
+          initialRoute: Routes.welcome,
+          onGenerateRoute: Routes.generateRoute,
           locale: model.appLocal,
           supportedLocales: AppLanguage.supportedLocales,
           localizationsDelegates: [

@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../database/models/intervention.dart';
 import '../util/localization.dart';
-import 'account_management.dart';
 import 'contact_tab/contact.dart';
+import 'settings.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreenArguments {
@@ -15,8 +15,6 @@ class DashboardScreenArguments {
 }
 
 class DashboardScreen extends StatefulWidget {
-  static const routeName = '/dashboard';
-
   final List<Intervention> interventions;
 
   const DashboardScreen({Key key, this.interventions}) : super(key: key);
