@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../dashboard/dashboard.dart';
 import '../util/localization.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -33,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
           ? null
           : [
               FlatButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/dashboard'),
+                onPressed: () => Navigator.pushReplacementNamed(context, DashboardScreen.routeName),
                 child: Text('Skip to Dashboard'),
               ),
             ],
