@@ -51,7 +51,7 @@ class _VideoTaskState extends State<VideoTask> {
               ),
             ),
             RaisedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.pop(context),
               child: Text(Nof1Localizations.of(context).translate('finished')),
             )
           ],
