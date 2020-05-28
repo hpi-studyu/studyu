@@ -1,7 +1,6 @@
 import 'multiple_choice_question.dart';
 
 class Question {
-
   static const String questionType = null;
   String get type => questionType;
 
@@ -25,11 +24,7 @@ class Question {
     }
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'question': question,
-        'type': type
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'question': question, 'type': type};
 
   @override
   String toString() {

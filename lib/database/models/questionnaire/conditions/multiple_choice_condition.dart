@@ -6,7 +6,6 @@ import '../questions/multiple_choice_question.dart';
 import 'condition.dart';
 
 class MultipleChoiceCondition extends Condition {
-
   static const String conditionType = MultipleChoiceQuestion.questionType;
   @override
   String get type => conditionType;
@@ -20,9 +19,7 @@ class MultipleChoiceCondition extends Condition {
   }
 
   @override
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {
-        'choiceIds': choiceIds.toList()
-      });
+  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {'choiceIds': choiceIds.toList()});
 
   @override
   bool checkAnswer(Answer answer) {

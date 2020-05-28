@@ -27,14 +27,22 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
         final stepResult = (value as RPStepResult);
         switch (stepResult.answerFormat.runtimeType) {
           case RPChoiceAnswerFormat:
-            answers[int.parse(key)] = MultipleChoiceAnswer(int.parse(key), DateTime.now(), int.parse(key), Set.from((stepResult.results['answer'] as List<RPChoice>).map<Choice>((choice) => Choice(choice.value, choice.text)).toList()));
+            answers[int.parse(key)] = MultipleChoiceAnswer(
+                int.parse(key),
+                DateTime.now(),
+                int.parse(key),
+                Set.from((stepResult.results['answer'] as List<RPChoice>)
+                    .map<Choice>((choice) => Choice(choice.value, choice.text))
+                    .toList()));
             break;
           default:
             return null;
         }
       });
 
-      isEligible = !widget.study.conditions.map<bool>((condition) => condition.checkAnswer(answers[condition.questionId])).any((element) => element == false);
+      isEligible = !widget.study.conditions
+          .map<bool>((condition) => condition.checkAnswer(answers[condition.questionId]))
+          .any((element) => element == false);
     }
     Navigator.of(context).pop(isEligible);
   }
@@ -48,7 +56,12 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
   }
 
   RPNavigableOrderedTask createOnboarding(BuildContext context, Study study) {
-    final instructionStep = RPInstructionStep(identifier: 'instructionID', title: study.title, detailText: study.description, footnote: '(1) Important footnote')..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
+    final instructionStep = RPInstructionStep(
+        identifier: 'instructionID',
+        title: study.title,
+        detailText: study.description,
+        footnote: '(1) Important footnote')
+      ..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
 
     final questionSteps = study.eligibility
         .map((question) {
@@ -59,7 +72,11 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
                 final choiceStep = RPChoice.withParams(choice.value, choice.id);
                 choices.add(choiceStep);
               }
-              final answerFormat = RPChoiceAnswerFormat.withParams((question as MultipleChoiceQuestion).multiple ? ChoiceAnswerStyle.MultipleChoice : ChoiceAnswerStyle.SingleChoice, choices);
+              final answerFormat = RPChoiceAnswerFormat.withParams(
+                  (question as MultipleChoiceQuestion).multiple
+                      ? ChoiceAnswerStyle.MultipleChoice
+                      : ChoiceAnswerStyle.SingleChoice,
+                  choices);
               return RPQuestionStep.withAnswerFormat('${question.id}', question.question, answerFormat);
             default:
               return null;
@@ -74,10 +91,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
       ..title = 'Thank You!'
       ..text = 'Continue for your results.';
 
-    final steps = [
-      instructionStep,
-      completionStep
-    ];
+    final steps = [instructionStep, completionStep];
 
     if (questionSteps.isNotEmpty) {
       steps.insert(1, onboardingFormStep);

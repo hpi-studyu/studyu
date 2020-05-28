@@ -2,7 +2,6 @@ import '../answers/answer.dart';
 import 'multiple_choice_condition.dart';
 
 class Condition {
-
   static const conditionType = null;
   String get type => conditionType;
 
@@ -24,10 +23,7 @@ class Condition {
     }
   }
 
-  Map<String, dynamic> toJson() => {
-    'questionId': questionId,
-    'type': type
-  };
+  Map<String, dynamic> toJson() => {'questionId': questionId, 'type': type};
 
   @override
   String toString() {

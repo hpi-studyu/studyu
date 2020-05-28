@@ -18,8 +18,5 @@ class MultipleChoiceAnswer extends Answer {
   }
 
   @override
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {
-    'choices': choices.toList()
-  });
-
+  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {'choices': choices.toList()});
 }

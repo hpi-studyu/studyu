@@ -1,5 +1,4 @@
 class Intervention {
-  
   String name;
 
   Intervention(this.name);
@@ -8,8 +7,5 @@ class Intervention {
     name = data['name'];
   }
 
-  Map<String, dynamic> toJson() => {
-    'name': name
-  };
-
+  Map<String, dynamic> toJson() => {'name': name};
 }
