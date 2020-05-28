@@ -1,0 +1,2 @@
+#!/bin/sh
+flutter format --line-length=120 .
