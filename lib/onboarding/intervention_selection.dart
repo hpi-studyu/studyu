@@ -18,83 +18,105 @@ class InterventionSelection extends StatefulWidget {
 class _InterventionSelectionState extends State<InterventionSelection> {
   final List<Intervention> selected = [];
 
+  Widget buildInterventionSelectionList(Study study) {
+    final theme = Theme.of(context);
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: study.studyDetails.interventions.length,
+        itemBuilder: (_context, index) {
+          final intervention = study.studyDetails.interventions[index];
+          return ListTile(
+            contentPadding: EdgeInsets.all(16),
+            onTap: () {
+              setState(() {
+                if (!selected
+                    .map<String>((intervention) => intervention.name)
+                    .contains(intervention.name)) {
+                  selected.add(intervention);
+                  if (selected.length > 2) selected.removeAt(0);
+                } else {
+                  selected
+                      .removeWhere((contained) => contained.name == intervention.name);
+                }
+              });
+            },
+            title: Center(
+              child: Text(intervention.name,
+                  style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
+            ),
+            trailing: selected
+                .map<String>((intervention) => intervention.name)
+                .contains(intervention.name)
+                ? Icon(MdiIcons.check)
+                : null,
+          );
+        });
+  }
+
+  Widget buildInterventionSelection(Study study) {
+    final theme = Theme.of(context);
+
+    return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Text(
+                    'Please select 1 or 2 interventions to apply during the study.',
+                    style: theme.textTheme.headline5,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                study.studyDetails != null &&
+                    study.studyDetails.interventions.isNotEmpty
+                    ? buildInterventionSelectionList(study)
+                    : Text('No interventions available.'),
+                SizedBox(
+                  height: 20,
+                ),
+                RaisedButton(
+                  child: Text(Nof1Localizations.of(context).translate('finished')),
+                  onPressed: () => Navigator.of(context).pushReplacementNamed(DashboardScreen.routeName,
+                      arguments: DashboardScreenArguments(selected)),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-          future: StudyDao().getStudyDetails(widget.study),
+          future: StudyDao().getStudyWithStudyDetails(widget.study),
           builder: (_context, snapshot) {
-            final theme = Theme.of(context);
-            return snapshot.hasData
-                ? SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Center(
-                            child: Text(
-                              'Please select 2 interventions to apply during the study.',
-                              style: theme.textTheme.headline5,
+            return !snapshot.hasError
+                ? snapshot.hasData
+                    ? buildInterventionSelection(snapshot.data as Study)
+                    : Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Loading interventions'),
+                            SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data.interventions.length,
-                              itemBuilder: (_context, index) {
-                                final intervention = snapshot.data.interventions[index];
-                                return ListTile(
-                                  contentPadding: EdgeInsets.all(16),
-                                  onTap: () {
-                                    setState(() {
-                                      if (!selected
-                                          .map<String>((intervention) => intervention.name)
-                                          .contains(intervention.name)) {
-                                        selected.add(intervention);
-                                        if (selected.length > 2) selected.removeAt(0);
-                                      } else {
-                                        selected.removeWhere((contained) => contained.name == intervention.name);
-                                      }
-                                    });
-                                  },
-                                  title: Center(
-                                    child: Text(intervention.name,
-                                        style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
-                                  ),
-                                  trailing: selected
-                                          .map<String>((intervention) => intervention.name)
-                                          .contains(intervention.name)
-                                      ? Icon(MdiIcons.check)
-                                      : null,
-                                );
-                              }),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          RaisedButton(
-                            child: Text(Nof1Localizations.of(context).translate('finished')),
-                            onPressed: () => Navigator.of(context).pushReplacementNamed(DashboardScreen.routeName,
-                                arguments: DashboardScreenArguments(selected)),
-                          ),
-                        ],
-                      ),
-                    ))
-                : Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Loading interventions'),
-                        SizedBox(
-                          height: 20,
+                            CircularProgressIndicator(),
+                          ],
                         ),
-                        CircularProgressIndicator(),
-                      ],
-                    ),
-                  );
+                      )
+                : Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text('An error occurred!'),
+                    duration: Duration(seconds: 20),
+                  ));
           },
         ),
       ),

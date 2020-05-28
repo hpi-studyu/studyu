@@ -16,7 +16,7 @@ class StudySelectionScreen extends StatelessWidget {
                   study: selectedStudy,
                   route: ModalRoute.of(context),
                 )));
-    if (isEligible) {
+    if (isEligible != null && isEligible) {
       print('Patient is eligible');
       Navigator.pushReplacement(
           context,

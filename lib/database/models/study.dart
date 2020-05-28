@@ -25,6 +25,15 @@ class Study extends ParseObject implements ParseCloneable {
   @override
   Study clone(Map<String, dynamic> map) => Study.clone()..fromJson(map);
 
+  @override
+  Study fromJson(Map<String, dynamic> objectData) {
+    super.fromJson(objectData);
+    if (objectData.containsKey(keyStudyDetails)) {
+      studyDetails = StudyDetails.clone().fromJson(objectData[keyStudyDetails]);
+    }
+    return this;
+  }
+
   String get id => get<String>(keyId);
   set id(String id) => set<String>(keyId, id);
   String get title => get<String>(keyTitle);
@@ -43,9 +52,4 @@ class Study extends ParseObject implements ParseCloneable {
       set<List<Map<String, dynamic>>>(keyConditions, conditions.map((e) => e.toJson()).toList());
   StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
-
-  @override
-  String toString() {
-    return 'Study(id = $id, title = $title, description = $description, eligibility = $eligibility, conditions: $conditions)';
-  }
 }

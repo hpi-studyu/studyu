@@ -16,6 +16,6 @@ class StudyDetails extends ParseObject implements ParseCloneable {
   List<Intervention> get interventions =>
       get<List<dynamic>>(keyInterventions)?.map((e) => Intervention.fromJson(e))?.toList() ?? [];
 
-  set interventions(List<Intervention> eligibility) =>
-      set<List<Map<String, dynamic>>>(keyInterventions, eligibility.map((e) => e.toJson()).toList());
+  set interventions(List<Intervention> interventions) =>
+      set<List<Map<String, dynamic>>>(keyInterventions, interventions.map((e) => e.toJson()).toList());
 }
