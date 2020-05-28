@@ -44,7 +44,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
           .map<bool>((condition) => condition.checkAnswer(answers[condition.questionId]))
           .any((element) => element == false);
     }
-    Navigator.of(context).pop(isEligible);
+    Navigator.pop(context, isEligible);
   }
 
   @override
