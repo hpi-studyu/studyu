@@ -36,10 +36,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (true) {
       // ABAB
       plannedInterventions = [interventions[0], interventions[1], interventions[0], interventions[1]];
-    } else {
+    } /*else {
       // BBAA
       plannedInterventions = [interventions[1], interventions[1], interventions[0], interventions[0]];
-    }
+    }*/
   }
 
   @override
