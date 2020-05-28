@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -18,13 +20,13 @@ class InterventionSelection extends StatefulWidget {
 class _InterventionSelectionState extends State<InterventionSelection> {
   final List<Intervention> selected = [];
 
-  Widget buildInterventionSelectionList(Study study) {
+  Widget buildInterventionSelectionList(List<Intervention> interventions) {
     final theme = Theme.of(context);
     return ListView.builder(
         shrinkWrap: true,
-        itemCount: study.studyDetails.interventions.length,
+        itemCount: interventions.length,
         itemBuilder: (_context, index) {
-          final intervention = study.studyDetails.interventions[index];
+          final intervention = interventions[index];
           return ListTile(
             contentPadding: EdgeInsets.all(16),
             onTap: () {
@@ -75,7 +77,7 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                 ),
                 study.studyDetails != null &&
                     study.studyDetails.interventions.isNotEmpty
-                    ? buildInterventionSelectionList(study)
+                    ? buildInterventionSelectionList(study.studyDetails.interventions)
                     : Text('No interventions available.'),
                 SizedBox(
                   height: 20,
@@ -98,25 +100,26 @@ class _InterventionSelectionState extends State<InterventionSelection> {
         child: FutureBuilder(
           future: StudyDao().getStudyWithStudyDetails(widget.study),
           builder: (_context, snapshot) {
-            return !snapshot.hasError
-                ? snapshot.hasData
-                    ? buildInterventionSelection(snapshot.data as Study)
-                    : Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Loading interventions'),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CircularProgressIndicator(),
-                          ],
+            if (snapshot.hasError) {
+              Timer(Duration(seconds: 4,), () => Navigator.pushReplacementNamed(context, '/studySelection'));
+              return Center(
+                child: Text('An error occurred!'),
+              );
+            }
+            return snapshot.hasData
+                ? buildInterventionSelection(snapshot.data as Study)
+                : Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Loading interventions'),
+                        SizedBox(
+                          height: 20,
                         ),
-                      )
-                : Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('An error occurred!'),
-                    duration: Duration(seconds: 20),
-                  ));
+                        CircularProgressIndicator(),
+                      ],
+                    ),
+                  );
           },
         ),
       ),
