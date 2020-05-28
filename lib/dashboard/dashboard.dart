@@ -25,25 +25,32 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
+class PlannedIntervention {
+  final Intervention intervention;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  PlannedIntervention(this.intervention, this.startDate, this.endDate);
+}
+
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<Intervention> plannedInterventions;
-
-  @override
-  void initState() {
-    super.initState();
-    final interventions = [Intervention('Pain Killers'), Intervention('Exercise')];
-
-    if (true) {
-      // ABAB
-      plannedInterventions = [interventions[0], interventions[1], interventions[0], interventions[1]];
-    } /*else {
-      // BBAA
-      plannedInterventions = [interventions[1], interventions[1], interventions[0], interventions[0]];
-    }*/
-  }
+  List<PlannedIntervention> plannedInterventions;
 
   @override
   Widget build(BuildContext context) {
+    final DashboardScreenArguments args = ModalRoute.of(context).settings.arguments;
+    final interventions = args.selectedInterventions;
+
+    // ABAB
+    final plannedInterventions = [
+      PlannedIntervention(interventions[0], DateTime.now(), DateTime.now().add(Duration(days: 6))),
+      PlannedIntervention(
+          interventions[1], DateTime.now().add(Duration(days: 7)), DateTime.now().add(Duration(days: 13))),
+      PlannedIntervention(
+          interventions[0], DateTime.now().add(Duration(days: 14)), DateTime.now().add(Duration(days: 20))),
+      PlannedIntervention(
+          interventions[1], DateTime.now().add(Duration(days: 21)), DateTime.now().add(Duration(days: 27)))
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('dashboard')),

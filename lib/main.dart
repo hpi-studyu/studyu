@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             '/welcome': (context) => WelcomeScreen(),
             '/about': (context) => AboutScreen(),
             '/studySelection': (context) => StudySelectionScreen(),
-            '/dashboard': (context) => DashboardScreen(),
+            DashboardScreen.routeName: (context) => DashboardScreen(),
           },
           locale: model.appLocal,
           supportedLocales: AppLanguage.supportedLocales,
