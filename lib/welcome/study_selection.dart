@@ -18,7 +18,7 @@ class StudySelectionScreen extends StatelessWidget {
                 )));
     if (isEligible != null && isEligible) {
       print('Patient is eligible');
-      Navigator.of(context).pushReplacementNamed(Routes.interventionSelection,
+      Navigator.pushReplacementNamed(context, Routes.interventionSelection,
           arguments: InterventionSelectionScreenArguments(selectedStudy));
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(

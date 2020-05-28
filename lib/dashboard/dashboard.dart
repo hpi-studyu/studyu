@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../database/models/intervention.dart';
 import '../routes.dart';
 import '../util/localization.dart';
-import 'settings.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreenArguments {
@@ -56,13 +55,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             tooltip: Nof1Localizations.of(context).translate('contact'),
             icon: Icon(MdiIcons.commentAccount),
             onPressed: () {
-              Navigator.of(context).pushNamed(Routes.contact);
+              Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: Nof1Localizations.of(context).translate('settings'),
             icon: Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Settings())),
+            onPressed: () => Navigator.pushNamed(context, Routes.appSettings),
           ),
         ],
       ),
