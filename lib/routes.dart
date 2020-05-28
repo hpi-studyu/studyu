@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dashboard/contact_tab/contact.dart';
 import 'dashboard/dashboard.dart';
 import 'dashboard/settings.dart';
+import 'onboarding/eligibility_check.dart';
 import 'onboarding/intervention_selection.dart';
 import 'welcome/about.dart';
 import 'welcome/study_selection.dart';
@@ -13,6 +14,7 @@ class Routes {
   static const String welcome = '/welcome';
   static const String about = '/about';
   static const String studySelection = '/studySelection';
+  static const String eligibilityCheck = '/eligibilityCheck';
   static const String interventionSelection = '/interventionSelection';
   static const String contact = '/contact';
   static const String appSettings = '/settings';
@@ -27,6 +29,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => AboutScreen());
       case studySelection:
         return MaterialPageRoute(builder: (_) => StudySelectionScreen());
+      case eligibilityCheck:
+        return MaterialPageRoute(builder: (_) => EligibilityCheckScreen.fromRouteArgs(settings.arguments));
       case interventionSelection:
         return MaterialPageRoute(builder: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments));
       case contact:

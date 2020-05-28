@@ -7,11 +7,19 @@ import '../database/models/models.dart';
 import '../database/models/questionnaire/answers/multiple_choice_answer.dart';
 import '../database/models/questionnaire/questions/multiple_choice_question.dart';
 
+class EligibilityCheckScreenArguments {
+  final Study selectedStudy;
+
+  EligibilityCheckScreenArguments(this.selectedStudy);
+}
+
 class EligibilityCheckScreen extends StatefulWidget {
-  final MaterialPageRoute route;
   final Study study;
 
-  EligibilityCheckScreen({Key key, @required this.study, @required this.route}) : super(key: key);
+  EligibilityCheckScreen(this.study, {Key key}) : super(key: key);
+
+  factory EligibilityCheckScreen.fromRouteArgs(EligibilityCheckScreenArguments args) =>
+      EligibilityCheckScreen(args.selectedStudy);
 
   @override
   State<EligibilityCheckScreen> createState() => _EligibilityCheckScreenState();
