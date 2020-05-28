@@ -1,7 +1,7 @@
-import 'package:Nof1/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../dashboard/dashboard.dart';
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
 import '../util/localization.dart';

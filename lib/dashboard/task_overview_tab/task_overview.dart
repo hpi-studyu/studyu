@@ -16,8 +16,6 @@ class TaskOverview extends StatefulWidget {
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
-  final DateTime _startDate = DateTime.now().subtract(Duration(days: 9));
-  final DateTime _endDate = DateTime.now().add(Duration(days: 15));
 
   @override
   Widget build(BuildContext context) {
