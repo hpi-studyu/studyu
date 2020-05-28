@@ -6,6 +6,7 @@ import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
 import '../onboarding/eligibility_check.dart';
 import '../onboarding/intervention_selection.dart';
+import '../routes.dart';
 
 class StudySelectionScreen extends StatelessWidget {
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
@@ -18,12 +19,8 @@ class StudySelectionScreen extends StatelessWidget {
                 )));
     if (isEligible != null && isEligible) {
       print('Patient is eligible');
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => InterventionSelection(
-                    study: selectedStudy,
-                  )));
+      Navigator.of(context).pushReplacementNamed(Routes.interventionSelection,
+          arguments: InterventionSelectionScreenArguments(selectedStudy));
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('You are not eligible for this study. Please select a different one.'),

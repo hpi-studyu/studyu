@@ -9,16 +9,25 @@ import '../database/models/models.dart';
 import '../routes.dart';
 import '../util/localization.dart';
 
-class InterventionSelection extends StatefulWidget {
+class InterventionSelectionScreenArguments {
   final Study study;
 
-  const InterventionSelection({Key key, this.study}) : super(key: key);
-
-  @override
-  _InterventionSelectionState createState() => _InterventionSelectionState();
+  const InterventionSelectionScreenArguments(this.study);
 }
 
-class _InterventionSelectionState extends State<InterventionSelection> {
+class InterventionSelectionScreen extends StatefulWidget {
+  final Study study;
+
+  const InterventionSelectionScreen(this.study, {Key key}) : super(key: key);
+
+  factory InterventionSelectionScreen.fromRouteArgs(InterventionSelectionScreenArguments args) =>
+      InterventionSelectionScreen(args.study);
+
+  @override
+  _InterventionSelectionScreenState createState() => _InterventionSelectionScreenState();
+}
+
+class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selected = [];
 
   Widget buildInterventionSelectionList(List<Intervention> interventions) {

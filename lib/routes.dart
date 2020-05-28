@@ -20,9 +20,7 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case dashboard:
-        return MaterialPageRoute(builder: (_) {
-          return DashboardScreen.fromRouteArgs(settings.arguments);
-        });
+        return MaterialPageRoute(builder: (_) => DashboardScreen.fromRouteArgs(settings.arguments));
       case welcome:
         return MaterialPageRoute(builder: (_) => WelcomeScreen());
       case about:
@@ -30,7 +28,7 @@ class Routes {
       case studySelection:
         return MaterialPageRoute(builder: (_) => StudySelectionScreen());
       case interventionSelection:
-        return MaterialPageRoute(builder: (_) => InterventionSelection());
+        return MaterialPageRoute(builder: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments));
       case contact:
         return MaterialPageRoute(builder: (_) => Contact());
       case appSettings:
