@@ -26,16 +26,10 @@ class Answer {
     }
   }
 
-  Map<String, dynamic> toJson() => {
-    'answer_id': id,
-    'type': type,
-    'timestamp': timestamp,
-    'questionId': questionId
-  };
+  Map<String, dynamic> toJson() => {'answer_id': id, 'type': type, 'timestamp': timestamp, 'questionId': questionId};
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }

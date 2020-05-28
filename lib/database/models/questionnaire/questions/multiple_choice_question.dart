@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'question.dart';
 
 class MultipleChoiceQuestion extends Question {
-
   static const String questionType = 'multiple';
   @override
   String get type => questionType;
@@ -19,10 +18,8 @@ class MultipleChoiceQuestion extends Question {
   }
 
   @override
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {
-        'multiple': multiple,
-        'choices': choices.map((choice) => choice.toJson()).toList()
-      });
+  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(
+      super.toJson(), {'multiple': multiple, 'choices': choices.map((choice) => choice.toJson()).toList()});
 }
 
 class Choice {
@@ -36,10 +33,7 @@ class Choice {
     value = data['value'];
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'value': value
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'value': value};
 
   @override
   String toString() {

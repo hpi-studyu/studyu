@@ -125,14 +125,16 @@ class _CalendarRowState extends State<CalendarRow> {
                   child: AspectRatio(
                     aspectRatio: 1.5,
                     child: Card(
-                      color: Colors.green,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: spacing / 5, bottom: spacing / 5),
-                        child: FittedBox(
-                          child: Text('$start\n-\n$end', textAlign: TextAlign.center,),
-                        ),
-                      )
-                    ),
+                        color: Colors.green,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: spacing / 5, bottom: spacing / 5),
+                          child: FittedBox(
+                            child: Text(
+                              '$start\n-\n$end',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )),
                   ),
                 );
               } else {
