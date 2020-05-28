@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../database/models/intervention.dart';
 import '../../tasks/pain_rating_task.dart';
 import '../../tasks/video_task.dart';
 import '../../util/localization.dart';
+import '../dashboard.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
-  final List<Intervention> plannedInterventions;
+  final List<PlannedIntervention> plannedInterventions;
 
   const TaskOverview({Key key, @required this.plannedInterventions}) : super(key: key);
   @override
@@ -16,15 +16,28 @@ class TaskOverview extends StatefulWidget {
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
+  String interventionDateString(PlannedIntervention plannedIntervention) {
+    String dateString(DateTime date) {
+      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}';
+    }
+
+    return '${dateString(plannedIntervention.startDate)} - ${dateString(plannedIntervention.endDate)}';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: <Widget>[
         ProgressRow(plannedInterventions: widget.plannedInterventions),
         Expanded(
           child: ListView(
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(interventionDateString(widget.plannedInterventions[1]),
+                    style: theme.textTheme.subtitle2.copyWith(color: Colors.black)),
+              ),
               TaskBox(
                   task: VideoTask(
                 Nof1Localizations.of(context).translate('video_task'),
