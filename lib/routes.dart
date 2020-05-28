@@ -9,7 +9,7 @@ import 'welcome/study_selection.dart';
 import 'welcome/welcome.dart';
 
 class Routes {
-  static const String dashboard = '/';
+  static const String dashboard = '/dashboard';
   static const String welcome = '/welcome';
   static const String about = '/about';
   static const String studySelection = '/studySelection';
@@ -20,7 +20,9 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case dashboard:
-        return MaterialPageRoute(builder: (_) => DashboardScreen());
+        return MaterialPageRoute(builder: (_) {
+          return DashboardScreen.fromRouteArgs(settings.arguments);
+        });
       case welcome:
         return MaterialPageRoute(builder: (_) => WelcomeScreen());
       case about:
