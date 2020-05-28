@@ -93,30 +93,21 @@ class _InterventionSelectionState extends State<InterventionSelection> {
         child: FutureBuilder(
           future: StudyDao().getStudyWithStudyDetails(widget.study),
           builder: (_context, snapshot) {
-            if (snapshot.hasError) {
-              Timer(
-                  Duration(
-                    seconds: 4,
-                  ),
-                  () => Navigator.pushReplacementNamed(context, '/studySelection'));
-              return Center(
-                child: Text('An error occurred!'),
+            if (!snapshot.hasData) {
+              Center(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text('Loading interventions'),
+                  SizedBox(height: 20),
+                  CircularProgressIndicator(),
+                ]),
               );
             }
-            return snapshot.hasData
-                ? buildInterventionSelection(snapshot.data as Study)
-                : Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Loading interventions'),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CircularProgressIndicator(),
-                      ],
-                    ),
-                  );
+            if (snapshot.hasError) {
+              Timer(Duration(seconds: 4), () => Navigator.pushReplacementNamed(context, '/studySelection'));
+              return Center(child: Text('An error occurred!'));
+            }
+
+            return buildInterventionSelection(snapshot.data as Study);
           },
         ),
       ),
