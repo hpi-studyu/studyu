@@ -6,6 +6,7 @@ import 'package:research_package/research_package.dart';
 import '../database/models/models.dart';
 import '../database/models/questionnaire/answers/multiple_choice_answer.dart';
 import '../database/models/questionnaire/questions/multiple_choice_question.dart';
+import '../questionnaire_widgets/question_widget.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
@@ -64,24 +65,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
       ..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
 
     final questionSteps = study.eligibility
-        .map((question) {
-          switch (question.runtimeType) {
-            case MultipleChoiceQuestion:
-              final choices = <RPChoice>[];
-              for (var choice in (question as MultipleChoiceQuestion).choices) {
-                final choiceStep = RPChoice.withParams(choice.value, choice.id);
-                choices.add(choiceStep);
-              }
-              final answerFormat = RPChoiceAnswerFormat.withParams(
-                  (question as MultipleChoiceQuestion).multiple
-                      ? ChoiceAnswerStyle.MultipleChoice
-                      : ChoiceAnswerStyle.SingleChoice,
-                  choices);
-              return RPQuestionStep.withAnswerFormat('${question.id}', question.question, answerFormat);
-            default:
-              return null;
-          }
-        })
+        .map<RPQuestionStep>(QuestionWidget.buildFromQuestion)
         .where((element) => element != null)
         .toList();
 
