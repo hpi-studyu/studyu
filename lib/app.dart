@@ -56,6 +56,7 @@ class _MyAppState extends State<MyApp> {
           theme: theme,
           initialRoute: Routes.welcome,
           onGenerateRoute: Routes.generateRoute,
+          onUnknownRoute: Routes.unknownRoute,
           locale: model.appLocal,
           supportedLocales: AppLanguage.supportedLocales,
           localizationsDelegates: [

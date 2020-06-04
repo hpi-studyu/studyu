@@ -21,6 +21,17 @@ class Routes {
   static const String contact = '/contact';
   static const String appSettings = '/settings';
 
+  static Route<dynamic> unknownRoute(RouteSettings settings) {
+    return MaterialPageRoute(
+        builder: (_) => Scaffold(
+              body: Center(
+                  child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text('No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻'),
+              )),
+            ));
+  }
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final routeMap = {
       dashboard: (_) => DashboardScreen.fromRouteArgs(settings.arguments),
