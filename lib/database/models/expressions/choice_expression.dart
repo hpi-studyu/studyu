@@ -4,14 +4,14 @@ import 'expression.dart';
 import 'value_expression.dart';
 
 class ChoiceExpression extends ValueExpression<List<String>> {
-  static String conditionType = Expression.registerExpressionType('choice', (data) => ChoiceExpression.fromJSON(data));
+  static const String expressionType = 'choice';
   @override
-  String get type => conditionType;
+  String get type => expressionType;
 
   static String keyChoices = 'choices';
   Set<String> choices;
 
-  ChoiceExpression.fromJSON(Map<String, dynamic> data) : super.fromJSON(data) {
+  ChoiceExpression.fromJson(Map<String, dynamic> data) : super.fromJson(data) {
     choices = Set.from(data['choices']);
   }
 

@@ -7,7 +7,7 @@ abstract class ValueExpression<V> extends Expression {
   static const String keyTarget = 'target';
   String target;
 
-  ValueExpression.fromJSON(Map<String, dynamic> data) : super.fromJSON(data) {
+  ValueExpression.fromJson(Map<String, dynamic> data) : super.fromJson(data) {
     target = data[keyTarget];
   }
 
