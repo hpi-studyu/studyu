@@ -34,7 +34,7 @@ class _TermsScreenState extends State<TermsScreen> {
               Text('Terms', style: theme.textTheme.headline3),
               Text('take it or leave it'),
               CheckboxListTile(
-                title: Text("I agree to the terms"),
+                title: Text('I agree to the terms'),
                 value: _acceptedTerms,
                 onChanged: (val) {
                   setState(() {
@@ -46,7 +46,7 @@ class _TermsScreenState extends State<TermsScreen> {
               Text('Privacy', style: theme.textTheme.headline3),
               Text('big brother is watching you'),
               CheckboxListTile(
-                title: Text("I read and understand the privacy statement"),
+                title: Text('I read and understand the privacy statement'),
                 value: _acceptedPrivacy,
                 onChanged: (val) {
                   setState(() {
@@ -58,7 +58,7 @@ class _TermsScreenState extends State<TermsScreen> {
               Text('Disclaimer', style: theme.textTheme.headline3),
               Text('we are not liable'),
               CheckboxListTile(
-                title: Text("I read and understand the disclaimer"),
+                title: Text('I read and understand the disclaimer'),
                 value: _acceptedDisclaimer,
                 onChanged: (val) {
                   setState(() {
