@@ -104,7 +104,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
           future: StudyDao().getStudyWithStudyDetails(widget.study),
           builder: (_context, snapshot) {
             if (!snapshot.hasData) {
-              Center(
+              return Center(
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   Text('Loading interventions'),
                   SizedBox(height: 20),
