@@ -7,12 +7,14 @@ import 'onboarding/eligibility_check.dart';
 import 'onboarding/intervention_selection.dart';
 import 'welcome/about.dart';
 import 'welcome/study_selection.dart';
+import 'welcome/terms.dart';
 import 'welcome/welcome.dart';
 
 class Routes {
   static const String dashboard = '/dashboard';
   static const String welcome = '/welcome';
   static const String about = '/about';
+  static const String terms = '/terms';
   static const String studySelection = '/studySelection';
   static const String eligibilityCheck = '/eligibilityCheck';
   static const String interventionSelection = '/interventionSelection';
@@ -24,6 +26,7 @@ class Routes {
       dashboard: (_) => DashboardScreen.fromRouteArgs(settings.arguments),
       welcome: (_) => WelcomeScreen(),
       about: (_) => AboutScreen(),
+      terms: (_) => TermsScreen(),
       studySelection: (_) => StudySelectionScreen(),
       eligibilityCheck: (_) => EligibilityCheckScreen.fromRouteArgs(settings.arguments),
       interventionSelection: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments),
