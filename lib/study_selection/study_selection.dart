@@ -7,14 +7,13 @@ import '../routes.dart';
 import '../study_onboarding/eligibility_check.dart';
 import '../study_onboarding/intervention_selection.dart';
 
-
 class StudySelectionScreen extends StatelessWidget {
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
     final isEligible = await Navigator.pushNamed(context, Routes.eligibilityCheck,
         arguments: EligibilityCheckScreenArguments(selectedStudy));
     if (isEligible != null && isEligible) {
       print('Patient is eligible');
-      Navigator.pushReplacementNamed(context, Routes.interventionSelection,
+      Navigator.pushNamed(context, Routes.interventionSelection,
           arguments: InterventionSelectionScreenArguments(selectedStudy));
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(

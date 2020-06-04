@@ -49,6 +49,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
     return Scaffold(
       appBar: AppBar(
+        // Removes back button. We currently keep navigation stack to make developing easier
+        automaticallyImplyLeading: false,
         title: Text(Nof1Localizations.of(context).translate('dashboard')),
         actions: [
           IconButton(
