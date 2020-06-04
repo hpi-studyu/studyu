@@ -20,28 +20,21 @@ class Routes {
   static const String appSettings = '/settings';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case dashboard:
-        return MaterialPageRoute(builder: (_) => DashboardScreen.fromRouteArgs(settings.arguments));
-      case welcome:
-        return MaterialPageRoute(builder: (_) => WelcomeScreen());
-      case about:
-        return MaterialPageRoute(builder: (_) => AboutScreen());
-      case studySelection:
-        return MaterialPageRoute(builder: (_) => StudySelectionScreen());
-      case eligibilityCheck:
-        return MaterialPageRoute(builder: (_) => EligibilityCheckScreen.fromRouteArgs(settings.arguments));
-      case interventionSelection:
-        return MaterialPageRoute(builder: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments));
-      case contact:
-        return MaterialPageRoute(builder: (_) => Contact());
-      case appSettings:
-        return MaterialPageRoute(builder: (_) => Settings());
-      default:
-        return MaterialPageRoute(
-            builder: (_) => Scaffold(
-                  body: Center(child: Text('No route defined for ${settings.name}')),
-                ));
-    }
+    final routeMap = {
+      dashboard: (_) => DashboardScreen.fromRouteArgs(settings.arguments),
+      welcome: (_) => WelcomeScreen(),
+      about: (_) => AboutScreen(),
+      studySelection: (_) => StudySelectionScreen(),
+      eligibilityCheck: (_) => EligibilityCheckScreen.fromRouteArgs(settings.arguments),
+      interventionSelection: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments),
+      contact: (_) => Contact(),
+      appSettings: (_) => Settings(),
+    };
+
+    Widget unknownRouteScreen(_) => Scaffold(
+          body: Center(child: Text('No route defined for ${settings.name}')),
+        );
+
+    return MaterialPageRoute(builder: routeMap[settings.name] ?? unknownRouteScreen);
   }
 }
