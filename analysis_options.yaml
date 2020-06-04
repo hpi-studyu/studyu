@@ -1,5 +1,12 @@
 include: package:effective_dart/analysis_options.1.2.0.yaml
 
+analyzer:
+  errors:
+    # treat missing required parameters as an error (not a hint)
+    missing_required_param: error
+    # treat missing returns as an error (not a hint)
+    missing_return: error
+
 # All lints: https://dart-lang.github.io/linter/lints/
 linter:
   rules:
