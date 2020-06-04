@@ -45,8 +45,8 @@ class Routes {
       appSettings: (_) => Settings(),
     };
 
-    // Should only be triggered by root /. Exits the app.
     if (!routeMap.containsKey(settings.name)) {
+      // null will be handled by onUnknownRoute
       return null;
     }
 
