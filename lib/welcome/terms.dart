@@ -23,58 +23,61 @@ class _TermsScreenState extends State<TermsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Terms', style: theme.textTheme.headline3),
-              Text('take it or leave it'),
-              CheckboxListTile(
-                title: Text('I agree to the terms'),
-                value: _acceptedTerms,
-                onChanged: (val) {
-                  setState(() {
-                    _acceptedTerms = val;
-                  });
-                },
-              ),
-              SizedBox(height: 40),
-              Text('Privacy', style: theme.textTheme.headline3),
-              Text('big brother is watching you'),
-              CheckboxListTile(
-                title: Text('I read and understand the privacy statement'),
-                value: _acceptedPrivacy,
-                onChanged: (val) {
-                  setState(() {
-                    _acceptedPrivacy = val;
-                  });
-                },
-              ),
-              SizedBox(height: 40),
-              Text('Disclaimer', style: theme.textTheme.headline3),
-              Text('we are not liable'),
-              CheckboxListTile(
-                title: Text('I read and understand the disclaimer'),
-                value: _acceptedDisclaimer,
-                onChanged: (val) {
-                  setState(() {
-                    _acceptedDisclaimer = val;
-                  });
-                },
-              ),
-              SizedBox(height: 40),
-              RaisedButton(
-                onPressed: userCanContinue() ? () => Navigator.pushReplacementNamed(context, Routes.studySelection) : null,
-                child: Text(Nof1Localizations.of(context).translate('get_started')),
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...buildSection(
+                    theme,
+                    'Terms',
+                    'take it or leave it',
+                    'I agree to the terms',
+                        (val) =>  setState(() => _acceptedTerms = val ),
+                    isChecked: _acceptedTerms
+                ),
+                ...buildSection(
+                    theme,
+                    'Privacy',
+                    'big brother is watching you!',
+                    'I read and understand the privacy statement',
+                        (val) =>  setState(() => _acceptedPrivacy = val ),
+                    isChecked: _acceptedPrivacy
+                ),
+                ...buildSection(
+                    theme,
+                    'Disclaimer',
+                    'we are not liable',
+                    'I read and understand the disclaimer',
+                    (val) =>  setState(() => _acceptedDisclaimer = val ),
+                    isChecked: _acceptedDisclaimer
+                ),
+                RaisedButton(
+                  onPressed: userCanContinue() ? () => Navigator.pushReplacementNamed(context, Routes.studySelection) : null,
+                  child: Text(Nof1Localizations.of(context).translate('get_started')),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> buildSection(ThemeData theme, String title, String descriptionText, String acknowledgmentText, Function onChange, {bool isChecked}) {
+    return <Widget>[
+      Text(title, style: theme.textTheme.headline3),
+      Text(descriptionText),
+      CheckboxListTile(
+        title: Text(acknowledgmentText),
+        value: isChecked,
+        onChanged: onChange
+      ),
+      SizedBox(height: 40),
+    ];
   }
 }
