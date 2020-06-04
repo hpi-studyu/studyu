@@ -34,26 +34,26 @@ class _TermsScreenState extends State<TermsScreen> {
               children: [
                 ...buildSection(
                     theme,
-                    'Terms',
-                    'take it or leave it',
-                    'I agree to the terms',
-                        (val) =>  setState(() => _acceptedTerms = val ),
+                    title: 'Terms',
+                    descriptionText: 'take it or leave it',
+                    acknowledgmentText: 'I agree to the terms',
+                    onChange: (val) =>  setState(() => _acceptedTerms = val ),
                     isChecked: _acceptedTerms
                 ),
                 ...buildSection(
                     theme,
-                    'Privacy',
-                    'big brother is watching you!',
-                    'I read and understand the privacy statement',
-                        (val) =>  setState(() => _acceptedPrivacy = val ),
+                    title: 'Privacy',
+                    descriptionText: 'big brother is watching you!',
+                    acknowledgmentText: 'I read and understand the privacy statement',
+                    onChange: (val) =>  setState(() => _acceptedPrivacy = val ),
                     isChecked: _acceptedPrivacy
                 ),
                 ...buildSection(
                     theme,
-                    'Disclaimer',
-                    'we are not liable',
-                    'I read and understand the disclaimer',
-                    (val) =>  setState(() => _acceptedDisclaimer = val ),
+                    title: 'Disclaimer',
+                    descriptionText: 'we are not liable',
+                    acknowledgmentText: 'I read and understand the disclaimer',
+                    onChange: (val) =>  setState(() => _acceptedDisclaimer = val ),
                     isChecked: _acceptedDisclaimer
                 ),
                 RaisedButton(
@@ -68,7 +68,7 @@ class _TermsScreenState extends State<TermsScreen> {
     );
   }
 
-  List<Widget> buildSection(ThemeData theme, String title, String descriptionText, String acknowledgmentText, Function onChange, {bool isChecked}) {
+  List<Widget> buildSection(ThemeData theme, { String title, String descriptionText, String acknowledgmentText, Function onChange, bool isChecked }) {
     return <Widget>[
       Text(title, style: theme.textTheme.headline3),
       Text(descriptionText),
