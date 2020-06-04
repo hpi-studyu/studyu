@@ -1,7 +1,5 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-import 'questionnaire/conditions/condition.dart';
-import 'questionnaire/questions/question.dart';
 import 'study_details.dart';
 
 class Study extends ParseObject implements ParseCloneable {
@@ -9,10 +7,7 @@ class Study extends ParseObject implements ParseCloneable {
   static const keyId = 'study_id';
   static const keyTitle = 'title';
   static const keyDescription = 'description';
-  static const keyEligibility = 'eligibility';
-  static const keyConditions = 'conditions';
   static const keyIconName = 'icon_name';
-  static const keyStudyDetails = 'study_details';
 
   /*List<Question> eligibility = [];
   List<Condition> conditions = [];
@@ -42,14 +37,8 @@ class Study extends ParseObject implements ParseCloneable {
   set description(String description) => set<String>(keyDescription, description);
   String get iconName => get<String>(keyIconName);
   set iconName(String iconName) => set<String>(keyIconName, iconName);
-  List<Question> get eligibility =>
-      get<List<dynamic>>(keyEligibility)?.map((e) => Question.fromJson(e))?.toList() ?? [];
-  set eligibility(List<Question> eligibility) =>
-      set<List<Map<String, dynamic>>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
-  List<Condition> get conditions =>
-      get<List<dynamic>>(keyConditions)?.map((e) => Condition.fromJson(e))?.toList() ?? [];
-  set conditions(List<Condition> conditions) =>
-      set<List<Map<String, dynamic>>>(keyConditions, conditions.map((e) => e.toJson()).toList());
+
+  static const keyStudyDetails = 'study_details';
   StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
 }
