@@ -88,8 +88,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 RaisedButton(
                   child: Text(Nof1Localizations.of(context).translate('finished')),
                   onPressed: selected.length == 2
-                      ? () => Navigator.of(context)
-                          .pushReplacementNamed(Routes.dashboard, arguments: DashboardScreenArguments(selected))
+                      ? () =>
+                          Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected))
                       : null,
                 ),
               ],
@@ -115,7 +115,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
               );
             }
             if (snapshot.hasError) {
-              Timer(Duration(seconds: 4), () => Navigator.pushReplacementNamed(context, Routes.studySelection));
+              Timer(Duration(seconds: 4), () => Navigator.pop(context));
               return Center(child: Text('An error occurred!'));
             }
 
