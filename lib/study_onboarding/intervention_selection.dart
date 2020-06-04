@@ -87,8 +87,10 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 ),
                 RaisedButton(
                   child: Text(Nof1Localizations.of(context).translate('finished')),
-                  onPressed: () => Navigator.of(context)
-                      .pushReplacementNamed(Routes.dashboard, arguments: DashboardScreenArguments(selected)),
+                  onPressed: selected.length == 2
+                      ? () => Navigator.of(context)
+                          .pushReplacementNamed(Routes.dashboard, arguments: DashboardScreenArguments(selected))
+                      : null,
                 ),
               ],
             ),
