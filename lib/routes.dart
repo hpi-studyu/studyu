@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'app_onboarding/about.dart';
+import 'app_onboarding/terms.dart';
+import 'app_onboarding/welcome.dart';
 import 'dashboard/contact_tab/contact.dart';
 import 'dashboard/dashboard.dart';
 import 'dashboard/settings.dart';
-import 'onboarding/eligibility_check.dart';
-import 'onboarding/intervention_selection.dart';
-import 'welcome/about.dart';
-import 'welcome/study_selection.dart';
-import 'welcome/terms.dart';
-import 'welcome/welcome.dart';
+import 'study_onboarding/eligibility_check.dart';
+import 'study_onboarding/intervention_selection.dart';
+import 'study_selection/study_selection.dart';
 
 class Routes {
   static const String dashboard = '/dashboard';

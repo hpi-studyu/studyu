@@ -3,9 +3,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../onboarding/eligibility_check.dart';
-import '../onboarding/intervention_selection.dart';
 import '../routes.dart';
+import '../study_onboarding/eligibility_check.dart';
+import '../study_onboarding/intervention_selection.dart';
+
 
 class StudySelectionScreen extends StatelessWidget {
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
