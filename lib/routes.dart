@@ -34,10 +34,11 @@ class Routes {
       appSettings: (_) => Settings(),
     };
 
-    Widget unknownRouteScreen(_) => Scaffold(
-          body: Center(child: Text('No route defined for ${settings.name}')),
-        );
+    // Should only be triggered by root /. Exits the app.
+    if (!routeMap.containsKey(settings.name)) {
+      return null;
+    }
 
-    return MaterialPageRoute(builder: routeMap[settings.name] ?? unknownRouteScreen);
+    return MaterialPageRoute(builder: routeMap[settings.name]);
   }
 }
