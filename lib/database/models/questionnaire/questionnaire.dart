@@ -6,14 +6,14 @@ class Questionnaire {
   Questionnaire();
 
   Questionnaire.fromJson(List<dynamic> data) {
-    questions = data.map((entry) => Question.fromJson(entry)).toList();
+    questions = data.map((entry) => Question.parseJson(entry)).toList();
   }
 
   List<dynamic> toJson() => questions.map((question) => question.toJson()).toList();
 }
 
 class QuestionnaireState {
-  Map<Question, Answer> answers;
+  Map<String, Answer> answers = {};
 
   T getAnswer<T>(String question) {
     dynamic answer = answers[question];

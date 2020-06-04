@@ -2,11 +2,11 @@ import 'expression.dart';
 import 'value_expression.dart';
 
 class BooleanExpression extends ValueExpression<bool> {
-  static String conditionType = Expression.registerExpressionType('boolean', (data) => BooleanExpression.fromJSON(data));
+  static const String expressionType = 'boolean';
   @override
-  String get type => conditionType;
+  String get type => expressionType;
 
-  BooleanExpression.fromJSON(Map<String, dynamic> data) : super.fromJSON(data);
+  BooleanExpression.fromJson(Map<String, dynamic> data) : super.fromJson(data);
 
   @override
   Map<String, dynamic> toJson() => super.toJson();

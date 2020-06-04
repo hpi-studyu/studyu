@@ -22,6 +22,6 @@ class QuestionDao {
       result = await db.query(questionTable, columns: columns);
     }
 
-    return result.isNotEmpty ? result.map((e) => Question.fromJson(e)).toList() : [];
+    return result.isNotEmpty ? result.map((e) => Question.parseJson(e)).toList() : [];
   }
 }

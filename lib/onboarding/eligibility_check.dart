@@ -1,11 +1,15 @@
 import 'dart:collection';
 
+import 'package:Nof1/database/daos/study_dao.dart';
+import 'package:Nof1/database/models/expressions/boolean_expression.dart';
+import 'package:Nof1/database/models/questionnaire/questionnaire.dart';
+import 'package:Nof1/database/models/questionnaire/questions/boolean_question.dart';
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
 import '../database/models/models.dart';
-import '../database/models/questionnaire/answers/multiple_choice_answer.dart';
-import '../database/models/questionnaire/questions/multiple_choice_question.dart';
+import '../database/models/questionnaire/questions/choice_question.dart';
+import '../database/models/questionnaire/questions/question.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
@@ -18,40 +22,60 @@ class EligibilityCheckScreen extends StatefulWidget {
 }
 
 class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
+  Study study;
+
   void resultCallback(BuildContext context, RPTaskResult result) {
     final formStepResult = result.getStepResultForIdentifier('onboardingFormStepID');
     var isEligible = false;
     if (formStepResult != null) {
-      var answers = HashMap();
+      var qs = QuestionnaireState();
       formStepResult.results.forEach((key, value) {
         final stepResult = (value as RPStepResult);
-        switch (stepResult.answerFormat.runtimeType) {
-          case RPChoiceAnswerFormat:
-            answers[int.parse(key)] = MultipleChoiceAnswer(
-                int.parse(key),
-                DateTime.now(),
-                int.parse(key),
-                Set.from((stepResult.results['answer'] as List<RPChoice>)
-                    .map<Choice>((choice) => Choice(choice.value, choice.text))
-                    .toList()));
+        Question question = study.studyDetails.questionnaire.questions.firstWhere((element) => element.id == key);
+
+        switch (question.runtimeType) {
+          case ChoiceQuestion:
+            final cq = question as ChoiceQuestion;
+            final response = stepResult.results['answer'] as List<RPChoice>;
+            final ids = response.map((e) => e.value as int);
+            final choices = ids.map((e) => cq.choices.elementAt(e));
+            var constructAnswer = cq.constructAnswer(choices.toList());
+            qs.answers[key] = constructAnswer;
             break;
-          default:
-            return null;
+          case BooleanQuestion:
+            final bq = question as BooleanQuestion;
+            final response = stepResult.results['answer'] as List<RPChoice>;
+            var constructAnswer = bq.constructAnswer(response.first.value == 1);
+            qs.answers[key] = constructAnswer;
+            break;
         }
       });
 
-      isEligible = !widget.study.conditions
-          .map<bool>((condition) => condition.checkAnswer(answers[condition.questionId]))
-          .any((element) => element == false);
+      isEligible = widget.study.studyDetails.eligibility
+          .every((expression) => expression.evaluate(qs));
     }
     Navigator.of(context).pop(isEligible);
   }
 
   @override
   Widget build(BuildContext context) {
-    return RPUITask(
-      task: createOnboarding(context, widget.study),
-      onSubmit: (result) => resultCallback(context, result),
+    return FutureBuilder(
+      future: StudyDao().getStudyWithStudyDetails(widget.study),
+      builder: (_context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text('Loading study'),
+              SizedBox(height: 20),
+              CircularProgressIndicator(),
+            ]),
+          );
+        }
+        return RPUITask(
+            task: createOnboarding(context, snapshot.data as Study),
+            onSubmit: (result) => resultCallback(context, result),
+        );
+      },
     );
   }
 
@@ -63,21 +87,27 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
         footnote: '(1) Important footnote')
       ..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
 
-    final questionSteps = study.eligibility
+    this.study = study;
+
+    final questionSteps = study.studyDetails.questionnaire.questions
         .map((question) {
           switch (question.runtimeType) {
-            case MultipleChoiceQuestion:
+            case ChoiceQuestion:
               final choices = <RPChoice>[];
-              for (var choice in (question as MultipleChoiceQuestion).choices) {
-                final choiceStep = RPChoice.withParams(choice.value, choice.id);
-                choices.add(choiceStep);
-              }
+              (question as ChoiceQuestion).choices.asMap().forEach((key, value) {
+                choices.add(RPChoice.withParams(value.text, key));
+              });
               final answerFormat = RPChoiceAnswerFormat.withParams(
-                  (question as MultipleChoiceQuestion).multiple
+                  (question as ChoiceQuestion).multiple
                       ? ChoiceAnswerStyle.MultipleChoice
                       : ChoiceAnswerStyle.SingleChoice,
                   choices);
-              return RPQuestionStep.withAnswerFormat('${question.id}', question.question, answerFormat);
+              return RPQuestionStep.withAnswerFormat(question.id, question.prompt, answerFormat);
+            case BooleanQuestion:
+              return RPQuestionStep.withAnswerFormat(question.id, question.prompt,
+                  RPChoiceAnswerFormat.withParams(ChoiceAnswerStyle.SingleChoice, [
+                    RPChoice.withParams('Yes', 1), RPChoice.withParams('No', 0)
+                  ]));
             default:
               return null;
           }

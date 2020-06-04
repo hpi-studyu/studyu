@@ -4,14 +4,14 @@ import '../questionnaire/questionnaire.dart';
 import 'expression.dart';
 
 class NotExpression extends Expression {
-  static String conditionType = Expression.registerExpressionType('not', (data) => NotExpression.fromJSON(data));
+  static const String expressionType = 'not';
   @override
-  String get type => conditionType;
+  String get type => expressionType;
 
   static String keyExpression = 'expression';
   Expression expression;
 
-  NotExpression.fromJSON(Map<String, dynamic> data) : super.fromJSON(data) {
+  NotExpression.fromJson(Map<String, dynamic> data) : super.fromJson(data) {
     expression = Expression.parseJson(data[keyExpression]);
   }
 

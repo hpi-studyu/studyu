@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 import 'question.dart';
 
 class ChoiceQuestion extends Question {
-  static String questionType = Question.registerQuestionType('choice', (data) => ChoiceQuestion.fromJson(data));
+  static String questionType = 'choice';
   @override
   String get type => questionType;
 
@@ -23,6 +23,9 @@ class ChoiceQuestion extends Question {
     keyMultiple: multiple,
     keyChoices: choices.map((choice) => choice.toJson()).toList()
   });
+
+  Answer<List<String>> constructAnswer(List<Choice> selected) =>
+      Answer(id, DateTime.now(), selected.map((choice) => choice.id).toList());
 }
 
 class Choice {
