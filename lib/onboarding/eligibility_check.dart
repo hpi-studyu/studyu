@@ -6,7 +6,6 @@ import 'package:research_package/research_package.dart';
 import '../database/models/models.dart';
 import '../database/models/questionnaire/answers/multiple_choice_answer.dart';
 import '../database/models/questionnaire/questions/multiple_choice_question.dart';
-import '../questionnaire_widgets/question_widget.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
@@ -64,10 +63,10 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
         footnote: '(1) Important footnote')
       ..text = 'This survey decides, whether you are eligible for the ${study.title.toLowerCase()} study.';
 
-    final questionSteps = study.eligibility
+    final questionSteps = []; /*study.eligibility
         .map<RPQuestionStep>(QuestionWidget.buildFromQuestion)
         .where((element) => element != null)
-        .toList();
+        .toList();*/
 
     final onboardingFormStep = RPFormStep.withTitle('onboardingFormStepID', questionSteps, 'Onboarding');
 
