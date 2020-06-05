@@ -7,16 +7,22 @@ import '../database/models/questionnaire/questions/question.dart';
 import 'multiple_choice_question_widget.dart';
 
 class QuestionWidget extends StatelessWidget {
-  final Function(Answer) onDone;
+  final Function(Answer, int) onDone;
   final Question question;
+  final int index;
 
-  const QuestionWidget({Key key, @required this.onDone, @required this.question}) : super(key: key);
+  const QuestionWidget({Key key, @required this.onDone, @required this.question, this.index}) : super(key: key);
+
+  void _onDone(Answer answer) {
+    onDone(answer, index);
+  }
 
   Widget getQuestionBody() {
     switch (question.runtimeType) {
       case MultipleChoiceQuestion:
         return MultipleChoiceQuestionWidget(
           question: question as MultipleChoiceQuestion,
+          onDone: _onDone,
         );
       default:
         print('Question not supported!');
@@ -29,34 +35,16 @@ class QuestionWidget extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Provider<QuestionWidgetModel>(
+        child: ChangeNotifierProvider<QuestionWidgetModel>(
           create: (context) => QuestionWidgetModel(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(question.question),
-              Selector<QuestionWidgetModel, String>(
-                builder: (context, data, child) => Text(
-                  data,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                selector: (context, model) => model.additionalDescription,
-              ),
               SizedBox(
                 height: 5,
               ),
               getQuestionBody(),
-              SizedBox(
-                height: 5,
-              ),
-              Selector<QuestionWidgetModel, Answer>(
-                builder: (context, data, child) => RaisedButton(
-                  onPressed: data != null ? onDone(data) : null,
-                  //TODO translate
-                  child: Text('Next'),
-                ),
-                selector: (context, model) => model.answer,
-              ),
             ],
           ),
         ),
@@ -66,7 +54,13 @@ class QuestionWidget extends StatelessWidget {
 }
 
 class QuestionWidgetModel extends ChangeNotifier {
-  Answer answer;
+  Answer _answer;
 
-  String additionalDescription = '';
+  Answer get answer => _answer;
+
+  set answer(Answer answer) {
+    _answer = answer;
+    notifyListeners();
+  }
+
 }

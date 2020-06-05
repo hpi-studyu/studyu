@@ -4,18 +4,20 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../onboarding/eligibility_check.dart';
 import '../onboarding/intervention_selection.dart';
+import '../questionnaire_widgets/questionnaire_widget.dart';
 
 class StudySelectionScreen extends StatelessWidget {
+
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
     final isEligible = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => EligibilityCheckScreen(
-                  study: selectedStudy,
-                  route: ModalRoute.of(context),
-                )));
+            builder: (context) => QuestionnaireWidget(
+              questions: selectedStudy.eligibility,
+              conditions: selectedStudy.conditions,
+              title: 'Check eligibility',
+            ))).then((value) => value[0]);
     if (isEligible != null && isEligible) {
       print('Patient is eligible');
       Navigator.pushReplacement(
