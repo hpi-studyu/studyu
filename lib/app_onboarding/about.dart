@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../routes.dart';
 import '../util/localization.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -25,7 +26,7 @@ class AboutScreen extends StatelessWidget {
               Text(consensus),
               SizedBox(height: 40),
               RaisedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/studySelection'),
+                onPressed: () => Navigator.pushNamed(context, Routes.terms),
                 child: Text(Nof1Localizations.of(context).translate('get_started')),
               ),
             ],

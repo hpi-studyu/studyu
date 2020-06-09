@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../dashboard/dashboard.dart';
+import '../database/models/interventions/intervention.dart';
+import '../routes.dart';
 import '../util/localization.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -17,12 +19,12 @@ class WelcomeScreen extends StatelessWidget {
               Image(image: AssetImage('assets/images/icon.png'), height: 200),
               SizedBox(height: 20),
               RaisedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/about'),
+                onPressed: () => Navigator.pushNamed(context, Routes.about),
                 child: Text(Nof1Localizations.of(context).translate('what_is_nof1')),
               ),
               SizedBox(height: 20),
               RaisedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/studySelection'),
+                onPressed: () => Navigator.pushNamed(context, Routes.terms),
                 child: Text(Nof1Localizations.of(context).translate('get_started')),
               ),
             ],
@@ -34,7 +36,8 @@ class WelcomeScreen extends StatelessWidget {
           ? null
           : [
               FlatButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, DashboardScreen.routeName),
+                onPressed: () => Navigator.pushNamed(context, Routes.dashboard,
+                    arguments: DashboardScreenArguments([Intervention('A'), Intervention('B')])),
                 child: Text('Skip to Dashboard'),
               ),
             ],
