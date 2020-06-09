@@ -51,7 +51,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
         }
       });
 
-      isEligible = widget.study.studyDetails.eligibility
+      isEligible = study.studyDetails.eligibility
           .every((expression) => expression.evaluate(qs));
     }
     Navigator.of(context).pop(isEligible);
