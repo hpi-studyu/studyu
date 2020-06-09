@@ -27,6 +27,7 @@ unit_test:
 analyze:
   stage: analyze
   script:
+    - flutter pub run build_runner build
     - flutter analyze
   tags:
     - app
