@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
           : [
               FlatButton(
                 onPressed: () => Navigator.pushNamed(context, Routes.dashboard,
-                    arguments: DashboardScreenArguments([Intervention('A'), Intervention('B')])),
+                    arguments: DashboardScreenArguments([Intervention('a', 'A'), Intervention('a', 'B')])),
                 child: Text('Skip to Dashboard'),
               ),
             ],

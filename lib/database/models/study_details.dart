@@ -18,7 +18,7 @@ class StudyDetails extends ParseObject implements ParseCloneable {
 
   static const keyEligibility = 'eligibilityCriteria';
   List<Expression> get eligibility =>
-      get<List<dynamic>>(keyEligibility)?.map((e) => Expression.parseJson(e))?.toList() ?? [];
+      get<List<dynamic>>(keyEligibility)?.map((e) => Expression.fromJson(e))?.toList() ?? [];
   set eligibility(List<Expression> eligibility) =>
       set<List<Map<String, dynamic>>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
 

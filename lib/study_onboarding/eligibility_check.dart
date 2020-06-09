@@ -3,7 +3,7 @@ import 'package:research_package/research_package.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../database/models/questionnaire/questionnaire.dart';
+import '../database/models/questionnaire/questionnaire_state.dart';
 import '../database/models/questionnaire/questions/boolean_question.dart';
 import '../database/models/questionnaire/questions/choice_question.dart';
 
