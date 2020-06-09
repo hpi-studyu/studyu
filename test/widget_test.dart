@@ -6,7 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:Nof1/util/localization.dart';
-import 'package:Nof1/welcome/welcome.dart';
+import 'package:Nof1/app_onboarding/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
