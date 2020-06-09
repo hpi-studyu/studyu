@@ -1,4 +1,4 @@
-import 'questions/question.dart';
+import 'question.dart';
 
 class Questionnaire {
   List<Question> questions;

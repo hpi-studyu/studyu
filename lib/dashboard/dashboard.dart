@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../database/models/intervention.dart';
+import '../database/models/interventions/intervention.dart';
 import '../util/localization.dart';
 import 'account_management.dart';
 import 'contact_tab/contact.dart';

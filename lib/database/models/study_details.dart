@@ -1,7 +1,7 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'expressions/expression.dart';
-import 'intervention.dart';
+import 'interventions/intervention_set.dart';
 import 'questionnaire/questionnaire.dart';
 
 class StudyDetails extends ParseObject implements ParseCloneable {
@@ -12,22 +12,19 @@ class StudyDetails extends ParseObject implements ParseCloneable {
   @override
   StudyDetails clone(Map<String, dynamic> map) => StudyDetails.clone()..fromJson(map);
 
+  static const keyQuestionnaire = 'questionnaire';
   Questionnaire get questionnaire => Questionnaire.fromJson(get<List<dynamic>>(keyQuestionnaire));
   set questionnaire(Questionnaire questionnaire) => set<List<dynamic>>(keyQuestionnaire, questionnaire.toJson());
 
-  static const keyQuestionnaire = 'questionnaire';
+  static const keyEligibility = 'eligibilityCriteria';
   List<Expression> get eligibility =>
       get<List<dynamic>>(keyEligibility)?.map((e) => Expression.parseJson(e))?.toList() ?? [];
-
-  static const keyEligibility = 'eligibilityCriteria';
   set eligibility(List<Expression> eligibility) =>
       set<List<Map<String, dynamic>>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
 
-  static const keyInterventions = 'interventionSet';
-  List<Intervention> get interventions =>
-      get<Map<String, dynamic>>(keyInterventions)?.map((e) => Intervention.fromJson(e))?.toList() ?? [];
+  static const keyInterventionSet = 'interventionSet';
+  InverventionSet get interventionSet => InverventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
+  set interventionSet(InverventionSet interventionSet) => set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
 
   static const keyObservations = 'observations';
-  set interventions(List<Intervention> interventions) =>
-      set<List<Map<String, dynamic>>>(keyInterventions, interventions.map((e) => e.toJson()).toList());
 }

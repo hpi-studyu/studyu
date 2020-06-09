@@ -1,4 +1,4 @@
-import 'question.dart';
+import '../question.dart';
 
 class BooleanQuestion extends Question {
   static const String questionType = 'boolean';
@@ -10,5 +10,5 @@ class BooleanQuestion extends Question {
   @override
   Map<String, dynamic> toJson() => super.toJson();
 
-  Answer<bool> constructAnswer(bool response) => Answer(id, DateTime.now(), response);
+  Answer<bool> constructAnswer(bool response) => Answer.forQuestion(this, response);
 }
