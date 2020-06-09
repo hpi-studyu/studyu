@@ -8,6 +8,7 @@ stages:
 build:
   stage: build
   script:
+    - flutter pub get
     - flutter pub run build_runner build
     - flutter build aot
   tags:
@@ -17,6 +18,7 @@ build:
 unit_test:
   stage: test
   script:
+    - flutter pub get
     - flutter pub run build_runner test
   tags:
     - app
