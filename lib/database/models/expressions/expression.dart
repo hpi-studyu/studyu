@@ -1,5 +1,6 @@
-import '../questionnaire/questionnaire.dart';
+import 'package:collection/collection.dart';
 
+import '../questionnaire/questionnaire_state.dart';
 import 'types/boolean_expression.dart';
 import 'types/choice_expression.dart';
 import 'types/not_expression.dart';
@@ -12,17 +13,14 @@ abstract class Expression {
     ChoiceExpression.expressionType: (data) => ChoiceExpression.fromJson(data),
     NotExpression.expressionType: (data) => NotExpression.fromJson(data)
   };
-
   static const String keyType = 'type';
   String get type => null;
 
-  Expression.fromJson(Map<String, dynamic> data);
+  Expression();
 
-  factory Expression.parseJson(Map<String, dynamic> data) {
-    return expressionTypes[data[keyType]](data);
-  }
-
-  Map<String, dynamic> toJson() => { keyType: type };
+  factory Expression.fromJson(Map<String, dynamic> data) => expressionTypes[data[keyType]](data);
+  Map<String, dynamic> toJsonData();
+  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>({ keyType: type }, toJsonData());
 
   @override
   String toString() {

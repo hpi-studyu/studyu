@@ -1,14 +1,15 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'intervention.dart';
 
+part 'intervention_set.g.dart';
+
+@JsonSerializable()
 class InverventionSet {
-  static const String keyInterventions = 'interventions';
   List<Intervention> interventions;
 
-  InverventionSet.fromJson(Map<String, dynamic> data) {
-    interventions = data[keyInterventions].map<Intervention>((entry) => Intervention.fromJson(entry)).toList();
-  }
+  InverventionSet(this.interventions);
 
-  Map<String, dynamic> toJson() => {
-    keyInterventions: interventions.map((intervention) => intervention.toJson()).toList()
-  };
+  factory InverventionSet.fromJson(Map<String, dynamic> json) => _$InverventionSetFromJson(json);
+  Map<String, dynamic> toJson() => _$InverventionSetToJson(this);
 }

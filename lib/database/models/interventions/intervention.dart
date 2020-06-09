@@ -1,19 +1,14 @@
-class Intervention {
-  static const String keyID = 'id';
-  String id;
+import 'package:json_annotation/json_annotation.dart';
 
-  static const String keyName = 'name';
+part 'intervention.g.dart';
+
+@JsonSerializable()
+class Intervention {
+  String id;
   String name;
 
-  Intervention(this.name);
+  Intervention(this.id, this.name);
 
-  Intervention.fromJson(Map<String, dynamic> data) {
-    id = data[keyID];
-    name = data[keyName];
-  }
-
-  Map<String, dynamic> toJson() => {
-    keyID: id,
-    keyName: name
-  };
+  factory Intervention.fromJson(Map<String, dynamic> data) => _$InterventionFromJson(data);
+  Map<String, dynamic> toJson() => _$InterventionToJson(this);
 }

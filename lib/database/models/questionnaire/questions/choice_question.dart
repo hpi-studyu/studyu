@@ -1,49 +1,39 @@
-import 'package:collection/collection.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+import '../answer.dart';
 import '../question.dart';
 
+part 'choice_question.g.dart';
+
+@JsonSerializable()
 class ChoiceQuestion extends Question {
   static String questionType = 'choice';
   @override
   String get type => questionType;
 
-  static const String keyMultiple = 'multiple';
   bool multiple;
-
-  static const String keyChoices = 'choices';
   List<Choice> choices;
 
-  ChoiceQuestion.fromJson(Map<String, dynamic> data) : super.fromJson(data) {
-    multiple = data[keyMultiple];
-    choices = (data[keyChoices] as List).map((choice) => Choice.fromJson(choice)).toList();
-  }
+  ChoiceQuestion();
 
+  factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
   @override
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(super.toJson(), {
-    keyMultiple: multiple,
-    keyChoices: choices.map((choice) => choice.toJson()).toList()
-  });
+  Map<String, dynamic> toJsonData() => _$ChoiceQuestionToJson(this);
 
   Answer<List<String>> constructAnswer(List<Choice> selected) =>
       Answer.forQuestion(this, selected.map((choice) => choice.id).toList());
 }
 
+@JsonSerializable()
 class Choice {
-  static const String keyID = 'id';
   String id;
-
-  static const String keyText = 'text';
   String text;
 
-  Choice.fromJson(Map<String, dynamic> data) {
-    id = data[keyID];
-    text = data[keyText];
-  }
+  Choice();
 
-  Map<String, dynamic> toJson() => {
-    keyID: id,
-    keyText: text
-  };
+  factory Choice.fromJson(Map<String, dynamic> json) => _$ChoiceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChoiceToJson(this);
 
   @override
   String toString() => toJson().toString();
