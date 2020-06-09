@@ -8,8 +8,6 @@ part 'not_expression.g.dart';
 @JsonSerializable()
 class NotExpression extends Expression {
   static const String expressionType = 'not';
-  @override
-  String get type => expressionType;
 
   Expression expression;
 
@@ -17,7 +15,7 @@ class NotExpression extends Expression {
 
   factory NotExpression.fromJson(Map<String, dynamic> json) => _$NotExpressionFromJson(json);
   @override
-  Map<String, dynamic> toJsonData() => _$NotExpressionToJson(this);
+  Map<String, dynamic> toJson() => _$NotExpressionToJson(this);
 
   @override
   bool evaluate(QuestionnaireState state) => !expression.evaluate(state);

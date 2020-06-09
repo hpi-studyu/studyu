@@ -1,4 +1,3 @@
-import 'answer.dart';
 import 'question.dart';
 
 // TODO: We might want to make this @JsonSerializable() as well, but it does not support list types

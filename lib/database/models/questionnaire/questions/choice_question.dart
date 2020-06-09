@@ -8,8 +8,6 @@ part 'choice_question.g.dart';
 @JsonSerializable()
 class ChoiceQuestion extends Question {
   static String questionType = 'choice';
-  @override
-  String get type => questionType;
 
   bool multiple;
   List<Choice> choices;
@@ -18,7 +16,7 @@ class ChoiceQuestion extends Question {
 
   factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
   @override
-  Map<String, dynamic> toJsonData() => _$ChoiceQuestionToJson(this);
+  Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);
 
   Answer<List<String>> constructAnswer(List<Choice> selected) =>
       Answer.forQuestion(this, selected.map((choice) => choice.id).toList());

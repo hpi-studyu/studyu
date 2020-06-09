@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-
 import 'questions/boolean_question.dart';
 import 'questions/choice_question.dart';
 
@@ -11,19 +9,15 @@ abstract class Question {
     ChoiceQuestion.questionType: (data) => ChoiceQuestion.fromJson(data)
   };
   static const String keyType = 'type';
-  String get type => null;
+  String type;
 
   String id;
   String prompt;
 
   Question();
 
-  factory Question.fromJson(Map<String, dynamic> data) {
-    return questionTypes[data[keyType]](data);
-  }
-
-  Map<String, dynamic> toJsonData();
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>({ keyType: type }, toJsonData());
+  factory Question.fromJson(Map<String, dynamic> data) => questionTypes[data[keyType]](data);
+  Map<String, dynamic> toJson();
 
   @override
   String toString() {
