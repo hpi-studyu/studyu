@@ -7,8 +7,6 @@ part 'choice_expression.g.dart';
 @JsonSerializable()
 class ChoiceExpression extends ValueExpression<List<String>> {
   static const String expressionType = 'choice';
-  @override
-  String get type => expressionType;
 
   Set<String> choices;
 
@@ -16,7 +14,7 @@ class ChoiceExpression extends ValueExpression<List<String>> {
 
   factory ChoiceExpression.fromJson(Map<String, dynamic> json) => _$ChoiceExpressionFromJson(json);
   @override
-  Map<String, dynamic> toJsonData() => _$ChoiceExpressionToJson(this);
+  Map<String, dynamic> toJson() => _$ChoiceExpressionToJson(this);
 
   @override
   bool checkValue(List<String> value) => value.any((element) => choices.contains(element));
