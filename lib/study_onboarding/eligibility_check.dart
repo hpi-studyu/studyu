@@ -1,15 +1,11 @@
-import 'dart:collection';
-
-import 'package:Nof1/database/daos/study_dao.dart';
-import 'package:Nof1/database/models/expressions/types/boolean_expression.dart';
-import 'package:Nof1/database/models/questionnaire/questionnaire.dart';
-import 'package:Nof1/database/models/questionnaire/questions/boolean_question.dart';
 import 'package:flutter/material.dart';
 import 'package:research_package/research_package.dart';
 
+import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
+import '../database/models/questionnaire/questionnaire.dart';
+import '../database/models/questionnaire/questions/boolean_question.dart';
 import '../database/models/questionnaire/questions/choice_question.dart';
-import '../database/models/questionnaire/question.dart';
 
 class EligibilityCheckScreenArguments {
   final Study selectedStudy;
@@ -39,7 +35,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
       var qs = QuestionnaireState();
       formStepResult.results.forEach((key, value) {
         final stepResult = (value as RPStepResult);
-        Question question = study.studyDetails.questionnaire.questions.firstWhere((element) => element.id == key);
+        var question = study.studyDetails.questionnaire.questions.firstWhere((element) => element.id == key);
 
         switch (question.runtimeType) {
           case ChoiceQuestion:

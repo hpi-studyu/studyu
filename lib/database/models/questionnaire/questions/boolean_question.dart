@@ -10,5 +10,6 @@ class BooleanQuestion extends Question {
   @override
   Map<String, dynamic> toJson() => super.toJson();
 
+  // ignore: avoid_positional_boolean_parameters
   Answer<bool> constructAnswer(bool response) => Answer.forQuestion(this, response);
 }

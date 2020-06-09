@@ -1,7 +1,7 @@
 import 'intervention.dart';
 
 class InverventionSet {
-  static const String keyInterventions = "interventions";
+  static const String keyInterventions = 'interventions';
   List<Intervention> interventions;
 
   InverventionSet.fromJson(Map<String, dynamic> data) {
