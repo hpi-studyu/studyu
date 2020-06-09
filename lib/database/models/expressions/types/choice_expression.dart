@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 
-import '../expression.dart';
 import 'value_expression.dart';
 
 class ChoiceExpression extends ValueExpression<List<String>> {

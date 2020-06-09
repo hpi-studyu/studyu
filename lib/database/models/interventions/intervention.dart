@@ -1,8 +1,8 @@
 class Intervention {
-  static const String keyID = "id";
+  static const String keyID = 'id';
   String id;
 
-  static const String keyName = "name";
+  static const String keyName = 'name';
   String name;
 
   Intervention(this.name);

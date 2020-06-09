@@ -20,5 +20,6 @@ class NotExpression extends Expression {
     keyExpression: expression.toJson()
   });
 
+  @override
   bool evaluate(QuestionnaireState state) => !expression.evaluate(state);
 }
