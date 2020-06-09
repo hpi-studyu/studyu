@@ -4,14 +4,6 @@ import 'study_details.dart';
 
 class Study extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'Study';
-  static const keyId = 'study_id';
-  static const keyTitle = 'title';
-  static const keyDescription = 'description';
-  static const keyIconName = 'icon_name';
-
-  /*List<Question> eligibility = [];
-  List<Condition> conditions = [];
-  List<Intervention> interventions = [];*/
 
   Study() : super(_keyTableName);
 
@@ -29,12 +21,19 @@ class Study extends ParseObject implements ParseCloneable {
     return this;
   }
 
+  static const keyId = 'study_id';
   String get id => get<String>(keyId);
   set id(String id) => set<String>(keyId, id);
+
+  static const keyTitle = 'title';
   String get title => get<String>(keyTitle);
   set title(String title) => set<String>(keyTitle, title);
+
+  static const keyDescription = 'description';
   String get description => get<String>(keyDescription);
   set description(String description) => set<String>(keyDescription, description);
+
+  static const keyIconName = 'icon_name';
   String get iconName => get<String>(keyIconName);
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 

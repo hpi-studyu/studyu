@@ -11,7 +11,7 @@ class ChoiceExpression extends ValueExpression<List<String>> {
   Set<String> choices;
 
   ChoiceExpression.fromJson(Map<String, dynamic> data) : super.fromJson(data) {
-    choices = Set.from(data['choices']);
+    choices = Set.from(data[keyChoices]);
   }
 
   @override
