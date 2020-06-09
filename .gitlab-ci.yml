@@ -19,7 +19,8 @@ unit_test:
   stage: test
   script:
     - flutter pub get
-    - flutter pub run build_runner test
+    - flutter pub run build_runner build
+    - flutter test
   tags:
     - app
     - android
