@@ -1,5 +1,5 @@
-import 'package:Nof1/database/models/questionnaire/questions/boolean_question.dart';
-import 'package:Nof1/database/models/questionnaire/questions/choice_question.dart';
+import 'questions/boolean_question.dart';
+import 'questions/choice_question.dart';
 
 typedef QuestionParser = Question Function(Map<String, dynamic> data);
 
@@ -53,6 +53,8 @@ class Answer<V> {
   V response;
 
   Answer(this.question, this.timestamp, this.response);
+
+  Answer.forQuestion(Question question, this.response) : question = question.id, timestamp = DateTime.now();
 
   Answer.fromJson(Map<String, dynamic> data) {
     question = data[keyQuestion];

@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../questionnaire/questionnaire.dart';
-import 'expression.dart';
+import '../../questionnaire/questionnaire.dart';
+import '../expression.dart';
 
 abstract class ValueExpression<V> extends Expression {
   static const String keyTarget = 'target';

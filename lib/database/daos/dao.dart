@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../database.dart';
-import '../models/questionnaire/questions/question.dart';
+import '../models/questionnaire/question.dart';
 
 class QuestionDao {
   final DatabaseProvider dbProvider = DatabaseProvider.dbProvider;

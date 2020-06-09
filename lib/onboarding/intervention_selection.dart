@@ -69,8 +69,8 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                 SizedBox(
                   height: 20,
                 ),
-                study.studyDetails != null && study.studyDetails.interventions.isNotEmpty
-                    ? buildInterventionSelectionList(study.studyDetails.interventions)
+                study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
+                    ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
                     : Text('No interventions available.'),
                 SizedBox(
                   height: 20,

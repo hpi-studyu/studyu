@@ -1,4 +1,4 @@
-import 'expression.dart';
+import '../expression.dart';
 import 'value_expression.dart';
 
 class BooleanExpression extends ValueExpression<bool> {

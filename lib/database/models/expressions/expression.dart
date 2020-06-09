@@ -1,8 +1,8 @@
-import 'package:Nof1/database/models/expressions/boolean_expression.dart';
-import 'package:Nof1/database/models/expressions/choice_expression.dart';
-import 'package:Nof1/database/models/expressions/not_expression.dart';
-
 import '../questionnaire/questionnaire.dart';
+
+import 'types/boolean_expression.dart';
+import 'types/choice_expression.dart';
+import 'types/not_expression.dart';
 
 typedef ExpressionParser = Expression Function(Map<String, dynamic> data);
 

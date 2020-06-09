@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 
-import 'question.dart';
+import '../question.dart';
 
 class ChoiceQuestion extends Question {
   static String questionType = 'choice';
@@ -25,7 +25,7 @@ class ChoiceQuestion extends Question {
   });
 
   Answer<List<String>> constructAnswer(List<Choice> selected) =>
-      Answer(id, DateTime.now(), selected.map((choice) => choice.id).toList());
+      Answer.forQuestion(this, selected.map((choice) => choice.id).toList());
 }
 
 class Choice {

@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../questionnaire/questionnaire.dart';
-import 'expression.dart';
+import '../../questionnaire/questionnaire.dart';
+import '../expression.dart';
 
 class NotExpression extends Expression {
   static const String expressionType = 'not';

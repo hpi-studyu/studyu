@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:Nof1/database/daos/study_dao.dart';
-import 'package:Nof1/database/models/expressions/boolean_expression.dart';
+import 'package:Nof1/database/models/expressions/types/boolean_expression.dart';
 import 'package:Nof1/database/models/questionnaire/questionnaire.dart';
 import 'package:Nof1/database/models/questionnaire/questions/boolean_question.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:research_package/research_package.dart';
 
 import '../database/models/models.dart';
 import '../database/models/questionnaire/questions/choice_question.dart';
-import '../database/models/questionnaire/questions/question.dart';
+import '../database/models/questionnaire/question.dart';
 
 class EligibilityCheckScreen extends StatefulWidget {
   final MaterialPageRoute route;
