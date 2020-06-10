@@ -6,18 +6,28 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../dashboard/dashboard.dart';
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
+import '../routes.dart';
 import '../util/localization.dart';
 
-class InterventionSelection extends StatefulWidget {
+class InterventionSelectionScreenArguments {
   final Study study;
 
-  const InterventionSelection({Key key, this.study}) : super(key: key);
-
-  @override
-  _InterventionSelectionState createState() => _InterventionSelectionState();
+  const InterventionSelectionScreenArguments(this.study);
 }
 
-class _InterventionSelectionState extends State<InterventionSelection> {
+class InterventionSelectionScreen extends StatefulWidget {
+  final Study study;
+
+  const InterventionSelectionScreen(this.study, {Key key}) : super(key: key);
+
+  factory InterventionSelectionScreen.fromRouteArgs(InterventionSelectionScreenArguments args) =>
+      InterventionSelectionScreen(args.study);
+
+  @override
+  _InterventionSelectionScreenState createState() => _InterventionSelectionScreenState();
+}
+
+class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selected = [];
 
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
@@ -69,16 +79,18 @@ class _InterventionSelectionState extends State<InterventionSelection> {
                 SizedBox(
                   height: 20,
                 ),
-                study.studyDetails != null && study.studyDetails.interventions.isNotEmpty
-                    ? buildInterventionSelectionList(study.studyDetails.interventions)
+                study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
+                    ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
                     : Text('No interventions available.'),
                 SizedBox(
                   height: 20,
                 ),
                 RaisedButton(
                   child: Text(Nof1Localizations.of(context).translate('finished')),
-                  onPressed: () => Navigator.of(context)
-                      .pushReplacementNamed(DashboardScreen.routeName, arguments: DashboardScreenArguments(selected)),
+                  onPressed: selected.length == 2
+                      ? () =>
+                          Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected))
+                      : null,
                 ),
               ],
             ),
@@ -103,7 +115,7 @@ class _InterventionSelectionState extends State<InterventionSelection> {
               );
             }
             if (snapshot.hasError) {
-              Timer(Duration(seconds: 4), () => Navigator.pushReplacementNamed(context, '/studySelection'));
+              Timer(Duration(seconds: 4), () => Navigator.pop(context));
               return Center(child: Text('An error occurred!'));
             }
 

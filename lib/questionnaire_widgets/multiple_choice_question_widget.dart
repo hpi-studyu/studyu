@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../database/models/questionnaire/answers/multiple_choice_answer.dart';
-import '../database/models/questionnaire/questions/multiple_choice_question.dart';
+import '../database/models/questionnaire/answer.dart';
+import '../database/models/questionnaire/questions/choice_question.dart';
 
 class MultipleChoiceQuestionWidget extends StatefulWidget {
-  final MultipleChoiceQuestion question;
-  final Function(MultipleChoiceAnswer) onDone;
+  final ChoiceQuestion question;
+  final Function(Answer) onDone;
 
   MultipleChoiceQuestionWidget({Key key, @required this.question, this.onDone});
 
@@ -20,7 +20,7 @@ class _MultipleChoiceQuestionWidgetState extends State<MultipleChoiceQuestionWid
   int maxSelection;
   String subtitle = '';
   final List<Widget> _questionFooter = [];
-  final ValueNotifier<MultipleChoiceAnswer> _currentAnswerNotifier = ValueNotifier(null);
+  final ValueNotifier<Answer> _currentAnswerNotifier = ValueNotifier(null);
 
   @override
   void initState() {
@@ -55,12 +55,7 @@ class _MultipleChoiceQuestionWidgetState extends State<MultipleChoiceQuestionWid
       }
       var answer;
       if (selected.isNotEmpty) {
-        answer = MultipleChoiceAnswer(
-          widget.question.id,
-          DateTime.now(),
-          widget.question.id,
-          selected.toSet(),
-        );
+        answer = widget.question.constructAnswer(selected);
       }
       _currentAnswerNotifier.value = answer;
     });
@@ -76,7 +71,7 @@ class _MultipleChoiceQuestionWidgetState extends State<MultipleChoiceQuestionWid
               child: InkWell(
                 onTap: () => tapped(choice),
                 child: ListTile(
-                  title: Text(choice.value),
+                  title: Text(choice.text),
                   trailing: Visibility(
                     visible: selected.map((ch) => ch.id).contains(choice.id),
                     child: Icon(MdiIcons.checkboxMarked),

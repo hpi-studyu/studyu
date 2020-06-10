@@ -1,34 +1,32 @@
-//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../onboarding/intervention_selection.dart';
+import '../database/models/questionnaire/questionnaire_state.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
+import '../routes.dart';
+import '../study_onboarding/intervention_selection.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
-    final isEligible = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => QuestionnaireWidget(
-              questions: selectedStudy.eligibility,
-              conditions: selectedStudy.conditions,
-              title: 'Check eligibility',
-            ))).then((value) => value[0]);
-    if (isEligible != null && isEligible) {
+    final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
+    final result = await Navigator.pushNamed(context, Routes.questionnaire,
+        arguments: QuestionnaireScreenArguments(
+          questions: study.studyDetails.questionnaire.questions,
+          criteria: study.studyDetails.eligibility,
+          title: 'Check eligibility',
+        )) as List<Object>;
+    if (result.isNotEmpty && result[0] != null && result[0]) {
       print('Patient is eligible');
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => InterventionSelection(
-                    study: selectedStudy,
-                  )));
-    } else {
+      Navigator.pushNamed(context, Routes.interventionSelection,
+          arguments: InterventionSelectionScreenArguments(study));
+    } else if (result.length > 1 && result[1] != null) {
+      final reason = study.studyDetails.eligibility
+          .firstWhere((criterion) => criterion.isViolated((result[1] as QuestionnaireState)))
+          .reason;
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You are not eligible for this study. Please select a different one.'),
+        content: Text('You are not eligible for this study. $reason'),
         duration: Duration(seconds: 30),
       ));
     }

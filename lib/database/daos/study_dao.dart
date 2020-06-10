@@ -1,7 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models/models.dart';
-import '../models/questionnaire/eligibility.dart';
 
 const filename = 'assets/studies/scratch.xml';
 
@@ -25,14 +24,5 @@ class StudyDao {
           study;
     }
     return detailedStudy;
-  }
-
-  Future<Eligibility> getEligibility(Study study) async {
-    //TODO add to study
-    var response = await Eligibility().getObject(null);
-    if (response.success && response.results.isNotEmpty) {
-      return response.results.first is Eligibility ? response.results.first : null;
-    }
-    return null;
   }
 }
