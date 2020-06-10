@@ -38,12 +38,13 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
         SelectableButton(
           selected: selected == true,
           onTap: () => tapped(choice: true),
-          child: Text('Yes')
+          child: Text('Yes'),
         ),
+        SizedBox(height: 8),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),
-          child: Text('No')
+          child: Text('No'),
         ),
       ],
     );
