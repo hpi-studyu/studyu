@@ -10,9 +10,9 @@ class TermsScreen extends StatefulWidget {
 }
 
 class _TermsScreenState extends State<TermsScreen> {
-  bool _acceptedTerms = false;
-  bool _acceptedPrivacy = false;
-  bool _acceptedDisclaimer = false;
+  bool _acceptedTerms = true;
+  bool _acceptedPrivacy = true;
+  bool _acceptedDisclaimer = true;
 
   bool userCanContinue() {
     return _acceptedTerms && _acceptedPrivacy && _acceptedDisclaimer;
