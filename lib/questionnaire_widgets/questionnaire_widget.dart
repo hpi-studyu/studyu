@@ -4,7 +4,7 @@ import '../database/models/eligibility/eligibility_criterion.dart';
 import '../database/models/questionnaire/answer.dart';
 import '../database/models/questionnaire/question.dart';
 import '../database/models/questionnaire/questionnaire_state.dart';
-import 'question_widget.dart';
+import 'question_container.dart';
 
 class QuestionnaireScreenArguments {
   final Key key;
@@ -34,7 +34,7 @@ class QuestionnaireScreen extends StatefulWidget {
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
-  final List<QuestionWidget> shownQuestions = <QuestionWidget>[];
+  final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
   final QuestionnaireState qs = QuestionnaireState();
@@ -63,7 +63,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     }
     qs.answers[answer.question] = answer;
     if (widget.questions.length > _nextQuestionIndex) {
-      shownQuestions.add(QuestionWidget(
+      shownQuestions.add(QuestionContainer(
         key: UniqueKey(),
         question: widget.questions[_nextQuestionIndex],
         onDone: _onQuestionDone,
@@ -78,7 +78,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   @override
   void initState() {
-    shownQuestions.add(QuestionWidget(
+    shownQuestions.add(QuestionContainer(
       key: UniqueKey(),
       question: widget.questions[0],
       onDone: _onQuestionDone,
