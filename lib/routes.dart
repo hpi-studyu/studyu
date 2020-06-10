@@ -1,4 +1,3 @@
-import 'package:Nof1/questionnaire_widgets/questionnaire_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'app_onboarding/about.dart';
@@ -7,6 +6,7 @@ import 'app_onboarding/welcome.dart';
 import 'dashboard/contact_tab/contact.dart';
 import 'dashboard/dashboard.dart';
 import 'dashboard/settings.dart';
+import 'questionnaire_widgets/questionnaire_widget.dart';
 import 'study_onboarding/eligibility_check.dart';
 import 'study_onboarding/intervention_selection.dart';
 import 'study_selection/study_selection.dart';
