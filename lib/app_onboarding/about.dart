@@ -26,7 +26,7 @@ class AboutScreen extends StatelessWidget {
               Text(consensus),
               SizedBox(height: 40),
               RaisedButton(
-                onPressed: () => Navigator.pushNamed(context, Routes.terms),
+                onPressed: () => Navigator.pushReplacementNamed(context, Routes.terms),
                 child: Text(Nof1Localizations.of(context).translate('get_started')),
               ),
             ],
