@@ -49,7 +49,8 @@ class _TermsScreenState extends State<TermsScreen> {
                     onChange: (val) => setState(() => _acceptedDisclaimer = val),
                     isChecked: _acceptedDisclaimer),
                 RaisedButton(
-                  onPressed: userCanContinue() ? () => Navigator.pushNamed(context, Routes.studySelection) : null,
+                  onPressed:
+                      userCanContinue() ? () => Navigator.pushReplacementNamed(context, Routes.studySelection) : null,
                   child: Text(Nof1Localizations.of(context).translate('get_started')),
                 ),
               ],

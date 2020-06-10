@@ -31,14 +31,14 @@ class StudySelectionScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('study_selection')),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text(
                 Nof1Localizations.of(context).translate('study_selection_description'),
-                style: theme.textTheme.headline4,
+                style: theme.textTheme.headline5,
               ),
             ),
             FutureBuilder(
@@ -47,6 +47,7 @@ class StudySelectionScreen extends StatelessWidget {
                 return snapshot.hasData
                     ? ListView.builder(
                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           final Study currentStudy = snapshot.data[index];
