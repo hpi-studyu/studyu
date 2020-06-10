@@ -59,13 +59,17 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final choiceWidgets = widget.question.choices.map<Widget>((choice) =>
-        SelectableButton(
-          selected: selected.contains(choice),
-          onTap: () => tapped(choice),
-          child: Text(choice.text),
-        )
-    ).toList();
+    final choiceWidgets = widget.question.choices
+        .expand<Widget>((choice) => [
+              SizedBox(height: 8),
+              SelectableButton(
+                selected: selected.contains(choice),
+                onTap: () => tapped(choice),
+                child: Text(choice.text),
+              ),
+            ])
+        .skip(1) // Skip first SizedBox
+        .toList();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
