@@ -31,6 +31,7 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
   void resultCallback(BuildContext context, RPTaskResult result) {
     final formStepResult = result.getStepResultForIdentifier('onboardingFormStepID');
     var isEligible = false;
+    String reason;
     if (formStepResult != null) {
       var qs = QuestionnaireState();
       formStepResult.results.forEach((key, value) {
@@ -55,10 +56,17 @@ class _EligibilityCheckScreenState extends State<EligibilityCheckScreen> {
         }
       });
 
-      isEligible = study.studyDetails.eligibility
-          .every((expression) => expression.evaluate(qs));
+      isEligible = study.studyDetails.eligibility.every((criterion) => criterion.isSatisfied(qs));
+      if (!isEligible) {
+        reason = study.studyDetails.eligibility.firstWhere((criterion) => criterion.isViolated(qs)).reason;
+      }
     }
-    Navigator.pop(context, isEligible);
+    if (!isEligible) {
+      Navigator.pop(context, reason);
+    } else {
+      Navigator.pop(context, null);
+    }
+
   }
 
   @override

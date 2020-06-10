@@ -1,6 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-import 'expressions/expression.dart';
+import 'eligibility/eligibility_criterion.dart';
 import 'interventions/intervention_set.dart';
 import 'questionnaire/questionnaire.dart';
 
@@ -17,10 +17,10 @@ class StudyDetails extends ParseObject implements ParseCloneable {
   set questionnaire(Questionnaire questionnaire) => set<List<dynamic>>(keyQuestionnaire, questionnaire.toJson());
 
   static const keyEligibility = 'eligibilityCriteria';
-  List<Expression> get eligibility =>
-      get<List<dynamic>>(keyEligibility)?.map((e) => Expression.fromJson(e))?.toList() ?? [];
-  set eligibility(List<Expression> eligibility) =>
-      set<List<Map<String, dynamic>>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
+  List<EligibilityCriterion> get eligibility =>
+      get<List<dynamic>>(keyEligibility)?.map((e) => EligibilityCriterion.fromJson(e))?.toList() ?? [];
+  set eligibility(List<EligibilityCriterion> eligibility) =>
+      set<List<dynamic>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
 
   static const keyInterventionSet = 'interventionSet';
   InverventionSet get interventionSet => InverventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
