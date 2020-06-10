@@ -1,38 +1,48 @@
-import 'dart:collection';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../database/models/questionnaire/answers/answer.dart';
-import '../database/models/questionnaire/conditions/condition.dart';
-import '../database/models/questionnaire/questions/question.dart';
+import '../database/models/eligibility/eligibility_criterion.dart';
+import '../database/models/questionnaire/answer.dart';
+import '../database/models/questionnaire/question.dart';
+import '../database/models/questionnaire/questionnaire_state.dart';
 import 'question_widget.dart';
 
-class QuestionnaireWidget extends StatefulWidget {
+class QuestionnaireScreenArguments {
+  final Key key;
   final String title;
   final List<Question> questions;
-  final List<Condition> conditions;
-  final Function(bool, Map<int, Answer>) onQuestionnaireDone;
+  final List<EligibilityCriterion> criteria;
 
-  const QuestionnaireWidget({Key key, this.title, @required this.questions, this.conditions, this.onQuestionnaireDone})
-      : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _QuestionnaireState();
+  QuestionnaireScreenArguments({this.key, this.title, @required this.questions, this.criteria});
 }
 
-class _QuestionnaireState extends State<QuestionnaireWidget> {
+class QuestionnaireScreen extends StatefulWidget {
+  final String title;
+  final List<Question> questions;
+  final List<EligibilityCriterion> criteria;
+
+  const QuestionnaireScreen({Key key, this.title, @required this.questions, this.criteria}) : super(key: key);
+
+  factory QuestionnaireScreen.fromRouteArgs(QuestionnaireScreenArguments args) => QuestionnaireScreen(
+    key: args.key,
+    title: args.title,
+    questions: args.questions,
+    criteria: args.criteria,
+  );
+
+  @override
+  State<StatefulWidget> createState() => _QuestionnaireScreenState();
+}
+
+class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   final List<QuestionWidget> shownQuestions = <QuestionWidget>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
-  final LinkedHashMap<int, Answer> _answers = LinkedHashMap<int, Answer>();
+  final QuestionnaireState qs = QuestionnaireState();
   int _nextQuestionIndex = 1;
 
   void _finishQuestionnaire() {
-    var conditionResult = widget.conditions
-        .every((condition) => condition.checkAnswer(_answers[condition.questionId]));
-    //widget.onQuestionnaireDone(conditionResult, _answers);
-    Navigator.of(context).pop([conditionResult, _answers]);
+    var conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
+    Navigator.of(context).pop([conditionResult, qs]);
   }
 
   void _onQuestionDone(Answer answer, int index) {
@@ -40,16 +50,18 @@ class _QuestionnaireState extends State<QuestionnaireWidget> {
       while (shownQuestions.length > index + 1) {
         var end = shownQuestions.length - 1;
         var lastQuestion = shownQuestions.removeLast();
-        _listKey.currentState.removeItem(end, (context, animation) => SizeTransition(
-          sizeFactor: animation,
-          axis: Axis.vertical,
-          child: lastQuestion,
-        ));
-        _answers.remove(lastQuestion.question.id);
+        _listKey.currentState.removeItem(
+            end,
+            (context, animation) => SizeTransition(
+                  sizeFactor: animation,
+                  axis: Axis.vertical,
+                  child: lastQuestion,
+                ));
+        qs.answers.remove(lastQuestion.question.id);
       }
       _nextQuestionIndex = index + 1;
     }
-    _answers.update(answer.id, (_) => answer, ifAbsent: () => answer);
+    qs.answers[answer.question] = answer;
     if (widget.questions.length > _nextQuestionIndex) {
       shownQuestions.add(QuestionWidget(
         key: UniqueKey(),
@@ -86,9 +98,9 @@ class _QuestionnaireState extends State<QuestionnaireWidget> {
         initialItemCount: shownQuestions.length,
         itemBuilder: (context, index, animation) {
           return SizeTransition(
-              sizeFactor: animation,
-              axis: Axis.vertical,
-              child: shownQuestions[index],
+            sizeFactor: animation,
+            axis: Axis.vertical,
+            child: shownQuestions[index],
           );
         },
       ),

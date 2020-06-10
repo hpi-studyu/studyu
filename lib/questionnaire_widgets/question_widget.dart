@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../database/models/questionnaire/answers/answer.dart';
-import '../database/models/questionnaire/questions/multiple_choice_question.dart';
-import '../database/models/questionnaire/questions/question.dart';
+import '../database/models/questionnaire/answer.dart';
+import '../database/models/questionnaire/question.dart';
+import '../database/models/questionnaire/questions/choice_question.dart';
 import 'multiple_choice_question_widget.dart';
 
 class QuestionWidget extends StatelessWidget {
@@ -19,9 +19,9 @@ class QuestionWidget extends StatelessWidget {
 
   Widget getQuestionBody() {
     switch (question.runtimeType) {
-      case MultipleChoiceQuestion:
+      case ChoiceQuestion:
         return MultipleChoiceQuestionWidget(
-          question: question as MultipleChoiceQuestion,
+          question: question as ChoiceQuestion,
           onDone: _onDone,
         );
       default:
@@ -40,7 +40,7 @@ class QuestionWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(question.question),
+              Text(question.prompt),
               SizedBox(
                 height: 5,
               ),
