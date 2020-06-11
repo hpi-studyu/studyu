@@ -26,7 +26,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-
   chewie:
   cupertino_icons:
   json_annotation:
