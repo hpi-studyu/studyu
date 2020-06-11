@@ -15,8 +15,8 @@ void main() {
 
         final result = schedule.generateWith(0);
 
-        expect(result.sublist(0, 2).toSet(), {0, 1}, reason: 'A cycle was not complete');
-        expect(result.sublist(2, 4).toSet(), {0, 1}, reason: 'A cycle was not complete');
+        expect(result.sublist(0).take(2).toSet().length, 2, reason: 'A cycle was not complete');
+        expect(result.sublist(2).take(2).toSet().length, 2, reason: 'A cycle was not complete');
       });
 
       test('respects the first intervention', () {
@@ -25,8 +25,8 @@ void main() {
           ..phaseDuration = 7
           ..includeBaseline = false;
 
-        expect(schedule.generateWith(0)[0], 0, reason: 'Did not respect first intervention');
-        expect(schedule.generateWith(1)[0], 1, reason: 'Did not respect first intervention');
+        expect(schedule.generateWith(0).first, 0, reason: 'Did not respect first intervention');
+        expect(schedule.generateWith(1).first, 1, reason: 'Did not respect first intervention');
       });
 
       test('can include baseline', () {
@@ -37,9 +37,9 @@ void main() {
 
         final result = schedule.generateWith(0);
 
-        expect(result[0], null, reason: 'No baseline phase was included');
-        expect(result.sublist(1, 3).toSet(), {0, 1}, reason: 'A cycle was not complete');
-        expect(result.sublist(3, 5).toSet(), {0, 1}, reason: 'A cycle was not complete');
+        expect(result.first, null, reason: 'No baseline phase was included');
+        expect(result.sublist(1).take(2).toSet().length, 2, reason: 'A cycle was not complete');
+        expect(result.sublist(3).take(2).toSet().length, 2, reason: 'A cycle was not complete');
       });
     }
     
