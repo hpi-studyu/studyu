@@ -43,7 +43,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   }
 
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
-    final theme = Theme.of(context);
+    final  theme = Theme.of(context);
     return ListView.builder(
         shrinkWrap: true,
         itemCount: interventions.length,
@@ -73,41 +73,46 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   Widget buildInterventionSelection(BuildContext context, Study study) {
     final theme = Theme.of(context);
-
-    return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Text(
-                    'Please select 1 or 2 interventions to apply during the study.',
-                    style: theme.textTheme.headline5,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
+      ),
+      body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Text(
+                      'Please select 1 or 2 interventions to apply during the study.',
+                      style: theme.textTheme.headline5,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
-                    ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
-                    : Text('No interventions available.'),
-                SizedBox(
-                  height: 20,
-                ),
-                RaisedButton(
-                  child: Text(Nof1Localizations.of(context).translate('finished')),
-                  onPressed: selected.length == 2
-                      ? () =>
-                          getConsentAndNavigateToDashboard(context, selected)
-                      : null,
-                ),
-              ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                  study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
+                      ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
+                      : Text('No interventions available.'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  RaisedButton(
+                    child: Text(Nof1Localizations.of(context).translate('finished')),
+                    onPressed: selected.length == 2
+                        ? () =>
+                        getConsentAndNavigateToDashboard(context, selected)
+                        : null,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ));
+          )
+      )
+    );
   }
 
   @override
