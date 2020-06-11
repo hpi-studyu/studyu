@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../routes.dart';
 import '../util/localization.dart';
 
 class ConsentScreen extends StatefulWidget {
@@ -24,7 +23,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Please give your consent to participate in this study.',
+                  Nof1Localizations.of(context).translate('please_give_consent'),
                   style: theme.textTheme.headline5,
                 ),
                 SizedBox(height: 40),

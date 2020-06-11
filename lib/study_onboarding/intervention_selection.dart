@@ -32,11 +32,11 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   void getConsentAndNavigateToDashboard(BuildContext context, List<Intervention> selected) async {
     final consentGiven = await Navigator.pushNamed(context, Routes.consent);
-    if (consentGiven) {
+    if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected));
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You did not give your consent. To participate you need to give consent.'),
+        content: Text(Nof1Localizations.of(context).translate('user_did_not_give_consent')),
         duration: Duration(seconds: 30),
       ));
     }
