@@ -80,15 +80,11 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                         style: theme.textTheme.headline5,
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
                         ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
                         : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     RaisedButton(
                       child: Text(Nof1Localizations.of(context).translate('finished')),
                       onPressed: selected.length == 2
