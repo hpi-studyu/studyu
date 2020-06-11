@@ -45,6 +45,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
     final theme = Theme.of(context);
     return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: interventions.length,
         itemBuilder: (_context, index) {
