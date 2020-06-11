@@ -1,9 +1,9 @@
-import 'package:Nof1/database/models/study_schedule/study_schedule.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'eligibility/eligibility_criterion.dart';
 import 'interventions/intervention_set.dart';
 import 'questionnaire/questionnaire.dart';
+import 'study_schedule/study_schedule.dart';
 
 class StudyDetails extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'StudyDetails';
