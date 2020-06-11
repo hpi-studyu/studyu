@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
+import '../util/user.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -66,9 +67,41 @@ class _SettingsState extends State<Settings> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             getDropdownRow(context),
+            RaisedButton.icon(
+              onPressed: () {
+                showDialog(context: context, builder: (_) => DeleteAlertDialog());
+              },
+              color: Colors.red,
+              icon: Icon(Icons.delete),
+              label: Text('Delete all data'),
+            )
           ],
         ),
       ),
     );
   }
+}
+
+class DeleteAlertDialog extends StatefulWidget {
+  @override
+  _DeleteAlertDialogState createState() => _DeleteAlertDialogState();
+}
+
+class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text('Delete all data?'),
+        content: Text('You will not be able to restore your data.'),
+        actions: [
+          FlatButton.icon(
+            onPressed: () {
+              UserUtils.logout();
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }, // only logout and delete local parse data,
+            icon: Icon(Icons.delete),
+            color: Colors.red,
+            label: Text('Delete all data'),
+          )
+        ],
+      );
 }
