@@ -1,7 +1,9 @@
 {
   "what_is_nof1": "What is N of 1?",
+  "description_part1": "Imagine reading the sentence: \"Studies have shown that caffeine increases tiredness in some people.\" An exciting result, but does it answer the question whether coffee makes you personally awake or tired?",
+  "description_part2": "Probably not, because you didn't take part in the study yourself, and an ordinary study can only answer whether it is more likely that coffee makes you awake or tired. You would therefore have to test the effect of coffee on yourself. This means that you would have to do your own personal study, in which you would have phases of drinking coffee and phases of abstaining from coffee. You would regularly assess your tiredness and in the end come to a result that could finally answer the question of whether coffee makes you awake or tired. And this personalized approach is exactly the goal of N-of-1 studies.",
+  "description_part3": "N-of-1 means that the number of people in the trials, which is usually indicated as N, is 1. And just like regular trials, N-of-1 trials need a clearly defined plan (a so-called study protocol) with the aim of making sure that the result is reliable at the end of the trial. And because good study protocols are not easy to make, we have developed this app. Here you can choose between different N-of-1 studies, according to your personal interest, and you will automatically receive a plan developed by experts that will give you a reliable result.",
   "get_started": "Get started",
-
   "study_selection": "Study Selection",
   "study_selection_description": "Please select a study.",
 
@@ -17,7 +19,6 @@
   "tea_vs_coffee": "Tea vs. Coffee",
   "weed_vs_alcohol": "Weed vs. Alcohol",
   "back_pain": "Back pain",
-
   "about": "This could be your advertisement.",
 
   "video_task": "Video task",
