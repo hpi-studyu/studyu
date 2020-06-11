@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../routes.dart';
 import '../util/localization.dart';
+import '../util/user.dart';
 
 class TermsScreen extends StatefulWidget {
   @override
@@ -10,9 +11,9 @@ class TermsScreen extends StatefulWidget {
 }
 
 class _TermsScreenState extends State<TermsScreen> {
-  bool _acceptedTerms = false;
-  bool _acceptedPrivacy = false;
-  bool _acceptedDisclaimer = false;
+  bool _acceptedTerms = true;
+  bool _acceptedPrivacy = true;
+  bool _acceptedDisclaimer = true;
 
   bool userCanContinue() {
     return _acceptedTerms && _acceptedPrivacy && _acceptedDisclaimer;
@@ -49,7 +50,12 @@ class _TermsScreenState extends State<TermsScreen> {
                     onChange: (val) => setState(() => _acceptedDisclaimer = val),
                     isChecked: _acceptedDisclaimer),
                 RaisedButton(
-                  onPressed: userCanContinue() ? () => Navigator.pushNamed(context, Routes.studySelection) : null,
+                  onPressed: userCanContinue()
+                      ? () {
+                          UserUtils.getOrCreateUser();
+                          Navigator.pushNamed(context, Routes.studySelection);
+                        }
+                      : null,
                   child: Text(Nof1Localizations.of(context).translate('get_started')),
                 ),
               ],
