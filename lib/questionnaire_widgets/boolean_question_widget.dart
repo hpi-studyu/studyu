@@ -22,6 +22,7 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
   @override
   void initState() {
     super.initState();
+    selected = null;
   }
 
   void tapped({bool choice}) {

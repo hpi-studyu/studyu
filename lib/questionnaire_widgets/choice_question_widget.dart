@@ -25,8 +25,8 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
   @override
   void initState() {
-    selected = [];
     super.initState();
+    selected = [];
   }
 
   void tapped(Choice choice) {
