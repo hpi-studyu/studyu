@@ -10,6 +10,7 @@ import 'questionnaire_widgets/questionnaire_widget.dart';
 import 'study_onboarding/consent.dart';
 import 'study_onboarding/eligibility_check.dart';
 import 'study_onboarding/intervention_selection.dart';
+import 'study_onboarding/journey_overview.dart';
 import 'study_selection/study_selection.dart';
 
 class Routes {
@@ -20,6 +21,7 @@ class Routes {
   static const String studySelection = '/studySelection';
   static const String eligibilityCheck = '/eligibilityCheck';
   static const String interventionSelection = '/interventionSelection';
+  static const String journey = '/journey';
   static const String consent = '/consent';
   static const String contact = '/contact';
   static const String appSettings = '/settings';
@@ -45,6 +47,7 @@ class Routes {
       studySelection: (_) => StudySelectionScreen(),
       eligibilityCheck: (_) => EligibilityCheckScreen.fromRouteArgs(settings.arguments),
       interventionSelection: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments),
+      journey: (_) => JourneyOverviewScreen.fromRouteArgs(settings.arguments),
       consent: (_) => ConsentScreen(),
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),
