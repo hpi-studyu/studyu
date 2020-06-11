@@ -42,20 +42,19 @@ class QuestionContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionBody = getQuestionBody();
 
-    var header = [
+    var header = <Widget>[
       Text(
           question.prompt,
           style: Theme.of(context).textTheme.subtitle1
       ),
-      SizedBox(height: 5),
     ];
     if (questionBody.subtitle != null) {
       header.addAll([
+        SizedBox(height: 5),
         Text(
             questionBody.subtitle,
             style: Theme.of(context).textTheme.subtitle2
         ),
-        SizedBox(height: 5),
       ]);
     }
 
@@ -69,6 +68,7 @@ class QuestionContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...header,
+              SizedBox(height: 10),
               questionBody
             ],
           ),
