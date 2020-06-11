@@ -16,6 +16,8 @@
 
   "how_would_you_rate_your_pain_today": "How would you rate your pain today? (0 = no pain, 10 = extreme pain)",
   "thank_you_for_your_input": "Thank you for your input",
+  "please_give_consent": "Please give your consent to participate in this study.",
+  "user_did_not_give_consent": "You did not give your consent. To participate you need to give consent.",
 
   "dashboard": "Dashboard",
   "home": "Home",
