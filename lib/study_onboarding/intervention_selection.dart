@@ -30,18 +30,6 @@ class InterventionSelectionScreen extends StatefulWidget {
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selected = [];
 
-  void getConsentAndNavigateToDashboard(BuildContext context, List<Intervention> selected) async {
-    final consentGiven = await Navigator.pushNamed(context, Routes.consent);
-    if (consentGiven != null && consentGiven) {
-      Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected));
-    } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(Nof1Localizations.of(context).translate('user_did_not_give_consent')),
-        duration: Duration(seconds: 30),
-      ));
-    }
-  }
-
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
     final theme = Theme.of(context);
     return ListView.builder(
@@ -75,45 +63,43 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Widget buildInterventionSelection(BuildContext context, Study study) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
-      ),
-      body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: Text(
-                      Nof1Localizations.of(context).translate('please_select_interventions'),
-                      style: theme.textTheme.headline5,
+        appBar: AppBar(
+          title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
+        ),
+        body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
+                      child: Text(
+                        Nof1Localizations.of(context).translate('please_select_interventions'),
+                        style: theme.textTheme.headline5,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
-                      ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
-                      : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  RaisedButton(
-                    child: Text(Nof1Localizations.of(context).translate('finished')),
-                    onPressed: selected.length == 2
-                        ? () =>
-                        getConsentAndNavigateToDashboard(context, selected)
-                        : null,
-                  ),
-                ],
+                    SizedBox(
+                      height: 20,
+                    ),
+                    study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
+                        ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
+                        : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    RaisedButton(
+                      child: Text(Nof1Localizations.of(context).translate('finished')),
+                      onPressed: selected.length == 2
+                          ? () => Navigator.pushNamed(context, Routes.journey,
+                              arguments: DashboardScreenArguments(selected))
+                          : null,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-      )
-    );
+            )));
   }
 
   @override
