@@ -50,10 +50,10 @@ class QuestionContainer extends StatelessWidget {
     ];
     if (questionBody.subtitle != null) {
       header.addAll([
-        SizedBox(height: 5),
+        SizedBox(height: 8),
         Text(
             questionBody.subtitle,
-            style: Theme.of(context).textTheme.subtitle2
+            style: Theme.of(context).textTheme.caption
         ),
       ]);
     }
@@ -68,7 +68,7 @@ class QuestionContainer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...header,
-              SizedBox(height: 10),
+              SizedBox(height: 16),
               questionBody
             ],
           ),
