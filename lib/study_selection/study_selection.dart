@@ -7,6 +7,7 @@ import '../database/models/questionnaire/questionnaire_state.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
 import '../study_onboarding/intervention_selection.dart';
+import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
@@ -36,30 +37,45 @@ class StudySelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future: StudyDao().getAllStudies(),
-          builder: (_context, snapshot) {
-            return snapshot.hasData
-                ? ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      final Study currentStudy = snapshot.data[index];
-                      return ListTile(
-                          contentPadding: EdgeInsets.all(16),
-                          onTap: () {
-                            navigateToEligibilityCheck(context, currentStudy);
-                          },
-                          title: Center(
-                              child: Text(currentStudy.title,
-                                  style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
-                          subtitle: Center(child: Text(currentStudy.description)),
-                          leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
-                              color: theme.primaryColor));
-                    })
-                : CircularProgressIndicator();
-          },
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('study_selection')),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                Nof1Localizations.of(context).translate('study_selection_description'),
+                style: theme.textTheme.headline5,
+              ),
+            ),
+            FutureBuilder(
+              future: StudyDao().getAllStudies(),
+              builder: (_context, snapshot) {
+                return snapshot.hasData
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          final Study currentStudy = snapshot.data[index];
+                          return ListTile(
+                              contentPadding: EdgeInsets.all(16),
+                              onTap: () {
+                                navigateToEligibilityCheck(context, currentStudy);
+                              },
+                              title: Center(
+                                  child: Text(currentStudy.title,
+                                      style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                              subtitle: Center(child: Text(currentStudy.description)),
+                              leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
+                                  color: theme.primaryColor));
+                        })
+                    : CircularProgressIndicator();
+              },
+            ),
+          ],
         ),
       ),
     );
