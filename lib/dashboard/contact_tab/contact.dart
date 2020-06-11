@@ -8,10 +8,23 @@ class Contact extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('contact')),
+        centerTitle: true,
       ),
       body: Center(
-        child: Text(
-          Nof1Localizations.of(context).translate('contact'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+                color: Colors.amber, onPressed: () {}, child: Text('FAQ')),
+            RaisedButton(
+                color: Colors.cyan,
+                onPressed: () {},
+                child: Text('Contact Support')),
+            RaisedButton(
+                color: Colors.amber,
+                onPressed: () {},
+                child: Text('Imprint/About')),
+          ],
         ),
       ),
     );
