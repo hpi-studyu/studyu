@@ -1,6 +1,7 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models/models.dart';
+import '../models/user_study.dart';
 
 const filename = 'assets/studies/scratch.xml';
 
@@ -24,5 +25,12 @@ class StudyDao {
           study;
     }
     return detailedStudy;
+  }
+
+  Future<UserStudy> getUserStudy(String objectId) async {
+    final builder = QueryBuilder<UserStudy>(UserStudy())
+      ..whereEqualTo('objectId', objectId);
+    return await builder.query().then((response) =>
+    response.success ? response.results.isNotEmpty ? response.results.first as UserStudy : null : null);
   }
 }
