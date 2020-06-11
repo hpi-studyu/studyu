@@ -30,6 +30,18 @@ class InterventionSelectionScreen extends StatefulWidget {
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selected = [];
 
+  void getConsentAndNavigateToDashboard(BuildContext context, List<Intervention> selected) async {
+    final consentGiven = await Navigator.pushNamed(context, Routes.consent);
+    if (consentGiven) {
+      Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected));
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('You did not give consent'),
+        duration: Duration(seconds: 30),
+      ));
+    }
+  }
+
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
     final theme = Theme.of(context);
     return ListView.builder(
@@ -89,7 +101,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                   child: Text(Nof1Localizations.of(context).translate('finished')),
                   onPressed: selected.length == 2
                       ? () =>
-                          Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected))
+                          getConsentAndNavigateToDashboard(context, selected)
                       : null,
                 ),
               ],
