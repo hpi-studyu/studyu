@@ -1,3 +1,4 @@
+import 'package:Nof1/database/models/study_schedule/study_schedule.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'eligibility/eligibility_criterion.dart';
@@ -27,4 +28,8 @@ class StudyDetails extends ParseObject implements ParseCloneable {
   set interventionSet(InverventionSet interventionSet) => set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
 
   static const keyObservations = 'observations';
+
+  static const keySchedule = 'schedule';
+  StudySchedule get schedule => StudySchedule.fromJson(get<Map<String, dynamic>>(keySchedule));
+  set schedule(StudySchedule schedule) => set<Map<String, dynamic>>(keySchedule, schedule.toJson());
 }
