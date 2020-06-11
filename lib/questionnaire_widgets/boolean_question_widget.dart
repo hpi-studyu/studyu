@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import '../database/models/questionnaire/answer.dart';
 import '../database/models/questionnaire/questions/boolean_question.dart';
+import '../widgets/selectable_button.dart';
 import 'question_widget.dart';
-import 'selectable_button.dart';
 
 class BooleanQuestionWidget extends QuestionWidget {
   final BooleanQuestion question;
