@@ -87,7 +87,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 children: [
                   Center(
                     child: Text(
-                      'Please select 1 or 2 interventions to apply during the study.',
+                      Nof1Localizations.of(context).translate('please_select_interventions'),
                       style: theme.textTheme.headline5,
                     ),
                   ),
@@ -96,7 +96,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                   ),
                   study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
                       ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
-                      : Text('No interventions available.'),
+                      : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
                   SizedBox(
                     height: 20,
                   ),
@@ -125,7 +125,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
             if (!snapshot.hasData) {
               return Center(
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text('Loading interventions'),
+                  Text(Nof1Localizations.of(context).translate('loading_interventions')),
                   SizedBox(height: 20),
                   CircularProgressIndicator(),
                 ]),
@@ -133,7 +133,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
             }
             if (snapshot.hasError) {
               Timer(Duration(seconds: 4), () => Navigator.pop(context));
-              return Center(child: Text('An error occurred!'));
+              return Center(child: Text(Nof1Localizations.of(context).translate('error')));
             }
 
             return buildInterventionSelection(_context, snapshot.data as Study);
