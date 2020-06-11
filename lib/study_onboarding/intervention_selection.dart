@@ -36,7 +36,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected));
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You did not give consent'),
+        content: Text('You did not give your consent. To participate you need to give consent.'),
         duration: Duration(seconds: 30),
       ));
     }
@@ -71,7 +71,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         });
   }
 
-  Widget buildInterventionSelection(Study study) {
+  Widget buildInterventionSelection(BuildContext context, Study study) {
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -131,7 +131,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
               return Center(child: Text('An error occurred!'));
             }
 
-            return buildInterventionSelection(snapshot.data as Study);
+            return buildInterventionSelection(_context, snapshot.data as Study);
           },
         ),
       ),
