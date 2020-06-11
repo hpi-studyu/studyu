@@ -21,36 +21,24 @@ class ChoiceQuestionWidget extends QuestionWidget {
 }
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
-  List<Choice> selected = [];
-  int maxSelection;
-  final List<Widget> _questionFooter = [];
+  List<Choice> selected;
 
   @override
   void initState() {
+    selected = [];
     super.initState();
-    if (widget.question.multiple) {
-      _questionFooter.add(RaisedButton(
-        onPressed: confirm,
-        // TODO: Translate
-        child: Text('Done'),
-      ));
-    }
   }
 
   void tapped(Choice choice) {
     setState(() {
-      if (!widget.question.multiple) {
-        selected.clear();
-      }
+      if (!widget.question.multiple) selected.clear();
       if (selected.contains(choice)) {
         selected.remove(choice);
       } else {
         selected.add(choice);
       }
     });
-    if (!widget.question.multiple) {
-      confirm();
-    }
+    if (!widget.question.multiple) confirm();
   }
 
   void confirm() {
@@ -59,24 +47,29 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final choiceWidgets = widget.question.choices
-        .expand<Widget>((choice) => [
-              SizedBox(height: 8),
-              SelectableButton(
-                selected: selected.contains(choice),
-                onTap: () => tapped(choice),
-                child: Text(choice.text),
-              ),
-            ])
-        .skip(1) // Skip first SizedBox
-        .toList();
+    final choiceWidgets = widget.question.choices.map<Widget>((choice) =>
+        SelectableButton(
+          selected: selected.contains(choice),
+          onTap: () => tapped(choice),
+          child: Text(choice.text),
+        )
+    ).toList();
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ...choiceWidgets,
-        ..._questionFooter,
-      ],
+    if (widget.question.multiple) {
+      choiceWidgets.add(
+          RaisedButton(
+            onPressed: confirm,
+            // TODO: Translate
+            child: Text('Done'),
+          )
+      );
+    }
+
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: choiceWidgets.length,
+      itemBuilder: (context, index) => choiceWidgets[index],
+      separatorBuilder: (context, index) => SizedBox(height: 8.0),
     );
   }
 }

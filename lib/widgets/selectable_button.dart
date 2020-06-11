@@ -16,10 +16,10 @@ class SelectableButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 48,
       child: FlatButton(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          borderRadius: BorderRadius.circular(4.0),
           side: Divider.createBorderSide(context, color: theme.primaryColor),
         ),
         onPressed: onTap,
