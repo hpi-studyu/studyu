@@ -30,6 +30,18 @@ class InterventionSelectionScreen extends StatefulWidget {
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selected = [];
 
+  void getConsentAndNavigateToDashboard(BuildContext context, List<Intervention> selected) async {
+    final consentGiven = await Navigator.pushNamed(context, Routes.consent);
+    if (consentGiven != null && consentGiven) {
+      Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected));
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(Nof1Localizations.of(context).translate('user_did_not_give_consent')),
+        duration: Duration(seconds: 30),
+      ));
+    }
+  }
+
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
     final theme = Theme.of(context);
     return ListView.builder(
@@ -59,7 +71,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         });
   }
 
-  Widget buildInterventionSelection(Study study) {
+  Widget buildInterventionSelection(BuildContext context, Study study) {
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -89,7 +101,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                   child: Text(Nof1Localizations.of(context).translate('finished')),
                   onPressed: selected.length == 2
                       ? () =>
-                          Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(selected))
+                          getConsentAndNavigateToDashboard(context, selected)
                       : null,
                 ),
               ],
@@ -119,7 +131,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
               return Center(child: Text('An error occurred!'));
             }
 
-            return buildInterventionSelection(snapshot.data as Study);
+            return buildInterventionSelection(_context, snapshot.data as Study);
           },
         ),
       ),
