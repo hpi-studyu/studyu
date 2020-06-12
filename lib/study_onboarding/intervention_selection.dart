@@ -1,34 +1,20 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
-import '../dashboard/dashboard.dart';
-import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
 import '../routes.dart';
 import '../util/localization.dart';
-
-class InterventionSelectionScreenArguments {
-  final Study study;
-
-  const InterventionSelectionScreenArguments(this.study);
-}
+import 'onboarding_model.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
-  final Study study;
-
-  const InterventionSelectionScreen(this.study, {Key key}) : super(key: key);
-
-  factory InterventionSelectionScreen.fromRouteArgs(InterventionSelectionScreenArguments args) =>
-      InterventionSelectionScreen(args.study);
-
   @override
   _InterventionSelectionScreenState createState() => _InterventionSelectionScreenState();
 }
 
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selected = [];
+  Study selectedStudy;
 
   Widget buildInterventionSelectionList(List<Intervention> interventions) {
     final theme = Theme.of(context);
@@ -60,7 +46,14 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         });
   }
 
-  Widget buildInterventionSelection(BuildContext context, Study study) {
+  @override
+  void initState() {
+    super.initState();
+    selectedStudy = context.read<OnboardingModel>().selectedStudy;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
         appBar: AppBar(
@@ -81,14 +74,17 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                       ),
                     ),
                     SizedBox(height: 20),
-                    study.studyDetails != null && study.studyDetails.interventionSet.interventions.isNotEmpty
-                        ? buildInterventionSelectionList(study.studyDetails.interventionSet.interventions)
+                    selectedStudy.studyDetails != null &&
+                            selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
+                        ? buildInterventionSelectionList(selectedStudy.studyDetails.interventionSet.interventions)
                         : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
                     SizedBox(height: 20),
                     RaisedButton(
                       onPressed: selected.length == 2
-                          ? () => Navigator.pushNamed(context, Routes.journey,
-                              arguments: DashboardScreenArguments(selected))
+                          ? () {
+                              context.read<OnboardingModel>().selectedInterventions = selected;
+                              Navigator.pushNamed(context, Routes.journey);
+                            }
                           : null,
                       child: Text(Nof1Localizations.of(context).translate('finished')),
                     ),
@@ -96,33 +92,5 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 ),
               ),
             )));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future: StudyDao().getStudyWithStudyDetails(widget.study),
-          builder: (_context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text(Nof1Localizations.of(context).translate('loading_interventions')),
-                  SizedBox(height: 20),
-                  CircularProgressIndicator(),
-                ]),
-              );
-            }
-            if (snapshot.hasError) {
-              Timer(Duration(seconds: 4), () => Navigator.pop(context));
-              return Center(child: Text(Nof1Localizations.of(context).translate('error')));
-            }
-
-            return buildInterventionSelection(_context, snapshot.data as Study);
-          },
-        ),
-      ),
-    );
   }
 }
