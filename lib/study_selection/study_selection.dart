@@ -13,12 +13,12 @@ import '../util/localization.dart';
 class StudySelectionScreen extends StatelessWidget {
   void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
     final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
-    final result = await Navigator.pushNamed(context, Routes.questionnaire,
-        arguments: QuestionnaireScreenArguments(
-          questions: study.studyDetails.questionnaire.questions,
-          criteria: study.studyDetails.eligibility,
-          title: 'Check eligibility',
-        )) as List<Object>;
+    final result = await Navigator.push(
+        context,
+        QuestionnaireScreen.route(
+            title: 'Check eligibility',
+            questions: study.studyDetails.questionnaire.questions,
+            criteria: study.studyDetails.eligibility)) as List<Object>;
     if (result.isNotEmpty && result[0] != null && result[0]) {
       print('Patient is eligible');
       final onboardingModel = Provider.of<OnboardingModel>(context, listen: false);

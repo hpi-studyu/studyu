@@ -6,28 +6,20 @@ import '../database/models/questionnaire/question.dart';
 import '../database/models/questionnaire/questionnaire_state.dart';
 import 'question_container.dart';
 
-class QuestionnaireScreenArguments {
-  final Key key;
-  final String title;
-  final List<Question> questions;
-  final List<EligibilityCriterion> criteria;
-
-  QuestionnaireScreenArguments({this.key, this.title, @required this.questions, this.criteria});
-}
-
 class QuestionnaireScreen extends StatefulWidget {
+  static MaterialPageRoute route(
+          {@required String title,
+          @required List<Question> questions,
+          @required List<EligibilityCriterion> criteria}) =>
+      MaterialPageRoute(
+          builder: (_) => QuestionnaireScreen(title, questions, criteria),
+          settings: RouteSettings(name: 'eligibilityCheck'));
+
   final String title;
   final List<Question> questions;
   final List<EligibilityCriterion> criteria;
 
-  const QuestionnaireScreen({Key key, this.title, @required this.questions, this.criteria}) : super(key: key);
-
-  factory QuestionnaireScreen.fromRouteArgs(QuestionnaireScreenArguments args) => QuestionnaireScreen(
-    key: args.key,
-    title: args.title,
-    questions: args.questions,
-    criteria: args.criteria,
-  );
+  const QuestionnaireScreen(this.title, this.questions, this.criteria, {Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireScreenState();

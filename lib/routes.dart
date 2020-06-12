@@ -6,7 +6,6 @@ import 'app_onboarding/welcome.dart';
 import 'dashboard/contact_tab/contact.dart';
 import 'dashboard/dashboard.dart';
 import 'dashboard/settings.dart';
-import 'questionnaire_widgets/questionnaire_widget.dart';
 import 'study_onboarding/consent.dart';
 import 'study_onboarding/intervention_selection.dart';
 import 'study_onboarding/journey_overview.dart';
@@ -48,7 +47,6 @@ class Routes {
       consent: (_) => ConsentScreen(),
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),
-      questionnaire: (_) => QuestionnaireScreen.fromRouteArgs(settings.arguments),
     };
 
     if (!routeMap.containsKey(settings.name)) {
