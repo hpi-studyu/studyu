@@ -40,14 +40,14 @@ class Routes {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final routeMap = {
-      dashboard: (_) => DashboardScreen.fromRouteArgs(settings.arguments),
+      dashboard: (_) => DashboardScreen(),
       welcome: (_) => WelcomeScreen(),
       about: (_) => AboutScreen(),
       terms: (_) => TermsScreen(),
       studySelection: (_) => StudySelectionScreen(),
       eligibilityCheck: (_) => EligibilityCheckScreen.fromRouteArgs(settings.arguments),
-      interventionSelection: (_) => InterventionSelectionScreen.fromRouteArgs(settings.arguments),
-      journey: (_) => JourneyOverviewScreen.fromRouteArgs(settings.arguments),
+      interventionSelection: (_) => InterventionSelectionScreen(),
+      journey: (_) => JourneyOverviewScreen(),
       consent: (_) => ConsentScreen(),
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),

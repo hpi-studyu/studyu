@@ -1,28 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../dashboard/dashboard.dart';
-import '../database/models/models.dart';
 import '../routes.dart';
 import '../util/localization.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
-  final List<Intervention> interventions;
-
-  const JourneyOverviewScreen(this.interventions, {Key key}) : super(key: key);
-
-  factory JourneyOverviewScreen.fromRouteArgs(DashboardScreenArguments args) => JourneyOverviewScreen(args.selectedInterventions);
-
   @override
   _JourneyOverviewScreen createState() => _JourneyOverviewScreen();
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
-
   void getConsentAndNavigateToDashboard(BuildContext context) async {
     final consentGiven = await Navigator.pushNamed(context, Routes.consent);
     if (consentGiven != null && consentGiven) {
-      Navigator.pushNamed(context, Routes.dashboard, arguments: DashboardScreenArguments(widget.interventions));
+      Navigator.pushNamed(context, Routes.dashboard);
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(Nof1Localizations.of(context).translate('user_did_not_give_consent')),
@@ -36,11 +27,10 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('journey')),
-      ),
-      body: Builder(
-        builder: (_context) {
+        appBar: AppBar(
+          title: Text(Nof1Localizations.of(context).translate('journey')),
+        ),
+        body: Builder(builder: (_context) {
           return Center(
             child: SingleChildScrollView(
               child: Padding(
@@ -62,8 +52,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
               ),
             ),
           );
-        }
-      )
-    );
+        }));
   }
 }

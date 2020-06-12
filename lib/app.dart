@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'environments/environment.dart';
 import 'routes.dart';
+import 'study_onboarding/onboarding_model.dart';
 import 'theme.dart';
 import 'util/localization.dart';
 
@@ -48,8 +49,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppLanguage>.value(
-      value: appLanguage,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppLanguage>.value(value: appLanguage),
+        Provider<OnboardingModel>(create: (context) => OnboardingModel()),
+      ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return MaterialApp(
           title: 'Nof1 Initial app',

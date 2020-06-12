@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../dashboard/dashboard.dart';
 import '../database/models/interventions/intervention.dart';
+import '../database/models/models.dart';
 import '../routes.dart';
+import '../study_onboarding/onboarding_model.dart';
 import '../util/localization.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -36,8 +38,12 @@ class WelcomeScreen extends StatelessWidget {
           ? null
           : [
               FlatButton(
-                onPressed: () => Navigator.pushNamed(context, Routes.dashboard,
-                    arguments: DashboardScreenArguments([Intervention('a', 'A'), Intervention('a', 'B')])),
+                onPressed: () {
+                  final onboardingModel = context.read<OnboardingModel>();
+                  onboardingModel.selectedStudy = Study();
+                  onboardingModel.selectedInterventions = [Intervention('a', 'A'), Intervention('a', 'B')];
+                  Navigator.pushNamed(context, Routes.dashboard);
+                },
                 child: Text('Skip to Dashboard'),
               ),
             ],
