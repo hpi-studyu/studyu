@@ -22,11 +22,17 @@ class PlannedIntervention {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  List<Intervention> interventions;
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO: dashboard should read from a different model connected to parse UserStudy object
+    interventions = context.read<OnboardingModel>().selectedInterventions;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: dashboard should read from a different model connected to parse UserStudy object
-    final interventions = context.read<OnboardingModel>().selectedInterventions;
-
     // ABAB
     final plannedInterventions = [
       PlannedIntervention(interventions[0], DateTime.now(), DateTime.now().add(Duration(days: 6))),
