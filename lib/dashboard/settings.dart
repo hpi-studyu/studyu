@@ -24,14 +24,14 @@ class _SettingsState extends State<Settings> {
 
     for (var locale in AppLanguage.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
-        child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),
         value: locale,
+        child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),
       ));
     }
 
     dropDownItems.add(DropdownMenuItem(
-      child: Text('System'),
       value: null,
+      child: Text('System'),
     ));
 
     return Row(

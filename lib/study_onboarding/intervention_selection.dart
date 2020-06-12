@@ -86,11 +86,11 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                         : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
                     SizedBox(height: 20),
                     RaisedButton(
-                      child: Text(Nof1Localizations.of(context).translate('finished')),
                       onPressed: selected.length == 2
                           ? () => Navigator.pushNamed(context, Routes.journey,
                               arguments: DashboardScreenArguments(selected))
                           : null,
+                      child: Text(Nof1Localizations.of(context).translate('finished')),
                     ),
                   ],
                 ),

@@ -30,11 +30,11 @@ class _ProgressRowState extends State<ProgressRow> {
           },
           elevation: 0,
           fillColor: isCurrent ? theme.accentColor : theme.primaryColor,
+          shape: CircleBorder(),
           child: Icon(
             plannedIntervention.intervention.name == 'Exercise' ? MdiIcons.dumbbell : MdiIcons.pill,
             color: Colors.white,
           ),
-          shape: CircleBorder(),
         ),
       ],
     ));
