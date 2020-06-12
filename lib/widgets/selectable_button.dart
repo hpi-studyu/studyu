@@ -23,8 +23,8 @@ class SelectableButton extends StatelessWidget {
           side: Divider.createBorderSide(context, color: theme.primaryColor),
         ),
         onPressed: onTap,
-        child: child,
         color: _getFillColor(theme),
+        child: child,
       ),
     );
   }

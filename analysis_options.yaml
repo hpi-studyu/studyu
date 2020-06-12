@@ -31,3 +31,7 @@ linter:
     unnecessary_const: true
     unnecessary_null_in_if_null_operators: true
     use_function_type_syntax_for_parameters: true
+    # even more linters
+    sort_child_properties_last: true
+    sort_unnamed_constructors_first: true
+    sort_pub_dependencies: true
