@@ -19,13 +19,15 @@ class Answer<V> {
 
   Answer(this.question, this.timestamp);
 
-  Answer.forQuestion(Question question, this.response) : question = question.id, timestamp = DateTime.now();
+  Answer.forQuestion(Question question, this.response)
+      : question = question.id,
+        timestamp = DateTime.now();
 
   factory Answer.parseJson(Map<String, dynamic> json) => _$AnswerFromJson(json)..response = json[keyResponse] as V;
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(_$AnswerToJson(this), { keyResponse: response });
+  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(_$AnswerToJson(this), {keyResponse: response});
 
   static Answer fromJson(Map<String, dynamic> data) {
-    dynamic value = data[keyResponse];
+    final dynamic value = data[keyResponse];
     switch (value.runtimeType) {
       case bool:
         return Answer<bool>.parseJson(data);

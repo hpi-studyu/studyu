@@ -30,11 +30,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initLanguage() {
-    appLanguage = AppLanguage();
-    appLanguage.fetchLocale();
+    appLanguage = AppLanguage()..fetchLocale();
   }
 
-  void initParse(Environment env) async {
+  Future<void> initParse(Environment env) async {
     if (!Parse().hasParseBeenInitialized()) {
       await Parse().initialize(env.keyParseApplicationId, env.keyParseServerUrl,
           masterKey: env.keyParseMasterKey, debug: env.debug, coreStore: await CoreStoreSharedPrefsImp.getInstance());

@@ -39,9 +39,9 @@ class WelcomeScreen extends StatelessWidget {
           : [
               FlatButton(
                 onPressed: () {
-                  final onboardingModel = context.read<OnboardingModel>();
-                  onboardingModel.selectedStudy = Study();
-                  onboardingModel.selectedInterventions = [Intervention('a', 'A'), Intervention('a', 'B')];
+                  context.read<OnboardingModel>()
+                    ..selectedStudy = Study()
+                    ..selectedInterventions = [Intervention('a', 'A'), Intervention('a', 'B')];
                   Navigator.pushNamed(context, Routes.dashboard);
                 },
                 child: Text('Skip to Dashboard'),

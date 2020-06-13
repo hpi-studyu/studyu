@@ -17,8 +17,8 @@ class UserUtils {
     return currentUser;
   }
 
-  static void logout() async {
-    final currentUser = await ParseUser.currentUser() as ParseUser;
+  static Future<void> logout() async {
+    final ParseUser currentUser = await ParseUser.currentUser();
     currentUser.logout(deleteLocalUserData: true);
   }
 }

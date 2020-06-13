@@ -10,7 +10,7 @@ import 'task_box.dart';
 class TaskOverview extends StatefulWidget {
   final List<PlannedIntervention> plannedInterventions;
 
-  const TaskOverview({Key key, @required this.plannedInterventions}) : super(key: key);
+  const TaskOverview({@required this.plannedInterventions, Key key}) : super(key: key);
   @override
   _TaskOverviewState createState() => _TaskOverviewState();
 }

@@ -63,7 +63,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
             scrollDirection: Axis.vertical,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

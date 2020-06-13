@@ -18,7 +18,7 @@ class StudySchedule {
 
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles, (index) => index);
-    var phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
+    final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
 
     if (includeBaseline) phases.insert(0, null);
 
@@ -54,11 +54,6 @@ class StudySchedule {
     if (cycle > 0) phase.shuffle();
     return phase;
   }
-
 }
 
-enum PhaseSequence {
-  alternating,
-  counterBalanced,
-  randomized
-}
+enum PhaseSequence { alternating, counterBalanced, randomized }
