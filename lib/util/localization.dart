@@ -20,8 +20,8 @@ class Nof1Localizations {
   Map<String, String> _localizedStrings;
 
   Future<Nof1Localizations> load() async {
-    var jsonString = await rootBundle.loadString('assets/i18n/${locale.languageCode}.json');
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
+    final jsonString = await rootBundle.loadString('assets/i18n/${locale.languageCode}.json');
+    final Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
@@ -54,7 +54,7 @@ class Nof1LocalizationsDelegate extends LocalizationsDelegate<Nof1Localizations>
 
   @override
   Future<Nof1Localizations> load(Locale locale) async {
-    var localizations = Nof1Localizations(locale, testing: testing);
+    final localizations = Nof1Localizations(locale, testing: testing);
     if (testing) {
       await localizations.loadTest(locale);
     } else {
@@ -76,14 +76,14 @@ class AppLanguage extends ChangeNotifier {
   ];
 
   Locale get appLocal => _appLocale;
-  void fetchLocale() async {
-    var prefs = await SharedPreferences.getInstance();
-    var pref = prefs.getString('language_code');
+  Future<void> fetchLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    final pref = prefs.getString('language_code');
     _appLocale = pref != null ? Locale(pref) : null;
   }
 
-  void changeLanguage(Locale type) async {
-    var prefs = await SharedPreferences.getInstance();
+  Future<void> changeLanguage(Locale type) async {
+    final prefs = await SharedPreferences.getInstance();
     if (_appLocale == type) {
       return;
     }

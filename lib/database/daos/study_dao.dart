@@ -6,7 +6,7 @@ const filename = 'assets/studies/scratch.xml';
 
 class StudyDao {
   Future<List<Study>> getAllStudies() async {
-    var response = await Study().getAll();
+    final response = await Study().getAll();
     if (response.success) {
       return response.results.map((study) => study is Study ? study : null).toList();
     }

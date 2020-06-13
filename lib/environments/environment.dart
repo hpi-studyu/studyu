@@ -7,7 +7,7 @@ class Environment extends InheritedWidget {
   final String keyParseMasterKey;
   final bool debug;
 
-  Environment({
+  const Environment({
     @required this.keyParseApplicationId,
     @required this.keyParseServerUrl,
     @required this.keyParseMasterKey,

@@ -22,7 +22,7 @@ class _SettingsState extends State<Settings> {
   Widget getDropdownRow(BuildContext context) {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
-    for (var locale in AppLanguage.supportedLocales) {
+    for (final locale in AppLanguage.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
         child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),

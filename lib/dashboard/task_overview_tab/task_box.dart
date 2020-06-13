@@ -7,7 +7,7 @@ import '../../tasks/dashboard_task.dart';
 class TaskBox extends StatefulWidget {
   final DashboardTask task;
 
-  TaskBox({@required this.task});
+  const TaskBox({@required this.task});
 
   @override
   State<TaskBox> createState() => _TaskBoxState();
@@ -63,17 +63,17 @@ class RoundCheckbox extends StatelessWidget {
         return IconButton(
           onPressed: () {
             onChanged(!value);
-            controller.forward(from: 0.0);
+            controller.forward(from: 0);
           },
           icon: value
               ? Icon(
                   MdiIcons.checkboxMarkedCircleOutline,
-                  size: 30.0,
+                  size: 30,
                   color: theme.accentColor,
                 )
               : Icon(
                   MdiIcons.checkboxBlankCircleOutline,
-                  size: 30.0,
+                  size: 30,
                   color: theme.accentColor,
                 ),
         );

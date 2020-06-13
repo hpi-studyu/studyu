@@ -11,7 +11,7 @@ import '../study_onboarding/onboarding_model.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
+  Future<void> navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
     final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
     final result = await Navigator.push(
         context,
@@ -19,12 +19,11 @@ class StudySelectionScreen extends StatelessWidget {
             title: 'Check eligibility', criteria: study.studyDetails.eligibility)) as List<Object>;
     if (result.isNotEmpty && result[0] != null && result[0]) {
       print('Patient is eligible');
-      final onboardingModel = Provider.of<OnboardingModel>(context, listen: false);
-      onboardingModel.selectedStudy = study;
+      Provider.of<OnboardingModel>(context, listen: false).selectedStudy = study;
       Navigator.pushNamed(context, Routes.interventionSelection);
     } else if (result.length > 1 && result[1] != null) {
       final reason = study.studyDetails.eligibility
-          .firstWhere((criterion) => criterion.isViolated((result[1] as QuestionnaireState)))
+          .firstWhere((criterion) => criterion.isViolated(result[1] as QuestionnaireState))
           .reason;
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('You are not eligible for this study. $reason'),
@@ -44,7 +43,7 @@ class StudySelectionScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 Nof1Localizations.of(context).translate('study_selection_description'),
                 style: theme.textTheme.headline5,

@@ -31,15 +31,15 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   int _nextQuestionIndex = 1;
 
   void _finishQuestionnaire() {
-    var conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
+    final conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
     Navigator.of(context).pop([conditionResult, qs]);
   }
 
   void _onQuestionDone(Answer answer, int index) {
     if (index < _nextQuestionIndex - 1) {
       while (shownQuestions.length > index + 1) {
-        var end = shownQuestions.length - 1;
-        var lastQuestion = shownQuestions.removeLast();
+        final end = shownQuestions.length - 1;
+        final lastQuestion = shownQuestions.removeLast();
         _listKey.currentState.removeItem(
             end,
             (context, animation) => SizeTransition(

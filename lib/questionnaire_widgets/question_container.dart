@@ -14,7 +14,7 @@ class QuestionContainer extends StatelessWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer({Key key, @required this.onDone, @required this.question, this.index}) : super(key: key);
+  const QuestionContainer({@required this.onDone, @required this.question, this.index, Key key}) : super(key: key);
 
   void _onDone(Answer answer) {
     onDone(answer, index);
@@ -42,35 +42,25 @@ class QuestionContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionBody = getQuestionBody();
 
-    var header = <Widget>[
-      Text(
-          question.prompt,
-          style: Theme.of(context).textTheme.subtitle1
-      ),
+    final header = <Widget>[
+      Text(question.prompt, style: Theme.of(context).textTheme.subtitle1),
     ];
     if (questionBody.subtitle != null) {
       header.addAll([
         SizedBox(height: 8),
-        Text(
-            questionBody.subtitle,
-            style: Theme.of(context).textTheme.caption
-        ),
+        Text(questionBody.subtitle, style: Theme.of(context).textTheme.caption),
       ]);
     }
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: ChangeNotifierProvider<QuestionWidgetModel>(
           create: (context) => QuestionWidgetModel(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...header,
-              SizedBox(height: 16),
-              questionBody
-            ],
+            children: [...header, SizedBox(height: 16), questionBody],
           ),
         ),
       ),
@@ -87,5 +77,4 @@ class QuestionWidgetModel extends ChangeNotifier {
     _answer = answer;
     notifyListeners();
   }
-
 }
