@@ -11,9 +11,12 @@ abstract class Task {
   String id;
   String title;
 
+  List<Schedule> schedule;
+
   Task();
 
   factory Task.fromJson(Map<String, dynamic> data) => taskTypes[data[keyType]](data);
+
   Map<String, dynamic> toJson();
 
   @override

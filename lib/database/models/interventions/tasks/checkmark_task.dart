@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../schedule/schedule.dart';
 import '../task.dart';
 
 part 'checkmark_task.g.dart';
