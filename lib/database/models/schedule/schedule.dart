@@ -4,7 +4,7 @@ typedef ScheduleParser = Schedule Function(Map<String, dynamic> data);
 
 abstract class Schedule {
   static Map<String, ScheduleParser> scheduleTypes = {
-    FixedSchedule.scheduleType: (json) => FixedSchedule.fromJson(json)
+    FixedSchedule.scheduleType: (json) => FixedSchedule.fromJson(json),
   };
   static const String keyType = 'type';
   String type;
