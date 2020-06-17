@@ -15,10 +15,8 @@ class StudySelectionScreen extends StatelessWidget {
     final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
     final result = await Navigator.push(
         context,
-        QuestionnaireScreen.route(
-            title: 'Check eligibility',
-            questions: study.studyDetails.questionnaire.questions,
-            criteria: study.studyDetails.eligibility)) as List<Object>;
+        QuestionnaireScreen.routeFor(study.studyDetails.questionnaire.questions,
+            title: 'Check eligibility', criteria: study.studyDetails.eligibility)) as List<Object>;
     if (result.isNotEmpty && result[0] != null && result[0]) {
       print('Patient is eligible');
       final onboardingModel = Provider.of<OnboardingModel>(context, listen: false);

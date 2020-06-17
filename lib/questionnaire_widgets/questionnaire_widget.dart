@@ -7,10 +7,8 @@ import '../database/models/questionnaire/questionnaire_state.dart';
 import 'question_container.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
-  static MaterialPageRoute route(
-          {@required String title,
-          @required List<Question> questions,
-          @required List<EligibilityCriterion> criteria}) =>
+  static MaterialPageRoute routeFor(List<Question> questions,
+          {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
           builder: (_) => QuestionnaireScreen(title, questions, criteria),
           settings: RouteSettings(name: 'eligibilityCheck'));
