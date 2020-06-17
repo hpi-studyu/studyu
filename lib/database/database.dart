@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 //import 'models/questions/question.dart';
 
-final String questionTable = 'Question';
+const String questionTable = 'Question';
 
 class DatabaseProvider {
   static final DatabaseProvider dbProvider = DatabaseProvider();
@@ -15,19 +15,18 @@ class DatabaseProvider {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-    _database = await createDatabase();
-    return _database;
+    return createDatabase();
   }
 
   Future<Database> createDatabase() async {
-    var documentsDirectory = await getApplicationDocumentsDirectory();
-    var path = join(documentsDirectory.path, 'Nof1.db');
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentsDirectory.path, 'Nof1.db');
 
-    var database = await openDatabase(path, version: 1, onCreate: initDB, onUpgrade: onUpgrade);
+    final database = await openDatabase(path, version: 1, onCreate: initDB, onUpgrade: onUpgrade);
     return database;
   }
 
-  void initDB(Database db, int version) async {
+  Future<void> initDB(Database db, int version) async {
     await db.execute('CREATE TABLE $questionTable ('
         'id INTEGER PRIMARY KEY AUTOINCREMENT, '
         'question TEXT, '

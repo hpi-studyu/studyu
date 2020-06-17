@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'environments/local.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(localApp);

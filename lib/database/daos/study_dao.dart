@@ -7,7 +7,7 @@ const filename = 'assets/studies/scratch.xml';
 
 class StudyDao {
   Future<List<Study>> getAllStudies() async {
-    var response = await Study().getAll();
+    final response = await Study().getAll();
     if (response.success) {
       return response.results.map((study) => study is Study ? study : null).toList();
     }
@@ -20,9 +20,8 @@ class StudyDao {
       final builder = QueryBuilder<Study>(Study())
         ..whereEqualTo('objectId', study.objectId)
         ..includeObject(['study_details']);
-      detailedStudy = await builder.query().then((response) =>
-              response.success ? response.results.isNotEmpty ? response.results.first as Study : null : null) ??
-          study;
+      final response = await builder.query();
+      detailedStudy = response.success && response.results.isNotEmpty ? response.results.first : study;
     }
     return detailedStudy;
   }

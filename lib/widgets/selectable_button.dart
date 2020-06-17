@@ -6,7 +6,7 @@ class SelectableButton extends StatelessWidget {
   final bool selected;
   final Function() onTap;
 
-  SelectableButton({Key key, @required this.child, this.selected = false, this.onTap});
+  const SelectableButton({@required this.child, this.selected = false, this.onTap});
 
   Color _getFillColor(ThemeData theme) => selected ? theme.primaryColor : theme.cardColor;
 
@@ -19,7 +19,7 @@ class SelectableButton extends StatelessWidget {
       height: 48,
       child: FlatButton(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
+          borderRadius: BorderRadius.circular(4),
           side: Divider.createBorderSide(context, color: theme.primaryColor),
         ),
         onPressed: onTap,

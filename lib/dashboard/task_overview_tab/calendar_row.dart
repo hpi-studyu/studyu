@@ -14,7 +14,7 @@ class CalendarRow extends StatefulWidget {
   final Function getProgress;
 
   const CalendarRow(
-      {Key key, @required this.startDate, @required this.endDate, @required this.height, this.getProgress})
+      {@required this.startDate, @required this.endDate, @required this.height, this.getProgress, Key key})
       : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _CalendarRowState extends State<CalendarRow> {
 
   @override
   void didChangeDependencies() {
-    var selected = Provider.of<TaskOverviewModel>(context, listen: false).selectedDate;
+    final selected = Provider.of<TaskOverviewModel>(context, listen: false).selectedDate;
     _selectedCycle = selected != null
         ? _cycles.indexWhere((element) =>
             element.first.difference(selected).inDays <= 0 && element.last.difference(selected).inDays >= 0)
@@ -46,11 +46,11 @@ class _CalendarRowState extends State<CalendarRow> {
       return null;
     }
 
-    var cycles = <List<DateTime>>[[]];
+    final cycles = <List<DateTime>>[[]];
     var timeLeft = end.difference(start).inDays;
 
     while (timeLeft > -1) {
-      var currentDate = end.subtract(Duration(days: timeLeft));
+      final currentDate = end.subtract(Duration(days: timeLeft));
       cycles.last.add(currentDate);
       if (currentDate.weekday == 7 && timeLeft > 0) {
         cycles.add([]);
@@ -76,7 +76,7 @@ class _CalendarRowState extends State<CalendarRow> {
               shrinkWrap: true,
               itemCount: days.length,
               itemBuilder: (_context, i) {
-                var date = days[i];
+                final date = days[i];
                 return GestureDetector(
                   onTap: () {
                     Provider.of<TaskOverviewModel>(context, listen: false).setDate(date);
@@ -106,7 +106,7 @@ class _CalendarRowState extends State<CalendarRow> {
     return LayoutBuilder(builder: (context, constraints) {
       final spacing = constraints.maxWidth / 50;
       final height = widget.height;
-      return Container(
+      return SizedBox(
         height: height,
         child: Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
@@ -115,9 +115,9 @@ class _CalendarRowState extends State<CalendarRow> {
             itemCount: _cycles.length,
             itemBuilder: (_context, i) {
               if (i != _selectedCycle) {
-                var cycle = _cycles[i];
-                var start = '${cycle.first.day}.${cycle.first.month}.';
-                var end = '${cycle.last.day}.${cycle.last.month}.';
+                final cycle = _cycles[i];
+                final start = '${cycle.first.day}.${cycle.first.month}.';
+                final end = '${cycle.last.day}.${cycle.last.month}.';
                 return GestureDetector(
                   onTap: () => setState(() {
                     _selectedCycle = i;
@@ -157,7 +157,7 @@ class DayTile extends StatefulWidget {
   final DateTime date;
   final Function getData;
 
-  const DayTile({Key key, @required this.date, this.getData}) : super(key: key);
+  const DayTile({@required this.date, this.getData, Key key}) : super(key: key);
 
   @override
   State<DayTile> createState() => _DayTileState();
@@ -168,46 +168,42 @@ class _DayTileState extends State<DayTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: LayoutBuilder(builder: (context, innerConstraints) {
-          return Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Consumer<TaskOverviewModel>(
-                builder: (context, taskOverviewModel, child) => ClipOval(
-                  child: Container(
-                    color: taskOverviewModel.selectedDate.isSameDate(widget.date)
-                        ? Colors.green[300]
-                        : widget.date.isEarlierDateThan(taskOverviewModel.currentDate)
-                            ? Colors.grey[400]
-                            : Colors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(innerConstraints.maxWidth / 5),
-                      child: FittedBox(
-                        child: Center(
-                          child: Text((widget.date.day < 10 ? '0' : '') + widget.date.day.toString()),
-                        ),
+    return AspectRatio(
+      aspectRatio: 1,
+      child: LayoutBuilder(builder: (context, innerConstraints) {
+        return Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Consumer<TaskOverviewModel>(
+              builder: (context, taskOverviewModel, child) => ClipOval(
+                child: Container(
+                  color: taskOverviewModel.selectedDate.isSameDate(widget.date)
+                      ? Colors.green[300]
+                      : widget.date.isEarlierDateThan(taskOverviewModel.currentDate) ? Colors.grey[400] : Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.all(innerConstraints.maxWidth / 5),
+                    child: FittedBox(
+                      child: Center(
+                        child: Text((widget.date.day < 10 ? '0' : '') + widget.date.day.toString()),
                       ),
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(innerConstraints.maxWidth / 20),
-                child: FittedBox(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: random.nextDouble(), //widget.getData != null ? widget.getData(widget.date) : null ?? 0,
-                    ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(innerConstraints.maxWidth / 20),
+              child: FittedBox(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    value: random.nextDouble(), //widget.getData != null ? widget.getData(widget.date) : null ?? 0,
                   ),
                 ),
               ),
-            ],
-          );
-        }),
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

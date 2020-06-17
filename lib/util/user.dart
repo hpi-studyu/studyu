@@ -9,7 +9,7 @@ class UserUtils {
   }
 
   static Future<ParseUser> getOrCreateUser() async {
-    var currentUser = await ParseUser.currentUser() as ParseUser;
+    ParseUser currentUser = await ParseUser.currentUser();
 
     if (currentUser == null) {
       final response = await ParseUser(null, null, null).loginAnonymous();
@@ -20,8 +20,8 @@ class UserUtils {
     return currentUser;
   }
 
-  static void logout() async {
-    final currentUser = await ParseUser.currentUser() as ParseUser;
+  static Future<void> logout() async {
+    final ParseUser currentUser = await ParseUser.currentUser();
     currentUser.logout(deleteLocalUserData: true);
   }
 }

@@ -31,9 +31,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // TODO: dashboard should read from a different model connected to parse UserStudy object
     final study = context.read<AppModel>().userStudy;
     interventions = study.interventionSet.interventions.toList();
+    plannedInterventions = [];
     for (var i = 0; i < study.interventionOrder.length; i++) {
+      final index = study.interventionOrder[i];
+      if (index == null) {
+        continue;
+      }
       plannedInterventions.add(PlannedIntervention(
-        interventions[study.interventionOrder[i]],
+        interventions[index],
         DateTime.now().add(Duration(days: 7 * i)),
         DateTime.now().add(Duration(days: 6)),
       ));

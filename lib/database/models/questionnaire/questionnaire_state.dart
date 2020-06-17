@@ -5,12 +5,12 @@ class QuestionnaireState {
 
   QuestionnaireState() : answers = {};
 
-  QuestionnaireState.fromJson(List<Map<String, dynamic>> json) :
-      answers = Map.fromIterable(json.map(Answer.fromJson), key: (answer) => answer.id);
+  QuestionnaireState.fromJson(List<Map<String, dynamic>> json)
+      : answers = Map.fromIterable(json.map(Answer.fromJson), key: (answer) => answer.id);
   List<Map<String, dynamic>> toJson() => answers.values.map((answer) => answer.toJson()).toList();
 
   T getAnswer<T>(String question) {
-    dynamic answer = answers[question];
+    final dynamic answer = answers[question];
     if (answer is Answer<T>) {
       return answer.response;
     } else {

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../routes.dart';
 import '../util/localization.dart';
 import '../util/user.dart';
 
@@ -15,14 +17,14 @@ class _SettingsState extends State<Settings> {
 
   @override
   void didChangeDependencies() {
-    _selectedValue = Provider.of<AppLanguage>(context, listen: false).appLocal;
+    _selectedValue = context.read<AppLanguage>().appLocal;
     super.didChangeDependencies();
   }
 
   Widget getDropdownRow(BuildContext context) {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
-    for (var locale in AppLanguage.supportedLocales) {
+    for (final locale in AppLanguage.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
         child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),
@@ -57,6 +59,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('settings')),
@@ -67,6 +70,29 @@ class _SettingsState extends State<Settings> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             getDropdownRow(context),
+            SizedBox(height: 20),
+            Text(
+              'Current Study',
+            ),
+            RaisedButton(
+              color: theme.accentColor,
+              onPressed: () => Navigator.pushNamed(context, Routes.dashboard),
+              child: Text(
+                'Lower back pain',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text('Previous Study'),
+            RaisedButton(
+              color: theme.accentColor,
+              onPressed: () => Navigator.pushNamed(context, Routes.dashboard),
+              child: Text(
+                'Lower back pain',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 20),
             RaisedButton.icon(
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog());
@@ -94,8 +120,9 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
         content: Text('You will not be able to restore your data.'),
         actions: [
           FlatButton.icon(
-            onPressed: () {
+            onPressed: () async {
               UserUtils.logout();
+              await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserUtils.selectedStudyObjectIdKey));
               Navigator.popUntil(context, (route) => route.isFirst);
             }, // only logout and delete local parse data,
             icon: Icon(Icons.delete),
