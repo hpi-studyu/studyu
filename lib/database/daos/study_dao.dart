@@ -33,7 +33,6 @@ class StudyDao {
     return await builder.query().then((response) =>
     response.success ? response.results.isNotEmpty ? response.results.first as UserStudy : null : null);
   }
-
   static Future<String> saveUserStudy(UserStudy userStudy) async {
     final response = await userStudy.save();
     if (response.success) {
