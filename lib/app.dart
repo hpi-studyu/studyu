@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'database/daos/study_dao.dart';
+import 'database/models/user_study.dart';
 import 'environments/environment.dart';
 import 'routes.dart';
-import 'study_onboarding/onboarding_model.dart';
+import 'study_onboarding/app_state.dart';
 import 'theme.dart';
 import 'util/localization.dart';
+import 'util/user.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -16,11 +20,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   AppLanguage appLanguage;
+  UserStudy selectedStudy;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     initLanguage();
+    await initStudy();
   }
 
   @override
@@ -32,6 +38,12 @@ class _MyAppState extends State<MyApp> {
   void initLanguage() {
     appLanguage = AppLanguage();
     appLanguage.fetchLocale();
+  }
+
+  void initStudy() async {
+    final prefs = await SharedPreferences.getInstance();
+    final selectedStudyObjectId = prefs.getString(UserUtils.selectedStudyObjectIdKey);
+    selectedStudy = await StudyDao.getUserStudy(selectedStudyObjectId);
   }
 
   void initParse(Environment env) async {
@@ -52,7 +64,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppLanguage>.value(value: appLanguage),
-        Provider<OnboardingModel>(create: (context) => OnboardingModel()),
+        Provider<AppModel>(create: (context) => AppModel(selectedStudy)),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return MaterialApp(

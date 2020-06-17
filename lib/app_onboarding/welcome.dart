@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../database/models/interventions/intervention.dart';
 import '../database/models/models.dart';
 import '../routes.dart';
-import '../study_onboarding/onboarding_model.dart';
+import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -39,7 +39,7 @@ class WelcomeScreen extends StatelessWidget {
           : [
               FlatButton(
                 onPressed: () {
-                  final onboardingModel = context.read<OnboardingModel>();
+                  final onboardingModel = context.read<AppModel>();
                   onboardingModel.selectedStudy = Study();
                   onboardingModel.selectedInterventions = [Intervention('a', 'A'), Intervention('a', 'B')];
                   Navigator.pushNamed(context, Routes.dashboard);

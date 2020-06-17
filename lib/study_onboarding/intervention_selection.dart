@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
 import '../routes.dart';
 import '../util/localization.dart';
-import 'onboarding_model.dart';
+import '../util/user.dart';
+import 'app_state.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
   @override
@@ -49,7 +52,22 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   @override
   void initState() {
     super.initState();
-    selectedStudy = context.read<OnboardingModel>().selectedStudy;
+    selectedStudy = context
+        .read<AppModel>()
+        .selectedStudy;
+  }
+
+  void onFinished() async {
+    final model = context.read<AppModel>();
+    final userId = await UserUtils.getOrCreateUser().then((user) => user.objectId);
+    //TODO add selection of first intervention
+    model.userStudy = model.selectedStudy.extractUserStudy(userId, selected, 0);
+    final selectedStudyObjectId = await StudyDao.saveUserStudy(model.userStudy);
+    if (selectedStudyObjectId != null) {
+      await SharedPreferences.getInstance().then((pref) =>
+          pref.setString(UserUtils.selectedStudyObjectIdKey, selectedStudyObjectId));
+    }
+    Navigator.pushNamed(context, Routes.journey);
   }
 
   @override
@@ -75,16 +93,13 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                     ),
                     SizedBox(height: 20),
                     selectedStudy.studyDetails != null &&
-                            selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
+                        selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
                         ? buildInterventionSelectionList(selectedStudy.studyDetails.interventionSet.interventions)
                         : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
                     SizedBox(height: 20),
                     RaisedButton(
                       onPressed: selected.length == 2
-                          ? () {
-                              context.read<OnboardingModel>().selectedInterventions = selected;
-                              Navigator.pushNamed(context, Routes.journey);
-                            }
+                          ? onFinished
                           : null,
                       child: Text(Nof1Localizations.of(context).translate('finished')),
                     ),

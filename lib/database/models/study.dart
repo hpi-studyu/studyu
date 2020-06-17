@@ -1,6 +1,9 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
+import 'interventions/intervention.dart';
+import 'interventions/intervention_set.dart';
 import 'study_details.dart';
+import 'user_study.dart';
 
 class Study extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'Study';
@@ -40,4 +43,20 @@ class Study extends ParseObject implements ParseCloneable {
   static const keyStudyDetails = 'study_details';
   StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
+
+  UserStudy extractUserStudy(String userId, List<Intervention> selectedInterventions, int firstIntervention) {
+    final userStudy = UserStudy();
+    userStudy.title = title;
+    userStudy.description = description;
+    userStudy.studyId = id;
+    userStudy.userId = userId;
+    userStudy.interventionSet = InverventionSet(selectedInterventions);
+    if (studyDetails.schedule != null) {
+      userStudy.interventionOrder = studyDetails.schedule.generateWith(firstIntervention);
+    } else {
+      print('Study is missing schedule or StudyDetails not fetched!');
+      return null;
+    }
+    return userStudy;
+  }
 }

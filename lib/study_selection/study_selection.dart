@@ -7,7 +7,7 @@ import '../database/models/models.dart';
 import '../database/models/questionnaire/questionnaire_state.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
-import '../study_onboarding/onboarding_model.dart';
+import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class StudySelectionScreen extends StatelessWidget {
             title: 'Check eligibility', criteria: study.studyDetails.eligibility)) as List<Object>;
     if (result.isNotEmpty && result[0] != null && result[0]) {
       print('Patient is eligible');
-      final onboardingModel = Provider.of<OnboardingModel>(context, listen: false);
+      final onboardingModel = Provider.of<AppModel>(context, listen: false);
       onboardingModel.selectedStudy = study;
       Navigator.pushNamed(context, Routes.interventionSelection);
     } else if (result.length > 1 && result[1] != null) {
