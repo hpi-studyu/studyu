@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../database/models/interventions/intervention.dart';
 import '../routes.dart';
-import '../study_onboarding/onboarding_model.dart';
+import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 import 'task_overview_tab/task_overview.dart';
 
@@ -23,26 +23,25 @@ class PlannedIntervention {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   List<Intervention> interventions;
+  List<PlannedIntervention> plannedInterventions;
 
   @override
   void initState() {
     super.initState();
     // TODO: dashboard should read from a different model connected to parse UserStudy object
-    interventions = context.read<OnboardingModel>().selectedInterventions;
+    final study = context.read<AppModel>().userStudy;
+    interventions = study.interventionSet.interventions.toList();
+    for (var i = 0; i < study.interventionOrder.length; i++) {
+      plannedInterventions.add(PlannedIntervention(
+        interventions[study.interventionOrder[i]],
+        DateTime.now().add(Duration(days: 7 * i)),
+        DateTime.now().add(Duration(days: 6)),
+      ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // ABAB
-    final plannedInterventions = [
-      PlannedIntervention(interventions[0], DateTime.now(), DateTime.now().add(Duration(days: 6))),
-      PlannedIntervention(
-          interventions[1], DateTime.now().add(Duration(days: 7)), DateTime.now().add(Duration(days: 13))),
-      PlannedIntervention(
-          interventions[0], DateTime.now().add(Duration(days: 14)), DateTime.now().add(Duration(days: 20))),
-      PlannedIntervention(
-          interventions[1], DateTime.now().add(Duration(days: 21)), DateTime.now().add(Duration(days: 27)))
-    ];
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
