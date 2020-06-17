@@ -40,9 +40,7 @@ dependencies:
   provider:
   research_package:
   shared_preferences:
-  sqflite:
   video_player:
-  xml:
 
 dev_dependencies:
   build_runner:
