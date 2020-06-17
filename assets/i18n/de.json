@@ -1,18 +1,19 @@
 {
   "what_is_nof1": "Was ist N of 1?",
-  "description_part1": "Stellen Sie sich vor, Sie lesen den Satz: \"Studien konnten zeigen, dass Koffein bei einigen Menschen Müdigkeit verstärkt.\" Ein spannendes Ergebnis, aber beantwortet es Ihnen die Frage, ob Kaffee Sie persönlich wach oder müde macht?",
-  "description_part2": "Eher nicht, denn Sie haben ja nicht selbst an der Studie teilgenommen und eine gewöhnliche Studie kann nur beantworten, ob Sie durch Kaffee wahrscheinlich wacher oder müder werden. Sie müssten also bei sich selber testen, welche Wirkung Kaffee bei Ihnen hat. Das heißt nichts anderes, als dass Sie Ihre ganz persönliche Studie durchführen, in der Sie mal Kaffee trinken und mal keinen Kaffee trinken. Sie würden regelmäßig Ihre Müdigkeit einschätzen und am Ende zu einem Ergebnis kommen, dass Ihnen endlich die Frage beantworten kann, ob Sie von Kaffee wach oder müde werden. Und dieser personalisierte Ansatz ist genau das Ziel von N-of-1 Studien.",
-  "description_part3": "N-of-1 heißt, dass die Anzahl der Studienteilnehmer, die normalerweise mit N angegeben wird, bei 1 liegt. Und genauso wie gewöhnliche Studien brauchen auch N-of-1 Studien einen klar festgelegten Plan (ein so genanntes Studienprotokoll) mit dem Ziel, dass das Ergebnis am Ende der Studie auch wirklich zuverlässig ist. Und da gute Studienprotokolle nicht einfach zu machen sind, haben wir diese App entwickelt. Hier können Sie zwischen verschiedenen N-of-1 Studien wählen, ganz nach Ihrem persönlichen Interesse, und Sie erhalten ganz automatisch einen Plan, der von Experten entwickelt wurde und Ihnen ein zuverlässiges Ergebnis liefern wird.",
+  "description_part1": "Stellen Sie sich vor, Sie lesen den Satz: \"Studien konnten zeigen, dass Koffein bei einigen Menschen Müdigkeit verstärkt.\"",
+  "description_part2": "Ein spannendes Ergebnis, aber beantwortet es Ihnen die Frage, ob Kaffee SIE persönlich wach oder müde macht?",
+  "description_part3": "Eher nicht, denn Sie haben ja nicht selbst an der Studie teilgenommen und eine gewöhnliche Studie kann nur beantworten, ob Sie durch Kaffee WAHRSCHEINLICH wacher oder müder werden. Sie müssten also bei sich selber testen, welche Wirkung Kaffee bei Ihnen hat.",
+  "description_part4": "Das heißt nichts anderes, als dass Sie Ihre ganz persönliche Studie durchführen, in der Sie mal Kaffee trinken und mal keinen Kaffee trinken. Sie würden regelmäßig Ihre Müdigkeit einschätzen und am Ende zu einem Ergebnis kommen, dass Ihnen endlich die Frage beantworten kann, ob Sie von Kaffee wach oder müde werden. Und dieser personalisierte Ansatz ist genau das Ziel von N-of-1 Studien.",
+  "description_part5": "N-of-1 heißt, dass die Anzahl der Studienteilnehmer, die normalerweise mit N angegeben wird, bei 1 liegt. Und genauso wie gewöhnliche Studien brauchen auch N-of-1 Studien einen klar festgelegten Plan (ein so genanntes Studienprotokoll) mit dem Ziel, dass das Ergebnis am Ende der Studie auch wirklich zuverlässig ist.",
+  "description_part6": "Und da gute Studienprotokolle nicht einfach zu machen sind, haben wir diese App entwickelt. Hier können Sie zwischen verschiedenen N-of-1 Studien wählen, ganz nach IHREM persönlichen Interesse, und Sie erhalten ganz automatisch einen Plan, der von Experten entwickelt wurde und Ihnen ein zuverlässiges Ergebnis liefern wird.",
   "get_started": "Los geht's",
   "test": "test10",
   "study_selection": "Studieanauswahl",
   "study_selection_description": "Bitte wähle eine Studie aus.",
-
   "intervention_selection": "Interventionen Auswahl",
   "please_select_interventions": "Bitte zwei Interventionen für die Studie auswählen.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
-
   "journey": "Reise",
 
   "error": "Fehler!",
