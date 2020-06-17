@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../routes.dart';
 import '../util/localization.dart';
 import '../util/user.dart';
-import 'dashboard.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -58,6 +58,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('settings')),
@@ -73,21 +74,21 @@ class _SettingsState extends State<Settings> {
               'Current Study',
             ),
             RaisedButton(
-              color: Colors.amber,
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => DashboardScreen())),
+              color: theme.accentColor,
+              onPressed: () => Navigator.pushNamed(context, Routes.dashboard),
               child: Text(
                 'Lower back pain',
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
             SizedBox(height: 20),
             Text('Previous Study'),
             RaisedButton(
-              color: Colors.amber,
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => DashboardScreen())),
+              color: theme.accentColor,
+              onPressed: () => Navigator.pushNamed(context, Routes.dashboard),
               child: Text(
                 'Lower back pain',
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
             SizedBox(height: 20),
