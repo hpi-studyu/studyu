@@ -458,10 +458,12 @@ packages:
   parse_server_sdk:
     dependency: "direct main"
     description:
-      name: parse_server_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.26"
+      path: "."
+      ref: "release/1.0.27"
+      resolved-ref: db10be3fa1c3cf3419ab8f622c1cf75646c4aa3c
+      url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
+    source: git
+    version: "1.0.27"
   path:
     dependency: transitive
     description:
