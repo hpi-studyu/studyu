@@ -57,7 +57,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         .selectedStudy;
   }
 
-  void onFinished() async {
+  Future<void> onFinished() async {
     final model = context.read<AppModel>();
     final userId = await UserUtils.getOrCreateUser().then((user) => user.objectId);
     //TODO add selection of first intervention

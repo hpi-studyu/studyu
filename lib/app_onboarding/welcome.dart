@@ -1,9 +1,7 @@
-import 'package:Nof1/util/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/models/interventions/intervention.dart';
 import '../database/models/models.dart';
@@ -30,13 +28,6 @@ class WelcomeScreen extends StatelessWidget {
               RaisedButton(
                 onPressed: () => Navigator.pushReplacementNamed(context, Routes.terms),
                 child: Text(Nof1Localizations.of(context).translate('get_started')),
-              ),
-              SizedBox(height: 20),
-              RaisedButton(
-                onPressed: () async {
-                  print(await SharedPreferences.getInstance().then((prefs) => prefs.getString(UserUtils.selectedStudyObjectIdKey)));
-                },
-                child: Text('TESTING'),
               ),
             ],
           ),
