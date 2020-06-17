@@ -31,6 +31,9 @@ dependencies:
   json_annotation:
   material_design_icons_flutter:
   parse_server_sdk:
+    git:
+      url: https://github.com/parse-community/Parse-SDK-Flutter.git
+      ref: release/1.0.27
   path_provider:
   pimp_my_button:
   provider:
