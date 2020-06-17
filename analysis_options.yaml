@@ -1,6 +1,8 @@
 include: package:effective_dart/analysis_options.1.2.0.yaml
 
 analyzer:
+  exclude:
+    - lib/**.g.dart
   errors:
     # treat missing required parameters as an error (not a hint)
     missing_required_param: error

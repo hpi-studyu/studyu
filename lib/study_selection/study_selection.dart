@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../database/models/questionnaire/questionnaire_state.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
 import '../study_onboarding/onboarding_model.dart';
@@ -16,15 +15,14 @@ class StudySelectionScreen extends StatelessWidget {
     final result = await Navigator.push(
         context,
         QuestionnaireScreen.routeFor(study.studyDetails.questionnaire.questions,
-            title: 'Check eligibility', criteria: study.studyDetails.eligibility)) as List<Object>;
-    if (result.isNotEmpty && result[0] != null && result[0]) {
+            title: 'Check eligibility', criteria: study.studyDetails.eligibility));
+    if (result.conditionResult != null && result.conditionResult) {
       print('Patient is eligible');
-      Provider.of<OnboardingModel>(context, listen: false).selectedStudy = study;
+      context.read<OnboardingModel>().selectedStudy = study;
       Navigator.pushNamed(context, Routes.interventionSelection);
-    } else if (result.length > 1 && result[1] != null) {
-      final reason = study.studyDetails.eligibility
-          .firstWhere((criterion) => criterion.isViolated(result[1] as QuestionnaireState))
-          .reason;
+    } else if (result.answers != null) {
+      final reason =
+          study.studyDetails.eligibility.firstWhere((criterion) => criterion.isViolated(result.answers)).reason;
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('You are not eligible for this study. $reason'),
         duration: Duration(seconds: 30),

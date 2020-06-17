@@ -6,7 +6,7 @@ class UserUtils {
   }
 
   static Future<ParseUser> getOrCreateUser() async {
-    var currentUser = await ParseUser.currentUser() as ParseUser;
+    ParseUser currentUser = await ParseUser.currentUser();
 
     if (currentUser == null) {
       final response = await ParseUser(null, null, null).loginAnonymous();

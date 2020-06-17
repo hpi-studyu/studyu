@@ -24,12 +24,12 @@ class QuestionContainer extends StatelessWidget {
     switch (question.runtimeType) {
       case ChoiceQuestion:
         return ChoiceQuestionWidget(
-          question: question as ChoiceQuestion,
+          question: question,
           onDone: _onDone,
         );
       case BooleanQuestion:
         return BooleanQuestionWidget(
-          question: question as BooleanQuestion,
+          question: question,
           onDone: _onDone,
         );
       default:
