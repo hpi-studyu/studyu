@@ -25,32 +25,42 @@ class Study extends ParseObject implements ParseCloneable {
   }
 
   static const keyId = 'study_id';
+
   String get id => get<String>(keyId);
+
   set id(String id) => set<String>(keyId, id);
 
   static const keyTitle = 'title';
+
   String get title => get<String>(keyTitle);
+
   set title(String title) => set<String>(keyTitle, title);
 
   static const keyDescription = 'description';
+
   String get description => get<String>(keyDescription);
+
   set description(String description) => set<String>(keyDescription, description);
 
   static const keyIconName = 'icon_name';
+
   String get iconName => get<String>(keyIconName);
+
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
   static const keyStudyDetails = 'study_details';
+
   StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
+
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
 
   UserStudy extractUserStudy(String userId, List<Intervention> selectedInterventions, int firstIntervention) {
-    final userStudy = UserStudy();
-    userStudy.title = title;
-    userStudy.description = description;
-    userStudy.studyId = id;
-    userStudy.userId = userId;
-    userStudy.interventionSet = InverventionSet(selectedInterventions);
+    final userStudy = UserStudy()
+      ..title = title
+      ..description = description
+      ..studyId = id
+      ..userId = userId
+      ..interventionSet = InverventionSet(selectedInterventions);
     if (studyDetails.schedule != null) {
       userStudy.interventionOrder = studyDetails.schedule.generateWith(firstIntervention);
     } else {
