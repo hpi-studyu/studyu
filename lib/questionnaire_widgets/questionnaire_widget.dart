@@ -17,14 +17,14 @@ class QuestionnaireScreen extends StatefulWidget {
   static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
           {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
-          builder: (_) => QuestionnaireScreen(title, questions, criteria),
+          builder: (_) => QuestionnaireScreen(questions, title: title, criteria: criteria),
           settings: RouteSettings(name: 'eligibilityCheck'));
 
   final String title;
   final List<Question> questions;
   final List<EligibilityCriterion> criteria;
 
-  const QuestionnaireScreen(this.title, this.questions, this.criteria, {Key key}) : super(key: key);
+  const QuestionnaireScreen(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireScreenState();
