@@ -4,30 +4,15 @@ import 'package:provider/provider.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
-import '../study_onboarding/app_state.dart';
+import '../study_onboarding/onboarding_model.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  Future<void> navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
+  Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
     final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
-    final result = await Navigator.push(
-        context,
-        QuestionnaireScreen.routeFor(study.studyDetails.questionnaire.questions,
-            title: 'Check eligibility', criteria: study.studyDetails.eligibility));
-    if (result.conditionResult != null && result.conditionResult) {
-      print('Patient is eligible');
-      context.read<AppModel>().selectedStudy = study;
-      Navigator.pushNamed(context, Routes.interventionSelection);
-    } else if (result.answers != null) {
-      final reason =
-          study.studyDetails.eligibility.firstWhere((criterion) => criterion.isViolated(result.answers)).reason;
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You are not eligible for this study. $reason'),
-        duration: Duration(seconds: 30),
-      ));
-    }
+    context.read<OnboardingModel>().selectedStudy = study;
+    Navigator.pushNamed(context, Routes.studyOverview);
   }
 
   @override
@@ -60,7 +45,7 @@ class StudySelectionScreen extends StatelessWidget {
                           return ListTile(
                               contentPadding: EdgeInsets.all(16),
                               onTap: () {
-                                navigateToEligibilityCheck(context, currentStudy);
+                                navigateToStudyOverview(context, currentStudy);
                               },
                               title: Center(
                                   child: Text(currentStudy.title,

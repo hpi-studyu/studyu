@@ -13,6 +13,8 @@
   "please_select_interventions": "Please select two interventions to apply during the study.",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
+
+  "summary": "Summary",
   "journey": "Journey",
   "error": "An error occurred!",
 
