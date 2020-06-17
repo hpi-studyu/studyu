@@ -9,6 +9,7 @@ import 'dashboard/settings.dart';
 import 'study_onboarding/consent.dart';
 import 'study_onboarding/intervention_selection.dart';
 import 'study_onboarding/journey_overview.dart';
+import 'study_onboarding/study_overview.dart';
 import 'study_selection/study_selection.dart';
 
 class Routes {
@@ -17,6 +18,7 @@ class Routes {
   static const String about = '/about';
   static const String terms = '/terms';
   static const String studySelection = '/studySelection';
+  static const String studyOverview = '/studyOverview';
   static const String interventionSelection = '/interventionSelection';
   static const String journey = '/journey';
   static const String consent = '/consent';
@@ -42,6 +44,7 @@ class Routes {
       about: (_) => AboutScreen(),
       terms: (_) => TermsScreen(),
       studySelection: (_) => StudySelectionScreen(),
+      studyOverview: (_) => StudyOverviewScreen(),
       interventionSelection: (_) => InterventionSelectionScreen(),
       journey: (_) => JourneyOverviewScreen(),
       consent: (_) => ConsentScreen(),
