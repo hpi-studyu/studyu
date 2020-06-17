@@ -44,7 +44,7 @@ class _ProgressRowState extends State<ProgressRow> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Stack(
         alignment: Alignment.center,
         children: [

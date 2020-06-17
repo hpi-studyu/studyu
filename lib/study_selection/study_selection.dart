@@ -4,28 +4,25 @@ import 'package:provider/provider.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
-import '../database/models/questionnaire/questionnaire_state.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  void navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
+  Future<void> navigateToEligibilityCheck(BuildContext context, Study selectedStudy) async {
     final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
     final result = await Navigator.push(
         context,
         QuestionnaireScreen.routeFor(study.studyDetails.questionnaire.questions,
-            title: 'Check eligibility', criteria: study.studyDetails.eligibility)) as List<Object>;
-    if (result.isNotEmpty && result[0] != null && result[0]) {
+            title: 'Check eligibility', criteria: study.studyDetails.eligibility));
+    if (result.conditionResult != null && result.conditionResult) {
       print('Patient is eligible');
-      final onboardingModel = Provider.of<AppModel>(context, listen: false);
-      onboardingModel.selectedStudy = study;
+      context.read<AppModel>().selectedStudy = study;
       Navigator.pushNamed(context, Routes.interventionSelection);
-    } else if (result.length > 1 && result[1] != null) {
-      final reason = study.studyDetails.eligibility
-          .firstWhere((criterion) => criterion.isViolated((result[1] as QuestionnaireState)))
-          .reason;
+    } else if (result.answers != null) {
+      final reason =
+          study.studyDetails.eligibility.firstWhere((criterion) => criterion.isViolated(result.answers)).reason;
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('You are not eligible for this study. $reason'),
         duration: Duration(seconds: 30),
@@ -44,7 +41,7 @@ class StudySelectionScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 Nof1Localizations.of(context).translate('study_selection_description'),
                 style: theme.textTheme.headline5,

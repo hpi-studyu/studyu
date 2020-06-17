@@ -10,7 +10,7 @@ class JourneyOverviewScreen extends StatefulWidget {
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
-  void getConsentAndNavigateToDashboard(BuildContext context) async {
+  Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     final consentGiven = await Navigator.pushNamed(context, Routes.consent);
     if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.dashboard);

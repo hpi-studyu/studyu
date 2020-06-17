@@ -10,7 +10,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final ChoiceQuestion question;
   final Function(Answer) onDone;
 
-  ChoiceQuestionWidget({Key key, @required this.question, this.onDone});
+  ChoiceQuestionWidget({@required this.question, this.onDone});
 
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
@@ -47,29 +47,27 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final choiceWidgets = widget.question.choices.map<Widget>((choice) =>
-        SelectableButton(
-          selected: selected.contains(choice),
-          onTap: () => tapped(choice),
-          child: Text(choice.text),
-        )
-    ).toList();
+    final choiceWidgets = widget.question.choices
+        .map<Widget>((choice) => SelectableButton(
+              selected: selected.contains(choice),
+              onTap: () => tapped(choice),
+              child: Text(choice.text),
+            ))
+        .toList();
 
     if (widget.question.multiple) {
-      choiceWidgets.add(
-          RaisedButton(
-            onPressed: confirm,
-            // TODO: Translate
-            child: Text('Done'),
-          )
-      );
+      choiceWidgets.add(RaisedButton(
+        onPressed: confirm,
+        // TODO: Translate
+        child: Text('Done'),
+      ));
     }
 
     return ListView.separated(
       shrinkWrap: true,
       itemCount: choiceWidgets.length,
       itemBuilder: (context, index) => choiceWidgets[index],
-      separatorBuilder: (context, index) => SizedBox(height: 8.0),
+      separatorBuilder: (context, index) => SizedBox(height: 8),
     );
   }
 }

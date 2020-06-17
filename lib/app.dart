@@ -23,10 +23,10 @@ class _MyAppState extends State<MyApp> {
   UserStudy selectedStudy;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     initLanguage();
-    await initStudy();
+    initStudy();
   }
 
   @override
@@ -36,17 +36,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initLanguage() {
-    appLanguage = AppLanguage();
-    appLanguage.fetchLocale();
+    appLanguage = AppLanguage()..fetchLocale();
   }
 
-  void initStudy() async {
+  Future<void> initStudy() async {
     final prefs = await SharedPreferences.getInstance();
     final selectedStudyObjectId = prefs.getString(UserUtils.selectedStudyObjectIdKey);
     selectedStudy = await StudyDao.getUserStudy(selectedStudyObjectId);
   }
 
-  void initParse(Environment env) async {
+  Future<void> initParse(Environment env) async {
     if (!Parse().hasParseBeenInitialized()) {
       await Parse().initialize(env.keyParseApplicationId, env.keyParseServerUrl,
           masterKey: env.keyParseMasterKey, debug: env.debug, coreStore: await CoreStoreSharedPrefsImp.getInstance());

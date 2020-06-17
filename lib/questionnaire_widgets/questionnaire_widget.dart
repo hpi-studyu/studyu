@@ -6,18 +6,25 @@ import '../database/models/questionnaire/question.dart';
 import '../database/models/questionnaire/questionnaire_state.dart';
 import 'question_container.dart';
 
+class QuestionnaireResult {
+  final bool conditionResult;
+  final QuestionnaireState answers;
+
+  QuestionnaireResult(this.answers, {this.conditionResult});
+}
+
 class QuestionnaireScreen extends StatefulWidget {
-  static MaterialPageRoute routeFor(List<Question> questions,
+  static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
           {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
-          builder: (_) => QuestionnaireScreen(title, questions, criteria),
+          builder: (_) => QuestionnaireScreen(questions, title: title, criteria: criteria),
           settings: RouteSettings(name: 'eligibilityCheck'));
 
   final String title;
   final List<Question> questions;
   final List<EligibilityCriterion> criteria;
 
-  const QuestionnaireScreen(this.title, this.questions, this.criteria, {Key key}) : super(key: key);
+  const QuestionnaireScreen(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireScreenState();
@@ -31,15 +38,15 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   int _nextQuestionIndex = 1;
 
   void _finishQuestionnaire() {
-    var conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
-    Navigator.of(context).pop([conditionResult, qs]);
+    final conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
+    Navigator.of(context).pop(QuestionnaireResult(qs, conditionResult: conditionResult));
   }
 
   void _onQuestionDone(Answer answer, int index) {
     if (index < _nextQuestionIndex - 1) {
       while (shownQuestions.length > index + 1) {
-        var end = shownQuestions.length - 1;
-        var lastQuestion = shownQuestions.removeLast();
+        final end = shownQuestions.length - 1;
+        final lastQuestion = shownQuestions.removeLast();
         _listKey.currentState.removeItem(
             end,
             (context, animation) => SizeTransition(
