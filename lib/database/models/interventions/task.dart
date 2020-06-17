@@ -1,5 +1,5 @@
-import 'package:Nof1/database/models/interventions/tasks/checkmark_task.dart';
-import 'package:Nof1/database/models/schedule/schedule.dart';
+import '../schedule/schedule.dart';
+import 'tasks/checkmark_task.dart';
 
 typedef TaskParser = Task Function(Map<String, dynamic> data);
 

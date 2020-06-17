@@ -1,4 +1,4 @@
-import 'package:Nof1/database/models/schedule/fixed_schedule.dart';
+import 'fixed_schedule.dart';
 
 typedef ScheduleParser = Schedule Function(Map<String, dynamic> data);
 
