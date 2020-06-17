@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../util/localization.dart';
 import '../util/user.dart';
+import 'dashboard.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -67,6 +68,29 @@ class _SettingsState extends State<Settings> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             getDropdownRow(context),
+            SizedBox(height: 20),
+            Text(
+              'Current Study',
+            ),
+            RaisedButton(
+              color: Colors.amber,
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => DashboardScreen())),
+              child: Text(
+                'Lower back pain',
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text('Previous Study'),
+            RaisedButton(
+              color: Colors.amber,
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => DashboardScreen())),
+              child: Text(
+                'Lower back pain',
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ),
+            SizedBox(height: 20),
             RaisedButton.icon(
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog());
