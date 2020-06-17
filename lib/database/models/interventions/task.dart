@@ -1,7 +1,10 @@
+import 'package:Nof1/database/models/interventions/tasks/checkmark_task.dart';
+import 'package:Nof1/database/models/schedule/schedule.dart';
+
 typedef TaskParser = Task Function(Map<String, dynamic> data);
 
 abstract class Task {
-  static Map<String, TaskParser> taskTypes = {};
+  static Map<String, TaskParser> taskTypes = {CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json)};
   static const String keyType = 'type';
   String type;
 
