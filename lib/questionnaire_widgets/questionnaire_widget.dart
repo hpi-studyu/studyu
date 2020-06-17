@@ -6,8 +6,15 @@ import '../database/models/questionnaire/question.dart';
 import '../database/models/questionnaire/questionnaire_state.dart';
 import 'question_container.dart';
 
+class QuestionnaireResult {
+  final bool conditionResult;
+  final QuestionnaireState answers;
+
+  QuestionnaireResult(this.answers, {this.conditionResult});
+}
+
 class QuestionnaireScreen extends StatefulWidget {
-  static MaterialPageRoute routeFor(List<Question> questions,
+  static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
           {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
           builder: (_) => QuestionnaireScreen(title, questions, criteria),
@@ -32,7 +39,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   void _finishQuestionnaire() {
     final conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
-    Navigator.of(context).pop([conditionResult, qs]);
+    Navigator.of(context).pop(QuestionnaireResult(qs, conditionResult: conditionResult));
   }
 
   void _onQuestionDone(Answer answer, int index) {
