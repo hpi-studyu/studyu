@@ -4,7 +4,9 @@ import 'tasks/checkmark_task.dart';
 typedef TaskParser = Task Function(Map<String, dynamic> data);
 
 abstract class Task {
-  static Map<String, TaskParser> taskTypes = {CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json)};
+  static Map<String, TaskParser> taskTypes = {
+    CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json),
+  };
   static const String keyType = 'type';
   String type;
 
