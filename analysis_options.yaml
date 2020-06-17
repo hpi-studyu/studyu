@@ -38,7 +38,7 @@ linter:
     avoid_as: true
     avoid_double_and_int_checks: true
     avoid_escaping_inner_quotes: true
-    avoid_single_cascade_in_expression_stateme: true
+    avoid_single_cascade_in_expression_statements: true
     avoid_unnecessary_containers: true
     avoid_unused_constructor_parameters: true
     avoid_void_async: true
