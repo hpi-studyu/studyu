@@ -123,7 +123,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
             onPressed: () async {
               UserUtils.logout();
               await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserUtils.selectedStudyObjectIdKey));
-              Navigator.pushReplacementNamed(context, Routes.welcome);
+              Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             }, // only logout and delete local parse data,
             icon: Icon(Icons.delete),
             color: Colors.red,
