@@ -27,18 +27,18 @@ class _CalendarRowState extends State<CalendarRow> {
 
   @override
   void initState() {
-    _cycles = getCycles(widget.startDate, widget.endDate);
     super.initState();
+    _cycles = getCycles(widget.startDate, widget.endDate);
   }
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     final selected = context.read<TaskOverviewModel>().selectedDate;
     _selectedCycle = selected != null
         ? _cycles.indexWhere((element) =>
             element.first.difference(selected).inDays <= 0 && element.last.difference(selected).inDays >= 0)
         : 0;
-    super.didChangeDependencies();
   }
 
   static List<List<DateTime>> getCycles(DateTime start, DateTime end) {
