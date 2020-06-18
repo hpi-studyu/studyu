@@ -26,17 +26,22 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initLanguage();
-    initStudy();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    initParse(Environment.of(context));
+    initData();
   }
 
   void initLanguage() {
     appLanguage = AppLanguage()..fetchLocale();
+  }
+
+  // Wait for initParse to finish before fetching StudyInstance
+  Future<void> initData() async {
+    await initParse(Environment.of(context));
+    await initStudy();
   }
 
   Future<void> initStudy() async {
