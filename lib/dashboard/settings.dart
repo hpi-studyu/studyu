@@ -50,7 +50,7 @@ class _SettingsState extends State<Settings> {
             setState(() {
               _selectedValue = value;
             });
-            Provider.of<AppLanguage>(context, listen: false).changeLanguage(value);
+            context.read<AppLanguage>().changeLanguage(value);
           },
         ),
       ],

@@ -33,7 +33,7 @@ class _CalendarRowState extends State<CalendarRow> {
 
   @override
   void didChangeDependencies() {
-    final selected = Provider.of<TaskOverviewModel>(context, listen: false).selectedDate;
+    final selected = context.read<TaskOverviewModel>().selectedDate;
     _selectedCycle = selected != null
         ? _cycles.indexWhere((element) =>
             element.first.difference(selected).inDays <= 0 && element.last.difference(selected).inDays >= 0)
@@ -79,7 +79,7 @@ class _CalendarRowState extends State<CalendarRow> {
                 final date = days[i];
                 return GestureDetector(
                   onTap: () {
-                    Provider.of<TaskOverviewModel>(context, listen: false).setDate(date);
+                    context.read<TaskOverviewModel>().setDate(date);
                   },
                   child: DayTile(
                     date: date,
