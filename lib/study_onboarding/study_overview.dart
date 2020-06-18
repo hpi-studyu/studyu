@@ -14,7 +14,6 @@ class StudyOverviewScreen extends StatefulWidget {
 }
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
-  bool _enableContinue;
   Study study;
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
@@ -26,9 +25,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       print('Patient is eligible');
       Navigator.pushNamed(context, Routes.interventionSelection);
     } else if (result.answers != null) {
-      setState(() {
-        _enableContinue = false;
-      });
       final reason =
           study.studyDetails.eligibility.firstWhere((criterion) => criterion.isViolated(result.answers)).reason;
       Scaffold.of(context).showSnackBar(SnackBar(
@@ -42,7 +38,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   void initState() {
     super.initState();
     study = context.read<OnboardingModel>().selectedStudy;
-    _enableContinue = true;
   }
 
   @override
@@ -66,11 +61,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
                     ),
                     SizedBox(height: 40),
                     RaisedButton(
-                      onPressed: _enableContinue
-                          ? () {
-                              navigateToEligibilityCheck(_context);
-                            }
-                          : null,
+                      onPressed: () {
+                        navigateToEligibilityCheck(_context);
+                      },
                       child: Text(Nof1Localizations.of(context).translate('get_started')),
                     ),
                   ],
