@@ -16,8 +16,8 @@ class _SettingsState extends State<Settings> {
   Locale _selectedValue;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _selectedValue = context.read<AppLanguage>().appLocal;
   }
 
