@@ -1,9 +1,15 @@
 image: cirrusci/flutter:beta
 
 stages:
+  - check-format
   - generate
   - build
   - verify
+
+check-format:
+  stage: check-format
+  script:
+    - flutter format -l 120 -n . --set-exit-if-changed
 
 generate:
   stage: generate
@@ -36,7 +42,6 @@ test:
 analyze:
   stage: verify
   script:
-    - flutter format -l 120 -n . --set-exit-if-changed
     - flutter analyze
   tags:
     - app
