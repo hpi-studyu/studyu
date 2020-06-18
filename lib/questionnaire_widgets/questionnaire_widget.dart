@@ -75,13 +75,13 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   @override
   void initState() {
+    super.initState();
     shownQuestions.add(QuestionContainer(
       key: UniqueKey(),
       question: widget.questions[0],
       onDone: _onQuestionDone,
       index: 0,
     ));
-    super.initState();
   }
 
   @override

@@ -17,8 +17,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   void didChangeDependencies() {
-    _selectedValue = context.read<AppLanguage>().appLocal;
     super.didChangeDependencies();
+    _selectedValue = context.read<AppLanguage>().appLocal;
   }
 
   Widget getDropdownRow(BuildContext context) {
