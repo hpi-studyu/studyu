@@ -30,8 +30,7 @@ class StudyDao {
     final builder = QueryBuilder<StudyInstance>(StudyInstance())
       ..whereEqualTo('objectId', objectId);
     return builder.query().then((response) =>
-    // ignore: avoid_as
-    response.success ? response.results.isNotEmpty ? response.results.first as StudyInstance : null : null);
+    response.success && response.results.isNotEmpty ? response.results.first : null);
   }
   static Future<String> saveUserStudy(StudyInstance userStudy) async {
     final response = await userStudy.save();
