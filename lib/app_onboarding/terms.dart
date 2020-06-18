@@ -24,6 +24,9 @@ class _TermsScreenState extends State<TermsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('terms')),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
