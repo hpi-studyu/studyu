@@ -10,8 +10,7 @@ import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
   Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
-    final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
-    context.read<AppModel>().selectedStudy = study;
+    context.read<AppModel>().selectedStudy = selectedStudy;
     Navigator.pushNamed(context, Routes.studyOverview);
   }
 
