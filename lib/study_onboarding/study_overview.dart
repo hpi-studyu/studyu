@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../database/daos/study_dao.dart';
 import '../database/models/study.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
@@ -16,7 +17,13 @@ class StudyOverviewScreen extends StatefulWidget {
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Study study;
 
-  Future<void> navigateToEligibilityCheck(BuildContext context) async {
+  @override
+  void initState() {
+    super.initState();
+    study = context.read<OnboardingModel>().selectedStudy;
+  }
+
+  Future<void> navigateToEligibilityCheck(BuildContext context, Study study) async {
     final result = await Navigator.push(
         context,
         QuestionnaireScreen.routeFor(study.studyDetails.questionnaire.questions,
@@ -34,10 +41,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    study = context.read<OnboardingModel>().selectedStudy;
+  Future<Study> loadStudyDetails(BuildContext context) async {
+    final completeStudy = await StudyDao().getStudyWithStudyDetails(study);
+    context.read<OnboardingModel>().selectedStudy = completeStudy;
+    print(completeStudy);
+    return completeStudy;
   }
 
   @override
@@ -47,30 +55,33 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         appBar: AppBar(
           title: Text(Nof1Localizations.of(context).translate('summary')),
         ),
-        body: Builder(builder: (_context) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'todo put summary here',
-                      style: theme.textTheme.headline5,
-                    ),
-                    SizedBox(height: 40),
-                    RaisedButton(
-                      onPressed: () {
-                        navigateToEligibilityCheck(_context);
-                      },
-                      child: Text(Nof1Localizations.of(context).translate('get_started')),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }));
+        body: Center(
+            child: FutureBuilder(
+                future: loadStudyDetails(context),
+                builder: (_context, snapshot) {
+                  return snapshot.hasData
+                      ? SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'todo put summary here',
+                                  style: theme.textTheme.headline5,
+                                ),
+                                SizedBox(height: 40),
+                                RaisedButton(
+                                  onPressed: () {
+                                    navigateToEligibilityCheck(_context, snapshot.data);
+                                  },
+                                  child: Text(Nof1Localizations.of(context).translate('get_started')),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : CircularProgressIndicator();
+                })));
   }
 }
