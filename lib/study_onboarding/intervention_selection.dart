@@ -64,6 +64,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
@@ -94,12 +95,22 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    /*Center(
-                      child: Text(
-                        Nof1Localizations.of(context).translate('please_select_interventions'),
-                        style: theme.textTheme.headline5,
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          Text(
+                            Nof1Localizations.of(context).translate('please_select_interventions'),
+                            style: theme.textTheme.subtitle1,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'The effects of these two interventions will be measured and compared during the study.',
+                            style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+                          ),
+                        ],
                       ),
-                    ),*/
+                    ),
                     selectedStudy.studyDetails != null &&
                             selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
                         ? buildInterventionSelectionList(selectedStudy.studyDetails.interventionSet.interventions)
