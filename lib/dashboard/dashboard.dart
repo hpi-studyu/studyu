@@ -29,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     // TODO: dashboard should read from a different model connected to parse UserStudy object
-    final study = context.read<AppModel>().userStudy;
+    final study = context.read<AppModel>().activeStudy;
     interventions = study.interventionSet.interventions.toList();
     plannedInterventions = [];
     for (var i = 0; i < study.interventionOrder.length; i++) {

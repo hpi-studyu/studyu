@@ -3,7 +3,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'interventions/intervention.dart';
 import 'interventions/intervention_set.dart';
 import 'study_details.dart';
-import 'user_study.dart';
+import 'study_instance.dart';
 
 class Study extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'Study';
@@ -54,8 +54,8 @@ class Study extends ParseObject implements ParseCloneable {
 
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
 
-  UserStudy extractUserStudy(String userId, List<Intervention> selectedInterventions, int firstIntervention) {
-    final userStudy = UserStudy()
+  StudyInstance extractUserStudy(String userId, List<Intervention> selectedInterventions, int firstIntervention) {
+    final userStudy = StudyInstance()
       ..title = title
       ..description = description
       ..studyId = id
