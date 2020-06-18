@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_onboarding/about.dart';
+import 'app_onboarding/loading_screen.dart';
 import 'app_onboarding/terms.dart';
 import 'app_onboarding/welcome.dart';
 import 'dashboard/contact_tab/contact.dart';
@@ -13,6 +14,7 @@ import 'study_onboarding/study_overview.dart';
 import 'study_selection/study_selection.dart';
 
 class Routes {
+  static const String loading = '/loading';
   static const String dashboard = '/dashboard';
   static const String welcome = '/welcome';
   static const String about = '/about';
@@ -39,6 +41,7 @@ class Routes {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final routeMap = {
+      loading: (_) => LoadingScreen(),
       dashboard: (_) => DashboardScreen(),
       welcome: (_) => WelcomeScreen(),
       about: (_) => AboutScreen(),

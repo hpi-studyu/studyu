@@ -1,4 +1,6 @@
 {
+  "loading": "Loading",
+
   "what_is_nof1": "What is N of 1?",
   "description_part1": "Imagine reading the sentence: \"Studies have shown that caffeine increases tiredness in some people.\"",
   "description_part2": "An exciting result, but does it answer the question whether coffee makes YOU personally awake or tired?",
