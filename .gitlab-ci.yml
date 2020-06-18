@@ -1,35 +1,39 @@
 image: cirrusci/flutter:beta
 
 stages:
+  - generate
   - build
-  - analyze
-  - test
+  - verify
+
+generate:
+  stage: generate
+  before_script:
+    - flutter pub get
+  script:
+    - flutter pub run build_runner build
+  artifacts:
+    paths:
+      - lib/**/*.g.dart
 
 build:
   stage: build
   script:
-    - flutter pub get
-    - flutter pub run build_runner build
     - flutter build aot
   tags:
     - app
     - android
 
-unit_test:
-  stage: test
+test:
+  stage: verify
   script:
-    - flutter pub get
-    - flutter pub run build_runner build
     - flutter test
   tags:
     - app
     - android
-    
+
 analyze:
-  stage: analyze
+  stage: verify
   script:
-    - flutter pub get
-    - flutter pub run build_runner build
     - flutter analyze
   tags:
     - app
