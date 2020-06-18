@@ -36,6 +36,7 @@ test:
 analyze:
   stage: verify
   script:
+    - flutter format -l 120 -n . --set-exit-if-changed
     - flutter analyze
   tags:
     - app
