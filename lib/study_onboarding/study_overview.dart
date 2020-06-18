@@ -44,7 +44,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Future<Study> loadStudyDetails(BuildContext context) async {
     final completeStudy = await StudyDao().getStudyWithStudyDetails(study);
     context.read<AppModel>().selectedStudy = completeStudy;
-    print(completeStudy);
     return completeStudy;
   }
 
