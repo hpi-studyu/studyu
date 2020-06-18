@@ -6,7 +6,7 @@ void main() {
     StudySchedule schedule;
     setUp(() => schedule = StudySchedule());
 
-    void includeCommonRequirements () {
+    void includeCommonRequirements() {
       test('creates a complete schedule', () {
         schedule
           ..numberOfCycles = 2
@@ -42,7 +42,7 @@ void main() {
         expect(result.sublist(3).take(2).toSet().length, 2, reason: 'A cycle was not complete');
       });
     }
-    
+
     group('Alternating Phase Sequence', () {
       setUp(() => schedule.sequence = PhaseSequence.alternating);
       includeCommonRequirements();

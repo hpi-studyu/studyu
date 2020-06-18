@@ -14,16 +14,9 @@ class Contact extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-                color: Colors.amber, onPressed: () {}, child: Text('FAQ')),
-            RaisedButton(
-                color: Colors.cyan,
-                onPressed: () {},
-                child: Text('Contact Support')),
-            RaisedButton(
-                color: Colors.amber,
-                onPressed: () {},
-                child: Text('Imprint/About')),
+            RaisedButton(color: Colors.amber, onPressed: () {}, child: Text('FAQ')),
+            RaisedButton(color: Colors.cyan, onPressed: () {}, child: Text('Contact Support')),
+            RaisedButton(color: Colors.amber, onPressed: () {}, child: Text('Imprint/About')),
           ],
         ),
       ),

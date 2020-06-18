@@ -52,9 +52,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   @override
   void initState() {
     super.initState();
-    selectedStudy = context
-        .read<AppModel>()
-        .selectedStudy;
+    selectedStudy = context.read<AppModel>().selectedStudy;
   }
 
   Future<void> onFinished() async {
@@ -64,8 +62,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     model.activeStudy = model.selectedStudy.extractUserStudy(userId, selected, 0);
     final selectedStudyObjectId = await StudyDao.saveUserStudy(model.activeStudy);
     if (selectedStudyObjectId != null) {
-      await SharedPreferences.getInstance().then((pref) =>
-          pref.setString(UserUtils.selectedStudyObjectIdKey, selectedStudyObjectId));
+      await SharedPreferences.getInstance()
+          .then((pref) => pref.setString(UserUtils.selectedStudyObjectIdKey, selectedStudyObjectId));
     }
     Navigator.pushNamed(context, Routes.journey);
   }
@@ -93,14 +91,12 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                     ),
                     SizedBox(height: 20),
                     selectedStudy.studyDetails != null &&
-                        selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
+                            selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
                         ? buildInterventionSelectionList(selectedStudy.studyDetails.interventionSet.interventions)
                         : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
                     SizedBox(height: 20),
                     RaisedButton(
-                      onPressed: selected.length == 2
-                          ? onFinished
-                          : null,
+                      onPressed: selected.length == 2 ? onFinished : null,
                       child: Text(Nof1Localizations.of(context).translate('finished')),
                     ),
                   ],
