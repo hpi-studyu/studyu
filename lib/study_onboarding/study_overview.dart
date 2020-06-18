@@ -58,8 +58,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
             child: FutureBuilder(
                 future: loadStudyDetails(context),
                 builder: (_context, snapshot) {
-                  return snapshot.hasData
-                      ? SingleChildScrollView(
+                  return !snapshot.hasData
+                      ? CircularProgressIndicator()
+                      : SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
                             child: Column(
@@ -80,8 +81,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
                               ],
                             ),
                           ),
-                        )
-                      : CircularProgressIndicator();
+                        );
                 })));
   }
 }
