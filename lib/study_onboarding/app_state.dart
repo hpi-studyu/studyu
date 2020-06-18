@@ -1,10 +1,10 @@
 import '../database/models/models.dart';
-import '../database/models/user_study.dart';
+import '../database/models/study_instance.dart';
 
 class AppModel {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
-  UserStudy userStudy;
+  StudyInstance activeStudy;
 
-  AppModel(this.userStudy);
+  AppModel(this.activeStudy);
 }

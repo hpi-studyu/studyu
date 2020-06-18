@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'database/daos/study_dao.dart';
-import 'database/models/user_study.dart';
+import 'database/models/study_instance.dart';
 import 'environments/environment.dart';
 import 'routes.dart';
 import 'study_onboarding/app_state.dart';
@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   AppLanguage appLanguage;
-  UserStudy selectedStudy;
+  StudyInstance selectedStudy;
 
   @override
   void initState() {

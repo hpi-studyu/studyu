@@ -1,7 +1,7 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models/models.dart';
-import '../models/user_study.dart';
+import '../models/study_instance.dart';
 
 const filename = 'assets/studies/scratch.xml';
 
@@ -26,14 +26,14 @@ class StudyDao {
     return detailedStudy;
   }
 
-  static Future<UserStudy> getUserStudy(String objectId) async {
-    final builder = QueryBuilder<UserStudy>(UserStudy())
+  static Future<StudyInstance> getUserStudy(String objectId) async {
+    final builder = QueryBuilder<StudyInstance>(StudyInstance())
       ..whereEqualTo('objectId', objectId);
     return builder.query().then((response) =>
     // ignore: avoid_as
-    response.success ? response.results.isNotEmpty ? response.results.first as UserStudy : null : null);
+    response.success ? response.results.isNotEmpty ? response.results.first as StudyInstance : null : null);
   }
-  static Future<String> saveUserStudy(UserStudy userStudy) async {
+  static Future<String> saveUserStudy(StudyInstance userStudy) async {
     final response = await userStudy.save();
     if (response.success) {
       return userStudy.objectId;
