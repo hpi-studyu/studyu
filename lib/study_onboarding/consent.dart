@@ -9,7 +9,6 @@ class ConsentScreen extends StatefulWidget {
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

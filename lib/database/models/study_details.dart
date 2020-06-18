@@ -25,7 +25,8 @@ class StudyDetails extends ParseObject implements ParseCloneable {
 
   static const keyInterventionSet = 'interventionSet';
   InverventionSet get interventionSet => InverventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
-  set interventionSet(InverventionSet interventionSet) => set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
+  set interventionSet(InverventionSet interventionSet) =>
+      set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
 
   static const keyObservations = 'observations';
 

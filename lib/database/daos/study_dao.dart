@@ -27,11 +27,12 @@ class StudyDao {
   }
 
   static Future<StudyInstance> getUserStudy(String objectId) async {
-    final builder = QueryBuilder<StudyInstance>(StudyInstance())
-      ..whereEqualTo('objectId', objectId);
-    return builder.query().then((response) =>
-    response.success && response.results.isNotEmpty ? response.results.first : null);
+    final builder = QueryBuilder<StudyInstance>(StudyInstance())..whereEqualTo('objectId', objectId);
+    return builder
+        .query()
+        .then((response) => response.success && response.results.isNotEmpty ? response.results.first : null);
   }
+
   static Future<String> saveUserStudy(StudyInstance userStudy) async {
     final response = await userStudy.save();
     if (response.success) {
