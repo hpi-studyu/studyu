@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 import '../database/daos/study_dao.dart';
 import '../database/models/models.dart';
 import '../routes.dart';
-import '../study_onboarding/onboarding_model.dart';
+import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
   Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
     final study = await StudyDao().getStudyWithStudyDetails(selectedStudy);
-    context.read<OnboardingModel>().selectedStudy = study;
+    context.read<AppModel>().selectedStudy = study;
     Navigator.pushNamed(context, Routes.studyOverview);
   }
 

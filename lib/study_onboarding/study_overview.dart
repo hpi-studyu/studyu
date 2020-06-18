@@ -6,7 +6,7 @@ import '../database/daos/study_dao.dart';
 import '../database/models/study.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import '../routes.dart';
-import '../study_onboarding/onboarding_model.dart';
+import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
@@ -20,7 +20,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<OnboardingModel>().selectedStudy;
+    study = context.read<AppModel>().selectedStudy;
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context, Study study) async {
@@ -43,7 +43,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<Study> loadStudyDetails(BuildContext context) async {
     final completeStudy = await StudyDao().getStudyWithStudyDetails(study);
-    context.read<OnboardingModel>().selectedStudy = completeStudy;
+    context.read<AppModel>().selectedStudy = completeStudy;
     print(completeStudy);
     return completeStudy;
   }
