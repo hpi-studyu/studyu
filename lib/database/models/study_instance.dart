@@ -33,7 +33,15 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
   static const keyInterventionOrder = 'intervention_order';
-  List<int> get interventionOrder => get<List<dynamic>>(keyInterventionOrder);
+  List<int> get interventionOrder => get<List<dynamic>>(keyInterventionOrder).map<int>((entry) {
+        try {
+          return int.parse(entry.toString());
+        } on Exception {
+          // TODO change model so there is no null
+          // ignore: avoid_returning_null
+          return null;
+        }
+      }).toList();
   set interventionOrder(List<int> interventionOrder) => set<List<int>>(keyInterventionOrder, interventionOrder);
 
   static const keyInterventionSet = 'intervention_set';
