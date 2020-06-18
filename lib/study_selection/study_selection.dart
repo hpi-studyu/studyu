@@ -24,11 +24,13 @@ class StudySelectionScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                Nof1Localizations.of(context).translate('study_selection_description'),
-                style: theme.textTheme.headline5,
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  Nof1Localizations.of(context).translate('study_selection_description'),
+                  style: theme.textTheme.headline5,
+                ),
               ),
             ),
             FutureBuilder(
