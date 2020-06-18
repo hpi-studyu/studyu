@@ -34,18 +34,12 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   }
 
   List<Widget> buildJourney() {
-    final interventions = <Widget>[];
-    for (var i = 0; i < study.interventionOrder.length; i++) {
-      final index = study.interventionOrder[i];
-      if (index == null) {
-        continue;
-      }
-      final milestone = Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(children: [Text(study.interventionSet.interventions[index].name)]));
-      interventions.add(milestone);
-    }
-    return interventions;
+    return study.interventionOrder
+        .skip(1) // TODO: skip baseline
+        .map((index) => Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(children: [Text(study.interventionSet.interventions[index].name)])))
+        .toList();
   }
 
   @override
