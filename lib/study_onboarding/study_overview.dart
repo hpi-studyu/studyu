@@ -67,9 +67,10 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'todo put summary here',
+                                  snapshot.data.title,
                                   style: theme.textTheme.headline5,
                                 ),
+                                Text(snapshot.data.description),
                                 SizedBox(height: 40),
                                 RaisedButton(
                                   onPressed: () {
