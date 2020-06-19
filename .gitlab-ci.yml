@@ -12,6 +12,8 @@ check-format:
     - flutter format -l 120 -n . --set-exit-if-changed
   tags:
     - app
+  only:
+    - merge_requests
 
 generate:
   stage: generate
@@ -24,6 +26,8 @@ generate:
       - lib/**/*.g.dart
   tags:
     - app
+  only:
+    - merge_requests
 
 build:
   stage: build
@@ -32,6 +36,8 @@ build:
   tags:
     - app
     - android
+  only:
+    - merge_requests
 
 test:
   stage: verify
@@ -40,6 +46,8 @@ test:
   tags:
     - app
     - android
+  only:
+    - merge_requests
 
 analyze:
   stage: verify
@@ -48,3 +56,5 @@ analyze:
   tags:
     - app
     - android
+  only:
+    - merge_requests
