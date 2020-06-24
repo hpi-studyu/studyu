@@ -29,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   StudyInstance study;
   List<Intervention> interventions;
   List<PlannedIntervention> plannedInterventions;
+  Multimap<Time, Task> scheduleToday;
 
   @override
   void initState() {
@@ -45,21 +46,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
         DateTime.now().add(Duration(days: 6)),
       ));
     }
+
+    const activeIntervention = 0;
+
+    scheduleToday = Multimap<Time, Task>();
+    for (final task in study.interventionSet.interventions[activeIntervention].tasks) {
+      for (final schedule in task.schedule) {
+        if (schedule is FixedSchedule) {
+          scheduleToday.add(schedule.time, task);
+        }
+      }
+    }
+    for (final observation in study.observations) {
+      for (final task in observation.tasks) {
+        for (final schedule in task.schedule) {
+          if (schedule is FixedSchedule) {
+            scheduleToday.add(schedule.time, task);
+          }
+        }
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final scheduleToday = Multimap<Time, Task>();
-    study.interventionSet.interventions[0].tasks.forEach((task) {
-      task.schedule.forEach((schedule) {
-        if (schedule is FixedSchedule) {
-          scheduleToday.add(schedule.time, task);
-        }
-      });
-    });
-
-    scheduleToday.forEach((key, value) => print('[$key->$value]'));
-
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
@@ -82,7 +92,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: ChangeNotifierProvider(
         create: (context) => TaskOverviewModel(),
-        child: TaskOverview(plannedInterventions: plannedInterventions),
+        child: TaskOverview(plannedInterventions: plannedInterventions, scheduleToday: scheduleToday),
       ),
     );
   }
