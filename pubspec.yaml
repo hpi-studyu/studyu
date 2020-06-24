@@ -38,6 +38,7 @@ dependencies:
   path_provider:
   pimp_my_button:
   provider:
+  quiver: ^2.1.3
   research_package:
   shared_preferences:
   video_player:
