@@ -11,6 +11,7 @@ import '../util/localization.dart';
 import '../util/user.dart';
 import 'app_state.dart';
 import 'intervention_card.dart';
+import 'oboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
   @override
@@ -74,18 +75,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
               icon: Icon(MdiIcons.checkBold),
             ),
           ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(4),
-            child: Row(
-              children: [
-                Expanded(child: LinearProgressIndicator(value: 1)),
-                SizedBox(width: 4),
-                Expanded(child: LinearProgressIndicator(value: selected.length / 2)),
-                SizedBox(width: 4),
-                Expanded(child: LinearProgressIndicator(value: 0)),
-              ],
-            ),
-          ),
+          bottom: OnboardingProgress(stage: 1, progress: selected.length / 2),
         ),
         body: SingleChildScrollView(
             scrollDirection: Axis.vertical,
