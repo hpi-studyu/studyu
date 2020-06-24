@@ -1,6 +1,5 @@
-import 'package:Nof1/database/models/observations/tasks/questionnaire_task.dart';
-
 import '../tasks/task.dart';
+import 'tasks/questionnaire_task.dart';
 
 typedef ObservationTaskParser = ObservationTask Function(Map<String, dynamic> data);
 
