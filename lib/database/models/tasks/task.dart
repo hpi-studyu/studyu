@@ -1,7 +1,5 @@
 import '../tasks/schedule.dart';
 
-typedef TaskParser = Task Function(Map<String, dynamic> data);
-
 abstract class Task {
   static const String keyType = 'type';
   String type;
