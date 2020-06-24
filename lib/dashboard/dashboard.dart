@@ -1,5 +1,3 @@
-import 'package:Nof1/database/models/interventions/task.dart';
-import 'package:Nof1/database/models/schedule/fixed_schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +5,8 @@ import 'package:quiver/collection.dart';
 
 import '../database/models/interventions/intervention.dart';
 import '../database/models/study_instance.dart';
+import '../database/models/tasks/fixed_schedule.dart';
+import '../database/models/tasks/task.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
