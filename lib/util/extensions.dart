@@ -21,4 +21,10 @@ extension DateOnlyCompare on DateTime {
   bool isLaterDateThan(DateTime other) {
     return !(isSameDate(other) || isEarlierDateThan(other));
   }
+
+  Duration differenceInDays(DateTime other) {
+    final currentZero = DateTime(year, month, day);
+    final otherZero = DateTime(other.year, other.month, other.day);
+    return currentZero.difference(otherZero);
+  }
 }

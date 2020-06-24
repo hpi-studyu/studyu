@@ -33,12 +33,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     interventions = study.interventionSet.interventions.toList();
     plannedInterventions = [];
     for (var i = 0; i < study.interventionOrder.length; i++) {
-      final index = study.interventionOrder[i];
-      if (index == null) {
-        continue;
-      }
+      final id = study.interventionOrder[i];
       plannedInterventions.add(PlannedIntervention(
-        interventions[index],
+        interventions.firstWhere((intervention) => intervention.id == id, orElse: () => null),
         DateTime.now().add(Duration(days: 7 * i)),
         DateTime.now().add(Duration(days: 6)),
       ));
