@@ -91,34 +91,36 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
-          actions: [
-            IconButton(
-              onPressed: (selected.length == 2) ? onFinished : null,
-              icon: Icon(MdiIcons.checkBold),
-            ),
-          ],
-          bottom: OnboardingProgress(stage: 1, progress: selected.length / 2),
-        ),
-        body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildInterventionSelectionExplanation(theme),
-                    _buildInterventionSelectionList(),
-                    SizedBox(height: 16),
-                    RaisedButton(
-                      onPressed: selected.length == 2 ? onFinished : null,
-                      child: Text(Nof1Localizations.of(context).translate('finished')),
-                    ),
-                  ],
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
+        actions: [
+          IconButton(
+            onPressed: (selected.length == 2) ? onFinished : null,
+            icon: Icon(MdiIcons.checkBold),
+          ),
+        ],
+        bottom: OnboardingProgress(stage: 1, progress: selected.length / 2),
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildInterventionSelectionExplanation(theme),
+                _buildInterventionSelectionList(),
+                SizedBox(height: 16),
+                RaisedButton(
+                  onPressed: selected.length == 2 ? onFinished : null,
+                  child: Text(Nof1Localizations.of(context).translate('finished')),
                 ),
-              ),
-            )));
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
