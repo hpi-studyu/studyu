@@ -9,9 +9,6 @@ PODS:
   - devicelocale (0.0.1):
     - Flutter
   - Flutter (1.0.0)
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -27,9 +24,6 @@ PODS:
     - Flutter
   - shared_preferences_web (0.0.1):
     - Flutter
-  - sqflite (0.0.1):
-    - Flutter
-    - FMDB (~> 2.7.2)
   - video_player (0.0.1):
     - Flutter
   - video_player_web (0.0.1):
@@ -50,14 +44,12 @@ DEPENDENCIES:
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
   - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
-  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_player_web (from `.symlinks/plugins/video_player_web/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
   trunk:
-    - FMDB
     - Reachability
 
 EXTERNAL SOURCES:
@@ -85,8 +77,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_macos/ios"
   shared_preferences_web:
     :path: ".symlinks/plugins/shared_preferences_web/ios"
-  sqflite:
-    :path: ".symlinks/plugins/sqflite/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   video_player_web:
@@ -100,7 +90,6 @@ SPEC CHECKSUMS:
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   devicelocale: feebbe5e7a30adb8c4f83185de1b50ff19b44f00
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4
@@ -109,7 +98,6 @@ SPEC CHECKSUMS:
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
-  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7
   wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4
