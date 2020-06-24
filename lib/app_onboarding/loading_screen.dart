@@ -43,6 +43,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     print('Selected study: $selectedStudyObjectId');
     if (selectedStudyObjectId == null) {
       Navigator.pushReplacementNamed(context, Routes.welcome);
+      return;
     }
     final studyInstance = await StudyDao.getUserStudy(selectedStudyObjectId);
     if (studyInstance != null) {
