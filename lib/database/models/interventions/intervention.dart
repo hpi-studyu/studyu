@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'task.dart';
+import 'intervention_task.dart';
 
 part 'intervention.g.dart';
 
@@ -9,7 +9,7 @@ class Intervention {
   String id;
   String name;
 
-  List<Task> tasks;
+  List<InterventionTask> tasks;
 
   Intervention(this.id, this.name);
 

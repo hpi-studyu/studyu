@@ -1,12 +1,8 @@
-import '../schedule/schedule.dart';
-import 'tasks/checkmark_task.dart';
+import '../tasks/schedule.dart';
 
 typedef TaskParser = Task Function(Map<String, dynamic> data);
 
 abstract class Task {
-  static Map<String, TaskParser> taskTypes = {
-    CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json),
-  };
   static const String keyType = 'type';
   String type;
 
@@ -16,8 +12,6 @@ abstract class Task {
   List<Schedule> schedule;
 
   Task();
-
-  factory Task.fromJson(Map<String, dynamic> data) => taskTypes[data[keyType]](data);
 
   Map<String, dynamic> toJson();
 
