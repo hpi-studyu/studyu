@@ -47,10 +47,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ));
     }
 
-    const activeIntervention = 0;
+    final activeIntervention = study.getInterventionForDate(DateTime.now());
 
     scheduleToday = Multimap<Time, Task>();
-    for (final task in study.interventionSet.interventions[activeIntervention].tasks) {
+    for (final task in activeIntervention.tasks) {
       for (final schedule in task.schedule) {
         if (schedule is FixedSchedule) {
           scheduleToday.add(schedule.time, task);
