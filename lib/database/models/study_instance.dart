@@ -1,5 +1,7 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
+import '../../util/extensions.dart';
+import 'interventions/intervention.dart';
 import 'interventions/intervention_set.dart';
 import 'observations/observation.dart';
 
@@ -33,17 +35,17 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   String get iconName => get<String>(keyIconName);
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
-  static const keyInterventionOrder = 'intervention_order';
-  List<int> get interventionOrder => get<List<dynamic>>(keyInterventionOrder).map<int>((entry) {
-        try {
-          return int.parse(entry.toString());
-        } on Exception {
-          // TODO change model so there is no null
-          // ignore: avoid_returning_null
-          return null;
-        }
-      }).toList();
-  set interventionOrder(List<int> interventionOrder) => set<List<int>>(keyInterventionOrder, interventionOrder);
+  static const keyStartDate = 'start_date';
+  DateTime get startDate => get<DateTime>(keyStartDate);
+  set startDate(DateTime startDate) => set<DateTime>(keyStartDate, startDate);
+
+  static const keyPhaseDuration = 'phase_duration';
+  int get phaseDuration => get<int>(keyPhaseDuration);
+  set phaseDuration(int phaseDuration) => set<int>(keyPhaseDuration, phaseDuration);
+
+  static const keyInterventionOrder = 'intervention_order_ids';
+  List<String> get interventionOrder => get<List<dynamic>>(keyInterventionOrder).map<String>((e) => e).toList();
+  set interventionOrder(List<String> interventionOrder) => set<List<String>>(keyInterventionOrder, interventionOrder);
 
   static const keyInterventionSet = 'intervention_set';
   InverventionSet get interventionSet => InverventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
@@ -55,4 +57,16 @@ class StudyInstance extends ParseObject implements ParseCloneable {
       get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
   set observations(List<Observation> observations) =>
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
+
+  Intervention getInterventionForDate(DateTime date) {
+    final test = date.differenceInDays(startDate).inDays;
+    final index = test ~/ phaseDuration;
+    if (index < 0 || index >= interventionOrder.length) {
+      print('Study is over or has not begun.');
+      return null;
+    }
+    final interventionId = interventionOrder[index];
+    return interventionSet.interventions
+        .firstWhere((intervention) => intervention.id == interventionId, orElse: () => null);
+  }
 }

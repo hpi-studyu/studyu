@@ -59,7 +59,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final model = context.read<AppModel>();
     final userId = await UserUtils.getOrCreateUser().then((user) => user.objectId);
     //TODO add selection of first intervention
-    model.activeStudy = model.selectedStudy.extractUserStudy(userId, selected, 0);
+    model.activeStudy = model.selectedStudy.extractUserStudy(userId, selected, DateTime.now(), 0);
     final selectedStudyObjectId = await StudyDao.saveUserStudy(model.activeStudy);
     if (selectedStudyObjectId != null) {
       await SharedPreferences.getInstance()

@@ -36,9 +36,14 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   List<Widget> buildJourney() {
     return study.interventionOrder
         .skip(1) // TODO: skip baseline
-        .map((index) => Padding(
+        .map((id) => Padding(
             padding: const EdgeInsets.all(15),
-            child: Column(children: [Text(study.interventionSet.interventions[index].name)])))
+            child: Column(children: [
+              Text(study.interventionSet.interventions
+                      .firstWhere((intervention) => intervention.id == id, orElse: () => null)
+                      ?.name ??
+                  '')
+            ])))
         .toList();
   }
 

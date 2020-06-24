@@ -44,16 +44,27 @@ class Study extends ParseObject implements ParseCloneable {
   StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
 
-  StudyInstance extractUserStudy(String userId, List<Intervention> selectedInterventions, int firstIntervention) {
+  StudyInstance extractUserStudy(
+      String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
     final userStudy = StudyInstance()
       ..title = title
       ..description = description
       ..studyId = id
       ..userId = userId
+      ..startDate = startDate
       ..interventionSet = InverventionSet(selectedInterventions)
-      ..observations = studyDetails.observations;
+      ..observations = studyDetails.observations ?? [];
     if (studyDetails.schedule != null) {
-      userStudy.interventionOrder = studyDetails.schedule.generateWith(firstIntervention);
+      final order = <String>[];
+      for (final index in studyDetails.schedule.generateWith(firstIntervention)) {
+        if (index == null) {
+          continue;
+        }
+        order.add(selectedInterventions[index].id);
+      }
+      userStudy
+        ..interventionOrder = order
+        ..phaseDuration = studyDetails.schedule.phaseDuration;
     } else {
       print('Study is missing schedule or StudyDetails not fetched!');
       return null;
