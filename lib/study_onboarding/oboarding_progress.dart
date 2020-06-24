@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class OnboardingProgress extends StatelessWidget implements PreferredSizeWidget {
-  int stage;
-  double progress;
+  final int stage;
+  final double progress;
 
-  OnboardingProgress({@required this.stage, @required this.progress, Key key}) : super(key: key);
+  const OnboardingProgress({@required this.stage, @required this.progress, Key key}) : super(key: key);
 
   double _getProgressForStage(int stage) {
     if (stage < this.stage) return 1;

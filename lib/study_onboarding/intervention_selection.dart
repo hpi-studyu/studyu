@@ -22,32 +22,56 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   final List<Intervention> selected = [];
   Study selectedStudy;
 
-  Widget buildInterventionSelectionList(List<Intervention> interventions) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: interventions.length,
-      itemBuilder: (_context, index) => InterventionCard(
-        interventions[index],
-        selected: selected.map((intervention) => intervention.id).contains(interventions[index].id),
-        onTap: () {
-          setState(() {
-            if (!selected.map<String>((intervention) => intervention.name).contains(interventions[index].name)) {
-              selected.add(interventions[index]);
-              if (selected.length > 2) selected.removeAt(0);
-            } else {
-              selected.removeWhere((contained) => contained.name == interventions[index].name);
-            }
-          });
-        },
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
     selectedStudy = context.read<AppModel>().selectedStudy;
+  }
+
+  Widget _buildInterventionSelectionExplanation(ThemeData theme) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Column(
+        children: [
+          Text(
+            Nof1Localizations.of(context).translate('please_select_interventions'),
+            style: theme.textTheme.subtitle1,
+          ),
+          SizedBox(height: 8),
+          Text(
+            'The effects of these two interventions will be measured and compared during the study.',
+            style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInterventionSelectionList() {
+    final interventions = selectedStudy.studyDetails?.interventionSet?.interventions;
+    if (interventions == null || interventions.isEmpty) {
+      return Text(Nof1Localizations.of(context).translate('no_interventions_available'));
+    }
+
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: interventions.length,
+      itemBuilder: (_context, index) => InterventionCard(interventions[index],
+          selected: selected.map((intervention) => intervention.id).contains(interventions[index].id),
+          onTap: () => onSelect(interventions[index])),
+    );
+  }
+
+  void onSelect(Intervention intervention) {
+    setState(() {
+      if (!selected.map<String>((intervention) => intervention.name).contains(intervention.name)) {
+        selected.add(intervention);
+        if (selected.length > 2) selected.removeAt(0);
+      } else {
+        selected.removeWhere((contained) => contained.name == intervention.name);
+      }
+    });
   }
 
   Future<void> onFinished() async {
@@ -85,27 +109,9 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Text(
-                            Nof1Localizations.of(context).translate('please_select_interventions'),
-                            style: theme.textTheme.subtitle1,
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'The effects of these two interventions will be measured and compared during the study.',
-                            style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
-                          ),
-                        ],
-                      ),
-                    ),
-                    selectedStudy.studyDetails != null &&
-                            selectedStudy.studyDetails.interventionSet.interventions.isNotEmpty
-                        ? buildInterventionSelectionList(selectedStudy.studyDetails.interventionSet.interventions)
-                        : Text(Nof1Localizations.of(context).translate('no_interventions_available')),
-                    SizedBox(height: 20),
+                    _buildInterventionSelectionExplanation(theme),
+                    _buildInterventionSelectionList(),
+                    SizedBox(height: 16),
                     RaisedButton(
                       onPressed: selected.length == 2 ? onFinished : null,
                       child: Text(Nof1Localizations.of(context).translate('finished')),
