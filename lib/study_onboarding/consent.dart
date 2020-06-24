@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../routes.dart';
 import '../util/localization.dart';
+import '../util/user.dart';
 
 class ConsentScreen extends StatefulWidget {
   @override
@@ -44,6 +46,17 @@ class ChangeButtonBackgroundState extends State<ChangeButtonBackground> {
  */
 
 class _ConsentScreenState extends State<ConsentScreen> {
+  bool _box1 = true;
+  bool _box2 = true;
+  bool _box3 = true;
+  bool _box4 = true;
+  bool _box5 = true;
+  bool _box6 = true;
+
+  bool userCanContinue() {
+    return _box1 && _box2 && _box3 && _box4 && _box5 && _box6;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -55,12 +68,27 @@ class _ConsentScreenState extends State<ConsentScreen> {
       body: PageView(
         scrollDirection: Axis.vertical,
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  Nof1Localizations.of(context).translate('please_give_consent'),
+                  style: theme.textTheme.headline5,
+                ),
+                SizedBox(height: 40),
+              ],
+            ),
+          ),
           GridView.count(
             primary: false,
             padding: const EdgeInsets.all(20),
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             crossAxisCount: 2,
+            // child: Column(
+            // mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Card(
                 color: Colors.blue[100],
@@ -72,7 +100,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Container(
                     width: 300,
                     height: 100,
-                    child: Text('this'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...buildSection(theme,
+                            title: 'Box 1',
+                            descriptionText: 'this',
+                            acknowledgmentText: 'I agree',
+                            onChange: (val) => setState(() => _box1 = val),
+                            isChecked: _box1),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -86,7 +124,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Container(
                     width: 300,
                     height: 100,
-                    child: Text('is'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...buildSection(theme,
+                            title: 'Box 2',
+                            descriptionText: 'is',
+                            acknowledgmentText: 'I agree',
+                            onChange: (val) => setState(() => _box2 = val),
+                            isChecked: _box2),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -100,7 +148,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Container(
                     width: 300,
                     height: 100,
-                    child: Text('for'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...buildSection(theme,
+                            title: 'Box 3',
+                            descriptionText: 'for',
+                            acknowledgmentText: 'I agree',
+                            onChange: (val) => setState(() => _box3 = val),
+                            isChecked: _box3),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -114,7 +172,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Container(
                     width: 300,
                     height: 100,
-                    child: Text('getting'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...buildSection(theme,
+                            title: 'Box 4',
+                            descriptionText: 'getting',
+                            acknowledgmentText: 'I agree',
+                            onChange: (val) => setState(() => _box4 = val),
+                            isChecked: _box4),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -128,7 +196,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Container(
                     width: 300,
                     height: 100,
-                    child: Text('your'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...buildSection(theme,
+                            title: 'Box 5',
+                            descriptionText: 'you',
+                            acknowledgmentText: 'I agree',
+                            onChange: (val) => setState(() => _box5 = val),
+                            isChecked: _box5),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -142,11 +220,22 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Container(
                     width: 300,
                     height: 100,
-                    child: Text('data'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...buildSection(theme,
+                            title: 'Box 6',
+                            descriptionText: 'informed',
+                            acknowledgmentText: 'I agree',
+                            onChange: (val) => setState(() => _box6 = val),
+                            isChecked: _box6),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ],
+            // ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -159,13 +248,14 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 ),
                 SizedBox(height: 40),
                 RaisedButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: Text(Nof1Localizations.of(context).translate('cancel')),
+                  onPressed: userCanContinue()
+                      ? () {
+                          UserUtils.getOrCreateUser();
+                          Navigator.pushNamed(context, Routes.dashboard);
+                        }
+                      : null,
+                  child: Text(Nof1Localizations.of(context).translate('get_started')),
                 ),
-                RaisedButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: Text(Nof1Localizations.of(context).translate('accept')),
-                )
               ],
             ),
           ),
@@ -173,4 +263,15 @@ class _ConsentScreenState extends State<ConsentScreen> {
       ),
     );
   }
+}
+
+List<Widget> buildSection(ThemeData theme,
+    {String title, String descriptionText, String acknowledgmentText, Function onChange, bool isChecked}) {
+  return <Widget>[
+    Text(title, style: theme.textTheme.headline5),
+    Text(descriptionText),
+    Align(alignment: FractionalOffset.bottomCenter),
+    CheckboxListTile(title: Text(acknowledgmentText), value: isChecked, onChanged: onChange),
+    SizedBox(height: 40),
+  ];
 }
