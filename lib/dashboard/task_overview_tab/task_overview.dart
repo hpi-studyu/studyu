@@ -54,17 +54,6 @@ class _TaskOverviewState extends State<TaskOverview> {
     }
 
     return result;
-/*
-    return widget.scheduleToday.keys.map((key) => {
-    widget.scheduleToday[key].map((task) => {
-    return TaskBox(
-    task: PainRatingTask(
-    Nof1Localizations.of(context).translate('survey'),
-    Nof1Localizations.of(context).translate('survey_test'),
-    ))
-    })
-    });
-    */
   }
 
   @override
