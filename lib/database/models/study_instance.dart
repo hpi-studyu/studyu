@@ -1,6 +1,7 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'interventions/intervention_set.dart';
+import 'observations/observation.dart';
 
 class StudyInstance extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'UserStudy';
@@ -50,4 +51,8 @@ class StudyInstance extends ParseObject implements ParseCloneable {
       set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
 
   static const keyObservations = 'observations';
+  List<Observation> get observations =>
+      get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
+  set observations(List<Observation> observations) =>
+      set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
 }

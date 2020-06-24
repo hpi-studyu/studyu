@@ -60,7 +60,8 @@ class Study extends ParseObject implements ParseCloneable {
       ..description = description
       ..studyId = id
       ..userId = userId
-      ..interventionSet = InverventionSet(selectedInterventions);
+      ..interventionSet = InverventionSet(selectedInterventions)
+      ..observations = studyDetails.observations;
     if (studyDetails.schedule != null) {
       userStudy.interventionOrder = studyDetails.schedule.generateWith(firstIntervention);
     } else {

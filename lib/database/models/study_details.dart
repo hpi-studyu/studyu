@@ -1,8 +1,8 @@
-import 'package:Nof1/database/models/observations/observation.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'eligibility/eligibility_criterion.dart';
 import 'interventions/intervention_set.dart';
+import 'observations/observation.dart';
 import 'questionnaire/questionnaire.dart';
 import 'study_schedule/study_schedule.dart';
 
