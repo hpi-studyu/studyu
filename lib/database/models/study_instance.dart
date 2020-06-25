@@ -58,9 +58,13 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   set observations(List<Observation> observations) =>
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
 
-  Intervention getInterventionForDate(DateTime date) {
+  int getInterventionIndexForDate(DateTime date) {
     final test = date.differenceInDays(startDate).inDays;
-    final index = test ~/ phaseDuration;
+    return test ~/ phaseDuration;
+  }
+
+  Intervention getInterventionForDate(DateTime date) {
+    final index = getInterventionIndexForDate(date);
     if (index < 0 || index >= interventionOrder.length) {
       print('Study is over or has not begun.');
       return null;
@@ -68,5 +72,14 @@ class StudyInstance extends ParseObject implements ParseCloneable {
     final interventionId = interventionOrder[index];
     return interventionSet.interventions
         .firstWhere((intervention) => intervention.id == interventionId, orElse: () => null);
+  }
+
+  List<Intervention> getInterventionsInOrder() {
+    final interventions = <Intervention>[];
+    for (final key in interventionOrder) {
+      interventions
+          .add(interventionSet.interventions.firstWhere((intervention) => intervention.id == key, orElse: () => null));
+    }
+    return interventions;
   }
 }
