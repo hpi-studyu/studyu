@@ -5,11 +5,11 @@ import 'intervention.dart';
 part 'intervention_set.g.dart';
 
 @JsonSerializable()
-class InverventionSet {
+class InterventionSet {
   List<Intervention> interventions;
 
-  InverventionSet(this.interventions);
+  InterventionSet(this.interventions);
 
-  factory InverventionSet.fromJson(Map<String, dynamic> json) => _$InverventionSetFromJson(json);
-  Map<String, dynamic> toJson() => _$InverventionSetToJson(this);
+  factory InterventionSet.fromJson(Map<String, dynamic> json) => _$InterventionSetFromJson(json);
+  Map<String, dynamic> toJson() => _$InterventionSetToJson(this);
 }
