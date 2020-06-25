@@ -3,38 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../database/models/interventions/intervention.dart';
-import '../dashboard.dart';
+import '../../database/models/study_instance.dart';
 
 class ProgressRow extends StatefulWidget {
-  final List<PlannedIntervention> plannedInterventions;
+  final StudyInstance study;
 
-  const ProgressRow({Key key, this.plannedInterventions}) : super(key: key);
+  const ProgressRow({Key key, this.study}) : super(key: key);
   @override
   _ProgressRowState createState() => _ProgressRowState();
 }
 
 class _ProgressRowState extends State<ProgressRow> {
-  Widget _buildInterventionSegment(BuildContext context, PlannedIntervention plannedIntervention, bool isCurrent) {
+  Widget _buildInterventionSegment(BuildContext context, Intervention intervention, bool isCurrent, bool isFuture) {
     final theme = Theme.of(context);
     return Expanded(
         child: Column(
       children: [
         RawMaterialButton(
-          padding: isCurrent ? EdgeInsets.all(10) : EdgeInsets.all(0),
+          padding: isCurrent ? EdgeInsets.all(15) : EdgeInsets.all(5),
           onPressed: () {
             showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                      title: Text('$Intervention: ${plannedIntervention.intervention.name}'),
+                      title: Text('$Intervention: ${intervention.name}'),
                     ));
           },
           elevation: 0,
-          fillColor: isCurrent ? theme.accentColor : theme.primaryColor,
+          fillColor: isCurrent || !isFuture ? theme.accentColor : theme.primaryColor,
           shape: CircleBorder(),
-          child: Icon(
-            plannedIntervention.intervention.name == 'Exercise' ? MdiIcons.dumbbell : MdiIcons.pill,
-            color: Colors.white,
-          ),
+          child: Text(intervention.name[0].toUpperCase(),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         ),
       ],
     ));
@@ -48,23 +46,16 @@ class _ProgressRowState extends State<ProgressRow> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Divider(
-            color: theme.accentColor,
-            thickness: 8,
-            indent: 34,
-            endIndent: 34,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(MdiIcons.run, size: 30),
               SizedBox(width: 8),
-              ...widget.plannedInterventions.asMap().entries.map((entry) {
-                // mock one active intervention week
-                final idx = entry.key;
-                return _buildInterventionSegment(context, entry.value, idx == 1);
+              ...widget.study.getInterventionsInOrder().asMap().entries.map((entry) {
+                final currentStudyIndex = widget.study.getInterventionIndexForDate(DateTime.now());
+                return _buildInterventionSegment(
+                    context, entry.value, currentStudyIndex == entry.key, currentStudyIndex < entry.key);
               }),
-              SizedBox(width: 8),
               Icon(MdiIcons.flagCheckered, size: 30),
             ],
           ),

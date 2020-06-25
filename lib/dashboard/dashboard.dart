@@ -3,7 +3,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 
-import '../database/models/interventions/intervention.dart';
 import '../database/models/study_instance.dart';
 import '../database/models/tasks/fixed_schedule.dart';
 import '../database/models/tasks/task.dart';
@@ -17,35 +16,14 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-class PlannedIntervention {
-  final Intervention intervention;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  PlannedIntervention(this.intervention, this.startDate, this.endDate);
-}
-
 class _DashboardScreenState extends State<DashboardScreen> {
   StudyInstance study;
-  List<Intervention> interventions;
-  List<PlannedIntervention> plannedInterventions;
   Multimap<Time, Task> scheduleToday;
 
   @override
   void initState() {
     super.initState();
-    // TODO: dashboard should read from a different model connected to parse UserStudy object
     study = context.read<AppModel>().activeStudy;
-    interventions = study.interventionSet.interventions.toList();
-    plannedInterventions = [];
-    for (var i = 0; i < study.interventionOrder.length; i++) {
-      final id = study.interventionOrder[i];
-      plannedInterventions.add(PlannedIntervention(
-        interventions.firstWhere((intervention) => intervention.id == id, orElse: () => null),
-        DateTime.now().add(Duration(days: 7 * i)),
-        DateTime.now().add(Duration(days: 6)),
-      ));
-    }
 
     final activeIntervention = study.getInterventionForDate(DateTime.now());
 
@@ -92,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: ChangeNotifierProvider(
         create: (context) => TaskOverviewModel(),
-        child: TaskOverview(plannedInterventions: plannedInterventions, scheduleToday: scheduleToday),
+        child: TaskOverview(study: study, scheduleToday: scheduleToday),
       ),
     );
   }

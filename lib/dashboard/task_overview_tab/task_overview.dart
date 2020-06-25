@@ -1,33 +1,26 @@
+import 'package:Nof1/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/collection.dart';
 
 import '../../database/models/observations/tasks/questionnaire_task.dart';
+import '../../database/models/study_instance.dart';
 import '../../database/models/tasks/fixed_schedule.dart';
 import '../../database/models/tasks/task.dart';
 import '../../tasks/pain_rating_task.dart';
 import '../../tasks/video_task.dart';
-import '../dashboard.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
-  final List<PlannedIntervention> plannedInterventions;
+  final StudyInstance study;
   final Multimap<Time, Task> scheduleToday;
 
-  const TaskOverview({@required this.plannedInterventions, @required this.scheduleToday, Key key}) : super(key: key);
+  const TaskOverview({@required this.study, @required this.scheduleToday, Key key}) : super(key: key);
   @override
   _TaskOverviewState createState() => _TaskOverviewState();
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
-  String interventionDateString(PlannedIntervention plannedIntervention) {
-    String dateString(DateTime date) {
-      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}';
-    }
-
-    return '${dateString(plannedIntervention.startDate)} - ${dateString(plannedIntervention.endDate)}';
-  }
-
   List<Widget> buildScheduleToday(BuildContext context) {
     final theme = Theme.of(context);
     final result = <Widget>[];
@@ -61,15 +54,12 @@ class _TaskOverviewState extends State<TaskOverview> {
     final theme = Theme.of(context);
     return Column(
       children: <Widget>[
-        ProgressRow(plannedInterventions: widget.plannedInterventions),
+        ProgressRow(study: widget.study),
+        Text(widget.study.getInterventionForDate(DateTime.now()).name, style: theme.textTheme.headline6),
+        Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6),
         Expanded(
           child: ListView(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(interventionDateString(widget.plannedInterventions[1]),
-                    style: theme.textTheme.subtitle1.copyWith(color: Colors.black)),
-              ),
               ...buildScheduleToday(context),
             ],
           ),
