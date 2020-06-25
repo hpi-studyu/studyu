@@ -75,11 +75,8 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   }
 
   List<Intervention> getInterventionsInOrder() {
-    final interventions = <Intervention>[];
-    for (final key in interventionOrder) {
-      interventions
-          .add(interventionSet.interventions.firstWhere((intervention) => intervention.id == key, orElse: () => null));
-    }
-    return interventions;
+    return interventionOrder
+        .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))
+        .toList();
   }
 }
