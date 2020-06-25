@@ -1,4 +1,3 @@
-import 'package:Nof1/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/collection.dart';
 
@@ -8,6 +7,7 @@ import '../../database/models/tasks/fixed_schedule.dart';
 import '../../database/models/tasks/task.dart';
 import '../../tasks/pain_rating_task.dart';
 import '../../tasks/video_task.dart';
+import '../../util/localization.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
 
@@ -62,7 +62,7 @@ class _TaskOverviewState extends State<TaskOverview> {
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(widget.study.getInterventionForDate(DateTime.now()).name)),
-        // Todo: display duration of intervention
+        // Todo: find good way to calculate duration of intervention and display it
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)),
