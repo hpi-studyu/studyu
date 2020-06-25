@@ -5,9 +5,11 @@ import '../database/models/questionnaire/answer.dart';
 import '../database/models/questionnaire/question.dart';
 import '../database/models/questionnaire/questions/boolean_question.dart';
 import '../database/models/questionnaire/questions/choice_question.dart';
+import '../database/models/questionnaire/questions/visual_analogue_question.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
 import 'question_widget.dart';
+import 'visual_analogue_question_widget.dart';
 
 class QuestionContainer extends StatelessWidget {
   final Function(Answer, int) onDone;
@@ -29,6 +31,11 @@ class QuestionContainer extends StatelessWidget {
         );
       case BooleanQuestion:
         return BooleanQuestionWidget(
+          question: question,
+          onDone: _onDone,
+        );
+      case VisualAnalogueQuestion:
+        return VisualAnalogueQuestionWidget(
           question: question,
           onDone: _onDone,
         );
