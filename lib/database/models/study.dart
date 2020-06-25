@@ -25,33 +25,23 @@ class Study extends ParseObject implements ParseCloneable {
   }
 
   static const keyId = 'study_id';
-
   String get id => get<String>(keyId);
-
   set id(String id) => set<String>(keyId, id);
 
   static const keyTitle = 'title';
-
   String get title => get<String>(keyTitle);
-
   set title(String title) => set<String>(keyTitle, title);
 
   static const keyDescription = 'description';
-
   String get description => get<String>(keyDescription);
-
   set description(String description) => set<String>(keyDescription, description);
 
   static const keyIconName = 'icon_name';
-
   String get iconName => get<String>(keyIconName);
-
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
   static const keyStudyDetails = 'study_details';
-
   StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
-
   set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
 
   StudyInstance extractUserStudy(
@@ -65,17 +55,21 @@ class Study extends ParseObject implements ParseCloneable {
       ..interventionSet = InterventionSet(selectedInterventions)
       ..observations = studyDetails.observations ?? [];
     if (studyDetails.schedule != null) {
+      const baselineId = '__baseline';
+      var addBaseline = false;
       userStudy
         ..phaseDuration = studyDetails.schedule.phaseDuration
         ..interventionOrder = studyDetails.schedule.generateWith(firstIntervention).map<String>((index) {
           if (index == null) {
-            const baselineId = '__baseline';
-            userStudy.interventionSet = InterventionSet(
-                [...userStudy.interventionSet.interventions, Intervention(baselineId, 'Baseline')..tasks = []]);
+            addBaseline = true;
             return baselineId;
           }
           return selectedInterventions[index].id;
         }).toList();
+      if (addBaseline) {
+        userStudy.interventionSet = InterventionSet(
+            [...userStudy.interventionSet.interventions, Intervention(baselineId, 'Baseline')..tasks = []]);
+      }
     } else {
       print('Study is missing schedule or StudyDetails not fetched!');
       return null;
