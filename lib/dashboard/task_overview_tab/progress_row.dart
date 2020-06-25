@@ -51,9 +51,9 @@ class _ProgressRowState extends State<ProgressRow> {
               Icon(MdiIcons.run, size: 30),
               SizedBox(width: 8),
               ...widget.study.getInterventionsInOrder().asMap().entries.map((entry) {
-                final currentStudyIndex = widget.study.getInterventionIndexForDate(DateTime.now());
+                final currentInterventionIndex = widget.study.getInterventionIndexForDate(DateTime.now());
                 return _buildInterventionSegment(
-                    context, entry.value, currentStudyIndex == entry.key, currentStudyIndex < entry.key);
+                    context, entry.value, currentInterventionIndex == entry.key, currentInterventionIndex < entry.key);
               }),
               Icon(MdiIcons.flagCheckered, size: 30),
             ],
