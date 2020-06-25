@@ -20,18 +20,16 @@ class TaskOverview extends StatefulWidget {
 class _TaskOverviewState extends State<TaskOverview> {
   List<Widget> buildScheduleToday(BuildContext context) {
     final theme = Theme.of(context);
-    final result = <Widget>[];
 
-    for (final key in widget.scheduleToday.keys) {
-      result.add(Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text(key.toString(), style: theme.textTheme.subtitle2.copyWith(color: Colors.black)),
-      ));
-      for (final task in widget.scheduleToday[key]) {
-        result.add(TaskBox(task: task));
-      }
-    }
-    return result;
+    return widget.scheduleToday.keys
+        .expand((time) => [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(time.toString(), style: theme.textTheme.subtitle2.copyWith(color: Colors.black)),
+              ),
+              ...widget.scheduleToday[time].map((task) => TaskBox(task: task))
+            ])
+        .toList();
   }
 
   @override
