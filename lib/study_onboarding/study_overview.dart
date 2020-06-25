@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/study.dart';
-import '../questionnaire_widgets/questionnaire_widget.dart';
+import '../questionnaire_widgets/eligibility_screen.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
@@ -26,7 +26,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Future<void> navigateToEligibilityCheck(BuildContext context, Study study) async {
     final result = await Navigator.push(
         context,
-        QuestionnaireScreen.routeFor(study.studyDetails.questionnaire.questions,
+        EligibilityScreen.routeFor(study.studyDetails.questionnaire.questions,
             title: 'Check eligibility', criteria: study.studyDetails.eligibility));
     if (result.conditionResult != null && result.conditionResult) {
       print('Patient is eligible');

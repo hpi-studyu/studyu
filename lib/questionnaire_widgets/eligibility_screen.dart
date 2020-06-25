@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../database/models/eligibility/eligibility_criterion.dart';
-import '../database/models/questionnaire/answer.dart';
 import '../database/models/questionnaire/question.dart';
 import '../database/models/questionnaire/questionnaire_state.dart';
-import 'question_container.dart';
+import 'questionnaire_widget.dart';
 
 class QuestionnaireResult {
   final bool conditionResult;
@@ -13,7 +12,7 @@ class QuestionnaireResult {
   QuestionnaireResult(this.answers, {this.conditionResult});
 }
 
-class EligibilityScreen extends StatefulWidget {
+class EligibilityScreen extends StatelessWidget {
   static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
           {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
@@ -27,80 +26,12 @@ class EligibilityScreen extends StatefulWidget {
   const EligibilityScreen(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _EligibilityScreenState();
-}
-
-class _EligibilityScreenState extends State<EligibilityScreen> {
-  final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-
-  final QuestionnaireState qs = QuestionnaireState();
-  int _nextQuestionIndex = 1;
-
-  void _finishQuestionnaire() {
-    final conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
-    Navigator.of(context).pop(QuestionnaireResult(qs, conditionResult: conditionResult));
-  }
-
-  void _onQuestionDone(Answer answer, int index) {
-    if (index < _nextQuestionIndex - 1) {
-      while (shownQuestions.length > index + 1) {
-        final end = shownQuestions.length - 1;
-        final lastQuestion = shownQuestions.removeLast();
-        _listKey.currentState.removeItem(
-            end,
-            (context, animation) => SizeTransition(
-                  sizeFactor: animation,
-                  axis: Axis.vertical,
-                  child: lastQuestion,
-                ));
-        qs.answers.remove(lastQuestion.question.id);
-      }
-      _nextQuestionIndex = index + 1;
-    }
-    qs.answers[answer.question] = answer;
-    if (widget.questions.length > _nextQuestionIndex) {
-      shownQuestions.add(QuestionContainer(
-        key: UniqueKey(),
-        question: widget.questions[_nextQuestionIndex],
-        onDone: _onQuestionDone,
-        index: _nextQuestionIndex,
-      ));
-      _listKey.currentState.insertItem(_nextQuestionIndex, duration: Duration(milliseconds: 300));
-      _nextQuestionIndex++;
-    } else {
-      _finishQuestionnaire();
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    shownQuestions.add(QuestionContainer(
-      key: UniqueKey(),
-      question: widget.questions[0],
-      onDone: _onQuestionDone,
-      index: 0,
-    ));
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
-      body: AnimatedList(
-        key: _listKey,
-        initialItemCount: shownQuestions.length,
-        itemBuilder: (context, index, animation) {
-          return SizeTransition(
-            sizeFactor: animation,
-            axis: Axis.vertical,
-            child: shownQuestions[index],
-          );
-        },
-      ),
+      body: QuestionnaireWidget(questions, title: title, criteria: criteria),
     );
   }
 }
