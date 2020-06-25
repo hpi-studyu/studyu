@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/collection.dart';
 
-import '../../database/models/observations/tasks/questionnaire_task.dart';
 import '../../database/models/study_instance.dart';
 import '../../database/models/tasks/fixed_schedule.dart';
 import '../../database/models/tasks/task.dart';
-import '../../tasks/pain_rating_task.dart';
-import '../../tasks/video_task.dart';
 import '../../util/localization.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
@@ -31,18 +28,7 @@ class _TaskOverviewState extends State<TaskOverview> {
         child: Text(key.toString(), style: theme.textTheme.subtitle2.copyWith(color: Colors.black)),
       ));
       for (final task in widget.scheduleToday[key]) {
-        Widget taskWidget;
-        if (task is QuestionnaireTask) {
-          taskWidget = TaskBox(task: PainRatingTask(task.title, task.title));
-        } else {
-          taskWidget = TaskBox(
-              task: VideoTask(
-            task.title,
-            task.title,
-            'assets/rick-roll.mp4',
-          ));
-        }
-        result.add(taskWidget);
+        result.add(TaskBox(task: task));
       }
     }
     return result;
