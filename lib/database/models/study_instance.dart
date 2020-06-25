@@ -48,8 +48,8 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   set interventionOrder(List<String> interventionOrder) => set<List<String>>(keyInterventionOrder, interventionOrder);
 
   static const keyInterventionSet = 'intervention_set';
-  InverventionSet get interventionSet => InverventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
-  set interventionSet(InverventionSet interventionSet) =>
+  InterventionSet get interventionSet => InterventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
+  set interventionSet(InterventionSet interventionSet) =>
       set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
 
   static const keyObservations = 'observations';
