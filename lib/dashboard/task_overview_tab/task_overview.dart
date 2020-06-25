@@ -53,10 +53,19 @@ class _TaskOverviewState extends State<TaskOverview> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         ProgressRow(study: widget.study),
-        Text(widget.study.getInterventionForDate(DateTime.now()).name, style: theme.textTheme.headline6),
-        Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text('Current Intervention', style: theme.textTheme.headline6)),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(widget.study.getInterventionForDate(DateTime.now()).name)),
+        // Todo: display duration of intervention
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)),
         Expanded(
           child: ListView(
             children: [
