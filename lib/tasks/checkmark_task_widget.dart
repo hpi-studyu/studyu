@@ -9,6 +9,5 @@ class CheckmarkTaskWidget extends StatelessWidget {
         },
         icon: Icon(Icons.check),
         label: Text('Complete', style: TextStyle(fontSize: 24)));
-    ;
   }
 }
