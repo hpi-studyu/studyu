@@ -45,7 +45,6 @@ class _TaskOverviewState extends State<TaskOverview> {
         result.add(taskWidget);
       }
     }
-
     return result;
   }
 
@@ -57,15 +56,16 @@ class _TaskOverviewState extends State<TaskOverview> {
       children: <Widget>[
         ProgressRow(study: widget.study),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text('Current Intervention', style: theme.textTheme.headline6)),
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(widget.study.getInterventionForDate(DateTime.now()).name)),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(height: 8),
+              Text('Current Intervention', style: theme.textTheme.headline6),
+              SizedBox(height: 8),
+              Text(widget.study.getInterventionForDate(DateTime.now()).name),
+              SizedBox(height: 8),
+              Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)
+            ])),
         // Todo: find good way to calculate duration of intervention and display it
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)),
         Expanded(
           child: ListView(
             children: [
