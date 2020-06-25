@@ -13,24 +13,24 @@ class QuestionnaireResult {
   QuestionnaireResult(this.answers, {this.conditionResult});
 }
 
-class QuestionnaireScreen extends StatefulWidget {
+class EligibilityScreen extends StatefulWidget {
   static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
           {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
-          builder: (_) => QuestionnaireScreen(questions, title: title, criteria: criteria),
+          builder: (_) => EligibilityScreen(questions, title: title, criteria: criteria),
           settings: RouteSettings(name: 'eligibilityCheck'));
 
   final String title;
   final List<Question> questions;
   final List<EligibilityCriterion> criteria;
 
-  const QuestionnaireScreen(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
+  const EligibilityScreen(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _QuestionnaireScreenState();
+  State<StatefulWidget> createState() => _EligibilityScreenState();
 }
 
-class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
+class _EligibilityScreenState extends State<EligibilityScreen> {
   final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
