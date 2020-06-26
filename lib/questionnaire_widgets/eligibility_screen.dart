@@ -2,15 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../database/models/eligibility/eligibility_criterion.dart';
 import '../database/models/questionnaire/question.dart';
-import '../database/models/questionnaire/questionnaire_state.dart';
 import 'questionnaire_widget.dart';
-
-class QuestionnaireResult {
-  final bool conditionResult;
-  final QuestionnaireState answers;
-
-  QuestionnaireResult(this.answers, {this.conditionResult});
-}
 
 class EligibilityScreen extends StatelessWidget {
   static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
