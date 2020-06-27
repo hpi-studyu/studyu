@@ -41,26 +41,56 @@ class _ConsentScreenState extends State<ConsentScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(height: 40),
                 Text(
                   Nof1Localizations.of(context).translate('please_give_consent'),
                   style: theme.textTheme.headline5,
                 ),
-                SizedBox(height: 40),
+                Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          GridView.builder(
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-            itemCount: consentElementList.length,
-            itemBuilder: (context, index) {
-              return ConsentCard(
-                consentElement: consentElementList[index],
-                isChecked: false,
-              );
-            },
-            primary: false,
-            padding: const EdgeInsets.all(20),
+          Stack(
+            children: [
+              GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                itemCount: consentElementList.length,
+                itemBuilder: (context, index) {
+                  return ConsentCard(
+                    consentElement: consentElementList[index],
+                    isChecked: true,
+                  );
+                },
+                primary: false,
+                padding: const EdgeInsets.all(20),
+              ),
+              Container(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.blue,
+                      size: 60,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -79,7 +109,16 @@ class _ConsentScreenState extends State<ConsentScreen> {
                           Navigator.pushNamed(context, Routes.dashboard);
                         }
                       : null,
-                  child: Text(Nof1Localizations.of(context).translate('get_started')),
+                  child: Text(Nof1Localizations.of(context).translate('accept')),
+                ),
+                RaisedButton(
+                  onPressed: userCanContinue() != null
+                      ? () {
+                          UserUtils.getOrCreateUser();
+                          Navigator.pushNamed(context, Routes.studySelection);
+                        }
+                      : null,
+                  child: Text(Nof1Localizations.of(context).translate('cancel')),
                 ),
               ],
             ),
@@ -100,27 +139,37 @@ class ConsentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.blue[100],
+      color: isChecked ? Colors.blue[100] : Colors.transparent,
       child: InkWell(
         splashColor: Colors.orange.withAlpha(100),
         onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('test'),
+                ),
+          );
           print('Card tapped.');
         },
-        child: Container(
-          width: 300,
-          height: 100,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(consentElement.title, style: Theme.of(context).textTheme.headline5),
-              Text(consentElement.descriptionText),
-              Align(alignment: FractionalOffset.bottomCenter),
-              CheckboxListTile(title: Text(consentElement.acknowledgmentText), value: isChecked, onChanged: onChange),
-              SizedBox(height: 40),
-            ],
-          ),
+        //child: Container(
+        //width: 300,
+        //height: 100,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(consentElement.title, style: Theme
+                .of(context)
+                .textTheme
+                .headline5),
+            Text(consentElement.descriptionText),
+            // Align(alignment: FractionalOffset.bottomCenter),
+            // CheckboxListTile(title: Text(consentElement.acknowledgmentText), value: isChecked, onChanged: onChange),
+            // SizedBox(height: 40),
+          ],
         ),
       ),
+      //),
     );
   }
 }
