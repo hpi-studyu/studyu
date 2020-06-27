@@ -145,10 +145,9 @@ class ConsentCard extends StatelessWidget {
         onTap: () {
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(
-                  title: Text('test'),
-                ),
+            builder: (context) => AlertDialog(
+              title: Text('test'),
+            ),
           );
           print('Card tapped.');
         },
