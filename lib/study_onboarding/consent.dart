@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../routes.dart';
 import '../util/localization.dart';
+import '../util/user.dart';
 
 class ConsentScreen extends StatefulWidget {
   @override
@@ -19,13 +21,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
     ConsentElement('Box6', 'data', 'I agree'),
   ];
 
+  List<bool> userCanContinue() {
+    return boxLogic;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Einverständnis'),
+        title: Text(Nof1Localizations.of(context).translate('consent')),
       ),
       body: PageView(
         scrollDirection: Axis.vertical,
@@ -66,15 +72,15 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   style: theme.textTheme.headline5,
                 ),
                 SizedBox(height: 40),
-                /* RaisedButton(
-                 onPressed: userCanContinue()
+                RaisedButton(
+                  onPressed: userCanContinue() != null
                       ? () {
                           UserUtils.getOrCreateUser();
                           Navigator.pushNamed(context, Routes.dashboard);
                         }
                       : null,
                   child: Text(Nof1Localizations.of(context).translate('get_started')),
-                ), */
+                ),
               ],
             ),
           ),
