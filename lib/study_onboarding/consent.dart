@@ -112,10 +112,7 @@ class ConsentCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(consentElement.title, style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline5),
+              Text(consentElement.title, style: Theme.of(context).textTheme.headline5),
               Text(consentElement.descriptionText),
               Align(alignment: FractionalOffset.bottomCenter),
               CheckboxListTile(title: Text(consentElement.acknowledgmentText), value: isChecked, onChanged: onChange),
