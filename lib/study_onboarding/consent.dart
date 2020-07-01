@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../routes.dart';
 import '../util/localization.dart';
-import '../util/user.dart';
 
 class ConsentScreen extends StatefulWidget {
   @override
@@ -21,8 +20,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
     ConsentElement('Box6', 'data', 'I agree'),
   ];
 
-  List<bool> userCanContinue() {
-    return boxLogic;
+  void onBoxTapped(int index) {
+    setState(() {
+      boxLogic[index] = true;
+    });
   }
 
   @override
@@ -71,22 +72,22 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 itemBuilder: (context, index) {
                   return ConsentCard(
                     consentElement: consentElementList[index],
-                    isChecked: true,
+                    isChecked: boxLogic[index],
+                    index: index,
+                    onTapped: onBoxTapped,
                   );
                 },
                 primary: false,
                 padding: const EdgeInsets.all(20),
               ),
-              Container(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
-                    ),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.blue,
+                    size: 60,
                   ),
                 ),
               ),
@@ -103,19 +104,17 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 ),
                 SizedBox(height: 40),
                 RaisedButton(
-                  onPressed: userCanContinue() != null
+                  onPressed: boxLogic.every((element) => element == true)
                       ? () {
-                          UserUtils.getOrCreateUser();
-                          Navigator.pushNamed(context, Routes.dashboard);
+                          Navigator.pop(context, true);
                         }
                       : null,
                   child: Text(Nof1Localizations.of(context).translate('accept')),
                 ),
                 RaisedButton(
-                  onPressed: userCanContinue() != null
+                  onPressed: boxLogic.every((element) => element == true)
                       ? () {
-                          UserUtils.getOrCreateUser();
-                          Navigator.pushNamed(context, Routes.studySelection);
+                          Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection));
                         }
                       : null,
                   child: Text(Nof1Localizations.of(context).translate('cancel')),
@@ -131,15 +130,16 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
 class ConsentCard extends StatelessWidget {
   final ConsentElement consentElement;
-  final Function onChange;
+  final int index;
+  final Function(int) onTapped;
   final bool isChecked;
 
-  const ConsentCard({Key key, this.consentElement, this.onChange, this.isChecked}) : super(key: key);
+  const ConsentCard({Key key, this.consentElement, this.index, this.onTapped, this.isChecked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: isChecked ? Colors.blue[100] : Colors.transparent,
+      color: isChecked ? Colors.blue[100] : Colors.grey[300],
       child: InkWell(
         splashColor: Colors.orange.withAlpha(100),
         onTap: () {
@@ -149,23 +149,17 @@ class ConsentCard extends StatelessWidget {
               title: Text('test'),
             ),
           );
+          onTapped(index);
           print('Card tapped.');
         },
-        //child: Container(
-        //width: 300,
-        //height: 100,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(consentElement.title, style: Theme.of(context).textTheme.headline5),
             Text(consentElement.descriptionText),
-            // Align(alignment: FractionalOffset.bottomCenter),
-            // CheckboxListTile(title: Text(consentElement.acknowledgmentText), value: isChecked, onChanged: onChange),
-            // SizedBox(height: 40),
           ],
         ),
       ),
-      //),
     );
   }
 }
