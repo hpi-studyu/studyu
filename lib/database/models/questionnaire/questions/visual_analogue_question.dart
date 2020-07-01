@@ -15,12 +15,15 @@ class VisualAnalogueQuestion extends SliderQuestion {
   @JsonKey(fromJson: parseColor, toJson: colorToJson)
   Color maximumColor;
 
+  String minimumAnnotation;
+  String maximumAnnotation;
+
   VisualAnalogueQuestion();
 
   factory VisualAnalogueQuestion.fromJson(Map<String, dynamic> json) => _$VisualAnalogueQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$VisualAnalogueQuestionToJson(this);
 
-  static Color parseColor(String colorString) => Color(int.parse('${colorString.substring(1)}ff', radix: 16));
-  static String colorToJson(Color color) => '#${color.value.toRadixString(16).padLeft(8, '0').substring(0, 6)}';
+  static Color parseColor(String colorString) => Color(int.parse('ff${colorString.substring(1)}', radix: 16));
+  static String colorToJson(Color color) => '#${color.value.toRadixString(16).padLeft(8, '0').substring(2, 8)}';
 }

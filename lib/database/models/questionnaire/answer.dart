@@ -33,6 +33,8 @@ class Answer<V> {
         return Answer<bool>.parseJson(data);
       case int:
         return Answer<int>.parseJson(data);
+      case double:
+        return Answer<double>.parseJson(data);
       case String:
         return Answer<String>.parseJson(data);
       default:

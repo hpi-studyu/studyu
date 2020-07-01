@@ -1,10 +1,14 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import '../answer.dart';
 import '../question.dart';
 
 abstract class SliderQuestion extends Question {
-  int minimum;
-  int maximum;
-  int step;
+  double minimum;
+  double maximum;
+  double initial;
+  @JsonKey(nullable: true)
+  double step;
 
-  Answer<int> constructAnswer(int response) => Answer.forQuestion(this, response);
+  Answer<double> constructAnswer(double response) => Answer.forQuestion(this, response);
 }
