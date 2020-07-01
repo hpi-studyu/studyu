@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../database/daos/study_dao.dart';
 import '../database/models/study.dart';
-import '../questionnaire_widgets/eligibility_screen.dart';
+import 'eligibility_screen.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';

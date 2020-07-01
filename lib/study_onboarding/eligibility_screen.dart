@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../database/models/eligibility/eligibility_criterion.dart';
 import '../database/models/questionnaire/question.dart';
-import 'questionnaire_widget.dart';
+import '../questionnaire_widgets/questionnaire_widget.dart';
+import 'onboarding_progress.dart';
 
 class EligibilityScreen extends StatelessWidget {
   static MaterialPageRoute<QuestionnaireResult> routeFor(List<Question> questions,
@@ -22,6 +23,7 @@ class EligibilityScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        bottom: OnboardingProgress(stage: 0, progress: 0.5),
       ),
       body: QuestionnaireWidget(questions, title: title, criteria: criteria),
     );

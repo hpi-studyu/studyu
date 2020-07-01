@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../util/localization.dart';
+import 'onboarding_progress.dart';
 
 class ConsentScreen extends StatefulWidget {
   @override
@@ -14,6 +15,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('consent')),
+        bottom: OnboardingProgress(stage: 2, progress: 1),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -26,10 +31,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   style: theme.textTheme.headline5,
                 ),
                 SizedBox(height: 40),
-                RaisedButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: Text(Nof1Localizations.of(context).translate('cancel')),
-                ),
                 RaisedButton(
                   onPressed: () => Navigator.pop(context, true),
                   child: Text(Nof1Localizations.of(context).translate('accept')),

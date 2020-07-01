@@ -6,6 +6,7 @@ import '../database/models/study_instance.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
+import 'onboarding_progress.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
   @override
@@ -53,6 +54,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(Nof1Localizations.of(context).translate('journey')),
+          bottom: OnboardingProgress(stage: 2, progress: 0.5),
         ),
         body: Builder(builder: (_context) {
           return Center(

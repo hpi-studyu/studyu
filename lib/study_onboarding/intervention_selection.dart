@@ -11,7 +11,7 @@ import '../util/localization.dart';
 import '../util/user.dart';
 import 'app_state.dart';
 import 'intervention_card.dart';
-import 'oboarding_progress.dart';
+import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
   @override
