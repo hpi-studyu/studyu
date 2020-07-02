@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:nof1_models/models/models.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
 
-import '../../database/models/tasks/task.dart';
 import '../../tasks/task_screen.dart';
 
 class TaskBox extends StatefulWidget {

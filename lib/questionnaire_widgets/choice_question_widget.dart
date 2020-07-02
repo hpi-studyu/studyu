@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:nof1_models/models/models.dart';
 
-import '../database/models/questionnaire/answer.dart';
-import '../database/models/questionnaire/questions/choice_question.dart';
 import '../widgets/selectable_button.dart';
 import 'question_widget.dart';
 

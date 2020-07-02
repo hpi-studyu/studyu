@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nof1_models/models/models.dart';
 
-import '../database/models/interventions/tasks/checkmark_task.dart';
-import '../database/models/observations/tasks/questionnaire_task.dart';
-import '../database/models/tasks/task.dart';
 import 'checkmark_task_widget.dart';
 import 'questionnaire_task_widget.dart';
 

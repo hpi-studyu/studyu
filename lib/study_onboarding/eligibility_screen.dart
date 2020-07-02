@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nof1_models/models/models.dart';
 
-import '../database/models/eligibility/eligibility_criterion.dart';
-import '../database/models/questionnaire/question.dart';
 import '../questionnaire_widgets/questionnaire_widget.dart';
 import 'onboarding_progress.dart';
 

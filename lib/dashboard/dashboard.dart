@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:nof1_models/models/models.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 
-import '../database/models/study_instance.dart';
-import '../database/models/tasks/fixed_schedule.dart';
-import '../database/models/tasks/task.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
