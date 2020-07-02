@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../database/models/questionnaire/answer.dart';
 import '../database/models/questionnaire/question.dart';
+import '../database/models/questionnaire/questions/annotated_scale_question.dart';
 import '../database/models/questionnaire/questions/boolean_question.dart';
 import '../database/models/questionnaire/questions/choice_question.dart';
 import '../database/models/questionnaire/questions/visual_analogue_question.dart';
+import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
 import 'question_widget.dart';
@@ -36,6 +38,11 @@ class QuestionContainer extends StatelessWidget {
         );
       case VisualAnalogueQuestion:
         return VisualAnalogueQuestionWidget(
+          question: question,
+          onDone: _onDone,
+        );
+      case AnnotatedScaleQuestion:
+        return AnnotatedScaleQuestionWidget(
           question: question,
           onDone: _onDone,
         );
