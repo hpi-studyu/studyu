@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nof1_models/models/models.dart';
 import 'package:quiver/collection.dart';
 
-import '../../database/models/study_instance.dart';
-import '../../database/models/tasks/fixed_schedule.dart';
-import '../../database/models/tasks/task.dart';
 import '../../util/localization.dart';
 import 'progress_row.dart';
 import 'task_box.dart';

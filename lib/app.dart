@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:nof1_models/models/models.dart';
 import 'package:provider/provider.dart';
 
-import 'database/models/study_instance.dart';
 import 'routes.dart';
 import 'study_onboarding/app_state.dart';
 import 'theme.dart';

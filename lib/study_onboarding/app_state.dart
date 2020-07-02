@@ -1,5 +1,4 @@
-import '../database/models/models.dart';
-import '../database/models/study_instance.dart';
+import 'package:nof1_models/models/models.dart';
 
 class AppModel {
   Study selectedStudy;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nof1_models/models/models.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/daos/study_dao.dart';
-import '../database/models/study_instance.dart';
 import '../environments/environment.dart';
 import '../routes.dart';
 import '../study_onboarding/app_state.dart';

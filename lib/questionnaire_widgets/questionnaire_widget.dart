@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nof1_models/models/models.dart';
 
-import '../database/models/eligibility/eligibility_criterion.dart';
-import '../database/models/questionnaire/answer.dart';
-import '../database/models/questionnaire/question.dart';
-import '../database/models/questionnaire/questionnaire_state.dart';
 import 'question_container.dart';
 
 class QuestionnaireResult {

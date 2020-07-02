@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import '../../database/models/interventions/intervention.dart';
-import '../../database/models/study_instance.dart';
+import 'package:nof1_models/models/models.dart';
 
 class ProgressRow extends StatefulWidget {
   final StudyInstance study;
