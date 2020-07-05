@@ -446,7 +446,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: d1e6d4bf887049bf10a8b7c656dc642140938d65
+      resolved-ref: c2d030653bf9135ed21cb4c82d7b92bb7839af32
       url: "git@gitlab.hpi.de:nof1/nof1_models.git"
     source: git
     version: "0.0.1"
@@ -570,7 +570,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.3"
+    version: "4.1.3+1"
   pub_semver:
     dependency: transitive
     description:
@@ -612,7 +612,7 @@ packages:
       name: sembast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.5"
+    version: "2.4.6+1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -792,7 +792,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   vector_math:
     dependency: transitive
     description:
@@ -834,7 +834,7 @@ packages:
       name: wakelock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4+1"
+    version: "0.1.4+2"
   watcher:
     dependency: transitive
     description:
