@@ -364,13 +364,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  json_serializable:
-    dependency: "direct dev"
-    description:
-      name: json_serializable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.3.0"
   logging:
     dependency: transitive
     description:
@@ -446,7 +439,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: c2d030653bf9135ed21cb4c82d7b92bb7839af32
+      resolved-ref: b87c7305437b20cb12446cda768959a1e58f0177
       url: "git@gitlab.hpi.de:nof1/nof1_models.git"
     source: git
     version: "0.0.1"
@@ -681,13 +674,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  source_gen:
-    dependency: transitive
-    description:
-      name: source_gen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.5"
   source_map_stack_trace:
     dependency: transitive
     description:
