@@ -2,7 +2,6 @@ image: cirrusci/flutter:beta
 
 stages:
   - check-format
-  - generate
   - build
   - verify
 
@@ -17,19 +16,6 @@ check-format:
   stage: check-format
   script:
     - flutter format -l 120 -n . --set-exit-if-changed
-  tags:
-    - app
-  only:
-    - merge_requests
-
-generate:
-  stage: generate
-  script:
-    - flutter pub get
-    - flutter pub run build_runner build
-  artifacts:
-    paths:
-      - lib/**/*.g.dart
   tags:
     - app
   only:
