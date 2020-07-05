@@ -6,13 +6,6 @@ stages:
   - build
   - verify
 
-before_script:
-  - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.hpi.de/nof1/nof1_models.git".insteadOf git@gitlab.hpi.de:nof1/nof1_models.git
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - ssh-keyscan -t rsa gitlab.hpi.de >> ~/.ssh/known_hosts
-
-
 check-format:
   stage: check-format
   script:
@@ -25,6 +18,10 @@ check-format:
 generate:
   stage: generate
   before_script:
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.hpi.de/nof1/nof1_models.git".insteadOf git@gitlab.hpi.de:nof1/nof1_models.git
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -t rsa gitlab.hpi.de >> ~/.ssh/known_hosts
     - flutter pub get
   script:
     - flutter pub run build_runner build
