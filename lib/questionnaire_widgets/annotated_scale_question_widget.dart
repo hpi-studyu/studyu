@@ -44,7 +44,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
 
     final items = <Widget>[_constructAnnotationWidgetFor(annotations.first, context)];
     for (var i = 0; i < annotations.length - 1; ++i) {
-      final distance = (annotations[i].value - annotations[i + 1].value).abs();
+      final distanceBetweenAnnotations = (annotations[i].value - annotations[i + 1].value).abs();
       items.addAll([
         Spacer(flex: distance),
         _constructAnnotationWidgetFor(annotations[i + 1], context),
