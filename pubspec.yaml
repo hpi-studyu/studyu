@@ -45,7 +45,7 @@ dependencies:
   nof1_models:
     git:
       url: git@gitlab.hpi.de:nof1/nof1_models.git
-      ref: master
+      ref: v0.0.1
     #path: ../nof1_models
 
 dev_dependencies:
