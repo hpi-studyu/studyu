@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nof1_models/models/models.dart';
 import 'package:provider/provider.dart';
 
+import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
 import 'question_widget.dart';

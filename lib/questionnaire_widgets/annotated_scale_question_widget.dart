@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:nof1_models/models/models.dart';
 
-import '../database/models/questionnaire/answer.dart';
-import '../database/models/questionnaire/questions/annotated_scale_question.dart';
 import 'question_widget.dart';
 
 class AnnotatedScaleQuestionWidget extends QuestionWidget {
