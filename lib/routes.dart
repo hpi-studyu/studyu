@@ -60,6 +60,6 @@ class Routes {
       return null;
     }
 
-    return MaterialPageRoute(builder: routeMap[settings.name]);
+    return MaterialPageRoute(builder: routeMap[settings.name], settings: settings);
   }
 }

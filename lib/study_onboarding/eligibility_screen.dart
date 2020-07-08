@@ -9,7 +9,7 @@ class EligibilityScreen extends StatelessWidget {
           {@required String title, List<EligibilityCriterion> criteria}) =>
       MaterialPageRoute(
           builder: (_) => EligibilityScreen(questions, title: title, criteria: criteria),
-          settings: RouteSettings(name: 'eligibilityCheck'));
+          settings: RouteSettings(name: '/eligibilityCheck'));
 
   final String title;
   final List<Question> questions;
