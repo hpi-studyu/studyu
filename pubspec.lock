@@ -438,8 +438,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: e19942f1d6dcc038cd3189e0c3739098a187286c
+      ref: "v0.0.1"
+      resolved-ref: "73f31a7e622edf3ee0c56c0c1c097d6086f05db3"
       url: "git@gitlab.hpi.de:nof1/nof1_models.git"
     source: git
     version: "0.0.1"
