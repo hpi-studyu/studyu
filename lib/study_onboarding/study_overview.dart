@@ -28,6 +28,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         context,
         EligibilityScreen.routeFor(study.studyDetails.questionnaire.questions,
             title: 'Check eligibility', criteria: study.studyDetails.eligibility));
+    if (result == null) return;
+
     if (result.conditionResult != null && result.conditionResult) {
       print('Patient is eligible');
       Navigator.pushNamed(context, Routes.interventionSelection);
