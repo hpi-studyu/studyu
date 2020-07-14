@@ -9,6 +9,8 @@ import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
 class StudySelectionScreen extends StatelessWidget {
+  final Future _studiesFuture = StudyDao().getAllStudies();
+
   Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
     context.read<AppModel>().selectedStudy = selectedStudy;
     Navigator.pushNamed(context, Routes.studyOverview);
@@ -34,7 +36,7 @@ class StudySelectionScreen extends StatelessWidget {
               ),
             ),
             FutureBuilder(
-              future: StudyDao().getAllStudies(),
+              future: _studiesFuture,
               builder: (_context, snapshot) {
                 return snapshot.hasData
                     ? ListView.builder(

@@ -16,11 +16,13 @@ class StudyOverviewScreen extends StatefulWidget {
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Study study;
+  Future<Study> _futureStudyDetails;
 
   @override
   void initState() {
     super.initState();
     study = context.read<AppModel>().selectedStudy;
+    _futureStudyDetails = loadStudyDetails(context);
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context, Study study) async {
@@ -58,7 +60,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
         body: Center(
             child: FutureBuilder(
-                future: loadStudyDetails(context),
+                future: _futureStudyDetails,
                 builder: (_context, snapshot) {
                   return !snapshot.hasData
                       ? CircularProgressIndicator()
