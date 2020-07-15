@@ -1,6 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-class UserUtils {
+class UserQueries {
   static const selectedStudyObjectIdKey = 'selected_study_object_id';
 
   static Future<bool> isUserLoggedIn() async {

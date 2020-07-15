@@ -6,10 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../models/app_state.dart';
+import '../../../queries/study.dart';
+import '../../../queries/user.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
-import '../../../util/study.dart';
-import '../../../util/user.dart';
 import 'intervention_card.dart';
 import 'onboarding_progress.dart';
 
@@ -76,13 +76,13 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   Future<void> onFinished() async {
     final model = context.read<AppModel>();
-    final userId = await UserUtils.getOrCreateUser().then((user) => user.objectId);
+    final userId = await UserQueries.getOrCreateUser().then((user) => user.objectId);
     //TODO add selection of first intervention
     model.activeStudy = model.selectedStudy.extractUserStudy(userId, selected, DateTime.now(), 0);
-    final selectedStudyObjectId = await StudyUtils.saveUserStudy(model.activeStudy);
+    final selectedStudyObjectId = await StudyQueries.saveUserStudy(model.activeStudy);
     if (selectedStudyObjectId != null) {
       await SharedPreferences.getInstance()
-          .then((pref) => pref.setString(UserUtils.selectedStudyObjectIdKey, selectedStudyObjectId));
+          .then((pref) => pref.setString(UserQueries.selectedStudyObjectIdKey, selectedStudyObjectId));
     }
     Navigator.pushNamed(context, Routes.journey);
   }
