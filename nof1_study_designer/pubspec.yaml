@@ -1,0 +1,35 @@
+name: study_designer
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons:
+  flutter_chips_input: ^1.9.0-dev.3
+  # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4
+  flutter_form_builder: ^4.0.0-alpha.4
+  material_design_icons_flutter:
+  nof1_models:
+    git:
+      url: git@gitlab.hpi.de:nof1/nof1_models.git
+      ref: v0.0.1
+  parse_server_sdk:
+    git:
+      url: https://github.com/parse-community/Parse-SDK-Flutter.git
+      ref: release/1.0.27
+
+dev_dependencies:
+  effective_dart:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
