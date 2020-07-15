@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../widgets/questionnaire/questionnaire_widget.dart';
+import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatelessWidget {
   final QuestionnaireTask task;

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../routes.dart';
-import '../util/localization.dart';
-import '../util/user.dart';
+import '../../../routes.dart';
+import '../../../util/localization.dart';
+import '../../../util/user.dart';
 
 class Settings extends StatefulWidget {
   @override

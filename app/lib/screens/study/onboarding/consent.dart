@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../routes.dart';
-import '../util/localization.dart';
+import '../../../routes.dart';
+import '../../../util/localization.dart';
 
 class ConsentScreen extends StatefulWidget {
   @override

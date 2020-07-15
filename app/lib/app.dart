@@ -3,8 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
+import 'models/app_state.dart';
 import 'routes.dart';
-import 'study_onboarding/app_state.dart';
 import 'theme.dart';
 import 'util/localization.dart';
 

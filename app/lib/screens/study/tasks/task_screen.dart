@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
 
-import 'checkmark_task_widget.dart';
-import 'questionnaire_task_widget.dart';
+import 'intervention/checkmark_task_widget.dart';
+import 'observation/questionnaire_task_widget.dart';
 
 class TaskScreen extends StatefulWidget {
   final Task task;

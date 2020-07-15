@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'app_onboarding/about.dart';
-import 'app_onboarding/loading_screen.dart';
-import 'app_onboarding/terms.dart';
-import 'app_onboarding/welcome.dart';
-import 'dashboard/contact_tab/contact.dart';
-import 'dashboard/dashboard.dart';
-import 'dashboard/settings.dart';
-import 'study_onboarding/consent.dart';
-import 'study_onboarding/intervention_selection.dart';
-import 'study_onboarding/journey_overview.dart';
-import 'study_onboarding/study_overview.dart';
-import 'study_selection/study_selection.dart';
+import 'screens/app_onboarding/about.dart';
+import 'screens/app_onboarding/loading_screen.dart';
+import 'screens/app_onboarding/terms.dart';
+import 'screens/app_onboarding/welcome.dart';
+import 'screens/study/dashboard/contact_tab/contact.dart';
+import 'screens/study/dashboard/dashboard.dart';
+import 'screens/study/dashboard/settings.dart';
+import 'screens/study/onboarding/consent.dart';
+import 'screens/study/onboarding/intervention_selection.dart';
+import 'screens/study/onboarding/journey_overview.dart';
+import 'screens/study/onboarding/study_overview.dart';
+import 'screens/study/onboarding/study_selection.dart';
 
 class Routes {
   static const String loading = '/loading';
