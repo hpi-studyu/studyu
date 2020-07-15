@@ -1,6 +1,5 @@
-import 'package:Nof1/database/models/tasks/fixed_schedule.dart';
-import 'package:Nof1/database/models/tasks/schedule.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nof1_models/models/models.dart';
 
 class InterventionCard extends StatelessWidget {
@@ -31,8 +30,8 @@ class InterventionCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          leading: Icon(Icons.free_breakfast),
           onTap: onTap,
+          leading: Icon(MdiIcons.fromString(intervention.icon)),
           trailing: Checkbox(
             value: selected,
             onChanged: null,
@@ -42,15 +41,13 @@ class InterventionCard extends StatelessWidget {
             intervention.name,
             style: theme.textTheme.headline6,
           ),
-          subtitle: Text(
-              'Willow bark contains a chemical called salicin that is similar to aspirin, which has been proven to help Lower back pain.'),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
-          /*child: Text(
-            'click here for more information on the intervention',
+          child: Text(
+            intervention.description,
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
-          ),*/
+          ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
