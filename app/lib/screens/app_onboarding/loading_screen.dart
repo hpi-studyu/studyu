@@ -3,11 +3,10 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/queries/queries.dart';
 
 import '../../environments/environment.dart';
 import '../../models/app_state.dart';
-import '../../queries/study.dart';
-import '../../queries/user.dart';
 import '../../routes.dart';
 import '../../util/localization.dart';
 

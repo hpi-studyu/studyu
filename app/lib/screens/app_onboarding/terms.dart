@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studyou_core/queries/queries.dart';
 
-import '../../queries/user.dart';
 import '../../routes.dart';
 import '../../util/localization.dart';
 
