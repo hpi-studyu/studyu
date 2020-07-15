@@ -3,19 +3,15 @@ import 'package:nof1_models/models/models.dart';
 
 import 'question_container.dart';
 
-class QuestionnaireResult {
-  final bool conditionResult;
-  final QuestionnaireState answers;
-
-  QuestionnaireResult(this.answers, {this.conditionResult});
-}
+typedef StateHandler = void Function(QuestionnaireState);
 
 class QuestionnaireWidget extends StatefulWidget {
   final String title;
   final List<Question> questions;
-  final List<EligibilityCriterion> criteria;
+  final StateHandler onChange;
+  final StateHandler onComplete;
 
-  const QuestionnaireWidget(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
+  const QuestionnaireWidget(this.questions, {this.title, this.onComplete, this.onChange, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireWidgetState();
@@ -29,11 +25,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   int _nextQuestionIndex = 1;
 
   void _finishQuestionnaire() {
-    final conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
-    Navigator.of(context).pop(QuestionnaireResult(qs, conditionResult: conditionResult));
+    if (widget.onComplete != null) widget.onComplete(qs);
   }
 
-  void _onQuestionDone(Answer answer, int index) {
+  void _invalidateDownstreamAnswers(int index) {
     if (index < _nextQuestionIndex - 1) {
       while (shownQuestions.length > index + 1) {
         final end = shownQuestions.length - 1;
@@ -47,16 +42,24 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                 ));
         qs.answers.remove(lastQuestion.question.id);
       }
-      _nextQuestionIndex = index + 1;
     }
+  }
+
+  void _insertQuestion(int index) {
+    shownQuestions.add(QuestionContainer(
+      key: UniqueKey(),
+      question: widget.questions[index],
+      onDone: _onQuestionDone,
+      index: index,
+    ));
+  }
+
+  void _onQuestionDone(Answer answer, int index) {
+    _invalidateDownstreamAnswers(index);
+    _nextQuestionIndex = index + 1;
     qs.answers[answer.question] = answer;
     if (widget.questions.length > _nextQuestionIndex) {
-      shownQuestions.add(QuestionContainer(
-        key: UniqueKey(),
-        question: widget.questions[_nextQuestionIndex],
-        onDone: _onQuestionDone,
-        index: _nextQuestionIndex,
-      ));
+      _insertQuestion(_nextQuestionIndex);
       _listKey.currentState.insertItem(_nextQuestionIndex, duration: Duration(milliseconds: 300));
       _nextQuestionIndex++;
     } else {
@@ -67,12 +70,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   @override
   void initState() {
     super.initState();
-    shownQuestions.add(QuestionContainer(
-      key: UniqueKey(),
-      question: widget.questions[0],
-      onDone: _onQuestionDone,
-      index: 0,
-    ));
+    _insertQuestion(0);
   }
 
   @override

@@ -8,8 +8,19 @@ class QuestionnaireTaskWidget extends StatelessWidget {
 
   const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
 
+  void _evaluateResponse(QuestionnaireState qs, BuildContext context) {
+    //TODO: Save QS
+
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: QuestionnaireWidget(task.questions.questions));
+    return Expanded(
+      child: QuestionnaireWidget(
+        task.questions.questions,
+        onComplete: (qs) => _evaluateResponse(qs, context),
+      ),
+    );
   }
 }
