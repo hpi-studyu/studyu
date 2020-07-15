@@ -1,10 +1,8 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 
-const filename = 'assets/studies/scratch.xml';
-
-class StudyDao {
-  Future<List<Study>> getAllStudies() async {
+class StudyUtils {
+  static Future<List<Study>> getAllStudies() async {
     final response = await Study().getAll();
     if (response.success) {
       return response.results.map((study) => study is Study ? study : null).toList();
@@ -12,7 +10,7 @@ class StudyDao {
     return [];
   }
 
-  Future<Study> getStudyWithStudyDetails(Study study) async {
+  static Future<Study> getStudyWithStudyDetails(Study study) async {
     var detailedStudy = study;
     if (study.studyDetails != null && study.studyDetails.createdAt == null) {
       final builder = QueryBuilder<Study>(Study())

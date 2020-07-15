@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../../../database/daos/study_dao.dart';
+import '../../../database/daos/study.dart';
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
@@ -41,7 +41,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<Study> loadStudyDetails(BuildContext context) async {
-    final completeStudy = await StudyDao().getStudyWithStudyDetails(study);
+    final completeStudy = await StudyUtils.getStudyWithStudyDetails(study);
     context.read<AppModel>().selectedStudy = completeStudy;
     return completeStudy;
   }

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../../../database/daos/study_dao.dart';
+import '../../../database/daos/study.dart';
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
@@ -79,7 +79,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final userId = await UserUtils.getOrCreateUser().then((user) => user.objectId);
     //TODO add selection of first intervention
     model.activeStudy = model.selectedStudy.extractUserStudy(userId, selected, DateTime.now(), 0);
-    final selectedStudyObjectId = await StudyDao.saveUserStudy(model.activeStudy);
+    final selectedStudyObjectId = await StudyUtils.saveUserStudy(model.activeStudy);
     if (selectedStudyObjectId != null) {
       await SharedPreferences.getInstance()
           .then((pref) => pref.setString(UserUtils.selectedStudyObjectIdKey, selectedStudyObjectId));
