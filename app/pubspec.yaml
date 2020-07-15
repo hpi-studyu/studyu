@@ -43,10 +43,7 @@ dependencies:
   shared_preferences:
   video_player:
   nof1_models:
-    git:
-      url: git@gitlab.hpi.de:nof1/nof1_models.git
-      ref: v0.0.2
-    #path: ../nof1_models
+    path: ../core
 
 dev_dependencies:
   build_runner:
