@@ -438,11 +438,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.0.1"
-      resolved-ref: "73f31a7e622edf3ee0c56c0c1c097d6086f05db3"
+      ref: "v0.0.2"
+      resolved-ref: "15ab0f9fb0a4b561fe36d52cac354107b570d1b0"
       url: "git@gitlab.hpi.de:nof1/nof1_models.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.2"
   open_iconic_flutter:
     dependency: transitive
     description:

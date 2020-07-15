@@ -34,11 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     }
     for (final observation in study.observations) {
-      for (final task in observation.tasks) {
-        for (final schedule in task.schedule) {
-          if (schedule is FixedSchedule) {
-            scheduleToday.add(schedule.time, task);
-          }
+      for (final schedule in observation.schedule) {
+        if (schedule is FixedSchedule) {
+          scheduleToday.add(schedule.time, observation);
         }
       }
     }
