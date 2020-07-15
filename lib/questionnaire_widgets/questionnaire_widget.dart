@@ -58,6 +58,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     _invalidateDownstreamAnswers(index);
     _nextQuestionIndex = index + 1;
     qs.answers[answer.question] = answer;
+    if (widget.onChange != null) widget.onChange(qs);
     if (widget.questions.length > _nextQuestionIndex) {
       _insertQuestion(_nextQuestionIndex);
       _listKey.currentState.insertItem(_nextQuestionIndex, duration: Duration(milliseconds: 300));
