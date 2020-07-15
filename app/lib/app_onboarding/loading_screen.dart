@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nof1_models/models/models.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../database/daos/study_dao.dart';
 import '../environments/environment.dart';

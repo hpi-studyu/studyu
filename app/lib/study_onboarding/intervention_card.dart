@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:nof1_models/models/models.dart';
+import 'package:studyou_core/models/models.dart';
 
 class InterventionCard extends StatelessWidget {
   final Intervention intervention;

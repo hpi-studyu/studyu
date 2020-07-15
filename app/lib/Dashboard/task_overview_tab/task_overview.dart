@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nof1_models/models/models.dart';
 import 'package:quiver/collection.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../../util/localization.dart';
 import 'progress_row.dart';

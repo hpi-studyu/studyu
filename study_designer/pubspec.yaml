@@ -12,13 +12,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+  studyou_core:
+    path: ../core
+
   cupertino_icons:
   flutter_chips_input: ^1.9.0-dev.3
   # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4
   flutter_form_builder: ^4.0.0-alpha.4
   material_design_icons_flutter:
-  nof1_models:
-    path: ../nof1_core
   parse_server_sdk:
     git:
       url: https://github.com/parse-community/Parse-SDK-Flutter.git
