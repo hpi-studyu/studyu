@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../queries/user.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
-import '../../../util/user.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -121,8 +121,8 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
         actions: [
           FlatButton.icon(
             onPressed: () async {
-              UserUtils.logout();
-              await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserUtils.selectedStudyObjectIdKey));
+              UserQueries.logout();
+              await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             }, // only logout and delete local parse data,
             icon: Icon(Icons.delete),

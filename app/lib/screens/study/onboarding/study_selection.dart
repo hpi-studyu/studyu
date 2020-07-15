@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../models/app_state.dart';
+import '../../../queries/study.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
-import '../../../util/study.dart';
 
 class StudySelectionScreen extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   @override
   void initState() {
     super.initState();
-    _studiesFuture = StudyUtils.getAllStudies();
+    _studiesFuture = StudyQueries.getAllStudies();
   }
 
   Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {

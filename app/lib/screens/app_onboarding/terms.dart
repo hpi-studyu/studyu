@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../queries/user.dart';
 import '../../routes.dart';
 import '../../util/localization.dart';
-import '../../util/user.dart';
 
 class TermsScreen extends StatefulWidget {
   @override
@@ -55,7 +55,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 RaisedButton(
                   onPressed: userCanContinue()
                       ? () {
-                          UserUtils.getOrCreateUser();
+                          UserQueries.getOrCreateUser();
                           Navigator.pushNamed(context, Routes.studySelection);
                         }
                       : null,

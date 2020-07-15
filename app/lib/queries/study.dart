@@ -1,7 +1,7 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 
-class StudyUtils {
+class StudyQueries {
   static Future<List<Study>> getAllStudies() async {
     final response = await Study().getAll();
     if (response.success) {

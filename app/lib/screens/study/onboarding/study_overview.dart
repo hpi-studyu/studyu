@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../models/app_state.dart';
+import '../../../queries/study.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
-import '../../../util/study.dart';
 import 'eligibility_screen.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   }
 
   Future<Study> loadStudyDetails(BuildContext context) async {
-    final completeStudy = await StudyUtils.getStudyWithStudyDetails(study);
+    final completeStudy = await StudyQueries.getStudyWithStudyDetails(study);
     context.read<AppModel>().selectedStudy = completeStudy;
     return completeStudy;
   }
