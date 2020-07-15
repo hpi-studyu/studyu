@@ -36,11 +36,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       print('Patient is eligible');
       Navigator.pushNamed(context, Routes.interventionSelection);
     } else if (result.answers != null) {
-      final reason = result.firstFailed.reason;
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('You are not eligible for this study. $reason'),
-        duration: Duration(seconds: 30),
-      ));
+      Navigator.pop(context);
     }
   }
 
