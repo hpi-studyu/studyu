@@ -332,12 +332,10 @@ packages:
   nof1_models:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "v0.0.1"
-      resolved-ref: "73f31a7e622edf3ee0c56c0c1c097d6086f05db3"
-      url: "git@gitlab.hpi.de:nof1/nof1_models.git"
-    source: git
-    version: "0.0.1"
+      path: "../nof1_core"
+      relative: true
+    source: path
+    version: "0.0.2"
   package_info:
     dependency: transitive
     description:
