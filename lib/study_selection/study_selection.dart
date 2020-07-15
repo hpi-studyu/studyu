@@ -8,8 +8,19 @@ import '../routes.dart';
 import '../study_onboarding/app_state.dart';
 import '../util/localization.dart';
 
-class StudySelectionScreen extends StatelessWidget {
-  final Future _studiesFuture = StudyDao().getAllStudies();
+class StudySelectionScreen extends StatefulWidget {
+  @override
+  _StudySelectionScreenState createState() => _StudySelectionScreenState();
+}
+
+class _StudySelectionScreenState extends State<StudySelectionScreen> {
+  Future _studiesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _studiesFuture = StudyDao().getAllStudies();
+  }
 
   Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
     context.read<AppModel>().selectedStudy = selectedStudy;
