@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../widgets/selectable_button.dart';
+import '../selectable_button.dart';
 import 'question_widget.dart';
 
 class ChoiceQuestionWidget extends QuestionWidget {
