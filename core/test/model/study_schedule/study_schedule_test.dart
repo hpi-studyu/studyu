@@ -1,4 +1,4 @@
-import 'package:nof1_models/models/study_schedule/study_schedule.dart';
+import 'package:studyou_core/models/study_schedule/study_schedule.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

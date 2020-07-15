@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:nof1_models/models/models.dart';
+import 'package:studyou_core/models/models.dart';
 
 part "result.g.dart";
 

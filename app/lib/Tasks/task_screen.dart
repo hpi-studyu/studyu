@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nof1_models/models/models.dart';
+import 'package:studyou_core/models/models.dart';
 
 import 'checkmark_task_widget.dart';
 import 'questionnaire_task_widget.dart';

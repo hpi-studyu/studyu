@@ -1,4 +1,4 @@
-import 'package:nof1_models/models/results/result.dart';
+import 'package:studyou_core/models/results/result.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../../util/extensions.dart';

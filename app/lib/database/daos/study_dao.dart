@@ -1,5 +1,5 @@
-import 'package:nof1_models/models/models.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:studyou_core/models/models.dart';
 
 const filename = 'assets/studies/scratch.xml';
 
