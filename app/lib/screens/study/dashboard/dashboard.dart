@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../routes.dart';
-import '../study_onboarding/app_state.dart';
-import '../util/localization.dart';
+import '../../../models/app_state.dart';
+import '../../../routes.dart';
+import '../../../util/localization.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {

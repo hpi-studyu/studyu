@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../../util/localization.dart';
+import '../../../../util/localization.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
 

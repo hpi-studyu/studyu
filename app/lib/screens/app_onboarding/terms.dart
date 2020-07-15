@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../routes.dart';
-import '../util/localization.dart';
-import '../util/user.dart';
+import '../../routes.dart';
+import '../../util/localization.dart';
+import '../../util/user.dart';
 
 class TermsScreen extends StatefulWidget {
   @override
