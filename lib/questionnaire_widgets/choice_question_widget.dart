@@ -58,7 +58,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       choiceWidgets.add(RaisedButton(
         onPressed: confirm,
         // TODO: Translate
-        child: Text('Done'),
+        child: Text('Confirm selection'),
       ));
     }
 

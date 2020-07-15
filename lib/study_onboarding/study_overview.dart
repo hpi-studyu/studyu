@@ -32,12 +32,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
             title: 'Check eligibility', criteria: study.studyDetails.eligibility));
     if (result == null) return;
 
-    if (result.conditionResult != null && result.conditionResult) {
+    if (result.eligible != null && result.eligible) {
       print('Patient is eligible');
       Navigator.pushNamed(context, Routes.interventionSelection);
     } else if (result.answers != null) {
-      final reason =
-          study.studyDetails.eligibility.firstWhere((criterion) => criterion.isViolated(result.answers)).reason;
+      final reason = result.firstFailed.reason;
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('You are not eligible for this study. $reason'),
         duration: Duration(seconds: 30),
