@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/queries/queries.dart';
 
 import 'designer.dart';
 
@@ -11,12 +11,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Future<ParseResponse> _studiesFuture;
+  Future<List<Study>> _studiesFuture;
 
   @override
   void initState() {
     super.initState();
-    _studiesFuture = Study().getAll();
+    _studiesFuture = StudyQueries.getAllStudies();
   }
 
   @override
@@ -38,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
             future: _studiesFuture,
             builder: (context, snapshot) {
               if (!snapshot.hasData) return CircularProgressIndicator();
-              final studies = List<Study>.from(snapshot.data.results);
+              final studies = snapshot.data.results;
               return ListView.builder(
                 itemCount: studies.length,
                 itemBuilder: (context, index) => StudyCard(study: studies[index]),
