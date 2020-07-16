@@ -35,8 +35,6 @@
   "please_give_consent": "Please give your consent to participate in this study.",
   "user_did_not_give_consent": "You did not give your consent. To participate you need to give consent.",
 
-  "consent": "Consent",
-
   "dashboard": "Dashboard",
   "home": "Home",
   "profile": "Profile",
@@ -48,6 +46,8 @@
   "complete": "Complete!",
   "cancel": "Cancel",
   "accept": "Agree",
+
+  "could_not_save_results": "Could not save results",
 
   "language": "Language",
   "en": "English",

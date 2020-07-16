@@ -5,6 +5,7 @@ import 'package:studyou_core/models/results/result.dart';
 import 'package:studyou_core/queries/queries.dart';
 
 import '../../../../models/app_state.dart';
+import '../../../../util/localization.dart';
 import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatelessWidget {
@@ -22,9 +23,13 @@ class QuestionnaireTaskWidget extends StatelessWidget {
         ..taskId = task.id
     ];
     activeStudy.addResults(resultList);
-    print(activeStudy);
     if (await StudyQueries.saveUserStudy(activeStudy) != null) {
       Navigator.of(context).pop();
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(Nof1Localizations.of(context).translate('could_not_save_results')),
+        duration: Duration(seconds: 10),
+      ));
     }
   }
 
