@@ -14,9 +14,6 @@ check-format:
     - flutter format -l 120 -n . --set-exit-if-changed
   tags:
     - app
-  only:
-    changes:
-      - ${FLUTTER_PROJECT_ROOT}/**/*.dart
 
 build:
   stage: build
