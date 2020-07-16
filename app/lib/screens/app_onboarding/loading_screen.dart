@@ -32,9 +32,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final studyInstance = await StudyQueries.getUserStudy(selectedStudyObjectId);
     if (studyInstance != null) {
       model.activeStudy = studyInstance;
-      //Navigator.pushReplacementNamed(context, Routes.dashboard);
+      Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      //Navigator.pushReplacementNamed(context, Routes.welcome);
+      Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
 

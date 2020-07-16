@@ -6,5 +6,5 @@ import 'app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(Environment.production(child: MyApp()));
+  runApp(Environment.localAndroidEmulator(child: MyApp()));
 }
