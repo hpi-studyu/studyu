@@ -25,8 +25,9 @@ class _ParseInitState extends State<ParseInit> {
     return FutureBuilder<bool>(
       future: _initParseFuture,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-        if (snapshot.hasError || !snapshot.data) return Center(child: Text('Server connection failed.'));
+        if (snapshot.hasError || (snapshot.hasData && !snapshot.data))
+          return Scaffold(body: Center(child: Text('Server connection failed')));
+        if (!snapshot.hasData) return Scaffold(body: Center(child: CircularProgressIndicator()));
 
         return widget.child;
       },
