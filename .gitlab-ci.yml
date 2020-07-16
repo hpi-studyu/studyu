@@ -10,12 +10,12 @@ core-check:
     include: core/.gitlab-ci.yml
     strategy: depend
   only:
-    changes:
-      - core/**/*
     refs:
       - merge_requests
       - master
       - dev
+    changes:
+      - core/**/*
 
 app-check:
   stage: dependencies
@@ -23,13 +23,13 @@ app-check:
     include: app/.gitlab-ci.yml
     strategy: depend
   only:
-    changes:
-      - core/**/*
-      - app/**/*
     refs:
       - merge_requests
       - master
       - dev
+    changes:
+      - core/**/*
+      - app/**/*
 
 designer-check:
   stage: dependencies
@@ -37,10 +37,10 @@ designer-check:
     include: study_designer/.gitlab-ci.yml
     strategy: depend
   only:
-    changes:
-      - core/**/*
-      - study_designer/**/*
     refs:
       - merge_requests
       - master
       - dev
+    changes:
+      - core/**/*
+      - study_designer/**/*
