@@ -1,43 +1,5 @@
-image: cirrusci/flutter:beta
+include:
+  local: flutter-project.yml
 
-stages:
-  - format
-  - verify
-
-before_script:
-  - cd study_designer
-
-check-format:
-  stage: format
-  script:
-    - flutter format -l 120 -n . > unformatted_files.txt
-    - cat unformatted_files.txt
-    - sed -i '/.g.dart/c\' unformatted_files.txt
-    - cat unformatted_files.txt
-    - if [ $(wc -l < unformatted_files.txt) -ge 1 ]; then echo 'Please format'; exit 1; fi
-  tags:
-    - app
-
-test:
-  stage: verify
-  script:
-    - flutter test
-  tags:
-    - app
-    - android
-
-analyze:
-  stage: verify
-  script:
-    - flutter analyze
-  tags:
-    - app
-
-check-generation:
-  stage: verify
-  script:
-    - flutter pub get
-    - flutter pub run build_runner build --delete-conflicting-outputs
-    - git diff HEAD --exit-code -- "**/*.g.dart"
-  tags:
-    - app
+variables:
+  FLUTTER_PROJECT_ROOT: study_designer

@@ -1,0 +1,43 @@
+image: cirrusci/flutter:beta
+
+stages:
+  - check-format
+  - build
+  - verify
+
+before_script:
+  - cd ${FLUTTER_PROJECT_ROOT}
+
+check-format:
+  stage: check-format
+  script:
+    - flutter format -l 120 -n . --set-exit-if-changed
+  tags:
+    - app
+  only:
+    changes:
+      - ${FLUTTER_PROJECT_ROOT}/**/*.dart
+
+build:
+  stage: build
+  script:
+    - flutter build aot
+  tags:
+    - app
+    - android
+
+test:
+  stage: verify
+  script:
+    - flutter test
+  tags:
+    - app
+    - android
+
+analyze:
+  stage: verify
+  script:
+    - flutter analyze
+  tags:
+    - app
+    - android

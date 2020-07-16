@@ -1,40 +1,5 @@
-image: cirrusci/flutter:beta
+include:
+  local: flutter-project.yml
 
-stages:
-  - check-format
-  - build
-  - verify
-
-before_script:
-  - cd app
-
-check-format:
-  stage: check-format
-  script:
-    - flutter format -l 120 -n . --set-exit-if-changed
-  tags:
-    - app
-
-build:
-  stage: build
-  script:
-    - flutter build aot
-  tags:
-    - app
-    - android
-
-test:
-  stage: verify
-  script:
-    - flutter test
-  tags:
-    - app
-    - android
-
-analyze:
-  stage: verify
-  script:
-    - flutter analyze
-  tags:
-    - app
-    - android
+variables:
+  FLUTTER_PROJECT_ROOT: app
