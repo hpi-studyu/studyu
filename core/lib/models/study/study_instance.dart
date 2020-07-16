@@ -1,5 +1,5 @@
-import 'package:studyou_core/models/results/result.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:studyou_core/models/results/result.dart';
 
 import '../../util/extensions.dart';
 import '../interventions/intervention.dart';
@@ -60,10 +60,36 @@ class StudyInstance extends ParseObject implements ParseCloneable {
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
 
   static const keyResults = 'results';
-  Map<String, List<Result>> get results => Map.fromIterable(get<List<List<Map<String, dynamic>>>>(keyResults),
-      key: (e) => Result.fromJson(e.first).taskId, value: (e) => e.map((r) => Result.fromJson(r)));
-  set results(Map<String, List<Result>> results) => set<List<List<Map<String, dynamic>>>>(
-      keyResults, results.values.map((e) => e.map((r) => r.toJson()).toList()).toList());
+
+  Map<String, List<Result>> get results {
+    final savedMap = get<Map<String, dynamic>>(keyResults) ?? <String, dynamic>{};
+    final resultMap = <String, List<Result>>{};
+    savedMap.forEach((key, value) {
+      resultMap[key] = (value as List<dynamic>).map<Result>((resultData) => Result.fromJson(resultData)).toList();
+    });
+    return resultMap;
+  }
+
+  set results(Map<String, List<Result>> results) {
+    final savedMap = <String, dynamic>{};
+    results.forEach((key, value) => savedMap[key] = value.map<dynamic>((result) => result.toJson()).toList());
+    set<Map<String, dynamic>>(keyResults, savedMap);
+  }
+
+  void addResults(List<Result> newResults) {
+    if (newResults.isEmpty) {
+      return;
+    }
+    final returnResults = results;
+    newResults.forEach((result) {
+      if (returnResults[result.taskId] != null) {
+        returnResults[result.taskId].add(result);
+      } else {
+        returnResults[result.taskId] = [result];
+      }
+    });
+    results = returnResults;
+  }
 
   int getInterventionIndexForDate(DateTime date) {
     final test = date.differenceInDays(startDate).inDays;
