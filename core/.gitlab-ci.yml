@@ -4,6 +4,9 @@ stages:
   - format
   - verify
 
+before_script:
+  - cd core
+
 check-format:
   stage: format
   script:

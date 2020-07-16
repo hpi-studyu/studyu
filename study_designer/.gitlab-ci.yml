@@ -4,6 +4,9 @@ stages:
   - format
   - verify
 
+before_script:
+  - cd study_designer
+
 check-format:
   stage: format
   script:
