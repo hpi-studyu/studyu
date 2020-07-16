@@ -41,89 +41,151 @@ class _DesignerState extends State<Designer> {
       appBar: AppBar(
         title: Text('Create New Study'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              FormBuilder(
-                key: _fbKey,
-                autovalidate: true,
-                // readonly: true,
-                child: Column(
-                  children: <Widget>[
-                    FormBuilderTextField(
-                      attribute: 'name',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: 'Name'),
-                    ),
-                    FormBuilderTextField(
-                      attribute: 'description',
-                      decoration: InputDecoration(labelText: 'Description'),
-                    ),
-                    Text('Interventions', style: theme.textTheme.subtitle1),
-                    ...interventions,
-                    Row(
-                      children: [
-                        RaisedButton.icon(
-                            textTheme: ButtonTextTheme.primary,
-                            onPressed: addIntervention,
-                            icon: Icon(Icons.add),
-                            color: Colors.green,
-                            label: Text('Add Intervention')),
-                        SizedBox(width: 20),
-                        RaisedButton.icon(
-                            textTheme: ButtonTextTheme.primary,
-                            onPressed: () => removeIntervention(interventions.length - 1),
-                            icon: Icon(Icons.remove),
-                            color: Colors.red,
-                            label: Text('Remove Intervention')),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      onPressed: () {
-                        _fbKey.currentState.save();
-                        if (_fbKey.currentState.validate()) {
-                          print(_fbKey.currentState.value);
-                        } else {
-                          print('validation failed');
-                        }
-                      },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      onPressed: () {
-                        _fbKey.currentState.reset();
-                      },
-                      child: Text(
-                        'Reset',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+      body: Row(children: [
+        NavigationRail(
+          selectedIndex: 0,
+          onDestinationSelected: (int index) {},
+          labelType: NavigationRailLabelType.all,
+          destinations: [
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Meta Data'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Interventions'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Eligibility'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Observations'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Schedule'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Report'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Consent'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: Text('Publish'),
+            )
+          ],
         ),
-      ),
+        VerticalDivider(thickness: 1, width: 1),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(content: Text("hi"));
+                          });
+                    },
+                    child: Text("Open Popup"),
+                  ),
+                  FormBuilder(
+                    key: _fbKey,
+                    autovalidate: true,
+                    // readonly: true,
+                    child: Column(
+                      children: <Widget>[
+                        FormBuilderTextField(
+                          attribute: 'name',
+                          maxLength: 40,
+                          decoration: InputDecoration(labelText: 'Name'),
+                        ),
+                        FormBuilderTextField(
+                          attribute: 'description',
+                          decoration: InputDecoration(labelText: 'Description'),
+                        ),
+                        Text('Interventions', style: theme.textTheme.subtitle1),
+                        ...interventions,
+                        Row(
+                          children: [
+                            RaisedButton.icon(
+                                textTheme: ButtonTextTheme.primary,
+                                onPressed: addIntervention,
+                                icon: Icon(Icons.add),
+                                color: Colors.green,
+                                label: Text('Add Intervention')),
+                            SizedBox(width: 20),
+                            RaisedButton.icon(
+                                textTheme: ButtonTextTheme.primary,
+                                onPressed: () => removeIntervention(interventions.length - 1),
+                                icon: Icon(Icons.remove),
+                                color: Colors.red,
+                                label: Text('Remove Intervention')),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: MaterialButton(
+                          color: Theme.of(context).accentColor,
+                          onPressed: () {
+                            _fbKey.currentState.save();
+                            if (_fbKey.currentState.validate()) {
+                              print(_fbKey.currentState.value);
+                            } else {
+                              print('validation failed');
+                            }
+                          },
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: MaterialButton(
+                          color: Theme.of(context).accentColor,
+                          onPressed: () {
+                            _fbKey.currentState.reset();
+                          },
+                          child: Text(
+                            'Reset',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        )
+      ]),
     );
   }
 }
