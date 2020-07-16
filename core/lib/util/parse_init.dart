@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-
-import 'environment.dart';
+import 'package:studyou_core/environment.dart';
 
 class ParseInit extends StatefulWidget {
   final Widget child;

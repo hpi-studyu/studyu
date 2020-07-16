@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:studyou_core/util/parse_init.dart';
 
 import 'dashboard.dart';
-import 'parse_init.dart';
 
 class MyApp extends StatefulWidget {
   @override
