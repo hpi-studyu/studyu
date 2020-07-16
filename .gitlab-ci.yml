@@ -21,17 +21,9 @@ app-check:
   trigger:
     include: app/.gitlab-ci.yml
     strategy: depend
-  only:
-    changes:
-      - core/**/*
-      - app/**/*
 
 designer-check:
   stage: dependencies
   trigger:
     include: study_designer/.gitlab-ci.yml
     strategy: depend
-  only:
-    changes:
-      - core/**/*
-      - study_designer/**/*
