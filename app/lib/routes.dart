@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyou_core/util/parse_init.dart';
 
 import 'screens/app_onboarding/about.dart';
 import 'screens/app_onboarding/loading_screen.dart';
@@ -41,7 +42,8 @@ class Routes {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final routeMap = {
-      loading: (_) => LoadingScreen(),
+      // init Parse on our initial route
+      loading: (_) => ParseInit(child: LoadingScreen()),
       dashboard: (_) => DashboardScreen(),
       welcome: (_) => WelcomeScreen(),
       about: (_) => AboutScreen(),
