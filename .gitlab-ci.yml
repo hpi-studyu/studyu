@@ -4,6 +4,9 @@ stages:
   - core
   - dependencies
 
+workflow:
+  rules:
+    -
 
 core-check:
   stage: core
