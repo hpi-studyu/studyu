@@ -11,7 +11,7 @@ core-check:
     strategy: depend
   only:
     changes:
-      - core/**
+      - core/**/*
 
 app-check:
   stage: dependencies
@@ -20,8 +20,8 @@ app-check:
     strategy: depend
   only:
     changes:
-      - core/**
-      - app/**
+      - core/**/*
+      - app/**/*
 
 designer-check:
   stage: dependencies
@@ -30,5 +30,5 @@ designer-check:
     strategy: depend
   only:
     changes:
-      - core/**
-      - study_designer/**
+      - core/**/*
+      - study_designer/**/*
