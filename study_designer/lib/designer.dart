@@ -44,7 +44,6 @@ class _DesignerState extends State<Designer> {
       body: Row(children: [
         NavigationRail(
           selectedIndex: 0,
-          onDestinationSelected: (int index) {},
           labelType: NavigationRailLabelType.all,
           destinations: [
             NavigationRailDestination(
@@ -100,11 +99,11 @@ class _DesignerState extends State<Designer> {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(content: Text("hi"));
+                          builder: (context) {
+                            return AlertDialog(content: Text('hi'));
                           });
                     },
-                    child: Text("Open Popup"),
+                    child: Text('Open Popup'),
                   ),
                   FormBuilder(
                     key: _fbKey,
