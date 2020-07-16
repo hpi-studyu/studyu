@@ -14,10 +14,6 @@ check-format:
     - if [ $(wc -l < unformatted_files.txt) -ge 1 ]; then echo 'Please format'; exit 1; fi
   tags:
     - app
-  only:
-    - merge_requests
-    - master
-    - dev
 
 test:
   stage: verify
@@ -26,10 +22,6 @@ test:
   tags:
     - app
     - android
-  only:
-    - merge_requests
-    - master
-    - dev
 
 analyze:
   stage: verify
@@ -37,10 +29,6 @@ analyze:
     - flutter analyze
   tags:
     - app
-  only:
-    - merge_requests
-    - master
-    - dev
 
 check-generation:
   stage: verify
@@ -50,7 +38,3 @@ check-generation:
     - git diff HEAD --exit-code -- "**/*.g.dart"
   tags:
     - app
-  only:
-    - merge_requests
-    - master
-    - dev
