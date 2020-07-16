@@ -1,0 +1,56 @@
+image: cirrusci/flutter:beta
+
+stages:
+  - format
+  - verify
+
+check-format:
+  stage: format
+  script:
+    - flutter format -l 120 -n . > unformatted_files.txt
+    - cat unformatted_files.txt
+    - sed -i '/.g.dart/c\' unformatted_files.txt
+    - cat unformatted_files.txt
+    - if [ $(wc -l < unformatted_files.txt) -ge 1 ]; then echo 'Please format'; exit 1; fi
+  tags:
+    - app
+  only:
+    - merge_requests
+    - master
+    - dev
+
+test:
+  stage: verify
+  script:
+    - flutter test
+  tags:
+    - app
+    - android
+  only:
+    - merge_requests
+    - master
+    - dev
+
+analyze:
+  stage: verify
+  script:
+    - flutter analyze
+  tags:
+    - app
+  only:
+    - merge_requests
+    - master
+    - dev
+
+check-generation:
+  stage: verify
+  script:
+    - flutter pub get
+    - flutter pub run build_runner build --delete-conflicting-outputs
+    - git diff HEAD --exit-code -- "**/*.g.dart"
+  tags:
+    - app
+  only:
+    - merge_requests
+    - master
+    - dev
