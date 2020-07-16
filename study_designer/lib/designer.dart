@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/models.dart';
 
 import 'designer/interventions_designer.dart';
 import 'designer/meta_data_designer.dart';
@@ -15,14 +14,7 @@ const String keyInterventionName = 'intervention_name_';
 const String keyInterventionDescription = 'intervention_description_';
 
 class _DesignerState extends State<Designer> {
-  Study study;
   int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    study = Study()..title = 'hi';
-  }
 
   final List<Widget> _mywidgets = [
     MetaDataDesigner(),
