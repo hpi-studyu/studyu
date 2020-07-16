@@ -4,26 +4,43 @@ stages:
   - core
   - dependencies
 
-workflow:
-  rules:
-    - if: $CI_MERGE_REQUEST_IID
-    - if: $CI_COMMIT_TAG
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
 core-check:
   stage: core
   trigger:
     include: core/.gitlab-ci.yml
     strategy: depend
+  only:
+    changes:
+      - core/**/*
+    refs:
+      - merge_requests
+      - master
+      - dev
 
 app-check:
   stage: dependencies
   trigger:
     include: app/.gitlab-ci.yml
     strategy: depend
+  only:
+    changes:
+      - core/**/*
+      - app/**/*
+    refs:
+      - merge_requests
+      - master
+      - dev
 
 designer-check:
   stage: dependencies
   trigger:
     include: study_designer/.gitlab-ci.yml
     strategy: depend
+  only:
+    changes:
+      - core/**/*
+      - study_designer/**/*
+    refs:
+      - merge_requests
+      - master
+      - dev
