@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
+
+import '../models/desinger_state.dart';
 
 class MetaDataDesigner extends StatefulWidget {
   @override
@@ -6,6 +10,14 @@ class MetaDataDesigner extends StatefulWidget {
 }
 
 class _MetaDataDesignerState extends State<MetaDataDesigner> {
+  Study _draftStudy;
+
+  @override
+  void initState() {
+    super.initState();
+    _draftStudy = context.read<DesignerModel>().draftStudy;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

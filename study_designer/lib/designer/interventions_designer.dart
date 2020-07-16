@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
+
+import '../models/desinger_state.dart';
 
 class InterventionsDesigner extends StatefulWidget {
   @override
@@ -10,6 +14,14 @@ const String keyInterventionName = 'intervention_name_';
 const String keyInterventionDescription = 'intervention_description_';
 
 class _InterventionsDesignerState extends State<InterventionsDesigner> {
+  Study _draftStudy;
+
+  @override
+  void initState() {
+    super.initState();
+    _draftStudy = context.read<DesignerModel>().draftStudy;
+  }
+
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
   List<Widget> interventions = [];
