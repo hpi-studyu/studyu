@@ -15,9 +15,6 @@ core-check:
   trigger:
     include: core/.gitlab-ci.yml
     strategy: depend
-  only:
-    changes:
-      - core/**/*
 
 app-check:
   stage: dependencies
