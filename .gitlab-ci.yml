@@ -30,5 +30,5 @@ designer-check:
     strategy: depend
   only:
     changes:
+      - core/**
       - study_designer/**
-      - app/**

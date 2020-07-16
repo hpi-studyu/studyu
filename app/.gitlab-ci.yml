@@ -5,6 +5,9 @@ stages:
   - build
   - verify
 
+before_script:
+  - cd app
+
 check-format:
   stage: check-format
   script:
