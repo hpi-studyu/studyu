@@ -2,14 +2,6 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 
 class StudyQueries {
-  static Future<List<Study>> getAllStudies() async {
-    final response = await Study().getAll();
-    if (response.success) {
-      return response.results.map((study) => study is Study ? study : null).toList();
-    }
-    return [];
-  }
-
   static Future<Study> getStudyWithStudyDetails(Study study) async {
     var detailedStudy = study;
     if (study.studyDetails != null && study.studyDetails.createdAt == null) {
