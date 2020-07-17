@@ -24,14 +24,13 @@ SOFTWARE.
 
 import 'package:flutter/material.dart';
 
-typedef CustomErrorWidgetBuilder = dynamic Function(BuildContext context, dynamic error);
+typedef CustomErrorWidgetBuilder = dynamic Function(BuildContext context, dynamic error, void Function() reload);
 
-class RetryableFutureBuilder<T> extends StatefulWidget {
-  static RetryableFutureBuilderState of(BuildContext context) =>
-      context.findAncestorStateOfType<RetryableFutureBuilderState>();
+class RetryFutureBuilder<T> extends StatefulWidget {
+  static RetryFutureBuilderState of(BuildContext context) => context.findAncestorStateOfType<RetryFutureBuilderState>();
 
   final Future<T> Function() tryFunction;
-  final Widget Function(BuildContext, T) onSuccess;
+  final Widget Function(BuildContext, T) successBuilder;
 
   /// a value to show immediately, before evaluating [tryFunction]
   final T initialData;
@@ -43,10 +42,10 @@ class RetryableFutureBuilder<T> extends StatefulWidget {
   final CustomErrorWidgetBuilder errorWidgetBuilder;
   final List<Widget> extraWidgets;
 
-  RetryableFutureBuilder({
+  RetryFutureBuilder({
     Key key,
     @required this.tryFunction,
-    @required this.onSuccess,
+    @required this.successBuilder,
     this.initialData,
     this.loadingBuilder,
     this.errorWidgetBuilder,
@@ -54,10 +53,10 @@ class RetryableFutureBuilder<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RetryableFutureBuilder<T>> createState() => RetryableFutureBuilderState<T>();
+  State<RetryFutureBuilder<T>> createState() => RetryFutureBuilderState<T>();
 }
 
-class RetryableFutureBuilderState<T> extends State<RetryableFutureBuilder<T>> {
+class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
   Future<T> _future;
 
   @override
@@ -82,12 +81,12 @@ class RetryableFutureBuilderState<T> extends State<RetryableFutureBuilder<T>> {
             case ConnectionState.done:
               if (snapshot.hasError) {
                 if (widget.errorWidgetBuilder != null) {
-                  final errorWidget = widget.errorWidgetBuilder(context, snapshot.error);
+                  final errorWidget = widget.errorWidgetBuilder(context, snapshot.error, reload);
                   if (errorWidget != null) return errorWidget;
                 }
-                return buildErrorView(snapshot.error);
+                return buildErrorView(context, snapshot.error);
               }
-              return widget.onSuccess(context, snapshot.data);
+              return widget.successBuilder(context, snapshot.data);
             default:
               return widget.loadingBuilder != null
                   ? widget.loadingBuilder(context)
@@ -96,18 +95,23 @@ class RetryableFutureBuilderState<T> extends State<RetryableFutureBuilder<T>> {
         },
       );
 
-  Widget buildErrorView(Object error) => ErrorPage(error: error, detailTextAlign: TextAlign.center, extraWidgets: [
-        Container(
-          child: QuerdenkerTheme.roundedOutlineButton(
-            context,
-            color: Colors.white,
-            onPressed: () => setState(() {
-              _future = (widget.tryFunction)();
-            }),
-            label: 'Erneut versuchen',
-          ),
-          width: double.infinity,
+  Widget buildErrorView(BuildContext context, Object error) {
+    final theme = Theme.of(context);
+    return Center(
+        child: Column(
+      children: [
+        Text('Something went wrong:'),
+        SizedBox(height: 16),
+        Text(error.toString()),
+        SizedBox(height: 16),
+        RaisedButton.icon(
+          onPressed: reload,
+          color: theme.accentColor,
+          icon: Icon(Icons.sync),
+          label: Text('Retry'),
         ),
         ...widget.extraWidgets
-      ]);
+      ],
+    ));
+  }
 }
