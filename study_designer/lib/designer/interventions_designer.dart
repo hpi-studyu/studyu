@@ -16,22 +16,20 @@ const String keyInterventionDescription = 'intervention_description_';
 class _InterventionsDesignerState extends State<InterventionsDesigner> {
   Study _draftStudy;
 
-  List<Intervention> interventionsTest = [];
+  List<Intervention> interventions = [Intervention('Xd', 'xd'), Intervention('hi', 'hi')];
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
 
   void removeIntervention(int index) {
     setState(() {
-      // Sets the attribute to null. Currently there is no correct way of removing attributes from the state
-      _fbKey.currentState.updateFormAttributeValue(keyInterventionName + index.toString(), null);
-      _fbKey.currentState.updateFormAttributeValue(keyInterventionDescription + index.toString(), null);
-      // Ideally this would remove the value, but it doesn't do anything. On save() the "removed fields" get restored
-      // See https://github.com/danvick/flutter_form_builder/issues/104
-      _fbKey.currentState.unregisterFieldKey(keyInterventionName + index.toString());
-      _fbKey.currentState.unregisterFieldKey(keyInterventionDescription + index.toString());
-      // interventions.removeLast();
+      interventions.removeAt(index);
     });
-    print(_fbKey.currentState.value);
+  }
+
+  void addIntervention() {
+    setState(() {
+      interventions.add(Intervention('', ''));
+    });
   }
 
   @override
@@ -43,37 +41,44 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            ..._buildInterventionTables(context, interventions),
             RaisedButton.icon(
                 textTheme: ButtonTextTheme.primary,
-                onPressed: () {
-                  setState(() {
-                    _draftStudy.studyDetails.interventionSet.interventions.add(Intervention('xd', 'hi'));
-                  });
-                  print(_draftStudy.studyDetails.interventionSet.interventions);
-                },
+                onPressed: addIntervention,
                 icon: Icon(Icons.add),
                 color: Colors.green,
                 label: Text('Add Intervention')),
-            RaisedButton(
-              onPressed: () {
-                showDialog(context: context, builder: _buildEditDialog);
-              },
-              child: Text('Edit'),
-            ),
-            Table(border: TableBorder.all(), children: [
-              TableRow(children: [
-                Column(children: [Text('Title')]),
-                Column(children: [Text(_draftStudy.title)])
-              ]),
-              TableRow(children: [
-                Column(children: [Text('Description')]),
-                Column(children: [Text(_draftStudy.description)])
-              ]),
-            ]),
           ],
         ),
       ),
     );
+  }
+
+  List<dynamic> _buildInterventionTables(BuildContext context, interventions) {
+    return interventions
+        .asMap()
+        .entries
+        .map((entry) => Column(children: [
+              RaisedButton(
+                onPressed: () {
+                  showDialog(context: context, builder: _buildEditDialog);
+                },
+                child: Text('Edit'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  removeIntervention(entry.key);
+                },
+                child: Text('Delete'),
+              ),
+              Table(border: TableBorder.all(), children: [
+                TableRow(children: [
+                  Column(children: [Text('Name')]),
+                  Column(children: [Text(entry.value.name)])
+                ]),
+              ]),
+            ]))
+        .toList();
   }
 }
 
