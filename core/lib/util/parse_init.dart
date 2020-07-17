@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/environment.dart';
+import 'package:studyou_core/util/parse_future_builder.dart';
 
 class ParseInit extends StatefulWidget {
   final Widget child;
@@ -12,7 +13,7 @@ class ParseInit extends StatefulWidget {
 }
 
 class _ParseInitState extends State<ParseInit> {
-  Future<bool> _initParseFuture;
+  Future<ParseResponse> _initParseFuture;
 
   @override
   void didChangeDependencies() {
@@ -22,30 +23,17 @@ class _ParseInitState extends State<ParseInit> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _initParseFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError || (snapshot.hasData && !snapshot.data))
-          return Scaffold(body: Center(child: Text('Server connection failed')));
-        if (!snapshot.hasData) return Scaffold(body: Center(child: CircularProgressIndicator()));
-
-        return widget.child;
-      },
+    return ParseFutureBuilder<bool>(
+      queryFunction: () => _initParseFuture,
+      builder: (context, _) => widget.child,
     );
   }
 
-  Future<bool> initParse(Environment env) async {
+  Future<ParseResponse> initParse(Environment env) async {
     if (!Parse().hasParseBeenInitialized()) {
       await Parse().initialize(env.keyParseApplicationId, env.keyParseServerUrl,
           masterKey: env.keyParseMasterKey, debug: env.debug, coreStore: await CoreStoreSharedPrefsImp.getInstance());
     }
-    final response = await Parse().healthCheck();
-    if (response.success) {
-      print('Connection to Parse server successful');
-      return true;
-    } else {
-      print('Failed establishing connection to Parse server');
-      return false;
-    }
+    return Parse().healthCheck();
   }
 }
