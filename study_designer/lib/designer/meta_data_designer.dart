@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../models/desinger_state.dart';
+import '../models/designer_state.dart';
 
 class MetaDataDesigner extends StatefulWidget {
   @override
