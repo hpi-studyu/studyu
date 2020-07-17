@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -19,7 +19,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   @override
   void initState() {
     super.initState();
-    _studiesFuture = StudyQueries.getAllStudies();
+    _studiesFuture = Study().getAll();
   }
 
   Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
@@ -46,29 +46,27 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 ),
               ),
             ),
-            FutureBuilder(
-              future: _studiesFuture,
-              builder: (_context, snapshot) {
-                return snapshot.hasData
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          final Study currentStudy = snapshot.data[index];
-                          return ListTile(
-                              contentPadding: EdgeInsets.all(16),
-                              onTap: () {
-                                navigateToStudyOverview(context, currentStudy);
-                              },
-                              title: Center(
-                                  child: Text(currentStudy.title,
-                                      style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
-                              subtitle: Center(child: Text(currentStudy.description)),
-                              leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
-                                  color: theme.primaryColor));
-                        })
-                    : CircularProgressIndicator();
+            ParseFutureBuilder<Study>(
+              queryFunction: () => _studiesFuture,
+              builder: (_context, studies) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: studies.length,
+                    itemBuilder: (context, index) {
+                      final currentStudy = studies[index];
+                      return ListTile(
+                          contentPadding: EdgeInsets.all(16),
+                          onTap: () {
+                            navigateToStudyOverview(context, currentStudy);
+                          },
+                          title: Center(
+                              child: Text(currentStudy.title,
+                                  style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                          subtitle: Center(child: Text(currentStudy.description)),
+                          leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
+                              color: theme.primaryColor));
+                    });
               },
             ),
           ],
