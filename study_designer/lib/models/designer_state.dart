@@ -5,6 +5,7 @@ class DesignerModel {
 
   DesignerModel() {
     final interventionSet = InterventionSet([]);
+    interventionSet.interventions.add(Intervention('xd', 'hi'));
 
     final studyDetails = StudyDetails()..interventionSet = interventionSet;
 
