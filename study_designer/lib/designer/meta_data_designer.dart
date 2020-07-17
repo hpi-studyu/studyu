@@ -29,64 +29,45 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                showDialog(context: context, builder: _buildEditDialog);
-              },
-              child: Text('Edit'),
-            ),
-            Table(border: TableBorder.all(), children: [
-              TableRow(children: [
-                Column(children: [Text('Title')]),
-                Column(children: [Text(_draftStudy.title)])
-              ]),
-              TableRow(children: [
-                Column(children: [Text('Description')]),
-                Column(children: [Text(_draftStudy.description)])
-              ]),
-            ]),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEditDialog(BuildContext context) {
-    return AlertDialog(
-      content: FormBuilder(
-        key: _editFormKey,
-        autovalidate: true,
-        // readonly: true,
-        child: Column(
-          children: <Widget>[
-            FormBuilderTextField(
-                attribute: 'title',
-                maxLength: 40,
-                decoration: InputDecoration(labelText: 'Title'),
-                initialValue: _draftStudy.title),
-            FormBuilderTextField(
-                attribute: 'description',
-                decoration: InputDecoration(labelText: 'Description'),
-                initialValue: _draftStudy.description),
-            MaterialButton(
-              color: Theme.of(context).accentColor,
-              onPressed: () {
-                _editFormKey.currentState.save();
-                if (_editFormKey.currentState.validate()) {
-                  setState(() {
-                    _draftStudy.title = _editFormKey.currentState.value['title'];
-                    _draftStudy.description = _editFormKey.currentState.value['description'];
-                  });
-                  Navigator.pop(context);
-                } else {
-                  print('validation failed');
-                }
-              },
-              child: Text(
-                'Submit',
-                style: TextStyle(color: Colors.white),
+            FormBuilder(
+              key: _editFormKey,
+              autovalidate: true,
+              // readonly: true,
+              child: Column(
+                children: <Widget>[
+                  FormBuilderTextField(
+                      attribute: 'title',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: 'Title'),
+                      initialValue: _draftStudy.title),
+                  FormBuilderTextField(
+                      attribute: 'description',
+                      decoration: InputDecoration(labelText: 'Description'),
+                      initialValue: _draftStudy.description),
+                  MaterialButton(
+                    color: Theme.of(context).accentColor,
+                    onPressed: () {
+                      _editFormKey.currentState.save();
+                      if (_editFormKey.currentState.validate()) {
+                        setState(() {
+                          _draftStudy
+                            ..title = _editFormKey.currentState.value['title']
+                            ..description = _editFormKey.currentState.value['description'];
+                        });
+                        print('saved');
+                        // TODO: show dialog "saved"
+                      } else {
+                        print('validation failed');
+                      }
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),

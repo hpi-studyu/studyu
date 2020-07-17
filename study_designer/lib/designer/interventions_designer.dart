@@ -16,21 +16,9 @@ const String keyInterventionDescription = 'intervention_description_';
 class _InterventionsDesignerState extends State<InterventionsDesigner> {
   Study _draftStudy;
 
-  @override
-  void initState() {
-    super.initState();
-    _draftStudy = context.read<DesignerModel>().draftStudy;
-  }
+  List<Intervention> interventionsTest = [];
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-
-  List<Widget> interventions = [];
-
-  void addIntervention() {
-    setState(() {
-      interventions.add(InterventionField(index: interventions.length + 1));
-    });
-  }
 
   void removeIntervention(int index) {
     setState(() {
@@ -41,108 +29,56 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
       // See https://github.com/danvick/flutter_form_builder/issues/104
       _fbKey.currentState.unregisterFieldKey(keyInterventionName + index.toString());
       _fbKey.currentState.unregisterFieldKey(keyInterventionDescription + index.toString());
-      interventions.removeLast();
+      // interventions.removeLast();
     });
     print(_fbKey.currentState.value);
   }
 
   @override
   Widget build(BuildContext context) {
+    _draftStudy = context.watch<DesignerModel>().draftStudy;
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            RaisedButton.icon(
+                textTheme: ButtonTextTheme.primary,
+                onPressed: () {
+                  setState(() {
+                    _draftStudy.studyDetails.interventionSet.interventions.add(Intervention('xd', 'hi'));
+                  });
+                  print(_draftStudy.studyDetails.interventionSet.interventions);
+                },
+                icon: Icon(Icons.add),
+                color: Colors.green,
+                label: Text('Add Intervention')),
             RaisedButton(
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(content: Text('hi'));
-                    });
+                showDialog(context: context, builder: _buildEditDialog);
               },
-              child: Text('Open Popup'),
+              child: Text('Edit'),
             ),
-            FormBuilder(
-              key: _fbKey,
-              autovalidate: true,
-              // readonly: true,
-              child: Column(
-                children: <Widget>[
-                  FormBuilderTextField(
-                    attribute: 'name',
-                    maxLength: 40,
-                    decoration: InputDecoration(labelText: 'Name'),
-                  ),
-                  FormBuilderTextField(
-                    attribute: 'description',
-                    decoration: InputDecoration(labelText: 'Description'),
-                  ),
-                  Text('Interventions', style: theme.textTheme.subtitle1),
-                  ...interventions,
-                  Row(
-                    children: [
-                      RaisedButton.icon(
-                          textTheme: ButtonTextTheme.primary,
-                          onPressed: addIntervention,
-                          icon: Icon(Icons.add),
-                          color: Colors.green,
-                          label: Text('Add Intervention')),
-                      SizedBox(width: 20),
-                      RaisedButton.icon(
-                          textTheme: ButtonTextTheme.primary,
-                          onPressed: () => removeIntervention(interventions.length - 1),
-                          icon: Icon(Icons.remove),
-                          color: Colors.red,
-                          label: Text('Remove Intervention')),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: MaterialButton(
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      _fbKey.currentState.save();
-                      if (_fbKey.currentState.validate()) {
-                        print(_fbKey.currentState.value);
-                      } else {
-                        print('validation failed');
-                      }
-                    },
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: MaterialButton(
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      _fbKey.currentState.reset();
-                    },
-                    child: Text(
-                      'Reset',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            )
+            Table(border: TableBorder.all(), children: [
+              TableRow(children: [
+                Column(children: [Text('Title')]),
+                Column(children: [Text(_draftStudy.title)])
+              ]),
+              TableRow(children: [
+                Column(children: [Text('Description')]),
+                Column(children: [Text(_draftStudy.description)])
+              ]),
+            ]),
           ],
         ),
       ),
     );
   }
+}
+
+Widget _buildEditDialog(BuildContext context) {
+  return AlertDialog();
 }
 
 class InterventionField extends StatelessWidget {

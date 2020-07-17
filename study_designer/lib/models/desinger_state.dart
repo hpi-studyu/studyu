@@ -1,10 +1,16 @@
 import 'package:studyou_core/models/models.dart';
 
 class DesignerModel {
-  final Study draftStudy;
+  Study draftStudy;
 
-  DesignerModel()
-      : draftStudy = Study()
-          ..title = ''
-          ..description = '';
+  DesignerModel() {
+    final interventionSet = InterventionSet([]);
+
+    final studyDetails = StudyDetails()..interventionSet = interventionSet;
+
+    draftStudy = Study()
+      ..title = ''
+      ..description = ''
+      ..studyDetails = studyDetails;
+  }
 }
