@@ -21,7 +21,7 @@ class ParseFutureBuilder<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RetryFutureBuilder<ParseResponse>(
       tryFunction: parseQuery,
-      successBuilder: (context, response) => builder(context, List<T>.from(response.results)),
+      successBuilder: (context, response) => builder(context, List<T>.from(response.results ?? [])),
     );
   }
 }
