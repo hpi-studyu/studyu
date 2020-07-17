@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/parse_future_builder.dart';
 
 import 'designer.dart';
 
@@ -11,12 +12,12 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Future<List<Study>> _studiesFuture;
+  Future<ParseResponse> _studiesFuture;
 
   @override
   void initState() {
     super.initState();
-    _studiesFuture = StudyQueries.getAllStudies();
+    _studiesFuture = Study().getAll();
   }
 
   @override
@@ -34,11 +35,9 @@ class _DashboardState extends State<Dashboard> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: FutureBuilder(
-            future: _studiesFuture,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return CircularProgressIndicator();
-              final studies = snapshot.data.results;
+          child: ParseFutureBuilder<Study>(
+            queryFunction: () => _studiesFuture,
+            builder: (context, studies) {
               return ListView.builder(
                 itemCount: studies.length,
                 itemBuilder: (context, index) => StudyCard(study: studies[index]),
