@@ -18,7 +18,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   List<Intervention> interventions = [Intervention('Xd', 'xd'), Intervention('hi', 'hi')];
 
-  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   void removeIntervention(int index) {
     setState(() {
@@ -61,7 +61,11 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
         .map((entry) => Column(children: [
               RaisedButton(
                 onPressed: () {
-                  showDialog(context: context, builder: _buildEditDialog);
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return _buildEditDialog(context, entry.key);
+                      });
                 },
                 child: Text('Edit'),
               ),
@@ -80,10 +84,45 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
             ]))
         .toList();
   }
-}
 
-Widget _buildEditDialog(BuildContext context) {
-  return AlertDialog();
+  Widget _buildEditDialog(BuildContext context, int index) {
+    return AlertDialog(
+      content: FormBuilder(
+        key: _editFormKey,
+        autovalidate: true,
+        // readonly: true,
+        child: Column(
+          children: <Widget>[
+            FormBuilderTextField(
+                attribute: 'name',
+                maxLength: 40,
+                decoration: InputDecoration(labelText: 'Name'),
+                initialValue: interventions[index].name),
+            MaterialButton(
+              color: Theme.of(context).accentColor,
+              onPressed: () {
+                _editFormKey.currentState.save();
+                if (_editFormKey.currentState.validate()) {
+                  setState(() {
+                    interventions[index].name = _editFormKey.currentState.value['name'];
+                  });
+                  print('saved');
+                  Navigator.pop(context);
+                  // TODO: show dialog "saved"
+                } else {
+                  print('validation failed');
+                }
+              },
+              child: Text(
+                'Save',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class InterventionField extends StatelessWidget {
