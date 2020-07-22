@@ -18,22 +18,28 @@ class _ProgressRowState extends State<ProgressRow> {
         child: Column(
       children: [
         RawMaterialButton(
-          padding: isCurrent ? EdgeInsets.all(15) : EdgeInsets.all(5),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                      title: Text('$Intervention: ${intervention.name}'),
-                    ));
-          },
-          elevation: 0,
-          fillColor: isCurrent || !isFuture ? theme.accentColor : theme.primaryColor,
-          shape: CircleBorder(),
-          child: Text(intervention.name[0].toUpperCase(),
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        ),
+            padding: isCurrent ? EdgeInsets.all(15) : EdgeInsets.all(5),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: Text('$Intervention: ${intervention.name}'),
+                      ));
+            },
+            elevation: 0,
+            fillColor: isCurrent || !isFuture ? theme.accentColor : theme.primaryColor,
+            shape: CircleBorder(),
+            child: interventionIcon(intervention)),
       ],
     ));
+  }
+
+  Widget interventionIcon(Intervention intervention) {
+    if (intervention.name == 'Baseline') return Icon(MdiIcons.rayStart, color: Colors.white);
+
+    return intervention.icon != null && intervention.icon.isNotEmpty
+        ? Icon(MdiIcons.fromString(intervention.icon), color: Colors.white)
+        : Text(intervention.name[0].toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white));
   }
 
   @override
