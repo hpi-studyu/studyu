@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'designer/interventions_designer.dart';
+import 'designer/interventions_designer/designer.dart';
 import 'designer/meta_data_designer.dart';
 import 'models/designer_state.dart';
 
