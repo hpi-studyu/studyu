@@ -48,7 +48,9 @@ class _InterventionCardState extends State<InterventionCard> {
           ButtonBar(
             children: <Widget>[
               FlatButton(
-                onPressed: _showEditInterventionDialog,
+                onPressed: () {
+                  showDialog(context: context, builder: _buildEditDialog);
+                },
                 child: const Text('Edit'),
               ),
               FlatButton(
@@ -85,10 +87,6 @@ class _InterventionCardState extends State<InterventionCard> {
         ]),
       ),
     );
-  }
-
-  void _showEditInterventionDialog() {
-    showDialog(context: context, builder: _buildEditDialog);
   }
 
   Widget _buildEditDialog(context) {
