@@ -16,13 +16,11 @@ class QuestionnaireTaskWidget extends StatelessWidget {
   Future<void> _evaluateResponse(QuestionnaireState qs, BuildContext context) async {
     final model = context.read<AppModel>();
     final activeStudy = model.activeStudy;
-    final resultList = [
-      Result<QuestionnaireState>()
-        ..result = qs
-        ..timeStamp = DateTime.now()
-        ..taskId = task.id
-    ];
-    activeStudy.addResults(resultList);
+    final result = Result<QuestionnaireState>()
+      ..result = qs
+      ..timeStamp = DateTime.now()
+      ..taskId = task.id;
+    activeStudy.addResult(result);
     if (await StudyQueries.saveUserStudy(activeStudy) != null) {
       Navigator.of(context).pop();
     } else {
