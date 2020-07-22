@@ -46,7 +46,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 ),
               ),
             ),
-            ParseFutureBuilder<Study>(
+            ParseListFutureBuilder<Study>(
               queryFunction: () => _studiesFuture,
               builder: (_context, studies) {
                 return ListView.builder(

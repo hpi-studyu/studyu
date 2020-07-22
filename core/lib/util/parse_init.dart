@@ -23,7 +23,7 @@ class _ParseInitState extends State<ParseInit> {
 
   @override
   Widget build(BuildContext context) {
-    return ParseFutureBuilder<bool>(
+    return ParseListFutureBuilder<bool>(
       queryFunction: () => _initParseFuture,
       builder: (context, _) => widget.child,
     );
