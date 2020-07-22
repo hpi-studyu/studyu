@@ -35,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: ParseFutureBuilder<Study>(
+          child: ParseListFutureBuilder<Study>(
             queryFunction: () => _studiesFuture,
             builder: (context, studies) {
               return ListView.builder(
