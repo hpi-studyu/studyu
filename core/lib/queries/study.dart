@@ -1,5 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/queries/user.dart';
 
 class StudyQueries {
   static Future<ParseResponse> getStudyDetails(Study study) async {
@@ -23,5 +24,16 @@ class StudyQueries {
     }
     print('Could not save UserStudy!');
     return null;
+  }
+
+  static Future<List<StudyInstance>> getStudyHistory() async {
+    final builder = QueryBuilder<StudyInstance>(StudyInstance())
+      ..whereEqualTo(StudyInstance.keyUserId, await UserQueries.getOrCreateUser().then((user) => user.objectId));
+    return builder.query().then((response) => response.success
+        ? response.results
+            .map<StudyInstance>((instance) => instance is StudyInstance ? instance : null)
+            .where((element) => element != null)
+            .toList()
+        : <StudyInstance>[]);
   }
 }

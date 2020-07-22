@@ -13,6 +13,7 @@ import 'screens/study/onboarding/intervention_selection.dart';
 import 'screens/study/onboarding/journey_overview.dart';
 import 'screens/study/onboarding/study_overview.dart';
 import 'screens/study/onboarding/study_selection.dart';
+import 'screens/study/report/report_history.dart';
 
 class Routes {
   static const String loading = '/loading';
@@ -28,6 +29,7 @@ class Routes {
   static const String contact = '/contact';
   static const String appSettings = '/settings';
   static const String questionnaire = '/questionnaire';
+  static const String reportHistory = '/reportHistory';
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -55,6 +57,7 @@ class Routes {
       consent: (_) => ConsentScreen(),
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),
+      reportHistory: (_) => ReportHistoryScreen(),
     };
 
     if (!routeMap.containsKey(settings.name)) {
