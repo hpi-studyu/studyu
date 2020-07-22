@@ -5,9 +5,11 @@ import 'package:studyou_core/models/models.dart';
 class InterventionCard extends StatelessWidget {
   final Intervention intervention;
   final bool selected;
+  final bool showCheckbox;
   final Function() onTap;
 
-  const InterventionCard(this.intervention, {this.onTap, this.selected = false, Key key}) : super(key: key);
+  const InterventionCard(this.intervention, {this.onTap, this.selected = false, this.showCheckbox = true, Key key})
+      : super(key: key);
   String scheduleString(List<Schedule> schedules) {
     return schedules.map((schedule) {
       switch (schedule.runtimeType) {
@@ -30,12 +32,14 @@ class InterventionCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          onTap: onTap,
+          onTap: showCheckbox ? onTap : null,
           leading: Icon(MdiIcons.fromString(intervention.icon)),
-          trailing: Checkbox(
-            value: selected,
-            onChanged: null,
-          ),
+          trailing: showCheckbox
+              ? Checkbox(
+                  value: selected,
+                  onChanged: (_) => onTap(), // Needed so Checkbox can be clicked and has color
+                )
+              : null,
           dense: true,
           title: Text(
             intervention.name,
