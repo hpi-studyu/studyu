@@ -80,6 +80,10 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                   Column(children: [Text('Name')]),
                   Column(children: [Text(entry.value.name)])
                 ]),
+                TableRow(children: [
+                  Column(children: [Text('Description')]),
+                  Column(children: [Text(entry.value.description)])
+                ]),
               ]),
             ]))
         .toList();
