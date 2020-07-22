@@ -1,3 +1,4 @@
+import 'package:StudYou/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
@@ -40,10 +41,14 @@ class ReportHistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final model = context.watch<AppModel>();
     return Card(
-      color: context.watch<AppModel>().activeStudy.studyId == instance.studyId ? Colors.green[600] : theme.cardColor,
+      color: model.activeStudy.studyId == instance.studyId ? Colors.green[600] : theme.cardColor,
       child: InkWell(
-        onTap: () => null, // Navigator.pushNamed(context, ReportDetailsScreen, arguments: ),
+        onTap: () {
+          model.reportStudy = instance;
+          Navigator.pushNamed(context, Routes.reportDetails);
+        },
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
