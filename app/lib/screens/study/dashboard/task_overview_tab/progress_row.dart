@@ -21,7 +21,6 @@ class _ProgressRowState extends State<ProgressRow> {
         child: Column(
       children: [
         RawMaterialButton(
-            padding: isCurrent ? EdgeInsets.all(15) : EdgeInsets.all(5),
             onPressed: () {
               showDialog(
                   context: context,
