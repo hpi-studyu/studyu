@@ -18,7 +18,7 @@ class InterventionSelectionScreen extends StatefulWidget {
 }
 
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
-  final List<Intervention> selected = [];
+  final List<Intervention> selectedInterventions = [];
   Study selectedStudy;
 
   @override
@@ -56,19 +56,21 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: interventions.length,
-      itemBuilder: (_context, index) => InterventionCard(interventions[index],
-          selected: selected.map((intervention) => intervention.id).contains(interventions[index].id),
-          onTap: () => onSelect(interventions[index])),
+      itemBuilder: (_context, index) => Card(
+        child: InterventionCard(interventions[index],
+            selected: selectedInterventions.any((intervention) => intervention.id == interventions[index].id),
+            onTap: () => onSelect(interventions[index])),
+      ),
     );
   }
 
   void onSelect(Intervention intervention) {
     setState(() {
-      if (!selected.map<String>((intervention) => intervention.name).contains(intervention.name)) {
-        selected.add(intervention);
-        if (selected.length > 2) selected.removeAt(0);
+      if (!selectedInterventions.map<String>((intervention) => intervention.name).contains(intervention.name)) {
+        selectedInterventions.add(intervention);
+        if (selectedInterventions.length > 2) selectedInterventions.removeAt(0);
       } else {
-        selected.removeWhere((contained) => contained.name == intervention.name);
+        selectedInterventions.removeWhere((contained) => contained.name == intervention.name);
       }
     });
   }
@@ -77,7 +79,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final model = context.read<AppModel>();
     final userId = await UserQueries.getOrCreateUser().then((user) => user.objectId);
     //TODO add selection of first intervention
-    model.activeStudy = model.selectedStudy.extractUserStudy(userId, selected, DateTime.now(), 0);
+    model.activeStudy = model.selectedStudy.extractUserStudy(userId, selectedInterventions, DateTime.now(), 0);
     final selectedStudyObjectId = await StudyQueries.saveUserStudy(model.activeStudy);
     if (selectedStudyObjectId != null) {
       await SharedPreferences.getInstance()
@@ -94,11 +96,11 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
         actions: [
           IconButton(
-            onPressed: (selected.length == 2) ? onFinished : null,
+            onPressed: (selectedInterventions.length == 2) ? onFinished : null,
             icon: Icon(MdiIcons.checkBold),
           ),
         ],
-        bottom: OnboardingProgress(stage: 1, progress: selected.length / 2),
+        bottom: OnboardingProgress(stage: 1, progress: selectedInterventions.length / 2),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -112,7 +114,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 _buildInterventionSelectionList(),
                 SizedBox(height: 16),
                 RaisedButton(
-                  onPressed: selected.length == 2 ? onFinished : null,
+                  onPressed: selectedInterventions.length == 2 ? onFinished : null,
                   child: Text(Nof1Localizations.of(context).translate('finished')),
                 ),
               ],
