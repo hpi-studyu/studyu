@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/interventions/task_card.dart';
+import 'package:study_designer/designer/interventions_designer/task_card.dart';
 import 'package:study_designer/models/designer_state.dart';
 
 class InterventionCard extends StatefulWidget {
@@ -114,8 +114,8 @@ class _InterventionCardState extends State<InterventionCard> {
                 _editFormKey.currentState.save();
                 if (_editFormKey.currentState.validate()) {
                   setState(() {
-                    intervention.name = _editFormKey.currentState.value['name'];
-                    intervention.description = _editFormKey.currentState.value['description'];
+                    intervention.name = _editFormKey.currentState.value['name']
+                      ..description = _editFormKey.currentState.value['description'];
                   });
                   print('saved');
                   Navigator.pop(context);
