@@ -113,8 +113,8 @@ class _TaskCardState extends State<TaskCard> {
                 _editFormKey.currentState.save();
                 if (_editFormKey.currentState.validate()) {
                   setState(() {
-                    task.name = _editFormKey.currentState.value['name'];
-                    task.description = _editFormKey.currentState.value['description'];
+                    task.name = _editFormKey.currentState.value['name']
+                      ..description = _editFormKey.currentState.value['description'];
                   });
                   print('saved');
                   Navigator.pop(context);
