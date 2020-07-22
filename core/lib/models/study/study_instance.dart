@@ -74,18 +74,10 @@ class StudyInstance extends ParseObject implements ParseCloneable {
       results.map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())));
 
   void addResults(List<Result> newResults) {
-    if (newResults.isEmpty) {
-      return;
-    }
-    final returnResults = results;
-    newResults.forEach((result) {
-      if (returnResults[result.taskId] != null) {
-        returnResults[result.taskId].add(result);
-      } else {
-        returnResults[result.taskId] = [result];
-      }
-    });
-    results = returnResults;
+    if (newResults.isEmpty) return;
+    var nextResults = results;
+    newResults.forEach((result) => nextResults.putIfAbsent(result.taskId, () => []).add(result));
+    results = nextResults;
   }
 
   int getInterventionIndexForDate(DateTime date) {
