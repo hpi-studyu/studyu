@@ -4,6 +4,7 @@ class AppModel {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
   StudyInstance activeStudy;
+  StudyInstance reportStudy;
 
   AppModel(this.activeStudy);
 }
