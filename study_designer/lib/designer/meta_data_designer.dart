@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/models.dart';
 
 import '../models/designer_state.dart';
 
@@ -11,7 +10,7 @@ class MetaDataDesigner extends StatefulWidget {
 }
 
 class _MetaDataDesignerState extends State<MetaDataDesigner> {
-  Study _draftStudy;
+  LocalStudy _draftStudy;
 
   @override
   void initState() {
@@ -55,6 +54,7 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                             ..description = _editFormKey.currentState.value['description'];
                         });
                         print('saved');
+                        print(_draftStudy.studyDetails.interventions);
                         // TODO: show dialog "saved"
                       } else {
                         print('validation failed');
