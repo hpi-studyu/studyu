@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../../../util/intervention.dart';
+
 class ProgressRow extends StatefulWidget {
   final StudyInstance study;
 
@@ -32,14 +34,6 @@ class _ProgressRowState extends State<ProgressRow> {
             child: interventionIcon(intervention)),
       ],
     ));
-  }
-
-  Widget interventionIcon(Intervention intervention) {
-    if (intervention.name == 'Baseline') return Icon(MdiIcons.rayStart, color: Colors.white);
-
-    return intervention.icon != null && intervention.icon.isNotEmpty
-        ? Icon(MdiIcons.fromString(intervention.icon), color: Colors.white)
-        : Text(intervention.name[0].toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white));
   }
 
   @override
