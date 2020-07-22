@@ -4,7 +4,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
-import 'designer.dart';
+import 'routes.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -47,9 +47,9 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
+        onPressed: () => Navigator.pushNamed(
           context,
-          MaterialPageRoute(builder: (context) => Designer()),
+          designerRoute,
         ),
         tooltip: 'Add',
         child: Icon(Icons.add),
