@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:study_designer/designer/interventions_designer/schedule_card.dart';
 import 'package:study_designer/models/designer_state.dart';
 
 class TaskCard extends StatefulWidget {
@@ -54,7 +55,9 @@ class _TaskCardState extends State<TaskCard> {
             ButtonBar(
               children: <Widget>[
                 FlatButton(
-                  onPressed: _showEditTaskDialog,
+                  onPressed: () {
+                    showDialog(context: context, builder: _buildEditDialog);
+                  },
                   child: const Text('Edit'),
                 ),
                 FlatButton(
@@ -69,7 +72,7 @@ class _TaskCardState extends State<TaskCard> {
               title: Text(task.name.isEmpty ? 'Name' : task.name),
               subtitle: Text(task.description.isEmpty ? 'Description' : task.description),
             ),
-            ...task.schedules.asMap().entries.map((entry) => _buildScheduleCard(entry.key, entry.value)).toList(),
+            ...task.schedules.asMap().entries.map((entry) => ScheduleCard()).toList(),
             ButtonBar(
               children: <Widget>[
                 FlatButton(
@@ -82,15 +85,7 @@ class _TaskCardState extends State<TaskCard> {
         )));
   }
 
-  Widget _buildScheduleCard(index, schedule) {
-    return Container(margin: EdgeInsets.all(10.0), child: Card(child: Column(children: [Text('Fixed Schedule')])));
-  }
-
-  void _showEditTaskDialog() {
-    showDialog(context: context, builder: _buildEditTaskDialog);
-  }
-
-  Widget _buildEditTaskDialog(context) {
+  Widget _buildEditDialog(context) {
     return AlertDialog(
       content: FormBuilder(
         key: _editFormKey,
