@@ -70,11 +70,8 @@ class StudyInstance extends ParseObject implements ParseCloneable {
     return resultMap;
   }
 
-  set results(Map<String, List<Result>> results) {
-    final savedMap = <String, dynamic>{};
-    results.forEach((key, value) => savedMap[key] = value.map<dynamic>((result) => result.toJson()).toList());
-    set<Map<String, dynamic>>(keyResults, savedMap);
-  }
+  set results(Map<String, List<Result>> results) => set<Map<String, dynamic>>(keyResults,
+      results.map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())));
 
   void addResults(List<Result> newResults) {
     if (newResults.isEmpty) {
