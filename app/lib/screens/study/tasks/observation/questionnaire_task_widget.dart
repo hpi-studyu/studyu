@@ -29,6 +29,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(Nof1Localizations.of(context).translate('could_not_save_results')),
         duration: Duration(seconds: 10),
+        action: SnackBarAction(label: 'retry', onPressed: () => _evaluateResponse(qs, context)),
       ));
     }
   }
