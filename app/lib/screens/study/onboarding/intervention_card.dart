@@ -27,9 +27,9 @@ class InterventionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-        child: Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
           onTap: showCheckbox ? onTap : null,
@@ -49,36 +49,39 @@ class InterventionCard extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
           child: Text(
-            intervention.description,
+            intervention.description ?? '',
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
           ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('Daily Tasks:'),
+          child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
         ),
         Divider(
           height: 4,
         ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: intervention.tasks.length,
-          itemBuilder: (context, index) => Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(child: Text(intervention.tasks[index].title)),
-                FittedBox(
-                    child: Text(
-                  scheduleString(intervention.tasks[index].schedule),
-                  style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
-                )),
-              ],
-            ),
-          ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: intervention.tasks
+              .map(
+                (task) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
+                      FittedBox(
+                          child: Text(
+                        scheduleString(task.schedule),
+                        style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
+                      )),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
         ),
       ],
-    ));
+    );
   }
 }
