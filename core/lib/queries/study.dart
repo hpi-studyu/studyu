@@ -2,16 +2,11 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 
 class StudyQueries {
-  static Future<Study> getStudyWithStudyDetails(Study study) async {
-    var detailedStudy = study;
-    if (study.studyDetails != null && study.studyDetails.createdAt == null) {
-      final builder = QueryBuilder<Study>(Study())
-        ..whereEqualTo('objectId', study.objectId)
-        ..includeObject(['study_details']);
-      final response = await builder.query();
-      detailedStudy = response.success && response.results.isNotEmpty ? response.results.first : study;
-    }
-    return detailedStudy;
+  static Future<ParseResponse> getStudyDetails(Study study) async {
+    final builder = QueryBuilder<Study>(Study())
+      ..whereEqualTo('objectId', study.objectId)
+      ..includeObject(['study_details']);
+    return builder.query();
   }
 
   static Future<StudyInstance> getUserStudy(String objectId) async {

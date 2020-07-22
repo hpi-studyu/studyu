@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -16,13 +18,13 @@ class StudyOverviewScreen extends StatefulWidget {
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Study study;
-  Future<Study> _futureStudyDetails;
+  Future<ParseResponse> _futureStudyDetails;
 
   @override
   void initState() {
     super.initState();
     study = context.read<AppModel>().selectedStudy;
-    _futureStudyDetails = loadStudyDetails(context);
+    _futureStudyDetails = StudyQueries.getStudyDetails(study);
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context, Study study) async {
@@ -40,12 +42,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     }
   }
 
-  Future<Study> loadStudyDetails(BuildContext context) async {
-    final completeStudy = await StudyQueries.getStudyWithStudyDetails(study);
-    context.read<AppModel>().selectedStudy = completeStudy;
-    return completeStudy;
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -54,33 +50,32 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
           title: Text(Nof1Localizations.of(context).translate('summary')),
         ),
         body: Center(
-            child: FutureBuilder(
-                future: _futureStudyDetails,
-                builder: (_context, snapshot) {
-                  return !snapshot.hasData
-                      ? CircularProgressIndicator()
-                      : SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  snapshot.data.title,
-                                  style: theme.textTheme.headline5,
-                                ),
-                                Text(snapshot.data.description),
-                                SizedBox(height: 40),
-                                RaisedButton(
-                                  onPressed: () {
-                                    navigateToEligibilityCheck(_context, snapshot.data);
-                                  },
-                                  child: Text(Nof1Localizations.of(context).translate('get_started')),
-                                ),
-                              ],
-                            ),
+            child: ParseFetchOneFutureBuilder<Study>(
+                queryFunction: () => _futureStudyDetails,
+                builder: (_context, study) {
+                  context.read<AppModel>().selectedStudy = study;
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            study.title,
+                            style: theme.textTheme.headline5,
                           ),
-                        );
+                          Text(study.description),
+                          SizedBox(height: 40),
+                          RaisedButton(
+                            onPressed: () {
+                              navigateToEligibilityCheck(_context, study);
+                            },
+                            child: Text(Nof1Localizations.of(context).translate('get_started')),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 })));
   }
 }
