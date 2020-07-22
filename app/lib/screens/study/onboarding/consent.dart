@@ -104,11 +104,12 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 ),
                 SizedBox(height: 40),
                 RaisedButton(
-                  onPressed: boxLogic.every((element) => element == true)
-                      ? () {
-                          Navigator.pop(context, true);
-                        }
-                      : null,
+//                  onPressed: boxLogic.every((element) => element == true)
+//                      ? () {
+//                          Navigator.pop(context, true);
+//                        }
+//                      : null,
+                  onPressed: () => Navigator.pop(context, true),
                   child: Text(Nof1Localizations.of(context).translate('accept')),
                 ),
                 RaisedButton(
