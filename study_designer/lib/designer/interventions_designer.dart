@@ -16,7 +16,7 @@ const String keyInterventionDescription = 'intervention_description_';
 class _InterventionsDesignerState extends State<InterventionsDesigner> {
   Study _draftStudy;
 
-  List<Intervention> interventions = [Intervention('Xd', 'xd'), Intervention('hi', 'hi')];
+  List<Intervention> interventions = [];
 
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
@@ -28,7 +28,9 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   void addIntervention() {
     setState(() {
-      interventions.add(Intervention('', ''));
+      int index = interventions.length;
+      Intervention intervention = Intervention(index.toString(), '')..description = '';
+      interventions.add(intervention);
     });
   }
 
@@ -41,7 +43,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            ..._buildInterventionTables(context, interventions),
+            ..._buildInterventionCards(context, interventions),
             RaisedButton.icon(
                 textTheme: ButtonTextTheme.primary,
                 onPressed: addIntervention,
@@ -54,39 +56,52 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
     );
   }
 
-  List<dynamic> _buildInterventionTables(BuildContext context, interventions) {
+  List<dynamic> _buildInterventionCards(BuildContext context, interventions) {
     return interventions
         .asMap()
         .entries
-        .map((entry) => Column(children: [
-              RaisedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return _buildEditDialog(context, entry.key);
-                      });
-                },
-                child: Text('Edit'),
-              ),
-              RaisedButton(
-                onPressed: () {
-                  removeIntervention(entry.key);
-                },
-                child: Text('Delete'),
-              ),
-              Table(border: TableBorder.all(), children: [
-                TableRow(children: [
-                  Column(children: [Text('Name')]),
-                  Column(children: [Text(entry.value.name)])
+        .map((entry) => Container(
+              padding: EdgeInsets.all(10.0),
+              child: Card(
+                child: Column(children: [
+                  ButtonBar(
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          _showEditDialog(entry.key);
+                        },
+                        child: const Text('Edit'),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          removeIntervention(entry.key);
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  ),
+                  Table(border: TableBorder.all(), children: [
+                    TableRow(children: [
+                      Column(children: [Text('Name')]),
+                      Column(children: [Text(entry.value.name)])
+                    ]),
+                    TableRow(children: [
+                      Column(children: [Text('Description')]),
+                      Column(children: [Text(entry.value.description)])
+                    ]),
+                  ]),
                 ]),
-                TableRow(children: [
-                  Column(children: [Text('Description')]),
-                  Column(children: [Text(entry.value.description)])
-                ]),
-              ]),
-            ]))
+              ),
+            ))
         .toList();
+  }
+
+  void _showEditDialog(index) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return _buildEditDialog(context, index);
+        });
   }
 
   Widget _buildEditDialog(BuildContext context, int index) {
