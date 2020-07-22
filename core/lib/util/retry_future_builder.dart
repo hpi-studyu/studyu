@@ -97,21 +97,24 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
 
   Widget buildErrorView(BuildContext context, Object error) {
     final theme = Theme.of(context);
-    return Center(
-        child: Column(
-      children: [
-        Text('Something went wrong:'),
-        SizedBox(height: 16),
-        Text(error.toString()),
-        SizedBox(height: 16),
-        RaisedButton.icon(
-          onPressed: reload,
-          color: theme.accentColor,
-          icon: Icon(Icons.sync),
-          label: Text('Retry'),
-        ),
-        ...widget.extraWidgets
-      ],
-    ));
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Center(
+          child: Column(
+        children: [
+          Text('Something went wrong:'),
+          SizedBox(height: 16),
+          Text(error.toString()),
+          SizedBox(height: 16),
+          RaisedButton.icon(
+            onPressed: reload,
+            color: theme.accentColor,
+            icon: Icon(Icons.sync),
+            label: Text('Retry'),
+          ),
+          ...widget.extraWidgets
+        ],
+      )),
+    );
   }
 }
