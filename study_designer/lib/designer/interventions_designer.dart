@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/models.dart';
 
 import '../models/designer_state.dart';
 
@@ -14,26 +13,23 @@ const String keyInterventionName = 'intervention_name_';
 const String keyInterventionDescription = 'intervention_description_';
 
 class _InterventionsDesignerState extends State<InterventionsDesigner> {
-  Study _draftStudy;
-
-  List<LocalIntervention> interventions = [];
+  List<LocalIntervention> _interventions;
 
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   void _addIntervention() {
     setState(() {
-      final index = interventions.length;
       final intervention = LocalIntervention()
         ..name = ''
         ..description = ''
         ..tasks = [];
-      interventions.add(intervention);
+      _interventions.add(intervention);
     });
   }
 
   void _removeIntervention(index) {
     setState(() {
-      interventions.removeAt(index);
+      _interventions.removeAt(index);
     });
   }
 
@@ -41,28 +37,44 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
     setState(() {
       final task = LocalCheckMarkTask()
         ..name = ''
-        ..description = '';
-      interventions[index].tasks.add(task);
+        ..description = ''
+        ..schedules = [];
+      _interventions[index].tasks.add(task);
     });
-    print(interventions[index].tasks);
+    print(_interventions[index].tasks);
   }
 
   void _removeTask(interventionIndex, taskIndex) {
     setState(() {
-      interventions[interventionIndex].tasks.removeAt(taskIndex);
+      _interventions[interventionIndex].tasks.removeAt(taskIndex);
+    });
+  }
+
+  void _addFixedSchedule(interventionIndex, taskIndex) {
+    setState(() {
+      final schedule = LocalFixedSchedule()
+        ..hour = 0
+        ..minute = 0;
+      _interventions[interventionIndex].tasks[taskIndex].schedules.add(schedule);
+    });
+  }
+
+  void _removeSchedule(interventionIndex, taskIndex, scheduleIndex) {
+    setState(() {
+      _interventions[interventionIndex].tasks[taskIndex].schedules.removeAt(scheduleIndex);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _draftStudy = context.watch<DesignerModel>().draftStudy;
+    _interventions = context.watch<DesignerModel>().draftStudy.studyDetails.interventions;
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            ...interventions.asMap().entries.map((entry) => _buildInterventionCard(entry.key, entry.value)).toList(),
+            ..._interventions.asMap().entries.map((entry) => _buildInterventionCard(entry.key, entry.value)).toList(),
             RaisedButton.icon(
                 textTheme: ButtonTextTheme.primary,
                 onPressed: _addIntervention,
@@ -148,8 +160,27 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
               title: Text(task.name.isEmpty ? 'Name' : task.name),
               subtitle: Text(task.description.isEmpty ? 'Description' : task.description),
             ),
+            ...task.schedules
+                .asMap()
+                .entries
+                .map((entry) => _buildScheduleCard(interventionIndex, index, entry.key, entry.value))
+                .toList(),
+            ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    _addFixedSchedule(interventionIndex, index);
+                  },
+                  child: const Text('Add fixed schedule'),
+                ),
+              ],
+            ),
           ],
         )));
+  }
+
+  Widget _buildScheduleCard(interventionIndex, taskIndex, index, schedule) {
+    return Container(margin: EdgeInsets.all(10.0), child: Card(child: Column(children: [Text('Fixed Schedule')])));
   }
 
   void _showEditInterventionDialog(index) {
@@ -172,19 +203,19 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                 attribute: 'name',
                 maxLength: 40,
                 decoration: InputDecoration(labelText: 'Name'),
-                initialValue: interventions[index].name),
+                initialValue: _interventions[index].name),
             FormBuilderTextField(
                 attribute: 'description',
                 decoration: InputDecoration(labelText: 'Description'),
-                initialValue: interventions[index].description),
+                initialValue: _interventions[index].description),
             MaterialButton(
               color: Theme.of(context).accentColor,
               onPressed: () {
                 _editFormKey.currentState.save();
                 if (_editFormKey.currentState.validate()) {
                   setState(() {
-                    interventions[index].name = _editFormKey.currentState.value['name'];
-                    interventions[index].description = _editFormKey.currentState.value['description'];
+                    _interventions[index].name = _editFormKey.currentState.value['name'];
+                    _interventions[index].description = _editFormKey.currentState.value['description'];
                   });
                   print('saved');
                   Navigator.pop(context);
@@ -224,19 +255,19 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                 attribute: 'name',
                 maxLength: 40,
                 decoration: InputDecoration(labelText: 'Name'),
-                initialValue: interventions[interventionIndex].tasks[index].name),
+                initialValue: _interventions[interventionIndex].tasks[index].name),
             FormBuilderTextField(
                 attribute: 'description',
                 decoration: InputDecoration(labelText: 'Description'),
-                initialValue: interventions[interventionIndex].tasks[index].description),
+                initialValue: _interventions[interventionIndex].tasks[index].description),
             MaterialButton(
               color: Theme.of(context).accentColor,
               onPressed: () {
                 _editFormKey.currentState.save();
                 if (_editFormKey.currentState.validate()) {
                   setState(() {
-                    interventions[interventionIndex].tasks[index].name = _editFormKey.currentState.value['name'];
-                    interventions[interventionIndex].tasks[index].description =
+                    _interventions[interventionIndex].tasks[index].name = _editFormKey.currentState.value['name'];
+                    _interventions[interventionIndex].tasks[index].description =
                         _editFormKey.currentState.value['description'];
                   });
                   print('saved');
@@ -257,16 +288,3 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
     );
   }
 }
-
-class LocalIntervention {
-  String name;
-  String description;
-  List<LocalTask> tasks;
-}
-
-class LocalTask {
-  String name;
-  String description;
-}
-
-class LocalCheckMarkTask extends LocalTask {}

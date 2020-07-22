@@ -1,17 +1,43 @@
-import 'package:studyou_core/models/models.dart';
-
 class DesignerModel {
-  Study draftStudy;
+  LocalStudy draftStudy;
 
   DesignerModel() {
-    final interventionSet = InterventionSet([]);
-    //interventionSet.interventions.add(Intervention('xd', 'hi'));
+    final studyDetails = LocalStudyDetails()..interventions = [];
 
-    final studyDetails = StudyDetails()..interventionSet = interventionSet;
-
-    draftStudy = Study()
+    draftStudy = LocalStudy()
       ..title = ''
       ..description = ''
       ..studyDetails = studyDetails;
   }
+}
+
+class LocalStudy {
+  String title;
+  String description;
+  LocalStudyDetails studyDetails;
+}
+
+class LocalStudyDetails {
+  List<LocalIntervention> interventions;
+}
+
+class LocalIntervention {
+  String name;
+  String description;
+  List<LocalTask> tasks;
+}
+
+class LocalTask {
+  String name;
+  String description;
+  List<LocalSchedule> schedules;
+}
+
+class LocalCheckMarkTask extends LocalTask {}
+
+class LocalSchedule {}
+
+class LocalFixedSchedule extends LocalSchedule {
+  int hour;
+  int minute;
 }
