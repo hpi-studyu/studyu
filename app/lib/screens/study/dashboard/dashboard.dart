@@ -46,6 +46,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icon(Icons.settings),
             onPressed: () => Navigator.pushNamed(context, Routes.appSettings),
           ),
+          IconButton(
+            tooltip: Nof1Localizations.of(context).translate('report_history'),
+            icon: Icon(MdiIcons.history),
+            onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
+          )
         ],
       ),
       body: ChangeNotifierProvider(
