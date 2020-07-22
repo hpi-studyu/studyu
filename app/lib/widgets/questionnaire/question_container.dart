@@ -5,6 +5,7 @@ import 'package:studyou_core/models/models.dart';
 import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
+import 'question_header.dart';
 import 'question_widget.dart';
 import 'visual_analogue_question_widget.dart';
 
@@ -51,16 +52,6 @@ class QuestionContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final questionBody = getQuestionBody();
 
-    final header = <Widget>[
-      Text(question.prompt, style: Theme.of(context).textTheme.subtitle1),
-    ];
-    if (questionBody.subtitle != null) {
-      header.addAll([
-        SizedBox(height: 8),
-        Text(questionBody.subtitle, style: Theme.of(context).textTheme.caption),
-      ]);
-    }
-
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -69,7 +60,15 @@ class QuestionContainer extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [...header, SizedBox(height: 16), questionBody],
+            children: [
+              QuestionHeader(
+                prompt: question.prompt,
+                subtitle: questionBody.subtitle,
+                rationale: question.rationale,
+              ),
+              SizedBox(height: 16),
+              questionBody,
+            ],
           ),
         ),
       ),
