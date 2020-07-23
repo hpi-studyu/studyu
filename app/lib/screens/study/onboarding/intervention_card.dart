@@ -26,7 +26,7 @@ class InterventionCard extends StatelessWidget {
     }).join(',');
   }
 
-  List<Widget> tasksList(ThemeData theme) => <Widget>[
+  List<Widget> _buildTaskList(ThemeData theme) => <Widget>[
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
@@ -87,7 +87,7 @@ class InterventionCard extends StatelessWidget {
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
           ),
         ),
-        if (showTasks) ...tasksList(theme)
+        if (showTasks) ..._buildTaskList(theme)
       ],
     );
   }
