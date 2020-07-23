@@ -157,6 +157,7 @@ class PerformanceBar extends StatelessWidget {
                   ),
                 ),
               ),
+              // TODO fix text positioning
               Text('min'),
             ],
           ),

@@ -45,7 +45,6 @@ dependencies:
   research_package:
   shared_preferences:
   video_player:
-  gradient_widgets:
   rainbow_color:
 
 dev_dependencies:
