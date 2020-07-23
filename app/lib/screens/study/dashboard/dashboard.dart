@@ -23,27 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     study = context.read<AppModel>().activeStudy;
-    _buildSchedule();
-  }
-
-  void _buildSchedule() {
-    final activeIntervention = study.getInterventionForDate(DateTime.now());
-
-    scheduleToday = Multimap<Time, Task>();
-    for (final task in activeIntervention.tasks) {
-      for (final schedule in task.schedule) {
-        if (schedule is FixedSchedule) {
-          scheduleToday.add(schedule.time, task);
-        }
-      }
-    }
-    for (final observation in study.observations) {
-      for (final schedule in observation.schedule) {
-        if (schedule is FixedSchedule) {
-          scheduleToday.add(schedule.time, observation);
-        }
-      }
-    }
+    scheduleToday = study.buildSchedule();
   }
 
   @override
@@ -76,8 +56,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ? FlatButton(
               onPressed: () {
                 setState(() {
-                  study.startDate = study.startDate.subtract(Duration(days: 1));
-                  _buildSchedule();
+                  study.setStartDateBackBy(days: 1);
+                  scheduleToday = study.buildSchedule();
                 });
               },
               child: Text('next day'),

@@ -1,4 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:quiver/collection.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
 
 import '../../util/extensions.dart';
@@ -102,4 +104,27 @@ class StudyInstance extends ParseObject implements ParseCloneable {
         .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))
         .toList();
   }
+
+  Multimap<Time, Task> buildSchedule() {
+    final activeIntervention = getInterventionForDate(DateTime.now());
+
+    final scheduleToday = Multimap<Time, Task>();
+    for (final task in activeIntervention.tasks) {
+      for (final schedule in task.schedule) {
+        if (schedule is FixedSchedule) {
+          scheduleToday.add(schedule.time, task);
+        }
+      }
+    }
+    for (final observation in observations) {
+      for (final schedule in observation.schedule) {
+        if (schedule is FixedSchedule) {
+          scheduleToday.add(schedule.time, observation);
+        }
+      }
+    }
+    return scheduleToday;
+  }
+
+  void setStartDateBackBy({int days = 1}) => startDate = startDate.subtract(Duration(days: days));
 }
