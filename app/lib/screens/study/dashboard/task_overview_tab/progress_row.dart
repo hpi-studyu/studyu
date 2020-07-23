@@ -1,10 +1,10 @@
-import 'package:StudYou/screens/study/onboarding/intervention_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../../util/intervention.dart';
+import '../../onboarding/intervention_card.dart';
 
 class ProgressRow extends StatefulWidget {
   final StudyInstance study;
