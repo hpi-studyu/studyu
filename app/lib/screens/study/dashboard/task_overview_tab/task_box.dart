@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pimp_my_button/pimp_my_button.dart';
+import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../../../models/app_state.dart';
 import '../../../../widgets/round_checkbox.dart';
 import '../../tasks/task_screen.dart';
 
@@ -16,16 +17,23 @@ class TaskBox extends StatefulWidget {
 }
 
 class _TaskBoxState extends State<TaskBox> {
-  bool _checked = false;
+  bool _isCompleted = false;
+
+  Future<void> _navigateToTaskScreen() async {
+    final completed =
+        await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => TaskScreen(task: widget.task)));
+    setState(() {
+      _isCompleted = completed;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    _isCompleted = context.watch<AppModel>().activeStudy.isTaskFinishedForToday(widget.task.id);
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TaskScreen(task: widget.task)));
-        },
+        onTap: _navigateToTaskScreen,
         child: Row(
           children: [
             Expanded(
@@ -35,12 +43,8 @@ class _TaskBoxState extends State<TaskBox> {
               ),
             ),
             RoundCheckbox(
-              value: _checked,
-              onChanged: (value) {
-                setState(() {
-                  _checked = value;
-                });
-              },
+              value: _isCompleted,
+              onChanged: (value) => _navigateToTaskScreen(),
             )
           ],
         ),

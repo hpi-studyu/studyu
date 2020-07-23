@@ -22,7 +22,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
       ..taskId = task.id;
     activeStudy.addResult(result);
     if (await StudyQueries.saveUserStudy(activeStudy) != null) {
-      Navigator.of(context).pop();
+      Navigator.pop(context, true);
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(Nof1Localizations.of(context).translate('could_not_save_results')),
