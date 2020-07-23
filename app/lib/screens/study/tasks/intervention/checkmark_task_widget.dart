@@ -10,7 +10,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
             onPressed: () async {
               await controller.forward(from: 0);
               await Future.delayed(Duration(milliseconds: 100));
-              Navigator.pop(context);
+              Navigator.pop(context, true);
             },
             icon: Icon(Icons.check, size: 32),
             label: Text('Complete', style: TextStyle(fontSize: 24))));
