@@ -126,7 +126,7 @@ class StudyInstance extends ParseObject implements ParseCloneable {
     return taskSchedule;
   }
 
-  void setStartDateBackBy({int days = 1}) {
+  void setStartDateBackBy({int days}) {
     startDate = startDate.subtract(Duration(days: days));
     results = results.map((task, results) => MapEntry(
         task,
