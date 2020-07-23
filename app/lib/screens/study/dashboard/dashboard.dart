@@ -23,7 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     study = context.read<AppModel>().activeStudy;
-    scheduleToday = study.buildSchedule();
+    scheduleToday = study.scheduleFor(DateTime.now());
   }
 
   @override
@@ -57,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onPressed: () {
                 setState(() {
                   study.setStartDateBackBy(days: 1);
-                  scheduleToday = study.buildSchedule();
+                  scheduleToday = study.scheduleFor(DateTime.now());
                 });
               },
               child: Text('next day'),
