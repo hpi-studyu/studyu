@@ -61,7 +61,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                   .entries
                   .map((entry) => InterventionCard(
                       interventionIndex: entry.key,
-                      removeIntervention: _removeIntervention,
+                      remove: _removeIntervention,
                       isEditing: entry.key == selectedInterventionIndex,
                       onTap: _selectIntervention))
                   .toList(),
