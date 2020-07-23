@@ -62,5 +62,6 @@
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",
 
-  "report_history": "Report history"
+  "report_history": "Report history",
+  "current_power_level": "Current power level"
 }
