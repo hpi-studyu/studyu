@@ -70,6 +70,13 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   set results(Map<String, List<Result>> results) => set<Map<String, dynamic>>(keyResults,
       results.map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())));
 
+  List<Result> resultsFor(String taskId) => results[taskId];
+
+  bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
+      resultsFor(taskId)?.any((result) => result.timeStamp.day == dateTime.day) ?? false;
+
+  bool isTaskFinishedForToday(String taskId) => isTaskFinishedFor(taskId, DateTime.now());
+
   void addResult(Result result) {
     var nextResults = results;
     nextResults.putIfAbsent(result.taskId, () => []).add(result);
