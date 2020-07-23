@@ -75,8 +75,6 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
       resultsFor(taskId)?.any((result) => result.timeStamp.day == dateTime.day) ?? false;
 
-  bool isTaskFinishedForToday(String taskId) => isTaskFinishedFor(taskId, DateTime.now());
-
   void addResult(Result result) {
     var nextResults = results;
     nextResults.putIfAbsent(result.taskId, () => []).add(result);
