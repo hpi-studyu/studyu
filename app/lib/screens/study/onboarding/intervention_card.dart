@@ -66,7 +66,7 @@ class InterventionCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-          onTap: showCheckbox ? onTap : null,
+          onTap: onTap,
           leading: Icon(MdiIcons.fromString(intervention.icon)),
           trailing: showCheckbox
               ? Checkbox(
