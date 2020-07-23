@@ -8,12 +8,12 @@ import 'package:study_designer/models/designer_state.dart';
 class InterventionCard extends StatefulWidget {
   final int interventionIndex;
   final bool isEditing;
-  final void Function(int interventionIndex) removeIntervention;
+  final void Function(int interventionIndex) remove;
   final void Function(int interventionIndex) onTap;
 
   const InterventionCard(
       {@required this.interventionIndex,
-      @required this.removeIntervention,
+      @required this.remove,
       @required this.isEditing,
       @required this.onTap,
       Key key})
@@ -29,12 +29,6 @@ class _InterventionCardState extends State<InterventionCard> {
 
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
-  @override
-  void initState() {
-    super.initState();
-    selectedTaskIndex = null;
-  }
-
   void _addCheckMarkTask() {
     setState(() {
       final task = LocalCheckMarkTask()
@@ -42,22 +36,22 @@ class _InterventionCardState extends State<InterventionCard> {
         ..description = ''
         ..schedules = [];
       intervention.tasks.add(task);
+      selectedTaskIndex = intervention.tasks.length - 1;
     });
-    setState(() => selectedTaskIndex = intervention.tasks.length - 1);
   }
 
   void _removeTask(taskIndex) {
     setState(() {
-      setState(() => selectedTaskIndex = null);
+      selectedTaskIndex = null;
       intervention.tasks.removeAt(taskIndex);
     });
   }
 
   void _selectTask(index) {
-    widget.onTap(widget.interventionIndex);
     setState(() {
       selectedTaskIndex = index;
     });
+    widget.onTap(widget.interventionIndex);
   }
 
   @override
@@ -65,7 +59,8 @@ class _InterventionCardState extends State<InterventionCard> {
     intervention = context.watch<DesignerModel>().draftStudy.studyDetails.interventions[widget.interventionIndex];
 
     final cardContent = <Widget>[];
-    cardContent.add(Text('Intervention ' + (widget.interventionIndex + 1).toString()));
+    cardContent.add(Text(widget.isEditing.toString()));
+    cardContent.add(Text('Intervention ${(widget.interventionIndex + 1).toString()}'));
     if (widget.isEditing) {
       cardContent.add(_buildDeleteButton());
     }
@@ -81,10 +76,9 @@ class _InterventionCardState extends State<InterventionCard> {
 
     return GestureDetector(
       onTap: () {
+        print('hi gesture');
         setState(() => selectedTaskIndex = null);
-        if (!widget.isEditing) {
-          widget.onTap(widget.interventionIndex);
-        }
+        widget.onTap(widget.interventionIndex);
       },
       child: Card(margin: EdgeInsets.all(10.0), child: Column(children: cardContent)),
     );
@@ -95,7 +89,7 @@ class _InterventionCardState extends State<InterventionCard> {
       children: <Widget>[
         FlatButton(
           onPressed: () {
-            widget.removeIntervention(widget.interventionIndex);
+            widget.remove(widget.interventionIndex);
           },
           child: const Text('Delete'),
         ),
@@ -108,12 +102,11 @@ class _InterventionCardState extends State<InterventionCard> {
         .asMap()
         .entries
         .map((entry) => TaskCard(
-              interventionIndex: widget.interventionIndex,
-              taskIndex: entry.key,
-              removeTask: _removeTask,
-              isEditing: widget.isEditing && entry.key == selectedTaskIndex,
-              onTap: _selectTask,
-            ))
+            interventionIndex: widget.interventionIndex,
+            taskIndex: entry.key,
+            remove: _removeTask,
+            isEditing: widget.isEditing && entry.key == selectedTaskIndex,
+            onTap: _selectTask))
         .toList();
   }
 
@@ -143,13 +136,6 @@ class _InterventionCardState extends State<InterventionCard> {
         ));
   }
 
-  Widget _buildShowMetaData() {
-    return ListTile(
-      title: Text(intervention.name.isEmpty ? 'Name' : intervention.name),
-      subtitle: Text(intervention.description.isEmpty ? 'Description' : intervention.description),
-    );
-  }
-
   void saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
@@ -157,10 +143,16 @@ class _InterventionCardState extends State<InterventionCard> {
         intervention.name = _editFormKey.currentState.value['name'];
         intervention.description = _editFormKey.currentState.value['description'];
       });
-      print('saved');
     } else {
       print('validation failed');
     }
+  }
+
+  Widget _buildShowMetaData() {
+    return ListTile(
+      title: Text(intervention.name.isEmpty ? 'Name' : intervention.name),
+      subtitle: Text(intervention.description.isEmpty ? 'Description' : intervention.description),
+    );
   }
 
   Widget _buildCardFooter() {
