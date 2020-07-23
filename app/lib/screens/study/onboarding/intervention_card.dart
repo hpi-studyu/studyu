@@ -6,9 +6,11 @@ class InterventionCard extends StatelessWidget {
   final Intervention intervention;
   final bool selected;
   final bool showCheckbox;
+  final bool showTasks;
   final Function() onTap;
 
-  const InterventionCard(this.intervention, {this.onTap, this.selected = false, this.showCheckbox = true, Key key})
+  const InterventionCard(this.intervention,
+      {this.onTap, this.selected = false, this.showCheckbox = true, this.showTasks = true, Key key})
       : super(key: key);
   String scheduleString(List<Schedule> schedules) {
     return schedules.map((schedule) {
@@ -27,6 +29,38 @@ class InterventionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final tasksList = <Widget>[
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
+      ),
+      Divider(
+        height: 4,
+      ),
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: intervention.tasks
+            .map(
+              (task) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
+                    FittedBox(
+                        child: Text(
+                      scheduleString(task.schedule),
+                      style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
+                    )),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -53,34 +87,7 @@ class InterventionCard extends StatelessWidget {
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
-        ),
-        Divider(
-          height: 4,
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: intervention.tasks
-              .map(
-                (task) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
-                      FittedBox(
-                          child: Text(
-                        scheduleString(task.schedule),
-                        style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
-                      )),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
-        ),
+        if (showTasks) ...tasksList
       ],
     );
   }
