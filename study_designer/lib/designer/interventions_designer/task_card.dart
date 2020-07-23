@@ -8,9 +8,17 @@ import 'package:study_designer/models/designer_state.dart';
 class TaskCard extends StatefulWidget {
   final int interventionIndex;
   final int taskIndex;
+  final bool isEditing;
   final void Function(int taskIndex) removeTask;
+  final void Function(int interventionIndex) onTap;
 
-  const TaskCard({@required this.interventionIndex, @required this.taskIndex, @required this.removeTask, Key key})
+  const TaskCard(
+      {@required this.interventionIndex,
+      @required this.taskIndex,
+      @required this.removeTask,
+      @required this.isEditing,
+      @required this.onTap,
+      Key key})
       : super(key: key);
 
   @override
@@ -48,84 +56,89 @@ class _TaskCardState extends State<TaskCard> {
 
     return Container(
         margin: EdgeInsets.all(10.0),
-        child: Card(
-            child: Column(
-          children: [
-            Text('Checkmark Task'),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    showDialog(context: context, builder: _buildEditDialog);
-                  },
-                  child: const Text('Edit'),
-                ),
-                FlatButton(
-                  onPressed: () {
-                    widget.removeTask(widget.taskIndex);
-                  },
-                  child: const Text('Delete'),
-                ),
-              ],
-            ),
-            ListTile(
-              title: Text(task.name.isEmpty ? 'Name' : task.name),
-              subtitle: Text(task.description.isEmpty ? 'Description' : task.description),
-            ),
-            ...task.schedules.asMap().entries.map((entry) => ScheduleCard()).toList(),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  onPressed: _addFixedSchedule,
-                  child: const Text('Add fixed schedule'),
-                ),
-              ],
-            ),
-          ],
-        )));
+        decoration: BoxDecoration(border: Border.all()),
+        child: widget.isEditing ? _buildEditWidget(context) : _buildShowWidget(context));
   }
 
-  Widget _buildEditDialog(context) {
-    return AlertDialog(
-      content: FormBuilder(
-        key: _editFormKey,
-        autovalidate: true,
-        // readonly: true,
-        child: Column(
+  Widget _buildShowWidget(context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onTap(widget.taskIndex);
+      },
+      child: Column(
+        children: [
+          Text('Checkmark Task'),
+          ListTile(
+            title: Text(task.name.isEmpty ? 'Name' : task.name),
+            subtitle: Text(task.description.isEmpty ? 'Description' : task.description),
+          ),
+          ...task.schedules.asMap().entries.map((entry) => ScheduleCard()).toList(),
+        ],
+      ),
+    );
+  }
+
+  void saveFormChanges() {
+    _editFormKey.currentState.save();
+    if (_editFormKey.currentState.validate()) {
+      setState(() {
+        task.name = _editFormKey.currentState.value['name'];
+        task.description = _editFormKey.currentState.value['description'];
+      });
+      print('saved');
+    } else {
+      print('validation failed');
+    }
+  }
+
+  Widget _buildEditWidget(context) {
+    return Column(
+      children: [
+        Text('Checkmark Task'),
+        ButtonBar(
           children: <Widget>[
-            FormBuilderTextField(
-                attribute: 'name',
-                maxLength: 40,
-                decoration: InputDecoration(labelText: 'Name'),
-                initialValue: task.name),
-            FormBuilderTextField(
-                attribute: 'description',
-                decoration: InputDecoration(labelText: 'Description'),
-                initialValue: task.description),
-            MaterialButton(
-              color: Theme.of(context).accentColor,
+            FlatButton(
               onPressed: () {
-                _editFormKey.currentState.save();
-                if (_editFormKey.currentState.validate()) {
-                  setState(() {
-                    task.name = _editFormKey.currentState.value['name']
-                      ..description = _editFormKey.currentState.value['description'];
-                  });
-                  print('saved');
-                  Navigator.pop(context);
-                  // TODO: show dialog "saved"
-                } else {
-                  print('validation failed');
-                }
+                widget.removeTask(widget.taskIndex);
               },
-              child: Text(
-                'Save',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
+              child: const Text('Delete'),
+            ),
           ],
         ),
-      ),
+        FormBuilder(
+          key: _editFormKey,
+          autovalidate: true,
+          // readonly: true,
+          child: Column(
+            children: <Widget>[
+              FormBuilderTextField(
+                  onChanged: (value) {
+                    saveFormChanges();
+                  },
+                  attribute: 'name',
+                  maxLength: 40,
+                  decoration: InputDecoration(labelText: 'Name'),
+                  initialValue: task.name),
+              FormBuilderTextField(
+                  onChanged: (value) {
+                    saveFormChanges();
+                  },
+                  attribute: 'description',
+                  decoration: InputDecoration(labelText: 'Description'),
+                  initialValue: task.description),
+            ],
+          ),
+        ),
+        ...task.schedules.asMap().entries.map((entry) => ScheduleCard()).toList(),
+        ButtonBar(
+          children: <Widget>[
+            FlatButton(
+              onPressed: _addFixedSchedule,
+              child: const Text('Add fixed schedule'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
