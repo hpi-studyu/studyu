@@ -15,7 +15,54 @@ class ProgressRow extends StatefulWidget {
 }
 
 class _ProgressRowState extends State<ProgressRow> {
-  Widget _buildInterventionSegment(BuildContext context, Intervention intervention, bool isCurrent, bool isFuture) {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(MdiIcons.run, size: 30),
+              SizedBox(width: 8),
+              ...widget.study.getInterventionsInOrder().asMap().entries.expand((entry) {
+                final currentInterventionIndex = widget.study.getInterventionIndexForDate(DateTime.now());
+                return [
+                  InterventionSegment(
+                      intervention: entry.value,
+                      isCurrent: currentInterventionIndex == entry.key,
+                      isFuture: currentInterventionIndex < entry.key),
+                  Expanded(
+                    child: Divider(
+                      indent: 5,
+                      endIndent: 5,
+                      thickness: 3,
+                      color: theme.primaryColor,
+                    ),
+                  ),
+                ];
+              }),
+              Icon(MdiIcons.flagCheckered, size: 30),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class InterventionSegment extends StatelessWidget {
+  final Intervention intervention;
+  final bool isCurrent;
+  final bool isFuture;
+
+  const InterventionSegment({@required this.intervention, this.isCurrent, this.isFuture, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Expanded(
         child: Column(
@@ -37,42 +84,6 @@ class _ProgressRowState extends State<ProgressRow> {
             child: interventionIcon(intervention)),
       ],
     ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(MdiIcons.run, size: 30),
-              SizedBox(width: 8),
-              ...widget.study.getInterventionsInOrder().asMap().entries.expand((entry) {
-                final currentInterventionIndex = widget.study.getInterventionIndexForDate(DateTime.now());
-                return [
-                  _buildInterventionSegment(context, entry.value, currentInterventionIndex == entry.key,
-                      currentInterventionIndex < entry.key),
-                  Expanded(
-                    child: Divider(
-                      indent: 5,
-                      endIndent: 5,
-                      thickness: 3,
-                      color: theme.primaryColor,
-                    ),
-                  ),
-                ];
-              }),
-              Icon(MdiIcons.flagCheckered, size: 30),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 
