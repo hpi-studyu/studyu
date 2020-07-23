@@ -31,6 +31,7 @@ dependencies:
 
   chewie:
   cupertino_icons:
+  intersperse:
   json_annotation:
   material_design_icons_flutter:
   parse_server_sdk:
