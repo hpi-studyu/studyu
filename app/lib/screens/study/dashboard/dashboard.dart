@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     study = context.read<AppModel>().activeStudy;
+    _buildSchedule();
+  }
 
+  void _buildSchedule() {
     final activeIntervention = study.getInterventionForDate(DateTime.now());
 
     scheduleToday = Multimap<Time, Task>();
@@ -68,6 +72,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         create: (context) => TaskOverviewModel(),
         child: TaskOverview(study: study, scheduleToday: scheduleToday),
       ),
+      bottomSheet: kDebugMode
+          ? FlatButton(
+              onPressed: () {
+                setState(() {
+                  study.startDate = study.startDate.subtract(Duration(days: 1));
+                  _buildSchedule();
+                });
+              },
+              child: Text('next day'),
+            )
+          : null,
     );
   }
 }
