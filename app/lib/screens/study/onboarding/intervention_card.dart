@@ -26,40 +26,40 @@ class InterventionCard extends StatelessWidget {
     }).join(',');
   }
 
+  List<Widget> tasksList(ThemeData theme) => <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
+        ),
+        Divider(
+          height: 4,
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: intervention.tasks
+              .map(
+                (task) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
+                      FittedBox(
+                          child: Text(
+                        scheduleString(task.schedule),
+                        style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
+                      )),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final tasksList = <Widget>[
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
-      ),
-      Divider(
-        height: 4,
-      ),
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: intervention.tasks
-            .map(
-              (task) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
-                    FittedBox(
-                        child: Text(
-                      scheduleString(task.schedule),
-                      style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
-                    )),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +87,7 @@ class InterventionCard extends StatelessWidget {
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
           ),
         ),
-        if (showTasks) ...tasksList
+        if (showTasks) ...tasksList(theme)
       ],
     );
   }
