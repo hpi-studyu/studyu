@@ -1,3 +1,4 @@
+import 'package:StudYou/screens/study/onboarding/intervention_card.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
@@ -43,7 +44,8 @@ class _TaskOverviewState extends State<TaskOverview> {
               SizedBox(height: 8),
               Text('Current Intervention', style: theme.textTheme.headline6),
               SizedBox(height: 8),
-              Text(widget.study.getInterventionForDate(DateTime.now()).name),
+              InterventionCard(widget.study.getInterventionForDate(DateTime.now()),
+                  showCheckbox: false, showTasks: false),
               SizedBox(height: 8),
               Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)
             ])),
