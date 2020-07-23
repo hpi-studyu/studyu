@@ -105,25 +105,25 @@ class StudyInstance extends ParseObject implements ParseCloneable {
         .toList();
   }
 
-  Multimap<Time, Task> buildSchedule() {
-    final activeIntervention = getInterventionForDate(DateTime.now());
+  Multimap<Time, Task> scheduleFor(DateTime dateTime) {
+    final activeIntervention = getInterventionForDate(dateTime);
 
-    final scheduleToday = Multimap<Time, Task>();
+    final taskSchedule = Multimap<Time, Task>();
     for (final task in activeIntervention.tasks) {
       for (final schedule in task.schedule) {
         if (schedule is FixedSchedule) {
-          scheduleToday.add(schedule.time, task);
+          taskSchedule.add(schedule.time, task);
         }
       }
     }
     for (final observation in observations) {
       for (final schedule in observation.schedule) {
         if (schedule is FixedSchedule) {
-          scheduleToday.add(schedule.time, observation);
+          taskSchedule.add(schedule.time, observation);
         }
       }
     }
-    return scheduleToday;
+    return taskSchedule;
   }
 
   void setStartDateBackBy({int days = 1}) {
