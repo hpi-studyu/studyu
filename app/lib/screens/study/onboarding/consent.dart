@@ -36,92 +36,67 @@ class _ConsentScreenState extends State<ConsentScreen> {
         title: Text(Nof1Localizations.of(context).translate('consent')),
         bottom: OnboardingProgress(stage: 2, progress: 2.5),
       ),
-      body: PageView(
+      body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 40),
+              children: <Widget>[
                 Text(
                   Nof1Localizations.of(context).translate('please_give_consent'),
                   style: theme.textTheme.headline5,
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.blue,
-                        size: 60,
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                    itemCount: consentElementList.length,
+                    itemBuilder: (context, index) {
+                      return ConsentCard(
+                        consentElement: consentElementList[index],
+                        isChecked: boxLogic[index],
+                        index: index,
+                        onTapped: onBoxTapped,
+                      );
+                    },
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RaisedButton(
+                        onPressed:
+                            //boxLogic.every((element) => element == true) ?
+                            () {
+                          Navigator.pop(context, true);
+                        },
+                        //  : null,
+                        child: Text(Nof1Localizations.of(context).translate('accept')),
                       ),
                     ),
-                  ),
+                    Expanded(
+                      child: RaisedButton(
+                        onPressed:
+                            // boxLogic.every((element) => element == true) ?
+                            () {
+                          Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection));
+                        },
+                        //   : null,
+                        child: Text(Nof1Localizations.of(context).translate('cancel')),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          Stack(
-            children: [
-              GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-                itemCount: consentElementList.length,
-                itemBuilder: (context, index) {
-                  return ConsentCard(
-                    consentElement: consentElementList[index],
-                    isChecked: boxLogic[index],
-                    index: index,
-                    onTapped: onBoxTapped,
-                  );
-                },
-                primary: false,
-                padding: const EdgeInsets.all(20),
-              ),
-              Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.blue,
-                    size: 60,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  Nof1Localizations.of(context).translate('please_give_consent'),
-                  style: theme.textTheme.headline5,
-                ),
-                SizedBox(height: 40),
-                RaisedButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: Text(Nof1Localizations.of(context).translate('accept')),
-                ),
-                RaisedButton(
-                  onPressed:
-                      // boxLogic.every((element) => element == true) ?
-                      () {
-                    Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection));
-                  },
-                  //   : null,
-                  child: Text(Nof1Localizations.of(context).translate('cancel')),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
