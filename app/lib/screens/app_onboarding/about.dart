@@ -144,7 +144,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 Expanded(
                     child: Text(
-                  "of",
+                  'of',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 30),
                 )),
@@ -262,7 +262,7 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: Text(
-                    "Study",
+                    'Study',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30),
                   )),
