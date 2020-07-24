@@ -79,8 +79,8 @@ class ReportPerformanceModule extends ReportModuleContent {
                 '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription()}'),
           ),
           PerformanceBar(
-            progress: 0.4,
-            minimum: 0.6,
+            progress: 0.6,
+            minimum: 0.2,
           ),
         ],
       );
@@ -106,6 +106,8 @@ class PerformanceBar extends StatelessWidget {
     final colorSamples =
         List<double>.generate(11, (index) => index * 0.1 * progress).map<Color>((index) => rainbow[index]).toList();
 
+    final spacing = (minimum * 1000).floor();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -126,19 +128,30 @@ class PerformanceBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                FractionallySizedBox(
-                  alignment: Alignment.centerLeft,
-                  widthFactor: progress,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(right: BorderSide(width: 2, color: Colors.grey[600])),
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: colorSamples,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: FractionallySizedBox(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: progress,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: colorSamples,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Container(
+                      width: 2,
+                      color: Colors.grey[600],
+                    )
+                  ],
                 ),
               ],
             ),
@@ -146,19 +159,37 @@ class PerformanceBar extends StatelessWidget {
         ),
         if (minimum != null && minimum >= 0 && minimum <= 1)
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              FractionallySizedBox(
-                widthFactor: minimum,
-                child: Container(
-                  height: 15,
-                  decoration: BoxDecoration(
-                    border: Border(right: BorderSide(width: 2, color: Colors.grey[600])),
+              Row(
+                children: [
+                  if (spacing > 0)
+                    Spacer(
+                      flex: spacing,
+                    ),
+                  Container(
+                    width: 2,
+                    height: 15,
+                    color: Colors.grey[600],
                   ),
-                ),
+                  if (spacing < 1000)
+                    Spacer(
+                      flex: 1000 - spacing,
+                    ),
+                ],
               ),
-              // TODO fix text positioning
-              Text('min'),
+              Row(
+                children: [
+                  if (spacing > 0)
+                    Spacer(
+                      flex: spacing,
+                    ),
+                  Text('min'),
+                  if (spacing < 1000)
+                    Spacer(
+                      flex: 1000 - spacing,
+                    ),
+                ],
+              ),
             ],
           ),
       ],
