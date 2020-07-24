@@ -35,12 +35,15 @@ class ReportDetailsScreen extends StatelessWidget {
 
 class ReportModule extends StatelessWidget {
   final ReportModuleContent module;
+  final String subRouteName;
 
-  const ReportModule(this.module);
+  const ReportModule(this.module, {this.subRouteName});
 
   @override
   Widget build(BuildContext context) => Card(
         child: InkWell(
+          // TODO maybe convert routes list to map to enable contains check
+          onTap: () => subRouteName != null ? Navigator.pushNamed(context, subRouteName) : null,
           child: Padding(
             padding: EdgeInsets.all(20),
             child: module,
@@ -79,7 +82,7 @@ class ReportPerformanceModule extends ReportModuleContent {
                 '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription()}'),
           ),
           PerformanceBar(
-            progress: 0.6,
+            progress: 0.4,
             minimum: 0.2,
           ),
         ],
