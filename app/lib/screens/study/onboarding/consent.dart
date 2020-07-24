@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../routes.dart';
 import '../../../util/localization.dart';
+import 'onboarding_progress.dart';
 
 class ConsentScreen extends StatefulWidget {
   @override
@@ -33,6 +34,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('consent')),
+        bottom: OnboardingProgress(stage: 2, progress: 2.5),
       ),
       body: PageView(
         scrollDirection: Axis.vertical,
