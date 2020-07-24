@@ -108,11 +108,12 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   child: Text(Nof1Localizations.of(context).translate('accept')),
                 ),
                 RaisedButton(
-                  onPressed: boxLogic.every((element) => element == true)
-                      ? () {
-                          Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection));
-                        }
-                      : null,
+                  onPressed:
+                      // boxLogic.every((element) => element == true) ?
+                      () {
+                    Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection));
+                  },
+                  //   : null,
                   child: Text(Nof1Localizations.of(context).translate('cancel')),
                 ),
               ],
