@@ -21,7 +21,7 @@ class WelcomeScreen extends StatelessWidget {
               SizedBox(height: 20),
               RaisedButton(
                 onPressed: () => Navigator.pushNamed(context, Routes.about),
-                child: Text(Nof1Localizations.of(context).translate('what_is_nof1')),
+                child: Text(Nof1Localizations.of(context).translate('what_is_studyu')),
               ),
               SizedBox(height: 20),
               RaisedButton(
