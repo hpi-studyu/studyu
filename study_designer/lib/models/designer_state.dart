@@ -30,14 +30,8 @@ class LocalIntervention {
 class LocalTask {
   String name;
   String description;
-  List<LocalSchedule> schedules;
-}
-
-class LocalCheckMarkTask extends LocalTask {}
-
-class LocalSchedule {}
-
-class LocalFixedSchedule extends LocalSchedule {
   int hour;
   int minute;
 }
+
+class LocalCheckMarkTask extends LocalTask {}
