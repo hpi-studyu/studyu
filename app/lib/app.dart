@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return MaterialApp(
-          title: 'Nof1 Initial app',
+          title: 'StudyU',
           theme: theme,
           initialRoute: Routes.loading,
           onGenerateRoute: Routes.generateRoute,
