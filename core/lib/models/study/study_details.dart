@@ -4,6 +4,7 @@ import '../eligibility/eligibility_criterion.dart';
 import '../interventions/intervention_set.dart';
 import '../observations/observation.dart';
 import '../questionnaire/questionnaire.dart';
+import '../report/report_models.dart';
 import '../study_schedule/study_schedule.dart';
 
 class StudyDetails extends ParseObject implements ParseCloneable {
@@ -40,4 +41,10 @@ class StudyDetails extends ParseObject implements ParseCloneable {
   static const keySchedule = 'schedule';
   StudySchedule get schedule => StudySchedule.fromJson(get<Map<String, dynamic>>(keySchedule));
   set schedule(StudySchedule schedule) => set<Map<String, dynamic>>(keySchedule, schedule.toJson());
+
+  static const keyReportSpecification = 'report_specification';
+  ReportSpecification get reportSpecification =>
+      ReportSpecification.fromJson(get<Map<String, dynamic>>(keyReportSpecification));
+  set reportSpecification(ReportSpecification reportSpecification) =>
+      set<Map<String, dynamic>>(keyReportSpecification, reportSpecification.toJson());
 }

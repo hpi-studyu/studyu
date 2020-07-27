@@ -3,5 +3,7 @@ export 'expressions/expression.dart';
 export 'interventions/interventions.dart';
 export 'observations/observations.dart';
 export 'questionnaire/questionnaire_models.dart';
+export 'report/report_models.dart';
+export 'results/result.dart';
 export 'study/studies.dart';
 export 'tasks/tasks.dart';

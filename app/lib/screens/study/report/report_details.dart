@@ -1,3 +1,4 @@
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -20,16 +21,25 @@ class ReportDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: Consumer<AppModel>(
-          builder: (context, value, child) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ReportModule(ReportGeneralDetailsModule(value.reportStudy)),
-              ReportModule(ReportPerformanceModule(value.reportStudy)),
-              ReportModule(ReportOutcomeModule(value.reportStudy)),
-            ],
-          ),
-        ),
+        body: Consumer<AppModel>(builder: (context, value, child) {
+          final study = value.reportStudy;
+          final outcome = study.reportSpecification != null
+              ? study.reportSpecification.outcomes.isNotEmpty ? study.reportSpecification.outcomes[0] : null
+              : null;
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ReportModule(ReportGeneralDetailsModule(study)),
+                ReportModule(ReportPerformanceModule(study)),
+                if (outcome != null)
+                  ReportModule(
+                      ReportOutcomeModule(study, value.reportStudy.reportSpecification.outcomes[0], primary: true)),
+              ],
+            ),
+          );
+        }),
       );
 }
 
@@ -201,8 +211,95 @@ class PerformanceBar extends StatelessWidget {
 }
 
 class ReportOutcomeModule extends ReportModuleContent {
-  const ReportOutcomeModule(StudyInstance instance) : super(instance);
+  final bool primary;
+  final Outcome outcome;
+
+  const ReportOutcomeModule(StudyInstance instance, this.outcome, {@required this.primary}) : super(instance);
 
   @override
-  Widget build(BuildContext context) => Card();
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (outcome.title != null)
+          Text(
+            outcome.title,
+            style: theme.textTheme.headline5,
+          ),
+        if (primary)
+          Text(
+            getResultText(),
+            style: theme.textTheme.subtitle2,
+          ),
+        AspectRatio(aspectRatio: 2, child: getDiagram()),
+      ],
+    );
+  }
+
+  String getResultText() {
+    return '';
+  }
+
+  Widget getDiagram() {
+    switch (outcome.chartType) {
+      case ChartType.BAR:
+        return charts.BarChart(
+          getBarData(),
+          animate: true,
+        );
+      case ChartType.LINE:
+        return Placeholder();
+      default:
+        print('Unknown chart type!');
+        return Placeholder();
+    }
+  }
+
+  List<charts.Series<_DiagramData, String>> getBarData() {
+    Task task;
+    task = instance.observations.firstWhere((element) => element.id == outcome.taskId, orElse: () => null);
+    if (task != null) {
+      if (task is QuestionnaireTask && outcome.questionId != null) {
+        final data = <_DiagramData>[];
+        switch (outcome.chartX) {
+          case ChartX.INTERVENTION:
+            final resultData = instance.getResultsByInterventionId();
+            resultData.forEach((key, results) {
+              final values = results
+                  .where((result) => result.taskId == outcome.taskId && result is Result<QuestionnaireState>)
+                  .where((result) {
+                final response = result.result.answers[outcome.questionId]?.response;
+                return response != null && response is num;
+              }).map<num>((result) => result.result.answers[outcome.questionId].response);
+
+              if (values.isNotEmpty) {
+                data.add(_DiagramData(key, values.reduce((a, b) => a + b) / values.length));
+              }
+            });
+            break;
+          default:
+            print('Unknown x axis type.');
+        }
+        ;
+        return [
+          charts.Series<_DiagramData, String>(
+            id: outcome.title,
+            colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+            domainFn: (dData, _) => dData.x,
+            measureFn: (dData, _) => dData.y,
+            data: data,
+          )
+        ];
+      }
+    }
+    return [];
+  }
+}
+
+class _DiagramData {
+  final String x;
+  final num y;
+
+  _DiagramData(this.x, this.y);
 }
