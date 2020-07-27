@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/interventions_designer/schedule_card.dart';
 import 'package:study_designer/models/designer_state.dart';
 
 class TaskCard extends StatefulWidget {
@@ -27,33 +27,8 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   LocalTask task;
-  int selectedScheduleIndex;
 
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
-
-  void _addFixedSchedule() {
-    setState(() {
-      final schedule = LocalFixedSchedule()
-        ..hour = 0
-        ..minute = 0;
-      task.schedules.add(schedule);
-      selectedScheduleIndex = task.schedules.length - 1;
-    });
-  }
-
-  void _removeSchedule(scheduleIndex) {
-    setState(() {
-      selectedScheduleIndex = null;
-      task.schedules.removeAt(scheduleIndex);
-    });
-  }
-
-  void _selectSchedule(index) {
-    setState(() {
-      selectedScheduleIndex = index;
-    });
-    widget.onTap(widget.taskIndex);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,24 +40,16 @@ class _TaskCardState extends State<TaskCard> {
         .tasks[widget.taskIndex];
 
     final cardContent = <Widget>[];
-    cardContent.add(Text(widget.isEditing.toString()));
     cardContent.add(Text('Task ${(widget.taskIndex + 1).toString()}'));
     if (widget.isEditing) {
       cardContent.add(_buildDeleteButton());
-    }
-    if (widget.isEditing && selectedScheduleIndex == null) {
       cardContent.add(_buildEditMetaDataForm());
     } else {
       cardContent.add(_buildShowMetaData());
     }
-    cardContent.addAll(_buildScheduleCards());
-    if (widget.isEditing) {
-      cardContent.add(_buildCardFooter());
-    }
 
     return GestureDetector(
         onTap: () {
-          setState(() => selectedScheduleIndex = null);
           widget.onTap(widget.taskIndex);
         },
         child: Container(
@@ -102,20 +69,6 @@ class _TaskCardState extends State<TaskCard> {
         ),
       ],
     );
-  }
-
-  List<Widget> _buildScheduleCards() {
-    return task.schedules
-        .asMap()
-        .entries
-        .map((entry) => ScheduleCard(
-            interventionIndex: widget.interventionIndex,
-            taskIndex: widget.taskIndex,
-            scheduleIndex: entry.key,
-            remove: _removeSchedule,
-            isEditing: widget.isEditing && entry.key == selectedScheduleIndex,
-            onTap: _selectSchedule))
-        .toList();
   }
 
   Widget _buildEditMetaDataForm() {
@@ -140,6 +93,24 @@ class _TaskCardState extends State<TaskCard> {
               attribute: 'description',
               decoration: InputDecoration(labelText: 'Description'),
               initialValue: task.description),
+          FormBuilderTextField(
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                saveFormChanges();
+              },
+              attribute: 'hour',
+              decoration: InputDecoration(labelText: 'Hour'),
+              initialValue: task.hour.toString()),
+          FormBuilderTextField(
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                saveFormChanges();
+              },
+              attribute: 'minute',
+              decoration: InputDecoration(labelText: 'Minute'),
+              initialValue: task.minute.toString()),
         ],
       ),
     );
@@ -151,24 +122,19 @@ class _TaskCardState extends State<TaskCard> {
       setState(() {
         task.name = _editFormKey.currentState.value['name'];
         task.description = _editFormKey.currentState.value['description'];
+        task.hour = int.parse(_editFormKey.currentState.value['hour']);
+        task.minute = int.parse(_editFormKey.currentState.value['minute']);
       });
     }
   }
 
   Widget _buildShowMetaData() {
-    return ListTile(
-      title: Text(task.name.isEmpty ? 'Name' : task.name),
-      subtitle: Text(task.description.isEmpty ? 'Description' : task.description),
-    );
-  }
-
-  Widget _buildCardFooter() {
-    return ButtonBar(
-      children: <Widget>[
-        FlatButton(
-          onPressed: _addFixedSchedule,
-          child: const Text('Add fixed schedule'),
-        ),
+    return Column(
+      children: [
+        ListTile(
+            title: Text(task.name.isEmpty ? 'Name' : task.name),
+            subtitle: Text(task.description.isEmpty ? 'Description' : task.description)),
+        Text('${task.hour}:${task.minute}')
       ],
     );
   }

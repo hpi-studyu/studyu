@@ -34,7 +34,8 @@ class _InterventionCardState extends State<InterventionCard> {
       final task = LocalCheckMarkTask()
         ..name = ''
         ..description = ''
-        ..schedules = [];
+        ..hour = 0
+        ..minute = 0;
       intervention.tasks.add(task);
       selectedTaskIndex = intervention.tasks.length - 1;
     });
@@ -59,7 +60,6 @@ class _InterventionCardState extends State<InterventionCard> {
     intervention = context.watch<DesignerModel>().draftStudy.studyDetails.interventions[widget.interventionIndex];
 
     final cardContent = <Widget>[];
-    cardContent.add(Text(widget.isEditing.toString()));
     cardContent.add(Text('Intervention ${(widget.interventionIndex + 1).toString()}'));
     if (widget.isEditing) {
       cardContent.add(_buildDeleteButton());
