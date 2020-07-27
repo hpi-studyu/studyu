@@ -7,6 +7,7 @@ import '../../util/extensions.dart';
 import '../interventions/intervention.dart';
 import '../interventions/intervention_set.dart';
 import '../observations/observation.dart';
+import '../report/report_models.dart';
 
 class StudyInstance extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'UserStudy';
@@ -62,13 +63,17 @@ class StudyInstance extends ParseObject implements ParseCloneable {
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
 
   static const keyResults = 'results';
-
   Map<String, List<Result>> get results =>
       get<Map<String, dynamic>>(keyResults, defaultValue: {}).map<String, List<Result>>((key, resultsData) =>
           MapEntry(key, resultsData.map<Result>((resultData) => Result.fromJson(resultData)).toList()));
-
   set results(Map<String, List<Result>> results) => set<Map<String, dynamic>>(keyResults,
       results.map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())));
+
+  static const keyReportSpecification = 'report_specification';
+  ReportSpecification get reportSpecification =>
+      ReportSpecification.fromJson(get<Map<String, dynamic>>(keyReportSpecification));
+  set reportSpecification(ReportSpecification reportSpecification) =>
+      set<Map<String, dynamic>>(keyReportSpecification, reportSpecification.toJson());
 
   List<Result> resultsFor(String taskId) => results[taskId];
 
@@ -86,6 +91,19 @@ class StudyInstance extends ParseObject implements ParseCloneable {
     var nextResults = results;
     newResults.forEach((result) => nextResults.putIfAbsent(result.taskId, () => []).add(result));
     results = nextResults;
+  }
+
+  Map<String, List<Result>> getResultsByInterventionId() {
+    final resultMap = <String, List<Result>>{};
+    results.values
+        .map((value) => value.map((result) {
+              final intervention = getInterventionForDate(result.timeStamp);
+              return intervention != null ? MapEntry(intervention.id, result) : null;
+            }))
+        .expand((element) => element)
+        .where((element) => element != null)
+        .forEach((element) => resultMap.putIfAbsent(element.key, () => []).add(element.value));
+    return resultMap;
   }
 
   int getInterventionIndexForDate(DateTime date) {
