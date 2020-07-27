@@ -10,6 +10,7 @@ before_script:
 check-format:
   stage: format
   script:
+    - dart --disable-analytics
     - flutter format -l 120 -n . > unformatted_files.txt
     - cat unformatted_files.txt
     - sed -i '/.g.dart/c\' unformatted_files.txt
