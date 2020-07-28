@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/queries/queries.dart';
 
 import '../../routes.dart';
-import '../../util/localization.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
@@ -25,9 +24,6 @@ class _TermsScreenState extends State<TermsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('terms')),
-      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

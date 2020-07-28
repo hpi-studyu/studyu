@@ -32,45 +32,44 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('study_selection')),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  Nof1Localizations.of(context).translate('study_selection_description'),
-                  style: theme.textTheme.headline5,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    Nof1Localizations.of(context).translate('study_selection_description'),
+                    style: theme.textTheme.headline5,
+                  ),
                 ),
               ),
-            ),
-            ParseListFutureBuilder<Study>(
-              queryFunction: () => _studiesFuture,
-              builder: (_context, studies) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: studies.length,
-                    itemBuilder: (context, index) {
-                      final currentStudy = studies[index];
-                      return ListTile(
-                          contentPadding: EdgeInsets.all(16),
-                          onTap: () {
-                            navigateToStudyOverview(context, currentStudy);
-                          },
-                          title: Center(
-                              child: Text(currentStudy.title,
-                                  style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
-                          subtitle: Center(child: Text(currentStudy.description)),
-                          leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
-                              color: theme.primaryColor));
-                    });
-              },
-            ),
-          ],
+              ParseListFutureBuilder<Study>(
+                queryFunction: () => _studiesFuture,
+                builder: (_context, studies) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: studies.length,
+                      itemBuilder: (context, index) {
+                        final currentStudy = studies[index];
+                        return ListTile(
+                            contentPadding: EdgeInsets.all(16),
+                            onTap: () {
+                              navigateToStudyOverview(context, currentStudy);
+                            },
+                            title: Center(
+                                child: Text(currentStudy.title,
+                                    style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                            subtitle: Center(child: Text(currentStudy.description)),
+                            leading: Icon(MdiIcons.fromString(currentStudy.iconName ?? 'accountHeart'),
+                                color: theme.primaryColor));
+                      });
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(hideNext: true),
