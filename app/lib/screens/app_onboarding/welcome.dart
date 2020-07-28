@@ -17,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(image: AssetImage('assets/images/icon.png'), height: 200),
+              Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
               SizedBox(height: 20),
               RaisedButton(
                 onPressed: () => Navigator.pushNamed(context, Routes.about),
