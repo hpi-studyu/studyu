@@ -30,12 +30,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppModel>().selectedStudy;
-    final result = await Navigator.push(
-        context,
-        EligibilityScreen.routeFor(study.studyDetails.questionnaire.questions,
-            title: study.title,
-            leading: Icon(MdiIcons.fromString(study.iconName)),
-            criteria: study.studyDetails.eligibility));
+    final result = await Navigator.push(context, EligibilityScreen.routeFor(study: study));
     if (result == null) return;
 
     if (result.eligible != null && result.eligible) {

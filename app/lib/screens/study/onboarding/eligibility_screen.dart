@@ -16,17 +16,12 @@ class EligibilityResult {
 }
 
 class EligibilityScreen extends StatefulWidget {
-  final String title;
-  final List<Question> questions;
-  final List<EligibilityCriterion> criteria;
-  final Widget leading;
+  final Study study;
 
-  static MaterialPageRoute<EligibilityResult> routeFor(List<Question> questions,
-          {@required String title, List<EligibilityCriterion> criteria, Widget leading}) =>
-      MaterialPageRoute(
-          builder: (_) => EligibilityScreen(questions, title: title, leading: leading, criteria: criteria),
-          settings: RouteSettings(name: '/eligibilityCheck'));
-  const EligibilityScreen(this.questions, {this.title, this.criteria, this.leading, Key key}) : super(key: key);
+  static MaterialPageRoute<EligibilityResult> routeFor({@required Study study}) => MaterialPageRoute(
+      builder: (_) => EligibilityScreen(study: study), settings: RouteSettings(name: '/eligibilityCheck'));
+
+  const EligibilityScreen({@required this.study, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();
@@ -48,12 +43,13 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   void _evaluateResponse(QuestionnaireState qs) {
+    final criteria = widget.study.studyDetails.eligibility;
     setState(() {
-      final conditionResult = widget.criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
+      final conditionResult = criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
       if (conditionResult) {
         activeResult = EligibilityResult(qs, eligible: conditionResult);
       } else {
-        final firstFailed = widget.criteria.firstWhere((criterion) => criterion.isViolated(qs));
+        final firstFailed = criteria.firstWhere((criterion) => criterion.isViolated(qs));
         activeResult = EligibilityResult(qs, eligible: conditionResult, firstFailed: firstFailed);
       }
     });
@@ -113,9 +109,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.study.title),
         automaticallyImplyLeading: false,
-        leading: widget.leading,
+        leading: Icon(MdiIcons.fromString(widget.study.iconName)),
       ),
       body: Column(
         children: [
@@ -129,8 +125,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           ),
           Expanded(
             child: QuestionnaireWidget(
-              widget.questions,
-              title: widget.title,
+              widget.study.studyDetails.questionnaire.questions,
+              title: widget.study.title,
               onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
             ),
