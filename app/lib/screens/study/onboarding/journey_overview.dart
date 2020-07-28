@@ -79,8 +79,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       }),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: () => getConsentAndNavigateToDashboard(context),
-        nextLabel: Nof1Localizations.of(context).translate('done'),
-        nextIcon: Icon(Icons.check),
       ),
     );
   }
