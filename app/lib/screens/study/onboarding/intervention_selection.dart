@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
@@ -93,8 +94,9 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
-        bottom: OnboardingProgress(stage: 1, progress: selectedInterventions.length / 2),
+        title: Text(selectedStudy.title),
+        automaticallyImplyLeading: false,
+        leading: Icon(MdiIcons.fromString(selectedStudy.iconName)),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -114,6 +116,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: selectedInterventions.length == 2 ? onFinished : null,
+        progress: OnboardingProgress(stage: 1, progress: selectedInterventions.length / 2),
       ),
     );
   }

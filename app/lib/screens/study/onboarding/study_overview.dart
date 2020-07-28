@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
@@ -32,7 +33,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     final result = await Navigator.push(
         context,
         EligibilityScreen.routeFor(study.studyDetails.questionnaire.questions,
-            title: 'Check eligibility', criteria: study.studyDetails.eligibility));
+            title: study.title,
+            leading: Icon(MdiIcons.fromString(study.iconName)),
+            criteria: study.studyDetails.eligibility));
     if (result == null) return;
 
     if (result.eligible != null && result.eligible) {
@@ -47,6 +50,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      appBar: AppBar(
+        leading: Icon(MdiIcons.fromString(study.iconName)),
+        title: Text(study.title),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
           child: ParseFetchOneFutureBuilder<Study>(
               queryFunction: () => _futureStudyDetails,

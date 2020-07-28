@@ -10,6 +10,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final bool hideNext;
   final Icon nextIcon;
   final Icon backIcon;
+  final Widget progress;
 
   const BottomOnboardingNavigation(
       {Key key,
@@ -19,7 +20,8 @@ class BottomOnboardingNavigation extends StatelessWidget {
       this.nextLabel,
       this.hideNext = false,
       this.nextIcon,
-      this.backIcon})
+      this.backIcon,
+      this.progress})
       : super(key: key);
 
   @override
@@ -37,9 +39,13 @@ class BottomOnboardingNavigation extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
-          if (!hideNext)
-            FlatButton(
+          if (progress != null) ...[SizedBox(width: 8), Expanded(child: progress), SizedBox(width: 8)] else Spacer(),
+          Visibility(
+            visible: !hideNext,
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            child: FlatButton(
               onPressed: onNext,
               child: Row(
                 children: [
@@ -48,6 +54,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 ],
               ),
             ),
+          ),
         ],
       ),
     );

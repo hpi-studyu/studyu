@@ -1,9 +1,13 @@
-import 'package:StudYou/widgets/bottom_onboarding_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
 
+import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
+import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class ConsentScreen extends StatefulWidget {
@@ -12,6 +16,8 @@ class ConsentScreen extends StatefulWidget {
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {
+  StudyInstance study;
+
   List<bool> boxLogic = List.filled(6, false);
   List<ConsentElement> consentElementList = [
     ConsentElement('Box1', 'this', 'I agree'),
@@ -29,13 +35,20 @@ class _ConsentScreenState extends State<ConsentScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    study = context.read<AppModel>().activeStudy;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('consent')),
-        bottom: OnboardingProgress(stage: 2, progress: 2.5),
+        title: Text(study.title),
+        automaticallyImplyLeading: false,
+        leading: Icon(MdiIcons.fromString(study.iconName)),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -47,7 +60,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
               children: <Widget>[
                 Text(
                   Nof1Localizations.of(context).translate('please_give_consent'),
-                  style: theme.textTheme.headline5,
+                  style: theme.textTheme.subtitle1,
                 ),
                 Flexible(
                   fit: FlexFit.loose,
@@ -80,6 +93,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         nextLabel: Nof1Localizations.of(context).translate('accept'),
         nextIcon: Icon(Icons.check),
         onNext: () => Navigator.pop(context, true),
+        progress: OnboardingProgress(stage: 2, progress: 2.5),
       ),
     );
   }

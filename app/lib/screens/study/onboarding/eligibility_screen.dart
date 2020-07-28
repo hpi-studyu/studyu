@@ -1,3 +1,4 @@
+import 'package:StudYou/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
@@ -18,13 +19,14 @@ class EligibilityScreen extends StatefulWidget {
   final String title;
   final List<Question> questions;
   final List<EligibilityCriterion> criteria;
+  final Widget leading;
 
   static MaterialPageRoute<EligibilityResult> routeFor(List<Question> questions,
-          {@required String title, List<EligibilityCriterion> criteria}) =>
+          {@required String title, List<EligibilityCriterion> criteria, Widget leading}) =>
       MaterialPageRoute(
-          builder: (_) => EligibilityScreen(questions, title: title, criteria: criteria),
+          builder: (_) => EligibilityScreen(questions, title: title, leading: leading, criteria: criteria),
           settings: RouteSettings(name: '/eligibilityCheck'));
-  const EligibilityScreen(this.questions, {this.title, this.criteria, Key key}) : super(key: key);
+  const EligibilityScreen(this.questions, {this.title, this.criteria, this.leading, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();
@@ -108,14 +110,23 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        bottom: OnboardingProgress(stage: 0, progress: 0.5),
+        automaticallyImplyLeading: false,
+        leading: widget.leading,
       ),
       body: Column(
         children: [
           if (activeResult != null) _constructResultBanner(),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              Nof1Localizations.of(context).translate('please_answer_eligibility'),
+              style: theme.textTheme.subtitle1,
+            ),
+          ),
           Expanded(
             child: QuestionnaireWidget(
               widget.questions,
@@ -126,7 +137,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(hideNext: true),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        hideNext: true,
+        progress: OnboardingProgress(stage: 0, progress: 0.5),
+      ),
     );
   }
 }
