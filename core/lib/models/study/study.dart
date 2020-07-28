@@ -49,6 +49,7 @@ class Study extends ParseObject implements ParseCloneable {
     final userStudy = StudyInstance()
       ..title = title
       ..description = description
+      ..iconName = iconName
       ..studyId = id
       ..userId = userId
       ..startDate = startDate
