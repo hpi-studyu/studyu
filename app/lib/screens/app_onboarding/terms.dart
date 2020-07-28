@@ -4,6 +4,7 @@ import 'package:studyou_core/queries/queries.dart';
 
 import '../../routes.dart';
 import '../../util/localization.dart';
+import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
   @override
@@ -52,19 +53,18 @@ class _TermsScreenState extends State<TermsScreen> {
                     acknowledgmentText: 'I read and understand the disclaimer',
                     onChange: (val) => setState(() => _acceptedDisclaimer = val),
                     isChecked: _acceptedDisclaimer),
-                RaisedButton(
-                  onPressed: userCanContinue()
-                      ? () {
-                          UserQueries.getOrCreateUser();
-                          Navigator.pushNamed(context, Routes.studySelection);
-                        }
-                      : null,
-                  child: Text(Nof1Localizations.of(context).translate('get_started')),
-                ),
               ],
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        onNext: userCanContinue()
+            ? () {
+                UserQueries.getOrCreateUser();
+                Navigator.pushNamed(context, Routes.studySelection);
+              }
+            : null,
       ),
     );
   }
