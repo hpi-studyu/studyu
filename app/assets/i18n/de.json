@@ -51,6 +51,9 @@
   "complete": "Ausführen!",
   "cancel": "Abbrechen",
   "accept": "Akzeptieren",
+  "next": "Nächste",
+  "back": "Zurück",
+  "done": "Fertig",
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 

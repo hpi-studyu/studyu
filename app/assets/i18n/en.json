@@ -49,7 +49,10 @@
 
   "complete": "Complete!",
   "cancel": "Cancel",
-  "accept": "Agree",
+  "accept": "Accept",
+  "next": "Next",
+  "back": "Back",
+  "done": "Done",
 
   "could_not_save_results": "Could not save results",
 
