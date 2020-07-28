@@ -16,11 +16,23 @@ class OnboardingProgress extends StatelessWidget implements PreferredSizeWidget 
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: LinearProgressIndicator(value: _getProgressForStage(0))),
+        Expanded(
+            child: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(value: _getProgressForStage(0)),
+        )),
         SizedBox(width: 4),
-        Expanded(child: LinearProgressIndicator(value: _getProgressForStage(1))),
+        Expanded(
+            child: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(value: _getProgressForStage(1)),
+        )),
         SizedBox(width: 4),
-        Expanded(child: LinearProgressIndicator(value: _getProgressForStage(2))),
+        Expanded(
+            child: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(value: _getProgressForStage(2)),
+        )),
       ],
     );
   }
