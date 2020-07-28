@@ -47,7 +47,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(study.title),
-        automaticallyImplyLeading: false,
         leading: Icon(MdiIcons.fromString(study.iconName)),
       ),
       body: SingleChildScrollView(

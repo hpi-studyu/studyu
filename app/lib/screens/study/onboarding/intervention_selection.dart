@@ -95,7 +95,6 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedStudy.title),
-        automaticallyImplyLeading: false,
         leading: Icon(MdiIcons.fromString(selectedStudy.iconName)),
       ),
       body: SingleChildScrollView(
