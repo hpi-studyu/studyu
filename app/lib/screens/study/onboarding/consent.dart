@@ -1,3 +1,4 @@
+import 'package:StudYou/widgets/bottom_onboarding_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -72,31 +73,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          children: [
-            Expanded(
-              child: FlatButton.icon(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection));
-                },
-                label: Text(Nof1Localizations.of(context).translate('cancel')),
-              ),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: FlatButton.icon(
-                icon: Icon(Icons.check),
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                label: Text(Nof1Localizations.of(context).translate('accept')),
-              ),
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        backLabel: Nof1Localizations.of(context).translate('decline'),
+        backIcon: Icon(Icons.close),
+        onBack: () => Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection)),
+        nextLabel: Nof1Localizations.of(context).translate('accept'),
+        nextIcon: Icon(Icons.check),
+        onNext: () => Navigator.pop(context, true),
       ),
     );
   }
