@@ -23,7 +23,6 @@ class CheckmarkTaskWidget extends StatelessWidget {
     activeStudy.addResult(result);
     if (await StudyQueries.saveUserStudy(activeStudy) != null) {
       await animation;
-      await Future.delayed(Duration(milliseconds: 100));
       Navigator.pop(context, true);
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
