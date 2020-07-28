@@ -24,6 +24,9 @@ class Result<T> {
       case QuestionnaireState:
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
         break;
+      case bool:
+        resultMap = {keyResult: result};
+        break;
       default:
         resultMap = {keyResult: ''};
     }
@@ -37,6 +40,8 @@ class Result<T> {
         return Result<QuestionnaireState>.parseJson(data)
           ..result = QuestionnaireState.fromJson(
               data[keyResult].map<Map<String, dynamic>>((e) => e as Map<String, dynamic>).toList());
+      case 'bool':
+        return Result<bool>.parseJson(data)..result = data[keyResult];
       default:
         throw ArgumentError('Type ${data[keyType]} not supported.');
     }
