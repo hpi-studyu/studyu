@@ -17,7 +17,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget _buildTask() {
     switch (widget.task.runtimeType) {
       case CheckmarkTask:
-        return CheckmarkTaskWidget();
+        return CheckmarkTaskWidget(task: widget.task);
       case QuestionnaireTask:
         return QuestionnaireTaskWidget(task: widget.task);
       default:
