@@ -258,26 +258,19 @@ class AboutScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                      child: Text(
-                    'Study',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 30),
-                  )),
-                  Expanded(
-                    child: Icon(MdiIcons.stethoscope, size: 80, color: Colors.blue),
-                  ),
-                ],
-              ),
+              Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
               SizedBox(height: 50),
               Text(Nof1Localizations.of(context).translate('description_part9'),
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
               SizedBox(height: 40),
-              RaisedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, Routes.terms),
-                child: Text(Nof1Localizations.of(context).translate('get_started')),
+              OutlineButton.icon(
+                icon: Icon(MdiIcons.rocket),
+                onPressed: () => Navigator.pushNamed(context, Routes.terms),
+                label: Text(Nof1Localizations.of(context).translate('get_started'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Theme.of(context).primaryColor, fontSize: 20)),
               ),
             ]),
           ),
