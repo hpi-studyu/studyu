@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/questionnaire/questionnaire_widget.dart';
 import 'onboarding_progress.dart';
 
@@ -125,6 +126,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomOnboardingNavigation(hideNext: true),
     );
   }
 }

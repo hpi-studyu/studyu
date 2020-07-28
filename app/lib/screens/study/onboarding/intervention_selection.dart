@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
@@ -9,6 +8,7 @@ import 'package:studyou_core/queries/queries.dart';
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
+import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'intervention_card.dart';
 import 'onboarding_progress.dart';
 
@@ -94,12 +94,6 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('intervention_selection')),
-        actions: [
-          IconButton(
-            onPressed: (selectedInterventions.length == 2) ? onFinished : null,
-            icon: Icon(MdiIcons.checkBold),
-          ),
-        ],
         bottom: OnboardingProgress(stage: 1, progress: selectedInterventions.length / 2),
       ),
       body: SingleChildScrollView(
@@ -113,14 +107,13 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
                 _buildInterventionSelectionExplanation(theme),
                 _buildInterventionSelectionList(),
                 SizedBox(height: 16),
-                RaisedButton(
-                  onPressed: selectedInterventions.length == 2 ? onFinished : null,
-                  child: Text(Nof1Localizations.of(context).translate('finished')),
-                ),
               ],
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        onNext: selectedInterventions.length == 2 ? onFinished : null,
       ),
     );
   }
