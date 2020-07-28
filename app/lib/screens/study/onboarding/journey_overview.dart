@@ -56,7 +56,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(study.title),
-        automaticallyImplyLeading: false,
         leading: Icon(MdiIcons.fromString(study.iconName)),
       ),
       body: Builder(builder: (_context) {

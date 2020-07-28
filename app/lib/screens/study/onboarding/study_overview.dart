@@ -53,7 +53,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       appBar: AppBar(
         leading: Icon(MdiIcons.fromString(study.iconName)),
         title: Text(study.title),
-        automaticallyImplyLeading: false,
       ),
       body: Center(
           child: ParseFetchOneFutureBuilder<Study>(
