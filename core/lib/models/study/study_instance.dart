@@ -122,6 +122,12 @@ class StudyInstance extends ParseObject implements ParseCloneable {
         .firstWhere((intervention) => intervention.id == interventionId, orElse: () => null);
   }
 
+  Map<String, int> resultCount() {
+    final today = DateTime.now();
+    final totalDays = startDate.difference(today).inDays;
+    return results.map((task, results) => MapEntry(task, results.length));
+  }
+
   List<Intervention> getInterventionsInOrder() {
     return interventionOrder
         .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))

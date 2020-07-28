@@ -35,6 +35,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text(Nof1Localizations.of(context).translate('dashboard')),
         actions: [
           IconButton(
+            tooltip: 'Performance',
+            icon: Icon(MdiIcons.chartLine),
+            onPressed: () => Navigator.pushNamed(context, Routes.performance),
+          ),
+          IconButton(
             tooltip: Nof1Localizations.of(context).translate('contact'),
             icon: Icon(MdiIcons.commentAccount),
             onPressed: () {
