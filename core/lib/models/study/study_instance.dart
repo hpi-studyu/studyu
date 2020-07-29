@@ -100,10 +100,10 @@ class StudyInstance extends ParseObject implements ParseCloneable {
     results = nextResults;
   }
 
-  Map<String, List<Result>> getResultsByInterventionId() {
+  Map<String, List<Result>> getResultsByInterventionId({String taskId}) {
     final resultMap = <String, List<Result>>{};
     results.values
-        .map((value) => value.map((result) {
+        .map((value) => value.where((result) => taskId == null || taskId == result.taskId).map((result) {
               final intervention = getInterventionForDate(result.timeStamp);
               return intervention != null ? MapEntry(intervention.id, result) : null;
             }))

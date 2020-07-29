@@ -47,6 +47,8 @@ dependencies:
   video_player:
   rainbow_color:
   charts_flutter:
+  normal:
+  stats:
 
 dev_dependencies:
   build_runner:
