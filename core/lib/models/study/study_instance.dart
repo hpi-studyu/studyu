@@ -2,6 +2,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
+import 'package:studyou_core/models/study_schedule/study_schedule.dart';
 
 import '../../util/extensions.dart';
 import '../interventions/intervention.dart';
@@ -43,9 +44,9 @@ class StudyInstance extends ParseObject implements ParseCloneable {
   DateTime get startDate => get<DateTime>(keyStartDate);
   set startDate(DateTime startDate) => set<DateTime>(keyStartDate, startDate);
 
-  static const keyPhaseDuration = 'phase_duration';
-  int get phaseDuration => get<int>(keyPhaseDuration);
-  set phaseDuration(int phaseDuration) => set<int>(keyPhaseDuration, phaseDuration);
+  static const keySchedule = 'schedule';
+  StudySchedule get schedule => StudySchedule.fromJson(get<Map<String, dynamic>>(keySchedule));
+  set schedule(StudySchedule schedule) => set<Map<String, dynamic>>(keySchedule, schedule.toJson());
 
   static const keyInterventionOrder = 'intervention_order_ids';
   List<String> get interventionOrder => get<List<dynamic>>(keyInterventionOrder).map<String>((e) => e).toList();
@@ -108,7 +109,7 @@ class StudyInstance extends ParseObject implements ParseCloneable {
 
   int getInterventionIndexForDate(DateTime date) {
     final test = date.differenceInDays(startDate).inDays;
-    return test ~/ phaseDuration;
+    return test ~/ schedule.phaseDuration;
   }
 
   Intervention getInterventionForDate(DateTime date) {
@@ -122,10 +123,18 @@ class StudyInstance extends ParseObject implements ParseCloneable {
         .firstWhere((intervention) => intervention.id == interventionId, orElse: () => null);
   }
 
-  Map<String, int> resultCount() {
-    final today = DateTime.now();
-    final totalDays = startDate.difference(today).inDays;
-    return results.map((task, results) => MapEntry(task, results.length));
+  int completedTasksFor(Task task) {
+    return resultsFor(task.id)?.length ?? 0;
+  }
+
+  int totalTaskCountFor(Task task) {
+    var daysCount = schedule.numberOfCycles * schedule.phaseDuration;
+
+    if (task is Observation) {
+      daysCount = 2 * daysCount + (schedule.includeBaseline ? schedule.phaseDuration : 0);
+    }
+
+    return daysCount * task.schedule.length;
   }
 
   List<Intervention> getInterventionsInOrder() {
