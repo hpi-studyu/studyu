@@ -2,7 +2,9 @@ class DesignerModel {
   LocalStudy draftStudy;
 
   DesignerModel() {
-    final studyDetails = LocalStudyDetails()..interventions = [];
+    final studyDetails = LocalStudyDetails()
+      ..interventions = []
+      ..eligibilityQuestionnaire = [];
 
     draftStudy = LocalStudy()
       ..title = ''
@@ -19,6 +21,7 @@ class LocalStudy {
 
 class LocalStudyDetails {
   List<LocalIntervention> interventions;
+  List<LocalQuestion> eligibilityQuestionnaire;
 }
 
 class LocalIntervention {
@@ -35,3 +38,9 @@ class LocalTask {
 }
 
 class LocalCheckMarkTask extends LocalTask {}
+
+class LocalQuestion {
+  String question;
+  bool excludingAnswer;
+  String excludingAnswerReason;
+}

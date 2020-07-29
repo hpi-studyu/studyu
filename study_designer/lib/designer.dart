@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_designer/designer/consent_designer.dart';
+import 'package:study_designer/designer/eligibility_designer/designer.dart';
+import 'package:study_designer/designer/observation_designer/designer.dart';
+import 'package:study_designer/designer/publish.dart';
+import 'package:study_designer/designer/report_designer.dart';
+import 'package:study_designer/designer/schedule_designer.dart';
 
 import 'designer/interventions_designer/designer.dart';
 import 'designer/meta_data_designer.dart';
@@ -19,6 +25,12 @@ class _DesignerState extends State<Designer> {
   final List<Widget> _mywidgets = [
     MetaDataDesigner(),
     InterventionsDesigner(),
+    EligibilityDesigner(),
+    ObservationDesigner(),
+    ScheduleDesigner(),
+    ReportDesigner(),
+    ConsentDesigner(),
+    Publish(),
   ];
 
   @override
@@ -46,38 +58,38 @@ class _DesignerState extends State<Designer> {
                 label: Text('Meta Data'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.accessibility_new),
+                selectedIcon: Icon(Icons.accessibility_new),
                 label: Text('Interventions'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.verified_user),
+                selectedIcon: Icon(Icons.verified_user),
                 label: Text('Eligibility'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.zoom_in),
+                selectedIcon: Icon(Icons.zoom_in),
                 label: Text('Observations'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.schedule),
+                selectedIcon: Icon(Icons.schedule),
                 label: Text('Schedule'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.content_paste),
+                selectedIcon: Icon(Icons.content_paste),
                 label: Text('Report'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.warning),
+                selectedIcon: Icon(Icons.warning),
                 label: Text('Consent'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                icon: Icon(Icons.publish),
+                selectedIcon: Icon(Icons.publish),
                 label: Text('Publish'),
               )
             ],
