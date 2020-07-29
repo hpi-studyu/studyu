@@ -18,5 +18,8 @@ class NotExpression extends Expression {
   Map<String, dynamic> toJson() => _$NotExpressionToJson(this);
 
   @override
-  bool evaluate(QuestionnaireState state) => !expression.evaluate(state);
+  bool evaluate(QuestionnaireState state) {
+    bool result = expression.evaluate(state);
+    return result != null ? !result : result;
+  }
 }

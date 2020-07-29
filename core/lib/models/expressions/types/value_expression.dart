@@ -10,6 +10,6 @@ abstract class ValueExpression<V> extends Expression {
 
   @override
   bool evaluate(QuestionnaireState state) {
-    return checkValue(state.getAnswer<V>(target));
+    return state.hasAnswer<V>(target) ? checkValue(state.getAnswer<V>(target)) : null;
   }
 }
