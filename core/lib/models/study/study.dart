@@ -60,7 +60,7 @@ class Study extends ParseObject implements ParseCloneable {
       const baselineId = '__baseline';
       var addBaseline = false;
       userStudy
-        ..phaseDuration = studyDetails.schedule.phaseDuration
+        ..schedule = studyDetails.schedule
         ..interventionOrder = studyDetails.schedule.generateWith(firstIntervention).map<String>((index) {
           if (index == null) {
             addBaseline = true;
