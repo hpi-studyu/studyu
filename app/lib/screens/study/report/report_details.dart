@@ -101,7 +101,7 @@ class ReportPerformanceModule extends ReportModuleContent {
                 '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription()}'),
           ),
           PerformanceBar(
-            progress: 0.4,
+            progress: getPowerLevel(),
             minimum: 0.2,
           ),
         ],
@@ -110,6 +110,10 @@ class ReportPerformanceModule extends ReportModuleContent {
   String getPowerLevelDescription() {
     // TODO add useful power level wording
     return 'OVER 9000';
+  }
+
+  double getPowerLevel() {
+    return 0;
   }
 }
 
