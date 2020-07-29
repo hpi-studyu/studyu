@@ -13,7 +13,6 @@ import 'screens/study/onboarding/intervention_selection.dart';
 import 'screens/study/onboarding/journey_overview.dart';
 import 'screens/study/onboarding/study_overview.dart';
 import 'screens/study/onboarding/study_selection.dart';
-import 'screens/study/report/report_details.dart';
 import 'screens/study/report/report_history.dart';
 
 class Routes {
@@ -60,7 +59,6 @@ class Routes {
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),
       reportHistory: (_) => ReportHistoryScreen(),
-      reportDetails: (_) => ReportDetailsScreen(),
     };
 
     if (!routeMap.containsKey(settings.name)) {

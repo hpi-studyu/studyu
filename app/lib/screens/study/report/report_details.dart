@@ -2,45 +2,51 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../../../models/app_state.dart';
+import '../../../routes.dart';
 import '../../../util/localization.dart';
 
 class ReportDetailsScreen extends StatelessWidget {
+  final StudyInstance reportStudy;
+
+  static MaterialPageRoute routeFor({@required StudyInstance reportStudy}) => MaterialPageRoute(
+      builder: (_) => ReportDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.reportDetails));
+
+  const ReportDetailsScreen(this.reportStudy, {Key key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              icon: Icon(MdiIcons.download),
-              // TODO add pdf download
-              onPressed: () => null,
-            ),
+  Widget build(BuildContext context) {
+    final outcome = reportStudy.reportSpecification != null
+        ? reportStudy.reportSpecification.outcomes.isNotEmpty ? reportStudy.reportSpecification.outcomes[0] : null
+        : null;
+
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(MdiIcons.download),
+            // TODO add pdf download
+            onPressed: () => null,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ReportModule(ReportGeneralDetailsModule(reportStudy)),
+            ReportModule(ReportPerformanceModule(reportStudy)),
+            if (outcome != null)
+              ReportModule(
+                  ReportOutcomeModule(reportStudy, reportStudy.reportSpecification.outcomes[0], primary: true)),
           ],
         ),
-        body: Consumer<AppModel>(builder: (context, value, child) {
-          final study = value.reportStudy;
-          final outcome = study.reportSpecification != null
-              ? study.reportSpecification.outcomes.isNotEmpty ? study.reportSpecification.outcomes[0] : null
-              : null;
-          return SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ReportModule(ReportGeneralDetailsModule(study)),
-                ReportModule(ReportPerformanceModule(study)),
-                if (outcome != null)
-                  ReportModule(
-                      ReportOutcomeModule(study, value.reportStudy.reportSpecification.outcomes[0], primary: true)),
-              ],
-            ),
-          );
-        }),
-      );
+      ),
+    );
+  }
 }
 
 class ReportModule extends StatelessWidget {
