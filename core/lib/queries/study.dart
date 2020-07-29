@@ -26,14 +26,9 @@ class StudyQueries {
     return null;
   }
 
-  static Future<List<StudyInstance>> getStudyHistory() async {
+  static Future<ParseResponse> getStudyHistory() async {
     final builder = QueryBuilder<StudyInstance>(StudyInstance())
       ..whereEqualTo(StudyInstance.keyUserId, await UserQueries.getOrCreateUser().then((user) => user.objectId));
-    return builder.query().then((response) => response.success
-        ? response.results
-            .map<StudyInstance>((instance) => instance is StudyInstance ? instance : null)
-            .where((element) => element != null)
-            .toList()
-        : <StudyInstance>[]);
+    return builder.query();
   }
 }
