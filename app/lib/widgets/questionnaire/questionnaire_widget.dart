@@ -4,14 +4,17 @@ import 'package:studyou_core/models/models.dart';
 import 'question_container.dart';
 
 typedef StateHandler = void Function(QuestionnaireState);
+typedef ContinuationPredicate = bool Function(QuestionnaireState);
 
 class QuestionnaireWidget extends StatefulWidget {
   final String title;
   final List<Question> questions;
   final StateHandler onChange;
   final StateHandler onComplete;
+  final ContinuationPredicate shouldContinue;
 
-  const QuestionnaireWidget(this.questions, {this.title, this.onComplete, this.onChange, Key key}) : super(key: key);
+  const QuestionnaireWidget(this.questions, {this.title, this.onComplete, this.onChange, this.shouldContinue, Key key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireWidgetState();
@@ -60,6 +63,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     qs.answers[answer.question] = answer;
     if (widget.onChange != null) widget.onChange(qs);
     if (widget.questions.length > _nextQuestionIndex) {
+      if (!(widget.shouldContinue?.call(qs) ?? true)) return;
       _insertQuestion(_nextQuestionIndex);
       _listKey.currentState.insertItem(_nextQuestionIndex, duration: Duration(milliseconds: 300));
       _nextQuestionIndex++;

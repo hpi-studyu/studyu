@@ -42,6 +42,16 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     });
   }
 
+  bool _checkContinuation(QuestionnaireState qs) {
+    final criteria = widget.study.studyDetails.eligibility;
+    final failingResult = criteria?.firstWhere((element) => element.isViolated(qs), orElse: () => null);
+    if (failingResult == null) return true;
+    setState(() {
+      activeResult = EligibilityResult(qs, eligible: false, firstFailed: failingResult);
+    });
+    return false;
+  }
+
   void _evaluateResponse(QuestionnaireState qs) {
     final criteria = widget.study.studyDetails.eligibility;
     setState(() {
@@ -128,6 +138,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               title: widget.study.title,
               onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
+              shouldContinue: _checkContinuation,
             ),
           ),
         ],
