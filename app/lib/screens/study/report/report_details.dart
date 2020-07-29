@@ -96,54 +96,68 @@ class ReportGeneralDetailsModule extends ReportModuleContent {
 class ReportPerformanceModule extends ReportModuleContent {
   const ReportPerformanceModule(StudyInstance instance) : super(instance);
 
+  // TODO move to model
+  final minimum = 0.2;
+
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-                '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription()}'),
-          ),
-          PerformanceBar(
-            progress: getPowerLevel(),
-            minimum: 0.2,
-          ),
-        ],
-      );
-
-  String getPowerLevelDescription() {
-    // TODO add useful power level wording
-    return 'OVER 9000';
+  Widget build(BuildContext context) {
+    final powerLevel = getPowerLevel();
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+              '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription(powerLevel)}'),
+        ),
+        PerformanceBar(
+          progress: powerLevel,
+          minimum: minimum,
+        ),
+      ],
+    );
   }
 
-  double getPowerLevel() {
-    if (instance.reportSpecification?.outcomes == null || instance.reportSpecification.outcomes.isEmpty) {
-      print('Outcomes missing.');
-    }
-    final primaryOutcome = instance.reportSpecification.outcomes[0];
-    final results = <List<num>>[];
-    instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
-      if (key == '_baseline') return;
-      final data = value
-          .whereType<Result<QuestionnaireState>>()
-          .map((result) => result.result.answers[primaryOutcome.questionId].response)
-          .whereType<num>()
-          .toList();
-      if (data.isNotEmpty) results.add(data);
-    });
-
-    if (results.length != 2 || results[0].isEmpty || results[1].isEmpty) {
-      print('The given values are incorrect!');
-      return 0;
+    String getPowerLevelDescription(double powerLevel) {
+      // TODO add useful power level wording
+      if (powerLevel == 0) {
+        return 'Not enough data.';
+      } else if (powerLevel < minimum) {
+        return 'Too low';
+      } else if (powerLevel < 0.9) {
+        return 'High enough';
+      } else {
+      return 'OVER 9000';
+      }
     }
 
-    final mean0 = Stats.fromData(results[0]).average;
-    final mean1 = Stats.fromData(results[1]).average;
-    final sD = Stats.fromData([...results[0], ...results[1]]).standardDeviation;
+    double getPowerLevel() {
+      if (instance.reportSpecification?.outcomes == null || instance.reportSpecification.outcomes.isEmpty) {
+        print('Outcomes missing.');
+      }
+      final primaryOutcome = instance.reportSpecification.outcomes[0];
+      final results = <List<num>>[];
+      instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
+        final data = value
+            .whereType<Result<QuestionnaireState>>()
+            .map((result) => result.result.answers[primaryOutcome.questionId].response)
+            .whereType<num>()
+            .toList();
+        if (data.isNotEmpty && key != '__baseline') results.add(data);
+      });
 
-    return Normal.pdf(1.96 + ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length)))) +
-        Normal.pdf(1.96 - ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length))));
-  }
+      if (results.length != 2 || results[0].isEmpty || results[1].isEmpty) {
+        print('The given values are incorrect!');
+        return 0;
+      }
+
+      final mean0 = Stats.fromData(results[0]).average;
+      final mean1 = Stats.fromData(results[1]).average;
+      final sD = Stats.fromData([...results[0], ...results[1]]).standardDeviation;
+
+      // TODO might be cdf
+      return Normal.pdf(-1.96 + ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length)))) +
+          Normal.pdf(-1.96 - ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length))));
+    }
 }
 
 class PerformanceBar extends StatelessWidget {
