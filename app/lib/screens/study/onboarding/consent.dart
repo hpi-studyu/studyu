@@ -20,12 +20,36 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
   List<bool> boxLogic = List.filled(6, false);
   List<ConsentElement> consentElementList = [
-    ConsentElement('Box1', 'this', 'I agree'),
-    ConsentElement('Box2', 'is', 'I agree'),
-    ConsentElement('Box3', 'for', 'I agree'),
-    ConsentElement('Box4', 'getting', 'I agree'),
-    ConsentElement('Box5', 'your', 'I agree'),
-    ConsentElement('Box6', 'data', 'I agree'),
+    ConsentElement(
+        'Why Consent Is Needed',
+        'We need your explicit consent because you are going to enroll to a research study. Therefore, we have to provide you all the information that could potentially have an impact on your decision whether or not you take part in the study. This is study-specific so please go through it carefully. Participation is entirely voluntary.',
+        'I agree',
+        MdiIcons.featureSearch),
+    ConsentElement(
+        'Risks & Benefits',
+        'The main risks to you if you choose to participate are allergic reactions to one of the interventions you are going to apply. If you feel uncomfortable, suffer from itching or rash please pause the study until you have seen a doctor. It is important to know that you may not get any benefit from taking part in this research. Others may not benefit either. However, study results may help you to understand if one of the offered interventions has a positive effect on one of the investigated observations for you.',
+        'I agree',
+        MdiIcons.signCaution),
+    ConsentElement(
+        'Data Handling & Use',
+        'By giving your consent you accept that researchers are allowed to process anonymized data collected from you during this study for research purposes. If you stop being in the research study, already transmitted information may not be removed from the research study database because re-identification is not possible. It will continue to be used to complete the research analysis.',
+        'I agree',
+        MdiIcons.databaseExport),
+    ConsentElement(
+        'Issues to Consider',
+        'For being able to use your results for research we need you to actively participate for the indicated minimum study duration. But since researchers are able to combine your results with results from other participants and therefore need less results from a single participant, for you to receive meaningful results we encourage you to take part at least twice as long. If you decide to take part in this research study you will be responsible for buying the needed aids.',
+        'I agree',
+        MdiIcons.mapClock),
+    ConsentElement(
+        'Participant Rights',
+        'You may stop taking part in this research study at any time without any penalty. If you have any questions, concerns, or complaints at any time about this research, or you think the research has harmed you, please contact the office of the research team. You can find the contact details in your personal study dashboard.',
+        'I agree',
+        MdiIcons.gavel),
+    ConsentElement(
+        'Future Research',
+        'The purpose of this research study is to help you find the most effective supporting agent or behavior. The aim is not to treat your symptom causally. In a broader perspective the purpose of this study is also to get insights which group of persons benefits most from which intervention.',
+        'I agree',
+        MdiIcons.binoculars),
   ];
 
   void onBoxTapped(int index) {
@@ -116,7 +140,7 @@ class ConsentCard extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('test'),
+              title: Text(consentElement.descriptionText),
             ),
           );
           onTapped(index);
@@ -125,8 +149,10 @@ class ConsentCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(consentElement.title, style: Theme.of(context).textTheme.headline5),
-            Text(consentElement.descriptionText),
+            Text(consentElement.title, style: Theme.of(context).textTheme.headline6),
+            // Text(consentElement.descriptionText),
+            SizedBox(height: 10),
+            Icon(consentElement.icon, size: 60),
           ],
         ),
       ),
@@ -138,6 +164,7 @@ class ConsentElement {
   final String title;
   final String descriptionText;
   final String acknowledgmentText;
+  final IconData icon;
 
-  ConsentElement(this.title, this.descriptionText, this.acknowledgmentText);
+  ConsentElement(this.title, this.descriptionText, this.acknowledgmentText, this.icon);
 }
