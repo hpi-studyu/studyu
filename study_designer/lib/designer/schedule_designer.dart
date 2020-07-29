@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 
 import '../models/designer_state.dart';
 
-class MetaDataDesigner extends StatefulWidget {
+class ScheduleDesigner extends StatefulWidget {
   @override
-  _MetaDataDesignerState createState() => _MetaDataDesignerState();
+  _ScheduleDesignerState createState() => _ScheduleDesignerState();
 }
 
-class _MetaDataDesignerState extends State<MetaDataDesigner> {
+class _ScheduleDesignerState extends State<ScheduleDesigner> {
   LocalStudy _draftStudy;
 
   @override
@@ -35,16 +35,34 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
               child: Column(
                 children: <Widget>[
                   FormBuilderTextField(
-                      onChanged: _saveFormChanges,
                       attribute: 'title',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: 'Title'),
                       initialValue: _draftStudy.title),
                   FormBuilderTextField(
-                      onChanged: _saveFormChanges,
                       attribute: 'description',
                       decoration: InputDecoration(labelText: 'Description'),
                       initialValue: _draftStudy.description),
+                  MaterialButton(
+                    color: Theme.of(context).accentColor,
+                    onPressed: () {
+                      _editFormKey.currentState.save();
+                      if (_editFormKey.currentState.validate()) {
+                        setState(() {
+                          _draftStudy
+                            ..title = _editFormKey.currentState.value['title']
+                            ..description = _editFormKey.currentState.value['description'];
+                        });
+                        print('saved');
+                        print(_draftStudy.studyDetails.interventions);
+                        // TODO: show dialog "saved"
+                      }
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -52,19 +70,5 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
         ),
       ),
     );
-  }
-
-  void _saveFormChanges(value) {
-    _editFormKey.currentState.save();
-    if (_editFormKey.currentState.validate()) {
-      setState(() {
-        _draftStudy
-          ..title = _editFormKey.currentState.value['title']
-          ..description = _editFormKey.currentState.value['description'];
-      });
-      print('saved');
-      print(_draftStudy.studyDetails.interventions);
-      // TODO: show dialog "saved"
-    }
   }
 }

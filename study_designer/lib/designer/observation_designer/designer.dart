@@ -4,12 +4,12 @@ import 'package:study_designer/designer/interventions_designer/intervention_card
 
 import '../../models/designer_state.dart';
 
-class InterventionsDesigner extends StatefulWidget {
+class ObservationDesigner extends StatefulWidget {
   @override
-  _InterventionsDesignerState createState() => _InterventionsDesignerState();
+  _ObservationDesignerState createState() => _ObservationDesignerState();
 }
 
-class _InterventionsDesignerState extends State<InterventionsDesigner> {
+class _ObservationDesignerState extends State<ObservationDesigner> {
   List<LocalIntervention> _interventions;
   int selectedInterventionIndex;
 
