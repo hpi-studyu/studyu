@@ -1,5 +1,6 @@
 import 'package:StudYou/screens/study/report/report_details.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
@@ -41,19 +42,26 @@ class ReportHistoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.watch<AppModel>();
+    final isActiveStudy = model.activeStudy.studyId == instance.studyId;
     return Card(
-      color: model.activeStudy.studyId == instance.studyId ? Colors.green[600] : theme.cardColor,
+      color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
           Navigator.push(context, ReportDetailsScreen.routeFor(reportStudy: instance));
         },
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(instance.title, style: theme.textTheme.headline5),
-            ],
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                instance.iconName != null
+                    ? Icon(MdiIcons.fromString(instance.iconName))
+                    : Icon(MdiIcons.accountHeart, color: isActiveStudy ? Colors.white : Colors.black),
+                Text(instance.title,
+                    style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black)),
+              ],
+            ),
           ),
         ),
       ),
