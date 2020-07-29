@@ -1,4 +1,3 @@
-import 'package:StudYou/screens/study/report/report_details.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../util/localization.dart';
+import 'report_details.dart';
 
 class ReportHistoryScreen extends StatelessWidget {
   @override
