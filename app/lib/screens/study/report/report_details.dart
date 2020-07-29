@@ -123,6 +123,7 @@ class ReportPerformanceModule extends ReportModuleContent {
     final primaryOutcome = instance.reportSpecification.outcomes[0];
     final results = <List<num>>[];
     instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
+      if (key == '_baseline') return;
       final data = value
           .whereType<Result<QuestionnaireState>>()
           .map((result) => result.result.answers[primaryOutcome.questionId].response)
@@ -138,10 +139,10 @@ class ReportPerformanceModule extends ReportModuleContent {
 
     final mean0 = Stats.fromData(results[0]).average;
     final mean1 = Stats.fromData(results[1]).average;
-    final omega = Stats.fromData([...results[0], ...results[1]]).standardDeviation;
+    final sD = Stats.fromData([...results[0], ...results[1]]).standardDeviation;
 
-    return Normal.pdf(1.96 + ((mean0 - mean1) / sqrt(pow(omega, 2) / (results[0].length + results[1].length)))) +
-        Normal.pdf(1.96 - ((mean0 - mean1) / sqrt(pow(omega, 2) / (results[0].length + results[1].length))));
+    return Normal.pdf(1.96 + ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length)))) +
+        Normal.pdf(1.96 - ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length))));
   }
 }
 
