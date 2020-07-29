@@ -110,7 +110,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.study.title),
-        automaticallyImplyLeading: false,
         leading: Icon(MdiIcons.fromString(widget.study.iconName)),
       ),
       body: Column(
