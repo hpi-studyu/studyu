@@ -16,7 +16,7 @@ class ChoiceQuestion extends Question {
 
   factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);
+  Map<String, dynamic> serializeToJson() => _$ChoiceQuestionToJson(this);
 
   Answer<List<String>> constructAnswer(List<Choice> selected) =>
       Answer.forQuestion(this, selected.map((choice) => choice.id).toList());
