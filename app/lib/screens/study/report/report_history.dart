@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -16,15 +17,13 @@ class ReportHistoryScreen extends StatelessWidget {
           Nof1Localizations.of(context).translate('report_history'),
         ),
       ),
-      body: FutureBuilder(
-        future: StudyQueries.getStudyHistory(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-          if (snapshot.data is! List<StudyInstance>) return Center(child: Text('ERROR'));
+      body: ParseListFutureBuilder<StudyInstance>(
+        queryFunction: StudyQueries.getStudyHistory,
+        builder: (context, pastStudies) {
           return ListView.builder(
-            itemCount: snapshot.data.length,
+            itemCount: pastStudies.length,
             itemBuilder: (context, index) {
-              return ReportHistoryItem(snapshot.data[index]);
+              return ReportHistoryItem(pastStudies[index]);
             },
           );
         },
