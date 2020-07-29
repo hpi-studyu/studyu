@@ -462,6 +462,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.12"
+  normal:
+    dependency: "direct main"
+    description:
+      name: normal
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.1"
   open_iconic_flutter:
     dependency: transitive
     description:
@@ -742,6 +749,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.5"
+  stats:
+    dependency: "direct main"
+    description:
+      name: stats
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:

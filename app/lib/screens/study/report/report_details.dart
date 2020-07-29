@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:normal/normal.dart';
 import 'package:rainbow_color/rainbow_color.dart';
+import 'package:stats/stats.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../routes.dart';
@@ -113,7 +117,31 @@ class ReportPerformanceModule extends ReportModuleContent {
   }
 
   double getPowerLevel() {
-    return 0;
+    if (instance.reportSpecification?.outcomes == null || instance.reportSpecification.outcomes.isEmpty) {
+      print('Outcomes missing.');
+    }
+    final primaryOutcome = instance.reportSpecification.outcomes[0];
+    final results = <List<num>>[];
+    instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
+      final data = value
+          .whereType<Result<QuestionnaireState>>()
+          .map((result) => result.result.answers[primaryOutcome.questionId].response)
+          .whereType<num>()
+          .toList();
+      if (data.isNotEmpty) results.add(data);
+    });
+
+    if (results.length != 2 || results[0].isEmpty || results[1].isEmpty) {
+      print('The given values are incorrect!');
+      return 0;
+    }
+
+    final mean0 = Stats.fromData(results[0]).average;
+    final mean1 = Stats.fromData(results[1]).average;
+    final omega = Stats.fromData([...results[0], ...results[1]]).standardDeviation;
+
+    return Normal.pdf(1.96 + ((mean0 - mean1) / sqrt(pow(omega, 2) / (results[0].length + results[1].length)))) +
+        Normal.pdf(1.96 - ((mean0 - mean1) / sqrt(pow(omega, 2) / (results[0].length + results[1].length))));
   }
 }
 
@@ -277,11 +305,9 @@ class ReportOutcomeModule extends ReportModuleContent {
         final data = <_DiagramData>[];
         switch (outcome.chartX) {
           case ChartX.INTERVENTION:
-            final resultData = instance.getResultsByInterventionId();
+            final resultData = instance.getResultsByInterventionId(taskId: outcome.taskId);
             resultData.forEach((key, results) {
-              final values = results
-                  .where((result) => result.taskId == outcome.taskId && result is Result<QuestionnaireState>)
-                  .where((result) {
+              final values = results.whereType<Result<QuestionnaireState>>().where((result) {
                 final response = result.result.answers[outcome.questionId]?.response;
                 return response != null && response is num;
               }).map<num>((result) => result.result.answers[outcome.questionId].response);
