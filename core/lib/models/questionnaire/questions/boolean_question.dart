@@ -13,7 +13,7 @@ class BooleanQuestion extends Question {
 
   factory BooleanQuestion.fromJson(Map<String, dynamic> json) => _$BooleanQuestionFromJson(json);
   @override
-  Map<String, dynamic> toJson() => _$BooleanQuestionToJson(this);
+  Map<String, dynamic> serializeToJson() => _$BooleanQuestionToJson(this);
 
   // ignore: avoid_positional_boolean_parameters
   Answer<bool> constructAnswer(bool response) => Answer.forQuestion(this, response);
