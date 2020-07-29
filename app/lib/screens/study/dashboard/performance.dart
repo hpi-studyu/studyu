@@ -1,7 +1,8 @@
-import 'package:StudYou/models/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
+
+import '../../../models/app_state.dart';
 
 class PerformanceScreen extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    study.resultPerformance();
+    study.resultCount();
     return Scaffold(
       appBar: AppBar(
         title: Text('Performance'),
