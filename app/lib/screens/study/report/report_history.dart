@@ -1,3 +1,4 @@
+import 'package:StudYou/screens/study/report/report_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
@@ -5,7 +6,6 @@ import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
-import '../../../routes.dart';
 import '../../../util/localization.dart';
 
 class ReportHistoryScreen extends StatelessWidget {
@@ -45,8 +45,7 @@ class ReportHistoryItem extends StatelessWidget {
       color: model.activeStudy.studyId == instance.studyId ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
-          model.reportStudy = instance;
-          Navigator.pushNamed(context, Routes.reportDetails);
+          Navigator.push(context, ReportDetailsScreen.routeFor(reportStudy: instance));
         },
         child: Padding(
           padding: EdgeInsets.all(20),
