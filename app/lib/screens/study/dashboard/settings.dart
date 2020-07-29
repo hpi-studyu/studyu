@@ -71,28 +71,6 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
             getDropdownRow(context),
             SizedBox(height: 20),
-            Text(
-              'Current Study',
-            ),
-            RaisedButton(
-              color: theme.accentColor,
-              onPressed: () => Navigator.pushNamed(context, Routes.dashboard),
-              child: Text(
-                'Lower back pain',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text('Previous Study'),
-            RaisedButton(
-              color: theme.accentColor,
-              onPressed: () => Navigator.pushNamed(context, Routes.dashboard),
-              child: Text(
-                'Lower back pain',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
-            SizedBox(height: 20),
             RaisedButton.icon(
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog());
