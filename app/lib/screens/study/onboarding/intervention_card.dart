@@ -9,10 +9,16 @@ class InterventionCard extends StatelessWidget {
   final bool selected;
   final bool showCheckbox;
   final bool showTasks;
+  final bool showDescription;
   final Function() onTap;
 
   const InterventionCard(this.intervention,
-      {this.onTap, this.selected = false, this.showCheckbox = true, this.showTasks = true, Key key})
+      {this.onTap,
+      this.selected = false,
+      this.showCheckbox = true,
+      this.showTasks = true,
+      this.showDescription = true,
+      Key key})
       : super(key: key);
   String scheduleString(List<Schedule> schedules) {
     return schedules.map((schedule) {
@@ -84,13 +90,14 @@ class InterventionCard extends StatelessWidget {
             style: theme.textTheme.headline6,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
-          child: Text(
-            intervention.description ?? '',
-            style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+        if (showDescription)
+          Padding(
+            padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Text(
+              intervention.description ?? '',
+              style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+            ),
           ),
-        ),
         if (showTasks) ..._buildTaskList(theme)
       ],
     );
