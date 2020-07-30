@@ -41,6 +41,6 @@ class LocalCheckMarkTask extends LocalTask {}
 
 class LocalQuestion {
   String question;
-  bool excludingAnswer;
+  String excludingAnswer;
   String excludingAnswerReason;
 }

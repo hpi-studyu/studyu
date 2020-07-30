@@ -66,8 +66,9 @@ class _QuestionCardState extends State<QuestionCard> {
                   },
                   attribute: 'excludingAnswer',
                   items: [
-                    DropdownMenuItem(value: true, child: Text('yes')),
-                    DropdownMenuItem(value: false, child: Text('no'))
+                    DropdownMenuItem(value: null, child: Text('none')),
+                    DropdownMenuItem(value: 'yes', child: Text('yes')),
+                    DropdownMenuItem(value: 'no', child: Text('no'))
                   ],
                   decoration: InputDecoration(labelText: 'Excluding Answer'),
                   initialValue: item.excludingAnswer),
@@ -87,7 +88,7 @@ class _QuestionCardState extends State<QuestionCard> {
     return ListTile(
         title: Text(item.question.isEmpty
             ? '*Click to edit*'
-            : '${item.question} [${item.excludingAnswer ? 'yes' : 'no'} => ${item.excludingAnswerReason}]'));
+            : '${item.question} ${item.excludingAnswer != null ? '[${item.excludingAnswer} => ${item.excludingAnswerReason}]' : ''}'));
   }
 
   void saveFormChanges() {
