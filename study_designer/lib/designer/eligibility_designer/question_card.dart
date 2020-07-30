@@ -11,11 +11,7 @@ class QuestionCard extends StatefulWidget {
   final void Function(int index) onTap;
 
   const QuestionCard(
-      {@required this.index,
-      @required this.isEditing,
-      @required this.onTap,
-      @required this.remove,
-      Key key})
+      {@required this.index, @required this.isEditing, @required this.onTap, @required this.remove, Key key})
       : super(key: key);
 
   @override
@@ -87,6 +83,7 @@ class _QuestionCardState extends State<QuestionCard> {
     ];
     if (item.excludingAnswer != null) {
       fields.add(FormBuilderTextField(
+          validator: FormBuilderValidators.minLength(context, 3),
           onChanged: (value) {
             saveFormChanges();
           },
