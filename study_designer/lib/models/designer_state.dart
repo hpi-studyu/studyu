@@ -40,6 +40,8 @@ class LocalTask {
 class LocalCheckMarkTask extends LocalTask {}
 
 class LocalQuestion {
+  int conditionalQuestionId;
+  String conditionalQuestionAnswer;
   String question;
   String excludingAnswer;
   String excludingAnswerReason;

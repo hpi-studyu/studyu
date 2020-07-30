@@ -11,7 +11,11 @@ class QuestionCard extends StatefulWidget {
   final void Function(int index) onTap;
 
   const QuestionCard(
-      {@required this.index, @required this.remove, @required this.isEditing, @required this.onTap, Key key})
+      {@required this.index,
+      @required this.isEditing,
+      @required this.onTap,
+      @required this.remove,
+      Key key})
       : super(key: key);
 
   @override
@@ -60,28 +64,37 @@ class _QuestionCardState extends State<QuestionCard> {
                   attribute: 'question',
                   decoration: InputDecoration(labelText: 'Question'),
                   initialValue: item.question),
-              FormBuilderDropdown(
-                  onChanged: (value) {
-                    saveFormChanges();
-                  },
-                  attribute: 'excludingAnswer',
-                  items: [
-                    DropdownMenuItem(value: null, child: Text('none')),
-                    DropdownMenuItem(value: 'yes', child: Text('yes')),
-                    DropdownMenuItem(value: 'no', child: Text('no'))
-                  ],
-                  decoration: InputDecoration(labelText: 'Excluding Answer'),
-                  initialValue: item.excludingAnswer),
-              FormBuilderTextField(
-                  onChanged: (value) {
-                    saveFormChanges();
-                  },
-                  attribute: 'excludingAnswerReason',
-                  decoration: InputDecoration(labelText: 'Excluding Answer Reason'),
-                  initialValue: item.excludingAnswerReason),
+              ..._buildEditViewExcludingAnswerQuestions()
             ],
           ))
     ]);
+  }
+
+  List<Widget> _buildEditViewExcludingAnswerQuestions() {
+    final fields = <Widget>[
+      FormBuilderDropdown(
+          onChanged: (value) {
+            saveFormChanges();
+          },
+          attribute: 'excludingAnswer',
+          items: [
+            DropdownMenuItem(value: null, child: Text('none')),
+            DropdownMenuItem(value: 'yes', child: Text('yes')),
+            DropdownMenuItem(value: 'no', child: Text('no'))
+          ],
+          decoration: InputDecoration(labelText: 'Excluding Answer'),
+          initialValue: item.excludingAnswer)
+    ];
+    if (item.excludingAnswer != null) {
+      fields.add(FormBuilderTextField(
+          onChanged: (value) {
+            saveFormChanges();
+          },
+          attribute: 'excludingAnswerReason',
+          decoration: InputDecoration(labelText: 'Excluding Answer Reason'),
+          initialValue: item.excludingAnswerReason));
+    }
+    return fields;
   }
 
   Widget _buildShowView() {
