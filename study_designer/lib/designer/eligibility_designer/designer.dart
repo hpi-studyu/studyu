@@ -70,6 +70,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .entries
                   .map((entry) => QuestionCard(
                       index: entry.key,
+                      item: context.watch<DesignerModel>().draftStudy.studyDetails.eligibilityQuestionnaire[entry.key],
                       isEditing: entry.key == _selectedIndex,
                       onTap: _selectItem,
                       remove: _removeItem,
