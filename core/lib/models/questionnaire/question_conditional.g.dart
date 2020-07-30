@@ -9,8 +9,6 @@ part of 'question_conditional.dart';
 QuestionConditional<V> _$QuestionConditionalFromJson<V>(
     Map<String, dynamic> json) {
   return QuestionConditional<V>()
-    ..defaultValue =
-        Answer.fromJson(json['defaultValue'] as Map<String, dynamic>)
     ..condition =
         Expression.fromJson(json['condition'] as Map<String, dynamic>);
 }
@@ -18,6 +16,5 @@ QuestionConditional<V> _$QuestionConditionalFromJson<V>(
 Map<String, dynamic> _$QuestionConditionalToJson<V>(
         QuestionConditional<V> instance) =>
     <String, dynamic>{
-      'defaultValue': instance.defaultValue.toJson(),
       'condition': instance.condition.toJson(),
     };

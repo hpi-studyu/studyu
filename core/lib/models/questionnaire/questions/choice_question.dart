@@ -2,11 +2,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../answer.dart';
 import '../question.dart';
+import '../question_conditional.dart';
 
 part 'choice_question.g.dart';
 
 @JsonSerializable()
-class ChoiceQuestion extends Question {
+class ChoiceQuestion extends Question<List<String>> {
   static String questionType = 'choice';
 
   bool multiple;
@@ -16,7 +17,7 @@ class ChoiceQuestion extends Question {
 
   factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
   @override
-  Map<String, dynamic> serializeToJson() => _$ChoiceQuestionToJson(this);
+  Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);
 
   Answer<List<String>> constructAnswer(List<Choice> selected) =>
       Answer.forQuestion(this, selected.map((choice) => choice.id).toList());

@@ -1,15 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../expressions/expression.dart';
-import 'answer.dart';
 
 part 'question_conditional.g.dart';
 
 @JsonSerializable()
 class QuestionConditional<V> {
-  Answer<V> defaultValue;
+  static const String keyDefaultValue = 'defaultValue';
+  @JsonKey(ignore: true)
+  V defaultValue;
   Expression condition;
 
-  static QuestionConditional<V> fromJson<V>(Map<String, dynamic> json) => _$QuestionConditionalFromJson<V>(json);
-  Map<String, dynamic> toJson() => _$QuestionConditionalToJson<V>(this);
+  static QuestionConditional<V> fromJson<V>(Map<String, dynamic> json) =>
+      _$QuestionConditionalFromJson<V>(json)..defaultValue = json[keyDefaultValue] as V;
+  Map<String, dynamic> toJson() => _$QuestionConditionalToJson<V>(this)..[keyDefaultValue] = defaultValue;
 }
