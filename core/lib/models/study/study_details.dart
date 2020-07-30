@@ -1,4 +1,5 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:studyou_core/models/consent/consent_item.dart';
 
 import '../eligibility/eligibility_criterion.dart';
 import '../interventions/intervention_set.dart';
@@ -26,6 +27,11 @@ class StudyDetails extends ParseObject implements ParseCloneable {
       get<List<dynamic>>(keyEligibility)?.map((e) => EligibilityCriterion.fromJson(e))?.toList() ?? [];
   set eligibility(List<EligibilityCriterion> eligibility) =>
       set<List<dynamic>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
+
+  static const keyConsent = 'consent';
+  List<ConsentItem> get consent =>
+      get<List<dynamic>>(keyConsent, defaultValue: []).map((e) => ConsentItem.fromJson(e)).toList();
+  set consent(List<ConsentItem> consent) => set<List<dynamic>>(keyConsent, consent.map((e) => e.toJson()).toList());
 
   static const keyInterventionSet = 'interventionSet';
   InterventionSet get interventionSet => InterventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));

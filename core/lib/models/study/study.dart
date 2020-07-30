@@ -61,6 +61,7 @@ class Study extends ParseObject implements ParseCloneable {
       var addBaseline = false;
       userStudy
         ..schedule = studyDetails.schedule
+        ..consent = studyDetails.consent
         ..interventionOrder = studyDetails.schedule.generateWith(firstIntervention).map<String>((index) {
           if (index == null) {
             addBaseline = true;
