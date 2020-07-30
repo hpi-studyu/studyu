@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../question_conditional.dart';
 import 'slider_question.dart';
 
 part 'annotated_scale_question.g.dart';
@@ -14,7 +15,7 @@ class AnnotatedScaleQuestion extends SliderQuestion {
 
   factory AnnotatedScaleQuestion.fromJson(Map<String, dynamic> json) => _$AnnotatedScaleQuestionFromJson(json);
   @override
-  Map<String, dynamic> serializeToJson() => _$AnnotatedScaleQuestionToJson(this);
+  Map<String, dynamic> toJson() => _$AnnotatedScaleQuestionToJson(this);
 }
 
 @JsonSerializable()

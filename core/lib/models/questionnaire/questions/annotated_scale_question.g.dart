@@ -13,6 +13,10 @@ AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
     ..id = json['id'] as String
     ..prompt = json['prompt'] as String
     ..rationale = json['rationale'] as String
+    ..conditional = json['conditional'] == null
+        ? null
+        : QuestionConditional.fromJson(
+            json['conditional'] as Map<String, dynamic>)
     ..minimum = (json['minimum'] as num).toDouble()
     ..maximum = (json['maximum'] as num).toDouble()
     ..initial = (json['initial'] as num).toDouble()
@@ -37,6 +41,7 @@ Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
   }
 
   writeNotNull('rationale', instance.rationale);
+  writeNotNull('conditional', instance.conditional?.toJson());
   val['minimum'] = instance.minimum;
   val['maximum'] = instance.maximum;
   val['initial'] = instance.initial;

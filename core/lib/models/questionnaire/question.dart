@@ -22,22 +22,15 @@ abstract class Question<V> {
   String rationale;
 
   static const String keyConditional = 'conditional';
-  @JsonKey(ignore: true)
+  @JsonKey(nullable: true)
   QuestionConditional<V> conditional;
 
   Question(this.type);
 
   factory Question.fromJson(Map<String, dynamic> data) {
-    var question = questionTypes[data[keyType]](data);
-    question.conditional = data[keyConditional] != null ? QuestionConditional.fromJson(data[keyConditional]) : null;
-    return question;
+    return questionTypes[data[keyType]](data);
   }
-  Map<String, dynamic> serializeToJson();
-  Map<String, dynamic> toJson() {
-    var result = serializeToJson();
-    if (conditional != null) result[keyConditional] = conditional.toJson();
-    return result;
-  }
+  Map<String, dynamic> toJson();
 
   bool shouldBeShown(QuestionnaireState state) {
     if (conditional == null) return true;
@@ -45,7 +38,8 @@ abstract class Question<V> {
   }
 
   Answer<V> getDefaultAnswer() {
-    return conditional?.defaultValue;
+    if (conditional == null) return null;
+    return Answer.forQuestion(this, conditional.defaultValue);
   }
 
   @override

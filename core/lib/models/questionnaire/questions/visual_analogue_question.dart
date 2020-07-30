@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:json_annotation/json_annotation.dart';
 
+import '../question_conditional.dart';
 import 'slider_question.dart';
 
 part 'visual_analogue_question.g.dart';
@@ -22,7 +23,7 @@ class VisualAnalogueQuestion extends SliderQuestion {
 
   factory VisualAnalogueQuestion.fromJson(Map<String, dynamic> json) => _$VisualAnalogueQuestionFromJson(json);
   @override
-  Map<String, dynamic> serializeToJson() => _$VisualAnalogueQuestionToJson(this);
+  Map<String, dynamic> toJson() => _$VisualAnalogueQuestionToJson(this);
 
   static Color parseColor(String colorString) => Color(int.parse('ff${colorString.substring(1)}', radix: 16));
   static String colorToJson(Color color) => '#${color.value.toRadixString(16).padLeft(8, '0').substring(2, 8)}';
