@@ -54,10 +54,11 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .asMap()
                   .entries
                   .map((entry) => QuestionCard(
-                      index: entry.key,
-                      remove: _removeItem,
-                      isEditing: entry.key == _selectedIndex,
-                      onTap: _selectItem))
+                        index: entry.key,
+                        isEditing: entry.key == _selectedIndex,
+                        onTap: _selectItem,
+                        remove: _removeItem,
+                      ))
                   .toList(),
               RaisedButton.icon(
                   textTheme: ButtonTextTheme.primary,
