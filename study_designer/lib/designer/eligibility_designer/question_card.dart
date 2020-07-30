@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
 import 'package:study_designer/models/designer_state.dart';
 
 class QuestionCard extends StatefulWidget {
   final int index;
+  final LocalQuestion item;
   final bool isEditing;
   final void Function(int index) remove;
   final void Function(int index) onTap;
@@ -13,6 +13,7 @@ class QuestionCard extends StatefulWidget {
 
   const QuestionCard(
       {@required this.index,
+      @required this.item,
       @required this.isEditing,
       @required this.onTap,
       @required this.remove,
@@ -25,14 +26,10 @@ class QuestionCard extends StatefulWidget {
 }
 
 class _QuestionCardState extends State<QuestionCard> {
-  LocalQuestion item;
-
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    item = context.watch<DesignerModel>().draftStudy.studyDetails.eligibilityQuestionnaire[widget.index];
-
     return GestureDetector(
       onTap: () {
         widget.onTap(widget.index);
@@ -66,21 +63,21 @@ class _QuestionCardState extends State<QuestionCard> {
                   },
                   attribute: 'question',
                   decoration: InputDecoration(labelText: 'Question'),
-                  initialValue: item.question),
+                  initialValue: widget.item.question),
             ],
           ))
     ]);
   }
 
   Widget _buildShowView() {
-    return ListTile(title: Text(item.question.isEmpty ? '*Click to edit*' : item.question));
+    return ListTile(title: Text(widget.item.question.isEmpty ? '*Click to edit*' : widget.item.question));
   }
 
   void saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        item.question = _editFormKey.currentState.value['question'];
+        widget.item.question = _editFormKey.currentState.value['question'];
       });
       widget.setValidated(true);
     } else {
