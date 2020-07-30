@@ -67,45 +67,13 @@ class _QuestionCardState extends State<QuestionCard> {
                   attribute: 'question',
                   decoration: InputDecoration(labelText: 'Question'),
                   initialValue: item.question),
-              ..._buildEditViewExcludingAnswerQuestions()
             ],
           ))
     ]);
   }
 
-  List<Widget> _buildEditViewExcludingAnswerQuestions() {
-    final fields = <Widget>[
-      FormBuilderDropdown(
-          onChanged: (value) {
-            saveFormChanges();
-          },
-          attribute: 'excludingAnswer',
-          items: [
-            DropdownMenuItem(value: '', child: Text('none')),
-            DropdownMenuItem(value: 'yes', child: Text('yes')),
-            DropdownMenuItem(value: 'no', child: Text('no'))
-          ],
-          decoration: InputDecoration(labelText: 'Excluding Answer'),
-          initialValue: item.excludingAnswer)
-    ];
-    if (item.excludingAnswer != null) {
-      fields.add(FormBuilderTextField(
-          validator: FormBuilderValidators.minLength(context, 3),
-          onChanged: (value) {
-            saveFormChanges();
-          },
-          attribute: 'excludingAnswerReason',
-          decoration: InputDecoration(labelText: 'Excluding Answer Reason'),
-          initialValue: item.excludingAnswerReason));
-    }
-    return fields;
-  }
-
   Widget _buildShowView() {
-    return ListTile(
-        title: Text(item.question.isEmpty
-            ? '*Click to edit*'
-            : '${item.question} ${item.excludingAnswer != null ? '[${item.excludingAnswer} => ${item.excludingAnswerReason}]' : ''}'));
+    return ListTile(title: Text(item.question.isEmpty ? '*Click to edit*' : item.question));
   }
 
   void saveFormChanges() {
@@ -113,8 +81,6 @@ class _QuestionCardState extends State<QuestionCard> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         item.question = _editFormKey.currentState.value['question'];
-        item.excludingAnswer = _editFormKey.currentState.value['excludingAnswer'];
-        item.excludingAnswerReason = _editFormKey.currentState.value['excludingAnswerReason'];
       });
       widget.setValidated(true);
     } else {

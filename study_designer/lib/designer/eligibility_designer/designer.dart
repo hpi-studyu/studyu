@@ -25,10 +25,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
     if (_validated) {
       setState(() {
         _validated = false;
-        final newItem = LocalQuestion()
-          ..question = ''
-          ..excludingAnswer = ''
-          ..excludingAnswerReason = '';
+        final newItem = LocalQuestion()..question = '';
         _list.add(newItem);
         _selectedIndex = _list.length - 1;
       });
