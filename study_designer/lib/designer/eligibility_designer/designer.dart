@@ -21,12 +21,11 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
     _validated = true;
   }
 
-  void _addItem() {
+  void _addItem(item) {
     if (_validated) {
       setState(() {
         _validated = false;
-        final newItem = LocalQuestion()..question = '';
-        _list.add(newItem);
+        _list.add(item);
         _selectedIndex = _list.length - 1;
       });
     }
@@ -78,10 +77,16 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .toList(),
               RaisedButton.icon(
                   textTheme: ButtonTextTheme.primary,
-                  onPressed: _addItem,
+                  onPressed: () => _addItem(BooleanQuestion()),
                   icon: Icon(Icons.add),
                   color: Colors.green,
-                  label: Text('Add Question')),
+                  label: Text('Add Boolean Question')),
+              RaisedButton.icon(
+                  textTheme: ButtonTextTheme.primary,
+                  onPressed: () => _addItem(ChoiceQuestion()),
+                  icon: Icon(Icons.add),
+                  color: Colors.green,
+                  label: Text('Add Choice Question')),
             ],
           ),
         ),
