@@ -39,6 +39,12 @@ class LocalTask {
 
 class LocalCheckMarkTask extends LocalTask {}
 
-class LocalQuestion {
+abstract class LocalQuestion {
   String question;
+}
+
+class BooleanQuestion extends LocalQuestion {}
+
+class ChoiceQuestion extends LocalQuestion {
+  List<String> choices;
 }
