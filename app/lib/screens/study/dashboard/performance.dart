@@ -1,3 +1,4 @@
+import 'package:StudYou/util/intervention.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final interventions =
+        study.interventionSet.interventions.where((intervention) => !isBaseline(intervention)).toList();
     return Scaffold(
       appBar: AppBar(
         title: Text('Performance'),
@@ -49,9 +52,9 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: study.interventionSet.interventions.length,
-                  itemBuilder: (context, index) => InterventionPerformanceBar(
-                      study: study, intervention: study.interventionSet.interventions[index]),
+                  itemCount: interventions.length,
+                  itemBuilder: (context, index) =>
+                      InterventionPerformanceBar(study: study, intervention: interventions[index]),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -84,7 +87,6 @@ class InterventionPerformanceBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -111,7 +113,6 @@ class ObservationPerformanceBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
