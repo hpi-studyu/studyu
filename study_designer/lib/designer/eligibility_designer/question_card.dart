@@ -9,9 +9,15 @@ class QuestionCard extends StatefulWidget {
   final bool isEditing;
   final void Function(int index) remove;
   final void Function(int index) onTap;
+  final void Function(bool validated) setValidated;
 
   const QuestionCard(
-      {@required this.index, @required this.isEditing, @required this.onTap, @required this.remove, Key key})
+      {@required this.index,
+      @required this.isEditing,
+      @required this.onTap,
+      @required this.remove,
+      @required this.setValidated,
+      Key key})
       : super(key: key);
 
   @override
@@ -54,6 +60,7 @@ class _QuestionCardState extends State<QuestionCard> {
           child: Column(
             children: <Widget>[
               FormBuilderTextField(
+                  validator: FormBuilderValidators.minLength(context, 3),
                   onChanged: (value) {
                     saveFormChanges();
                   },
@@ -74,7 +81,7 @@ class _QuestionCardState extends State<QuestionCard> {
           },
           attribute: 'excludingAnswer',
           items: [
-            DropdownMenuItem(value: null, child: Text('none')),
+            DropdownMenuItem(value: '', child: Text('none')),
             DropdownMenuItem(value: 'yes', child: Text('yes')),
             DropdownMenuItem(value: 'no', child: Text('no'))
           ],
@@ -109,8 +116,9 @@ class _QuestionCardState extends State<QuestionCard> {
         item.excludingAnswer = _editFormKey.currentState.value['excludingAnswer'];
         item.excludingAnswerReason = _editFormKey.currentState.value['excludingAnswerReason'];
       });
+      widget.setValidated(true);
     } else {
-      print('validation failed');
+      widget.setValidated(false);
     }
   }
 }

@@ -12,30 +12,48 @@ class EligibilityDesigner extends StatefulWidget {
 class _EligibilityDesignerState extends State<EligibilityDesigner> {
   List<LocalQuestion> _list;
   int _selectedIndex;
+  bool _validated;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = null;
+    _validated = true;
   }
 
   void _addItem() {
-    setState(() {
-      final newItem = LocalQuestion()..question = '';
-      _list.add(newItem);
-    });
+    if (_validated) {
+      setState(() {
+        _validated = false;
+        final newItem = LocalQuestion()
+          ..question = ''
+          ..excludingAnswer = ''
+          ..excludingAnswerReason = '';
+        _list.add(newItem);
+        _selectedIndex = _list.length - 1;
+      });
+    }
   }
 
   void _removeItem(index) {
     setState(() {
+      _validated = true;
       _list.removeAt(index);
       _selectedIndex = null;
     });
   }
 
   void _selectItem(index) {
+    if (_validated) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
+  void _setValidated(boolean) {
     setState(() {
-      _selectedIndex = index;
+      _validated = boolean;
     });
   }
 
@@ -44,7 +62,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
     _list = context.watch<DesignerModel>().draftStudy.studyDetails.eligibilityQuestionnaire;
     final theme = Theme.of(context);
     return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = null),
+      onTap: () => setState(() => _selectItem(null)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -54,11 +72,11 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .asMap()
                   .entries
                   .map((entry) => QuestionCard(
-                        index: entry.key,
-                        isEditing: entry.key == _selectedIndex,
-                        onTap: _selectItem,
-                        remove: _removeItem,
-                      ))
+                      index: entry.key,
+                      isEditing: entry.key == _selectedIndex,
+                      onTap: _selectItem,
+                      remove: _removeItem,
+                      setValidated: _setValidated))
                   .toList(),
               RaisedButton.icon(
                   textTheme: ButtonTextTheme.primary,
