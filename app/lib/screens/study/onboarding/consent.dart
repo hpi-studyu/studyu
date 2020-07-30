@@ -15,18 +15,10 @@ class ConsentScreen extends StatefulWidget {
   _ConsentScreenState createState() => _ConsentScreenState();
 }
 
-class ModelConsent {
-  String id;
-  String title;
-  String description;
-  String iconName;
-  ModelConsent(this.id, this.title, this.description, this.iconName);
-}
-
 class _ConsentScreenState extends State<ConsentScreen> {
   StudyInstance study;
   List<bool> boxLogic;
-  List<ModelConsent> consentList;
+  List<ConsentItem> consentList;
 
   void onBoxTapped(int index) {
     setState(() {
@@ -37,12 +29,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppModel>().activeStudy;
-    consentList = <ModelConsent>[
-      ModelConsent('one', 'risk', 'risk description', 'featureSearch'),
-      ModelConsent('two', 'caution', 'risk caution', 'signCaution'),
-      ModelConsent('three', 'caution', 'risk caution', 'signCaution')
-    ];
+    consentList = context.read<AppModel>().activeStudy.consent;
+    consentList = study.consent;
     boxLogic = List.filled(consentList.length, false);
   }
 
@@ -105,7 +93,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
 }
 
 class ConsentCard extends StatelessWidget {
-  final ModelConsent consent;
+  final ConsentItem consent;
   final int index;
   final Function(int) onTapped;
   final bool isChecked;

@@ -1,5 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:quiver/collection.dart';
+import 'package:studyou_core/models/consent/consent_item.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
 import 'package:studyou_core/models/study_schedule/study_schedule.dart';
@@ -62,6 +63,11 @@ class StudyInstance extends ParseObject implements ParseCloneable {
       get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
   set observations(List<Observation> observations) =>
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
+
+  static const keyConsent = 'consent';
+  List<ConsentItem> get consent =>
+      get<List<dynamic>>(keyConsent, defaultValue: []).map((e) => ConsentItem.fromJson(e)).toList();
+  set consent(List<ConsentItem> consent) => set<List<dynamic>>(keyConsent, consent.map((e) => e.toJson()).toList());
 
   static const keyResults = 'results';
   Map<String, List<Result>> get results =>
