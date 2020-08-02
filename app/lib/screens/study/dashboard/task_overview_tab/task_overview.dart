@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -10,8 +11,10 @@ import 'task_box.dart';
 class TaskOverview extends StatefulWidget {
   final StudyInstance study;
   final Multimap<Time, Task> scheduleToday;
+  final String interventionIcon;
 
-  const TaskOverview({@required this.study, @required this.scheduleToday, Key key}) : super(key: key);
+  const TaskOverview({@required this.study, @required this.scheduleToday, Key key, this.interventionIcon})
+      : super(key: key);
   @override
   _TaskOverviewState createState() => _TaskOverviewState();
 }
@@ -23,10 +26,21 @@ class _TaskOverviewState extends State<TaskOverview> {
     return widget.scheduleToday.keys
         .expand((time) => [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(time.toString(), style: theme.textTheme.subtitle2.copyWith(color: Colors.black)),
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time, color: theme.primaryColor),
+                    SizedBox(width: 8),
+                    Text(time.toString(),
+                        style: theme.textTheme.subtitle2.copyWith(fontSize: 16, color: theme.primaryColor)),
+                  ],
+                ),
               ),
-              ...widget.scheduleToday[time].map((task) => TaskBox(task: task))
+              ...widget.scheduleToday[time].map((task) => TaskBox(
+                  task: task,
+                  icon: Icon(task is Observation
+                      ? MdiIcons.orderBoolAscendingVariant
+                      : MdiIcons.fromString(widget.interventionIcon))))
             ])
         .toList();
   }

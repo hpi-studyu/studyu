@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -9,8 +8,9 @@ import '../../tasks/task_screen.dart';
 
 class TaskBox extends StatefulWidget {
   final Task task;
+  final Icon icon;
 
-  const TaskBox({@required this.task});
+  const TaskBox({@required this.task, this.icon});
 
   @override
   State<TaskBox> createState() => _TaskBoxState();
@@ -38,7 +38,7 @@ class _TaskBoxState extends State<TaskBox> {
           children: [
             Expanded(
               child: ListTile(
-                leading: Icon(MdiIcons.orderBoolAscendingVariant),
+                leading: widget.icon,
                 title: Text(widget.task.title),
               ),
             ),
