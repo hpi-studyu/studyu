@@ -6,13 +6,13 @@ import '../../../routes.dart';
 import '../../../util/intervention.dart';
 import '../onboarding/intervention_card.dart';
 
-class PerformanceScreen extends StatelessWidget {
+class PerformanceDetailsScreen extends StatelessWidget {
   final StudyInstance reportStudy;
 
   static MaterialPageRoute routeFor({@required StudyInstance reportStudy}) => MaterialPageRoute(
-      builder: (_) => PerformanceScreen(reportStudy), settings: RouteSettings(name: Routes.performance));
+      builder: (_) => PerformanceDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.performanceDetails));
 
-  const PerformanceScreen(this.reportStudy, {Key key}) : super(key: key);
+  const PerformanceDetailsScreen(this.reportStudy, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

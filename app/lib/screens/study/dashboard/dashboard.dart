@@ -35,11 +35,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text(Nof1Localizations.of(context).translate('dashboard')),
         actions: [
           IconButton(
-            tooltip: 'Performance',
-            icon: Icon(MdiIcons.chartLine),
-            onPressed: () => Navigator.pushNamed(context, Routes.performance),
-          ),
-          IconButton(
             tooltip: Nof1Localizations.of(context).translate('contact'),
             icon: Icon(MdiIcons.commentAccount),
             onPressed: () {
@@ -47,14 +42,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
           IconButton(
-            tooltip: Nof1Localizations.of(context).translate('settings'),
-            icon: Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, Routes.appSettings),
-          ),
-          IconButton(
             tooltip: Nof1Localizations.of(context).translate('report_history'),
             icon: Icon(MdiIcons.history),
             onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
+          ),
+          IconButton(
+            tooltip: Nof1Localizations.of(context).translate('settings'),
+            icon: Icon(Icons.settings),
+            onPressed: () => Navigator.pushNamed(context, Routes.appSettings),
           )
         ],
       ),
