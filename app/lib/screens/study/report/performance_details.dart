@@ -1,31 +1,25 @@
-import 'package:StudYou/util/intervention.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
-import '../../../models/app_state.dart';
+import '../../../routes.dart';
+import '../../../util/intervention.dart';
 import '../onboarding/intervention_card.dart';
 
-class PerformanceScreen extends StatefulWidget {
-  @override
-  _PerformanceScreenState createState() => _PerformanceScreenState();
-}
+class PerformanceScreen extends StatelessWidget {
+  final StudyInstance reportStudy;
 
-class _PerformanceScreenState extends State<PerformanceScreen> {
-  StudyInstance study;
+  static MaterialPageRoute routeFor({@required StudyInstance reportStudy}) => MaterialPageRoute(
+      builder: (_) => PerformanceScreen(reportStudy), settings: RouteSettings(name: Routes.performance));
 
-  @override
-  void initState() {
-    super.initState();
-    study = context.read<AppModel>().activeStudy;
-  }
+  const PerformanceScreen(this.reportStudy, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final interventions =
-        study.interventionSet.interventions.where((intervention) => !isBaseline(intervention)).toList();
+        reportStudy.interventionSet.interventions.where((intervention) => !isBaseline(intervention)).toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Performance'),
@@ -54,7 +48,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                   shrinkWrap: true,
                   itemCount: interventions.length,
                   itemBuilder: (context, index) =>
-                      InterventionPerformanceBar(study: study, intervention: interventions[index]),
+                      InterventionPerformanceBar(study: reportStudy, intervention: interventions[index]),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -66,9 +60,9 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: study.observations.length,
+                  itemCount: reportStudy.observations.length,
                   itemBuilder: (context, index) =>
-                      ObservationPerformanceBar(study: study, observation: study.observations[index]),
+                      ObservationPerformanceBar(study: reportStudy, observation: reportStudy.observations[index]),
                 ),
               ],
             ),
