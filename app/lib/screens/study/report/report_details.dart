@@ -7,6 +7,7 @@ import 'package:studyou_core/models/models.dart';
 
 import '../../../routes.dart';
 import '../../../util/localization.dart';
+import 'performance_details.dart';
 
 class ReportDetailsScreen extends StatelessWidget {
   final StudyInstance reportStudy;
@@ -38,7 +39,10 @@ class ReportDetailsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ReportModule(ReportGeneralDetailsModule(reportStudy)),
-            ReportModule(ReportPerformanceModule(reportStudy)),
+            ReportModule(
+              ReportPerformanceModule(reportStudy),
+              onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),
+            ),
             if (outcome != null)
               ReportModule(
                   ReportOutcomeModule(reportStudy, reportStudy.reportSpecification.outcomes[0], primary: true)),
@@ -51,15 +55,14 @@ class ReportDetailsScreen extends StatelessWidget {
 
 class ReportModule extends StatelessWidget {
   final ReportModuleContent module;
-  final String subRouteName;
+  final Function onTap;
 
-  const ReportModule(this.module, {this.subRouteName});
+  const ReportModule(this.module, {this.onTap});
 
   @override
   Widget build(BuildContext context) => Card(
         child: InkWell(
-          // TODO maybe convert routes list to map to enable contains check
-          onTap: () => subRouteName != null ? Navigator.pushNamed(context, subRouteName) : null,
+          onTap: onTap,
           child: Padding(
             padding: EdgeInsets.all(20),
             child: module,
