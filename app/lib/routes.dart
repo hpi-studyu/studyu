@@ -7,7 +7,6 @@ import 'screens/app_onboarding/terms.dart';
 import 'screens/app_onboarding/welcome.dart';
 import 'screens/study/dashboard/contact_tab/contact.dart';
 import 'screens/study/dashboard/dashboard.dart';
-import 'screens/study/dashboard/performance.dart';
 import 'screens/study/dashboard/settings.dart';
 import 'screens/study/onboarding/consent.dart';
 import 'screens/study/onboarding/intervention_selection.dart';
@@ -32,7 +31,7 @@ class Routes {
   static const String questionnaire = '/questionnaire';
   static const String reportHistory = '/reportHistory';
   static const String reportDetails = '/reportDetails';
-  static const String performance = '/performance';
+  static const String performanceDetails = '/performanceDetails';
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -61,7 +60,6 @@ class Routes {
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),
       reportHistory: (_) => ReportHistoryScreen(),
-      performance: (_) => PerformanceScreen(),
     };
 
     if (!routeMap.containsKey(settings.name)) {
