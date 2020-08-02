@@ -11,7 +11,6 @@ before_script:
 check-format:
   stage: check-format
   script:
-    - dart --disable-analytics
     - flutter format -l 120 -n . --set-exit-if-changed
   tags:
     - app
