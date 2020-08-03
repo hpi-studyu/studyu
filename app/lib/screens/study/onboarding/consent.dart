@@ -29,7 +29,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
   @override
   void initState() {
     super.initState();
-    consentList = context.read<AppModel>().activeStudy.consent;
+    study = context.read<AppModel>().activeStudy;
     consentList = study.consent;
     boxLogic = List.filled(consentList.length, false);
   }
