@@ -25,9 +25,7 @@ class _PublishState extends State<Publish> {
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-
-          ],
+          children: <Widget>[],
         ),
       ),
     );
