@@ -36,13 +36,13 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                 children: <Widget>[
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
-                      name: 'title',
+                      attribute: 'title',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: 'Title'),
                       initialValue: _draftStudy.title),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
-                      name: 'description',
+                      attribute: 'description',
                       decoration: InputDecoration(labelText: 'Description'),
                       initialValue: _draftStudy.description),
                 ],
