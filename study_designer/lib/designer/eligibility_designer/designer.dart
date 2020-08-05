@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/shared_widgets/question_card.dart';
+import 'package:study_designer/widgets/question_card.dart';
+import 'package:study_designer/widgets/question_edit_widget.dart';
+import 'package:study_designer/widgets/question_show_widget.dart';
+import 'package:study_designer/widgets/study_designer_card.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,7 +29,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
   void _addItem(item) {
     if (_validated) {
       setState(() {
-        _validated = false;
+        _validated = true;
         _list.add(item);
         _selectedIndex = _list.length - 1;
       });
@@ -63,7 +66,6 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
   @override
   Widget build(BuildContext context) {
     _list = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
-    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => setState(() => _selectItem(null)),
       child: Padding(
@@ -74,13 +76,13 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
               ..._list
                   .asMap()
                   .entries
-                  .map((entry) => QuestionCard(
+                  .map((entry) => StudyDesignerCard(
                       index: entry.key,
-                      item: entry.value,
-                      isEditing: entry.key == _selectedIndex,
                       onTap: _selectItem,
                       remove: _removeItem,
-                      setValidated: _setValidated))
+                      isEditing: entry.key == _selectedIndex,
+                      child: entry.key == _selectedIndex? QuestionEditWidget(question: entry.value) : QuestionShowWidget(question: entry.value)
+                      ))
                   .toList(),
               RaisedButton.icon(
                   textTheme: ButtonTextTheme.primary,
