@@ -65,7 +65,6 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                       onTap: _selectIntervention))
                   .toList(),
               RaisedButton.icon(
-                  textTheme: ButtonTextTheme.primary,
                   onPressed: _addIntervention,
                   icon: Icon(Icons.add),
                   color: Colors.green,
