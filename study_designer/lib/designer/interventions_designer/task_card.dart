@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:study_designer/models/designer_state.dart';
+import 'package:studyou_core/models/models.dart';
 
 class TaskCard extends StatefulWidget {
   final int interventionIndex;
@@ -26,7 +26,7 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  LocalTask task;
+  Task task;
 
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
@@ -36,6 +36,7 @@ class _TaskCardState extends State<TaskCard> {
         .watch<DesignerModel>()
         .draftStudy
         .studyDetails
+        .interventionSet
         .interventions[widget.interventionIndex]
         .tasks[widget.taskIndex];
 
@@ -82,35 +83,28 @@ class _TaskCardState extends State<TaskCard> {
               onChanged: (value) {
                 saveFormChanges();
               },
-              attribute: 'name',
+              attribute: 'title',
               maxLength: 40,
-              decoration: InputDecoration(labelText: 'Name'),
-              initialValue: task.name),
-          FormBuilderTextField(
-              onChanged: (value) {
-                saveFormChanges();
-              },
-              attribute: 'description',
-              decoration: InputDecoration(labelText: 'Description'),
-              initialValue: task.description),
-          FormBuilderTextField(
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                saveFormChanges();
-              },
-              attribute: 'hour',
-              decoration: InputDecoration(labelText: 'Hour'),
-              initialValue: task.hour.toString()),
-          FormBuilderTextField(
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                saveFormChanges();
-              },
-              attribute: 'minute',
-              decoration: InputDecoration(labelText: 'Minute'),
-              initialValue: task.minute.toString()),
+              decoration: InputDecoration(labelText: 'Title'),
+              initialValue: task.title),
+//          FormBuilderTextField(
+//              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+//              keyboardType: TextInputType.number,
+//              onChanged: (value) {
+//                saveFormChanges();
+//              },
+//              attribute: 'hour',
+//              decoration: InputDecoration(labelText: 'Hour'),
+//              initialValue: task.hour.toString()),
+//          FormBuilderTextField(
+//              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+//              keyboardType: TextInputType.number,
+//              onChanged: (value) {
+//                saveFormChanges();
+//              },
+//              attribute: 'minute',
+//              decoration: InputDecoration(labelText: 'Minute'),
+//              initialValue: task.minute.toString()),
         ],
       ),
     );
@@ -120,10 +114,9 @@ class _TaskCardState extends State<TaskCard> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        task.name = _editFormKey.currentState.value['name'];
-        task.description = _editFormKey.currentState.value['description'];
-        task.hour = int.parse(_editFormKey.currentState.value['hour']);
-        task.minute = int.parse(_editFormKey.currentState.value['minute']);
+//        task.title = _editFormKey.currentState.value['title'];
+//        task.hour = int.parse(_editFormKey.currentState.value['hour']);
+//        task.minute = int.parse(_editFormKey.currentState.value['minute']);
       });
     }
   }
@@ -131,10 +124,8 @@ class _TaskCardState extends State<TaskCard> {
   Widget _buildShowMetaData() {
     return Column(
       children: [
-        ListTile(
-            title: Text(task.name.isEmpty ? 'Name' : task.name),
-            subtitle: Text(task.description.isEmpty ? 'Description' : task.description)),
-        Text('${task.hour}:${task.minute}')
+        ListTile(title: Text(task.title.isEmpty ? 'Name' : task.title)),
+//        Text('${task.hour}:${task.minute}')
       ],
     );
   }

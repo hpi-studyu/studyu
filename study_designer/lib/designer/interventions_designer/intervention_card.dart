@@ -4,6 +4,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:study_designer/designer/interventions_designer/task_card.dart';
 import 'package:study_designer/models/designer_state.dart';
+import 'package:studyou_core/models/interventions/intervention.dart';
+import 'package:studyou_core/models/interventions/interventions.dart';
+import 'package:uuid/uuid.dart';
 
 class InterventionCard extends StatefulWidget {
   final int interventionIndex;
@@ -24,18 +27,16 @@ class InterventionCard extends StatefulWidget {
 }
 
 class _InterventionCardState extends State<InterventionCard> {
-  LocalIntervention intervention;
+  Intervention intervention;
   int selectedTaskIndex;
 
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   void _addCheckMarkTask() {
     setState(() {
-      final task = LocalCheckMarkTask()
-        ..name = ''
-        ..description = ''
-        ..hour = 0
-        ..minute = 0;
+      final task = CheckmarkTask()
+        ..id = Uuid().v4()
+        ..title = '';
       intervention.tasks.add(task);
       selectedTaskIndex = intervention.tasks.length - 1;
     });
@@ -57,7 +58,8 @@ class _InterventionCardState extends State<InterventionCard> {
 
   @override
   Widget build(BuildContext context) {
-    intervention = context.watch<DesignerModel>().draftStudy.studyDetails.interventions[widget.interventionIndex];
+    intervention =
+        context.watch<DesignerModel>().draftStudy.studyDetails.interventionSet.interventions[widget.interventionIndex];
 
     final cardContent = <Widget>[];
     cardContent.add(Text('Intervention ${(widget.interventionIndex + 1).toString()}'));
@@ -76,7 +78,6 @@ class _InterventionCardState extends State<InterventionCard> {
 
     return GestureDetector(
       onTap: () {
-        print('hi gesture');
         setState(() => selectedTaskIndex = null);
         widget.onTap(widget.interventionIndex);
       },
@@ -143,8 +144,6 @@ class _InterventionCardState extends State<InterventionCard> {
         intervention.name = _editFormKey.currentState.value['name'];
         intervention.description = _editFormKey.currentState.value['description'];
       });
-    } else {
-      print('validation failed');
     }
   }
 

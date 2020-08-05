@@ -62,9 +62,6 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
           ..title = _editFormKey.currentState.value['title']
           ..description = _editFormKey.currentState.value['description'];
       });
-      print('saved');
-      print(_draftStudy.studyDetails.interventions);
-      // TODO: show dialog "saved"
     }
   }
 }
