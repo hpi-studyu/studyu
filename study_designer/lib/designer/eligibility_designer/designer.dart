@@ -62,9 +62,8 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .asMap()
                   .entries
                   .map((entry) => StudyDesignerCard(
-                      index: entry.key,
-                      onTap: _selectItem,
-                      remove: _removeItem,
+                      select: () => _selectItem(entry.key),
+                      remove: () => _removeItem(entry.key),
                       isEditing: entry.key == _selectedIndex,
                       child: entry.key == _selectedIndex
                           ? QuestionEditWidget(question: entry.value)
