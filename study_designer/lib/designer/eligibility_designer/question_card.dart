@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/models/designer_state.dart';
+import 'package:studyou_core/models/models.dart';
 
 class QuestionCard extends StatefulWidget {
   final int index;
-  final LocalQuestion item;
+  final Question item;
   final bool isEditing;
   final void Function(int index) remove;
   final void Function(int index) onTap;
@@ -61,23 +61,23 @@ class _QuestionCardState extends State<QuestionCard> {
                   onChanged: (value) {
                     saveFormChanges();
                   },
-                  attribute: 'question',
-                  decoration: InputDecoration(labelText: 'Question'),
-                  initialValue: widget.item.question),
+                  attribute: 'prompt',
+                  decoration: InputDecoration(labelText: 'Prompt'),
+                  initialValue: widget.item.prompt),
             ],
           ))
     ]);
   }
 
   Widget _buildShowView() {
-    return ListTile(title: Text(widget.item.question.isEmpty ? '*Click to edit*' : widget.item.question));
+    return ListTile(title: Text(widget.item.prompt.isEmpty ? '*Click to edit*' : widget.item.prompt));
   }
 
   void saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.item.question = _editFormKey.currentState.value['question'];
+        widget.item.prompt = _editFormKey.currentState.value['prompt'];
       });
       widget.setValidated(true);
     } else {

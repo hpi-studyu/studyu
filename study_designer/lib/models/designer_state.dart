@@ -1,10 +1,15 @@
+import 'package:studyou_core/models/interventions/intervention_set.dart';
+import 'package:studyou_core/models/questionnaire/questionnaire.dart';
+
 class DesignerModel {
   LocalStudy draftStudy;
 
   DesignerModel() {
+    final questionnaire = Questionnaire()..questions = [];
+
     final studyDetails = LocalStudyDetails()
-      ..interventions = []
-      ..eligibilityQuestionnaire = [];
+      ..questionnaire = questionnaire
+      ..interventionSet = InterventionSet([]);
 
     draftStudy = LocalStudy()
       ..title = ''
@@ -20,8 +25,8 @@ class LocalStudy {
 }
 
 class LocalStudyDetails {
-  List<LocalIntervention> interventions;
-  List<LocalQuestion> eligibilityQuestionnaire;
+  Questionnaire questionnaire;
+  InterventionSet interventionSet;
 }
 
 class LocalIntervention {
@@ -41,10 +46,4 @@ class LocalCheckMarkTask extends LocalTask {}
 
 abstract class LocalQuestion {
   String question;
-}
-
-class BooleanQuestion extends LocalQuestion {}
-
-class ChoiceQuestion extends LocalQuestion {
-  List<String> choices;
 }

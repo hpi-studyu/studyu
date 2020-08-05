@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_designer/designer/interventions_designer/intervention_card.dart';
+import 'package:studyou_core/models/interventions/intervention.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/designer_state.dart';
 
@@ -10,7 +12,7 @@ class InterventionsDesigner extends StatefulWidget {
 }
 
 class _InterventionsDesignerState extends State<InterventionsDesigner> {
-  List<LocalIntervention> _interventions;
+  List<Intervention> _interventions;
   int selectedInterventionIndex;
 
   @override
@@ -21,7 +23,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   void _addIntervention() {
     setState(() {
-      final intervention = LocalIntervention()
+      final intervention = Intervention(Uuid().v4(), '')
         ..name = ''
         ..description = ''
         ..tasks = [];
@@ -44,7 +46,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _interventions = context.watch<DesignerModel>().draftStudy.studyDetails.interventions;
+    _interventions = context.watch<DesignerModel>().draftStudy.studyDetails.interventionSet.interventions;
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => setState(() => selectedInterventionIndex = null),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_designer/designer/eligibility_designer/question_card.dart';
+import 'package:studyou_core/models/models.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/designer_state.dart';
 
@@ -10,7 +12,7 @@ class EligibilityDesigner extends StatefulWidget {
 }
 
 class _EligibilityDesignerState extends State<EligibilityDesigner> {
-  List<LocalQuestion> _list;
+  List<Question> _list;
   int _selectedIndex;
   bool _validated;
 
@@ -29,6 +31,11 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
         _selectedIndex = _list.length - 1;
       });
     }
+  }
+
+  void _addBooleanQuestion() {
+    final question = BooleanQuestion()..id = Uuid().v4();
+    _addItem(question);
   }
 
   void _removeItem(index) {
@@ -55,7 +62,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _list = context.watch<DesignerModel>().draftStudy.studyDetails.eligibilityQuestionnaire;
+    _list = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => setState(() => _selectItem(null)),
@@ -69,7 +76,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .entries
                   .map((entry) => QuestionCard(
                       index: entry.key,
-                      item: context.watch<DesignerModel>().draftStudy.studyDetails.eligibilityQuestionnaire[entry.key],
+                      item: context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions[entry.key],
                       isEditing: entry.key == _selectedIndex,
                       onTap: _selectItem,
                       remove: _removeItem,
@@ -77,16 +84,10 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .toList(),
               RaisedButton.icon(
                   textTheme: ButtonTextTheme.primary,
-                  onPressed: () => _addItem(BooleanQuestion()),
+                  onPressed: _addBooleanQuestion,
                   icon: Icon(Icons.add),
                   color: Colors.green,
-                  label: Text('Add Boolean Question')),
-              RaisedButton.icon(
-                  textTheme: ButtonTextTheme.primary,
-                  onPressed: () => _addItem(ChoiceQuestion()),
-                  icon: Icon(Icons.add),
-                  color: Colors.green,
-                  label: Text('Add Choice Question')),
+                  label: Text('Add Boolean Question'))
             ],
           ),
         ),
