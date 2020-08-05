@@ -122,7 +122,7 @@ class _InterventionCardState extends State<InterventionCard> {
                 onChanged: (value) {
                   saveFormChanges();
                 },
-                name: 'name',
+                attribute: 'name',
                 maxLength: 40,
                 decoration: InputDecoration(labelText: 'Name'),
                 initialValue: intervention.name),
@@ -130,7 +130,7 @@ class _InterventionCardState extends State<InterventionCard> {
                 onChanged: (value) {
                   saveFormChanges();
                 },
-                name: 'description',
+                attribute: 'description',
                 decoration: InputDecoration(labelText: 'Description'),
                 initialValue: intervention.description),
           ],

@@ -32,7 +32,7 @@ class _QuestionEditWidgetState extends State<QuestionEditWidget> {
                   onChanged: (value) {
                     saveFormChanges();
                   },
-                  name: 'prompt',
+                  attribute: 'prompt',
                   decoration: InputDecoration(labelText: 'Prompt'),
                   initialValue: widget.question.prompt),
               FormBuilderTextField(
@@ -40,7 +40,7 @@ class _QuestionEditWidgetState extends State<QuestionEditWidget> {
                   onChanged: (value) {
                     saveFormChanges();
                   },
-                  name: 'rationale',
+                  attribute: 'rationale',
                   decoration: InputDecoration(labelText: 'Rationale'),
                   initialValue: widget.question.rationale),
             ])),

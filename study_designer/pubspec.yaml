@@ -19,7 +19,7 @@ dependencies:
   cupertino_icons:
   flutter_chips_input: ^1.9.0-dev.3
   # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4
-  flutter_form_builder: ^4.0.0-alpha.9
+  flutter_form_builder: ^4.0.0-alpha.5
   material_design_icons_flutter:
   parse_server_sdk:
     git:
