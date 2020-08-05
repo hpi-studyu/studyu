@@ -97,24 +97,52 @@ class ReportPerformanceModule extends ReportModuleContent {
   const ReportPerformanceModule(StudyInstance instance) : super(instance);
 
   // TODO move to model
-  final minimum = 0.2;
+  final minimum = 0.1;
+  final maximum = 100;
 
   @override
   Widget build(BuildContext context) {
-    final powerLevel = getPowerLevel();
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(
-              '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription(powerLevel)}'),
-        ),
-        PerformanceBar(
-          progress: powerLevel,
-          minimum: minimum,
-        ),
-      ],
-    );
+    final interventions =
+        instance.interventionSet.interventions.where((intervention) => intervention.id != '__baseline').toList();
+    return interventions.length != 2 ||
+            instance.reportSpecification?.outcomes == null ||
+            instance.reportSpecification.outcomes.isEmpty
+        ? Center(
+            child: Text('ERROR!'),
+          )
+        : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Text(
+                  '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription(0)}',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),
+              ...getBars(interventions),
+            ],
+          );
+  }
+
+  List<Widget> getBars(List<Intervention> interventions) {
+    return interventions
+        .map((intervention) => [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  intervention.name,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: PerformanceBar(
+                  progress: getCountableObservationAmount(intervention) / maximum,
+                  minimum: minimum,
+                ),
+              ),
+            ])
+        .expand((element) => element)
+        .toList();
   }
 
   String getPowerLevelDescription(double powerLevel) {
@@ -130,10 +158,7 @@ class ReportPerformanceModule extends ReportModuleContent {
     }
   }
 
-  double getPowerLevel() {
-    if (instance.reportSpecification?.outcomes == null || instance.reportSpecification.outcomes.isEmpty) {
-      print('Outcomes missing.');
-    }
+  double getCountableObservationAmount(Intervention intervention) {
     final primaryOutcome = instance.reportSpecification.outcomes[0];
     final results = <List<num>>[];
     instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
