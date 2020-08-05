@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/eligibility_designer/question_card.dart';
+import 'package:study_designer/designer/shared_widgets/question_card.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
@@ -76,7 +76,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                   .entries
                   .map((entry) => QuestionCard(
                       index: entry.key,
-                      item: context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions[entry.key],
+                      item: entry.value,
                       isEditing: entry.key == _selectedIndex,
                       onTap: _selectItem,
                       remove: _removeItem,
