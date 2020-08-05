@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/widgets/question_card.dart';
 import 'package:study_designer/widgets/question_edit_widget.dart';
 import 'package:study_designer/widgets/question_show_widget.dart';
 import 'package:study_designer/widgets/study_designer_card.dart';
@@ -17,23 +16,18 @@ class EligibilityDesigner extends StatefulWidget {
 class _EligibilityDesignerState extends State<EligibilityDesigner> {
   List<Question> _list;
   int _selectedIndex;
-  bool _validated;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = null;
-    _validated = true;
   }
 
   void _addItem(item) {
-    if (_validated) {
-      setState(() {
-        _validated = true;
-        _list.add(item);
-        _selectedIndex = _list.length - 1;
-      });
-    }
+    setState(() {
+      _list.add(item);
+      _selectedIndex = _list.length - 1;
+    });
   }
 
   void _addBooleanQuestion() {
@@ -43,23 +37,14 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
 
   void _removeItem(index) {
     setState(() {
-      _validated = true;
       _list.removeAt(index);
       _selectedIndex = null;
     });
   }
 
   void _selectItem(index) {
-    if (_validated) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-  }
-
-  void _setValidated(boolean) {
     setState(() {
-      _validated = boolean;
+      _selectedIndex = index;
     });
   }
 
@@ -81,8 +66,9 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                       onTap: _selectItem,
                       remove: _removeItem,
                       isEditing: entry.key == _selectedIndex,
-                      child: entry.key == _selectedIndex? QuestionEditWidget(question: entry.value) : QuestionShowWidget(question: entry.value)
-                      ))
+                      child: entry.key == _selectedIndex
+                          ? QuestionEditWidget(question: entry.value)
+                          : QuestionShowWidget(question: entry.value)))
                   .toList(),
               RaisedButton.icon(
                   textTheme: ButtonTextTheme.primary,
