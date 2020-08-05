@@ -31,7 +31,11 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
   }
 
   void _addBooleanQuestion() {
-    final question = BooleanQuestion()..id = Uuid().v4();
+    final question = ChoiceQuestion()
+      ..id = Uuid().v4()
+      ..prompt = ''
+      ..rationale = ''
+      ..choices = [];
     _addItem(question);
   }
 
