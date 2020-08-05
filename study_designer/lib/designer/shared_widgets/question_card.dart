@@ -39,8 +39,6 @@ class _QuestionCardState extends State<QuestionCard> {
   }
 
   Widget _buildEditView() {
-    var questionBody = null();
-
     return Column(children: [
       ButtonBar(
         children: <Widget>[
@@ -75,27 +73,6 @@ class _QuestionCardState extends State<QuestionCard> {
                 initialValue: widget.item.rationale),
           ])),
     ]);
-  }
-
-  List<Widget> testtest() {
-    return [
-      FormBuilderTextField(
-          validator: FormBuilderValidators.minLength(context, 3),
-          onChanged: (value) {
-            saveFormChanges();
-          },
-          attribute: 'rationale',
-          decoration: InputDecoration(labelText: 'Rationale'),
-          initialValue: widget.item.rationale),
-      FormBuilderTextField(
-          validator: FormBuilderValidators.minLength(context, 3),
-          onChanged: (value) {
-            saveFormChanges();
-          },
-          attribute: 'rationale',
-          decoration: InputDecoration(labelText: 'Rationale'),
-          initialValue: widget.item.rationale)
-    ];
   }
 
   Widget _buildShowView() {
