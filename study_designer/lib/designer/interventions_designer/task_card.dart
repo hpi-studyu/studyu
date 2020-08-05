@@ -83,7 +83,7 @@ class _TaskCardState extends State<TaskCard> {
               onChanged: (value) {
                 saveFormChanges();
               },
-              attribute: 'title',
+              name: 'title',
               maxLength: 40,
               decoration: InputDecoration(labelText: 'Title'),
               initialValue: task.title),

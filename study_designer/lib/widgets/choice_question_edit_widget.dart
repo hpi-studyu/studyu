@@ -14,21 +14,29 @@ class ChoiceQuestionEditWidget extends StatefulWidget {
 }
 
 class _ChoiceQuestionEditWidgetState extends State<ChoiceQuestionEditWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      RaisedButton.icon(onPressed: _addChoice, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Choice')),
-      ...widget.question.choices.asMap().entries.map((entry) => ChoiceEditWidget(choice: entry.value))
-    ]);
-  }
-
   void _addChoice() {
     setState(() {
       final choice = Choice()
         ..id = Uuid().v4()
         ..text = '';
       widget.question.choices.add(choice);
-      print(widget.question.choices);
     });
+  }
+
+  void _removeChoice(index) {
+    setState(() {
+      widget.question.choices.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      RaisedButton.icon(onPressed: _addChoice, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Choice')),
+      ...widget.question.choices
+          .asMap()
+          .entries
+          .map((entry) => ChoiceEditWidget(choice: entry.value, remove: () => _removeChoice(entry.key)))
+    ]);
   }
 }
