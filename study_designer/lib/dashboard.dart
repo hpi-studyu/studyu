@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:study_designer/routes.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
+
+import 'routes.dart';
 
 class Dashboard extends StatefulWidget {
   @override
