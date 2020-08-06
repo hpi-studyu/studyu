@@ -15,11 +15,11 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
   List<Intervention> _interventions;
 
   void _addIntervention() {
+    final intervention = Intervention(Uuid().v4(), '')
+      ..name = ''
+      ..description = ''
+      ..tasks = [];
     setState(() {
-      final intervention = Intervention(Uuid().v4(), '')
-        ..name = ''
-        ..description = ''
-        ..tasks = [];
       _interventions.add(intervention);
     });
   }
@@ -33,7 +33,6 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
   @override
   Widget build(BuildContext context) {
     _interventions = context.watch<DesignerModel>().draftStudy.studyDetails.interventionSet.interventions;
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
