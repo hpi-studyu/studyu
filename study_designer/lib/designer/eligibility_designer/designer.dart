@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/widgets/question_edit_widget.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/designer_state.dart';
+import '../../widgets/question_edit_widget.dart';
 
 class EligibilityDesigner extends StatefulWidget {
   @override
@@ -48,25 +48,42 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
   @override
   Widget build(BuildContext context) {
     _questions = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            ..._questions
-                .asMap()
-                .entries
-                .map((entry) => QuestionEditWidget(
-                    key: UniqueKey(),
-                    remove: () => _removeQuestion(entry.key),
-                    changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
-                    question: entry.value))
-                .toList(),
-            RaisedButton.icon(
-                onPressed: _addQuestion, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Question'))
-          ],
+    return Stack(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ..._questions
+                      .asMap()
+                      .entries
+                      .map((entry) => QuestionEditWidget(
+                          key: UniqueKey(),
+                          remove: () => _removeQuestion(entry.key),
+                          changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
+                          question: entry.value))
+                      .toList(),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: FloatingActionButton.extended(
+              onPressed: _addQuestion,
+              isExtended: true,
+              label: Text('Add Question'),
+              icon: Icon(Icons.add),
+              backgroundColor: Colors.green,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
