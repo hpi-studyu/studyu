@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:study_designer/widgets/task/task_editor.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:studyou_core/models/interventions/interventions.dart';
@@ -63,6 +64,20 @@ class _InterventionEditorState extends State<InterventionEditor> {
                             maxLength: 40,
                             decoration: InputDecoration(labelText: 'Name'),
                             initialValue: widget.intervention.name),
+                        Row(children: [
+                          Expanded(
+                            child: FormBuilderTextField(
+                                onChanged: (value) {
+                                  saveFormChanges();
+                                },
+                                name: 'icon',
+                                maxLength: 40,
+                                decoration: InputDecoration(labelText: 'Icon'),
+                                initialValue: widget.intervention.icon),
+                          ),
+                          if (MdiIcons.fromString(widget.intervention.icon) != null)
+                            Expanded(child: Icon(MdiIcons.fromString(widget.intervention.icon)))
+                        ]),
                         FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
@@ -95,6 +110,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.intervention.name = _editFormKey.currentState.value['name'];
+        widget.intervention.icon = _editFormKey.currentState.value['icon'];
         widget.intervention.description = _editFormKey.currentState.value['description'];
       });
     }

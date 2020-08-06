@@ -19,6 +19,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
     final intervention = Intervention(Uuid().v4(), '')
       ..name = ''
       ..description = ''
+      ..icon = ''
       ..tasks = [];
     setState(() {
       _interventions.add(intervention);
