@@ -31,22 +31,19 @@ class _TaskSchedulesState extends State<TaskSchedules> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Divider(),
+      Text('Schedule'),
       ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: widget.task.schedule.length + 1,
+        itemCount: widget.task.schedule.length,
         itemBuilder: (buildContext, index) {
-          return index == widget.task.schedule.length
-              ? Row(children: [
-                  Spacer(),
-                  RaisedButton.icon(
-                      onPressed: _add, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Schedule')),
-                  Spacer()
-                ])
-              : FixedScheduleWidget(
-                  key: UniqueKey(), schedule: widget.task.schedule[index], remove: () => _remove(index));
+          return FixedScheduleWidget(
+              key: UniqueKey(), schedule: widget.task.schedule[index], remove: () => _remove(index));
         },
-      )
+      ),
+      Row(children: [Spacer(), IconButton(icon: Icon(Icons.add), onPressed: _add), Spacer()])
     ]);
   }
 }
