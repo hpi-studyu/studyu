@@ -6,8 +6,11 @@ import 'package:studyou_core/models/models.dart';
 
 class QuestionEditWidget extends StatefulWidget {
   final Question question;
+  final void Function() remove;
+  final void Function(String newType) changeQuestionType;
 
-  const QuestionEditWidget({@required this.question, Key key}) : super(key: key);
+  const QuestionEditWidget({@required this.question, @required this.remove, @required this.changeQuestionType, Key key})
+      : super(key: key);
 
   @override
   _QuestionEditWidgetState createState() => _QuestionEditWidgetState();
@@ -20,32 +23,61 @@ class _QuestionEditWidgetState extends State<QuestionEditWidget> {
   Widget build(BuildContext context) {
     final questionBody = buildQuestionBody();
 
-    return Column(
-      children: [
-        FormBuilder(
-            key: _editFormKey,
-            autovalidate: true,
-            // readonly: true,
-            child: Column(children: <Widget>[
-              FormBuilderTextField(
-                  validator: FormBuilderValidators.minLength(context, 3),
-                  onChanged: (value) {
-                    saveFormChanges();
-                  },
-                  attribute: 'prompt',
-                  decoration: InputDecoration(labelText: 'Prompt'),
-                  initialValue: widget.question.prompt),
-              FormBuilderTextField(
-                  validator: FormBuilderValidators.minLength(context, 3),
-                  onChanged: (value) {
-                    saveFormChanges();
-                  },
-                  attribute: 'rationale',
-                  decoration: InputDecoration(labelText: 'Rationale'),
-                  initialValue: widget.question.rationale),
-            ])),
-        if (questionBody != null) questionBody
-      ],
+    return Card(
+      margin: EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          ListTile(
+              title: Row(
+                children: [
+                  DropdownButton<String>(
+                    value: widget.question.type,
+                    onChanged: widget.changeQuestionType,
+                    items: <String>[BooleanQuestion.questionType, ChoiceQuestion.questionType]
+                        .map<DropdownMenuItem<String>>((value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  Text('question')
+                ],
+              ),
+              trailing: FlatButton(
+                onPressed: widget.remove,
+                child: const Text('Delete'),
+              )),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                FormBuilder(
+                    key: _editFormKey,
+                    autovalidate: true,
+                    // readonly: true,
+                    child: Column(children: <Widget>[
+                      FormBuilderTextField(
+                          onChanged: (value) {
+                            saveFormChanges();
+                          },
+                          attribute: 'prompt',
+                          decoration: InputDecoration(labelText: 'Prompt'),
+                          initialValue: widget.question.prompt),
+                      FormBuilderTextField(
+                          onChanged: (value) {
+                            saveFormChanges();
+                          },
+                          attribute: 'rationale',
+                          decoration: InputDecoration(labelText: 'Rationale'),
+                          initialValue: widget.question.rationale),
+                    ])),
+                if (questionBody != null) questionBody
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -32,11 +32,11 @@ class _ChoiceEditWidgetState extends State<ChoiceEditWidget> {
             ],
           ),
           FormBuilderTextField(
-              validator: FormBuilderValidators.minLength(context, 3),
               onChanged: (value) {
                 saveFormChanges();
               },
               attribute: 'text',
+              decoration: InputDecoration(labelText: 'Choice'),
               initialValue: widget.choice.text),
         ]));
   }
