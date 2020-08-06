@@ -17,56 +17,68 @@ class InterventionCard extends StatefulWidget {
 }
 
 class _InterventionCardState extends State<InterventionCard> {
-  int selectedTaskIndex;
-
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   void _addCheckMarkTask() {
     setState(() {
       final task = CheckmarkTask()
         ..id = Uuid().v4()
-        ..title = '';
+        ..title = ''
+        ..schedule = [];
       widget.intervention.tasks.add(task);
     });
+    print(widget.intervention.tasks);
   }
 
   void _removeTask(taskIndex) {
     setState(() {
-      selectedTaskIndex = null;
       widget.intervention.tasks.removeAt(taskIndex);
-    });
-  }
-
-  void _selectTask(index) {
-    setState(() {
-      selectedTaskIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cardContent = <Widget>[];
-
-    cardContent.add(_buildDeleteButton());
-
-    cardContent.add(_buildEditMetaDataForm());
-
-    cardContent.addAll(_buildTaskCards());
-
-    cardContent.add(_buildCardFooter());
-
-    return Card(margin: EdgeInsets.all(10.0), child: Column(children: cardContent));
-  }
-
-  Widget _buildDeleteButton() {
-    return ButtonBar(
-      children: <Widget>[
-        FlatButton(
-          onPressed: () {
-            widget.remove();
-          },
-          child: const Text('Delete'),
+    return Column(
+      children: [
+        Card(
+          margin: EdgeInsets.all(10.0),
+          child: Column(children: [
+            ListTile(
+                title: Text('Intervention'),
+                trailing: FlatButton(onPressed: widget.remove, child: const Text('Delete'))),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: [
+                FormBuilder(
+                    key: _editFormKey,
+                    autovalidate: true,
+                    // readonly: true,
+                    child: Column(
+                      children: <Widget>[
+                        FormBuilderTextField(
+                            onChanged: (value) {
+                              saveFormChanges();
+                            },
+                            name: 'name',
+                            maxLength: 40,
+                            decoration: InputDecoration(labelText: 'Name'),
+                            initialValue: widget.intervention.name),
+                        FormBuilderTextField(
+                            onChanged: (value) {
+                              saveFormChanges();
+                            },
+                            name: 'description',
+                            decoration: InputDecoration(labelText: 'Description'),
+                            initialValue: widget.intervention.description),
+                      ],
+                    )),
+                RaisedButton.icon(
+                    onPressed: _addCheckMarkTask, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Task')),
+              ]),
+            ),
+          ]),
         ),
+        ..._buildTaskCards()
       ],
     );
   }
@@ -79,32 +91,6 @@ class _InterventionCardState extends State<InterventionCard> {
         .toList();
   }
 
-  Widget _buildEditMetaDataForm() {
-    return FormBuilder(
-        key: _editFormKey,
-        autovalidate: true,
-        // readonly: true,
-        child: Column(
-          children: <Widget>[
-            FormBuilderTextField(
-                onChanged: (value) {
-                  saveFormChanges();
-                },
-                name: 'name',
-                maxLength: 40,
-                decoration: InputDecoration(labelText: 'Name'),
-                initialValue: widget.intervention.name),
-            FormBuilderTextField(
-                onChanged: (value) {
-                  saveFormChanges();
-                },
-                name: 'description',
-                decoration: InputDecoration(labelText: 'Description'),
-                initialValue: widget.intervention.description),
-          ],
-        ));
-  }
-
   void saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
@@ -113,16 +99,5 @@ class _InterventionCardState extends State<InterventionCard> {
         widget.intervention.description = _editFormKey.currentState.value['description'];
       });
     }
-  }
-
-  Widget _buildCardFooter() {
-    return ButtonBar(
-      children: <Widget>[
-        FlatButton(
-          onPressed: _addCheckMarkTask,
-          child: const Text('Add checkmark task'),
-        ),
-      ],
-    );
   }
 }

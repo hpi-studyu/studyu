@@ -88,7 +88,6 @@ class _QuestionEditWidgetState extends State<QuestionEditWidget> {
           question: widget.question,
         );
       default:
-        print('Question not supported!');
         return null;
     }
   }

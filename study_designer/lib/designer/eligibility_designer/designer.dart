@@ -12,20 +12,22 @@ class EligibilityDesigner extends StatefulWidget {
 }
 
 class _EligibilityDesignerState extends State<EligibilityDesigner> {
-  List<Question> _list;
-
-  void _addItem(item) {
-    setState(() {
-      _list.add(item);
-    });
-  }
+  List<Question> _questions;
 
   void _addQuestion() {
     final question = BooleanQuestion()
       ..id = Uuid().v4()
       ..prompt = ''
       ..rationale = '';
-    _addItem(question);
+    setState(() {
+      _questions.add(question);
+    });
+  }
+
+  void _removeQuestion(index) {
+    setState(() {
+      _questions.removeAt(index);
+    });
   }
 
   void _changeQuestionType(int index, String newType) {
@@ -36,42 +38,32 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
       newQuestion = ChoiceQuestion()..choices = [];
     }
     newQuestion
-      ..prompt = _list[index].prompt
-      ..rationale = _list[index].rationale;
+      ..prompt = _questions[index].prompt
+      ..rationale = _questions[index].rationale;
     setState(() {
-      _list[index] = newQuestion;
-    });
-  }
-
-  void _removeItem(index) {
-    setState(() {
-      _list.removeAt(index);
+      _questions[index] = newQuestion;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _list = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
+    _questions = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            ..._list
+            ..._questions
                 .asMap()
                 .entries
                 .map((entry) => QuestionEditWidget(
                     key: UniqueKey(),
-                    remove: () => _removeItem(entry.key),
+                    remove: () => _removeQuestion(entry.key),
                     changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
                     question: entry.value))
                 .toList(),
             RaisedButton.icon(
-                textTheme: ButtonTextTheme.primary,
-                onPressed: _addQuestion,
-                icon: Icon(Icons.add),
-                color: Colors.green,
-                label: Text('Add Question'))
+                onPressed: _addQuestion, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Question'))
           ],
         ),
       ),

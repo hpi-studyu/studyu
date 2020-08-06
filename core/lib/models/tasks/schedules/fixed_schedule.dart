@@ -22,6 +22,8 @@ class Time {
   int hour;
   int minute;
 
+  Time() : super();
+
   Time.fromJson(String value) {
     final elements = value.split(':').map(int.parse);
     hour = elements.elementAt(0);
