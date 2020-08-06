@@ -26,6 +26,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final selectedStudyObjectId = prefs.getString(UserQueries.selectedStudyObjectIdKey);
     print('Selected study: $selectedStudyObjectId');
     if (selectedStudyObjectId == null) {
+      if (await UserQueries.isUserLoggedIn()) {
+        Navigator.pushReplacementNamed(context, Routes.studySelection);
+        return;
+      }
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }

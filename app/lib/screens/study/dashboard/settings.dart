@@ -1,8 +1,11 @@
+import 'package:StudYou/models/app_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/user.dart';
 
 import '../../../routes.dart';
@@ -16,12 +19,14 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   Locale _selectedValue;
   Future<ParseUser> _userFuture;
+  StudyInstance activeStudy;
 
   @override
   void initState() {
     super.initState();
     _selectedValue = context.read<AppLanguage>().appLocal;
     _userFuture = UserQueries.getOrCreateUser();
+    activeStudy = context.read<AppModel>().activeStudy;
   }
 
   Widget getDropdownRow(BuildContext context) {
@@ -62,6 +67,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('settings')),
@@ -79,7 +85,18 @@ class _SettingsState extends State<Settings> {
                   return SelectableText('User ID: ${user.username}');
                 }),
             getDropdownRow(context),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
+            Text('Current study: ${activeStudy.title}', style: theme.textTheme.headline6),
+            SizedBox(height: 8),
+            RaisedButton.icon(
+              onPressed: () {
+                showDialog(context: context, builder: (_) => OptOutAlertDialog(activeStudy: activeStudy));
+              },
+              color: Colors.orange[800],
+              icon: Icon(MdiIcons.exitToApp),
+              label: Text('Opt-out'),
+            ),
+            SizedBox(height: 24),
             RaisedButton.icon(
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog());
@@ -95,12 +112,42 @@ class _SettingsState extends State<Settings> {
   }
 }
 
-class DeleteAlertDialog extends StatefulWidget {
+class OptOutAlertDialog extends StatelessWidget {
+  final StudyInstance activeStudy;
+
+  const OptOutAlertDialog({@required this.activeStudy}) : super();
+
   @override
-  _DeleteAlertDialogState createState() => _DeleteAlertDialogState();
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      title: Text('Opt-out of study?'),
+      content: RichText(
+        text: TextSpan(style: TextStyle(color: Colors.black), children: [
+          TextSpan(text: 'The progress of your current study '),
+          TextSpan(
+              text: activeStudy.title,
+              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
+          TextSpan(text: ' will be deleted and cannot be recovered. Previously completed studies will not be deleted.'),
+        ]),
+      ),
+      actions: [
+        FlatButton.icon(
+          onPressed: () async {
+            activeStudy.delete();
+            await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
+            Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
+          },
+          icon: Icon(MdiIcons.exitToApp),
+          color: Colors.orange[800],
+          label: Text('Opt-out'),
+        )
+      ],
+    );
+  }
 }
 
-class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
+class DeleteAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text('Delete all data?'),
@@ -112,7 +159,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
               UserQueries.deleteUserAccount();
               await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
-            }, // only logout and delete local parse data,
+            },
             icon: Icon(Icons.delete),
             color: Colors.red,
             label: Text('Delete all data'),
