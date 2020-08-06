@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_designer/widgets/designer_add_button.dart';
+import 'package:study_designer/widgets/question/question_editor.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/designer_state.dart';
-import '../../widgets/question_edit_widget.dart';
 
 class EligibilityDesigner extends StatefulWidget {
   @override
@@ -52,25 +52,24 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
     return Stack(
       children: [
         Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  ..._questions
-                      .asMap()
-                      .entries
-                      .map((entry) => QuestionEditWidget(
-                          key: UniqueKey(),
-                          remove: () => _removeQuestion(entry.key),
-                          changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
-                          question: entry.value))
-                      .toList(),
-                ],
-              ),
+            child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                ..._questions
+                    .asMap()
+                    .entries
+                    .map((entry) => QuestionEditor(
+                        key: UniqueKey(),
+                        remove: () => _removeQuestion(entry.key),
+                        changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
+                        question: entry.value))
+                    .toList(),
+              ],
             ),
           ),
-        ),
+        )),
         DesignerAddButton(label: Text('Add Question'), add: _addQuestion),
       ],
     );

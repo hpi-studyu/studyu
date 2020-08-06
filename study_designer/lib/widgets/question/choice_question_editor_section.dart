@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
-import 'choice_edit_widget.dart';
+import 'choice_editor.dart';
 
-class ChoiceQuestionEditWidget extends StatefulWidget {
+class ChoiceQuestionEditorSection extends StatefulWidget {
   final ChoiceQuestion question;
 
-  const ChoiceQuestionEditWidget({@required this.question, Key key}) : super(key: key);
+  const ChoiceQuestionEditorSection({@required this.question, Key key}) : super(key: key);
 
   @override
-  _ChoiceQuestionEditWidgetState createState() => _ChoiceQuestionEditWidgetState();
+  _ChoiceQuestionEditorSectionState createState() => _ChoiceQuestionEditorSectionState();
 }
 
-class _ChoiceQuestionEditWidgetState extends State<ChoiceQuestionEditWidget> {
+class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSection> {
   void _addChoice() {
     setState(() {
       final choice = Choice()
@@ -49,7 +49,7 @@ class _ChoiceQuestionEditWidgetState extends State<ChoiceQuestionEditWidget> {
                       onPressed: _addChoice, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Choice')),
                   Spacer()
                 ])
-              : ChoiceEditWidget(
+              : ChoiceEditor(
                   key: UniqueKey(), choice: widget.question.choices[index], remove: () => _removeChoice(index));
         },
       )

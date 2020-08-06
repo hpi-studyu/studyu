@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/choice_question_edit_widget.dart';
+import 'package:study_designer/widgets/question/choice_question_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
 
-class QuestionEditWidget extends StatefulWidget {
+class QuestionEditor extends StatefulWidget {
   final Question question;
   final void Function() remove;
   final void Function(String newType) changeQuestionType;
 
-  const QuestionEditWidget({@required this.question, @required this.remove, @required this.changeQuestionType, Key key})
+  const QuestionEditor({@required this.question, @required this.remove, @required this.changeQuestionType, Key key})
       : super(key: key);
 
   @override
-  _QuestionEditWidgetState createState() => _QuestionEditWidgetState();
+  _QuestionEditorState createState() => _QuestionEditorState();
 }
 
-class _QuestionEditWidgetState extends State<QuestionEditWidget> {
+class _QuestionEditorState extends State<QuestionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -84,7 +84,7 @@ class _QuestionEditWidgetState extends State<QuestionEditWidget> {
   Widget buildQuestionBody() {
     switch (widget.question.runtimeType) {
       case ChoiceQuestion:
-        return ChoiceQuestionEditWidget(
+        return ChoiceQuestionEditorSection(
           question: widget.question,
         );
       default:

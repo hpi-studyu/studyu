@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 
-class ChoiceEditWidget extends StatefulWidget {
+class ChoiceEditor extends StatefulWidget {
   final Choice choice;
   final void Function() remove;
 
-  const ChoiceEditWidget({@required this.choice, @required this.remove, Key key}) : super(key: key);
+  const ChoiceEditor({@required this.choice, @required this.remove, Key key}) : super(key: key);
 
   @override
-  _ChoiceEditWidgetState createState() => _ChoiceEditWidgetState();
+  _ChoiceEditorState createState() => _ChoiceEditorState();
 }
 
-class _ChoiceEditWidgetState extends State<ChoiceEditWidget> {
+class _ChoiceEditorState extends State<ChoiceEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override

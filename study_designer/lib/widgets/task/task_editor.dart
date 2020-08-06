@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/designer/interventions_designer/task_schedules.dart';
+import 'package:study_designer/widgets/task/task_schedule_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
 
-class TaskCard extends StatefulWidget {
+class TaskEditor extends StatefulWidget {
   final Task task;
   final void Function() remove;
 
-  const TaskCard({@required this.task, @required this.remove, Key key}) : super(key: key);
+  const TaskEditor({@required this.task, @required this.remove, Key key}) : super(key: key);
 
   @override
-  _TaskCardState createState() => _TaskCardState();
+  _TaskEditorState createState() => _TaskEditorState();
 }
 
-class _TaskCardState extends State<TaskCard> {
+class _TaskEditorState extends State<TaskEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -50,7 +50,7 @@ class _TaskCardState extends State<TaskCard> {
                   ],
                 ),
               ),
-              TaskSchedules(
+              TaskScheduleEditorSection(
                 task: widget.task,
               )
             ]),
