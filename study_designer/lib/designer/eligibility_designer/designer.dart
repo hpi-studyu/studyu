@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_designer/widgets/designer_add_button.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
@@ -70,19 +71,7 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: FloatingActionButton.extended(
-              onPressed: _addQuestion,
-              isExtended: true,
-              label: Text('Add Question'),
-              icon: Icon(Icons.add),
-              backgroundColor: Colors.green,
-            ),
-          ),
-        ),
+        DesignerAddButton(label: Text('Add Question'), add: _addQuestion),
       ],
     );
   }
