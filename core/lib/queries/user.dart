@@ -23,4 +23,10 @@ class UserQueries {
     final ParseUser currentUser = await ParseUser.currentUser();
     currentUser.logout(deleteLocalUserData: true);
   }
+
+  static Future<void> deleteUserAccount() async {
+    final ParseUser currentUser = await ParseUser.currentUser();
+    currentUser.delete();
+    currentUser.logout(deleteLocalUserData: true);
+  }
 }
