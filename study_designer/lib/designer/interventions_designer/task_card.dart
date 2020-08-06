@@ -1,62 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:provider/provider.dart';
-import 'package:study_designer/models/designer_state.dart';
 import 'package:studyou_core/models/models.dart';
 
 class TaskCard extends StatefulWidget {
-  final int interventionIndex;
-  final int taskIndex;
-  final bool isEditing;
-  final void Function(int taskIndex) remove;
-  final void Function(int interventionIndex) onTap;
+  final Task task;
+  final void Function() remove;
 
-  const TaskCard(
-      {@required this.interventionIndex,
-      @required this.taskIndex,
-      @required this.remove,
-      @required this.isEditing,
-      @required this.onTap,
-      Key key})
-      : super(key: key);
+  const TaskCard({@required this.task, @required this.remove, Key key}) : super(key: key);
 
   @override
   _TaskCardState createState() => _TaskCardState();
 }
 
 class _TaskCardState extends State<TaskCard> {
-  Task task;
-
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    task = context
-        .watch<DesignerModel>()
-        .draftStudy
-        .studyDetails
-        .interventionSet
-        .interventions[widget.interventionIndex]
-        .tasks[widget.taskIndex];
-
     final cardContent = <Widget>[];
-    cardContent.add(Text('Task ${(widget.taskIndex + 1).toString()}'));
-    if (widget.isEditing) {
-      cardContent.add(_buildDeleteButton());
-      cardContent.add(_buildEditMetaDataForm());
-    } else {
-      cardContent.add(_buildShowMetaData());
-    }
+    cardContent.add(Text('Task'));
 
-    return GestureDetector(
-        onTap: () {
-          widget.onTap(widget.taskIndex);
-        },
-        child: Container(
-            margin: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(border: Border.all()),
-            child: Column(children: cardContent)));
+    cardContent.add(_buildDeleteButton());
+    cardContent.add(_buildEditMetaDataForm());
+
+    return Container(
+        margin: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(border: Border.all()),
+        child: Column(children: cardContent));
   }
 
   Widget _buildDeleteButton() {
@@ -64,7 +35,7 @@ class _TaskCardState extends State<TaskCard> {
       children: <Widget>[
         FlatButton(
           onPressed: () {
-            widget.remove(widget.taskIndex);
+            widget.remove();
           },
           child: const Text('Delete'),
         ),
@@ -86,7 +57,7 @@ class _TaskCardState extends State<TaskCard> {
               attribute: 'title',
               maxLength: 40,
               decoration: InputDecoration(labelText: 'Title'),
-              initialValue: task.title),
+              initialValue: widget.task.title),
 //          FormBuilderTextField(
 //              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
 //              keyboardType: TextInputType.number,
@@ -119,14 +90,5 @@ class _TaskCardState extends State<TaskCard> {
 //        task.minute = int.parse(_editFormKey.currentState.value['minute']);
       });
     }
-  }
-
-  Widget _buildShowMetaData() {
-    return Column(
-      children: [
-        ListTile(title: Text(task.title.isEmpty ? 'Name' : task.title)),
-//        Text('${task.hour}:${task.minute}')
-      ],
-    );
   }
 }
