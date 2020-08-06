@@ -104,11 +104,12 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text('Delete all data?'),
-        content: Text('You will not be able to restore your data.'),
+        content: Text(
+            'You will not be able to restore your data. Parts of your anonymized data may still be used for research purposes.'),
         actions: [
           FlatButton.icon(
             onPressed: () async {
-              UserQueries.logout();
+              UserQueries.deleteUserAccount();
               await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             }, // only logout and delete local parse data,
