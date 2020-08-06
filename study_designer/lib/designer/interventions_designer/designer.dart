@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/interventions_designer/intervention_card.dart';
+import 'package:study_designer/designer/interventions_designer/intervention_editor.dart';
 import 'package:study_designer/widgets/designer_add_button.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:uuid/uuid.dart';
@@ -45,7 +45,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                   ..._interventions
                       .asMap()
                       .entries
-                      .map((entry) => InterventionCard(
+                      .map((entry) => InterventionEditor(
                           key: UniqueKey(), intervention: entry.value, remove: () => _removeIntervention(entry.key)))
                       .toList()
                 ],

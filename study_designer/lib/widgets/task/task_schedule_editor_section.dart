@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:study_designer/widgets/fixed_schedule_widget.dart';
+import 'package:study_designer/widgets/task/fixed_schedule_editor.dart';
 import 'package:studyou_core/models/models.dart';
 
-class TaskSchedules extends StatefulWidget {
+class TaskScheduleEditorSection extends StatefulWidget {
   final Task task;
 
-  const TaskSchedules({@required this.task, Key key}) : super(key: key);
+  const TaskScheduleEditorSection({@required this.task, Key key}) : super(key: key);
 
   @override
-  _TaskSchedulesState createState() => _TaskSchedulesState();
+  _TaskScheduleEditorSectionState createState() => _TaskScheduleEditorSectionState();
 }
 
-class _TaskSchedulesState extends State<TaskSchedules> {
+class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
   void _add() {
     final time = Time()
       ..hour = 0
@@ -39,7 +39,7 @@ class _TaskSchedulesState extends State<TaskSchedules> {
         shrinkWrap: true,
         itemCount: widget.task.schedule.length,
         itemBuilder: (buildContext, index) {
-          return FixedScheduleWidget(
+          return FixedScheduleEditor(
               key: UniqueKey(), schedule: widget.task.schedule[index], remove: () => _remove(index));
         },
       ),

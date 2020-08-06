@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 
-class FixedScheduleWidget extends StatefulWidget {
+class FixedScheduleEditor extends StatefulWidget {
   final FixedSchedule schedule;
   final void Function() remove;
 
-  const FixedScheduleWidget({@required this.schedule, @required this.remove, Key key}) : super(key: key);
+  const FixedScheduleEditor({@required this.schedule, @required this.remove, Key key}) : super(key: key);
 
   @override
-  _FixedScheduleWidgetState createState() => _FixedScheduleWidgetState();
+  _FixedScheduleEditorState createState() => _FixedScheduleEditorState();
 }
 
-class _FixedScheduleWidgetState extends State<FixedScheduleWidget> {
+class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override

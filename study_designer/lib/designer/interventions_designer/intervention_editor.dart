@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/designer/interventions_designer/task_card.dart';
+import 'package:study_designer/widgets/task/task_editor.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:studyou_core/models/interventions/interventions.dart';
 import 'package:uuid/uuid.dart';
 
-class InterventionCard extends StatefulWidget {
+class InterventionEditor extends StatefulWidget {
   final Intervention intervention;
   final void Function() remove;
 
-  const InterventionCard({@required this.intervention, @required this.remove, Key key}) : super(key: key);
+  const InterventionEditor({@required this.intervention, @required this.remove, Key key}) : super(key: key);
 
   @override
-  _InterventionCardState createState() => _InterventionCardState();
+  _InterventionEditorState createState() => _InterventionEditorState();
 }
 
-class _InterventionCardState extends State<InterventionCard> {
+class _InterventionEditorState extends State<InterventionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   void _addCheckMarkTask() {
@@ -77,7 +77,7 @@ class _InterventionCardState extends State<InterventionCard> {
                     shrinkWrap: true,
                     itemCount: widget.intervention.tasks.length,
                     itemBuilder: (buildContext, index) {
-                      return TaskCard(
+                      return TaskEditor(
                           key: UniqueKey(), task: widget.intervention.tasks[index], remove: () => _removeTask(index));
                     }),
                 RaisedButton.icon(
