@@ -35,7 +35,7 @@ packages:
       name: basic_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.5"
+    version: "2.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -161,7 +161,7 @@ packages:
       name: effective_dart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.3"
+    version: "1.2.4"
   fake_async:
     dependency: transitive
     description:
@@ -182,12 +182,12 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_chips_input:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: flutter_chips_input
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0-dev.3"
+    version: "1.9.0"
   flutter_colorpicker:
     dependency: transitive
     description:
@@ -195,13 +195,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
+  flutter_datetime_picker:
+    dependency: "direct overridden"
+    description:
+      path: "."
+      ref: patch-1
+      resolved-ref: "974f3d805dec941435fe62289e1948ba7d979f05"
+      url: "https://github.com/ditheshthegreat/flutter_datetime_picker"
+    source: git
+    version: "1.3.8"
   flutter_form_builder:
     dependency: "direct main"
     description:
       name: flutter_form_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0-alpha.5"
+    version: "4.0.0-alpha.9"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -239,26 +248,19 @@ packages:
       name: flutter_typeahead
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.5"
+    version: "1.8.7"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
-  group_radio_button:
-    dependency: transitive
-    description:
-      name: group_radio_button
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   http:
     dependency: transitive
     description:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.1"
+    version: "0.12.2"
   http_parser:
     dependency: transitive
     description:
@@ -280,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.7+4"
+  image_picker_for_web:
+    dependency: transitive
+    description:
+      name: image_picker_for_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+1"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -294,6 +303,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2"
   json_annotation:
     dependency: transitive
     description:
@@ -348,7 +364,7 @@ packages:
     description:
       path: "."
       ref: "release/1.0.27"
-      resolved-ref: fd494511317686235d31fd700a3476f2d96cee9b
+      resolved-ref: "87cbba81b4cca3e9e4b62acb11c283828c339b76"
       url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "1.0.27"
@@ -407,7 +423,7 @@ packages:
       name: phone_number
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2+3"
+    version: "0.6.2+4"
   platform:
     dependency: transitive
     description:
@@ -464,13 +480,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  searchable_dropdown:
+    dependency: transitive
+    description:
+      name: searchable_dropdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.3"
   sembast:
     dependency: transitive
     description:
       name: sembast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.7+4"
+    version: "2.4.7+6"
   shared_preferences:
     dependency: transitive
     description:
@@ -559,7 +582,7 @@ packages:
       name: synchronized
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+1"
+    version: "2.2.0+2"
   term_glyph:
     dependency: transitive
     description:
