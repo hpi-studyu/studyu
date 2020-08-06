@@ -182,7 +182,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_chips_input:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_chips_input
       url: "https://pub.dartlang.org"
