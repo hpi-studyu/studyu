@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/consent_designer.dart';
-import 'package:study_designer/designer/eligibility_designer/designer.dart';
-import 'package:study_designer/designer/observation_designer/designer.dart';
-import 'package:study_designer/designer/publish.dart';
-import 'package:study_designer/designer/report_designer.dart';
-import 'package:study_designer/designer/schedule_designer.dart';
 
+import 'designer/consent_designer.dart';
+import 'designer/eligibility_designer/designer.dart';
 import 'designer/interventions_designer/designer.dart';
 import 'designer/meta_data_designer.dart';
+import 'designer/observation_designer/designer.dart';
+import 'designer/publish.dart';
+import 'designer/report_designer.dart';
+import 'designer/schedule_designer.dart';
 import 'models/designer_state.dart';
+import 'routes.dart';
 
 class Designer extends StatefulWidget {
+  final String route;
+
+  const Designer({@required this.route}) : super();
   @override
   _DesignerState createState() => _DesignerState();
 }
@@ -20,17 +24,72 @@ const String keyInterventionName = 'intervention_name_';
 const String keyInterventionDescription = 'intervention_description_';
 
 class _DesignerState extends State<Designer> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
   int _selectedIndex = 0;
 
-  final List<Widget> _mywidgets = [
-    MetaDataDesigner(),
-    InterventionsDesigner(),
-    EligibilityDesigner(),
-    ObservationDesigner(),
-    ScheduleDesigner(),
-    ReportDesigner(),
-    ConsentDesigner(),
-    Publish(),
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = designerRoutes.indexOf(widget.route);
+  }
+
+  Widget buildDesignerRouter() => Expanded(
+        child: Navigator(
+          key: _navigatorKey,
+          initialRoute: widget.route,
+          onGenerateRoute: (settings) {
+            if (_selectedIndex != designerRoutes.indexOf(settings.name)) {
+              _selectedIndex = designerRoutes.indexOf(settings.name);
+            }
+            WidgetBuilder builder;
+            switch (settings.name) {
+              case designerRoute:
+                builder = (context) => MetaDataDesigner();
+                break;
+              case designerInterventionsRoute:
+                builder = (context) => InterventionsDesigner();
+                break;
+              case designerEligibilityRoute:
+                builder = (context) => EligibilityDesigner();
+                break;
+              case designerObservationsRoute:
+                builder = (context) => ObservationDesigner();
+                break;
+              case designerScheduleRoute:
+                builder = (context) => ScheduleDesigner();
+                break;
+              case designerReportRoute:
+                builder = (context) => ReportDesigner();
+                break;
+              case designerConsentRoute:
+                builder = (context) => ConsentDesigner();
+                break;
+              case designerPublishRoute:
+                builder = (context) => Publish();
+                break;
+              default:
+                builder = (context) => Container();
+              //throw Exception('Invalid route: ${settings.name}');
+            }
+            // You can also return a PageRouteBuilder and
+            // define custom transitions between pages
+            return MaterialPageRoute(
+              builder: builder,
+              settings: settings,
+            );
+          },
+        ),
+      );
+
+  final List<String> designerRoutes = [
+    designerRoute,
+    designerInterventionsRoute,
+    designerEligibilityRoute,
+    designerObservationsRoute,
+    designerScheduleRoute,
+    designerReportRoute,
+    designerConsentRoute,
+    designerPublishRoute,
   ];
 
   @override
@@ -49,6 +108,7 @@ class _DesignerState extends State<Designer> {
               setState(() {
                 _selectedIndex = index;
               });
+              _navigatorKey.currentState.pushReplacementNamed(designerRoutes[_selectedIndex]);
             },
             labelType: NavigationRailLabelType.all,
             destinations: [
@@ -95,9 +155,7 @@ class _DesignerState extends State<Designer> {
             ],
           ),
           VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: _mywidgets.elementAt(_selectedIndex),
-          )
+          buildDesignerRouter()
         ]),
       ),
     );
