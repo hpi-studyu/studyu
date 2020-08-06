@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/queries/user.dart';
 
 import '../../../routes.dart';
 import '../../../util/localization.dart';
@@ -14,11 +15,13 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Locale _selectedValue;
+  Future<ParseUser> _userFuture;
 
   @override
   void initState() {
     super.initState();
     _selectedValue = context.read<AppLanguage>().appLocal;
+    _userFuture = UserQueries.getOrCreateUser();
   }
 
   Widget getDropdownRow(BuildContext context) {
@@ -68,6 +71,13 @@ class _SettingsState extends State<Settings> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            FutureBuilder<ParseUser>(
+                future: _userFuture,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return Container();
+                  final user = snapshot.data;
+                  return SelectableText('User ID: ${user.username}');
+                }),
             getDropdownRow(context),
             SizedBox(height: 20),
             RaisedButton.icon(
