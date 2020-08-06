@@ -72,23 +72,22 @@ class _InterventionCardState extends State<InterventionCard> {
                             initialValue: widget.intervention.description),
                       ],
                     )),
+                ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.intervention.tasks.length,
+                    itemBuilder: (buildContext, index) {
+                      return TaskCard(
+                          key: UniqueKey(), task: widget.intervention.tasks[index], remove: () => _removeTask(index));
+                    }),
                 RaisedButton.icon(
                     onPressed: _addCheckMarkTask, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Task')),
               ]),
             ),
           ]),
         ),
-        ..._buildTaskCards()
       ],
     );
-  }
-
-  List<Widget> _buildTaskCards() {
-    return widget.intervention.tasks
-        .asMap()
-        .entries
-        .map((entry) => TaskCard(key: UniqueKey(), task: entry.value, remove: () => _removeTask(entry.key)))
-        .toList();
   }
 
   void saveFormChanges() {

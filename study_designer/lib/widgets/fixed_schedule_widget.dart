@@ -23,14 +23,6 @@ class _FixedScheduleWidgetState extends State<FixedScheduleWidget> {
         autovalidate: true,
         // readonly: true,
         child: Column(children: <Widget>[
-          ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                onPressed: widget.remove,
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
           Row(
             children: [
               Expanded(
@@ -51,6 +43,12 @@ class _FixedScheduleWidgetState extends State<FixedScheduleWidget> {
                     decoration: InputDecoration(labelText: 'Minute'),
                     initialValue: widget.schedule.time.minute.toString()),
               ),
+              Expanded(
+                child: FlatButton(
+                  onPressed: widget.remove,
+                  child: const Text('Delete'),
+                ),
+              )
             ],
           )
         ]));
