@@ -27,8 +27,6 @@ dependencies:
   provider:
 
 dependency_overrides:
-  # Next two only needed for flutter_form_builder v4 alpha
-  flutter_chips_input: ^1.9.0-dev.3
   flutter_datetime_picker:
     git:
       url: https://github.com/ditheshthegreat/flutter_datetime_picker
