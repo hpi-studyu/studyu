@@ -35,7 +35,7 @@ class _ChoiceEditWidgetState extends State<ChoiceEditWidget> {
               onChanged: (value) {
                 saveFormChanges();
               },
-              attribute: 'text',
+              name: 'text',
               decoration: InputDecoration(labelText: 'Choice'),
               initialValue: widget.choice.text),
         ]));
