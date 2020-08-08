@@ -1,4 +1,3 @@
-import 'package:StudYou/models/app_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -8,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/user.dart';
 
+import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
 
