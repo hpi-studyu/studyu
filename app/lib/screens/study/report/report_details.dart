@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:normal/normal.dart';
 import 'package:rainbow_color/rainbow_color.dart';
-import 'package:stats/stats.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../routes.dart';
@@ -119,30 +115,32 @@ class ReportPerformanceModule extends ReportModuleContent {
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
-              ...getBars(interventions),
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: interventions.length * 2,
+                  itemBuilder: (context, index) {
+                    final i = (index/2).floor();
+                    if (index.isEven) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          interventions[i].name,
+                        ),
+                      );
+                    } else {
+                      final countableInterventions = getCountableObservationAmount(interventions[i]);
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: PerformanceBar(
+                          progress: countableInterventions == 0 ? 0 : countableInterventions / maximum,
+                          minimum: minimum,
+                        ),
+                      );
+                    }
+                  }),
             ],
           );
-  }
-
-  List<Widget> getBars(List<Intervention> interventions) {
-    return interventions
-        .map((intervention) => [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  intervention.name,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: PerformanceBar(
-                  progress: getCountableObservationAmount(intervention) / maximum,
-                  minimum: minimum,
-                ),
-              ),
-            ])
-        .expand((element) => element)
-        .toList();
   }
 
   String getPowerLevelDescription(double powerLevel) {
@@ -158,8 +156,10 @@ class ReportPerformanceModule extends ReportModuleContent {
     }
   }
 
-  double getCountableObservationAmount(Intervention intervention) {
-    final primaryOutcome = instance.reportSpecification.outcomes[0];
+  int getCountableObservationAmount(Intervention intervention) {
+    final results = instance.getResultsByDate(interventionId: intervention.id);
+    return 0;
+    /*final primaryOutcome = instance.reportSpecification.outcomes[0];
     final results = <List<num>>[];
     instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
       final data = value
@@ -181,7 +181,7 @@ class ReportPerformanceModule extends ReportModuleContent {
 
     // TODO might be cdf
     return Normal.cdf(-1.96 + ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length)))) +
-        Normal.cdf(-1.96 - ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length))));
+        Normal.cdf(-1.96 - ((mean0 - mean1) / sqrt(pow(sD, 2) / (results[0].length + results[1].length))));*/
   }
 }
 
