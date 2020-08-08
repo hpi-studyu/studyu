@@ -113,6 +113,21 @@ class StudyInstance extends ParseObject implements ParseCloneable {
     return resultMap;
   }
 
+  Map<DateTime, List<Result>> getResultsByDate({String interventionId}) {
+    final resultMap = <DateTime, List<Result>>{};
+    results.values
+        .map((value) => value.map((result) {
+              final intervention = getInterventionForDate(result.timeStamp);
+              return intervention.id == interventionId
+                  ? MapEntry(DateTime(result.timeStamp.year, result.timeStamp.month, result.timeStamp.day), result)
+                  : null;
+            }))
+        .expand((element) => element)
+        .where((element) => element != null)
+        .forEach((element) => resultMap.putIfAbsent(element.key, () => []).add(element.value));
+    return resultMap;
+  }
+
   int getInterventionIndexForDate(DateTime date) {
     final test = date.differenceInDays(startDate).inDays;
     return test ~/ schedule.phaseDuration;
