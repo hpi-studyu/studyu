@@ -77,7 +77,7 @@ class InterventionSegment extends StatelessWidget {
                   context: context,
                   builder: (context) => AlertDialog(
                         contentPadding: EdgeInsets.all(0),
-                        content: InterventionCard(intervention, showCheckbox: false),
+                        content: InterventionCard(intervention, showCheckbox: false, showDescription: true),
                       ));
             },
             elevation: 0,
