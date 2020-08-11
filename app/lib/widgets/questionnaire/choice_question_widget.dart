@@ -64,6 +64,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
     return ListView.separated(
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemCount: choiceWidgets.length,
       itemBuilder: (context, index) => choiceWidgets[index],
       separatorBuilder: (context, index) => SizedBox(height: 8),
