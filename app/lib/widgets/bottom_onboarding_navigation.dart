@@ -26,36 +26,38 @@ class BottomOnboardingNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          FlatButton(
-            onPressed: onBack ?? () => Navigator.pop(context),
-            child: Row(
-              children: [
-                backIcon ?? Icon(Icons.navigate_before),
-                Text(backLabel ?? Nof1Localizations.of(context).translate('back')),
-              ],
-            ),
-          ),
-          if (progress != null) ...[SizedBox(width: 8), Expanded(child: progress), SizedBox(width: 8)] else Spacer(),
-          Visibility(
-            visible: !hideNext,
-            maintainSize: true,
-            maintainAnimation: true,
-            maintainState: true,
-            child: FlatButton(
-              onPressed: onNext,
+    return BottomAppBar(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            FlatButton(
+              onPressed: onBack ?? () => Navigator.pop(context),
               child: Row(
                 children: [
-                  Text(nextLabel ?? Nof1Localizations.of(context).translate('next')),
-                  nextIcon ?? Icon(Icons.navigate_next),
+                  backIcon ?? Icon(Icons.navigate_before),
+                  Text(backLabel ?? Nof1Localizations.of(context).translate('back')),
                 ],
               ),
             ),
-          ),
-        ],
+            if (progress != null) ...[SizedBox(width: 8), Expanded(child: progress), SizedBox(width: 8)] else Spacer(),
+            Visibility(
+              visible: !hideNext,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: FlatButton(
+                onPressed: onNext,
+                child: Row(
+                  children: [
+                    Text(nextLabel ?? Nof1Localizations.of(context).translate('next')),
+                    nextIcon ?? Icon(Icons.navigate_next),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
