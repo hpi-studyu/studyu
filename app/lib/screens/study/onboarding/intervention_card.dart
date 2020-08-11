@@ -18,7 +18,7 @@ class InterventionCard extends StatelessWidget {
       this.selected = false,
       this.showCheckbox = true,
       this.showTasks = true,
-      this.showDescription = true,
+      this.showDescription = false,
       Key key})
       : super(key: key);
   String scheduleString(List<Schedule> schedules) {
@@ -97,9 +97,30 @@ class InterventionCard extends StatelessWidget {
                 )
               : null,
           dense: true,
-          title: Text(
-            intervention.name,
-            style: theme.textTheme.headline6,
+          title: Row(
+            children: [
+              Text(
+                intervention.name,
+                style: theme.textTheme.headline6,
+              ),
+              if (!showDescription)
+                IconButton(
+                  icon: Icon(Icons.info_outline),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: ListTile(
+                          leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
+                          dense: true,
+                          title: Text(
+                            intervention.name,
+                            style: theme.textTheme.headline6,
+                          )),
+                      content: Text(intervention.description ?? ''),
+                    ),
+                  ),
+                )
+            ],
           ),
         ),
         if (showDescription)
@@ -124,7 +145,7 @@ class BaselineCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-          leading: Icon(MdiIcons.rayStart),
+          leading: Icon(MdiIcons.rayStart, color: Theme.of(context).accentColor),
           dense: true,
           title: Text(
             'Baseline',
