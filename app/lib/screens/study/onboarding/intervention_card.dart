@@ -21,61 +21,6 @@ class InterventionCard extends StatelessWidget {
       this.showDescription = false,
       Key key})
       : super(key: key);
-  String scheduleString(List<Schedule> schedules) {
-    return schedules.map((schedule) {
-      switch (schedule.runtimeType) {
-        case FixedSchedule:
-          final FixedSchedule fixedSchedule = schedule;
-          return fixedSchedule.time.toString();
-
-        default:
-          print('Schedule not supported!');
-          return '';
-      }
-    }).join(',');
-  }
-
-  List<Widget> _buildTaskList(ThemeData theme) => <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Daily Tasks:', style: theme.textTheme.bodyText2),
-            ],
-          ),
-        ),
-        Divider(
-          height: 4,
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: intervention.tasks
-              .map(
-                (task) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
-                      Row(
-                        children: [
-                          Icon(Icons.access_time, size: 16, color: theme.textTheme.caption.color),
-                          SizedBox(width: 4),
-                          Text(
-                            scheduleString(task.schedule),
-                            style:
-                                theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      ];
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +76,75 @@ class InterventionCard extends StatelessWidget {
               style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
             ),
           ),
-        if (showTasks) ..._buildTaskList(theme)
+        if (showTasks) _TaskList(tasks: intervention.tasks)
+      ],
+    );
+  }
+}
+
+class _TaskList extends StatelessWidget {
+  final List<InterventionTask> tasks;
+
+  const _TaskList({@required this.tasks, Key key}) : super(key: key);
+
+  String scheduleString(List<Schedule> schedules) {
+    return schedules.map((schedule) {
+      switch (schedule.runtimeType) {
+        case FixedSchedule:
+          final FixedSchedule fixedSchedule = schedule;
+          return fixedSchedule.time.toString();
+
+        default:
+          print('Schedule not supported!');
+          return '';
+      }
+    }).join(',');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Daily Tasks:', style: theme.textTheme.bodyText2),
+            ],
+          ),
+        ),
+        Divider(
+          height: 4,
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: tasks
+              .map(
+                (task) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, size: 16, color: theme.textTheme.caption.color),
+                          SizedBox(width: 4),
+                          Text(
+                            scheduleString(task.schedule),
+                            style:
+                                theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+        ),
       ],
     );
   }
