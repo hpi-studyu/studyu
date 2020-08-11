@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class OnboardingProgress extends StatelessWidget implements PreferredSizeWidget {
+class OnboardingProgress extends StatelessWidget {
   final int stage;
   final double progress;
 
@@ -36,7 +36,4 @@ class OnboardingProgress extends StatelessWidget implements PreferredSizeWidget 
       ],
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(4);
 }
