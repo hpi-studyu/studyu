@@ -120,7 +120,7 @@ class ReportPerformanceModule extends ReportModuleContent {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: interventions.length * 2,
                   itemBuilder: (context, index) {
-                    final i = (index/2).floor();
+                    final i = (index / 2).floor();
                     if (index.isEven) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8),
@@ -157,8 +157,23 @@ class ReportPerformanceModule extends ReportModuleContent {
   }
 
   int getCountableObservationAmount(Intervention intervention) {
-    final results = instance.getResultsByDate(interventionId: intervention.id);
-    return 0;
+    var interventionsPerDay = 0;
+    for (final interventionTask in intervention.tasks) {
+      interventionsPerDay += interventionTask.schedule.length;
+    }
+
+    var countable = 0;
+    instance.getResultsByDate(interventionId: intervention.id).values.forEach((resultList) {
+      if (resultList
+              .where((result) => intervention.tasks.any((interventionTask) => interventionTask.id == result.taskId))
+              .length ==
+          interventionsPerDay) {
+        countable += resultList
+            .where((result) => instance.observations.any((observation) => observation.id == result.taskId))
+            .length;
+      }
+    });
+    return countable;
     /*final primaryOutcome = instance.reportSpecification.outcomes[0];
     final results = <List<num>>[];
     instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
