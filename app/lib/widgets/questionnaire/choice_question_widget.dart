@@ -56,6 +56,8 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
     if (widget.question.multiple) {
       choiceWidgets.add(RaisedButton(
+        color: Theme.of(context).accentColor,
+        textColor: Colors.white,
         onPressed: confirm,
         // TODO: Translate
         child: Text('Confirm selection'),
