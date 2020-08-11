@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:studyou_core/models/models.dart';
 
 import 'question_container.dart';
@@ -23,6 +24,7 @@ class QuestionnaireWidget extends StatefulWidget {
 class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final _scrollController = ScrollController();
 
   final QuestionnaireState qs = QuestionnaireState();
   int _nextQuestionIndex = 1;
@@ -70,6 +72,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       _insertQuestion(widget.questions[_nextQuestionIndex]);
       _listKey.currentState.insertItem(shownQuestions.length - 1, duration: Duration(milliseconds: 300));
       _nextQuestionIndex++;
+
+      // Scroll to bottom
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
+      });
     } else {
       _finishQuestionnaire();
     }
@@ -85,13 +96,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   Widget build(BuildContext context) {
     return AnimatedList(
       key: _listKey,
+      controller: _scrollController,
       initialItemCount: shownQuestions.length,
       itemBuilder: (context, index, animation) {
-        return SizeTransition(
-          sizeFactor: animation,
-          axis: Axis.vertical,
-          child: shownQuestions[index],
-        );
+        return shownQuestions[index];
       },
     );
   }
