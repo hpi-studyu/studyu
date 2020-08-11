@@ -37,7 +37,13 @@ class InterventionCard extends StatelessWidget {
   List<Widget> _buildTaskList(ThemeData theme) => <Widget>[
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text('Daily Tasks:', style: theme.textTheme.bodyText2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Daily Tasks:', style: theme.textTheme.bodyText2),
+              Icon(Icons.access_time, size: 20, color: theme.accentColor),
+            ],
+          ),
         ),
         Divider(
           height: 4,
@@ -77,7 +83,7 @@ class InterventionCard extends StatelessWidget {
       children: [
         ListTile(
           onTap: onTap,
-          leading: Icon(MdiIcons.fromString(intervention.icon)),
+          leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
           trailing: showCheckbox
               ? Checkbox(
                   value: selected,
