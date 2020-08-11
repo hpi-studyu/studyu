@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
@@ -41,7 +42,6 @@ class InterventionCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Daily Tasks:', style: theme.textTheme.bodyText2),
-              Icon(Icons.access_time, size: 20, color: theme.accentColor),
             ],
           ),
         ),
@@ -58,11 +58,17 @@ class InterventionCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
-                      FittedBox(
-                          child: Text(
-                        scheduleString(task.schedule),
-                        style: theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
-                      )),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, size: 16, color: theme.textTheme.caption.color),
+                          SizedBox(width: 4),
+                          Text(
+                            scheduleString(task.schedule),
+                            style:
+                                theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
