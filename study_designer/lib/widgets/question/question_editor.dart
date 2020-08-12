@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/question/choice_question_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
+
+import 'choice_question_editor_section.dart';
 
 class QuestionEditor extends StatefulWidget {
   final Question question;
@@ -24,7 +25,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
     final questionBody = buildQuestionBody();
 
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
@@ -49,7 +50,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
                 child: const Text('Delete'),
               )),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 FormBuilder(

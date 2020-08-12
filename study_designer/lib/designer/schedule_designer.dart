@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/models/designer_state.dart';
 import 'package:studyou_core/models/study_schedule/study_schedule.dart';
+
+import '../models/designer_state.dart';
 
 class ScheduleDesigner extends StatefulWidget {
   @override
@@ -21,7 +22,6 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(

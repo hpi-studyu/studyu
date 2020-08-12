@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 
 import '../models/designer_state.dart';
@@ -20,12 +19,11 @@ class _PublishState extends State<Publish> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[],
+          children: <Widget>[Text(_draftStudy.title)],
         ),
       ),
     );

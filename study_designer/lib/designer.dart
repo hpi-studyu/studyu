@@ -94,7 +94,6 @@ class _DesignerState extends State<Designer> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Provider<DesignerModel>(
       create: (context) => DesignerModel(),
       child: Scaffold(
