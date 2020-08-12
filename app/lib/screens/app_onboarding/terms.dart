@@ -1,5 +1,12 @@
+import 'dart:io';
+
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:studyou_core/queries/queries.dart';
 
 import '../../routes.dart';
@@ -24,6 +31,18 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final translations = Map.fromEntries([
+      'terms',
+      'terms_content',
+      'terms_agree',
+      'privacy',
+      'privacy_content',
+      'privacy_agree',
+      'disclaimer',
+      'disclaimer_content',
+      'disclaimer_agree'
+    ].map((key) => MapEntry(key, Nof1Localizations.of(context).translate(key))));
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -34,23 +53,79 @@ class _TermsScreenState extends State<TermsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ...buildSection(theme,
-                      title: Nof1Localizations.of(context).translate('terms'),
-                      descriptionText: Nof1Localizations.of(context).translate('terms_content'),
-                      acknowledgmentText: Nof1Localizations.of(context).translate('terms_agree'),
+                      title: translations['terms'],
+                      descriptionText: translations['terms_content'],
+                      acknowledgmentText: translations['terms_agree'],
                       onChange: (val) => setState(() => _acceptedTerms = val),
                       isChecked: _acceptedTerms),
                   ...buildSection(theme,
-                      title: Nof1Localizations.of(context).translate('privacy'),
-                      descriptionText: Nof1Localizations.of(context).translate('privacy_content'),
-                      acknowledgmentText: Nof1Localizations.of(context).translate('privacy_agree'),
+                      title: translations['privacy'],
+                      descriptionText: translations['privacy_content'],
+                      acknowledgmentText: translations['privacy_agree'],
                       onChange: (val) => setState(() => _acceptedPrivacy = val),
                       isChecked: _acceptedPrivacy),
                   ...buildSection(theme,
-                      title: Nof1Localizations.of(context).translate('disclaimer'),
-                      descriptionText: Nof1Localizations.of(context).translate('disclaimer_content'),
-                      acknowledgmentText: Nof1Localizations.of(context).translate('disclaimer_agree'),
+                      title: translations['disclaimer'],
+                      descriptionText: translations['disclaimer_content'],
+                      acknowledgmentText: translations['disclaimer_agree'],
                       onChange: (val) => setState(() => _acceptedDisclaimer = val),
                       isChecked: _acceptedDisclaimer),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      final doc = pw.Document();
+                      final _logo = PdfImage.file(
+                        doc.document,
+                        bytes: (await rootBundle.load('assets/images/icon_wide.png')).buffer.asUint8List(),
+                      );
+                      doc.addPage(
+                        pw.MultiPage(
+                            pageFormat: PdfPageFormat.a4,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            header: (context) => pw.Container(
+                                  alignment: pw.Alignment.centerRight,
+                                  child: pw.Image(_logo, height: 30),
+                                ),
+                            build: (context) => <pw.Widget>[
+                                  pw.Header(
+                                    level: 0,
+                                    child: pw.Text(translations['terms'], textScaleFactor: 2),
+                                  ),
+                                  pw.Paragraph(text: translations['terms_content']),
+                                  pw.Header(
+                                    level: 0,
+                                    child: pw.Text(translations['privacy'], textScaleFactor: 2),
+                                  ),
+                                  pw.Paragraph(text: translations['privacy_content']),
+                                  pw.Header(
+                                    level: 0,
+                                    child: pw.Text(translations['disclaimer'], textScaleFactor: 2),
+                                  ),
+                                  pw.Paragraph(text: translations['disclaimer_content']),
+                                ]),
+                      );
+
+                      DownloadsPathProvider.downloadsDirectory.then((dir) {
+                        File('${dir.path}/StudyU_Terms_of_Service.pdf').writeAsBytesSync(doc.save());
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text(Nof1Localizations.of(context).translate('download_finished')),
+                                  content:
+                                      Text(Nof1Localizations.of(context).translate('download_finished_description')),
+                                ));
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Download'),
+                        Icon(MdiIcons.download),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

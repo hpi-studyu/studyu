@@ -38,7 +38,7 @@ class Nof1Localizations {
     if (testing) {
       return key;
     }
-    return _localizedStrings[key];
+    return _localizedStrings[key] ?? '';
   }
 }
 

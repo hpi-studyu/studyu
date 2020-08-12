@@ -49,6 +49,8 @@ dependencies:
   charts_flutter:
   normal:
   stats:
+  pdf:
+  downloads_path_provider:
 
 dev_dependencies:
   build_runner:
