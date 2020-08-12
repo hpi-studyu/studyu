@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:study_designer/widgets/task/questionnaire_task_editor_section.dart';
 import 'package:study_designer/widgets/task/task_schedule_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -19,6 +20,8 @@ class _TaskEditorState extends State<TaskEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final taskBody = buildTaskBody();
+
     return Card(
         margin: EdgeInsets.all(10.0),
         child: Column(children: [
@@ -50,12 +53,24 @@ class _TaskEditorState extends State<TaskEditor> {
                   ],
                 ),
               ),
+              if (taskBody != null) taskBody,
               TaskScheduleEditorSection(
                 task: widget.task,
               )
             ]),
           )
         ]));
+  }
+
+  Widget buildTaskBody() {
+    switch (widget.task.runtimeType) {
+      case QuestionnaireTask:
+        return QuestionnaireTaskEditorSection(
+          task: widget.task,
+        );
+      default:
+        return null;
+    }
   }
 
   void saveFormChanges() {
