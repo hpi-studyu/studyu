@@ -99,6 +99,9 @@
   "disclaimer_content": "we are not liable",
   "disclaimer_agree": "I read and understand the disclaimer",
 
+  "download_finished": "Download finished",
+  "download_finished_description": "The file has been saved to \"Downloads\".",
+
   "eligible_no": "You are not eligible for this study",
   "eligible_yes": "You are eligible for this study",
   "eligible_mistake": "If you made a mistake, you can still change your answers",

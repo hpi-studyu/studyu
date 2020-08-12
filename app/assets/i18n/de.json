@@ -101,6 +101,9 @@
   "disclaimer_content": "Wir sind nicht haftbar",
   "disclaimer_agree": "Ich akzeptiere den Haftungsaussschluss",
 
+  "download_finished": "Download abgeschlossen",
+  "download_finished_description": "Die Datei wurde in \"Downloads\" gespeichert.",
+
   "eligible_no": "Diese Studie ist für Sie leider nicht auswählbar",
   "eligible_yes": "Sie sind berechtigt, diese Studie auszuwählen",
   "eligible_mistake": "Falls Sie einen Fehler gemacht haben, können Sie Ihre Antworten ändern",
