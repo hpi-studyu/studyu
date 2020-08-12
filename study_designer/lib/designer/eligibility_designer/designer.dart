@@ -36,8 +36,8 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
                 padding: const EdgeInsets.all(16),
                 child: SingleChildScrollView(
                   child: QuestionnaireEditor(
-                    questionnaire: questionnaire,
-                  ),
+                      questionnaire: questionnaire,
+                      questionTypes: [BooleanQuestion.questionType, ChoiceQuestion.questionType]),
                 ))),
         DesignerAddButton(label: Text('Add Question'), add: _addQuestion),
       ],
