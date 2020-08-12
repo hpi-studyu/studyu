@@ -11,14 +11,13 @@ class MetaDataDesigner extends StatefulWidget {
 
 class _MetaDataDesignerState extends State<MetaDataDesigner> {
   LocalStudy _draftStudy;
+  final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
     super.initState();
     _draftStudy = context.read<DesignerModel>().draftStudy;
   }
-
-  final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
