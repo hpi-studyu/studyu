@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/task/questionnaire_task_editor_section.dart';
-import 'package:study_designer/widgets/task/task_schedule_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
+
+import 'questionnaire_task_editor_section.dart';
+import 'task_schedule_editor_section.dart';
 
 class TaskEditor extends StatefulWidget {
   final Task task;
@@ -23,7 +24,7 @@ class _TaskEditorState extends State<TaskEditor> {
     final taskBody = buildTaskBody();
 
     return Card(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(10),
         child: Column(children: [
           ListTile(
               title: Row(
@@ -34,7 +35,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 child: const Text('Delete'),
               )),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Column(children: [
               FormBuilder(
                 key: _editFormKey,

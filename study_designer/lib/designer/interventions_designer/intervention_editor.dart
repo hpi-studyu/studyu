@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:study_designer/widgets/task/task_editor.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:studyou_core/models/interventions/interventions.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../widgets/task/task_editor.dart';
 
 class InterventionEditor extends StatefulWidget {
   final Intervention intervention;
@@ -42,13 +43,13 @@ class _InterventionEditorState extends State<InterventionEditor> {
     return Column(
       children: [
         Card(
-          margin: EdgeInsets.all(10.0),
+          margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
                 title: Text('Intervention'),
                 trailing: FlatButton(onPressed: widget.remove, child: const Text('Delete'))),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8),
               child: Column(children: [
                 FormBuilder(
                     key: _editFormKey,
