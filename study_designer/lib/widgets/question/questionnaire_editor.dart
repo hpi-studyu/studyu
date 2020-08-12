@@ -30,7 +30,11 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     } else if (newType == AnnotatedScaleQuestion.questionType) {
       newQuestion = AnnotatedScaleQuestion();
     } else if (newType == VisualAnalogueQuestion.questionType) {
-      newQuestion = VisualAnalogueQuestion();
+      newQuestion = VisualAnalogueQuestion()
+        ..minimumColor = Colors.white
+        ..minimumAnnotation = ''
+        ..maximumColor = Colors.white
+        ..maximumAnnotation = '';
     }
     newQuestion
       ..prompt = widget.questionnaire.questions[index].prompt
