@@ -32,6 +32,11 @@ class LocalStudy {
   String title;
   String description;
   LocalStudyDetails studyDetails;
+
+  Study toParse() => Study()
+    ..title = title
+    ..description = description
+    ..studyDetails = studyDetails.toParse();
 }
 
 class LocalStudyDetails {
@@ -39,6 +44,12 @@ class LocalStudyDetails {
   InterventionSet interventionSet;
   StudySchedule studySchedule;
   List<Observation> observations;
+
+  StudyDetails toParse() => StudyDetails()
+    ..questionnaire = questionnaire
+    ..interventionSet = interventionSet
+    ..schedule = studySchedule
+    ..observations = observations;
 }
 
 class LocalIntervention {
