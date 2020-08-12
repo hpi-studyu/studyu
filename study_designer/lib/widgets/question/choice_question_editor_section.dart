@@ -32,11 +32,6 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
 
   @override
   Widget build(BuildContext context) {
-    /*return Column(children: [
-      RaisedButton.icon(onPressed: _addChoice, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Choice')),
-      ...widget.question.choices.asMap().entries.map(
-          (entry) => ChoiceEditWidget(key: UniqueKey(), choice: entry.value, remove: () => _removeChoice(entry.key)))
-    ]);*/
     return Column(children: [
       ListView.builder(
         shrinkWrap: true,
