@@ -60,6 +60,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       itemBuilder: (_context, index) => Card(
         child: InterventionCard(interventions[index],
             showCheckbox: true,
+            showDescription: false,
             selected: selectedInterventions.any((intervention) => intervention.id == interventions[index].id),
             onTap: () => onSelect(interventions[index])),
       ),
