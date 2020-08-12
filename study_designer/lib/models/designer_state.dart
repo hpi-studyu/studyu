@@ -1,5 +1,6 @@
 import 'package:studyou_core/models/interventions/intervention_set.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
+import 'package:studyou_core/models/study_schedule/study_schedule.dart';
 
 class DesignerModel {
   LocalStudy draftStudy;
@@ -7,9 +8,16 @@ class DesignerModel {
   DesignerModel() {
     final questionnaire = Questionnaire()..questions = [];
 
+    final studySchedule = StudySchedule()
+      ..numberOfCycles = 2
+      ..phaseDuration = 7
+      ..includeBaseline = true
+      ..sequence = PhaseSequence.alternating;
+
     final studyDetails = LocalStudyDetails()
       ..questionnaire = questionnaire
-      ..interventionSet = InterventionSet([]);
+      ..interventionSet = InterventionSet([])
+      ..studySchedule = studySchedule;
 
     draftStudy = LocalStudy()
       ..title = ''
@@ -27,6 +35,7 @@ class LocalStudy {
 class LocalStudyDetails {
   Questionnaire questionnaire;
   InterventionSet interventionSet;
+  StudySchedule studySchedule;
 }
 
 class LocalIntervention {
