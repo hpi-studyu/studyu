@@ -6,8 +6,9 @@ import 'package:studyou_core/models/questionnaire/questionnaire.dart';
 
 class QuestionnaireEditor extends StatefulWidget {
   final Questionnaire questionnaire;
+  final List<String> questionTypes;
 
-  const QuestionnaireEditor({@required this.questionnaire, Key key}) : super(key: key);
+  const QuestionnaireEditor({@required this.questionnaire, @required this.questionTypes, Key key}) : super(key: key);
 
   @override
   _QuestionnaireEditorState createState() => _QuestionnaireEditorState();
@@ -26,6 +27,10 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
       newQuestion = BooleanQuestion();
     } else if (newType == ChoiceQuestion.questionType) {
       newQuestion = ChoiceQuestion()..choices = [];
+    } else if (newType == AnnotatedScaleQuestion.questionType) {
+      newQuestion = AnnotatedScaleQuestion();
+    } else if (newType == VisualAnalogueQuestion.questionType) {
+      newQuestion = VisualAnalogueQuestion();
     }
     newQuestion
       ..prompt = widget.questionnaire.questions[index].prompt
@@ -42,11 +47,14 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
         ...widget.questionnaire.questions
             .asMap()
             .entries
-            .map((entry) => QuestionEditor(
-                key: UniqueKey(),
-                remove: () => _removeQuestion(entry.key),
-                changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
-                question: entry.value))
+            .map(
+              (entry) => QuestionEditor(
+                  key: UniqueKey(),
+                  remove: () => _removeQuestion(entry.key),
+                  changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
+                  question: entry.value,
+                  questionTypes: widget.questionTypes),
+            )
             .toList(),
       ],
     );

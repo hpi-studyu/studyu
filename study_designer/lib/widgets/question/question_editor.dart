@@ -1,16 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:study_designer/widgets/question/annotated_scale_question_editor_section.dart';
+import 'package:study_designer/widgets/question/choice_question_editor_section.dart';
+import 'package:study_designer/widgets/question/visual_analogue_question_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
-
-import 'choice_question_editor_section.dart';
 
 class QuestionEditor extends StatefulWidget {
   final Question question;
+  final List<String> questionTypes;
   final void Function() remove;
   final void Function(String newType) changeQuestionType;
 
-  const QuestionEditor({@required this.question, @required this.remove, @required this.changeQuestionType, Key key})
+  const QuestionEditor(
+      {@required this.question,
+      @required this.questionTypes,
+      @required this.remove,
+      @required this.changeQuestionType,
+      Key key})
       : super(key: key);
 
   @override
@@ -25,7 +32,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
     final questionBody = buildQuestionBody();
 
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(10.0),
       child: Column(
         children: [
           ListTile(
@@ -34,8 +41,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
                   DropdownButton<String>(
                     value: widget.question.type,
                     onChanged: widget.changeQuestionType,
-                    items: <String>[BooleanQuestion.questionType, ChoiceQuestion.questionType]
-                        .map<DropdownMenuItem<String>>((value) {
+                    items: widget.questionTypes.map<DropdownMenuItem<String>>((value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -50,7 +56,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
                 child: const Text('Delete'),
               )),
           Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 FormBuilder(
@@ -88,6 +94,10 @@ class _QuestionEditorState extends State<QuestionEditor> {
         return ChoiceQuestionEditorSection(
           question: widget.question,
         );
+      case VisualAnalogueQuestion:
+        return VisualAnalogueQuestionEditorSection(question: widget.question);
+      case AnnotatedScaleQuestion:
+        return AnnotatedScaleQuestionEditorSection(question: widget.question);
       default:
         return null;
     }

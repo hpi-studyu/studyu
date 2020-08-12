@@ -27,7 +27,7 @@ class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      QuestionnaireEditor(questionnaire: widget.task.questions),
+      QuestionnaireEditor(questionnaire: widget.task.questions, questionTypes: Question.questionTypes.keys.toList()),
       RaisedButton.icon(
           onPressed: _addQuestion, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Question'))
     ]);
