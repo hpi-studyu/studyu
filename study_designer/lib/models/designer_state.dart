@@ -1,4 +1,5 @@
 import 'package:studyou_core/models/interventions/intervention_set.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
 import 'package:studyou_core/models/study_schedule/study_schedule.dart';
 
@@ -17,7 +18,8 @@ class DesignerModel {
     final studyDetails = LocalStudyDetails()
       ..questionnaire = questionnaire
       ..interventionSet = InterventionSet([])
-      ..studySchedule = studySchedule;
+      ..studySchedule = studySchedule
+      ..observations = [];
 
     draftStudy = LocalStudy()
       ..title = ''
@@ -36,6 +38,7 @@ class LocalStudyDetails {
   Questionnaire questionnaire;
   InterventionSet interventionSet;
   StudySchedule studySchedule;
+  List<Observation> observations;
 }
 
 class LocalIntervention {

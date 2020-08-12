@@ -21,11 +21,11 @@ class _InterventionEditorState extends State<InterventionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   void _addCheckMarkTask() {
+    final task = CheckmarkTask()
+      ..id = Uuid().v4()
+      ..title = ''
+      ..schedule = [];
     setState(() {
-      final task = CheckmarkTask()
-        ..id = Uuid().v4()
-        ..title = ''
-        ..schedule = [];
       widget.intervention.tasks.add(task);
     });
     print(widget.intervention.tasks);
