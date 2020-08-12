@@ -59,6 +59,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       itemCount: interventions.length,
       itemBuilder: (_context, index) => Card(
         child: InterventionCard(interventions[index],
+            showCheckbox: true,
             selected: selectedInterventions.any((intervention) => intervention.id == interventions[index].id),
             onTap: () => onSelect(interventions[index])),
       ),

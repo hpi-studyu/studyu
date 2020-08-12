@@ -58,8 +58,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               SizedBox(height: 8),
               Text('Current Intervention', style: theme.textTheme.headline6),
               SizedBox(height: 8),
-              InterventionCard(widget.study.getInterventionForDate(DateTime.now()),
-                  showCheckbox: false, showTasks: false),
+              InterventionCardTitleTile(intervention: widget.study.getInterventionForDate(DateTime.now())),
               SizedBox(height: 8),
               Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)
             ])),
