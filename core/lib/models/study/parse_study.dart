@@ -2,8 +2,8 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../interventions/intervention.dart';
 import '../interventions/intervention_set.dart';
-import 'study_details.dart';
-import 'study_instance.dart';
+import 'parse_study_details.dart';
+import 'parse_user_study.dart';
 
 class ParseStudy extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'Study';
