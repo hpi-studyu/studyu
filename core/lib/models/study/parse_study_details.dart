@@ -1,12 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:studyou_core/models/consent/consent_item.dart';
 
-import '../eligibility/eligibility_criterion.dart';
-import '../interventions/intervention_set.dart';
-import '../observations/observation.dart';
-import '../questionnaire/questionnaire.dart';
-import '../report/report_models.dart';
-import '../study_schedule/study_schedule.dart';
+import '../models.dart';
 
 class ParseStudyDetails extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'StudyDetails';
