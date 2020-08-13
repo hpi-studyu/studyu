@@ -1,15 +1,8 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:quiver/collection.dart';
-import 'package:studyou_core/models/consent/consent_item.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/results/result.dart';
-import 'package:studyou_core/models/study_schedule/study_schedule.dart';
 
 import '../../util/extensions.dart';
-import '../interventions/intervention.dart';
-import '../interventions/intervention_set.dart';
-import '../observations/observation.dart';
-import '../report/report_models.dart';
+import '../models.dart';
 
 class ParseUserStudy extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'UserStudy';
