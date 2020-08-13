@@ -16,7 +16,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  StudyInstance study;
+  ParseUserStudy study;
   Multimap<Time, Task> scheduleToday;
 
   @override

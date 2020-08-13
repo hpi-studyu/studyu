@@ -16,7 +16,7 @@ class JourneyOverviewScreen extends StatefulWidget {
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
-  StudyInstance study;
+  ParseUserStudy study;
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     final consentGiven = await Navigator.pushNamed(context, Routes.consent);

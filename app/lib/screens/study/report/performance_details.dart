@@ -7,9 +7,9 @@ import '../../../util/intervention.dart';
 import '../onboarding/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
-  final StudyInstance reportStudy;
+  final ParseUserStudy reportStudy;
 
-  static MaterialPageRoute routeFor({@required StudyInstance reportStudy}) => MaterialPageRoute(
+  static MaterialPageRoute routeFor({@required ParseUserStudy reportStudy}) => MaterialPageRoute(
       builder: (_) => PerformanceDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.performanceDetails));
 
   const PerformanceDetailsScreen(this.reportStudy, {Key key}) : super(key: key);
@@ -75,7 +75,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
 
 class InterventionPerformanceBar extends StatelessWidget {
   final Intervention intervention;
-  final StudyInstance study;
+  final ParseUserStudy study;
 
   const InterventionPerformanceBar({@required this.intervention, @required this.study, Key key}) : super(key: key);
 
@@ -101,7 +101,7 @@ class InterventionPerformanceBar extends StatelessWidget {
 
 class ObservationPerformanceBar extends StatelessWidget {
   final Observation observation;
-  final StudyInstance study;
+  final ParseUserStudy study;
 
   const ObservationPerformanceBar({@required this.observation, @required this.study, Key key}) : super(key: key);
 

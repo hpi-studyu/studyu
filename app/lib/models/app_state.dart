@@ -1,9 +1,9 @@
 import 'package:studyou_core/models/models.dart';
 
 class AppModel {
-  Study selectedStudy;
+  ParseStudy selectedStudy;
   List<Intervention> selectedInterventions;
-  StudyInstance activeStudy;
+  ParseUserStudy activeStudy;
 
   AppModel(this.activeStudy);
 }

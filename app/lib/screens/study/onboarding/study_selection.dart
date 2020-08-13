@@ -20,10 +20,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
   @override
   void initState() {
     super.initState();
-    _studiesFuture = Study().getAll();
+    _studiesFuture = ParseStudy().getAll();
   }
 
-  Future<void> navigateToStudyOverview(BuildContext context, Study selectedStudy) async {
+  Future<void> navigateToStudyOverview(BuildContext context, ParseStudy selectedStudy) async {
     context.read<AppModel>().selectedStudy = selectedStudy;
     Navigator.pushNamed(context, Routes.studyOverview);
   }
@@ -45,7 +45,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   ),
                 ),
               ),
-              ParseListFutureBuilder<Study>(
+              ParseListFutureBuilder<ParseStudy>(
                 queryFunction: () => _studiesFuture,
                 builder: (_context, studies) {
                   return ListView.builder(

@@ -18,7 +18,7 @@ class StudyOverviewScreen extends StatefulWidget {
 }
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
-  Study study;
+  ParseStudy study;
   Future<ParseResponse> _futureStudyDetails;
 
   @override
@@ -50,7 +50,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         title: Text(study.title),
       ),
       body: Center(
-          child: ParseFetchOneFutureBuilder<Study>(
+          child: ParseFetchOneFutureBuilder<ParseStudy>(
               queryFunction: () => _futureStudyDetails,
               builder: (_context, study) {
                 context.read<AppModel>().selectedStudy = study;
