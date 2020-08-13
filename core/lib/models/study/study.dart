@@ -1,4 +1,4 @@
-abstract class Study {
+class Study {
   String id;
   String title;
   String description;
