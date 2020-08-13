@@ -1,6 +1,6 @@
 import '../models.dart';
 
-abstract class StudyDetails {
+class StudyDetails {
   Questionnaire questionnaire;
   List<EligibilityCriterion> eligibility;
   List<ConsentItem> consent;

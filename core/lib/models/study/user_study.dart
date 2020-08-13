@@ -3,7 +3,7 @@ import 'package:quiver/collection.dart';
 import '../../util/extensions.dart';
 import '../models.dart';
 
-abstract class UserStudy {
+class UserStudy {
   String studyId;
   String userId;
   String title;
