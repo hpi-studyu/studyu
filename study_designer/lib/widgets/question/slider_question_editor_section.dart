@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/question/annotated_scale_question_editor_section.dart';
-import 'package:study_designer/widgets/question/visual_analogue_question_editor_section.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire_models.dart';
 import 'package:studyou_core/models/questionnaire/questions/slider_question.dart';
+
+import '../../widgets/question/annotated_scale_question_editor_section.dart';
+import '../../widgets/question/visual_analogue_question_editor_section.dart';
 
 class SliderQuestionEditorSection extends StatefulWidget {
   final SliderQuestion question;

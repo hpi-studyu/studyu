@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:study_designer/widgets/task/fixed_schedule_editor.dart';
 import 'package:studyou_core/models/models.dart';
+
+import '../../widgets/task/fixed_schedule_editor.dart';
 
 class TaskScheduleEditorSection extends StatefulWidget {
   final Task task;
