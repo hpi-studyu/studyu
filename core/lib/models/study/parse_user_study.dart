@@ -4,7 +4,7 @@ import 'package:quiver/collection.dart';
 import '../../util/extensions.dart';
 import '../models.dart';
 
-class ParseUserStudy extends ParseObject implements ParseCloneable {
+class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudy {
   static const _keyTableName = 'UserStudy';
 
   ParseUserStudy() : super(_keyTableName);
