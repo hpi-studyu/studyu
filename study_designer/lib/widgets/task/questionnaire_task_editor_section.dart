@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:study_designer/widgets/question/questionnaire_editor.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../widgets/question/questionnaire_editor.dart';
 
 class QuestionnaireTaskEditorSection extends StatefulWidget {
   final QuestionnaireTask task;

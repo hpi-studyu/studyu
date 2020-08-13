@@ -14,6 +14,6 @@ class AnnotatedScaleQuestionEditorSection extends StatefulWidget {
 class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQuestionEditorSection> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [Text('Todo Annotated Scale')]);
+    return Column(children: const []);
   }
 }
