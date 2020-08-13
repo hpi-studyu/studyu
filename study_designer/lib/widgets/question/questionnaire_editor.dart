@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:study_designer/widgets/question/question_editor.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
+import 'package:studyou_core/models/questionnaire/questions/slider_question.dart';
 
 class QuestionnaireEditor extends StatefulWidget {
   final Questionnaire questionnaire;
@@ -22,23 +23,41 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
   }
 
   void _changeQuestionType(int index, String newType) {
+    final oldQuestion = widget.questionnaire.questions[index];
     Question newQuestion;
     if (newType == BooleanQuestion.questionType) {
       newQuestion = BooleanQuestion();
     } else if (newType == ChoiceQuestion.questionType) {
       newQuestion = ChoiceQuestion()..choices = [];
-    } else if (newType == AnnotatedScaleQuestion.questionType) {
-      newQuestion = AnnotatedScaleQuestion();
-    } else if (newType == VisualAnalogueQuestion.questionType) {
-      newQuestion = VisualAnalogueQuestion()
-        ..minimumColor = Colors.white
-        ..minimumAnnotation = ''
-        ..maximumColor = Colors.white
-        ..maximumAnnotation = '';
+    } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
+      if (newType == AnnotatedScaleQuestion.questionType) {
+        newQuestion = AnnotatedScaleQuestion();
+      } else {
+        newQuestion = VisualAnalogueQuestion()
+          ..minimumColor = Colors.white
+          ..minimumAnnotation = ''
+          ..maximumColor = Colors.white
+          ..maximumAnnotation = '';
+      }
+      if (newQuestion is SliderQuestion) {
+        if (oldQuestion is SliderQuestion) {
+          newQuestion
+            ..minimum = oldQuestion.minimum
+            ..maximum = oldQuestion.maximum
+            ..initial = oldQuestion.initial
+            ..step = oldQuestion.step;
+        } else {
+          newQuestion
+            ..minimum = 0
+            ..maximum = 0
+            ..initial = 0
+            ..step = 0;
+        }
+      }
     }
     newQuestion
-      ..prompt = widget.questionnaire.questions[index].prompt
-      ..rationale = widget.questionnaire.questions[index].rationale;
+      ..prompt = oldQuestion.prompt
+      ..rationale = oldQuestion.rationale;
     setState(() {
       widget.questionnaire.questions[index] = newQuestion;
     });

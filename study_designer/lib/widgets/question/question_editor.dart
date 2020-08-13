@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/question/annotated_scale_question_editor_section.dart';
 import 'package:study_designer/widgets/question/choice_question_editor_section.dart';
-import 'package:study_designer/widgets/question/visual_analogue_question_editor_section.dart';
+import 'package:study_designer/widgets/question/slider_question_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
 
 class QuestionEditor extends StatefulWidget {
@@ -29,10 +28,10 @@ class _QuestionEditorState extends State<QuestionEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final questionBody = buildQuestionBody();
+    final questionBody = _buildQuestionBody();
 
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
@@ -66,14 +65,14 @@ class _QuestionEditorState extends State<QuestionEditor> {
                     child: Column(children: <Widget>[
                       FormBuilderTextField(
                           onChanged: (value) {
-                            saveFormChanges();
+                            _saveFormChanges();
                           },
                           name: 'prompt',
                           decoration: InputDecoration(labelText: 'Prompt'),
                           initialValue: widget.question.prompt),
                       FormBuilderTextField(
                           onChanged: (value) {
-                            saveFormChanges();
+                            _saveFormChanges();
                           },
                           name: 'rationale',
                           decoration: InputDecoration(labelText: 'Rationale'),
@@ -88,22 +87,21 @@ class _QuestionEditorState extends State<QuestionEditor> {
     );
   }
 
-  Widget buildQuestionBody() {
+  Widget _buildQuestionBody() {
     switch (widget.question.runtimeType) {
       case ChoiceQuestion:
         return ChoiceQuestionEditorSection(
           question: widget.question,
         );
       case VisualAnalogueQuestion:
-        return VisualAnalogueQuestionEditorSection(question: widget.question);
       case AnnotatedScaleQuestion:
-        return AnnotatedScaleQuestionEditorSection(question: widget.question);
+        return SliderQuestionEditorSection(question: widget.question);
       default:
         return null;
     }
   }
 
-  void saveFormChanges() {
+  void _saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
