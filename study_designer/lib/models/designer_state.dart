@@ -33,7 +33,7 @@ class LocalStudy {
   String description;
   LocalStudyDetails studyDetails;
 
-  Study toParse() => Study()
+  ParseStudy toParse() => ParseStudy()
     ..title = title
     ..description = description
     ..studyDetails = studyDetails.toParse();
@@ -45,7 +45,7 @@ class LocalStudyDetails {
   StudySchedule studySchedule;
   List<Observation> observations;
 
-  StudyDetails toParse() => StudyDetails()
+  ParseStudyDetails toParse() => ParseStudyDetails()
     ..questionnaire = questionnaire
     ..interventionSet = interventionSet
     ..schedule = studySchedule

@@ -5,21 +5,21 @@ import '../interventions/intervention_set.dart';
 import 'study_details.dart';
 import 'study_instance.dart';
 
-class Study extends ParseObject implements ParseCloneable {
+class ParseStudy extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'Study';
 
-  Study() : super(_keyTableName);
+  ParseStudy() : super(_keyTableName);
 
-  Study.clone() : this();
-
-  @override
-  Study clone(Map<String, dynamic> map) => Study.clone()..fromJson(map);
+  ParseStudy.clone() : this();
 
   @override
-  Study fromJson(Map<String, dynamic> objectData) {
+  ParseStudy clone(Map<String, dynamic> map) => ParseStudy.clone()..fromJson(map);
+
+  @override
+  ParseStudy fromJson(Map<String, dynamic> objectData) {
     super.fromJson(objectData);
     if (objectData.containsKey(keyStudyDetails)) {
-      studyDetails = StudyDetails.clone().fromJson(objectData[keyStudyDetails]);
+      studyDetails = ParseStudyDetails.clone().fromJson(objectData[keyStudyDetails]);
     }
     return this;
   }
@@ -41,12 +41,12 @@ class Study extends ParseObject implements ParseCloneable {
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
   static const keyStudyDetails = 'study_details';
-  StudyDetails get studyDetails => get<StudyDetails>(keyStudyDetails);
-  set studyDetails(StudyDetails studyDetails) => set<StudyDetails>(keyStudyDetails, studyDetails);
+  ParseStudyDetails get studyDetails => get<ParseStudyDetails>(keyStudyDetails);
+  set studyDetails(ParseStudyDetails studyDetails) => set<ParseStudyDetails>(keyStudyDetails, studyDetails);
 
-  StudyInstance extractUserStudy(
+  ParseUserStudy extractUserStudy(
       String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
-    final userStudy = StudyInstance()
+    final userStudy = ParseUserStudy()
       ..title = title
       ..description = description
       ..iconName = iconName

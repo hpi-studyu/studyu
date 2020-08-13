@@ -10,9 +10,9 @@ import '../../../util/localization.dart';
 import 'performance_details.dart';
 
 class ReportDetailsScreen extends StatelessWidget {
-  final StudyInstance reportStudy;
+  final ParseUserStudy reportStudy;
 
-  static MaterialPageRoute routeFor({@required StudyInstance reportStudy}) => MaterialPageRoute(
+  static MaterialPageRoute routeFor({@required ParseUserStudy reportStudy}) => MaterialPageRoute(
       builder: (_) => ReportDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.reportDetails));
 
   const ReportDetailsScreen(this.reportStudy, {Key key}) : super(key: key);
@@ -72,13 +72,13 @@ class ReportModule extends StatelessWidget {
 }
 
 abstract class ReportModuleContent extends StatelessWidget {
-  final StudyInstance instance;
+  final ParseUserStudy instance;
 
   const ReportModuleContent(this.instance);
 }
 
 class ReportGeneralDetailsModule extends ReportModuleContent {
-  const ReportGeneralDetailsModule(StudyInstance instance) : super(instance);
+  const ReportGeneralDetailsModule(ParseUserStudy instance) : super(instance);
 
   @override
   Widget build(BuildContext context) => Column(
@@ -90,7 +90,7 @@ class ReportGeneralDetailsModule extends ReportModuleContent {
 }
 
 class ReportPerformanceModule extends ReportModuleContent {
-  const ReportPerformanceModule(StudyInstance instance) : super(instance);
+  const ReportPerformanceModule(ParseUserStudy instance) : super(instance);
 
   // TODO move to model
   final minimum = 0.1;
@@ -310,7 +310,7 @@ class ReportOutcomeModule extends ReportModuleContent {
   final bool primary;
   final Outcome outcome;
 
-  const ReportOutcomeModule(StudyInstance instance, this.outcome, {@required this.primary}) : super(instance);
+  const ReportOutcomeModule(ParseUserStudy instance, this.outcome, {@required this.primary}) : super(instance);
 
   @override
   Widget build(BuildContext context) {

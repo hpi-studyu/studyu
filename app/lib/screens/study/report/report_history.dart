@@ -18,7 +18,7 @@ class ReportHistoryScreen extends StatelessWidget {
           Nof1Localizations.of(context).translate('report_history'),
         ),
       ),
-      body: ParseListFutureBuilder<StudyInstance>(
+      body: ParseListFutureBuilder<ParseUserStudy>(
         queryFunction: StudyQueries.getStudyHistory,
         builder: (context, pastStudies) {
           return ListView.builder(
@@ -34,7 +34,7 @@ class ReportHistoryScreen extends StatelessWidget {
 }
 
 class ReportHistoryItem extends StatelessWidget {
-  final StudyInstance instance;
+  final ParseUserStudy instance;
 
   const ReportHistoryItem(this.instance);
 

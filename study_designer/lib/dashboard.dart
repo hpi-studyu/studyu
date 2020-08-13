@@ -17,7 +17,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    _studiesFuture = Study().getAll();
+    _studiesFuture = ParseStudy().getAll();
   }
 
   @override
@@ -35,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: ParseListFutureBuilder<Study>(
+          child: ParseListFutureBuilder<ParseStudy>(
             queryFunction: () => _studiesFuture,
             builder: (context, studies) {
               return ListView.builder(
@@ -56,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class StudyCard extends StatelessWidget {
-  final Study study;
+  final ParseStudy study;
 
   const StudyCard({Key key, this.study}) : super(key: key);
 

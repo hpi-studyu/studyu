@@ -16,7 +16,7 @@ class ConsentScreen extends StatefulWidget {
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {
-  StudyInstance study;
+  ParseUserStudy study;
   List<bool> boxLogic;
   List<ConsentItem> consentList;
 

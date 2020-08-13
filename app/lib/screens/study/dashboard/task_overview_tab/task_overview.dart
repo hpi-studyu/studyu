@@ -9,7 +9,7 @@ import 'progress_row.dart';
 import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
-  final StudyInstance study;
+  final ParseUserStudy study;
   final Multimap<Time, Task> scheduleToday;
   final String interventionIcon;
 

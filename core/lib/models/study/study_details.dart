@@ -8,15 +8,15 @@ import '../questionnaire/questionnaire.dart';
 import '../report/report_models.dart';
 import '../study_schedule/study_schedule.dart';
 
-class StudyDetails extends ParseObject implements ParseCloneable {
+class ParseStudyDetails extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'StudyDetails';
 
-  StudyDetails() : super(_keyTableName);
+  ParseStudyDetails() : super(_keyTableName);
 
-  StudyDetails.clone() : this();
+  ParseStudyDetails.clone() : this();
 
   @override
-  StudyDetails clone(Map<String, dynamic> map) => StudyDetails.clone()..fromJson(map);
+  ParseStudyDetails clone(Map<String, dynamic> map) => ParseStudyDetails.clone()..fromJson(map);
 
   static const keyQuestionnaire = 'questionnaire';
   Questionnaire get questionnaire => Questionnaire.fromJson(get<List<dynamic>>(keyQuestionnaire));

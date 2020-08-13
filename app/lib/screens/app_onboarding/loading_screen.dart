@@ -21,7 +21,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> initStudy() async {
-    final model = context.read<AppModel>()..activeStudy = StudyInstance();
+    final model = context.read<AppModel>()..activeStudy = ParseUserStudy();
     final prefs = await SharedPreferences.getInstance();
     final selectedStudyObjectId = prefs.getString(UserQueries.selectedStudyObjectIdKey);
     print('Selected study: $selectedStudyObjectId');

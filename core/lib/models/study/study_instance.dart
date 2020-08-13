@@ -11,15 +11,15 @@ import '../interventions/intervention_set.dart';
 import '../observations/observation.dart';
 import '../report/report_models.dart';
 
-class StudyInstance extends ParseObject implements ParseCloneable {
+class ParseUserStudy extends ParseObject implements ParseCloneable {
   static const _keyTableName = 'UserStudy';
 
-  StudyInstance() : super(_keyTableName);
+  ParseUserStudy() : super(_keyTableName);
 
-  StudyInstance.clone() : this();
+  ParseUserStudy.clone() : this();
 
   @override
-  StudyInstance clone(Map<String, dynamic> map) => StudyInstance.clone()..fromJson(map);
+  ParseUserStudy clone(Map<String, dynamic> map) => ParseUserStudy.clone()..fromJson(map);
 
   static const keyStudyId = 'study_id';
   String get studyId => get<String>(keyStudyId);
