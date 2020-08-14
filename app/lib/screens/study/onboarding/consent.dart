@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
@@ -37,20 +38,23 @@ class _ConsentScreenState extends State<ConsentScreen> {
     boxLogic = List.filled(consentList.length, false);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    final consentParagraphs = consentList
+  Future<List<pw.Widget>> generatePdfContent() async {
+    final ttf = pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Regular.ttf'));
+    return consentList
         .map((consentItem) => [
               pw.Header(
                 level: 0,
-                child: pw.Text(consentItem.title ?? '', textScaleFactor: 2),
+                child: pw.Text(consentItem.title ?? '', textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
               ),
-              pw.Paragraph(text: consentItem.description ?? ''),
+              pw.Paragraph(text: consentItem.description ?? '', style: pw.TextStyle(font: ttf)),
             ])
         .expand((element) => element)
         .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +63,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         actions: [
           IconButton(
             icon: Icon(MdiIcons.download),
-            onPressed: () => pdfDownload(context, study.title, consentParagraphs),
+            onPressed: () async => pdfDownload(context, study.title, await generatePdfContent()),
           ),
         ],
       ),

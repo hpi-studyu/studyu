@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:studyou_core/queries/queries.dart';
@@ -19,15 +20,12 @@ class _TermsScreenState extends State<TermsScreen> {
   bool _acceptedPrivacy = true;
   bool _acceptedDisclaimer = true;
 
-  bool userCanContinue() {
-    return _acceptedTerms && _acceptedPrivacy && _acceptedDisclaimer;
-  }
+  Map<String, String> translations = <String, String>{};
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    final translations = Map.fromEntries([
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    translations = Map.fromEntries([
       'terms',
       'terms_content',
       'terms_agree',
@@ -38,24 +36,36 @@ class _TermsScreenState extends State<TermsScreen> {
       'disclaimer_content',
       'disclaimer_agree'
     ].map((key) => MapEntry(key, Nof1Localizations.of(context).translate(key))));
+  }
 
-    final pdfContent = <pw.Widget>[
+  bool userCanContinue() {
+    return _acceptedTerms && _acceptedPrivacy && _acceptedDisclaimer;
+  }
+
+  Future<List<pw.Widget>> generatePdfContent() async {
+    final ttf = pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Regular.ttf'));
+    return <pw.Widget>[
       pw.Header(
         level: 0,
-        child: pw.Text(translations['terms'], textScaleFactor: 2),
+        child: pw.Text(translations['terms'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
       ),
-      pw.Paragraph(text: translations['terms_description']),
+      pw.Paragraph(text: translations['terms_description'], style: pw.TextStyle(font: ttf)),
       pw.Header(
         level: 0,
-        child: pw.Text(translations['privacy'], textScaleFactor: 2),
+        child: pw.Text(translations['privacy'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
       ),
-      pw.Paragraph(text: translations['privacy_description']),
+      pw.Paragraph(text: translations['privacy_description'], style: pw.TextStyle(font: ttf)),
       pw.Header(
         level: 0,
-        child: pw.Text(translations['disclaimer'], textScaleFactor: 2),
+        child: pw.Text(translations['disclaimer'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
       ),
-      pw.Paragraph(text: translations['disclaimer_description']),
+      pw.Paragraph(text: translations['disclaimer_description'], style: pw.TextStyle(font: ttf)),
     ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -88,7 +98,7 @@ class _TermsScreenState extends State<TermsScreen> {
                     height: 20,
                   ),
                   FlatButton.icon(
-                    onPressed: () => pdfDownload(context, 'StudyU_Terms_of_Service', pdfContent),
+                    onPressed: () async => pdfDownload(context, 'StudyU_Terms_of_Service', await generatePdfContent()),
                     label: Text('Download'),
                     icon: Icon(MdiIcons.download),
                   )
