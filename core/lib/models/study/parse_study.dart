@@ -2,7 +2,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models.dart';
 
-class ParseStudy extends ParseObject implements ParseCloneable, Study {
+class ParseStudy extends ParseObject with StudyBase implements ParseCloneable {
   static const _keyTableName = 'Study';
 
   ParseStudy() : super(_keyTableName);
@@ -19,6 +19,14 @@ class ParseStudy extends ParseObject implements ParseCloneable, Study {
       studyDetails = ParseStudyDetails.clone().fromJson(objectData[keyStudyDetails]);
     }
     return this;
+  }
+
+  factory ParseStudy.fromBase(StudyBase study) {
+    return ParseStudy()
+      ..id = study.id
+      ..title = study.title
+      ..description = study.description
+      ..iconName = study.iconName;
   }
 
   static const keyId = 'study_id';
