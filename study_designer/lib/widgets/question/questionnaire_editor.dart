@@ -32,7 +32,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
       newQuestion = ChoiceQuestion()..choices = [];
     } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
       if (newType == AnnotatedScaleQuestion.questionType) {
-        newQuestion = AnnotatedScaleQuestion();
+        newQuestion = AnnotatedScaleQuestion()..annotations = [];
       } else {
         newQuestion = VisualAnalogueQuestion()
           ..minimumColor = Colors.white
