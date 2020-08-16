@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_designer/designer/eligibility_designer.dart';
 
 import 'designer/consent_designer.dart';
-import 'designer/eligibility_designer/designer.dart';
-import 'designer/interventions_designer/designer.dart';
+import 'designer/interventions_designer.dart';
 import 'designer/meta_data_designer.dart';
-import 'designer/observation_designer/designer.dart';
+import 'designer/observation_designer.dart';
 import 'designer/publish.dart';
+import 'designer/questionnaire_designer.dart';
 import 'designer/report_designer.dart';
 import 'designer/schedule_designer.dart';
 import 'models/designer_state.dart';
@@ -49,6 +50,9 @@ class _DesignerState extends State<Designer> {
               case designerInterventionsRoute:
                 builder = (context) => InterventionsDesigner();
                 break;
+              case designerQuestionnaireRoute:
+                builder = (context) => QuestionnaireDesigner();
+                break;
               case designerEligibilityRoute:
                 builder = (context) => EligibilityDesigner();
                 break;
@@ -84,6 +88,7 @@ class _DesignerState extends State<Designer> {
   final List<String> designerRoutes = [
     designerRoute,
     designerInterventionsRoute,
+    designerQuestionnaireRoute,
     designerEligibilityRoute,
     designerObservationsRoute,
     designerScheduleRoute,
@@ -120,6 +125,11 @@ class _DesignerState extends State<Designer> {
                 icon: Icon(Icons.accessibility_new),
                 selectedIcon: Icon(Icons.accessibility_new),
                 label: Text('Interventions'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.question_answer),
+                selectedIcon: Icon(Icons.question_answer),
+                label: Text('Questionnaire'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.verified_user),

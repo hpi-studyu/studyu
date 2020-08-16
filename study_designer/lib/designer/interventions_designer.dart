@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../models/designer_state.dart';
-import '../../widgets/designer_add_button.dart';
-import 'intervention_editor.dart';
+import '../models/designer_state.dart';
+import '../widgets/designer_add_button.dart';
+import '../widgets/intervention_editor.dart';
 
 class InterventionsDesigner extends StatefulWidget {
   @override
