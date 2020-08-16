@@ -35,19 +35,17 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
     return Column(children: [
       ListView.builder(
         shrinkWrap: true,
-        itemCount: widget.question.choices.length + 1,
+        itemCount: widget.question.choices.length,
         itemBuilder: (buildContext, index) {
-          return index == widget.question.choices.length
-              ? Row(children: [
-                  Spacer(),
-                  RaisedButton.icon(
-                      onPressed: _addChoice, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Choice')),
-                  Spacer()
-                ])
-              : ChoiceEditor(
-                  key: UniqueKey(), choice: widget.question.choices[index], remove: () => _removeChoice(index));
+          return ChoiceEditor(
+              key: UniqueKey(), choice: widget.question.choices[index], remove: () => _removeChoice(index));
         },
-      )
+      ),
+      Row(children: [
+        Spacer(),
+        RaisedButton.icon(onPressed: _addChoice, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Choice')),
+        Spacer()
+      ])
     ]);
   }
 }
