@@ -1,3 +1,6 @@
+import 'package:quiver/collection.dart';
+
+import '../../util/extensions.dart';
 import '../models.dart';
 
 abstract class UserStudy {
@@ -9,8 +12,112 @@ abstract class UserStudy {
   DateTime startDate;
   StudySchedule schedule;
   List<String> interventionOrder;
+  InterventionSet interventionSet;
   List<Observation> observations;
   List<ConsentItem> consent;
   Map<String, List<Result>> results;
   ReportSpecification reportSpecification;
+
+  List<Result> resultsFor(String taskId) => results[taskId];
+
+  bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
+      resultsFor(taskId)?.any((result) => result.timeStamp.day == dateTime.day) ?? false;
+
+  void addResult(Result result) {
+    var nextResults = results;
+    nextResults.putIfAbsent(result.taskId, () => []).add(result);
+    results = nextResults;
+  }
+
+  void addResults(List<Result> newResults) {
+    if (newResults.isEmpty) return;
+    var nextResults = results;
+    newResults.forEach((result) => nextResults.putIfAbsent(result.taskId, () => []).add(result));
+    results = nextResults;
+  }
+
+  Map<String, List<Result>> getResultsByInterventionId({String taskId}) {
+    final resultMap = <String, List<Result>>{};
+    results.values
+        .map((value) => value.where((result) => taskId == null || taskId == result.taskId).map((result) {
+              final intervention = getInterventionForDate(result.timeStamp);
+              return intervention != null ? MapEntry(intervention.id, result) : null;
+            }))
+        .expand((element) => element)
+        .where((element) => element != null)
+        .forEach((element) => resultMap.putIfAbsent(element.key, () => []).add(element.value));
+    return resultMap;
+  }
+
+  Map<DateTime, List<Result>> getResultsByDate({String interventionId}) {
+    final resultMap = <DateTime, List<Result>>{};
+    results.values
+        .map((value) => value.map((result) {
+              final intervention = getInterventionForDate(result.timeStamp);
+              return intervention.id == interventionId
+                  ? MapEntry(DateTime(result.timeStamp.year, result.timeStamp.month, result.timeStamp.day), result)
+                  : null;
+            }))
+        .expand((element) => element)
+        .where((element) => element != null)
+        .forEach((element) => resultMap.putIfAbsent(element.key, () => []).add(element.value));
+    return resultMap;
+  }
+
+  int getInterventionIndexForDate(DateTime date) {
+    final test = date.differenceInDays(startDate).inDays;
+    return test ~/ schedule.phaseDuration;
+  }
+
+  Intervention getInterventionForDate(DateTime date) {
+    final index = getInterventionIndexForDate(date);
+    if (index < 0 || index >= interventionOrder.length) {
+      print('Study is over or has not begun.');
+      return null;
+    }
+    final interventionId = interventionOrder[index];
+    return interventionSet.interventions
+        .firstWhere((intervention) => intervention.id == interventionId, orElse: () => null);
+  }
+
+  int completedTasksFor(Task task) {
+    return resultsFor(task.id)?.length ?? 0;
+  }
+
+  int totalTaskCountFor(Task task) {
+    var daysCount = schedule.numberOfCycles * schedule.phaseDuration;
+
+    if (task is Observation) {
+      daysCount = 2 * daysCount + (schedule.includeBaseline ? schedule.phaseDuration : 0);
+    }
+
+    return daysCount * task.schedule.length;
+  }
+
+  List<Intervention> getInterventionsInOrder() {
+    return interventionOrder
+        .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))
+        .toList();
+  }
+
+  Multimap<Time, Task> scheduleFor(DateTime dateTime) {
+    final activeIntervention = getInterventionForDate(dateTime);
+
+    final taskSchedule = Multimap<Time, Task>();
+    for (final task in activeIntervention.tasks) {
+      for (final schedule in task.schedule) {
+        if (schedule is FixedSchedule) {
+          taskSchedule.add(schedule.time, task);
+        }
+      }
+    }
+    for (final observation in observations) {
+      for (final schedule in observation.schedule) {
+        if (schedule is FixedSchedule) {
+          taskSchedule.add(schedule.time, observation);
+        }
+      }
+    }
+    return taskSchedule;
+  }
 }
