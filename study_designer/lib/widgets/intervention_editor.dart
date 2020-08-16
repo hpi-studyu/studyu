@@ -6,7 +6,7 @@ import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:studyou_core/models/interventions/interventions.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../widgets/task/task_editor.dart';
+import 'task/task_editor.dart';
 
 class InterventionEditor extends StatefulWidget {
   final Intervention intervention;

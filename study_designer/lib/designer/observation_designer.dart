@@ -4,9 +4,9 @@ import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../models/designer_state.dart';
-import '../../widgets/designer_add_button.dart';
-import '../../widgets/task/task_editor.dart';
+import '../models/designer_state.dart';
+import '../widgets/designer_add_button.dart';
+import '../widgets/task/task_editor.dart';
 
 class ObservationDesigner extends StatefulWidget {
   @override
