@@ -1,6 +1,6 @@
 import '../models.dart';
 
-class StudyDetails {
+class StudyDetailsBase {
   Questionnaire questionnaire;
   List<EligibilityCriterion> eligibility;
   List<ConsentItem> consent;
@@ -8,4 +8,15 @@ class StudyDetails {
   List<Observation> observations;
   StudySchedule schedule;
   ReportSpecification reportSpecification;
+
+  StudyDetailsBase toBase() {
+    return StudyDetailsBase()
+      ..questionnaire = questionnaire
+      ..eligibility = eligibility
+      ..consent = consent
+      ..interventionSet = interventionSet
+      ..observations = observations
+      ..schedule = schedule
+      ..reportSpecification = reportSpecification;
+  }
 }

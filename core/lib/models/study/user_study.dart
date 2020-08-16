@@ -3,7 +3,7 @@ import 'package:quiver/collection.dart';
 import '../../util/extensions.dart';
 import '../models.dart';
 
-class UserStudy {
+class UserStudyBase {
   String studyId;
   String userId;
   String title;
@@ -17,6 +17,23 @@ class UserStudy {
   List<ConsentItem> consent;
   Map<String, List<Result>> results;
   ReportSpecification reportSpecification;
+
+  UserStudyBase toBase() {
+    return UserStudyBase()
+      ..studyId = studyId
+      ..userId = userId
+      ..title = title
+      ..description = description
+      ..iconName = iconName
+      ..startDate = startDate
+      ..schedule = schedule
+      ..interventionOrder = interventionOrder
+      ..interventionSet = interventionSet
+      ..observations = observations
+      ..consent = consent
+      ..results = results
+      ..reportSpecification = reportSpecification;
+  }
 
   List<Result> resultsFor(String taskId) => results[taskId];
 

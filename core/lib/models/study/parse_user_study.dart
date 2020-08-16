@@ -2,12 +2,29 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models.dart';
 
-class ParseUserStudy extends ParseObject with UserStudy implements ParseCloneable {
+class ParseUserStudy extends ParseObject with UserStudyBase implements ParseCloneable {
   static const _keyTableName = 'UserStudy';
 
   ParseUserStudy() : super(_keyTableName);
 
   ParseUserStudy.clone() : this();
+
+  factory ParseUserStudy.fromBase(UserStudyBase userStudy) {
+    return ParseUserStudy()
+      ..studyId = userStudy.studyId
+      ..userId = userStudy.userId
+      ..title = userStudy.title
+      ..description = userStudy.description
+      ..iconName = userStudy.iconName
+      ..startDate = userStudy.startDate
+      ..schedule = userStudy.schedule
+      ..interventionOrder = userStudy.interventionOrder
+      ..interventionSet = userStudy.interventionSet
+      ..observations = userStudy.observations
+      ..consent = userStudy.consent
+      ..results = userStudy.results
+      ..reportSpecification = userStudy.reportSpecification;
+  }
 
   @override
   ParseUserStudy clone(Map<String, dynamic> map) => ParseUserStudy.clone()..fromJson(map);
