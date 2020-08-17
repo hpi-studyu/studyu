@@ -3,32 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 
-import 'questionnaire_task_editor_section.dart';
-import 'task_schedule_editor_section.dart';
-
-class TaskEditor extends StatefulWidget {
-  final Task task;
+class EligibilityCriterionEditor extends StatefulWidget {
+  final EligibilityCriterion eligibilityCriterion;
   final void Function() remove;
 
-  const TaskEditor({@required this.task, @required this.remove, Key key}) : super(key: key);
+  const EligibilityCriterionEditor({@required this.eligibilityCriterion, @required this.remove, Key key})
+      : super(key: key);
 
   @override
-  _TaskEditorState createState() => _TaskEditorState();
+  _EligibilityCriterionEditorState createState() => _EligibilityCriterionEditorState();
 }
 
-class _TaskEditorState extends State<TaskEditor> {
+class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    final taskBody = buildTaskBody();
-
     return Card(
         margin: EdgeInsets.all(10),
         child: Column(children: [
           ListTile(
               title: Row(
-                children: [Text('${widget.task.type[0].toUpperCase()}${widget.task.type.substring(1)}'), Text(' Task')],
+                children: [Text('Eligibility Criterion')],
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,
@@ -47,40 +43,23 @@ class _TaskEditorState extends State<TaskEditor> {
                         onChanged: (value) {
                           saveFormChanges();
                         },
-                        name: 'title',
+                        name: 'reason',
                         maxLength: 40,
-                        decoration: InputDecoration(labelText: 'Title'),
-                        initialValue: widget.task.title),
+                        decoration: InputDecoration(labelText: 'Reason'),
+                        initialValue: widget.eligibilityCriterion.reason),
                   ],
                 ),
               ),
-              if (taskBody != null) taskBody,
-              TaskScheduleEditorSection(
-                task: widget.task,
-              )
             ]),
           )
         ]));
-  }
-
-  Widget buildTaskBody() {
-    switch (widget.task.runtimeType) {
-      case QuestionnaireTask:
-        return QuestionnaireTaskEditorSection(
-          task: widget.task,
-        );
-      default:
-        return null;
-    }
   }
 
   void saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.task.title = _editFormKey.currentState.value['title'];
-//        task.hour = int.parse(_editFormKey.currentState.value['hour']);
-//        task.minute = int.parse(_editFormKey.currentState.value['minute']);
+        widget.eligibilityCriterion.reason = _editFormKey.currentState.value['reason'];
       });
     }
   }

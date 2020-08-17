@@ -44,11 +44,11 @@ class _QuestionEditorState extends State<QuestionEditor> {
                     items: widget.questionTypes.map<DropdownMenuItem<String>>((value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
                       );
                     }).toList(),
                   ),
-                  Text('question')
+                  Text('Question')
                 ],
               ),
               trailing: FlatButton(
