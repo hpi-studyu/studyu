@@ -8,7 +8,9 @@ class StudyDetailsBase {
   List<Observation> observations;
   StudySchedule schedule;
   ReportSpecification reportSpecification;
+}
 
+extension StudyDetailsExtension on StudyDetailsBase {
   StudyDetailsBase toBase() {
     return StudyDetailsBase()
       ..questionnaire = questionnaire

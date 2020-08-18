@@ -2,7 +2,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models.dart';
 
-class ParseStudy extends ParseObject with StudyBase implements ParseCloneable {
+class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   static const _keyTableName = 'Study';
 
   ParseStudy() : super(_keyTableName);
@@ -26,7 +26,8 @@ class ParseStudy extends ParseObject with StudyBase implements ParseCloneable {
       ..id = study.id
       ..title = study.title
       ..description = study.description
-      ..iconName = study.iconName;
+      ..iconName = study.iconName
+      ..studyDetails = ParseStudyDetails.fromBase(study.studyDetails);
   }
 
   static const keyId = 'study_id';
@@ -47,7 +48,7 @@ class ParseStudy extends ParseObject with StudyBase implements ParseCloneable {
 
   static const keyStudyDetails = 'study_details';
   ParseStudyDetails get studyDetails => get<ParseStudyDetails>(keyStudyDetails);
-  set studyDetails(ParseStudyDetails studyDetails) => set<ParseStudyDetails>(keyStudyDetails, studyDetails);
+  set studyDetails(StudyDetailsBase studyDetails) => set<ParseStudyDetails>(keyStudyDetails, studyDetails);
 
   ParseUserStudy extractUserStudy(
       String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
