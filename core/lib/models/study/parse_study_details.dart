@@ -2,7 +2,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import '../models.dart';
 
-class ParseStudyDetails extends ParseObject with StudyDetailsBase implements ParseCloneable {
+class ParseStudyDetails extends ParseObject implements ParseCloneable, StudyDetailsBase {
   static const _keyTableName = 'StudyDetails';
 
   ParseStudyDetails() : super(_keyTableName);

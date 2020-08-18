@@ -17,7 +17,9 @@ class UserStudyBase {
   List<ConsentItem> consent;
   Map<String, List<Result>> results;
   ReportSpecification reportSpecification;
+}
 
+extension UserStudyExtension on UserStudyBase {
   UserStudyBase toBase() {
     return UserStudyBase()
       ..studyId = studyId
