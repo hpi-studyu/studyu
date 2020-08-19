@@ -38,7 +38,7 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _observations = context.watch<DesignerModel>().draftStudy.studyDetails.observations;
+    _observations = context.watch<DesignerState>().draftStudy.studyDetails.observations;
     return Stack(
       children: [
         Center(
