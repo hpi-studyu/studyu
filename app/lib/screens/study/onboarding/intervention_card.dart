@@ -6,15 +6,6 @@ import 'package:studyou_core/models/models.dart';
 import '../../../util/intervention.dart';
 import '../../../util/localization.dart';
 
-// TODO: Make sure those props are set in the model by default
-Intervention addBaselineProps(Intervention intervention) => intervention
-  ..icon = 'rayStart'
-  ..description = '''
-A baseline study is an analysis of the current situation to identify the starting points for a programme or project. 
-It looks at what information must be considered and analyzed to establish a baseline or starting point, 
-the benchmark against which future progress can be assessed or comparisons made.
-''';
-
 class InterventionCard extends StatelessWidget {
   final Intervention intervention;
   final bool selected;
@@ -23,15 +14,14 @@ class InterventionCard extends StatelessWidget {
   final bool showDescription;
   final Function() onTap;
 
-  InterventionCard(Intervention intervention,
+  const InterventionCard(this.intervention,
       {this.onTap,
       this.selected = false,
       this.showCheckbox = false,
       this.showTasks = true,
       this.showDescription = true,
       Key key})
-      : intervention = isBaseline(intervention) ? addBaselineProps(intervention) : intervention,
-        super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +50,14 @@ class InterventionCardTitleTile extends StatelessWidget {
   final bool showDescriptionButton;
   final Function() onTap;
 
-  InterventionCardTitleTile({
-    @required Intervention intervention,
+  const InterventionCardTitleTile({
+    @required this.intervention,
     this.selected = false,
     this.showCheckbox = false,
     this.showDescriptionButton = true,
     this.onTap,
     Key key,
-  })  : intervention = isBaseline(intervention) ? addBaselineProps(intervention) : intervention,
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -109,17 +98,20 @@ class InterventionCardTitleTile extends StatelessWidget {
 class InterventionCardDescription extends StatelessWidget {
   final Intervention intervention;
 
-  InterventionCardDescription({@required Intervention intervention, Key key})
-      : intervention = isBaseline(intervention) ? addBaselineProps(intervention) : intervention,
-        super(key: key);
+  const InterventionCardDescription({@required this.intervention, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final description =
+        isBaseline(intervention) ? Nof1Localizations.of(context).translate('baseline') : intervention.description;
+    if (description == null) return Container();
+
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
-        intervention.description ?? '',
+        description,
         style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
       ),
     );
