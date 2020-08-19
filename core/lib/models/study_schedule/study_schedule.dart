@@ -11,7 +11,11 @@ class StudySchedule {
   bool includeBaseline;
   PhaseSequence sequence;
 
-  StudySchedule();
+  StudySchedule()
+      : numberOfCycles = 2,
+        phaseDuration = 7,
+        includeBaseline = true,
+        sequence = PhaseSequence.alternating;
 
   factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);

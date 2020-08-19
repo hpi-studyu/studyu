@@ -4,7 +4,7 @@ import 'question.dart';
 class Questionnaire {
   List<Question> questions;
 
-  Questionnaire();
+  Questionnaire() : questions = [];
 
   Questionnaire.fromJson(List<dynamic> data) {
     questions = data.map((entry) => Question.fromJson(entry)).toList();
