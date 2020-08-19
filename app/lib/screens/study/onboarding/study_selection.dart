@@ -61,14 +61,13 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           text: Nof1Localizations.of(context).translate('study_selection_single_why'),
                           style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () =>
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  content:
-                                      Text(Nof1Localizations.of(context).translate('study_selection_single_reason')),
+                            ..onTap = () => showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    content:
+                                        Text(Nof1Localizations.of(context).translate('study_selection_single_reason')),
+                                  ),
                                 ),
-                              ),
                         )
                       ]),
                     ),
