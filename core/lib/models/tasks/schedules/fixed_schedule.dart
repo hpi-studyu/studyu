@@ -22,7 +22,7 @@ class Time {
   int hour;
   int minute;
 
-  Time() : super();
+  Time(this.hour, this.minute) : super();
 
   Time.fromJson(String value) {
     final elements = value.split(':').map(int.parse);
@@ -34,4 +34,8 @@ class Time {
 
   @override
   String toString() => '$hour:${minute.toString().padLeft(2, '0')}';
+
+  bool earlierThan(Time time) {
+    return this.hour < time.hour || this.hour == time.hour && this.minute < time.minute;
+  }
 }
