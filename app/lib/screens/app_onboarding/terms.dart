@@ -25,32 +25,34 @@ class _TermsScreenState extends State<TermsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...buildSection(theme,
-                    title: Nof1Localizations.of(context).translate('terms'),
-                    descriptionText: Nof1Localizations.of(context).translate('terms_content'),
-                    acknowledgmentText: Nof1Localizations.of(context).translate('terms_agree'),
-                    onChange: (val) => setState(() => _acceptedTerms = val),
-                    isChecked: _acceptedTerms),
-                ...buildSection(theme,
-                    title: Nof1Localizations.of(context).translate('privacy'),
-                    descriptionText: Nof1Localizations.of(context).translate('privacy_content'),
-                    acknowledgmentText: Nof1Localizations.of(context).translate('privacy_agree'),
-                    onChange: (val) => setState(() => _acceptedPrivacy = val),
-                    isChecked: _acceptedPrivacy),
-                ...buildSection(theme,
-                    title: Nof1Localizations.of(context).translate('disclaimer'),
-                    descriptionText: Nof1Localizations.of(context).translate('disclaimer_content'),
-                    acknowledgmentText: Nof1Localizations.of(context).translate('disclaimer_agree'),
-                    onChange: (val) => setState(() => _acceptedDisclaimer = val),
-                    isChecked: _acceptedDisclaimer),
-              ],
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...buildSection(theme,
+                      title: Nof1Localizations.of(context).translate('terms'),
+                      descriptionText: Nof1Localizations.of(context).translate('terms_content'),
+                      acknowledgmentText: Nof1Localizations.of(context).translate('terms_agree'),
+                      onChange: (val) => setState(() => _acceptedTerms = val),
+                      isChecked: _acceptedTerms),
+                  ...buildSection(theme,
+                      title: Nof1Localizations.of(context).translate('privacy'),
+                      descriptionText: Nof1Localizations.of(context).translate('privacy_content'),
+                      acknowledgmentText: Nof1Localizations.of(context).translate('privacy_agree'),
+                      onChange: (val) => setState(() => _acceptedPrivacy = val),
+                      isChecked: _acceptedPrivacy),
+                  ...buildSection(theme,
+                      title: Nof1Localizations.of(context).translate('disclaimer'),
+                      descriptionText: Nof1Localizations.of(context).translate('disclaimer_content'),
+                      acknowledgmentText: Nof1Localizations.of(context).translate('disclaimer_agree'),
+                      onChange: (val) => setState(() => _acceptedDisclaimer = val),
+                      isChecked: _acceptedDisclaimer),
+                ],
+              ),
             ),
           ),
         ),

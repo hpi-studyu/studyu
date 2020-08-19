@@ -36,11 +36,13 @@ class Routes {
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
         builder: (_) => Scaffold(
-              body: Center(
-                  child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text('No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻'),
-              )),
+              body: SafeArea(
+                child: Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text('No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻'),
+                )),
+              ),
             ));
   }
 
