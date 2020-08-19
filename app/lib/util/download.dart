@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -27,7 +27,7 @@ Future<void> pdfDownload(BuildContext context, String title, List<pw.Widget> con
     ),
   );
 
-  DownloadsPathProvider.downloadsDirectory.then((dir) {
+  getExternalStorageDirectory().then((dir) {
     File('${dir.path}/${title.replaceAll(' ', '_')}_consent.pdf').writeAsBytesSync(doc.save());
     showDialog(
         context: context,
