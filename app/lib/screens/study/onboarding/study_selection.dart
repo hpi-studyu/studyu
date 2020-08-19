@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -35,14 +36,39 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(
-                    Nof1Localizations.of(context).translate('study_selection_description'),
-                    style: theme.textTheme.headline5,
-                  ),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Text(
+                      Nof1Localizations.of(context).translate('study_selection_description'),
+                      style: theme.textTheme.headline5,
+                    ),
+                    SizedBox(height: 8),
+                    RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: Nof1Localizations.of(context).translate('study_selection_single'),
+                          style: theme.textTheme.subtitle2,
+                        ),
+                        TextSpan(
+                          text: Nof1Localizations.of(context).translate('study_selection_single_why'),
+                          style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () =>
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content:
+                                      Text(Nof1Localizations.of(context).translate('study_selection_single_reason')),
+                                ),
+                              ),
+                        )
+                      ]),
+                    ),
+                  ],
                 ),
               ),
               ParseListFutureBuilder<ParseStudy>(

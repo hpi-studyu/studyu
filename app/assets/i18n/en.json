@@ -15,6 +15,9 @@
   "get_started": "Get started",
   "study_selection": "Study Selection",
   "study_selection_description": "Please select a study.",
+  "study_selection_single": "You can only participate in one study at a time.",
+  "study_selection_single_why": "Why?",
+  "study_selection_single_reason": "If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.",
   "intervention_selection": "Intervention Selection",
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
   "please_select_interventions": "Please select two interventions to apply during the study.",
@@ -38,6 +41,8 @@
   "how_would_you_rate_your_pain_today": "How would you rate your pain today? (0 = no pain, 10 = extreme pain)",
   "thank_you_for_your_input": "Thank you for your input",
   "please_give_consent": "Please give your consent to participate in this study.",
+  "please_give_consent_why": "Why?",
+  "please_give_consent_reason": "Studies need to request specific consent from participants, for reasons of safety and data privacy. Hence, you must explicitly consent to participate in each study.",
   "user_did_not_give_consent": "You did not give your consent. To participate you need to give consent.",
 
   "dashboard": "Dashboard",
