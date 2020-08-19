@@ -54,6 +54,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           style: theme.textTheme.subtitle2,
                         ),
                         TextSpan(
+                          text: ' ',
+                          style: theme.textTheme.subtitle2,
+                        ),
+                        TextSpan(
                           text: Nof1Localizations.of(context).translate('study_selection_single_why'),
                           style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
                           recognizer: TapGestureRecognizer()
