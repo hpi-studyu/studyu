@@ -75,11 +75,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           color: Colors.green,
           size: 32,
         ),
-        content: Text('You are eligible for this study.', style: Theme.of(context).textTheme.subtitle1),
+        content:
+            Text(Nof1Localizations.of(context).translate('eligible_yes'), style: Theme.of(context).textTheme.subtitle1),
         actions: [
           FlatButton(
             onPressed: _finish,
-            child: Text('Continue'),
+            child: Text(Nof1Localizations.of(context).translate('next')),
           )
         ],
         forceActionsBelow: true,
@@ -95,17 +96,17 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('You are not eligible for this study.', style: Theme.of(context).textTheme.subtitle1),
+            Text(Nof1Localizations.of(context).translate('eligible_no'), style: Theme.of(context).textTheme.subtitle1),
             SizedBox(height: 4),
             Text(activeResult.firstFailed.reason),
             SizedBox(height: 4),
-            Text('If you made a mistake, you can still change your answers.')
+            Text(Nof1Localizations.of(context).translate('eligible_mistake')),
           ],
         ),
         actions: [
           FlatButton(
             onPressed: _finish,
-            child: Text('Back to study selection'),
+            child: Text(Nof1Localizations.of(context).translate('eligible_back')),
           )
         ],
         forceActionsBelow: true,

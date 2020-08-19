@@ -7,7 +7,7 @@ class Contact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('contact')),
+        title: Text(Nof1Localizations.of(context).translate('help')),
         centerTitle: true,
       ),
       body: Center(
@@ -15,8 +15,16 @@ class Contact extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             RaisedButton(color: Colors.amber, onPressed: () {}, child: Text('FAQ')),
-            RaisedButton(color: Colors.cyan, onPressed: () {}, child: Text('Contact Support')),
-            RaisedButton(color: Colors.amber, onPressed: () {}, child: Text('Imprint/About')),
+            RaisedButton(
+              color: Colors.cyan,
+              onPressed: () {},
+              child: Text(Nof1Localizations.of(context).translate('contact')),
+            ),
+            RaisedButton(
+              color: Colors.amber,
+              onPressed: () {},
+              child: Text(Nof1Localizations.of(context).translate('about')),
+            ),
           ],
         ),
       ),

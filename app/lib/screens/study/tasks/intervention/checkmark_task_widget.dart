@@ -41,6 +41,6 @@ class CheckmarkTaskWidget extends StatelessWidget {
         pimpedWidgetBuilder: (context, controller) => RaisedButton.icon(
             onPressed: () => _handleCompletion(context, controller.forward(from: 0)),
             icon: Icon(Icons.check, size: 32),
-            label: Text('Complete', style: TextStyle(fontSize: 24))));
+            label: Text(Nof1Localizations.of(context).translate('completed'), style: TextStyle(fontSize: 24))));
   }
 }

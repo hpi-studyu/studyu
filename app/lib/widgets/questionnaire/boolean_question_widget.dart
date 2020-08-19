@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../util/localization.dart';
 import '../selectable_button.dart';
 import 'question_widget.dart';
 
@@ -38,13 +39,13 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
         SelectableButton(
           selected: selected == true,
           onTap: () => tapped(choice: true),
-          child: Text('Yes'),
+          child: Text(Nof1Localizations.of(context).translate('yes')),
         ),
         SizedBox(height: 8),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),
-          child: Text('No'),
+          child: Text(Nof1Localizations.of(context).translate('no')),
         ),
       ],
     );

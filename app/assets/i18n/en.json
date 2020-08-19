@@ -21,12 +21,19 @@
   "intervention_selection": "Intervention Selection",
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
   "please_select_interventions": "Please select two interventions to apply during the study.",
+  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study.",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
-  "today_tasks": "Today's tasks",
+  "tasks_daily": "Daily tasks:",
+  "baseline": "The baseline is a phase within a study in which the initial state is measured to allow later comparisons. During the baseline phase you should behave as usual, no study-specific interventions are carried out yet",
 
-  "terms": "Terms, Privacy, Disclaimer",
+  "today_tasks": "Today's tasks",
+  "intervention_current": "Current intervention",
+  "study_current": "Current study:",
+  "opt_out": "Opt-out",
+  "delete_data": "Delete all data",
+
   "summary": "Summary",
   "journey": "Journey",
   "consent": "Consent",
@@ -34,7 +41,6 @@
   "tea_vs_coffee": "Tea vs. Coffee",
   "weed_vs_alcohol": "Weed vs. Alcohol",
   "back_pain": "Back pain",
-  "about": "This could be your advertisement.",
   "video_task": "Video task",
   "finished": "Finished",
 
@@ -48,9 +54,13 @@
   "dashboard": "Dashboard",
   "home": "Home",
   "profile": "Profile",
+  "help": "Help",
   "contact": "Contact",
+  "about": "About StudyU",
   "settings": "Settings",
-
+  "yes": "yes",
+"no": "no",
+  "confirm": "Confirm selection",
   "survey": "Survey",
 
   "complete": "Complete!",
@@ -60,6 +70,7 @@
   "next": "Next",
   "back": "Back",
   "done": "Done",
+  "completed": "Completed",
 
   "could_not_save_results": "Could not save results",
 
@@ -67,11 +78,31 @@
   "en": "English",
   "de": "German",
 
-  "help": "HELP!!!!1!1!",
-
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",
 
   "report_history": "Report history",
-  "current_power_level": "Current status"
+  "current_power_level": "Current status",
+
+  "terms": "Terms",
+  "terms_content": "take it or leave it",
+  "terms_agree": "I agree to the terms",
+
+  "privacy": "Privacy",
+  "privacy_content": "big brother is watching you!",
+  "privacy_agree": "I read and understand the privacy statement",
+
+  "disclaimer": "Disclaimer",
+  "disclaimer_content": "we are not liable",
+  "disclaimer_agree": "I read and understand the disclaimer",
+
+  "eligible_no": "You are not eligible for this study",
+  "eligible_yes": "You are eligible for this study",
+  "eligible_mistake": "If you made a mistake, you can still change your answers",
+  "eligible_back": "Back to study selection",
+
+  "performance": "Performance",
+  "performance_overview": "Overview of completion of tasks",
+  "performance_overview_interventions": "Interventions",
+  "performance_overview_observations": "Observations"
 }

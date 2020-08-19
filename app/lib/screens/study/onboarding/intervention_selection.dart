@@ -39,7 +39,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
           ),
           SizedBox(height: 8),
           Text(
-            'The effects of these two interventions will be measured and compared during the study.',
+            Nof1Localizations.of(context).translate('please_select_interventions_description'),
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
           ),
         ],
