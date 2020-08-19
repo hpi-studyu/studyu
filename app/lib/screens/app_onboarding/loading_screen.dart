@@ -45,16 +45,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '${Nof1Localizations.of(context).translate('loading')}...',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            CircularProgressIndicator(),
-          ],
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${Nof1Localizations.of(context).translate('loading')}...',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              CircularProgressIndicator(),
+            ],
+          ),
         ),
       ),
     );
