@@ -56,7 +56,7 @@ class _TaskOverviewState extends State<TaskOverview> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: 8),
-              Text('Current Intervention', style: theme.textTheme.headline6),
+              Text(Nof1Localizations.of(context).translate('intervention_current'), style: theme.textTheme.headline6),
               SizedBox(height: 8),
               InterventionCardTitleTile(intervention: widget.study.getInterventionForDate(DateTime.now())),
               SizedBox(height: 8),

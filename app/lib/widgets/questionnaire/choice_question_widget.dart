@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../util/localization.dart';
 import '../selectable_button.dart';
 import 'question_widget.dart';
 
@@ -59,8 +60,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         color: Theme.of(context).accentColor,
         textColor: Colors.white,
         onPressed: confirm,
-        // TODO: Translate
-        child: Text('Confirm selection'),
+        child: Text(Nof1Localizations.of(context).translate('confirm')),
       ));
     }
 

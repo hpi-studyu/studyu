@@ -86,7 +86,8 @@ class _SettingsState extends State<Settings> {
                 }),
             getDropdownRow(context),
             SizedBox(height: 24),
-            Text('Current study: ${activeStudy.title}', style: theme.textTheme.headline6),
+            Text('${Nof1Localizations.of(context).translate('study_current')} ${activeStudy.title}',
+                style: theme.textTheme.headline6),
             SizedBox(height: 8),
             RaisedButton.icon(
               onPressed: () {
@@ -94,7 +95,7 @@ class _SettingsState extends State<Settings> {
               },
               color: Colors.orange[800],
               icon: Icon(MdiIcons.exitToApp),
-              label: Text('Opt-out'),
+              label: Text(Nof1Localizations.of(context).translate('opt_out')),
             ),
             SizedBox(height: 24),
             RaisedButton.icon(
@@ -103,7 +104,7 @@ class _SettingsState extends State<Settings> {
               },
               color: Colors.red,
               icon: Icon(Icons.delete),
-              label: Text('Delete all data'),
+              label: Text(Nof1Localizations.of(context).translate('delete_data')),
             )
           ],
         ),

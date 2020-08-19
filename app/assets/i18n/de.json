@@ -20,14 +20,21 @@
   "study_selection_single_why": "Warum?",
   "study_selection_single_reason": "Wenn Sie zur selben Zeit an mehreren Studien teilnehmen würde, könnten die Kombination der Interventionen die Ergebnisse verfälschen.",
   "intervention_selection": "Interventionen Auswahl",
-  "please_answer_eligibility": "Bitte beantworten Sie ein paar Fragen um sicher zu gehen, dass diese Studie für Sie richtig ist",
-  "please_select_interventions": "Bitte zwei Interventionen für die Studie auswählen.",
+  "please_answer_eligibility": "Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist",
+  "please_select_interventions": "Bitte wählen Sie zwei Interventionen für die Studie aus.",
+  "please_select_interventions_description": "Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
 
-  "today_tasks": "Aufgaben heute",
+  "tasks_daily": "Heutige Aufgaben:",
+  "baseline": "Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.",
 
-  "terms": "AGB, Datenschutz, Disclaimer",
+  "today_tasks": "Aufgaben heute",
+  "intervention_current": "Aktuelle Maßnahme",
+  "study_current": "Aktuelle Studie:",
+  "opt_out": "Aussteigen",
+  "delete_data": "Alle Daten löschen",
+
   "summary": "Übersicht",
   "journey": "Reise",
   "consent": "Einverständnis",
@@ -35,7 +42,6 @@
   "tea_vs_coffee": "Tee vs. Kaffee",
   "weed_vs_alcohol": "Gras vs. Alkohol",
   "back_pain": "Rückenschmerzen",
-  "about": "Hier könnte Ihre Werbung stehen.",
   "video_task": "Videoaufgabe",
   "finished": "Fertig",
 
@@ -49,6 +55,8 @@
   "dashboard": "Dashboard",
   "home": "Home",
   "profile": "Profil",
+  "help": "Hilfe",
+  "about": "Über StudyU",
   "contact": "Kontakt",
   "settings": "Einstellungen",
 
@@ -58,9 +66,13 @@
   "cancel": "Abbrechen",
   "accept": "Akzeptieren",
   "decline": "Ablehnen",
-  "next": "Nächste",
+  "next": "Weiter",
   "back": "Zurück",
   "done": "Fertig",
+  "completed": "Erledigt",
+  "yes": "Ja",
+  "no": "Nein",
+  "confirm": "Auswahl bestätigen",
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 
@@ -68,11 +80,31 @@
   "en": "Englisch",
   "de": "Deutsch",
 
-  "help": "Hilfe!!!!1!1!",
-
   "video_test": "Das ist ein Videotest",
   "survey_test": "Das ist ein Umfragetest",
 
   "report_history": "Reportverlauf",
-  "current_power_level": "Aktueller Status"
+  "current_power_level": "Aktueller Status",
+
+  "terms": "Bedingungen",
+  "terms_content": "Dies sind die Bedingungen",
+  "terms_agree": "Ich akzeptiere die Nutzungsbedingungen",
+
+  "privacy": "Datenschutz",
+  "privacy_content": "Sie werden überwacht",
+  "privacy_agree": "Ich akzeptiere die Datenschutzbedingungen",
+
+  "disclaimer": "Haftung",
+  "disclaimer_content": "Wir sind nicht haftbar",
+  "disclaimer_agree": "Ich akzeptiere den Haftungsaussschluss",
+
+  "eligible_no": "Diese Studie ist für Sie leider nicht auswählbar",
+  "eligible_yes": "Sie sind berechtigt, diese Studie auszuwählen",
+  "eligible_mistake": "Falls Sie einen Fehler gemacht haben, können Sie Ihre Antworten ändern",
+  "eligible_back": "Zurück zur Studienauswahl",
+
+  "performance": "Fortschritt",
+  "performance_overview": "Übersicht der erfüllten Aufgaben",
+  "performance_overview_interventions": "Maßnahmen",
+  "performance_overview_observations": "Messungen"
 }

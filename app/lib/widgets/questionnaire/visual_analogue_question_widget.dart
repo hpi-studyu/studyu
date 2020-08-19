@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../util/localization.dart';
 import 'question_widget.dart';
 
 class VisualAnalogueQuestionWidget extends QuestionWidget {
@@ -63,7 +64,7 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
         ),
         RaisedButton(
           onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
-          child: Text('done'),
+          child: Text(Nof1Localizations.of(context).translate('done')),
         )
       ],
     );

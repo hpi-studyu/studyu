@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:studyou_core/models/models.dart';
 
 import '../../../util/intervention.dart';
+import '../../../util/localization.dart';
 
 // TODO: Make sure those props are set in the model by default
 Intervention addBaselineProps(Intervention intervention) => intervention
@@ -154,7 +155,7 @@ class _TaskList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Daily Tasks:', style: theme.textTheme.bodyText2),
+              Text(Nof1Localizations.of(context).translate('tasks_daily'), style: theme.textTheme.bodyText2),
             ],
           ),
         ),

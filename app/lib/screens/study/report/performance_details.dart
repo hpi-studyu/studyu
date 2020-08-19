@@ -4,6 +4,7 @@ import 'package:studyou_core/models/models.dart';
 
 import '../../../routes.dart';
 import '../../../util/intervention.dart';
+import '../../../util/localization.dart';
 import '../onboarding/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Performance'),
+        title: Text(Nof1Localizations.of(context).translate('performance')),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -34,14 +35,15 @@ class PerformanceDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text('Overview of completion of all tasks', style: theme.textTheme.subtitle1),
+                  child: Text(Nof1Localizations.of(context).translate('performance_overview'),
+                      style: theme.textTheme.subtitle1),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child:
-                          Text('Interventions', style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                      child: Text(Nof1Localizations.of(context).translate('performance_overview_interventions'),
+                          style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
                 ),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -54,8 +56,8 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child:
-                          Text('Observations', style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                      child: Text(Nof1Localizations.of(context).translate('performance_overview_observations'),
+                          style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
                 ),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/queries/queries.dart';
 
 import '../../routes.dart';
+import '../../util/localization.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
@@ -32,21 +33,21 @@ class _TermsScreenState extends State<TermsScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ...buildSection(theme,
-                    title: 'Terms',
-                    descriptionText: 'take it or leave it',
-                    acknowledgmentText: 'I agree to the terms',
+                    title: Nof1Localizations.of(context).translate('terms'),
+                    descriptionText: Nof1Localizations.of(context).translate('terms_content'),
+                    acknowledgmentText: Nof1Localizations.of(context).translate('terms_agree'),
                     onChange: (val) => setState(() => _acceptedTerms = val),
                     isChecked: _acceptedTerms),
                 ...buildSection(theme,
-                    title: 'Privacy',
-                    descriptionText: 'big brother is watching you!',
-                    acknowledgmentText: 'I read and understand the privacy statement',
+                    title: Nof1Localizations.of(context).translate('privacy'),
+                    descriptionText: Nof1Localizations.of(context).translate('privacy_content'),
+                    acknowledgmentText: Nof1Localizations.of(context).translate('privacy_agree'),
                     onChange: (val) => setState(() => _acceptedPrivacy = val),
                     isChecked: _acceptedPrivacy),
                 ...buildSection(theme,
-                    title: 'Disclaimer',
-                    descriptionText: 'we are not liable',
-                    acknowledgmentText: 'I read and understand the disclaimer',
+                    title: Nof1Localizations.of(context).translate('disclaimer'),
+                    descriptionText: Nof1Localizations.of(context).translate('disclaimer_content'),
+                    acknowledgmentText: Nof1Localizations.of(context).translate('disclaimer_agree'),
                     onChange: (val) => setState(() => _acceptedDisclaimer = val),
                     isChecked: _acceptedDisclaimer),
               ],
