@@ -9,7 +9,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         final models.FixedSchedule fixedSchedule = timedSchedule;
         final now = DateTime.now();
         var add = 0;
-        if (!models.Time(now.hour, now.minute).earlierThan(fixedSchedule.time)) {
+        if (!models.Time(hour: now.hour, minute: now.minute).earlierThan(fixedSchedule.time)) {
           add++;
         }
         final reminderTime = DateTime(now.year, now.month, now.day, fixedSchedule.time.hour, fixedSchedule.time.minute)
