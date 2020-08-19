@@ -9,15 +9,15 @@ import 'question_widget.dart';
 class ChoiceQuestionWidget extends QuestionWidget {
   final ChoiceQuestion question;
   final Function(Answer) onDone;
+  final String multiSelectionText;
 
-  ChoiceQuestionWidget({@required this.question, this.onDone});
+  ChoiceQuestionWidget({@required this.question, @required this.onDone, @required this.multiSelectionText});
 
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
 
   @override
-  // TODO: Translate
-  String get subtitle => question.multiple ? 'Select all that apply' : null;
+  String get subtitle => question.multiple ? multiSelectionText : null;
 }
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
