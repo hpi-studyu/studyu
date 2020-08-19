@@ -80,13 +80,18 @@ class InterventionCardTitleTile extends StatelessWidget {
               icon: Icon(Icons.info_outline),
               onPressed: () => showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: ListTile(
-                      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
-                      dense: true,
-                      title: Text(intervention.name, style: theme.textTheme.headline6)),
-                  content: Text(intervention.description ?? ''),
-                ),
+                builder: (context) {
+                  final description = isBaseline(intervention)
+                      ? Nof1Localizations.of(context).translate('baseline')
+                      : intervention.description;
+                  return AlertDialog(
+                    title: ListTile(
+                        leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
+                        dense: true,
+                        title: Text(intervention.name, style: theme.textTheme.headline6)),
+                    content: Text(description ?? ''),
+                  );
+                },
               ),
             )
         ],
