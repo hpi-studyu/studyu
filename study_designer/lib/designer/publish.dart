@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../models/designer_state.dart';
 
@@ -9,7 +10,7 @@ class Publish extends StatefulWidget {
 }
 
 class _PublishState extends State<Publish> {
-  LocalStudy _draftStudy;
+  StudyBase _draftStudy;
 
   @override
   void initState() {
@@ -27,7 +28,10 @@ class _PublishState extends State<Publish> {
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[Text(_draftStudy.title)],
+          children: <Widget>[
+            Text(_draftStudy.title),
+            RaisedButton.icon(onPressed: _publishStudy, icon: Icon(Icons.publish), label: Text('Publish study'))
+          ],
         ),
       ),
     );
