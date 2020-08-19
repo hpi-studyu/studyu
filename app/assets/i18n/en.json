@@ -100,6 +100,7 @@
   "eligible_yes": "You are eligible for this study",
   "eligible_mistake": "If you made a mistake, you can still change your answers",
   "eligible_back": "Back to study selection",
+  "eligible_choice_multi_selection": "Select all that apply",
 
   "performance": "Performance",
   "performance_overview": "Overview of completion of tasks",

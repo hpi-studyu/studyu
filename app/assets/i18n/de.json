@@ -102,6 +102,7 @@
   "eligible_yes": "Sie sind berechtigt, diese Studie auszuwählen",
   "eligible_mistake": "Falls Sie einen Fehler gemacht haben, können Sie Ihre Antworten ändern",
   "eligible_back": "Zurück zur Studienauswahl",
+  "eligible_choice_multi_selection": "Alle zutreffenden Antworten auswählen",
 
   "performance": "Fortschritt",
   "performance_overview": "Übersicht der erfüllten Aufgaben",
