@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/study_schedule/study_schedule.dart';
 
 import '../models/designer_state.dart';
@@ -11,7 +12,7 @@ class ScheduleDesigner extends StatefulWidget {
 }
 
 class _ScheduleDesignerState extends State<ScheduleDesigner> {
-  LocalStudy _draftStudy;
+  StudyBase _draftStudy;
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -34,22 +35,22 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
                   onChanged: _saveFormChanges,
                   name: 'numberOfCycles',
                   decoration: InputDecoration(labelText: 'Number of Cycles'),
-                  initialValue: _draftStudy.studyDetails.studySchedule.numberOfCycles.toString()),
+                  initialValue: _draftStudy.studyDetails.schedule.numberOfCycles.toString()),
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'phaseDuration',
                   decoration: InputDecoration(labelText: 'Phase Duration'),
-                  initialValue: _draftStudy.studyDetails.studySchedule.phaseDuration.toString()),
+                  initialValue: _draftStudy.studyDetails.schedule.phaseDuration.toString()),
               FormBuilderSwitch(
                   onChanged: _saveFormChanges,
                   title: Text('Include Baseline'),
                   name: 'includeBaseline',
-                  initialValue: _draftStudy.studyDetails.studySchedule.includeBaseline),
+                  initialValue: _draftStudy.studyDetails.schedule.includeBaseline),
               FormBuilderDropdown(
                 onChanged: _saveFormChanges,
                 name: 'sequence',
                 decoration: InputDecoration(labelText: 'Sequence'),
-                initialValue: _draftStudy.studyDetails.studySchedule.sequence,
+                initialValue: _draftStudy.studyDetails.schedule.sequence,
                 items: [PhaseSequence.alternating, PhaseSequence.counterBalanced, PhaseSequence.randomized]
                     .map((sequence) => DropdownMenuItem(value: sequence, child: Text(sequence.toString())))
                     .toList(),
@@ -65,7 +66,7 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        _draftStudy.studyDetails.studySchedule
+        _draftStudy.studyDetails.schedule
           ..numberOfCycles = int.parse(_editFormKey.currentState.value['numberOfCycles'])
           ..phaseDuration = int.parse(_editFormKey.currentState.value['phaseDuration'])
           ..includeBaseline = _editFormKey.currentState.value['includeBaseline']

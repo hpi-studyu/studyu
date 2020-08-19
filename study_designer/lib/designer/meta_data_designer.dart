@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../models/designer_state.dart';
 
@@ -10,7 +11,7 @@ class MetaDataDesigner extends StatefulWidget {
 }
 
 class _MetaDataDesignerState extends State<MetaDataDesigner> {
-  LocalStudy _draftStudy;
+  StudyBase _draftStudy;
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
