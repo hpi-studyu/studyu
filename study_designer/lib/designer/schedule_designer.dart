@@ -17,7 +17,7 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
   @override
   void initState() {
     super.initState();
-    _draftStudy = context.read<DesignerModel>().draftStudy;
+    _draftStudy = context.read<DesignerState>().draftStudy;
   }
 
   @override

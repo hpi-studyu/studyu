@@ -94,8 +94,8 @@ class _DesignerState extends State<Designer> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<DesignerModel>(
-      create: (context) => DesignerModel(),
+    return Provider<DesignerState>(
+      create: (context) => DesignerState(),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Create New Study'),

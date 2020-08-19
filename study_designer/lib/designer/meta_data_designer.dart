@@ -16,7 +16,7 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
   @override
   void initState() {
     super.initState();
-    _draftStudy = context.read<DesignerModel>().draftStudy;
+    _draftStudy = context.read<DesignerState>().draftStudy;
   }
 
   @override

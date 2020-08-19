@@ -14,7 +14,11 @@ class _PublishState extends State<Publish> {
   @override
   void initState() {
     super.initState();
-    _draftStudy = context.read<DesignerModel>().draftStudy;
+    _draftStudy = context.read<DesignerState>().draftStudy;
+  }
+
+  void _publishStudy() {
+    ParseStudy.fromBase(_draftStudy).save();
   }
 
   @override

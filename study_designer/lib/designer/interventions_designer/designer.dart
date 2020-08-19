@@ -34,7 +34,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _interventions = context.watch<DesignerModel>().draftStudy.studyDetails.interventionSet.interventions;
+    _interventions = context.watch<DesignerState>().draftStudy.studyDetails.interventionSet.interventions;
     return Stack(
       children: [
         Center(
