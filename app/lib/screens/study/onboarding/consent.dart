@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -51,9 +52,24 @@ class _ConsentScreenState extends State<ConsentScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(
-                  Nof1Localizations.of(context).translate('please_give_consent'),
-                  style: theme.textTheme.subtitle1,
+                RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                      text: Nof1Localizations.of(context).translate('please_give_consent'),
+                      style: theme.textTheme.subtitle1,
+                    ),
+                    TextSpan(
+                      text: Nof1Localizations.of(context).translate('please_give_consent_why'),
+                      style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text(Nof1Localizations.of(context).translate('please_give_consent_reason')),
+                              ),
+                            ),
+                    )
+                  ]),
                 ),
                 Flexible(
                   fit: FlexFit.loose,
