@@ -76,8 +76,12 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
           return selectedInterventions[index].id;
         }).toList();
       if (addBaseline) {
-        userStudy.interventionSet = InterventionSet(
-            [...userStudy.interventionSet.interventions, Intervention(baselineId, 'Baseline')..tasks = []]);
+        userStudy.interventionSet = InterventionSet([
+          ...userStudy.interventionSet.interventions,
+          Intervention(baselineId, 'Baseline')
+            ..tasks = []
+            ..icon = 'rayStart'
+        ]);
       }
     } else {
       print('Study is missing schedule or StudyDetails not fetched!');
