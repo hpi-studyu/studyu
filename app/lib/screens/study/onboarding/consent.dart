@@ -59,6 +59,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       style: theme.textTheme.subtitle1,
                     ),
                     TextSpan(
+                      text: ' ',
+                      style: theme.textTheme.subtitle1,
+                    ),
+                    TextSpan(
                       text: Nof1Localizations.of(context).translate('please_give_consent_why'),
                       style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
                       recognizer: TapGestureRecognizer()
