@@ -22,7 +22,7 @@ class Time {
   int hour;
   int minute;
 
-  Time(this.hour, this.minute) : super();
+  Time({this.hour, this.minute}) : super();
 
   Time.fromJson(String value) {
     final elements = value.split(':').map(int.parse);
