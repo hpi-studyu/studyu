@@ -10,7 +10,9 @@ class ReportSpecification {
 
   List<Outcome> outcomes;
 
-  ReportSpecification();
+  ReportSpecification()
+      : significanceLevel = 0,
+        outcomes = [];
 
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);

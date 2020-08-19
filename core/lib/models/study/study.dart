@@ -1,4 +1,5 @@
 import 'package:studyou_core/models/models.dart';
+import 'package:uuid/uuid.dart';
 
 class StudyBase {
   String id;
@@ -6,6 +7,10 @@ class StudyBase {
   String description;
   String iconName;
   StudyDetailsBase studyDetails;
+
+  StudyBase()
+      : id = Uuid().v4(),
+        studyDetails = StudyDetailsBase();
 }
 
 extension StudyExtension on StudyBase {

@@ -8,6 +8,15 @@ class StudyDetailsBase {
   List<Observation> observations;
   StudySchedule schedule;
   ReportSpecification reportSpecification;
+
+  StudyDetailsBase()
+      : questionnaire = Questionnaire(),
+        eligibility = [],
+        consent = [],
+        interventionSet = InterventionSet([]),
+        observations = [],
+        schedule = StudySchedule(),
+        reportSpecification = ReportSpecification();
 }
 
 extension StudyDetailsExtension on StudyDetailsBase {
