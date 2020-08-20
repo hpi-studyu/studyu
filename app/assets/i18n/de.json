@@ -52,6 +52,9 @@
   "please_give_consent_reason": "Aus Gründen der Sicherheit und des Datenschutzes müssen Studien das Einverständnis von Teilnehmern einholen. Aus diesem Grund müssen sie für jede Studie ihr Einverständnis abgeben.",
   "user_did_not_give_consent": "Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.",
 
+  "setting_up_study": "Studie wird vorbereitet...",
+  "good_to_go": "Es kann losgehen!",
+
   "dashboard": "Dashboard",
   "home": "Home",
   "profile": "Profil",
