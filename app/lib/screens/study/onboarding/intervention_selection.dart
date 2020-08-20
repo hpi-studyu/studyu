@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/queries.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -80,14 +78,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   Future<void> onFinished() async {
     final model = context.read<AppModel>();
-    final userId = await UserQueries.getOrCreateUser().then((user) => user.objectId);
-    //TODO add selection of first intervention
-    model.activeStudy = model.selectedStudy.extractUserStudy(userId, selectedInterventions, DateTime.now(), 0);
-    final selectedStudyObjectId = await StudyQueries.saveUserStudy(model.activeStudy);
-    if (selectedStudyObjectId != null) {
-      await SharedPreferences.getInstance()
-          .then((pref) => pref.setString(UserQueries.selectedStudyObjectIdKey, selectedStudyObjectId));
-    }
+    model.activeStudy = model.selectedStudy.extractUserStudy(null, selectedInterventions, DateTime.now(), 0);
     Navigator.pushNamed(context, Routes.journey);
   }
 

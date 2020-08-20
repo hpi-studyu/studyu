@@ -21,7 +21,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     final consentGiven = await Navigator.pushNamed(context, Routes.consent);
     if (consentGiven != null && consentGiven) {
-      Navigator.pushNamed(context, Routes.dashboard);
+      Navigator.pushNamed(context, Routes.kickoff);
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(Nof1Localizations.of(context).translate('user_did_not_give_consent')),

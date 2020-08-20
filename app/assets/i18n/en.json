@@ -51,6 +51,9 @@
   "please_give_consent_reason": "Studies need to request specific consent from participants, for reasons of safety and data privacy. Hence, you must explicitly consent to participate in each study.",
   "user_did_not_give_consent": "You did not give your consent. To participate you need to give consent.",
 
+  "setting_up_study": "Setting up your study...",
+  "good_to_go": "You are good to go!",
+
   "dashboard": "Dashboard",
   "home": "Home",
   "profile": "Profile",

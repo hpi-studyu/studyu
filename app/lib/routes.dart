@@ -1,3 +1,4 @@
+import 'package:StudYou/screens/study/onboarding/kickoff.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
@@ -26,6 +27,7 @@ class Routes {
   static const String interventionSelection = '/interventionSelection';
   static const String journey = '/journey';
   static const String consent = '/consent';
+  static const String kickoff = '/kickoff';
   static const String contact = '/contact';
   static const String appSettings = '/settings';
   static const String questionnaire = '/questionnaire';
@@ -59,6 +61,7 @@ class Routes {
       interventionSelection: (_) => InterventionSelectionScreen(),
       journey: (_) => JourneyOverviewScreen(),
       consent: (_) => ConsentScreen(),
+      kickoff: (_) => KickoffScreen(),
       contact: (_) => Contact(),
       appSettings: (_) => Settings(),
       reportHistory: (_) => ReportHistoryScreen(),
