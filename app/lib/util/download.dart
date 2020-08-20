@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -27,14 +28,16 @@ Future<void> pdfDownload(BuildContext context, String title, List<pw.Widget> con
     ),
   );
 
-  getExternalStorageDirectory().then((dir) {
-    File('${dir.path}/${title.replaceAll(' ', '_')}_consent.pdf').writeAsBytesSync(doc.save());
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              elevation: 24,
-              title: Text(Nof1Localizations.of(context).translate('download_finished')),
-              content: Text(Nof1Localizations.of(context).translate('download_finished_description')),
-            ));
-  });
+  // TODO maybe replace discontinued DownloadsPathProvider
+  final dir =
+      Platform.isIOS ? await getApplicationDocumentsDirectory() : await DownloadsPathProvider.downloadsDirectory;
+
+  File('${dir.path}/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(doc.save());
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            elevation: 24,
+            title: Text(Nof1Localizations.of(context).translate('download_finished')),
+            content: Text(Nof1Localizations.of(context).translate('download_finished_description')),
+          ));
 }
