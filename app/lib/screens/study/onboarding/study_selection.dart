@@ -37,7 +37,6 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: EdgeInsets.all(16),
