@@ -29,7 +29,7 @@ class InterventionCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        InterventionCardTitleTile(
+        InterventionCardTitle(
           intervention: intervention,
           showCheckbox: showCheckbox,
           showDescriptionButton: !showDescription,
@@ -43,14 +43,14 @@ class InterventionCard extends StatelessWidget {
   }
 }
 
-class InterventionCardTitleTile extends StatelessWidget {
+class InterventionCardTitle extends StatelessWidget {
   final Intervention intervention;
   final bool selected;
   final bool showCheckbox;
   final bool showDescriptionButton;
   final Function() onTap;
 
-  const InterventionCardTitleTile({
+  const InterventionCardTitle({
     @required this.intervention,
     this.selected = false,
     this.showCheckbox = false,
@@ -74,7 +74,7 @@ class InterventionCardTitleTile extends StatelessWidget {
       dense: true,
       title: Row(
         children: [
-          Text(intervention.name, style: theme.textTheme.headline6),
+          Expanded(child: Text(intervention.name, style: theme.textTheme.headline6)),
           if (showDescriptionButton)
             IconButton(
               icon: Icon(Icons.info_outline),

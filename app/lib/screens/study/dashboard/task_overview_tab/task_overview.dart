@@ -58,7 +58,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               SizedBox(height: 8),
               Text(Nof1Localizations.of(context).translate('intervention_current'), style: theme.textTheme.headline6),
               SizedBox(height: 8),
-              InterventionCardTitleTile(intervention: widget.study.getInterventionForDate(DateTime.now())),
+              InterventionCardTitle(intervention: widget.study.getInterventionForDate(DateTime.now())),
               SizedBox(height: 8),
               Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)
             ])),
