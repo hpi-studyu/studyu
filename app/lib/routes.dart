@@ -1,4 +1,3 @@
-import 'package:StudYou/screens/study/onboarding/kickoff.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
@@ -12,6 +11,7 @@ import 'screens/study/dashboard/settings.dart';
 import 'screens/study/onboarding/consent.dart';
 import 'screens/study/onboarding/intervention_selection.dart';
 import 'screens/study/onboarding/journey_overview.dart';
+import 'screens/study/onboarding/kickoff.dart';
 import 'screens/study/onboarding/study_overview.dart';
 import 'screens/study/onboarding/study_selection.dart';
 import 'screens/study/report/report_history.dart';
