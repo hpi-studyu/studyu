@@ -63,7 +63,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         actions: [
           IconButton(
             icon: Icon(MdiIcons.download),
-            onPressed: () async => pdfDownload(context, study.title, await generatePdfContent()),
+            onPressed: () async => pdfDownload(context, '${study.title}_consent', await generatePdfContent()),
           ),
         ],
       ),
