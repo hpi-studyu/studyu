@@ -205,12 +205,12 @@ packages:
   flutter_form_builder:
     dependency: "direct main"
     description:
-        path: "."
-        ref: version_4
-        resolved-ref: "47ad36335bbb16115a08b3c4b375eb844811582f"
-        url: "git://github.com/nstrelow/flutter_form_builder.git"
-        source: git
-        version: "4.0.0-beta.1"
+      path: "."
+      ref: version_4
+      resolved-ref: "47ad36335bbb16115a08b3c4b375eb844811582f"
+      url: "git://github.com/nstrelow/flutter_form_builder.git"
+    source: git
+    version: "4.0.0-beta.1"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
