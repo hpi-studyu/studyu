@@ -14,7 +14,7 @@ dependencies:
   uuid:
 
 dev_dependencies:
-  build_runner: 1.10.1
+  build_runner: 1.10.2
   effective_dart:
   flutter_test:
     sdk: flutter
