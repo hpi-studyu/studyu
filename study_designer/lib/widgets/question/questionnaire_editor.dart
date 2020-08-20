@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
 import 'package:studyou_core/models/questionnaire/questions/slider_question.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../widgets/question/question_editor.dart';
 
@@ -29,7 +30,9 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     if (newType == BooleanQuestion.questionType) {
       newQuestion = BooleanQuestion();
     } else if (newType == ChoiceQuestion.questionType) {
-      newQuestion = ChoiceQuestion()..choices = [];
+      newQuestion = ChoiceQuestion()
+        ..choices = []
+        ..id = Uuid().v4();
     } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
       if (newType == AnnotatedScaleQuestion.questionType) {
         newQuestion = AnnotatedScaleQuestion()..annotations = [];
