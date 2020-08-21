@@ -2,6 +2,7 @@ import '../../questionnaire/questionnaire_state.dart';
 import '../expression.dart';
 
 abstract class ValueExpression<V> extends Expression {
+  static const String expressionType = 'value';
   String target;
 
   ValueExpression(String type) : super(type);
