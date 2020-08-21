@@ -18,42 +18,54 @@ class ChoiceExpressionEditorSection extends StatefulWidget {
 class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSection> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
   bool addButtonActive;
+  List<Choice> selectedChoices;
 
   @override
   void initState() {
     addButtonActive = false;
+    selectedChoices = widget.targetQuestion.choices.where((c) => widget.expression.choices.contains(c.id)).toList();
     super.initState();
   }
 
-  void _removeChoice(String choiceId) {
+  void _removeChoice(index) {
+    final choice = selectedChoices[index];
     setState(() {
-      widget.expression.choices.remove(choiceId);
+      selectedChoices.removeAt(index);
+      widget.expression.choices.remove(choice.id);
     });
-  }
-
-  Choice _getChoiceForId(choiceId) {
-    final choices = widget.targetQuestion.choices.where((c) => c.id == choiceId).toList();
-    return choices.isNotEmpty ? choices[0] : null;
   }
 
   @override
   Widget build(BuildContext context) {
     final addButton = _buildAddButton();
-
-    return Column(children: [
-      ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.expression.choices.length,
-        itemBuilder: (buildContext, index) {
-          return Text(_getChoiceForId(widget.expression.choices.toList()[index]).text);
-        },
-      ),
-      if (addButton != null) addButton
-    ]);
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.expression.choices.length,
+          itemBuilder: (buildContext, index) {
+            return Row(children: [
+              Expanded(child: Text(selectedChoices[index].text)),
+              Expanded(
+                child: ButtonBar(
+                  children: <Widget>[
+                    FlatButton(
+                      onPressed: () => _removeChoice(index),
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                ),
+              ),
+            ]);
+          },
+        ),
+        if (addButton != null) addButton
+      ],
+    );
   }
 
   Widget _buildAddButton() {
-    if (widget.expression.choices.length < widget.targetQuestion.choices.length) {
+    if (selectedChoices.length < widget.targetQuestion.choices.length) {
       if (addButtonActive) {
         return FormBuilder(
             key: _editFormKey,
@@ -66,11 +78,12 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
                   setState(() {
                     addButtonActive = false;
                     widget.expression.choices.add(choice.id);
+                    selectedChoices.add(choice);
                   });
                 },
                 hint: Text('Select Choice to add'),
                 items: widget.targetQuestion.choices
-                    .where((choice) => !widget.expression.choices.contains(choice.id))
+                    .where((choice) => !selectedChoices.contains(choice))
                     .toList()
                     .map((choice) => DropdownMenuItem(value: choice, child: Text(choice.text)))
                     .toList(),
