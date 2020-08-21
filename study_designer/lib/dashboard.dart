@@ -24,7 +24,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('StudYou Designer'),
+        title: Text('StudyU Designer'),
         actions: [
           IconButton(
             onPressed: () {},
