@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:study_designer/widgets/eligibility/expression_editor.dart';
+import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
+import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/models.dart';
 
 class EligibilityCriterionEditor extends StatefulWidget {
   final EligibilityCriterion eligibilityCriterion;
+  final List<Question> questions;
   final void Function() remove;
 
-  const EligibilityCriterionEditor({@required this.eligibilityCriterion, @required this.remove, Key key})
+  const EligibilityCriterionEditor(
+      {@required this.eligibilityCriterion, @required this.questions, @required this.remove, Key key})
       : super(key: key);
 
   @override
@@ -16,6 +21,20 @@ class EligibilityCriterionEditor extends StatefulWidget {
 
 class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
+
+  void _changeTarget(newTarget) {
+    Expression newExpression;
+    if (newTarget == BooleanQuestion.questionType) {
+      newExpression = BooleanExpression();
+    } else if (newTarget == ChoiceQuestion.questionType) {
+      newExpression = ChoiceExpression();
+    }
+    print('hi');
+    setState(() {
+      widget.eligibilityCriterion.condition = newExpression;
+    });
+    print('bye');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +69,10 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
                   ],
                 ),
               ),
+              ExpressionEditor(
+                  expression: widget.eligibilityCriterion.condition,
+                  questions: widget.questions,
+                  changeTarget: _changeTarget)
             ]),
           )
         ]));
