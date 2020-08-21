@@ -35,8 +35,8 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _eligibility = context.watch<DesignerModel>().draftStudy.studyDetails.eligibility;
-    _questions = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
+    _eligibility = context.watch<DesignerState>().draftStudy.studyDetails.eligibility;
+    _questions = context.watch<DesignerState>().draftStudy.studyDetails.questionnaire.questions;
     return _questions.isNotEmpty
         ? Stack(
             children: [
