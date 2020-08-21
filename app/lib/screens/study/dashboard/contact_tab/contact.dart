@@ -1,6 +1,8 @@
+import 'package:StudYou/screens/app_onboarding/about.dart';
+import 'package:StudYou/screens/study/dashboard/contact_tab/contact_us.dart';
+import 'package:StudYou/screens/study/dashboard/contact_tab/faq.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../theme.dart';
 import '../../../../util/localization.dart';
 
 class Contact extends StatelessWidget {
@@ -15,9 +17,51 @@ class Contact extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(color: theme.primaryColor, onPressed: () {}, child: Text('FAQ')),
-            RaisedButton(color: theme.primaryColor, onPressed: () {}, child: Text('Contact Support')),
-            RaisedButton(color: theme.primaryColor, onPressed: () {}, child: Text('Imprint/About')),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: 160,
+              height: 60,
+              child: RaisedButton(
+                  color: Colors.lightBlue[200],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FAQ()),
+                    );
+                  },
+                  child: Text('FAQ', style: TextStyle(fontSize: 18)),
+                  textColor: Colors.white),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: 160,
+              height: 60,
+              child: RaisedButton(
+                  color: Colors.blue[400],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ContactUs()),
+                    );
+                  },
+                  child: Text('Contact Us', style: TextStyle(fontSize: 18)),
+                  textColor: Colors.white),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: 160,
+              height: 60,
+              child: RaisedButton(
+                  color: Colors.blue[600],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AboutScreen()),
+                    );
+                  },
+                  child: Text('About StudyU', style: TextStyle(fontSize: 18)),
+                  textColor: Colors.white),
+            )
           ],
         ),
       ),
