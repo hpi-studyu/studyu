@@ -38,6 +38,8 @@ Future<void> pdfDownload(BuildContext context, String title, List<pw.Widget> con
       builder: (context) => AlertDialog(
             elevation: 24,
             title: Text(Nof1Localizations.of(context).translate('download_finished')),
-            content: Text(Nof1Localizations.of(context).translate('download_finished_description')),
+            content: Platform.isIOS
+                ? Text(Nof1Localizations.of(context).translate('download_finished_description_ios'))
+                : Text(Nof1Localizations.of(context).translate('download_finished_description')),
           ));
 }
