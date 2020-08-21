@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Study Designer',
+      title: 'StudyU Designer',
       theme: theme,
       onGenerateRoute: (settings) {
         if (settings.name.startsWith(designerRoute)) {
