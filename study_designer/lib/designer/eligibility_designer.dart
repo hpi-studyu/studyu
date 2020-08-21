@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_designer/widgets/eligibility/eligibility_criterion_editor.dart';
+import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,9 +15,13 @@ class EligibilityDesigner extends StatefulWidget {
 
 class _EligibilityDesignerState extends State<EligibilityDesigner> {
   List<EligibilityCriterion> _eligibility;
+  List<Question> _questions;
 
   void _addCriterion() {
-    final criterion = EligibilityCriterion()..id = Uuid().v4();
+    final expression = BooleanExpression();
+    final criterion = EligibilityCriterion()
+      ..id = Uuid().v4()
+      ..condition = expression;
     setState(() {
       _eligibility.add(criterion);
     });
@@ -30,21 +35,25 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _eligibility = context.watch<DesignerState>().draftStudy.studyDetails.eligibility;
-    return Stack(
-      children: [
-        Center(
-            child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                    child: Column(children: <Widget>[
-                  ..._eligibility.asMap().entries.map((entry) => EligibilityCriterionEditor(
-                      key: UniqueKey(),
-                      eligibilityCriterion: entry.value,
-                      remove: () => _removeEligibilityCriterion(entry.key)))
-                ])))),
-        DesignerAddButton(label: Text('Add Criterion'), add: _addCriterion),
-      ],
-    );
+    _eligibility = context.watch<DesignerModel>().draftStudy.studyDetails.eligibility;
+    _questions = context.watch<DesignerModel>().draftStudy.studyDetails.questionnaire.questions;
+    return _questions.isNotEmpty
+        ? Stack(
+            children: [
+              Center(
+                  child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SingleChildScrollView(
+                          child: Column(children: <Widget>[
+                        ..._eligibility.asMap().entries.map((entry) => EligibilityCriterionEditor(
+                            key: UniqueKey(),
+                            eligibilityCriterion: entry.value,
+                            questions: _questions,
+                            remove: () => _removeEligibilityCriterion(entry.key)))
+                      ])))),
+              DesignerAddButton(label: Text('Add Criterion'), add: _addCriterion),
+            ],
+          )
+        : Center(child: Text('No Questions added yet'));
   }
 }
