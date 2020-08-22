@@ -27,7 +27,6 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
     setState(() {
       _observations.add(intervention);
     });
-    print(Observation.taskTypes.keys.toList());
   }
 
   void _removeObservation(index) {

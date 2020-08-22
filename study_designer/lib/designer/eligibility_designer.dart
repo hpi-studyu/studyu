@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/widgets/eligibility/eligibility_criterion_editor.dart';
 import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/designer_add_button.dart';
+import '../widgets/eligibility/eligibility_criterion_editor.dart';
 
 class EligibilityDesigner extends StatefulWidget {
   @override

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:study_designer/widgets/eligibility/expression_editor.dart';
 import 'package:studyou_core/models/expressions/types/types.dart';
 import 'package:studyou_core/models/models.dart';
+
+import './expression_editor.dart';
 
 class NotExpressionEditor extends StatefulWidget {
   final NotExpression expression;
