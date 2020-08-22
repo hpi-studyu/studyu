@@ -12,7 +12,7 @@ class StudyTile extends StatelessWidget {
   const StudyTile({@required this.study, Key key}) : super(key: key);
 
   Future<void> navigateToStudyOverview(BuildContext context, StudyBase selectedStudy) async {
-    context.read<AppModel>().selectedStudy = selectedStudy;
+    context.read<AppState>().selectedStudy = selectedStudy;
     Navigator.pushNamed(context, Routes.studyOverview);
   }
 

@@ -22,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppModel>().activeStudy;
+    study = context.read<AppState>().activeStudy;
     scheduleToday = study.scheduleFor(DateTime.now());
   }
 

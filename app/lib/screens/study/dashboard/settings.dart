@@ -26,7 +26,7 @@ class _SettingsState extends State<Settings> {
     super.initState();
     _selectedValue = context.read<AppLanguage>().appLocal;
     _userFuture = UserQueries.getOrCreateUser();
-    activeStudy = context.read<AppModel>().activeStudy;
+    activeStudy = context.read<AppState>().activeStudy;
   }
 
   Widget getDropdownRow(BuildContext context) {
