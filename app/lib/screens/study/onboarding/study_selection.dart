@@ -82,10 +82,13 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: studies.length,
                         itemBuilder: (context, index) {
-                          return StudyTile(
-                            study: studies[index],
-                            onTap: navigateToStudyOverview,
-                          );
+                          return Hero(
+                              tag: 'study_tile_${studies[index].id}',
+                              child: Material(
+                                  child: StudyTile(
+                                study: studies[index],
+                                onTap: navigateToStudyOverview,
+                              )));
                         });
                   },
                 ),
