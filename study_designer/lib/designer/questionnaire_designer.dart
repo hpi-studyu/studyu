@@ -26,8 +26,6 @@ class _QuestionnaireDesignerState extends State<QuestionnaireDesigner> {
     });
   }
 
-  void _removeLinkedExpressions(Question question) {}
-
   @override
   Widget build(BuildContext context) {
     questionnaire = context.watch<DesignerState>().draftStudy.studyDetails.questionnaire;

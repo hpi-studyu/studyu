@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/eligibility/choice_expression_editor_section.dart';
 import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/expressions/types/value_expression.dart';
 import 'package:studyou_core/models/models.dart';
+
+import './choice_expression_editor_section.dart';
 
 class ValueExpressionEditor extends StatefulWidget {
   final ValueExpression expression;

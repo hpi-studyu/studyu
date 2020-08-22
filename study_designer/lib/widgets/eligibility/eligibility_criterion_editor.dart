@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/eligibility/expression_editor.dart';
 import 'package:studyou_core/models/models.dart';
+
+import './expression_editor.dart';
 
 class EligibilityCriterionEditor extends StatefulWidget {
   final EligibilityCriterion eligibilityCriterion;
@@ -27,7 +28,7 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
         child: Column(children: [
           ListTile(
               title: Row(
-                children: [Text('Eligibility Criterion')],
+                children: const [Text('Eligibility Criterion')],
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,

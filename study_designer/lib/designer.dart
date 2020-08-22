@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/eligibility_designer.dart';
 
+import './designer/eligibility_designer.dart';
 import 'designer/consent_designer.dart';
 import 'designer/interventions_designer.dart';
 import 'designer/meta_data_designer.dart';

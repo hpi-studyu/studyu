@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:study_designer/widgets/eligibility/not_expression_editor.dart';
-import 'package:study_designer/widgets/eligibility/value_expression_editor.dart';
 import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/expressions/types/not_expression.dart';
 import 'package:studyou_core/models/expressions/types/value_expression.dart';
 import 'package:studyou_core/models/models.dart';
+
+import './not_expression_editor.dart';
+import './value_expression_editor.dart';
 
 class ExpressionEditor extends StatefulWidget {
   final Expression expression;
