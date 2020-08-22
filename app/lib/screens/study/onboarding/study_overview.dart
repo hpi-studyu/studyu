@@ -51,14 +51,22 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         title: Text(study.title),
       ),
       body: Center(
-          child: ParseFetchOneFutureBuilder<ParseStudy>(
-              queryFunction: () => _futureStudyDetails,
-              builder: (_context, study) {
-                context.read<AppState>().selectedStudy = study;
-                return SingleChildScrollView(
-                  child: StudyTile(study: study),
-                );
-              })),
+          child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Hero(
+              tag: 'study_tile_${study.id}',
+              child: Material(child: StudyTile(study: study)),
+            ),
+            ParseFetchOneFutureBuilder<ParseStudy>(
+                queryFunction: () => _futureStudyDetails,
+                builder: (_context, study) {
+                  context.read<AppState>().selectedStudy = study;
+                  return Container();
+                }),
+          ],
+        ),
+      )),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: () => navigateToEligibilityCheck(context),
       ),
