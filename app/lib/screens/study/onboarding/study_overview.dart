@@ -1,3 +1,4 @@
+import 'package:StudYou/widgets/study_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -55,20 +56,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               builder: (_context, study) {
                 context.read<AppState>().selectedStudy = study;
                 return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          study.title,
-                          style: theme.textTheme.headline5,
-                        ),
-                        SizedBox(height: 20),
-                        Text(study.description),
-                      ],
-                    ),
-                  ),
+                  child: StudyTile(study: study),
                 );
               })),
       bottomNavigationBar: BottomOnboardingNavigation(
