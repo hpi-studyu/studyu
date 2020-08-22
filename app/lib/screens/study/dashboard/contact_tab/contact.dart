@@ -44,7 +44,7 @@ class Contact extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => ContactUs()),
                     );
                   },
-                  child: Text('Contact Us', style: TextStyle(fontSize: 18)),
+                  child: Text(Nof1Localizations.of(context).translate('contact'), style: TextStyle(fontSize: 18)),
                   textColor: Colors.white),
             ),
             const SizedBox(height: 30),
@@ -59,7 +59,7 @@ class Contact extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => AboutScreen()),
                     );
                   },
-                  child: Text('About StudyU', style: TextStyle(fontSize: 18)),
+                  child: Text(Nof1Localizations.of(context).translate('about'), style: TextStyle(fontSize: 18)),
                   textColor: Colors.white),
             )
           ],
