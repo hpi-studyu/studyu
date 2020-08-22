@@ -1,5 +1,3 @@
-import 'package:StudYou/widgets/study_tile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
@@ -11,6 +9,7 @@ import 'package:studyou_core/util/parse_future_builder.dart';
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
+import '../../../widgets/study_tile.dart';
 import 'eligibility_screen.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
@@ -44,7 +43,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: Icon(MdiIcons.fromString(study.iconName)),
