@@ -66,7 +66,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   void _finish() {
-    Navigator.of(context).pop(activeResult);
+    Navigator.pop(context, activeResult);
   }
 
   Widget _constructPassBanner() => MaterialBanner(
@@ -77,12 +77,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         ),
         content:
             Text(Nof1Localizations.of(context).translate('eligible_yes'), style: Theme.of(context).textTheme.subtitle1),
-        actions: [
-          FlatButton(
-            onPressed: _finish,
-            child: Text(Nof1Localizations.of(context).translate('next')),
-          )
-        ],
+        actions: [Container()],
         forceActionsBelow: true,
         backgroundColor: Colors.green[50],
       );
@@ -125,7 +120,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       ),
       body: Column(
         children: [
-          if (activeResult != null) _constructResultBanner(),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text(
@@ -142,10 +136,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               shouldContinue: _checkContinuation,
             ),
           ),
+          if (activeResult != null) _constructResultBanner(),
         ],
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        hideNext: true,
+        onNext: activeResult?.eligible ?? false ? _finish : null,
         progress: OnboardingProgress(stage: 0, progress: 0.5),
       ),
     );
