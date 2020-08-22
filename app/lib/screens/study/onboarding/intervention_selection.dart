@@ -8,7 +8,7 @@ import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
-import 'intervention_card.dart';
+import '../../../widgets/intervention_card.dart';
 import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
