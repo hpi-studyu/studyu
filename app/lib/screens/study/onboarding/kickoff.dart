@@ -35,7 +35,7 @@ class _KickoffScreen extends State<KickoffScreen> {
   void initState() {
     super.initState();
     ready = false;
-    study = context.read<AppModel>().activeStudy;
+    study = context.read<AppState>().activeStudy;
     _storeUserStudy();
   }
 

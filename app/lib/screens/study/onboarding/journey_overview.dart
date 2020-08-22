@@ -33,7 +33,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppModel>().activeStudy;
+    study = context.read<AppState>().activeStudy;
   }
 
   List<Widget> buildJourney() {

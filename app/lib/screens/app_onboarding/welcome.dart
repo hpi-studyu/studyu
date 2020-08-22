@@ -44,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
           : [
               FlatButton(
                 onPressed: () {
-                  context.read<AppModel>()
+                  context.read<AppState>()
                     ..selectedStudy = ParseStudy()
                     ..selectedInterventions = [Intervention('a', 'A'), Intervention('a', 'B')];
                   Navigator.pushNamed(context, Routes.dashboard);

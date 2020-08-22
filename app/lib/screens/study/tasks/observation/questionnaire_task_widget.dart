@@ -14,7 +14,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
   const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
 
   Future<void> _evaluateResponse(QuestionnaireState qs, BuildContext context) async {
-    final model = context.read<AppModel>();
+    final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
     final result = Result<QuestionnaireState>()
       ..result = qs

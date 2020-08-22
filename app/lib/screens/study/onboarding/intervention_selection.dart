@@ -23,7 +23,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   @override
   void initState() {
     super.initState();
-    selectedStudy = context.read<AppModel>().selectedStudy;
+    selectedStudy = context.read<AppState>().selectedStudy;
   }
 
   Widget _buildInterventionSelectionExplanation(ThemeData theme) {
@@ -77,7 +77,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   }
 
   Future<void> onFinished() async {
-    final model = context.read<AppModel>();
+    final model = context.read<AppState>();
     model.activeStudy = model.selectedStudy.extractUserStudy(null, selectedInterventions, DateTime.now(), 0);
     Navigator.pushNamed(context, Routes.journey);
   }

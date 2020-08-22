@@ -29,7 +29,7 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
-    _isCompleted = context.watch<AppModel>().activeStudy.isTaskFinishedFor(widget.task.id, DateTime.now());
+    _isCompleted = context.watch<AppState>().activeStudy.isTaskFinishedFor(widget.task.id, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(

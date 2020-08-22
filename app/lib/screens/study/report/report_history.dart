@@ -41,7 +41,7 @@ class ReportHistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final model = context.watch<AppModel>();
+    final model = context.watch<AppState>();
     final isActiveStudy = model.activeStudy.studyId == instance.studyId;
     return Card(
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,

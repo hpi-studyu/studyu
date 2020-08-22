@@ -24,12 +24,12 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppModel>().selectedStudy;
+    study = context.read<AppState>().selectedStudy;
     _futureStudyDetails = StudyQueries.getStudyDetails(study);
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
-    final study = context.read<AppModel>().selectedStudy;
+    final study = context.read<AppState>().selectedStudy;
     final result = await Navigator.push(context, EligibilityScreen.routeFor(study: study));
     if (result == null) return;
 
@@ -53,7 +53,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
           child: ParseFetchOneFutureBuilder<ParseStudy>(
               queryFunction: () => _futureStudyDetails,
               builder: (_context, study) {
-                context.read<AppModel>().selectedStudy = study;
+                context.read<AppState>().selectedStudy = study;
                 return SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
