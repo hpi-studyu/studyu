@@ -62,7 +62,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
                 queryFunction: () => _futureStudyDetails,
                 builder: (_context, study) {
                   context.read<AppState>().selectedStudy = study;
-                  return Container();
+                  return StudyDetailsView(studyDetails: study.studyDetails);
                 }),
           ],
         ),
@@ -70,6 +70,27 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: () => navigateToEligibilityCheck(context),
       ),
+    );
+  }
+}
+
+class StudyDetailsView extends StatelessWidget {
+  final StudyDetailsBase studyDetails;
+
+  const StudyDetailsView({@required this.studyDetails, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final baselineLength = studyDetails.schedule.includeBaseline ? studyDetails.schedule.phaseDuration : 0;
+    final studyLength = baselineLength +
+        studyDetails.schedule.phaseDuration * studyDetails.schedule.numberOfCycles * StudySchedule.numberOfPhases;
+    return Column(
+      children: [
+        Text('Placeholder StudyDetails', style: theme.textTheme.headline6),
+        Text('Intervention phase duration: ${studyDetails.schedule.phaseDuration} days'),
+        Text('Minimum study length: $studyLength days'),
+      ],
     );
   }
 }
