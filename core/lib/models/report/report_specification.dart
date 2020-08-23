@@ -1,18 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'outcomes/outcome.dart';
+import 'section.dart';
 
 part 'report_specification.g.dart';
 
 @JsonSerializable()
 class ReportSpecification {
-  double significanceLevel;
+  Section primary;
+  List<Section> secondary;
 
-  List<Outcome> outcomes;
-
-  ReportSpecification()
-      : significanceLevel = 0,
-        outcomes = [];
+  ReportSpecification();
 
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);

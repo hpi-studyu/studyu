@@ -1,30 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'outcome.dart';
+part of 'average_section.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Outcome _$OutcomeFromJson(Map<String, dynamic> json) {
-  return Outcome()
-    ..outcomeId = json['outcomeId'] as String
+AverageSection _$AverageSectionFromJson(Map<String, dynamic> json) {
+  return AverageSection()
+    ..type = json['type'] as String
+    ..id = json['id'] as String
     ..title = json['title'] as String
     ..description = json['description'] as String
-    ..chartType = _$enumDecode(_$ChartTypeEnumMap, json['chartType'])
-    ..chartX = _$enumDecode(_$ChartXEnumMap, json['chartX'])
-    ..taskId = json['taskId'] as String
-    ..questionId = json['questionId'] as String;
+    ..aggregate = _$enumDecode(_$TemporalAggregationEnumMap, json['aggregate'])
+    ..resultProperty =
+        DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$OutcomeToJson(Outcome instance) => <String, dynamic>{
-      'outcomeId': instance.outcomeId,
+Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
       'title': instance.title,
       'description': instance.description,
-      'chartType': _$ChartTypeEnumMap[instance.chartType],
-      'chartX': _$ChartXEnumMap[instance.chartX],
-      'taskId': instance.taskId,
-      'questionId': instance.questionId,
+      'aggregate': _$TemporalAggregationEnumMap[instance.aggregate],
+      'resultProperty': instance.resultProperty.toJson(),
     };
 
 T _$enumDecode<T>(
@@ -48,12 +48,8 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-const _$ChartTypeEnumMap = {
-  ChartType.BAR: 'BAR',
-  ChartType.LINE: 'LINE',
-};
-
-const _$ChartXEnumMap = {
-  ChartX.DATE: 'DATE',
-  ChartX.INTERVENTION: 'INTERVENTION',
+const _$TemporalAggregationEnumMap = {
+  TemporalAggregation.day: 'day',
+  TemporalAggregation.phase: 'phase',
+  TemporalAggregation.intervention: 'intervention',
 };
