@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -16,13 +15,10 @@ class ChoiceExpressionEditorSection extends StatefulWidget {
 }
 
 class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSection> {
-  final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
-  bool addButtonActive;
   List<Choice> selectedChoices;
 
   @override
   void initState() {
-    addButtonActive = false;
     selectedChoices = widget.targetQuestion.choices.where((c) => widget.expression.choices.contains(c.id)).toList();
     super.initState();
   }
@@ -66,40 +62,22 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
 
   Widget _buildAddButton() {
     if (selectedChoices.length < widget.targetQuestion.choices.length) {
-      if (addButtonActive) {
-        return FormBuilder(
-            key: _editFormKey,
-            autovalidate: true,
-            // readonly: true,
-            child: Column(children: <Widget>[
-              FormBuilderDropdown(
-                name: 'choice',
-                onChanged: (choice) {
-                  setState(() {
-                    addButtonActive = false;
-                    widget.expression.choices.add(choice.id);
-                    selectedChoices.add(choice);
-                  });
-                },
-                hint: Text('Select Choice to add'),
-                items: widget.targetQuestion.choices
-                    .where((choice) => !selectedChoices.contains(choice))
-                    .toList()
-                    .map((choice) => DropdownMenuItem(value: choice, child: Text(choice.text)))
-                    .toList(),
-              ),
-            ]));
-      } else {
-        return Row(children: [
-          Spacer(),
-          RaisedButton.icon(
-              onPressed: () => setState(() => addButtonActive = true),
-              icon: Icon(Icons.add),
-              color: Colors.green,
-              label: Text('Select Choice')),
-          Spacer()
-        ]);
-      }
+      return Row(children: [
+        Text('Add choice:'),
+        SizedBox(width: 10),
+        DropdownButton<Choice>(
+            onChanged: (choice) {
+              setState(() {
+                widget.expression.choices.add(choice.id);
+                selectedChoices.add(choice);
+              });
+            },
+            items: widget.targetQuestion.choices
+                .where((choice) => !selectedChoices.contains(choice))
+                .toList()
+                .map((choice) => DropdownMenuItem(value: choice, child: Text(choice.text)))
+                .toList())
+      ]);
     } else {
       return null;
     }
