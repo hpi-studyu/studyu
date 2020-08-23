@@ -5,14 +5,13 @@ import 'package:flutter/widgets.dart';
 class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Frequently Asked Questions'),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(20),
-        itemBuilder: (BuildContext context, int index) => EntryItem(data[index]),
+        itemBuilder: (context, index) => EntryItem(data[index]),
         itemCount: data.length,
       ),
     );
