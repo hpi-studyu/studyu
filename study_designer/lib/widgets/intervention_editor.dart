@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:studyou_core/models/interventions/interventions.dart';
@@ -21,6 +23,17 @@ class InterventionEditor extends StatefulWidget {
 class _InterventionEditorState extends State<InterventionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
+  Future<void> _pickIcon() async {
+    final icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackMode: IconPack.custom,
+        customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)});
+
+    final iconName = iconMap.keys.firstWhere((k) => iconMap[k] == icon.codePoint, orElse: () => null);
+    setState(() {
+      widget.intervention.icon = iconName;
+    });
+  }
+
   void _addCheckMarkTask() {
     final task = CheckmarkTask()
       ..id = Uuid().v4()
@@ -29,7 +42,6 @@ class _InterventionEditorState extends State<InterventionEditor> {
     setState(() {
       widget.intervention.tasks.add(task);
     });
-    print(widget.intervention.tasks);
   }
 
   void _removeTask(taskIndex) {
@@ -67,14 +79,10 @@ class _InterventionEditorState extends State<InterventionEditor> {
                             initialValue: widget.intervention.name),
                         Row(children: [
                           Expanded(
-                            child: FormBuilderTextField(
-                                onChanged: (value) {
-                                  saveFormChanges();
-                                },
-                                name: 'icon',
-                                maxLength: 40,
-                                decoration: InputDecoration(labelText: 'Icon'),
-                                initialValue: widget.intervention.icon),
+                            child: FlatButton(
+                              onPressed: _pickIcon,
+                              child: Text('Choose Icon'),
+                            ),
                           ),
                           if (MdiIcons.fromString(widget.intervention.icon) != null)
                             Expanded(child: Icon(MdiIcons.fromString(widget.intervention.icon)))
@@ -111,7 +119,6 @@ class _InterventionEditorState extends State<InterventionEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.intervention.name = _editFormKey.currentState.value['name'];
-        widget.intervention.icon = _editFormKey.currentState.value['icon'];
         widget.intervention.description = _editFormKey.currentState.value['description'];
       });
     }
