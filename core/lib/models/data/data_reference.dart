@@ -4,7 +4,7 @@ part 'data_reference.g.dart';
 
 @JsonSerializable()
 class DataReference<T> {
-  String observation;
+  String task;
   String property;
 
   DataReference();
