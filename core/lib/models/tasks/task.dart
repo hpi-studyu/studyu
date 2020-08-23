@@ -1,3 +1,5 @@
+import 'package:studyou_core/models/results/result.dart';
+
 import '../tasks/schedule.dart';
 
 abstract class Task {
@@ -17,4 +19,6 @@ abstract class Task {
   String toString() {
     return toJson().toString();
   }
+
+  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults);
 }

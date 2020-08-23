@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyou_core/models/results/result.dart';
 
 import '../../tasks/schedule.dart';
 import '../intervention_task.dart';
@@ -15,4 +16,9 @@ class CheckmarkTask extends InterventionTask {
 
   @override
   Map<String, dynamic> toJson() => _$CheckmarkTaskToJson(this);
+
+  @override
+  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
+    throw new ArgumentError('${this.runtimeType.toString()} does not have a property named \'${property}\'.');
+  }
 }
