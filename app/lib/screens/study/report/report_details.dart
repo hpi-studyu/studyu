@@ -19,9 +19,7 @@ class ReportDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final outcome = reportStudy.reportSpecification != null
-        ? reportStudy.reportSpecification.outcomes.isNotEmpty ? reportStudy.reportSpecification.outcomes[0] : null
-        : null;
+    final outcome = reportStudy.reportSpecification.primary;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,8 +42,7 @@ class ReportDetailsScreen extends StatelessWidget {
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),
             ),
             if (outcome != null)
-              ReportModule(
-                  ReportOutcomeModule(reportStudy, reportStudy.reportSpecification.outcomes[0], primary: true)),
+              ReportModule(ReportAverageModule(reportStudy, reportStudy.reportSpecification.primary, primary: true)),
           ],
         ),
       ),
@@ -100,9 +97,7 @@ class ReportPerformanceModule extends ReportModuleContent {
   Widget build(BuildContext context) {
     final interventions =
         instance.interventionSet.interventions.where((intervention) => intervention.id != '__baseline').toList();
-    return interventions.length != 2 ||
-            instance.reportSpecification?.outcomes == null ||
-            instance.reportSpecification.outcomes.isEmpty
+    return interventions.length != 2 || instance.reportSpecification?.primary == null
         ? Center(
             child: Text('ERROR!'),
           )
@@ -306,11 +301,11 @@ class PerformanceBar extends StatelessWidget {
   }
 }
 
-class ReportOutcomeModule extends ReportModuleContent {
+class ReportAverageModule extends ReportModuleContent {
   final bool primary;
-  final Outcome outcome;
+  final AverageSection section;
 
-  const ReportOutcomeModule(ParseUserStudy instance, this.outcome, {@required this.primary}) : super(instance);
+  const ReportAverageModule(ParseUserStudy instance, this.section, {@required this.primary}) : super(instance);
 
   @override
   Widget build(BuildContext context) {
@@ -318,9 +313,9 @@ class ReportOutcomeModule extends ReportModuleContent {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (outcome.title != null)
+        if (section.title != null)
           Text(
-            outcome.title,
+            section.title,
             style: theme.textTheme.headline5,
           ),
         if (primary)
@@ -338,56 +333,24 @@ class ReportOutcomeModule extends ReportModuleContent {
   }
 
   Widget getDiagram() {
-    switch (outcome.chartType) {
-      case ChartType.BAR:
-        return charts.BarChart(
-          getBarData(),
-          animate: true,
-        );
-      case ChartType.LINE:
-        return Placeholder();
-      default:
-        print('Unknown chart type!');
-        return Placeholder();
-    }
+    return charts.BarChart(
+      getBarData(),
+      animate: true,
+    );
   }
 
   List<charts.Series<_DiagramData, String>> getBarData() {
-    Task task;
-    task = instance.observations.firstWhere((element) => element.id == outcome.taskId, orElse: () => null);
-    if (task != null) {
-      if (task is QuestionnaireTask && outcome.questionId != null) {
-        final data = <_DiagramData>[];
-        switch (outcome.chartX) {
-          case ChartX.INTERVENTION:
-            final resultData = instance.getResultsByInterventionId(taskId: outcome.taskId);
-            resultData.forEach((key, results) {
-              final values = results.whereType<Result<QuestionnaireState>>().where((result) {
-                final response = result.result.answers[outcome.questionId]?.response;
-                return response != null && response is num;
-              }).map<num>((result) => result.result.answers[outcome.questionId].response);
-
-              if (values.isNotEmpty) {
-                data.add(_DiagramData(key, values.reduce((a, b) => a + b) / values.length));
-              }
-            });
-            break;
-          default:
-            print('Unknown x axis type.');
-        }
-        ;
-        return [
-          charts.Series<_DiagramData, String>(
-            id: outcome.title,
-            colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-            domainFn: (dData, _) => dData.x,
-            measureFn: (dData, _) => dData.y,
-            data: data,
-          )
-        ];
-      }
-    }
-    return [];
+    var values = section.resultProperty.retrieveFromResults(instance);
+    final data = values.entries.map((e) => _DiagramData(e.key.toString(), e.value));
+    return [
+      charts.Series<_DiagramData, String>(
+        id: section.title,
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (dData, _) => dData.x,
+        measureFn: (dData, _) => dData.y,
+        data: data,
+      )
+    ];
   }
 }
 
