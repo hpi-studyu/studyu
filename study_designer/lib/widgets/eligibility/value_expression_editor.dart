@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/expressions/types/value_expression.dart';
@@ -22,7 +21,6 @@ class ValueExpressionEditor extends StatefulWidget {
 }
 
 class _ValueExpressionEditorState extends State<ValueExpressionEditor> {
-  final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
   Question targetQuestion;
 
   @override
