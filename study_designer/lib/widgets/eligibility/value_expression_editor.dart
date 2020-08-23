@@ -43,6 +43,9 @@ class _ValueExpressionEditorState extends State<ValueExpressionEditor> {
       final newChoiceExpression = ChoiceExpression()..choices = {};
       newExpression = newChoiceExpression;
     }
+    setState(() {
+      targetQuestion = newTarget;
+    });
     newExpression.target = newTarget.id;
     widget.updateExpression(newExpression);
   }
@@ -52,28 +55,17 @@ class _ValueExpressionEditorState extends State<ValueExpressionEditor> {
     final expressionBody = _buildExpressionBody();
 
     return Column(children: [
-      FormBuilder(
-          key: _editFormKey,
-          autovalidate: true,
-          // readonly: true,
-          child: Column(children: <Widget>[
-            FormBuilderDropdown(
-              name: 'target',
-              initialValue: targetQuestion,
-              onChanged: (question) {
-                setState(() {
-                  targetQuestion = question;
-                });
-                _changeExpressionTarget(question);
-              },
-              decoration: InputDecoration(labelText: 'Target'),
-              // initialValue: 'Male',
-              hint: Text('Select Target'),
-              items: widget.questions
-                  .map((question) => DropdownMenuItem(value: question, child: Text(question.prompt)))
-                  .toList(),
-            ),
-          ])),
+      Row(children: [
+        Text('Target:'),
+        SizedBox(width: 10),
+        DropdownButton<Question>(
+          value: targetQuestion,
+          onChanged: _changeExpressionTarget,
+          items: widget.questions
+              .map((question) => DropdownMenuItem(value: question, child: Text(question.prompt)))
+              .toList(),
+        )
+      ]),
       if (expressionBody != null) expressionBody
     ]);
   }
