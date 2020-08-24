@@ -1,12 +1,10 @@
+import 'package:StudYou/util/localization.dart';
 import 'package:flutter/material.dart';
 
 class ContactUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Contact Us'),
-      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -45,6 +43,9 @@ class ContactUs extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      appBar: AppBar(
+        title: Text(Nof1Localizations.of(context).translate('Contact Us')),
       ),
     );
   }
