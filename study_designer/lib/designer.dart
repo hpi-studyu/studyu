@@ -158,7 +158,7 @@ class _DesignerState extends State<Designer> {
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.save),
-                selectedIcon: Icon(Icons.publish),
+                selectedIcon: Icon(Icons.save),
                 label: Text('Save'),
               )
             ],
