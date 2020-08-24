@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
+import 'package:material_design_icons_flutter/icon_map.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -18,6 +21,17 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
   void initState() {
     super.initState();
     _draftStudy = context.read<DesignerState>().draftStudy;
+  }
+
+  Future<void> _pickIcon() async {
+    final icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackMode: IconPack.custom,
+        customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)});
+
+    final iconName = iconMap.keys.firstWhere((k) => iconMap[k] == icon.codePoint, orElse: () => null);
+    setState(() {
+      _draftStudy.iconName = iconName;
+    });
   }
 
   @override
@@ -44,6 +58,16 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                       name: 'description',
                       decoration: InputDecoration(labelText: 'Description'),
                       initialValue: _draftStudy.description),
+                  Row(children: [
+                    Expanded(
+                      child: FlatButton(
+                        onPressed: _pickIcon,
+                        child: Text('Choose Icon'),
+                      ),
+                    ),
+                    if (MdiIcons.fromString(_draftStudy.iconName) != null)
+                      Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
+                  ]),
                 ],
               ),
             ),

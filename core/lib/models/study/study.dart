@@ -10,6 +10,7 @@ class StudyBase {
 
   StudyBase()
       : id = Uuid().v4(),
+        iconName = '',
         studyDetails = StudyDetailsBase();
 }
 
