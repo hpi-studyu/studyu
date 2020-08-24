@@ -32,6 +32,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     } else if (newType == ChoiceQuestion.questionType) {
       newQuestion = ChoiceQuestion()
         ..choices = []
+        ..multiple = false
         ..id = Uuid().v4();
     } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
       if (newType == AnnotatedScaleQuestion.questionType) {
