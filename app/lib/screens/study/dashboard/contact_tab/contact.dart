@@ -22,45 +22,48 @@ class Contact extends StatelessWidget {
               width: 160,
               height: 60,
               child: RaisedButton(
-                  color: Colors.lightBlue[200],
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FAQ()),
-                    );
-                  },
-
-                  child: Text(Nof1Localizations.of(context).translate('FAQ'), style: TextStyle(fontSize: 18)), textColor: Colors.white),
+                color: Colors.lightBlue[200],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FAQ()),
+                  );
+                },
+                textColor: Colors.white,
+                child: Text(Nof1Localizations.of(context).translate('FAQ'), style: TextStyle(fontSize: 18)),
+              ),
             ),
             const SizedBox(height: 30),
             SizedBox(
               width: 160,
               height: 60,
               child: RaisedButton(
-                  color: Colors.blue[400],
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ContactUs()),
-                    );
-                  },
-
-                  child: Text(Nof1Localizations.of(context).translate('contact'), style: TextStyle(fontSize: 18)),textColor: Colors.white),
+                color: Colors.blue[400],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ContactUs()),
+                  );
+                },
+                textColor: Colors.white,
+                child: Text(Nof1Localizations.of(context).translate('contact'), style: TextStyle(fontSize: 18)),
+              ),
             ),
             const SizedBox(height: 30),
             SizedBox(
               width: 160,
               height: 60,
               child: RaisedButton(
-                  color: Colors.blue[600],
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AboutScreen()),
-                    );
-                  },
-
-                  child: Text(Nof1Localizations.of(context).translate('about'), style: TextStyle(fontSize: 18)),textColor: Colors.white),
+                color: Colors.blue[600],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutScreen()),
+                  );
+                },
+                textColor: Colors.white,
+                child: Text(Nof1Localizations.of(context).translate('about'), style: TextStyle(fontSize: 18)),
+              ),
             ),
           ],
         ),
