@@ -21,12 +21,19 @@ class _SaveState extends State<Save> {
     _draftStudy = context.read<DesignerState>().draftStudy;
   }
 
-  void _publishStudy() {
-    ParseStudy.fromBase(_draftStudy).save();
+  Future<void> _publishStudy(BuildContext context) async {
+    _draftStudy.published = true;
+    final isSaved = await showDialog<bool>(
+        context: context, builder: (_) => PublishAlertDialog(study: ParseStudy.fromBase(_draftStudy)));
+    if (isSaved) {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Study ${_draftStudy.title} was saved and published.')));
+      Navigator.popUntil(context, (route) => route.settings.name == '/');
+    }
   }
 
-  void _saveDraft() {
-    ParseStudy.fromBase(_draftStudy).save();
+  Future<void> _saveDraft() async {
+    await ParseStudy.fromBase(_draftStudy).save();
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Study ${_draftStudy.title} was saved as draft.')));
   }
 
   @override
@@ -47,7 +54,7 @@ class _SaveState extends State<Save> {
                     label: Text('Save draft', style: TextStyle(fontSize: 30))),
                 SizedBox(width: 16),
                 OutlineButton.icon(
-                    onPressed: _publishStudy,
+                    onPressed: () => _publishStudy(context),
                     icon: Icon(Icons.publish),
                     label: Text('Publish study', style: TextStyle(fontSize: 30))),
               ],
@@ -71,6 +78,40 @@ class _SaveState extends State<Save> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class PublishAlertDialog extends StatelessWidget {
+  final ParseStudy study;
+
+  const PublishAlertDialog({@required this.study}) : super();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      title: Text('Lock and publish study?'),
+      content: RichText(
+        text: TextSpan(style: TextStyle(color: Colors.black), children: [
+          TextSpan(text: 'The study '),
+          TextSpan(
+              text: study.title,
+              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
+          TextSpan(text: ' will be published. You will not be able to make changes afterwards!'),
+        ]),
+      ),
+      actions: [
+        FlatButton.icon(
+          onPressed: () async {
+            //await study.save();
+            Navigator.pop(context, true);
+          },
+          icon: Icon(Icons.publish),
+          color: Colors.green,
+          label: Text('Publish ${study.title}'),
+        )
+      ],
     );
   }
 }
