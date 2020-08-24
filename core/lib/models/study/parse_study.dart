@@ -46,6 +46,10 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   String get iconName => get<String>(keyIconName);
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
+  static const keyPublished = 'published';
+  bool get published => get<bool>(keyPublished);
+  set published(bool published) => set<bool>(keyPublished, published);
+
   static const keyStudyDetails = 'study_details';
   ParseStudyDetails get studyDetails => get<ParseStudyDetails>(keyStudyDetails);
   set studyDetails(StudyDetailsBase studyDetails) => set<ParseStudyDetails>(keyStudyDetails, studyDetails);
