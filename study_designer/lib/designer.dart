@@ -157,7 +157,7 @@ class _DesignerState extends State<Designer> {
                 label: Text('Consent'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.publish),
+                icon: Icon(Icons.save),
                 selectedIcon: Icon(Icons.publish),
                 label: Text('Save'),
               )
