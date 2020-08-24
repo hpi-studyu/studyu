@@ -10,6 +10,7 @@ class StudyBase {
   String title;
   String description;
   String iconName;
+  bool published;
   StudyDetailsBase studyDetails;
 
   StudyBase()
