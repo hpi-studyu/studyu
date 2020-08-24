@@ -22,6 +22,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('StudyU Designer'),
@@ -38,9 +39,31 @@ class _DashboardState extends State<Dashboard> {
           child: ParseListFutureBuilder<ParseStudy>(
             queryFunction: () => _studiesFuture,
             builder: (context, studies) {
-              return ListView.builder(
-                itemCount: studies.length,
-                itemBuilder: (context, index) => StudyCard(study: studies[index]),
+              final draftStudies = studies.where((s) => !s.published).toList();
+              final publishedStudies = studies.where((s) => s.published).toList();
+              return ListView(
+                children: [
+                  ExpansionTile(
+                    title: Row(children: [
+                      Icon(Icons.edit, color: theme.accentColor),
+                      SizedBox(width: 8),
+                      Text('Draft studies')
+                    ]),
+                    initiallyExpanded: true,
+                    children: ListTile.divideTiles(
+                        context: context, tiles: draftStudies.map((study) => StudyCard(study: study))).toList(),
+                  ),
+                  ExpansionTile(
+                    title: Row(children: [
+                      Icon(Icons.lock, color: theme.accentColor),
+                      SizedBox(width: 8),
+                      Text('Published studies')
+                    ]),
+                    initiallyExpanded: true,
+                    children: ListTile.divideTiles(
+                        context: context, tiles: publishedStudies.map((study) => StudyCard(study: study))).toList(),
+                  )
+                ],
               );
             },
           ),
@@ -62,15 +85,10 @@ class StudyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(study.title),
-            subtitle: Text(study.description),
-          )
-        ],
-      ),
+    return ListTile(
+      title: Text(study.title),
+      subtitle: Text(study.description),
+      onTap: !study.published ? () => Navigator.pushNamed(context, designerRoute) : null,
     );
   }
 }
