@@ -4,24 +4,38 @@ import 'package:studyou_core/util/retry_future_builder.dart';
 
 typedef ParseQuery = Future<ParseResponse> Function();
 
-class ParseListFutureBuilder<T> extends StatelessWidget {
+class ParseListFutureBuilder<T> extends StatefulWidget {
   final ParseQuery queryFunction;
   final Widget Function(BuildContext context, List<T> results) builder;
 
   const ParseListFutureBuilder({Key key, @required this.queryFunction, @required this.builder}) : super(key: key);
 
-  // throw error to be handled by RetryFutureBuilder
-  Future<ParseResponse> parseQuery() async {
-    final response = await queryFunction();
+  @override
+  _ParseListFutureBuilderState<T> createState() => _ParseListFutureBuilderState<T>();
+}
+
+class _ParseListFutureBuilderState<T> extends State<ParseListFutureBuilder<T>> {
+  ParseQuery _parseQueryFuture;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<ParseResponse> parseQuery(ParseQuery query) async {
+    print('parsequery');
+    final response = await query();
     if (!response.success) throw response.error;
+    print(response.results.toString());
     return response;
   }
 
   @override
   Widget build(BuildContext context) {
+    print('================================= PARSE FUTURE BUILDE BUILD =========================================');
     return RetryFutureBuilder<ParseResponse>(
-      tryFunction: parseQuery,
-      successBuilder: (context, response) => builder(context, List<T>.from(response.results ?? [])),
+      tryFunction: () => parseQuery(widget.queryFunction),
+      successBuilder: (context, response) => widget.builder(context, List<T>.from(response.results ?? [])),
     );
   }
 }

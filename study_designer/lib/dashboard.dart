@@ -13,16 +13,26 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   Future<ParseResponse> _studiesFuture;
+  Future<ParseResponse> Function() _studiesQueryFuture;
 
   @override
   void initState() {
     super.initState();
     _studiesFuture = ParseStudy().getAll();
+    _studiesQueryFuture = () => _studiesFuture;
+  }
+
+  void reloadStudies() {
+    setState(() {
+      _studiesFuture = ParseStudy().getAll();
+      _studiesQueryFuture = () => _studiesFuture;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    print('+++++++++++++++++++++CALLING BUILD ---------------------------------------------');
     return Scaffold(
       appBar: AppBar(
         title: Text('StudyU Designer'),
@@ -37,9 +47,11 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: () => _studiesFuture,
+            queryFunction: _studiesQueryFuture,
             builder: (context, studies) {
+              print('BUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUILINDG');
               final draftStudies = studies.where((s) => !s.published).toList();
+              print(draftStudies.map((s) => s.title).toString());
               final publishedStudies = studies.where((s) => s.published).toList();
               return ListView(
                 children: [
@@ -51,7 +63,8 @@ class _DashboardState extends State<Dashboard> {
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
-                        context: context, tiles: draftStudies.map((study) => StudyCard(study: study))).toList(),
+                        context: context,
+                        tiles: draftStudies.map((study) => StudyCard(study: study, onDelete: reloadStudies))).toList(),
                   ),
                   ExpansionTile(
                     title: Row(children: [
@@ -70,7 +83,7 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, designerRoute),
+        onPressed: () => Navigator.pushNamed(context, designerRoute).then((_) => reloadStudies()),
         tooltip: 'Add',
         child: Icon(Icons.add),
       ),
@@ -80,15 +93,53 @@ class _DashboardState extends State<Dashboard> {
 
 class StudyCard extends StatelessWidget {
   final ParseStudy study;
+  final Function onDelete;
 
-  const StudyCard({Key key, this.study}) : super(key: key);
+  const StudyCard({@required this.study, this.onDelete, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(study.title),
       subtitle: Text(study.description),
+      trailing: !study.published
+          ? IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: () async {
+                final isDeleted =
+                    await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
+                if (isDeleted) {
+                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Draft study ${study.title} deleted.')));
+                  if (onDelete != null) onDelete();
+                }
+                ;
+              },
+            )
+          : null,
       onTap: !study.published ? () => Navigator.pushNamed(context, designerRoute) : null,
     );
   }
+}
+
+class DeleteAlertDialog extends StatelessWidget {
+  final ParseStudy study;
+
+  const DeleteAlertDialog({@required this.study, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text('Delete draft study ${study.title}?'),
+        actions: [
+          FlatButton.icon(
+            onPressed: () async {
+              await study.studyDetails.delete();
+              await study.delete();
+              Navigator.pop(context, true);
+            },
+            icon: Icon(Icons.delete),
+            color: Colors.red,
+            label: Text('Delete ${study.title}'),
+          )
+        ],
+      );
 }
