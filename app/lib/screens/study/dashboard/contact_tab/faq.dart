@@ -1,7 +1,8 @@
-import 'package:StudYou/util/localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../../../util/localization.dart';
 
 class FAQ extends StatelessWidget {
   @override
@@ -38,6 +39,7 @@ class Entry {
   final List<Entry> children;
 }
 
+// ignore: non_constant_identifier_names
 final List<Entry> data_en = <Entry>[
   Entry(
     'Data Storage and Privacy',
@@ -132,7 +134,8 @@ final List<Entry> data_en = <Entry>[
   ),
 ];
 
-final List<Entry> data_de = <Entry>[
+// ignore: non_constant_identifier_names
+final data_de = <Entry>[
   Entry(
     'Datenspeicherung und Datenschutz',
     <Entry>[

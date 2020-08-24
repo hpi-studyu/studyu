@@ -29,8 +29,8 @@ class Contact extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => FAQ()),
                     );
                   },
-                  child: Text('FAQ', style: TextStyle(fontSize: 18)),
-                  textColor: Colors.white),
+
+                  child: Text(Nof1Localizations.of(context).translate('FAQ'), style: TextStyle(fontSize: 18)), textColor: Colors.white),
             ),
             const SizedBox(height: 30),
             SizedBox(
@@ -44,8 +44,8 @@ class Contact extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => ContactUs()),
                     );
                   },
-                  child: Text(Nof1Localizations.of(context).translate('contact'), style: TextStyle(fontSize: 18)),
-                  textColor: Colors.white),
+
+                  child: Text(Nof1Localizations.of(context).translate('contact'), style: TextStyle(fontSize: 18)),textColor: Colors.white),
             ),
             const SizedBox(height: 30),
             SizedBox(
@@ -59,8 +59,8 @@ class Contact extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => AboutScreen()),
                     );
                   },
-                  child: Text(Nof1Localizations.of(context).translate('about'), style: TextStyle(fontSize: 18)),
-                  textColor: Colors.white),
+
+                  child: Text(Nof1Localizations.of(context).translate('about'), style: TextStyle(fontSize: 18)),textColor: Colors.white),
             ),
           ],
         ),

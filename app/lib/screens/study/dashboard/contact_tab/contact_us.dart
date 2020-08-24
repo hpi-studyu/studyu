@@ -1,5 +1,6 @@
-import 'package:StudYou/util/localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../util/localization.dart';
 
 class ContactUs extends StatelessWidget {
   @override
