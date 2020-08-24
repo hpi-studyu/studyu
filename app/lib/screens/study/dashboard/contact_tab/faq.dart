@@ -1,3 +1,4 @@
+import 'package:StudYou/util/localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,16 +6,29 @@ import 'package:flutter/widgets.dart';
 class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Frequently Asked Questions'),
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(20),
-        itemBuilder: (context, index) => EntryItem(data[index]),
-        itemCount: data.length,
-      ),
-    );
+    if (Nof1Localizations.of(context).translate('Frequently Asked Questions') == 'Frequently Asked Questions') {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(Nof1Localizations.of(context).translate('Frequently Asked Questions')),
+        ),
+        body: ListView.builder(
+          padding: const EdgeInsets.all(20),
+          itemBuilder: (context, index) => EntryItem(data_en[index]),
+          itemCount: data_en.length,
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(Nof1Localizations.of(context).translate('Frequently Asked Questions')),
+        ),
+        body: ListView.builder(
+          padding: const EdgeInsets.all(20),
+          itemBuilder: (context, index) => EntryItem(data_de[index]),
+          itemCount: data_de.length,
+        ),
+      );
+    }
   }
 }
 
@@ -24,7 +38,7 @@ class Entry {
   final List<Entry> children;
 }
 
-final List<Entry> data = <Entry>[
+final List<Entry> data_en = <Entry>[
   Entry(
     'Data Storage and Privacy',
     <Entry>[
@@ -112,6 +126,101 @@ final List<Entry> data = <Entry>[
         <Entry>[
           Entry(
               'Your report will be ready to download once you have completed the minimum required tasks for a study. It will be available in the Report History tab located on the Dashboard.'),
+        ],
+      ),
+    ],
+  ),
+];
+
+final List<Entry> data_de = <Entry>[
+  Entry(
+    'Datenspeicherung und Datenschutz',
+    <Entry>[
+      Entry(
+        'Wo und wie werden meine Daten gespeichert?',
+        <Entry>[
+          Entry(
+              'Die von Ihnen gesammelten Daten werden lokal auf Ihrem Gerät gespeichert und bei Verbindung mit dem Internet auf einen sicheren Server hochgeladen.'),
+        ],
+      ),
+      Entry(
+        'Welche persönlichen Daten sammelt die App?',
+        <Entry>[
+          Entry('Die App sammelt keine persönlichen Daten des Benutzers, muss jedoch auf Zeit und Ort zugreifen.'),
+        ],
+      ),
+    ],
+  ),
+  Entry(
+    'das Studium',
+    <Entry>[
+      Entry(
+        'Wie lange dauert es, bis die Studie abgeschlossen ist?',
+        <Entry>[
+          Entry('Die Dauer jeder Studie wird bei der ersten Studienauswahl angegeben.'),
+        ],
+      ),
+      Entry(
+        'Kann ich eine andere Intervention erneut auswählen?',
+        <Entry>[
+          Entry(
+              'Ja, Sie können einfach zum Interventionsauswahlbildschirm zurückkehren und eine andere Intervention erneut auswählen, bevor Sie mit der Studie beginnen. '
+              'Wenn Sie dies jedoch zu einem späteren Zeitpunkt planen, müssen Sie die Studie abbestellen und eine neue Intervention erneut auswählen. '
+              'Bitte beachten Sie: Sie verlieren alle Ihre Daten für die aktuelle Studie, nachdem Sie sich abgemeldet haben. '),
+        ],
+      ),
+      Entry(
+        'Kann ich meine verpassten Aufgaben zu einem späteren Zeitpunkt wiederholen?',
+        <Entry>[
+          Entry('Nein, Sie können eine verpasste Aufgabe zu einem späteren Zeitpunkt nicht wiederholen. '
+              'Sie können es jedoch jederzeit am selben Tag beenden.'),
+        ],
+      ),
+      Entry(
+        'Wie kann ich mich von der aktuellen Studie abmelden?',
+        <Entry>[
+          Entry(
+              'Sie können dies tun, indem Sie im Dashboard auf die Registerkarte "Einstellungen" gehen und auf "Deaktivieren" klicken. '),
+        ],
+      ),
+    ],
+  ),
+  Entry(
+    'Berichtsdetails',
+    <Entry>[
+      Entry(
+        'Was sind tägliche Aufgaben und wie erledige ich sie?',
+        <Entry>[
+          Entry(
+              'Um herauszufinden, welche Intervention für Sie am besten geeignet ist, müssen Sie für jede Intervention einige tägliche Aufgaben ausführen. Bitte stellen Sie sicher, dass Sie nach Abschluss auf die Schaltfläche "Fertig stellen" klicken.'),
+        ],
+      ),
+      Entry(
+        'Was ist "Bewerten Sie Ihren Tag"?',
+        <Entry>[
+          Entry(
+              '"Bewerten Sie Ihren Tag" ist eine Funktion, die Ihre Gesundheit während des gesamten Studienzeitraums erfasst. Sie müssen bestimmte gesundheitsbezogene Abfragen auf einer Skala von 1 bis 10 bewerten.'),
+        ],
+      ),
+      Entry(
+        'Wie kann ich meine Aktivitäten verfolgen?',
+        <Entry>[
+          Entry(
+              'Im Abschnitt "Berichtsverlauf" erhalten Sie einen Überblick über Ihre täglichen Aufgaben und Ihren Gesundheitszustand.'),
+        ],
+      ),
+      Entry(
+        'Wie kann ich meinen Bericht herunterladen?',
+        <Entry>[
+          Entry(
+              'Sie können Ihren Bericht herunterladen, sobald Sie die erforderlichen Mindestaufgaben erledigt haben. Es ist auf der Registerkarte Berichtsverlauf im Dashboard verfügbar.'),
+        ],
+      ),
+      Entry(
+        'Wie kann ich meinen Studienbericht herunterladen?',
+        <Entry>[
+          Entry(
+              'Ihr Bericht kann heruntergeladen werden, sobald Sie die für eine Studie erforderlichen Mindestaufgaben erledigt haben. Es ist auf der Registerkarte Berichtsverlauf im Dashboard verfügbar.'),
         ],
       ),
     ],
