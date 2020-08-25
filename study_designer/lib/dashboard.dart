@@ -57,7 +57,6 @@ class _DashboardState extends State<Dashboard> {
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
-                        //context: context, tiles: draftStudies.map((study) => StudyCard(study: study))).toList(),
                         context: context,
                         tiles: draftStudies.map((study) => StudyCard(study: study, onDelete: reloadStudies))).toList(),
                   ),
