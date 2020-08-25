@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +12,17 @@ import 'package:pdf/widgets.dart' as pw;
 import 'localization.dart';
 
 Future<void> pdfDownload(BuildContext context, String title, List<pw.Widget> content) async {
+  if (kIsWeb) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              elevation: 24,
+              title: Text(Nof1Localizations.of(context).translate('download_not_supported')),
+              content: Text(Nof1Localizations.of(context).translate('download_not_supported_description')),
+            ));
+    return;
+  }
+
   final doc = pw.Document();
   final _logo = PdfImage.file(
     doc.document,
