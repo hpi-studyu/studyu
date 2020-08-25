@@ -78,7 +78,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
     super.didUpdateWidget(oldWidget);
     // triggers tryFunction again, so we always have the freshest data
     if (widget.tryFunction != oldWidget.tryFunction) {
-      _future = widget.tryFunction();
+      reload();
     }
   }
 
