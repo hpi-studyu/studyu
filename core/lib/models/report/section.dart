@@ -1,7 +1,11 @@
+import 'package:studyou_core/models/models.dart';
+
 typedef SectionParser = Section Function(Map<String, dynamic> data);
 
 abstract class Section {
-  static Map<String, SectionParser> sectionTypes = {};
+  static Map<String, SectionParser> sectionTypes = {
+    AverageSection.sectionType: (json) => AverageSection.fromJson(json),
+  };
   static const String keyType = 'type';
   String type;
 
@@ -11,9 +15,7 @@ abstract class Section {
 
   Section(this.type);
 
-  factory Section.fromJson(Map<String, dynamic> data) {
-    return sectionTypes[data[keyType]](data);
-  }
+  factory Section.fromJson(Map<String, dynamic> data) => sectionTypes[data[keyType]](data);
   Map<String, dynamic> toJson();
 
   @override

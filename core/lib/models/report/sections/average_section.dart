@@ -11,7 +11,7 @@ class AverageSection extends Section {
   static const String sectionType = 'average';
 
   TemporalAggregation aggregate;
-  DataReference<double> resultProperty;
+  DataReference<num> resultProperty;
 
   AverageSection() : super(sectionType);
 
