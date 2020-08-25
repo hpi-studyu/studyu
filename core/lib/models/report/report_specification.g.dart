@@ -8,9 +8,9 @@ part of 'report_specification.dart';
 
 ReportSpecification _$ReportSpecificationFromJson(Map<String, dynamic> json) {
   return ReportSpecification()
-    ..primary = Section.fromJson(json['primary'] as Map<String, dynamic>)
+    ..primary = ReportSection.fromJson(json['primary'] as Map<String, dynamic>)
     ..secondary = (json['secondary'] as List)
-        .map((e) => Section.fromJson(e as Map<String, dynamic>))
+        .map((e) => ReportSection.fromJson(e as Map<String, dynamic>))
         .toList();
 }
 

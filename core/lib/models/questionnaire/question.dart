@@ -42,6 +42,8 @@ abstract class Question<V> {
     return Answer.forQuestion(this, conditional.defaultValue);
   }
 
+  Type getAnswerType() => V;
+
   @override
   String toString() {
     return toJson().toString();
