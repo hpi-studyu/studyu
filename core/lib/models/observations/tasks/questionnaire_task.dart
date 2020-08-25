@@ -32,6 +32,5 @@ class QuestionnaireTask extends Observation {
   }
 
   @override
-  Map<String, Type> getAvailableProperties() =>
-      Map.fromIterable(questions.questions, key: (q) => q.id, value: (q) => q.getAnswerType());
+  Map<String, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
 }
