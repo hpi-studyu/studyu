@@ -17,17 +17,15 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-
   Task task;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
     if (widget.task != null) {
       task = widget.task;
     } else if (widget.taskId != null) {
-      final study = context.read<AppModel>().activeStudy;
+      final study = context.read<AppState>().activeStudy;
       final tasks = <Task>[
         ...study.observations.where((observation) => observation.id == widget.taskId).toList(),
         ...study.interventionSet.interventions
@@ -35,7 +33,6 @@ class _TaskScreenState extends State<TaskScreen> {
             .expand((task) => task)
             .toList()
       ];
-      print('############################ tasks: $tasks');
       if (tasks.isEmpty) {
         print('No task found with ID ${widget.taskId}');
       } else if (tasks.length > 1) {

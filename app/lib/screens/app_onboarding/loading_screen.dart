@@ -76,7 +76,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future selectNotification(String taskId) async {
     if (taskId != null) {
-      print('################################');
       await Navigator.push(
         context,
         MaterialPageRoute(
@@ -100,7 +99,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final iOSPlatformChannelSpecifics = IOSNotificationDetails();
     final platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    final task = context.read<AppModel>().activeStudy?.observations?.firstWhere((e) => true, orElse: () => null);
+    final task = context.read<AppState>().activeStudy?.observations?.firstWhere((e) => true, orElse: () => null);
     if (task != null) {
       await flutterLocalNotificationsPlugin.scheduleReminder(0, task, platformChannelSpecifics);
     }
