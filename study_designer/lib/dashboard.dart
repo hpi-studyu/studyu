@@ -93,9 +93,13 @@ class StudyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final icon =
+        study.iconName != null && study.iconName.isNotEmpty ? MdiIcons.fromString(study.iconName) : MdiIcons.cropSquare;
+
     return ListTile(
       title: Text(study.title),
       subtitle: Text(study.description),
+      leading: Icon(icon),
       trailing: !study.published
           ? IconButton(
               icon: Icon(Icons.delete, color: Colors.red),
