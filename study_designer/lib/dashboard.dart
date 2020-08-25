@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:study_designer/util/result_downloader.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
@@ -100,6 +105,13 @@ class StudyCard extends StatelessWidget {
 
   const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
 
+  void downloadFile(String contentString, String filename) {
+    final content = base64Encode(utf8.encode(contentString));
+    AnchorElement(href: 'data:application/octet-stream;charset=utf-8;base64,$content')
+      ..setAttribute('download', filename)
+      ..click();
+  }
+
   @override
   Widget build(BuildContext context) {
     final icon =
@@ -124,8 +136,13 @@ class StudyCard extends StatelessWidget {
           : IconButton(
               icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
               tooltip: 'Export CSV',
-              onPressed: () {
-                // TODO: Add downloadCSV
+              onPressed: () async {
+                var dl = ResultDownloader(study);
+                await dl.loadDetails();
+                var results = await dl.loadAllResults();
+                for (var entry in results.entries) {
+                  downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+                }
               },
             ),
       onTap: !study.published

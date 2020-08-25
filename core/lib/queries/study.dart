@@ -17,6 +17,11 @@ class StudyQueries {
     return builder.query();
   }
 
+  static Future<ParseResponse> getUserStudiesFor(ParseStudy study) async {
+    final builder = QueryBuilder<ParseUserStudy>(ParseUserStudy())..whereEqualTo('study_id', study.id);
+    return builder.query();
+  }
+
   static Future<ParseResponse> getStudyWithDetailsByStudyId(String studyId) async {
     final builder = QueryBuilder<ParseStudy>(ParseStudy())
       ..whereEqualTo(ParseStudy.keyId, studyId)

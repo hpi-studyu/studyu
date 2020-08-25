@@ -15,6 +15,7 @@ dependencies:
   studyou_core:
     path: ../core
 
+  csv:
   clipboard:
   cupertino_icons:
   # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4

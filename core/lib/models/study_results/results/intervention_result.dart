@@ -25,7 +25,8 @@ class InterventionResult extends StudyResult {
 
   @override
   List getValues(UserStudyBase instance) {
-    instance.interventionOrder
-        .expand((intervention) => List<String>.filled(instance.schedule.phaseDuration, intervention));
+    return instance.interventionOrder
+        .expand((intervention) => List<String>.filled(instance.schedule.phaseDuration, intervention))
+        .toList();
   }
 }

@@ -13,6 +13,7 @@ class StudyDetailsBase {
   List<Observation> observations;
   StudySchedule schedule;
   ReportSpecification reportSpecification;
+  List<StudyResult> results;
 
   StudyDetailsBase()
       : questionnaire = Questionnaire(),
