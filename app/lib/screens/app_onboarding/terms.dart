@@ -49,17 +49,17 @@ class _TermsScreenState extends State<TermsScreen> {
         level: 0,
         child: pw.Text(translations['terms'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
       ),
-      pw.Paragraph(text: translations['terms_description'], style: pw.TextStyle(font: ttf)),
+      pw.Paragraph(text: translations['terms_content'], style: pw.TextStyle(font: ttf)),
       pw.Header(
         level: 0,
         child: pw.Text(translations['privacy'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
       ),
-      pw.Paragraph(text: translations['privacy_description'], style: pw.TextStyle(font: ttf)),
+      pw.Paragraph(text: translations['privacy_content'], style: pw.TextStyle(font: ttf)),
       pw.Header(
         level: 0,
         child: pw.Text(translations['disclaimer'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
       ),
-      pw.Paragraph(text: translations['disclaimer_description'], style: pw.TextStyle(font: ttf)),
+      pw.Paragraph(text: translations['disclaimer_content'], style: pw.TextStyle(font: ttf)),
     ];
   }
 
