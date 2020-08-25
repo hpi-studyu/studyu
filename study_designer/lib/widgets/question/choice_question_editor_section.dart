@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,8 +15,6 @@ class ChoiceQuestionEditorSection extends StatefulWidget {
 }
 
 class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSection> {
-  final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
-
   void _addChoice() {
     setState(() {
       final choice = Choice()
@@ -36,18 +33,18 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      FormBuilder(
-          key: _editFormKey,
-          autovalidate: true,
-          // readonly: true,
-          child: Column(children: <Widget>[
-            FormBuilderSwitch(
-              onChanged: _saveFormChanges,
-              title: Text('Multiple'),
-              name: 'multiple',
-              initialValue: widget.question.multiple,
-            ),
-          ])),
+      Row(children: [
+        Text('Multiple:'),
+        SizedBox(width: 10),
+        Switch(
+          value: widget.question.multiple,
+          onChanged: (value) {
+            setState(() {
+              widget.question.multiple = value;
+            });
+          },
+        )
+      ]),
       ListView.builder(
         shrinkWrap: true,
         itemCount: widget.question.choices.length,
@@ -62,14 +59,5 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
         Spacer()
       ])
     ]);
-  }
-
-  void _saveFormChanges(value) {
-    _editFormKey.currentState.save();
-    if (_editFormKey.currentState.validate()) {
-      setState(() {
-        widget.question.multiple = _editFormKey.currentState.value['multiple'];
-      });
-    }
   }
 }
