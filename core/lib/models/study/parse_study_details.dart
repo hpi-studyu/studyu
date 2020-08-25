@@ -58,4 +58,8 @@ class ParseStudyDetails extends ParseObject implements ParseCloneable, StudyDeta
       ReportSpecification.fromJson(get<Map<String, dynamic>>(keyReportSpecification));
   set reportSpecification(ReportSpecification reportSpecification) =>
       set<Map<String, dynamic>>(keyReportSpecification, reportSpecification.toJson());
+
+  static const keyResults = 'results';
+  List<StudyResult> get results => get<List<dynamic>>(keyResults)?.map((e) => StudyResult.fromJson(e))?.toList() ?? [];
+  set results(List<StudyResult> results) => set<List<dynamic>>(keyResults, results.map((e) => e.toJson()).toList());
 }

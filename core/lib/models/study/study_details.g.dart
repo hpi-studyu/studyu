@@ -23,7 +23,10 @@ StudyDetailsBase _$StudyDetailsBaseFromJson(Map<String, dynamic> json) {
     ..schedule =
         StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
     ..reportSpecification = ReportSpecification.fromJson(
-        json['reportSpecification'] as Map<String, dynamic>);
+        json['reportSpecification'] as Map<String, dynamic>)
+    ..results = (json['results'] as List)
+        .map((e) => StudyResult.fromJson(e as Map<String, dynamic>))
+        .toList();
 }
 
 Map<String, dynamic> _$StudyDetailsBaseToJson(StudyDetailsBase instance) =>
@@ -35,4 +38,5 @@ Map<String, dynamic> _$StudyDetailsBaseToJson(StudyDetailsBase instance) =>
       'observations': instance.observations.map((e) => e.toJson()).toList(),
       'schedule': instance.schedule.toJson(),
       'reportSpecification': instance.reportSpecification.toJson(),
+      'results': instance.results.map((e) => e.toJson()).toList(),
     };

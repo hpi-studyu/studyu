@@ -3,7 +3,9 @@ import 'package:studyou_core/models/models.dart';
 typedef StudyResultParser = StudyResult Function(Map<String, dynamic> json);
 
 abstract class StudyResult {
-  static Map<String, StudyResultParser> studyResultTypes = {};
+  static Map<String, StudyResultParser> studyResultTypes = {
+    InterventionResult.studyResultType: (json) => InterventionResult.fromJson(json),
+  };
   static const String keyType = 'type';
   String type;
 
