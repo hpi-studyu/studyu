@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:quiver/collection.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -333,40 +334,77 @@ class ReportAverageModule extends ReportModuleContent {
   }
 
   Widget getDiagram() {
-    return charts.BarChart(
+    return charts.NumericComboChart(
       getBarData(),
-      domainAxis: charts.OrdinalAxisSpec(),
       animate: true,
+      behaviors: [
+        charts.SeriesLegend(),
+        charts.RangeAnnotation([
+          charts.LineAnnotationSegment<num>(
+            -0.5,
+            charts.RangeAnnotationAxisType.domain,
+            color: charts.MaterialPalette.gray.shade400,
+            strokeWidthPx: 1,
+          ),
+          for (var i = 1; i <= instance.interventionOrder.length; i++)
+            charts.LineAnnotationSegment<num>(
+              i * instance.schedule.phaseDuration - 0.5,
+              charts.RangeAnnotationAxisType.domain,
+              color: charts.MaterialPalette.gray.shade400,
+              strokeWidthPx: 1,
+            ),
+        ])
+      ],
+      domainAxis: charts.NumericAxisSpec(
+          viewport: charts.NumericExtents(0, (instance.interventionOrder.length * instance.schedule.phaseDuration) - 1),
+          tickProviderSpec: charts.StaticNumericTickProviderSpec([
+            for (var i = 0; i < instance.interventionOrder.length; i++)
+              charts.TickSpec<num>(i * instance.schedule.phaseDuration + (instance.schedule.phaseDuration - 1) / 2,
+                  label: (i + 1).toString()),
+          ])),
+      primaryMeasureAxis: charts.NumericAxisSpec(viewport: charts.NumericExtents(0, 10)),
+      defaultRenderer: charts.BarRendererConfig<num>(groupingType: charts.BarGroupingType.stacked),
     );
   }
 
-  List<charts.Series<_DiagramDatum, String>> getBarData() {
+  List<charts.Series<_DiagramDatum, num>> getBarData() {
     var values = section.resultProperty.retrieveFromResults(instance);
-    final data = values.entries
-        .map((e) => _DiagramDatum(
-            instance.getDayOfStudyFor(e.key).toString(), e.value, e.key, instance.getInterventionForDate(e.key).id))
-        .toList();
-    return [
-      charts.Series<_DiagramDatum, String>(
-        id: section.title,
-        colorFn: (datum, __) {
-          var index = instance.interventionSet.interventions.indexWhere((element) => element.id == datum.intervention);
-          return [
-            charts.MaterialPalette.blue.shadeDefault,
-            charts.MaterialPalette.deepOrange.shadeDefault,
-            charts.MaterialPalette.gray.shadeDefault,
-          ][index];
-        },
-        domainFn: (dData, _) => dData.x,
-        measureFn: (dData, _) => dData.y,
-        data: data,
-      )
-    ];
+    final data = values.entries.map((e) => _DiagramDatum(
+          instance.getDayOfStudyFor(e.key),
+          e.value,
+          e.key,
+          instance.getInterventionForDate(e.key).id,
+        ));
+
+    var interventions = [...instance.interventionSet.interventions];
+    var colors = <String, charts.Color>{};
+    if (interventions.any((intervention) => intervention.id == '__baseline')) {
+      colors['__baseline'] = charts.MaterialPalette.gray.shadeDefault;
+      interventions.removeWhere((intervention) => intervention.id == '__baseline');
+    }
+    colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
+    colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
+
+    var grouped =
+        Multimap<String, _DiagramDatum>.fromIterable(data, key: (datum) => datum.intervention, value: (datum) => datum);
+
+    return grouped
+        .asMap()
+        .entries
+        .map((e) => charts.Series<_DiagramDatum, num>(
+              id: e.key,
+              displayName: instance.interventionSet.interventions.firstWhere((element) => element.id == e.key).name,
+              seriesColor: colors[e.key],
+              domainFn: (datum, _) => datum.x,
+              measureFn: (datum, _) => datum.y,
+              data: e.value.toList(growable: false),
+            ))
+        .toList(growable: false);
   }
 }
 
 class _DiagramDatum {
-  final String x;
+  final num x;
   final DateTime timestamp;
   final String intervention;
   final num y;
