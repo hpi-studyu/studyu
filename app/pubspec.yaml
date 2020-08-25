@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons:
   downloads_path_provider:
   intersperse:
+  intl:
   json_annotation:
   material_design_icons_flutter:
   normal:
