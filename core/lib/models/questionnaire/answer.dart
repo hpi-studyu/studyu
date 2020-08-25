@@ -31,10 +31,12 @@ class Answer<V> {
     switch (value.runtimeType) {
       case bool:
         return Answer<bool>.parseJson(data);
+      case num:
+        return Answer<num>.parseJson(data);
       case int:
-        return Answer<int>.parseJson(data);
+        return Answer<num>.parseJson(data);
       case double:
-        return Answer<double>.parseJson(data);
+        return Answer<num>.parseJson(data);
       case String:
         return Answer<String>.parseJson(data);
       default:

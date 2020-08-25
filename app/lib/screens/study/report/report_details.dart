@@ -335,17 +335,28 @@ class ReportAverageModule extends ReportModuleContent {
   Widget getDiagram() {
     return charts.BarChart(
       getBarData(),
+      domainAxis: charts.OrdinalAxisSpec(),
       animate: true,
     );
   }
 
-  List<charts.Series<_DiagramData, String>> getBarData() {
+  List<charts.Series<_DiagramDatum, String>> getBarData() {
     var values = section.resultProperty.retrieveFromResults(instance);
-    final data = values.entries.map((e) => _DiagramData(e.key.toString(), e.value));
+    final data = values.entries
+        .map((e) => _DiagramDatum(
+            instance.getDayOfStudyFor(e.key).toString(), e.value, e.key, instance.getInterventionForDate(e.key).id))
+        .toList();
     return [
-      charts.Series<_DiagramData, String>(
+      charts.Series<_DiagramDatum, String>(
         id: section.title,
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (datum, __) {
+          var index = instance.interventionSet.interventions.indexWhere((element) => element.id == datum.intervention);
+          return [
+            charts.MaterialPalette.blue.shadeDefault,
+            charts.MaterialPalette.deepOrange.shadeDefault,
+            charts.MaterialPalette.gray.shadeDefault,
+          ][index];
+        },
         domainFn: (dData, _) => dData.x,
         measureFn: (dData, _) => dData.y,
         data: data,
@@ -354,9 +365,11 @@ class ReportAverageModule extends ReportModuleContent {
   }
 }
 
-class _DiagramData {
+class _DiagramDatum {
   final String x;
+  final DateTime timestamp;
+  final String intervention;
   final num y;
 
-  _DiagramData(this.x, this.y);
+  _DiagramDatum(this.x, this.y, this.timestamp, this.intervention);
 }

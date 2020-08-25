@@ -83,6 +83,11 @@ extension UserStudyExtension on UserStudyBase {
     return resultMap;
   }
 
+  int getDayOfStudyFor(DateTime date) {
+    final day = date.differenceInDays(startDate).inDays;
+    return day;
+  }
+
   int getInterventionIndexForDate(DateTime date) {
     final test = date.differenceInDays(startDate).inDays;
     return test ~/ schedule.phaseDuration;

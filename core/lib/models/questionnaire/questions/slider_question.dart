@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../answer.dart';
 import '../question.dart';
 
-abstract class SliderQuestion extends Question<double> {
+abstract class SliderQuestion extends Question<num> {
   double minimum;
   double maximum;
   double initial;
@@ -12,5 +12,5 @@ abstract class SliderQuestion extends Question<double> {
 
   SliderQuestion(String type) : super(type);
 
-  Answer<double> constructAnswer(double response) => Answer.forQuestion(this, response);
+  Answer<num> constructAnswer(double response) => Answer.forQuestion(this, response);
 }

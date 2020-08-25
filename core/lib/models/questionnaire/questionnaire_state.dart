@@ -18,7 +18,7 @@ class QuestionnaireState {
     if (answer is Answer<T>) {
       return answer.response;
     } else {
-      throw TypeError();
+      throw ArgumentError('\'Answer<${T.toString()}>\' requested but found \'${answer.runtimeType.toString()}\'.');
     }
   }
 }
