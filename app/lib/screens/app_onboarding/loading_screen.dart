@@ -29,6 +29,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final prefs = await SharedPreferences.getInstance();
     final selectedStudyObjectId = prefs.getString(UserQueries.selectedStudyObjectIdKey);
     print('Selected study: $selectedStudyObjectId');
+    final notificationInit = initNotifications();
     if (selectedStudyObjectId == null) {
       if (await UserQueries.isUserLoggedIn()) {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
@@ -40,7 +41,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final studyInstance = await StudyQueries.getUserStudy(selectedStudyObjectId);
     if (studyInstance != null) {
       model.activeStudy = studyInstance;
-      initNotifications();
+      notificationInit.then((value) => scheduleStudyNotifications(context));
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);
@@ -94,8 +95,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: selectNotification);
     context.read<AppState>().notificationsPlugin = flutterLocalNotificationsPlugin;
-
-    scheduleStudyNotifications(context);
   }
 
   @override
