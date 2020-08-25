@@ -29,28 +29,29 @@ dependencies:
   studyou_core:
     path: ../core
 
+  charts_flutter:
   chewie:
   cupertino_icons:
+  downloads_path_provider:
   intersperse:
   json_annotation:
   material_design_icons_flutter:
+  normal:
   parse_server_sdk:
     git:
       url: https://github.com/parse-community/Parse-SDK-Flutter.git
       ref: release/1.0.27
   path_provider:
+  pdf:
   pimp_my_button:
   provider:
   quiver:
+  rainbow_color:
   research_package:
   shared_preferences:
-  video_player:
-  rainbow_color:
-  charts_flutter:
-  normal:
   stats:
-  pdf:
-  downloads_path_provider:
+  timeline_tile:
+  video_player:
 
 dev_dependencies:
   build_runner:
