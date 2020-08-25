@@ -3,6 +3,13 @@ import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/user.dart';
 
 class StudyQueries {
+  static Future<ParseResponse> getPublishedStudies() async {
+    final builder = QueryBuilder<ParseStudy>(ParseStudy())
+      ..whereEqualTo('published', true)
+      ..includeObject(['study_details']);
+    return builder.query();
+  }
+
   static Future<ParseResponse> getStudyWithDetails(ParseStudy study) async {
     final builder = QueryBuilder<ParseStudy>(ParseStudy())
       ..whereEqualTo('objectId', study.objectId)
