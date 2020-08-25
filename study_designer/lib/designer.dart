@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studyou_core/models/models.dart';
 
 import './designer/eligibility_designer.dart';
 import 'designer/consent_designer.dart';
@@ -15,8 +16,13 @@ import 'routes.dart';
 
 class Designer extends StatefulWidget {
   final String route;
+  final StudyBase study;
 
-  const Designer({@required this.route}) : super();
+  const Designer({@required this.route, this.study}) : super();
+
+  static MaterialPageRoute draftRoute({@required StudyBase study}) => MaterialPageRoute(
+      builder: (_) => Designer(route: designerRoute, study: study), settings: RouteSettings(name: designerRoute));
+
   @override
   _DesignerState createState() => _DesignerState();
 }
@@ -27,11 +33,14 @@ const String keyInterventionDescription = 'intervention_description_';
 class _DesignerState extends State<Designer> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   int _selectedIndex = 0;
+  DesignerState _designerState;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = designerRoutes.indexOf(widget.route);
+    _designerState = DesignerState();
+    if (widget.study != null) _designerState.draftStudy = widget.study;
   }
 
   Widget buildDesignerRouter() => Expanded(
@@ -99,8 +108,8 @@ class _DesignerState extends State<Designer> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<DesignerState>(
-      create: (context) => DesignerState(),
+    return Provider<DesignerState>.value(
+      value: _designerState,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Create New Study'),

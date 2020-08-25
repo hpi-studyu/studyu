@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
+import 'designer.dart';
 import 'routes.dart';
 
 class Dashboard extends StatefulWidget {
@@ -58,7 +60,10 @@ class _DashboardState extends State<Dashboard> {
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
                         context: context,
-                        tiles: draftStudies.map((study) => StudyCard(study: study, onDelete: reloadStudies))).toList(),
+                        tiles: draftStudies.map((study) => StudyCard(
+                              study: study,
+                              reload: reloadStudies,
+                            ))).toList(),
                   ),
                   ExpansionTile(
                     title: Row(children: [
@@ -68,7 +73,11 @@ class _DashboardState extends State<Dashboard> {
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
-                        context: context, tiles: publishedStudies.map((study) => StudyCard(study: study))).toList(),
+                        context: context,
+                        tiles: publishedStudies.map((study) => StudyCard(
+                              study: study,
+                              reload: reloadStudies,
+                            ))).toList(),
                   )
                 ],
               );
@@ -87,9 +96,9 @@ class _DashboardState extends State<Dashboard> {
 
 class StudyCard extends StatelessWidget {
   final ParseStudy study;
-  final Function onDelete;
+  final Function reload;
 
-  const StudyCard({@required this.study, this.onDelete, Key key}) : super(key: key);
+  const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,9 +117,8 @@ class StudyCard extends StatelessWidget {
                     await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
                 if (isDeleted) {
                   Scaffold.of(context).showSnackBar(SnackBar(content: Text('Draft study ${study.title} deleted.')));
-                  if (onDelete != null) onDelete();
+                  if (reload != null) reload();
                 }
-                ;
               },
             )
           : IconButton(
@@ -120,7 +128,13 @@ class StudyCard extends StatelessWidget {
                 // TODO: Add downloadCSV
               },
             ),
-      onTap: !study.published ? () => Navigator.pushNamed(context, designerRoute) : null,
+      onTap: !study.published
+          ? () async {
+              final res = await StudyQueries.getStudyWithDetails(study);
+              final ParseStudy fullStudy = res.results.first;
+              Navigator.push(context, Designer.draftRoute(study: fullStudy.toBase())).then((_) => reload());
+            }
+          : null,
     );
   }
 }
