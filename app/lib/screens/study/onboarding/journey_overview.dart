@@ -1,3 +1,4 @@
+import 'package:StudYou/widgets/study_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -66,10 +67,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    study.title,
-                    style: theme.textTheme.headline5,
-                  ),
+                  StudyTile.fromUserStudy(study: study),
                   SizedBox(height: 40),
                   ...buildJourney(),
                 ],
