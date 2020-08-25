@@ -20,6 +20,8 @@ class StudySchedule {
   factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
 
+  int getNumberOfPhases() => numberOfCycles * numberOfPhases + (this.includeBaseline ? 1 : 0);
+
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles, (index) => index);
     final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
