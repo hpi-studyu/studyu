@@ -29,7 +29,6 @@ class _PublishState extends State<Publish> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Text(_draftStudy.title),
             RaisedButton.icon(onPressed: _publishStudy, icon: Icon(Icons.publish), label: Text('Publish study'))
           ],
         ),
