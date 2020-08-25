@@ -4,12 +4,12 @@ import 'package:studyou_core/models/models.dart';
 
 import '../models/designer_state.dart';
 
-class Publish extends StatefulWidget {
+class Save extends StatefulWidget {
   @override
-  _PublishState createState() => _PublishState();
+  _SaveState createState() => _SaveState();
 }
 
-class _PublishState extends State<Publish> {
+class _SaveState extends State<Save> {
   StudyBase _draftStudy;
 
   @override

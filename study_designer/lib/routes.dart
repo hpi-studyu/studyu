@@ -8,4 +8,4 @@ const String designerObservationsRoute = '${designerRoute}observations';
 const String designerScheduleRoute = '${designerRoute}schedule';
 const String designerReportRoute = '${designerRoute}report';
 const String designerConsentRoute = '${designerRoute}consent';
-const String designerPublishRoute = '${designerRoute}publish';
+const String designerSaveRoute = '${designerRoute}save';

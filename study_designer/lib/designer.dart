@@ -6,9 +6,9 @@ import 'designer/consent_designer.dart';
 import 'designer/interventions_designer.dart';
 import 'designer/meta_data_designer.dart';
 import 'designer/observation_designer.dart';
-import 'designer/publish.dart';
 import 'designer/questionnaire_designer.dart';
 import 'designer/report_designer.dart';
+import 'designer/save.dart';
 import 'designer/schedule_designer.dart';
 import 'models/designer_state.dart';
 import 'routes.dart';
@@ -68,8 +68,8 @@ class _DesignerState extends State<Designer> {
               case designerConsentRoute:
                 builder = (context) => ConsentDesigner();
                 break;
-              case designerPublishRoute:
-                builder = (context) => Publish();
+              case designerSaveRoute:
+                builder = (context) => Save();
                 break;
               default:
                 builder = (context) => Container();
@@ -94,7 +94,7 @@ class _DesignerState extends State<Designer> {
     designerScheduleRoute,
     designerReportRoute,
     designerConsentRoute,
-    designerPublishRoute,
+    designerSaveRoute,
   ];
 
   @override
@@ -159,7 +159,7 @@ class _DesignerState extends State<Designer> {
               NavigationRailDestination(
                 icon: Icon(Icons.publish),
                 selectedIcon: Icon(Icons.publish),
-                label: Text('Publish'),
+                label: Text('Save'),
               )
             ],
           ),
