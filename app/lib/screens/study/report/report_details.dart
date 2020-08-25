@@ -368,7 +368,7 @@ class ReportAverageModule extends ReportModuleContent {
   }
 
   List<charts.Series<_DiagramDatum, num>> getBarData() {
-    var values = section.resultProperty.retrieveFromResults(instance);
+    final values = section.resultProperty.retrieveFromResults(instance);
     final data = values.entries.map((e) => _DiagramDatum(
           instance.getDayOfStudyFor(e.key),
           e.value,
@@ -376,8 +376,8 @@ class ReportAverageModule extends ReportModuleContent {
           instance.getInterventionForDate(e.key).id,
         ));
 
-    var interventions = [...instance.interventionSet.interventions];
-    var colors = <String, charts.Color>{};
+    final interventions = [...instance.interventionSet.interventions];
+    final colors = <String, charts.Color>{};
     if (interventions.any((intervention) => intervention.id == '__baseline')) {
       colors['__baseline'] = charts.MaterialPalette.gray.shadeDefault;
       interventions.removeWhere((intervention) => intervention.id == '__baseline');
@@ -385,7 +385,7 @@ class ReportAverageModule extends ReportModuleContent {
     colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
     colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
 
-    var grouped =
+    final grouped =
         Multimap<String, _DiagramDatum>.fromIterable(data, key: (datum) => datum.intervention, value: (datum) => datum);
 
     return grouped
