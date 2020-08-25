@@ -103,6 +103,8 @@
 
   "download_finished": "Download abgeschlossen",
   "download_finished_description": "Die Datei wurde in \"Downloads\" gespeichert.",
+  "download_not_supported": "Fehler",
+  "download_not_supported_description": "Dateidownload ist in der Web-Version zur Zeit nicht unterstützt.",
 
   "eligible_no": "Diese Studie ist für Sie leider nicht auswählbar",
   "eligible_yes": "Sie sind berechtigt, diese Studie auszuwählen",

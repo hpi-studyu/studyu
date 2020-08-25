@@ -101,6 +101,8 @@
 
   "download_finished": "Download finished",
   "download_finished_description": "The file has been saved to \"Downloads\".",
+  "download_not_supported": "Error",
+  "download_not_supported_description": "Downloading files is currently not supported in the web version.",
 
   "eligible_no": "You are not eligible for this study",
   "eligible_yes": "You are eligible for this study",
