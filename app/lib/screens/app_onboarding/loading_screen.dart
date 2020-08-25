@@ -22,7 +22,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     initStudy();
-    initNotification();
   }
 
   Future<void> initStudy() async {
@@ -41,11 +40,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final studyInstance = await StudyQueries.getUserStudy(selectedStudyObjectId);
     if (studyInstance != null) {
       model.activeStudy = studyInstance;
+      initNotifications();
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
-    initNotification();
   }
 
   Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
@@ -87,23 +86,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<void> initNotification() async {
+  Future<void> initNotifications() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     final initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: selectNotification);
-    final androidPlatformChannelSpecifics =
-        AndroidNotificationDetails('0', 'StudyU main', 'The main StudyU notification channel.');
-    final iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    final platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    context.read<AppState>().notificationsPlugin = flutterLocalNotificationsPlugin;
 
-    final task = context.read<AppState>().activeStudy?.observations?.firstWhere((e) => true, orElse: () => null);
-    if (task != null) {
-      await flutterLocalNotificationsPlugin.scheduleReminder(0, task, platformChannelSpecifics);
-    }
-    flutterLocalNotificationsPlugin.pendingNotificationRequests().then((requests) => requests.forEach(print));
+    scheduleStudyNotifications(context);
   }
 
   @override
