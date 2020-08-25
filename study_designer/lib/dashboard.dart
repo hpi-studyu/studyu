@@ -110,7 +110,13 @@ class StudyCard extends StatelessWidget {
                 ;
               },
             )
-          : null,
+          : IconButton(
+              icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
+              tooltip: 'Export CSV',
+              onPressed: () {
+                // TODO: Add downloadCSV
+              },
+            ),
       onTap: !study.published ? () => Navigator.pushNamed(context, designerRoute) : null,
     );
   }
