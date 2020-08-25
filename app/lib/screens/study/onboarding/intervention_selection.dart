@@ -1,3 +1,4 @@
+import 'package:StudYou/util/notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -79,6 +80,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Future<void> onFinished() async {
     final model = context.read<AppState>();
     model.activeStudy = model.selectedStudy.extractUserStudy(null, selectedInterventions, DateTime.now(), 0);
+    scheduleStudyNotifications(context);
     Navigator.pushNamed(context, Routes.journey);
   }
 

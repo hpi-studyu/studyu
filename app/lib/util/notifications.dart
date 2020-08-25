@@ -2,26 +2,28 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart' as models;
+import 'package:studyou_core/util/extensions.dart';
 
 import '../models/app_state.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
-  void scheduleReminder(int id, models.Task task, NotificationDetails notificationDetails) {
+  void scheduleReminderForDate(
+      int initialId, models.Task task, DateTime date, NotificationDetails notificationDetails) {
+    var id = initialId;
     for (final taskSchedule in task.schedule) {
       switch (taskSchedule.type) {
         case models.FixedSchedule.scheduleType:
           final models.FixedSchedule fixedSchedule = taskSchedule;
-          final now = DateTime.now();
-          var add = 0;
-          if (!models.Time(hour: now.hour, minute: now.minute).earlierThan(fixedSchedule.time)) {
-            add++;
+          if (date.isSameDate(DateTime.now()) &&
+              !models.Time(hour: date.hour, minute: date.minute).earlierThan(fixedSchedule.time)) {
+            break;
           }
           final reminderTime =
-              DateTime(now.year, now.month, now.day, fixedSchedule.time.hour, fixedSchedule.time.minute)
-                  .add(Duration(days: add));
+              DateTime(date.year, date.month, date.day, fixedSchedule.time.hour, fixedSchedule.time.minute);
           // TODO add body
           schedule(id, task.title, '', reminderTime, notificationDetails, payload: task.id);
       }
+      id++;
     }
   }
 }
@@ -36,18 +38,36 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
   final study = appState.activeStudy;
 
   if (study != null) {
-    final taskAmount = (study.observations?.length ?? 0) +
-        (study.interventionSet.interventions
-                ?.map((intervention) => intervention.tasks?.length ?? 0)
-                ?.reduce((x, y) => x + y) ??
-            0);
-    print(taskAmount);
+    final tasks = [
+      ...study.observations,
+      ...study.interventionSet.interventions
+              ?.map((intervention) => intervention.tasks)
+              ?.reduce((firstList, secondList) => [...firstList, ...secondList]) ??
+          []
+    ];
+    final taskAmount = tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
+    if (taskAmount == 0) {
+      return;
+    }
+    final now = DateTime.now();
+    var id = 0;
+    for (final index in List.generate(3, (index) => index)) {
+      final date = now.add(Duration(days: index));
+      for (final observation in study.observations) {
+        appState.notificationsPlugin
+            .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
+        id += observation.schedule.length;
+      }
+      for (final intervention in study.interventionSet?.interventions ?? <models.Intervention>[]) {
+        if (intervention.id == null || intervention.id != study.getInterventionForDate(date)?.id) {
+          id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
+          continue;
+        }
+        intervention.tasks.map((task) {
+          appState.notificationsPlugin.scheduleReminderForDate(id, task, date, platformChannelSpecifics);
+          id += task.schedule.length;
+        });
+      }
+    }
   }
-
-  final task = context.read<AppState>().activeStudy?.observations?.firstWhere((e) => true, orElse: () => null);
-  if (task != null) {
-    await appState.notificationsPlugin.scheduleReminder(0, task, platformChannelSpecifics);
-  }
-
-  appState.notificationsPlugin.pendingNotificationRequests().then((value) => print(value.length));
 }
