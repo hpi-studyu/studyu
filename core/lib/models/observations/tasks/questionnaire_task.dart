@@ -30,4 +30,8 @@ class QuestionnaireTask extends Observation {
     var typedResults = sourceResults.map((r) => r as Result<QuestionnaireState>);
     return Map.fromEntries(typedResults.map((r) => new MapEntry(r.timeStamp, r.result.getAnswer<T>(property))));
   }
+
+  @override
+  Map<String, Type> getAvailableProperties() =>
+      Map.fromIterable(questions.questions, key: (q) => q.id, value: (q) => q.getAnswerType());
 }

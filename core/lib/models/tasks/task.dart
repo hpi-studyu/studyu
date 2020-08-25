@@ -21,4 +21,6 @@ abstract class Task {
   }
 
   Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults);
+
+  Map<String, Type> getAvailableProperties();
 }

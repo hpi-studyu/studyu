@@ -1,3 +1,3 @@
+export 'report_section.dart';
 export 'report_specification.dart';
-export 'section.dart';
-export 'sections/sections.dart';
+export 'sections/report_sections.dart';

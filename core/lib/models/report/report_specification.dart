@@ -1,13 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'section.dart';
+import 'report_section.dart';
 
 part 'report_specification.g.dart';
 
 @JsonSerializable()
 class ReportSpecification {
-  Section primary;
-  List<Section> secondary;
+  ReportSection primary;
+  List<ReportSection> secondary;
 
   ReportSpecification();
 
