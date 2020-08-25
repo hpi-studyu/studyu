@@ -13,26 +13,22 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   Future<ParseResponse> _studiesFuture;
-  Future<ParseResponse> Function() _studiesQueryFuture;
 
   @override
   void initState() {
     super.initState();
-    _studiesFuture = ParseStudy().getAll();
-    _studiesQueryFuture = () => _studiesFuture;
+    reloadStudies();
   }
 
   void reloadStudies() {
     setState(() {
       _studiesFuture = ParseStudy().getAll();
-      _studiesQueryFuture = () => _studiesFuture;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    print('+++++++++++++++++++++CALLING BUILD ---------------------------------------------');
     return Scaffold(
       appBar: AppBar(
         title: Text('StudyU Designer'),
@@ -47,11 +43,9 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: _studiesQueryFuture,
+            queryFunction: () => _studiesFuture,
             builder: (context, studies) {
-              print('BUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUILINDG');
               final draftStudies = studies.where((s) => !s.published).toList();
-              print(draftStudies.map((s) => s.title).toString());
               final publishedStudies = studies.where((s) => s.published).toList();
               return ListView(
                 children: [
@@ -63,6 +57,7 @@ class _DashboardState extends State<Dashboard> {
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
+                        //context: context, tiles: draftStudies.map((study) => StudyCard(study: study))).toList(),
                         context: context,
                         tiles: draftStudies.map((study) => StudyCard(study: study, onDelete: reloadStudies))).toList(),
                   ),
