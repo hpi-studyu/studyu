@@ -7,6 +7,7 @@ import '../../../../util/localization.dart';
 class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO(Manisha): Transfer strings to translation files
     if (Nof1Localizations.of(context).translate('Frequently Asked Questions') == 'Frequently Asked Questions') {
       return Scaffold(
         appBar: AppBar(
