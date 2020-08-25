@@ -63,14 +63,6 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
   void initState() {
     super.initState();
     reload();
-    print('=========================================== INIT STATE RETRY');
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    reload();
-    print('=========================================== DID CHANGE RETRY');
   }
 
   @override
