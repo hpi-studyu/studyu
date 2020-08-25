@@ -34,8 +34,10 @@
   "opt_out": "Opt-out",
   "delete_data": "Delete all data",
 
+  "your_journey": "Your Journey",
+  "journey_results_available": "Results available",
+
   "summary": "Summary",
-  "journey": "Journey",
   "consent": "Consent",
   "error": "An error occurred!",
   "tea_vs_coffee": "Tea vs. Coffee",
