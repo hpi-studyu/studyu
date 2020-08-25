@@ -86,9 +86,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                           return Hero(
                               tag: 'study_tile_${studies[index].id}',
                               child: Material(
-                                  child: StudyTile(
+                                  child: StudyTile.fromStudy(
                                 study: studies[index],
-                                onTap: navigateToStudyOverview,
+                                onTap: () => navigateToStudyOverview(context, studies[index]),
                               )));
                         });
                   },

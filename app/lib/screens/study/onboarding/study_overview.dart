@@ -54,7 +54,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
           children: [
             Hero(
               tag: 'study_tile_${study.id}',
-              child: Material(child: StudyTile(study: study)),
+              child: Material(child: StudyTile.fromStudy(study: study)),
             ),
             ParseFetchOneFutureBuilder<ParseStudy>(
                 queryFunction: () => _futureStudyDetails,
