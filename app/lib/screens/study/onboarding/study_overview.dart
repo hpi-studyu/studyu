@@ -25,7 +25,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   void initState() {
     super.initState();
     study = context.read<AppState>().selectedStudy;
-    _futureStudyDetails = StudyQueries.getStudyDetails(study);
+    _futureStudyDetails = StudyQueries.getStudyWithDetails(study);
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {

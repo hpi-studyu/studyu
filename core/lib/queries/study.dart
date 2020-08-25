@@ -3,9 +3,16 @@ import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/user.dart';
 
 class StudyQueries {
-  static Future<ParseResponse> getStudyDetails(ParseStudy study) async {
+  static Future<ParseResponse> getStudyWithDetails(ParseStudy study) async {
     final builder = QueryBuilder<ParseStudy>(ParseStudy())
       ..whereEqualTo('objectId', study.objectId)
+      ..includeObject(['study_details']);
+    return builder.query();
+  }
+
+  static Future<ParseResponse> getStudyWithDetailsByStudyId(String studyId) async {
+    final builder = QueryBuilder<ParseStudy>(ParseStudy())
+      ..whereEqualTo(ParseStudy.keyId, studyId)
       ..includeObject(['study_details']);
     return builder.query();
   }
