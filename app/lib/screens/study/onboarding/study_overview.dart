@@ -113,7 +113,8 @@ class StudyDetailsView extends StatelessWidget {
         SizedBox(height: 16),
         ListTile(
           title: Text('Responsible Researchers'),
-          subtitle: Text('Darius Rüther, Manisha Manaswini, Alexander Zenner, Florian Henschel, Fabian Pottbäcker, Nils Strelow'),
+          subtitle: Text(
+              'Darius Rüther, Manisha Manaswini, Alexander Zenner, Florian Henschel, Fabian Pottbäcker, Nils Strelow'),
           leading: Icon(MdiIcons.doctor, color: theme.accentColor, size: iconSize),
         ),
       ],
