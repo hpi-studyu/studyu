@@ -27,7 +27,7 @@ class _DataReferenceEditorState<T> extends State<DataReferenceEditor<T>> {
 
   @override
   Widget build(BuildContext context) {
-    var items = <DropdownMenuItem<_DataReferenceIdentifier>>[];
+    final items = <DropdownMenuItem<_DataReferenceIdentifier>>[];
     for (final task in widget.availableTaks) {
       for (final entry in task.getAvailableProperties().entries) {
         if (entry.value == T) {

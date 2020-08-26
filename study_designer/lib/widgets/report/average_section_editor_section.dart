@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/models/designer_state.dart';
-import 'package:study_designer/widgets/util/data_reference_editor.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/temporal_aggregation.dart';
+
+import '../../models/designer_state.dart';
+import '../util/data_reference_editor.dart';
 
 class AverageSectionEditorSection extends StatefulWidget {
   final AverageSection section;
