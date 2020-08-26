@@ -18,10 +18,9 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
   List<Question> _questions;
 
   void _addCriterion() {
-    final expression = BooleanExpression();
     final criterion = EligibilityCriterion()
       ..id = Uuid().v4()
-      ..condition = expression;
+      ..condition = BooleanExpression();
     setState(() {
       _eligibility.add(criterion);
     });
