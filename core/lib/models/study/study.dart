@@ -18,6 +18,7 @@ class StudyBase {
         title = '',
         description = '',
         iconName = '',
+        published = false,
         studyDetails = StudyDetailsBase();
 
   factory StudyBase.fromJson(Map<String, dynamic> json) => _$StudyBaseFromJson(json);
@@ -31,6 +32,7 @@ extension StudyExtension on StudyBase {
       ..title = title
       ..description = description
       ..iconName = iconName
+      ..published = published
       ..studyDetails = studyDetails.toBase();
   }
 }
