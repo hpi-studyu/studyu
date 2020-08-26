@@ -1,5 +1,3 @@
-import 'package:StudYou/util/intervention.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -9,6 +7,7 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
+import '../../../util/intervention.dart';
 import '../../../util/localization.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
