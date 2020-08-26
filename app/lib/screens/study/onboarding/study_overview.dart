@@ -56,6 +56,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               tag: 'study_tile_${study.id}',
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
+            SizedBox(height: 16),
             ParseFetchOneFutureBuilder<ParseStudy>(
                 queryFunction: () => _futureStudyDetails,
                 builder: (_context, study) {
@@ -77,6 +78,8 @@ class StudyDetailsView extends StatelessWidget {
 
   const StudyDetailsView({@required this.studyDetails, Key key}) : super(key: key);
 
+  final double iconSize = 40;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -85,9 +88,34 @@ class StudyDetailsView extends StatelessWidget {
         studyDetails.schedule.phaseDuration * studyDetails.schedule.numberOfCycles * StudySchedule.numberOfPhases;
     return Column(
       children: [
-        Text('Placeholder StudyDetails', style: theme.textTheme.headline6),
-        Text('Intervention phase duration: ${studyDetails.schedule.phaseDuration} days'),
-        Text('Minimum study length: $studyLength days'),
+        ListTile(
+          title: Text('Intervention phase duration'),
+          subtitle: Text('${studyDetails.schedule.phaseDuration} days'),
+          leading: Icon(
+            MdiIcons.clock,
+            color: theme.accentColor,
+            size: iconSize,
+          ),
+        ),
+        SizedBox(height: 16),
+        ListTile(
+          title: Text('Minimum study length'),
+          subtitle: Text('$studyLength days'),
+          leading: Icon(MdiIcons.calendar, color: theme.accentColor, size: iconSize),
+        ),
+        SizedBox(height: 16),
+        ListTile(
+          title: Text('Research Facility'),
+          subtitle: Text('Hasso Plattner Institute'),
+          leading: Icon(MdiIcons.hospitalBuilding, color: theme.accentColor, size: iconSize),
+          trailing: Image.asset('assets/images/hpi.png', height: 200),
+        ),
+        SizedBox(height: 16),
+        ListTile(
+          title: Text('Responsible Researchers'),
+          subtitle: Text('Darius Rüther, Manisha Manaswini, Alexander Zenner, Florian Henschel, Nils Strelow'),
+          leading: Icon(MdiIcons.doctor, color: theme.accentColor, size: iconSize),
+        ),
       ],
     );
   }
