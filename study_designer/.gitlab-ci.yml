@@ -6,4 +6,4 @@ variables:
 
 build:
   script:
-    - true #THIS IS EVIL
+    - 'true' #THIS IS EVIL
