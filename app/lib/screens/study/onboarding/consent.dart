@@ -58,7 +58,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(study.title),
+        title: Text(Nof1Localizations.of(context).translate('consent')),
         leading: Icon(MdiIcons.fromString(study.iconName)),
         actions: [
           IconButton(

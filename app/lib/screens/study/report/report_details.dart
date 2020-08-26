@@ -24,6 +24,9 @@ class ReportDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          Nof1Localizations.of(context).translate('report_overview'),
+        ),
         actions: [
           IconButton(
             icon: Icon(MdiIcons.download),
