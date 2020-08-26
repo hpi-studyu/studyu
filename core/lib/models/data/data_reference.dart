@@ -25,7 +25,7 @@ class DataReference<T> {
     if (sourceTask == null) throw new ArgumentError('Could not find a task with the id \'${this.task}\'.');
 
     List<Result> sourceResults = studyInstance.resultsFor(this.task);
-    if (sourceResults == null) throw new ArgumentError('Could not find a results for task with id \'${this.task}\'.');
+    if (sourceResults == null) sourceResults = [];
 
     return sourceTask.extractPropertyResults<T>(this.property, sourceResults);
   }

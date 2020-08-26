@@ -27,7 +27,7 @@ class QuestionnaireTask extends Observation {
     Question targetQuestion = questions.questions.firstWhere((q) => q.id == property, orElse: null);
     if (targetQuestion == null)
       throw new ArgumentError('Questionnaire \'${this.id}\' does not have a question with \'$property\'.');
-    var typedResults = sourceResults.map((r) => r as Result<QuestionnaireState>);
+    var typedResults = sourceResults.cast<Result<QuestionnaireState>>();
     return Map.fromEntries(typedResults.map((r) => new MapEntry(r.timeStamp, r.result.getAnswer<T>(property))));
   }
 
