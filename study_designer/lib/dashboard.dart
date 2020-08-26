@@ -105,6 +105,7 @@ class StudyCard extends StatelessWidget {
 
   const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
 
+  //TODO: Make this work on other platforms as well
   void downloadFile(String contentString, String filename) {
     final content = base64Encode(utf8.encode(contentString));
     AnchorElement(href: 'data:application/octet-stream;charset=utf-8;base64,$content')
