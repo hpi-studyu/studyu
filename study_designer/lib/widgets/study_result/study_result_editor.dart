@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/study_result/numeric_result_editor_section.dart';
 import 'package:studyou_core/models/study_results/results/numeric_result.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
+
+import '../../widgets/study_result/numeric_result_editor_section.dart';
 
 class StudyResultEditor extends StatefulWidget {
   final StudyResult result;

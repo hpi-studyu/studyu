@@ -31,7 +31,6 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
   }
 
   void _changeQuestionType(int index, String newType) {
-    final oldResult = _results[index];
     StudyResult newResult;
     if (newType == InterventionResult.studyResultType) {
       newResult = InterventionResult();
