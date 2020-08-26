@@ -42,7 +42,7 @@ class ReportDetailsScreen extends StatelessWidget {
               ReportPerformanceModule(reportStudy),
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),
             ),
-            if (outcome != null)
+            if (outcome != null) //TODO: Actual type lookup and secondary reports
               ReportModule(ReportAverageModule(reportStudy, reportStudy.reportSpecification.primary, primary: true)),
           ],
         ),
@@ -196,6 +196,7 @@ class ReportPerformanceModule extends ReportModuleContent {
   }
 }
 
+//TODO: Move to separate file
 class PerformanceBar extends StatelessWidget {
   final double progress;
   final double minimum;
@@ -302,6 +303,7 @@ class PerformanceBar extends StatelessWidget {
   }
 }
 
+//TODO: Move to seperate file(s)
 class ReportAverageModule extends ReportModuleContent {
   final bool primary;
   final AverageSection section;
@@ -340,6 +342,7 @@ class ReportAverageModule extends ReportModuleContent {
       behaviors: [
         charts.SeriesLegend(),
         charts.RangeAnnotation([
+          //TODO: Separator generation code should be improved
           charts.LineAnnotationSegment<num>(
             -0.5,
             charts.RangeAnnotationAxisType.domain,
@@ -356,13 +359,16 @@ class ReportAverageModule extends ReportModuleContent {
         ])
       ],
       domainAxis: charts.NumericAxisSpec(
+          //TODO: Axis utilities should be extracted for reuseability
           viewport: charts.NumericExtents(0, (instance.interventionOrder.length * instance.schedule.phaseDuration) - 1),
           tickProviderSpec: charts.StaticNumericTickProviderSpec([
             for (var i = 0; i < instance.interventionOrder.length; i++)
               charts.TickSpec<num>(i * instance.schedule.phaseDuration + (instance.schedule.phaseDuration - 1) / 2,
                   label: (i + 1).toString()),
           ])),
-      primaryMeasureAxis: charts.NumericAxisSpec(viewport: charts.NumericExtents(0, 10)),
+      primaryMeasureAxis: charts.NumericAxisSpec(
+        viewport: charts.NumericExtents(0, 10), //TODO: Add axis spec or reference to get an actual range
+      ),
       defaultRenderer: charts.BarRendererConfig<num>(groupingType: charts.BarGroupingType.stacked),
     );
   }
@@ -376,6 +382,7 @@ class ReportAverageModule extends ReportModuleContent {
           instance.getInterventionForDate(e.key).id,
         ));
 
+    //TODO: Extract intervention palette code (needed often)
     final interventions = [...instance.interventionSet.interventions];
     final colors = <String, charts.Color>{};
     if (interventions.any((intervention) => intervention.id == '__baseline')) {
@@ -385,6 +392,7 @@ class ReportAverageModule extends ReportModuleContent {
     colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
     colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
 
+    //TODO: Create simple data processing task with operations for group, reduce and filter (group is not part of dart)
     final grouped =
         Multimap<String, _DiagramDatum>.fromIterable(data, key: (datum) => datum.intervention, value: (datum) => datum);
 
