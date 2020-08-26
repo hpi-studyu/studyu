@@ -3,7 +3,3 @@ include:
 
 variables:
   FLUTTER_PROJECT_ROOT: study_designer
-
-build:
-  script:
-    - flutter build web
