@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/models/designer_state.dart';
-import 'package:study_designer/widgets/designer_add_button.dart';
-import 'package:study_designer/widgets/report/report_section_editor.dart';
 import 'package:studyou_core/models/report/report_models.dart';
+
+import '../models/designer_state.dart';
+import '../widgets/designer_add_button.dart';
+import '../widgets/report/report_section_editor.dart';
 
 class ReportDesigner extends StatefulWidget {
   @override
