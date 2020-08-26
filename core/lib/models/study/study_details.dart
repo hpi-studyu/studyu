@@ -22,7 +22,8 @@ class StudyDetailsBase {
         interventionSet = InterventionSet([]),
         observations = [],
         schedule = StudySchedule(),
-        reportSpecification = ReportSpecification();
+        reportSpecification = ReportSpecification(),
+        results = [];
 
   factory StudyDetailsBase.fromJson(Map<String, dynamic> json) => _$StudyDetailsBaseFromJson(json);
   Map<String, dynamic> toJson() => _$StudyDetailsBaseToJson(this);
