@@ -5,13 +5,13 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:study_designer/util/result_downloader.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import 'designer.dart';
 import 'routes.dart';
+import 'util/result_downloader.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -138,10 +138,10 @@ class StudyCard extends StatelessWidget {
               icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
               tooltip: 'Export CSV',
               onPressed: () async {
-                var dl = ResultDownloader(study);
+                final dl = ResultDownloader(study);
                 await dl.loadDetails();
-                var results = await dl.loadAllResults();
-                for (var entry in results.entries) {
+                final results = await dl.loadAllResults();
+                for (final entry in results.entries) {
                   downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
                 }
               },
