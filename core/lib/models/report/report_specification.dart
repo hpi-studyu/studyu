@@ -9,7 +9,8 @@ class ReportSpecification {
   ReportSection primary;
   List<ReportSection> secondary;
 
-  ReportSpecification();
+  ReportSpecification():
+    secondary = [];
 
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);

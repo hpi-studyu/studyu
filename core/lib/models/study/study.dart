@@ -15,6 +15,8 @@ class StudyBase {
 
   StudyBase()
       : id = Uuid().v4(),
+        title = '',
+        description = '',
         iconName = '',
         studyDetails = StudyDetailsBase();
 
