@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:study_designer/designer/results_designer.dart';
 import 'package:studyou_core/models/models.dart';
 
 import './designer/eligibility_designer.dart';
+import './designer/results_designer.dart';
 import 'designer/consent_designer.dart';
 import 'designer/interventions_designer.dart';
 import 'designer/meta_data_designer.dart';
