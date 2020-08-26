@@ -29,6 +29,7 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
               .toList(),
         )
       ]),
+      // Todo: place data reference editor here
     ]);
   }
 
