@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:studyou_core/models/study/study.dart';
-import 'package:studyou_core/models/study/user_study.dart';
 
+import '../../study/studies.dart';
 import '../study_result.dart';
 
 part 'intervention_result.g.dart';

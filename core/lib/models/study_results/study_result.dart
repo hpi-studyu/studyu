@@ -1,5 +1,5 @@
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/study_results/results/numeric_result.dart';
+import '../study/studies.dart';
+import 'results/results.dart';
 
 typedef StudyResultParser = StudyResult Function(Map<String, dynamic> json);
 

@@ -1,4 +1,5 @@
 export 'consent/consent_item.dart';
+export 'data/data_reference.dart';
 export 'eligibility/eligibility_criterion.dart';
 export 'expressions/expression.dart';
 export 'interventions/interventions.dart';
