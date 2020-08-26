@@ -326,7 +326,7 @@ class ReportAverageModule extends ReportModuleContent {
             getResultText(),
             style: theme.textTheme.subtitle2,
           ),
-        AspectRatio(aspectRatio: 2, child: getDiagram()),
+        AspectRatio(aspectRatio: 1.5, child: getDiagram()),
       ],
     );
   }
@@ -340,7 +340,7 @@ class ReportAverageModule extends ReportModuleContent {
       getBarData(),
       animate: true,
       behaviors: [
-        charts.SeriesLegend(),
+        charts.SeriesLegend(desiredMaxColumns: 2),
         charts.RangeAnnotation([
           //TODO: Separator generation code should be improved
           charts.LineAnnotationSegment<num>(
