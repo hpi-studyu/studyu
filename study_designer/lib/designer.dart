@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:study_designer/designer/results_designer.dart';
 import 'package:studyou_core/models/models.dart';
 
 import './designer/eligibility_designer.dart';
@@ -74,6 +75,9 @@ class _DesignerState extends State<Designer> {
               case designerReportRoute:
                 builder = (context) => ReportDesigner();
                 break;
+              case designerResultsRoute:
+                builder = (context) => ResultsDesigner();
+                break;
               case designerConsentRoute:
                 builder = (context) => ConsentDesigner();
                 break;
@@ -102,6 +106,7 @@ class _DesignerState extends State<Designer> {
     designerObservationsRoute,
     designerScheduleRoute,
     designerReportRoute,
+    designerResultsRoute,
     designerConsentRoute,
     designerSaveRoute,
   ];
@@ -159,6 +164,11 @@ class _DesignerState extends State<Designer> {
                 icon: Icon(Icons.content_paste),
                 selectedIcon: Icon(Icons.content_paste),
                 label: Text('Report'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.assignment_turned_in),
+                selectedIcon: Icon(Icons.assignment_turned_in),
+                label: Text('Results'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.warning),
