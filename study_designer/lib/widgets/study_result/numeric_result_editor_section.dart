@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:study_designer/models/designer_state.dart';
+import 'package:study_designer/widgets/util/data_reference_editor.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/study_results/results/numeric_result.dart';
 
 class NumericResultEditorSection extends StatefulWidget {
@@ -14,6 +18,17 @@ class NumericResultEditorSection extends StatefulWidget {
 class _NumericResultEditorSectionState extends State<NumericResultEditorSection> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: []);
+    final studyDetails = context.watch<DesignerState>().draftStudy.studyDetails;
+    final tasks = <Task>[
+      ...studyDetails.interventionSet.interventions.expand((intervention) => intervention.tasks),
+      ...studyDetails.observations,
+    ];
+
+    return Column(children: [
+      DataReferenceEditor<num>(
+          reference: widget.result.resultProperty,
+          availableTaks: tasks,
+          updateReference: (reference) => setState(() => widget.result.resultProperty = reference))
+    ]);
   }
 }

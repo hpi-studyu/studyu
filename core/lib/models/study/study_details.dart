@@ -38,6 +38,7 @@ extension StudyDetailsExtension on StudyDetailsBase {
       ..interventionSet = interventionSet
       ..observations = observations
       ..schedule = schedule
-      ..reportSpecification = reportSpecification;
+      ..reportSpecification = reportSpecification
+      ..results = results;
   }
 }
