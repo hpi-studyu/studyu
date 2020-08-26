@@ -24,4 +24,7 @@ class CheckmarkTask extends InterventionTask {
 
   @override
   Map<String, Type> getAvailableProperties() => {};
+
+  @override
+  String getHumanReadablePropertyName(String property) => null;
 }

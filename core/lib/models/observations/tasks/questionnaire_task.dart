@@ -33,4 +33,8 @@ class QuestionnaireTask extends Observation {
 
   @override
   Map<String, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
+
+  @override
+  String getHumanReadablePropertyName(String property) =>
+      questions.questions.firstWhere((q) => q.id == property, orElse: null).prompt;
 }
