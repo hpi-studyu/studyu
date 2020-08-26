@@ -1,3 +1,4 @@
+import 'package:StudYou/util/intervention.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -74,6 +75,7 @@ class Timeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final interventionsInOrder = study.getInterventionsInOrder();
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -84,6 +86,7 @@ class Timeline extends StatelessWidget {
           return InterventionTile(
             title: intervention.name,
             iconName: intervention.icon,
+            color: isBaseline(intervention) ? Colors.grey : theme.accentColor,
             date: study.startDate.add(Duration(days: index * study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
