@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:study_designer/widgets/report/average_section_editor_section.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/report_section.dart';
+
+import './average_section_editor_section.dart';
 
 class ReportSectionEditor extends StatefulWidget {
   final bool isPrimary;
