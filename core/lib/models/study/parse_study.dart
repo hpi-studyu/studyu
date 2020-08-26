@@ -27,6 +27,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
       ..title = study.title
       ..description = study.description
       ..iconName = study.iconName
+      ..published = study.published
       ..studyDetails = ParseStudyDetails.fromBase(study.studyDetails);
   }
 
