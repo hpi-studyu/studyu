@@ -32,8 +32,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     } else if (newType == ChoiceQuestion.questionType) {
       newQuestion = ChoiceQuestion()
         ..choices = []
-        ..multiple = false
-        ..id = Uuid().v4();
+        ..multiple = false;
     } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
       if (newType == AnnotatedScaleQuestion.questionType) {
         newQuestion = AnnotatedScaleQuestion()..annotations = [];
@@ -61,6 +60,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
       }
     }
     newQuestion
+      ..id = Uuid().v4()
       ..prompt = oldQuestion.prompt
       ..rationale = oldQuestion.rationale;
     setState(() {
