@@ -51,7 +51,10 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
+        widget.question.minimumAnnotation = _editFormKey.currentState.value['minimumAnnotation'];
         widget.question.minimumColor = _editFormKey.currentState.value['minimumColor'];
+        widget.question.maximumAnnotation = _editFormKey.currentState.value['maximumAnnotation'];
+        widget.question.maximumColor = _editFormKey.currentState.value['maximumColor'];
       });
     }
   }
