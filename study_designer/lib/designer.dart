@@ -72,14 +72,14 @@ class _DesignerState extends State<Designer> {
               case designerScheduleRoute:
                 builder = (context) => ScheduleDesigner();
                 break;
+              case designerConsentRoute:
+                builder = (context) => ConsentDesigner();
+                break;
               case designerReportRoute:
                 builder = (context) => ReportDesigner();
                 break;
               case designerResultsRoute:
                 builder = (context) => ResultsDesigner();
-                break;
-              case designerConsentRoute:
-                builder = (context) => ConsentDesigner();
                 break;
               case designerSaveRoute:
                 builder = (context) => Save();

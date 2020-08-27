@@ -4,8 +4,8 @@ import 'package:studyou_core/models/report/report_models.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
-import '../widgets/designer_add_button.dart';
 import '../widgets/report/report_section_editor.dart';
+import '../widgets/util/designer_add_button.dart';
 
 class ReportDesigner extends StatefulWidget {
   @override

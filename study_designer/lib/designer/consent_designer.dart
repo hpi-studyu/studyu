@@ -4,8 +4,8 @@ import 'package:studyou_core/models/consent/consent_item.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
-import '../widgets/consent_item_editor.dart';
-import '../widgets/designer_add_button.dart';
+import '../widgets/consent/consent_item_editor.dart';
+import '../widgets/util/designer_add_button.dart';
 
 class ConsentDesigner extends StatefulWidget {
   @override
