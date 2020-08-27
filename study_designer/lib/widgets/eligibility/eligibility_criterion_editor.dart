@@ -48,7 +48,6 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
                           saveFormChanges();
                         },
                         name: 'reason',
-                        maxLength: 40,
                         decoration: InputDecoration(labelText: 'Reason'),
                         initialValue: widget.eligibilityCriterion.reason),
                   ],
