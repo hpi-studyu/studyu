@@ -14,13 +14,14 @@ class ParseStudyDetails extends ParseObject implements ParseCloneable, StudyDeta
 
   factory ParseStudyDetails.fromBase(StudyDetailsBase studyDetails) {
     return ParseStudyDetails()
+      ..interventionSet = studyDetails.interventionSet
       ..questionnaire = studyDetails.questionnaire
       ..eligibility = studyDetails.eligibility
-      ..consent = studyDetails.consent
-      ..interventionSet = studyDetails.interventionSet
       ..observations = studyDetails.observations
       ..schedule = studyDetails.schedule
-      ..reportSpecification = studyDetails.reportSpecification;
+      ..consent = studyDetails.consent
+      ..reportSpecification = studyDetails.reportSpecification
+      ..results = studyDetails.results;
   }
 
   static const keyQuestionnaire = 'questionnaire';
