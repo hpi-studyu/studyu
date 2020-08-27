@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'consent_item.g.dart';
 
@@ -10,6 +11,10 @@ class ConsentItem {
   String iconName;
 
   ConsentItem();
+
+  ConsentItem.designer()
+      : id = Uuid().v4(),
+        iconName = '';
 
   factory ConsentItem.fromJson(Map<String, dynamic> json) => _$ConsentItemFromJson(json);
   Map<String, dynamic> toJson() => _$ConsentItemToJson(this);

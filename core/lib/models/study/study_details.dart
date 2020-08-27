@@ -15,14 +15,16 @@ class StudyDetailsBase {
   ReportSpecification reportSpecification;
   List<StudyResult> results;
 
-  StudyDetailsBase()
-      : questionnaire = Questionnaire(),
+  StudyDetailsBase();
+
+  StudyDetailsBase.designer()
+      : interventionSet = InterventionSet.designer(),
+        questionnaire = Questionnaire.designer(),
         eligibility = [],
-        consent = [],
-        interventionSet = InterventionSet([]),
         observations = [],
-        schedule = StudySchedule(),
-        reportSpecification = ReportSpecification(),
+        consent = [],
+        schedule = StudySchedule.designer(),
+        reportSpecification = ReportSpecification.designer(),
         results = [];
 
   factory StudyDetailsBase.fromJson(Map<String, dynamic> json) => _$StudyDetailsBaseFromJson(json);

@@ -11,7 +11,9 @@ class StudySchedule {
   bool includeBaseline;
   PhaseSequence sequence;
 
-  StudySchedule()
+  StudySchedule();
+
+  StudySchedule.designer()
       : numberOfCycles = 2,
         phaseDuration = 7,
         includeBaseline = true,

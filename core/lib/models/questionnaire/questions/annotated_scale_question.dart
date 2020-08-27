@@ -13,6 +13,10 @@ class AnnotatedScaleQuestion extends SliderQuestion {
 
   AnnotatedScaleQuestion() : super(questionType);
 
+  AnnotatedScaleQuestion.designer()
+      : annotations = [],
+        super.designer(questionType);
+
   factory AnnotatedScaleQuestion.fromJson(Map<String, dynamic> json) => _$AnnotatedScaleQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$AnnotatedScaleQuestionToJson(this);

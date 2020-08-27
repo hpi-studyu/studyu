@@ -13,11 +13,13 @@ class StudyBase {
   bool published;
   StudyDetailsBase studyDetails;
 
-  StudyBase()
+  StudyBase();
+
+  StudyBase.designer()
       : id = Uuid().v4(),
         iconName = '',
         published = false,
-        studyDetails = StudyDetailsBase();
+        studyDetails = StudyDetailsBase.designer();
 
   factory StudyBase.fromJson(Map<String, dynamic> json) => _$StudyBaseFromJson(json);
   Map<String, dynamic> toJson() => _$StudyBaseToJson(this);
