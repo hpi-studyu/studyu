@@ -38,7 +38,7 @@ class _ValueExpressionEditorState extends State<ValueExpressionEditor> {
     if (newTarget is BooleanQuestion) {
       newExpression = BooleanExpression();
     } else if (newTarget is ChoiceQuestion) {
-      final newChoiceExpression = ChoiceExpression()..choices = {};
+      final newChoiceExpression = ChoiceExpression.designer();
       newExpression = newChoiceExpression;
     }
     setState(() {

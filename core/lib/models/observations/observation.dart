@@ -10,5 +10,7 @@ abstract class Observation extends Task {
 
   Observation(String type) : super(type);
 
+  Observation.designer(String type) : super.designer(type);
+
   factory Observation.fromJson(Map<String, dynamic> data) => taskTypes[data[Task.keyType]](data);
 }

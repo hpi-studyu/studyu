@@ -1,4 +1,5 @@
 import 'package:studyou_core/models/results/result.dart';
+import 'package:uuid/uuid.dart';
 
 import '../tasks/schedule.dart';
 
@@ -12,6 +13,10 @@ abstract class Task {
   List<Schedule> schedule;
 
   Task(this.type);
+
+  Task.designer(this.type)
+      : id = Uuid().v4(),
+        schedule = [];
 
   Map<String, dynamic> toJson();
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/report/report_models.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/report/report_section_editor.dart';
@@ -16,10 +15,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
   ReportSpecification _reportSpecification;
 
   void _addSection() {
-    final section = AverageSection()
-      ..id = Uuid().v4()
-      ..title = ''
-      ..description = '';
+    final section = AverageSection.designer();
     setState(() {
       if (_reportSpecification.primary == null) {
         _reportSpecification.primary = section;

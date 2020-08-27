@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/eligibility/eligibility_criterion_editor.dart';
@@ -18,11 +16,8 @@ class _EligibilityDesignerState extends State<EligibilityDesigner> {
   List<Question> _questions;
 
   void _addCriterion() {
-    final criterion = EligibilityCriterion()
-      ..id = Uuid().v4()
-      ..condition = BooleanExpression();
     setState(() {
-      _eligibility.add(criterion);
+      _eligibility.add(EligibilityCriterion.designer());
     });
   }
 

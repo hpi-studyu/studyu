@@ -12,6 +12,10 @@ class ChoiceExpression extends ValueExpression<List<String>> {
 
   ChoiceExpression() : super(expressionType);
 
+  ChoiceExpression.designer()
+      : choices = {},
+        super(expressionType);
+
   factory ChoiceExpression.fromJson(Map<String, dynamic> json) => _$ChoiceExpressionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$ChoiceExpressionToJson(this);

@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../study/studies.dart';
 import 'results/results.dart';
 
@@ -15,6 +17,8 @@ abstract class StudyResult {
   String filename;
 
   StudyResult(this.type);
+
+  StudyResult.designer(this.type) : id = Uuid().v4();
 
   factory StudyResult.fromJson(Map<String, dynamic> data) {
     return studyResultTypes[data[keyType]](data);

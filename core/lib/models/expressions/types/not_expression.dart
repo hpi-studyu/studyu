@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 
 import '../../questionnaire/questionnaire_state.dart';
 import '../expression.dart';
@@ -12,6 +13,10 @@ class NotExpression extends Expression {
   Expression expression;
 
   NotExpression() : super(expressionType);
+
+  NotExpression.designer()
+      : expression = BooleanExpression(),
+        super(expressionType);
 
   factory NotExpression.fromJson(Map<String, dynamic> json) => _$NotExpressionFromJson(json);
   @override

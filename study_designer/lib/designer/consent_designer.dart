@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/consent/consent_item.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/consent/consent_item_editor.dart';
@@ -16,13 +15,8 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
   List<ConsentItem> _consent;
 
   void _addConsentItem() {
-    final intervention = ConsentItem()
-      ..id = Uuid().v4()
-      ..title = ''
-      ..description = ''
-      ..iconName = '';
     setState(() {
-      _consent.add(intervention);
+      _consent.add(ConsentItem.designer());
     });
   }
 

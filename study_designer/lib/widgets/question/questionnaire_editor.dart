@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
 import 'package:studyou_core/models/questionnaire/questions/slider_question.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../widgets/question/question_editor.dart';
 
@@ -28,20 +27,14 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     final oldQuestion = widget.questionnaire.questions[index];
     Question newQuestion;
     if (newType == BooleanQuestion.questionType) {
-      newQuestion = BooleanQuestion();
+      newQuestion = BooleanQuestion.designer();
     } else if (newType == ChoiceQuestion.questionType) {
-      newQuestion = ChoiceQuestion()
-        ..choices = []
-        ..multiple = false;
+      newQuestion = ChoiceQuestion.designer();
     } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
       if (newType == AnnotatedScaleQuestion.questionType) {
-        newQuestion = AnnotatedScaleQuestion()..annotations = [];
+        newQuestion = AnnotatedScaleQuestion.designer();
       } else {
-        newQuestion = VisualAnalogueQuestion()
-          ..minimumColor = Colors.white
-          ..minimumAnnotation = ''
-          ..maximumColor = Colors.white
-          ..maximumAnnotation = '';
+        newQuestion = VisualAnalogueQuestion.designer();
       }
       if (newQuestion is SliderQuestion) {
         if (oldQuestion is SliderQuestion) {
@@ -50,17 +43,10 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
             ..maximum = oldQuestion.maximum
             ..initial = oldQuestion.initial
             ..step = oldQuestion.step;
-        } else {
-          newQuestion
-            ..minimum = 0
-            ..maximum = 0
-            ..initial = 0
-            ..step = 0;
         }
       }
     }
     newQuestion
-      ..id = Uuid().v4()
       ..prompt = oldQuestion.prompt
       ..rationale = oldQuestion.rationale;
     setState(() {

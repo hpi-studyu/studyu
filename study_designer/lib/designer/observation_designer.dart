@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/questionnaire/questionnaire.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/task/task_editor.dart';
@@ -17,15 +15,8 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
   List<Observation> _observations;
 
   void _addObservation() {
-    final questionnaire = Questionnaire()..questions = [];
-
-    final intervention = QuestionnaireTask()
-      ..id = Uuid().v4()
-      ..title = ''
-      ..schedule = []
-      ..questions = questionnaire;
     setState(() {
-      _observations.add(intervention);
+      _observations.add(QuestionnaireTask.designer());
     });
   }
 

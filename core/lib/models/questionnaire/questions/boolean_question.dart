@@ -12,6 +12,8 @@ class BooleanQuestion extends Question<bool> {
 
   BooleanQuestion() : super(questionType);
 
+  BooleanQuestion.designer() : super.designer(questionType);
+
   factory BooleanQuestion.fromJson(Map<String, dynamic> json) => _$BooleanQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$BooleanQuestionToJson(this);

@@ -10,5 +10,7 @@ abstract class InterventionTask extends Task {
 
   InterventionTask(String type) : super(type);
 
+  InterventionTask.designer(String type) : super.designer(type);
+
   factory InterventionTask.fromJson(Map<String, dynamic> data) => taskTypes[data[Task.keyType]](data);
 }

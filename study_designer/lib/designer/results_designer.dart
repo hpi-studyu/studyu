@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/study_results/results/intervention_result.dart';
 import 'package:studyou_core/models/study_results/results/numeric_result.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/study_result/study_result_editor.dart';
@@ -18,9 +17,8 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
   List<StudyResult> _results;
 
   void _addResult() {
-    final result = InterventionResult()..id = Uuid().v4();
     setState(() {
-      _results.add(result);
+      _results.add(InterventionResult.designer());
     });
   }
 
@@ -30,14 +28,13 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
     });
   }
 
-  void _changeQuestionType(int index, String newType) {
+  void _changeResultsType(int index, String newType) {
     StudyResult newResult;
     if (newType == InterventionResult.studyResultType) {
-      newResult = InterventionResult();
+      newResult = InterventionResult.designer();
     } else if (newType == NumericResult.studyResultType) {
-      newResult = NumericResult();
+      newResult = NumericResult.designer();
     }
-    newResult.id = Uuid().v4();
     setState(() {
       _results[index] = newResult;
     });
@@ -62,7 +59,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
                           key: UniqueKey(),
                           result: entry.value,
                           remove: () => _removeResult(entry.key),
-                          changeResultType: (newType) => _changeQuestionType(entry.key, newType)))
+                          changeResultType: (newType) => _changeResultsType(entry.key, newType)))
                       .toList()
                 ],
               ),

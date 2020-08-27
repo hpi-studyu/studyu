@@ -21,6 +21,11 @@ class VisualAnalogueQuestion extends SliderQuestion {
 
   VisualAnalogueQuestion() : super(questionType);
 
+  VisualAnalogueQuestion.designer()
+      : this.minimumColor = Color(0xFFFFFFFF),
+        this.maximumColor = Color(0xFFFFFFFF),
+        super.designer(questionType);
+
   factory VisualAnalogueQuestion.fromJson(Map<String, dynamic> json) => _$VisualAnalogueQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$VisualAnalogueQuestionToJson(this);

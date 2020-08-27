@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../expressions/expression.dart';
+import '../expressions/types/boolean_expression.dart';
 import '../questionnaire/questionnaire_state.dart';
 
 part 'eligibility_criterion.g.dart';
@@ -12,6 +14,10 @@ class EligibilityCriterion {
   Expression condition;
 
   EligibilityCriterion();
+
+  EligibilityCriterion.designer()
+      : id = Uuid().v4(),
+        condition = BooleanExpression();
 
   factory EligibilityCriterion.fromJson(Map<String, dynamic> data) => _$EligibilityCriterionFromJson(data);
   Map<String, dynamic> toJson() => _$EligibilityCriterionToJson(this);

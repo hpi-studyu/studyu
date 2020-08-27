@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/question_conditional.dart';
+import 'package:uuid/uuid.dart';
 
 import 'questions/questions.dart';
 
@@ -27,9 +28,12 @@ abstract class Question<V> {
 
   Question(this.type);
 
+  Question.designer(this.type) : id = Uuid().v4();
+
   factory Question.fromJson(Map<String, dynamic> data) {
     return questionTypes[data[keyType]](data);
   }
+
   Map<String, dynamic> toJson();
 
   bool shouldBeShown(QuestionnaireState state) {
