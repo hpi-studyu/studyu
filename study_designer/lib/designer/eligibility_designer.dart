@@ -5,8 +5,8 @@ import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/designer_state.dart';
-import '../widgets/designer_add_button.dart';
 import '../widgets/eligibility/eligibility_criterion_editor.dart';
+import '../widgets/util/designer_add_button.dart';
 
 class EligibilityDesigner extends StatefulWidget {
   @override
