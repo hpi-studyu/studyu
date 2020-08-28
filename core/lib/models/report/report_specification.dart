@@ -12,7 +12,7 @@ class ReportSpecification {
 
   ReportSpecification();
 
-  ReportSpecification.designer() : secondary = [];
+  ReportSpecification.designerDefault() : secondary = [];
 
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);

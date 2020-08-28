@@ -14,7 +14,7 @@ class NumericResult extends StudyResult {
 
   NumericResult() : super(studyResultType);
 
-  NumericResult.designer() : super.designer(studyResultType);
+  NumericResult.designerDefault() : super.designer(studyResultType);
 
   factory NumericResult.fromJson(Map<String, dynamic> json) => _$NumericResultFromJson(json);
   @override

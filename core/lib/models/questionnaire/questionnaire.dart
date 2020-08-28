@@ -6,7 +6,7 @@ class Questionnaire {
 
   Questionnaire();
 
-  Questionnaire.designer() : questions = [];
+  Questionnaire.designerDefault() : questions = [];
 
   Questionnaire.fromJson(List<dynamic> data) {
     questions = data.map((entry) => Question.fromJson(entry)).toList();

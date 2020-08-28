@@ -15,11 +15,11 @@ class StudyBase {
 
   StudyBase();
 
-  StudyBase.designer()
+  StudyBase.designerDefault()
       : id = Uuid().v4(),
         iconName = '',
         published = false,
-        studyDetails = StudyDetailsBase.designer();
+        studyDetails = StudyDetailsBase.designerDefault();
 
   factory StudyBase.fromJson(Map<String, dynamic> json) => _$StudyBaseFromJson(json);
   Map<String, dynamic> toJson() => _$StudyBaseToJson(this);

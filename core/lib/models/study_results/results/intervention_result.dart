@@ -11,7 +11,7 @@ class InterventionResult extends StudyResult {
 
   InterventionResult() : super(studyResultType);
 
-  InterventionResult.designer() : super.designer(studyResultType);
+  InterventionResult.designerDefault() : super.designer(studyResultType);
 
   factory InterventionResult.fromJson(Map<String, dynamic> json) => _$InterventionResultFromJson(json);
   @override

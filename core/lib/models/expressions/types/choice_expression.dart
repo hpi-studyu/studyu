@@ -12,7 +12,7 @@ class ChoiceExpression extends ValueExpression<List<String>> {
 
   ChoiceExpression() : super(expressionType);
 
-  ChoiceExpression.designer()
+  ChoiceExpression.designerDefault()
       : choices = {},
         super(expressionType);
 

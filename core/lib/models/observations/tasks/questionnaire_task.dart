@@ -17,8 +17,8 @@ class QuestionnaireTask extends Observation {
 
   QuestionnaireTask() : super(taskType);
 
-  QuestionnaireTask.designer()
-      : this.questions = Questionnaire.designer(),
+  QuestionnaireTask.designerDefault()
+      : this.questions = Questionnaire.designerDefault(),
         super.designer(taskType);
 
   factory QuestionnaireTask.fromJson(Map<String, dynamic> json) => _$QuestionnaireTaskFromJson(json);
