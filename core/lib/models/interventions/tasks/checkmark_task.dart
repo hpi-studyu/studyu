@@ -12,7 +12,7 @@ class CheckmarkTask extends InterventionTask {
 
   CheckmarkTask() : super(taskType);
 
-  CheckmarkTask.designer() : super.designer(taskType);
+  CheckmarkTask.designerDefault() : super.designer(taskType);
 
   factory CheckmarkTask.fromJson(Map<String, dynamic> json) => _$CheckmarkTaskFromJson(json);
 

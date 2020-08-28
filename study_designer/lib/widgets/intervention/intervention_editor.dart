@@ -35,7 +35,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
 
   void _addCheckMarkTask() {
     setState(() {
-      widget.intervention.tasks.add(CheckmarkTask.designer());
+      widget.intervention.tasks.add(CheckmarkTask.designerDefault());
     });
   }
 

@@ -16,7 +16,7 @@ class Intervention {
 
   Intervention(this.id, this.name);
 
-  Intervention.designer() {
+  Intervention.designerDefault() {
     id = Uuid().v4();
     icon = '';
     tasks = [];

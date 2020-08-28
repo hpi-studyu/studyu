@@ -16,7 +16,7 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
 
   void _addConsentItem() {
     setState(() {
-      _consent.add(ConsentItem.designer());
+      _consent.add(ConsentItem.designerDefault());
     });
   }
 

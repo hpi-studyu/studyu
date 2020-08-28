@@ -14,7 +14,7 @@ class NotExpression extends Expression {
 
   NotExpression() : super(expressionType);
 
-  NotExpression.designer()
+  NotExpression.designerDefault()
       : expression = BooleanExpression(),
         super(expressionType);
 

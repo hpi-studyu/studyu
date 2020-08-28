@@ -13,7 +13,7 @@ class StudySchedule {
 
   StudySchedule();
 
-  StudySchedule.designer()
+  StudySchedule.designerDefault()
       : numberOfCycles = 2,
         phaseDuration = 7,
         includeBaseline = true,

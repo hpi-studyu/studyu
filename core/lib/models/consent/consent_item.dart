@@ -12,7 +12,7 @@ class ConsentItem {
 
   ConsentItem();
 
-  ConsentItem.designer()
+  ConsentItem.designerDefault()
       : id = Uuid().v4(),
         iconName = '';
 

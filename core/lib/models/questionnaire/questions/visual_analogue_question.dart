@@ -21,7 +21,7 @@ class VisualAnalogueQuestion extends SliderQuestion {
 
   VisualAnalogueQuestion() : super(questionType);
 
-  VisualAnalogueQuestion.designer()
+  VisualAnalogueQuestion.designerDefault()
       : this.minimumColor = Color(0xFFFFFFFF),
         this.maximumColor = Color(0xFFFFFFFF),
         super.designer(questionType);

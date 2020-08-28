@@ -17,7 +17,7 @@ class _QuestionnaireDesignerState extends State<QuestionnaireDesigner> {
 
   void _addQuestion() {
     setState(() {
-      questionnaire.questions.add(BooleanQuestion.designer());
+      questionnaire.questions.add(BooleanQuestion.designerDefault());
     });
   }
 

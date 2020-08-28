@@ -13,7 +13,7 @@ class AnnotatedScaleQuestion extends SliderQuestion {
 
   AnnotatedScaleQuestion() : super(questionType);
 
-  AnnotatedScaleQuestion.designer()
+  AnnotatedScaleQuestion.designerDefault()
       : annotations = [],
         super.designer(questionType);
 

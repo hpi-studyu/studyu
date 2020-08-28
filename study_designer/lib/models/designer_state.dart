@@ -4,6 +4,6 @@ class DesignerState {
   StudyBase draftStudy;
 
   DesignerState() {
-    draftStudy = StudyBase.designer();
+    draftStudy = StudyBase.designerDefault();
   }
 }

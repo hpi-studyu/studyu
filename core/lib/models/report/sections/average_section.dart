@@ -15,7 +15,7 @@ class AverageSection extends ReportSection {
 
   AverageSection() : super(sectionType);
 
-  AverageSection.designer() : super.designer(sectionType);
+  AverageSection.designerDefault() : super.designer(sectionType);
 
   factory AverageSection.fromJson(Map<String, dynamic> json) => _$AverageSectionFromJson(json);
   @override

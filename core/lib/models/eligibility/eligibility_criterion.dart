@@ -15,7 +15,7 @@ class EligibilityCriterion {
 
   EligibilityCriterion();
 
-  EligibilityCriterion.designer()
+  EligibilityCriterion.designerDefault()
       : id = Uuid().v4(),
         condition = BooleanExpression();
 

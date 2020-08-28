@@ -15,7 +15,7 @@ class ChoiceQuestion extends Question<List<String>> {
 
   ChoiceQuestion() : super(questionType);
 
-  ChoiceQuestion.designer()
+  ChoiceQuestion.designerDefault()
       : multiple = false,
         choices = [],
         super.designer(questionType);

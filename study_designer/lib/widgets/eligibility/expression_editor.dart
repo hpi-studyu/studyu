@@ -29,9 +29,9 @@ class _ExpressionEditorState extends State<ExpressionEditor> {
     if (newType == BooleanExpression.expressionType || newType == ValueExpression.expressionType) {
       newExpression = BooleanExpression();
     } else if (newType is ChoiceQuestion) {
-      newExpression = ChoiceExpression.designer();
+      newExpression = ChoiceExpression.designerDefault();
     } else {
-      final newNotExpression = NotExpression.designer();
+      final newNotExpression = NotExpression.designerDefault();
       newExpression = newNotExpression;
     }
 

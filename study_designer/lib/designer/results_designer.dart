@@ -18,7 +18,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
 
   void _addResult() {
     setState(() {
-      _results.add(InterventionResult.designer());
+      _results.add(InterventionResult.designerDefault());
     });
   }
 
@@ -31,9 +31,9 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
   void _changeResultsType(int index, String newType) {
     StudyResult newResult;
     if (newType == InterventionResult.studyResultType) {
-      newResult = InterventionResult.designer();
+      newResult = InterventionResult.designerDefault();
     } else if (newType == NumericResult.studyResultType) {
-      newResult = NumericResult.designer();
+      newResult = NumericResult.designerDefault();
     }
     setState(() {
       _results[index] = newResult;

@@ -17,14 +17,14 @@ class StudyDetailsBase {
 
   StudyDetailsBase();
 
-  StudyDetailsBase.designer()
-      : interventionSet = InterventionSet.designer(),
-        questionnaire = Questionnaire.designer(),
+  StudyDetailsBase.designerDefault()
+      : interventionSet = InterventionSet.designerDefault(),
+        questionnaire = Questionnaire.designerDefault(),
         eligibility = [],
         observations = [],
         consent = [],
-        schedule = StudySchedule.designer(),
-        reportSpecification = ReportSpecification.designer(),
+        schedule = StudySchedule.designerDefault(),
+        reportSpecification = ReportSpecification.designerDefault(),
         results = [];
 
   factory StudyDetailsBase.fromJson(Map<String, dynamic> json) => _$StudyDetailsBaseFromJson(json);
