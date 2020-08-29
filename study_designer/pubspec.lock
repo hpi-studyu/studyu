@@ -162,15 +162,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  devicelocale:
-    dependency: "direct overridden"
-    description:
-      path: "."
-      ref: patch-2
-      resolved-ref: "442818d77404cb5c7a24d811048bc2dee2019621"
-      url: "git://github.com/nstrelow/flutter-devicelocale.git"
-    source: git
-    version: "0.3.1"
   effective_dart:
     dependency: "direct dev"
     description:
@@ -427,10 +418,12 @@ packages:
   parse_server_sdk:
     dependency: "direct main"
     description:
-      name: parse_server_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.27"
+      path: "."
+      ref: "release/1.0.28"
+      resolved-ref: "05757f506b6af63bf2643616301c03761a05d819"
+      url: "https://github.com/nstrelow/Parse-SDK-Flutter.git"
+    source: git
+    version: "1.0.28"
   path:
     dependency: transitive
     description:
