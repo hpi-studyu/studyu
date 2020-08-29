@@ -6,6 +6,8 @@ part 'study.g.dart';
 
 @JsonSerializable()
 class StudyBase {
+  static const String baselineID = '__baseline';
+
   String id;
   String title;
   String description;
