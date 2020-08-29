@@ -28,7 +28,7 @@ dependencies:
   flutter_json_widget:
   parse_server_sdk:
     git:
-      url: https://github.com/nstrelow/Parse-SDK-Flutter.git
+      url: https://github.com/parse-community/Parse-SDK-Flutter.git
       ref: release/1.0.28
   pretty_json:
   provider:
