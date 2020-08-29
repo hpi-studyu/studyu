@@ -48,8 +48,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         leading: Icon(MdiIcons.fromString(study.iconName)),
         title: Text(study.title),
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Hero(
@@ -65,7 +64,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
                 }),
           ],
         ),
-      )),
+      ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: () => navigateToEligibilityCheck(context),
       ),
