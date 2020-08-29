@@ -5,6 +5,7 @@ import 'package:studyou_core/models/report/temporal_aggregation.dart';
 import 'package:studyou_core/models/study/studies.dart';
 
 import '../../../../util/data_processing.dart';
+import '../../../../util/localization.dart';
 import '../report_section_widget.dart';
 import '../util/plot_utilities.dart';
 
@@ -19,12 +20,13 @@ class AverageSectionWidget extends ReportSectionWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AspectRatio(aspectRatio: 1.5, child: getDiagram()),
+        AspectRatio(aspectRatio: 1.5, child: getDiagram(context)),
       ],
     );
   }
 
   bool get needsSeperators => section.aggregate == TemporalAggregation.day;
+  bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
 
   charts.RangeAnnotation generateSeperators(int numberOfPhases, int phaseDuration) => charts.RangeAnnotation(
         Iterable.generate(numberOfPhases + 1)
@@ -57,7 +59,7 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
-  Widget getDiagram() {
+  Widget getDiagram(BuildContext context) {
     final numberOfPhases = instance.interventionOrder.length;
     final phaseDuration = instance.schedule.phaseDuration;
     return charts.NumericComboChart(
@@ -66,6 +68,12 @@ class AverageSectionWidget extends ReportSectionWidget {
       behaviors: [
         charts.SeriesLegend(desiredMaxColumns: 2),
         if (needsSeperators) generateSeperators(numberOfPhases, phaseDuration),
+        if (needsDomainLabel)
+          charts.ChartTitle(
+            Nof1Localizations.of(context).translate('report_axis_phase'),
+            behaviorPosition: charts.BehaviorPosition.bottom,
+            titleStyleSpec: PlotUtilities.convertTextTheme(Theme.of(context).textTheme.caption),
+          )
       ],
       domainAxis: charts.NumericAxisSpec(
         viewport: getExtents(numberOfPhases, phaseDuration),

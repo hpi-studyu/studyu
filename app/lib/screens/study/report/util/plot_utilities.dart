@@ -1,4 +1,5 @@
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/material.dart';
 import 'package:studyou_core/models/interventions/intervention_set.dart';
 import 'package:studyou_core/models/study/study.dart';
 
@@ -43,5 +44,12 @@ class PlotUtilities {
           {charts.TextStyleSpec style}) =>
       charts.StaticNumericTickProviderSpec(
         ticks.map((entry) => charts.TickSpec<num>(entry.key, label: entry.value, style: style)).toList(),
+      );
+
+  static charts.TextStyleSpec convertTextTheme(TextStyle style) => charts.TextStyleSpec(
+        fontFamily: style.fontFamily,
+        fontSize: style.fontSize.toInt(),
+        lineHeight: style.height,
+        color: charts.Color(r: style.color.red, g: style.color.green, b: style.color.blue, a: style.color.alpha),
       );
 }

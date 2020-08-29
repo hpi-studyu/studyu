@@ -121,5 +121,7 @@
   "performance": "Fortschritt",
   "performance_overview": "Übersicht der erfüllten Aufgaben",
   "performance_overview_interventions": "Maßnahmen",
-  "performance_overview_observations": "Messungen"
+  "performance_overview_observations": "Messungen",
+
+  "report_axis_phase": "Phase"
 }
