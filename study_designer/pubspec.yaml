@@ -1,5 +1,5 @@
-name: study_designer
-description: A new Flutter project.
+name: StudyU_Designer
+description: StudyU Study designer
 
 publish_to: 'none'
 
@@ -27,9 +27,6 @@ dependencies:
   flutter_iconpicker:
   flutter_json_widget:
   parse_server_sdk:
-    git:
-      url: https://github.com/parse-community/Parse-SDK-Flutter.git
-      ref: release/1.0.27
   pretty_json:
   provider:
   uuid:
