@@ -68,7 +68,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
       ..observations = studyDetails.observations ?? []
       ..reportSpecification = studyDetails.reportSpecification;
     if (studyDetails.schedule != null) {
-      const baselineId = '__baseline';
+      const baselineId = StudyBase.baselineID;
       var addBaseline = false;
       userStudy
         ..schedule = studyDetails.schedule

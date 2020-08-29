@@ -1,4 +1,5 @@
 typedef FoldAggregator<V, R> = R Function(Iterable<V>);
+typedef KeyedAggregator<K, V, R> = R Function(Iterable<V>, K);
 typedef KeyAccessor<K, V> = K Function(V);
 
 class GroupedIterable<K, V> extends Iterable<MapEntry<K, Iterable<V>>> {
@@ -10,8 +11,10 @@ class GroupedIterable<K, V> extends Iterable<MapEntry<K, Iterable<V>>> {
   @override
   Iterator<MapEntry<K, Iterable<V>>> get iterator => data.entries.iterator;
 
-  Iterable<MapEntry<K, R>> aggregateFold<R>(R Function(Iterable<V>) aggregator) =>
+  Iterable<MapEntry<K, R>> aggregate<R>(FoldAggregator<V, R> aggregator) =>
       map((entry) => MapEntry(entry.key, aggregator(entry.value)));
+  Iterable<MapEntry<K, R>> aggregateWithKey<R>(KeyedAggregator<K, V, R> aggregator) =>
+      map((entry) => MapEntry(entry.key, aggregator(entry.value, entry.key)));
 }
 
 class FoldAggregators {

@@ -1,8 +1,7 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:StudYou/screens/study/report/report_section_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:quiver/collection.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyou_core/models/models.dart';
 
@@ -20,8 +19,6 @@ class ReportDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final outcome = reportStudy.reportSpecification.primary;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -45,8 +42,7 @@ class ReportDetailsScreen extends StatelessWidget {
               ReportPerformanceModule(reportStudy),
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),
             ),
-            if (outcome != null) //TODO: Actual type lookup and secondary reports
-              ReportModule(ReportAverageModule(reportStudy, reportStudy.reportSpecification.primary, primary: true)),
+            ReportSectionContainer(reportStudy.reportSpecification.primary, instance: reportStudy)
           ],
         ),
       ),
@@ -304,121 +300,4 @@ class PerformanceBar extends StatelessWidget {
       ],
     );
   }
-}
-
-//TODO: Move to seperate file(s)
-class ReportAverageModule extends ReportModuleContent {
-  final bool primary;
-  final AverageSection section;
-
-  const ReportAverageModule(ParseUserStudy instance, this.section, {@required this.primary}) : super(instance);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (section.title != null)
-          Text(
-            section.title,
-            style: theme.textTheme.headline5,
-          ),
-        if (primary)
-          Text(
-            getResultText(),
-            style: theme.textTheme.subtitle2,
-          ),
-        AspectRatio(aspectRatio: 1.5, child: getDiagram()),
-      ],
-    );
-  }
-
-  String getResultText() {
-    return '';
-  }
-
-  Widget getDiagram() {
-    return charts.NumericComboChart(
-      getBarData(),
-      animate: true,
-      behaviors: [
-        charts.SeriesLegend(desiredMaxColumns: 2),
-        charts.RangeAnnotation([
-          //TODO: Separator generation code should be improved
-          charts.LineAnnotationSegment<num>(
-            -0.5,
-            charts.RangeAnnotationAxisType.domain,
-            color: charts.MaterialPalette.gray.shade400,
-            strokeWidthPx: 1,
-          ),
-          for (var i = 1; i <= instance.interventionOrder.length; i++)
-            charts.LineAnnotationSegment<num>(
-              i * instance.schedule.phaseDuration - 0.5,
-              charts.RangeAnnotationAxisType.domain,
-              color: charts.MaterialPalette.gray.shade400,
-              strokeWidthPx: 1,
-            ),
-        ])
-      ],
-      domainAxis: charts.NumericAxisSpec(
-          //TODO: Axis utilities should be extracted for reuseability
-          viewport: charts.NumericExtents(0, (instance.interventionOrder.length * instance.schedule.phaseDuration) - 1),
-          tickProviderSpec: charts.StaticNumericTickProviderSpec([
-            for (var i = 0; i < instance.interventionOrder.length; i++)
-              charts.TickSpec<num>(i * instance.schedule.phaseDuration + (instance.schedule.phaseDuration - 1) / 2,
-                  label: (i + 1).toString()),
-          ])),
-      primaryMeasureAxis: charts.NumericAxisSpec(
-        viewport: charts.NumericExtents(0, 10), //TODO: Add axis spec or reference to get an actual range
-      ),
-      defaultRenderer: charts.BarRendererConfig<num>(groupingType: charts.BarGroupingType.stacked),
-    );
-  }
-
-  List<charts.Series<_DiagramDatum, num>> getBarData() {
-    final values = section.resultProperty.retrieveFromResults(instance);
-    final data = values.entries.map((e) => _DiagramDatum(
-          instance.getDayOfStudyFor(e.key),
-          e.value,
-          e.key,
-          instance.getInterventionForDate(e.key).id,
-        ));
-
-    //TODO: Extract intervention palette code (needed often)
-    final interventions = [...instance.interventionSet.interventions];
-    final colors = <String, charts.Color>{};
-    if (interventions.any((intervention) => intervention.id == '__baseline')) {
-      colors['__baseline'] = charts.MaterialPalette.gray.shadeDefault;
-      interventions.removeWhere((intervention) => intervention.id == '__baseline');
-    }
-    colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
-    colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
-
-    //TODO: Create simple data processing task with operations for group, reduce and filter (group is not part of dart)
-    final grouped =
-        Multimap<String, _DiagramDatum>.fromIterable(data, key: (datum) => datum.intervention, value: (datum) => datum);
-
-    return grouped
-        .asMap()
-        .entries
-        .map((e) => charts.Series<_DiagramDatum, num>(
-              id: e.key,
-              displayName: instance.interventionSet.interventions.firstWhere((element) => element.id == e.key).name,
-              seriesColor: colors[e.key],
-              domainFn: (datum, _) => datum.x,
-              measureFn: (datum, _) => datum.y,
-              data: e.value.toList(growable: false),
-            ))
-        .toList(growable: false);
-  }
-}
-
-class _DiagramDatum {
-  final num x;
-  final DateTime timestamp;
-  final String intervention;
-  final num y;
-
-  _DiagramDatum(this.x, this.y, this.timestamp, this.intervention);
 }
