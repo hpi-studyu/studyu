@@ -420,8 +420,8 @@ packages:
     description:
       path: "."
       ref: "release/1.0.28"
-      resolved-ref: "05757f506b6af63bf2643616301c03761a05d819"
-      url: "https://github.com/nstrelow/Parse-SDK-Flutter.git"
+      resolved-ref: "7462a01a934c263ba91d67e3815438784987c1d4"
+      url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "1.0.28"
   path:
