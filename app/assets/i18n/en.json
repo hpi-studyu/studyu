@@ -119,5 +119,7 @@
   "performance": "Performance",
   "performance_overview": "Overview of completion of tasks",
   "performance_overview_interventions": "Interventions",
-  "performance_overview_observations": "Observations"
+  "performance_overview_observations": "Observations",
+
+  "report_axis_phase": "Phase"
 }
