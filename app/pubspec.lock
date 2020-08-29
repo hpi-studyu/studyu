@@ -433,7 +433,7 @@ packages:
       name: material_design_icons_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.5345"
+    version: "4.0.5555"
   meta:
     dependency: transitive
     description:
@@ -507,11 +507,9 @@ packages:
   parse_server_sdk:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "release/1.0.27"
-      resolved-ref: "7d3c08b09b77096d1781be6c5af3e4be594e23db"
-      url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
-    source: git
+      name: parse_server_sdk
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.27"
   path:
     dependency: transitive
@@ -839,7 +837,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.16.0-nullsafety.1"
+    version: "1.16.0-nullsafety.2"
   test_api:
     dependency: transitive
     description:
@@ -853,7 +851,7 @@ packages:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.12-nullsafety.1"
+    version: "0.3.12-nullsafety.2"
   timeline_tile:
     dependency: "direct main"
     description:
@@ -888,7 +886,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.2"
   vector_math:
     dependency: transitive
     description:
@@ -902,14 +900,14 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.12"
+    version: "0.10.12+2"
   video_player_platform_interface:
     dependency: transitive
     description:
       name: video_player_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   video_player_web:
     dependency: transitive
     description:
