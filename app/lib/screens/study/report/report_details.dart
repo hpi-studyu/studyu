@@ -1,4 +1,3 @@
-import 'package:StudYou/screens/study/report/report_section_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -8,6 +7,7 @@ import 'package:studyou_core/models/models.dart';
 import '../../../routes.dart';
 import '../../../util/localization.dart';
 import 'performance_details.dart';
+import 'report_section_container.dart';
 
 class ReportDetailsScreen extends StatelessWidget {
   final ParseUserStudy reportStudy;
