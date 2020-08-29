@@ -163,11 +163,13 @@ packages:
     source: hosted
     version: "1.0.0"
   devicelocale:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: devicelocale
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: patch-2
+      resolved-ref: "442818d77404cb5c7a24d811048bc2dee2019621"
+      url: "git://github.com/nstrelow/flutter-devicelocale.git"
+    source: git
     version: "0.3.1"
   effective_dart:
     dependency: "direct dev"

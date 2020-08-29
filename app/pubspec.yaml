@@ -27,6 +27,9 @@ dependencies:
   material_design_icons_flutter:
   normal:
   parse_server_sdk:
+    git:
+      url: https://github.com/nstrelow/Parse-SDK-Flutter.git
+      ref: release/1.0.28
   path_provider:
   pdf:
   pimp_my_button:
