@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,11 +40,12 @@ Future<void> pdfDownload(BuildContext context, String title, List<pw.Widget> con
     ),
   );
 
-  // TODO maybe replace discontinued DownloadsPathProvider
-  final dir =
-      Platform.isIOS ? await getApplicationDocumentsDirectory() : await DownloadsPathProvider.downloadsDirectory;
+  final dirPath = Platform.isIOS
+      ? (await getApplicationDocumentsDirectory()).path
+      : await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
+  ;
 
-  File('${dir.path}/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(doc.save());
+  File('$dirPath/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(doc.save());
   showDialog(
       context: context,
       builder: (context) => AlertDialog(

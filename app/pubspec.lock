@@ -260,13 +260,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
-  downloads_path_provider:
-    dependency: "direct main"
-    description:
-      name: downloads_path_provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   effective_dart:
     dependency: "direct dev"
     description:
@@ -274,6 +267,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.4"
+  ext_storage:
+    dependency: "direct main"
+    description:
+      name: ext_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -500,9 +500,11 @@ packages:
   parse_server_sdk:
     dependency: "direct main"
     description:
-      path: "../../Parse-SDK-Flutter"
-      relative: true
-    source: path
+      path: "."
+      ref: "release/1.0.28"
+      resolved-ref: "05757f506b6af63bf2643616301c03761a05d819"
+      url: "https://github.com/nstrelow/Parse-SDK-Flutter.git"
+    source: git
     version: "1.0.28"
   path:
     dependency: transitive
