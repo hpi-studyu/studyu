@@ -4,9 +4,7 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
-  - devicelocale (0.0.1):
-    - Flutter
-  - downloads_path_provider (0.0.1):
+  - ext_storage (0.0.1):
     - Flutter
   - Flutter (1.0.0)
   - package_info (0.0.1):
@@ -24,8 +22,7 @@ PODS:
 DEPENDENCIES:
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
-  - devicelocale (from `.symlinks/plugins/devicelocale/ios`)
-  - downloads_path_provider (from `.symlinks/plugins/downloads_path_provider/ios`)
+  - ext_storage (from `.symlinks/plugins/ext_storage/ios`)
   - Flutter (from `Flutter`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -42,10 +39,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audioplayers/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
-  devicelocale:
-    :path: ".symlinks/plugins/devicelocale/ios"
-  downloads_path_provider:
-    :path: ".symlinks/plugins/downloads_path_provider/ios"
+  ext_storage:
+    :path: ".symlinks/plugins/ext_storage/ios"
   Flutter:
     :path: Flutter
   package_info:
@@ -62,8 +57,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
-  devicelocale: feebbe5e7a30adb8c4f83185de1b50ff19b44f00
-  downloads_path_provider: fe0d06888d4b8c055a59edbc2f51f03e63cb0e28
+  ext_storage: 4eaf3a84d5594106e2ebcc2502248cfde53c8fa1
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c

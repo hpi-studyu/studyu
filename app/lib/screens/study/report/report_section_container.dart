@@ -1,9 +1,9 @@
-import 'package:StudYou/screens/study/report/sections/report_section_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/report_models.dart';
 import 'package:studyou_core/models/study/parse_user_study.dart';
 
 import 'report_section_widget.dart';
+import 'sections/report_section_widgets.dart';
 
 typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, ParseUserStudy instance);
 
