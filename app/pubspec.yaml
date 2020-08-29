@@ -20,7 +20,7 @@ dependencies:
   charts_flutter:
   chewie:
   cupertino_icons:
-  downloads_path_provider:
+  ext_storage:
   intersperse:
   intl:
   json_annotation:
