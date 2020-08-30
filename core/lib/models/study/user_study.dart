@@ -39,6 +39,7 @@ extension UserStudyExtension on UserStudyBase {
 
   List<Result> resultsFor(String taskId) => results[taskId];
 
+  // TODO: Add index to support same task multiple times per day
   bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
       resultsFor(taskId)?.any((result) =>
           result.timeStamp.year == dateTime.year &&
@@ -148,4 +149,8 @@ extension UserStudyExtension on UserStudyBase {
     }
     return taskSchedule;
   }
+
+  // TODO: Add index to support same task multiple times per day
+  bool allTasksCompletedFor(DateTime dateTime) =>
+      scheduleFor(dateTime).values.every((task) => isTaskFinishedFor(task.id, dateTime));
 }
