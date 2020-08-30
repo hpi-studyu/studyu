@@ -11,6 +11,7 @@ typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, Par
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
     AverageSection: (section, instance) => AverageSectionWidget(instance, section),
+    LinearRegressionSection: (section, instance) => LinearRegressionSectionWidget(instance, section),
   };
 
   final ReportSection section;
