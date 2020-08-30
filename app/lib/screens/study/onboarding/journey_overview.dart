@@ -95,7 +95,7 @@ class Timeline extends StatelessWidget {
             iconName: 'flagCheckered',
             color: Colors.green,
             isLast: true,
-            date: study.startDate.add(Duration(days: interventionsInOrder.length * study.schedule.phaseDuration)))
+            date: study.endDate)
       ],
     );
   }
