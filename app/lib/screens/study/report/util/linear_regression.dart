@@ -50,7 +50,6 @@ class LinearRegression {
   }
 
   int _getDegreesOfFreedom() => designMatrix.rows - designMatrix.columns;
-  StudentT _getDistribution;
 
   SquareMatrix _getCrossMatrix() => designMatrix.transpose().matrixProduct(designMatrix).toSquareMatrix();
   SquareMatrix _getVarCoVarMatrix() => (_getCrossMatrix().inverse() * _squaredStandardError()).toSquareMatrix();
@@ -78,7 +77,7 @@ class LinearRegression {
   }
 
   Vector _getPValues({Vector mu0}) {
-    final tValues = _getTValues();
+    final tValues = _getTValues(mu0: mu0);
     return tValues.map((t) => (1 - _getStudentTCDF(t.abs())) * 2);
   }
 
@@ -89,7 +88,7 @@ class LinearRegression {
 
   num _getTConfidenceInterval(double alpha) => _coefficientDistribution.ppf(1 - (alpha / 2));
 
-  Vector _getConfidenceRadius(double alpha, {Vector mu0}) {
+  Vector _getConfidenceRadius(double alpha) {
     return _getStandardErrors() * _getTConfidenceInterval(alpha);
   }
 

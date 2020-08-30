@@ -1,4 +1,3 @@
-import 'package:StudyU/screens/study/report/util/linear_regression.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/sections/report_sections.dart';
@@ -6,6 +5,7 @@ import 'package:studyou_core/models/study/studies.dart';
 
 import '../../../../util/localization.dart';
 import '../report_section_widget.dart';
+import '../util/linear_regression.dart';
 import '../util/plot_utilities.dart';
 
 class LinearRegressionSectionWidget extends ReportSectionWidget {
@@ -109,7 +109,6 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       BuildContext context, LinearRegressionResult<num> coefficients, LinearRegressionResult<num> pValues) {
     final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
 
-    final intercept = coefficients.intercept;
     final factorA = coefficients.variables[1];
     final factorB = coefficients.variables[2];
     final interventionA = PlotUtilities.getInterventionA(instance.interventionSet);
@@ -138,14 +137,6 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
     return Text(text);
   }
-}
-
-class _SampleDatum {
-  final num day;
-  final num value;
-  final String intervention;
-
-  _SampleDatum(this.day, this.value, this.intervention);
 }
 
 class _ResultDatum {
