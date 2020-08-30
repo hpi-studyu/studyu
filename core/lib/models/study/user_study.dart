@@ -37,16 +37,6 @@ extension UserStudyExtension on UserStudyBase {
       ..reportSpecification = reportSpecification;
   }
 
-  List<Result> resultsFor(String taskId) => results[taskId];
-
-  // TODO: Add index to support same task multiple times per day
-  bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
-      resultsFor(taskId)?.any((result) =>
-          result.timeStamp.year == dateTime.year &&
-          result.timeStamp.month == dateTime.month &&
-          result.timeStamp.day == dateTime.day) ??
-      false;
-
   void addResult(Result result) {
     var nextResults = results;
     nextResults.putIfAbsent(result.taskId, () => []).add(result);
@@ -115,9 +105,23 @@ extension UserStudyExtension on UserStudyBase {
         .toList();
   }
 
+  List<Result> resultsFor(String taskId) => results[taskId];
+
+  // TODO: Add index to support same task multiple times per day
+  bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
+      resultsFor(taskId)?.any((result) =>
+          result.timeStamp.year == dateTime.year &&
+          result.timeStamp.month == dateTime.month &&
+          result.timeStamp.day == dateTime.day) ??
+      false;
+
   int completedTasksFor(Task task) {
     return resultsFor(task.id)?.length ?? 0;
   }
+
+  // TODO: Add index to support same task multiple times per day
+  bool allTasksCompletedFor(DateTime dateTime) =>
+      scheduleFor(dateTime).values.every((task) => isTaskFinishedFor(task.id, dateTime));
 
   int totalTaskCountFor(Task task) {
     var daysCount = schedule.numberOfCycles * schedule.phaseDuration;
@@ -149,8 +153,4 @@ extension UserStudyExtension on UserStudyBase {
     }
     return taskSchedule;
   }
-
-  // TODO: Add index to support same task multiple times per day
-  bool allTasksCompletedFor(DateTime dateTime) =>
-      scheduleFor(dateTime).values.every((task) => isTaskFinishedFor(task.id, dateTime));
 }
