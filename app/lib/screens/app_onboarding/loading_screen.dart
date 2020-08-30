@@ -1,4 +1,3 @@
-import 'package:StudyU/screens/study/report/report_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,6 +10,7 @@ import '../../models/app_state.dart';
 import '../../routes.dart';
 import '../../util/localization.dart';
 import '../../util/notifications.dart';
+import '../study/report/report_details.dart';
 import '../study/tasks/task_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
