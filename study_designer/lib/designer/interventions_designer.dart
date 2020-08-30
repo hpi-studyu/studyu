@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/intervention/intervention_editor.dart';
@@ -48,7 +49,8 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
             ),
           ),
         ),
-        DesignerAddButton(label: Text('Add Intervention'), add: _addIntervention)
+        DesignerAddButton(
+            label: Text(Nof1Localizations.of(context).translate('add_intervention')), add: _addIntervention)
       ],
     );
   }
