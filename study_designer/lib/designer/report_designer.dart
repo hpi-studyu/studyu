@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/report/report_models.dart';
@@ -35,6 +37,16 @@ class _ReportDesignerState extends State<ReportDesigner> {
     });
   }
 
+  void _replaceSection(index, ReportSection section) {
+    setState(() {
+      if (index == -1) {
+        _reportSpecification.primary = section;
+      } else {
+        _reportSpecification.secondary[index] = section;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _reportSpecification = context.watch<DesignerState>().draftStudy.studyDetails.reportSpecification;
@@ -48,18 +60,22 @@ class _ReportDesignerState extends State<ReportDesigner> {
                 children: <Widget>[
                   if (_reportSpecification.primary != null)
                     ReportSectionEditor(
-                        key: UniqueKey(),
-                        section: _reportSpecification.primary,
-                        isPrimary: true,
-                        remove: () => _removeSection(-1)),
+                      key: UniqueKey(),
+                      section: _reportSpecification.primary,
+                      isPrimary: true,
+                      remove: () => _removeSection(-1),
+                      updateSection: (section) => _replaceSection(-1, section),
+                    ),
                   ..._reportSpecification.secondary
                       .asMap()
                       .entries
                       .map((entry) => ReportSectionEditor(
-                          key: UniqueKey(),
-                          section: entry.value,
-                          isPrimary: false,
-                          remove: () => _removeSection(entry.key)))
+                            key: UniqueKey(),
+                            section: entry.value,
+                            isPrimary: false,
+                            remove: () => _removeSection(entry.key),
+                            updateSection: (section) => _replaceSection(entry.key, section),
+                          ))
                       .toList()
                 ],
               ),
