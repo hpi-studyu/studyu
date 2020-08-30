@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:quiver/collection.dart';
 
 import '../../util/extensions.dart';
@@ -110,7 +112,46 @@ extension UserStudyExtension on UserStudyBase {
         .toList();
   }
 
+  DateTime startOfPhase(int index) => startDate.add(Duration(days: schedule.phaseDuration * index));
+  DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: schedule.phaseDuration));
+
   List<Result> resultsFor(String taskId) => results[taskId];
+
+  Map<String, int> completedPerTaskForPhase(int index) =>
+      resultsForPhase(index).map(((taskId, taskResults) => MapEntry(taskId, taskResults.length)));
+
+  Map<String, List<Result>> resultsForPhase(int index) {
+    return resultsBetween(startOfPhase(index).subtract(Duration(days: 1)), dayAfterEndOfPhase(index));
+  }
+
+  // Excluding start and end
+  Map<String, List<Result>> resultsBetween(DateTime start, DateTime end) {
+    return results.map((taskId, taskResults) => MapEntry(
+        taskId, taskResults.where((result) => result.timeStamp.isBefore(end) && result.timeStamp.isAfter(start))));
+  }
+
+  int completedForPhase(int index) {
+    final start = startOfPhase(index);
+    int completedCount = 0;
+    for (int i = 0; i < schedule.phaseDuration; i++) {
+      if (allTasksCompletedFor(start.add(Duration(days: i)))) {
+        completedCount++;
+      }
+    }
+    return completedCount;
+  }
+
+  double percentCompletedForPhase(int index) {
+    return completedForPhase(index) / schedule.phaseDuration;
+  }
+
+  double percentMissedForPhase(int index, DateTime date) {
+    if (startOfPhase(index).isAfter(date)) return 0;
+
+    final missedInPhase =
+        min(date.differenceInDays(startOfPhase(index)).inDays, schedule.phaseDuration) - completedForPhase(index);
+    return missedInPhase / schedule.phaseDuration;
+  }
 
   // TODO: Add index to support same task multiple times per day
   bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
