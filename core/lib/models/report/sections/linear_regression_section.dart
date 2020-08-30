@@ -12,6 +12,7 @@ class LinearRegressionSection extends ReportSection {
   DataReference<num> resultProperty;
   bool compareAB;
   double alpha;
+  ImprovementDirection improvement;
 
   LinearRegressionSection() : super(sectionType);
 
@@ -22,4 +23,9 @@ class LinearRegressionSection extends ReportSection {
   factory LinearRegressionSection.fromJson(Map<String, dynamic> json) => _$LinearRegressionSectionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$LinearRegressionSectionToJson(this);
+}
+
+enum ImprovementDirection {
+  positive,
+  negative,
 }
