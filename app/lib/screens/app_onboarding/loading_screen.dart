@@ -47,8 +47,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         Navigator.pushReplacement(context, ReportDetailsScreen.routeFor(reportStudy: userStudy));
       } else {
         notificationInit.then((value) => scheduleStudyNotifications(context));
+        Navigator.pushReplacementNamed(context, Routes.dashboard);
       }
-      Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
