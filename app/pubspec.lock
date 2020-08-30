@@ -144,9 +144,11 @@ packages:
   charts_flutter:
     dependency: "direct main"
     description:
-      name: charts_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: charts_flutter
+      ref: git_export
+      resolved-ref: "75a6ff8fbbcca9a8ea0a1374159239e675361de9"
+      url: "https://github.com/Pottiman/charts.git"
+    source: git
     version: "0.9.0"
   checked_yaml:
     dependency: transitive

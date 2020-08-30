@@ -18,6 +18,10 @@ dependencies:
     path: ../core
 
   charts_flutter:
+    git:
+      url: https://github.com/Pottiman/charts.git
+      ref: git_export
+      path: charts_flutter
   chewie:
   cupertino_icons:
   dart_numerics:
