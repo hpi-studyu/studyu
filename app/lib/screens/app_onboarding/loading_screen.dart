@@ -10,7 +10,6 @@ import '../../models/app_state.dart';
 import '../../routes.dart';
 import '../../util/localization.dart';
 import '../../util/notifications.dart';
-import '../study/report/report_details.dart';
 import '../study/tasks/task_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -43,12 +42,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final userStudy = await StudyQueries.getUserStudy(selectedStudyObjectId);
     if (userStudy != null) {
       model.activeStudy = userStudy;
-      if (userStudy.completedStudy) {
-        Navigator.pushReplacement(context, ReportDetailsScreen.routeFor(reportStudy: userStudy));
-      } else {
-        notificationInit.then((value) => scheduleStudyNotifications(context));
-        Navigator.pushReplacementNamed(context, Routes.dashboard);
-      }
+      notificationInit.then((value) => scheduleStudyNotifications(context));
+      Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
