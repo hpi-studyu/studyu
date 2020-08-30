@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/temporal_aggregation.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../models/designer_state.dart';
 import '../util/data_reference_editor.dart';
@@ -27,7 +28,7 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
 
     return Column(children: [
       Row(children: [
-        Text('Temporal Aggregation:'),
+        Text(Nof1Localizations.of(context).translate('Temporal Aggregation')),
         SizedBox(width: 10),
         DropdownButton<TemporalAggregation>(
           value: widget.section.aggregate,

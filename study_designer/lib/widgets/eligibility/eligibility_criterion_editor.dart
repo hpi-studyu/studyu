@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import './expression_editor.dart';
 
@@ -28,11 +29,11 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
         child: Column(children: [
           ListTile(
               title: Row(
-                children: const [Text('Eligibility Criterion')],
+                children: [Text(Nof1Localizations.of(context).translate('eligibility_criterion'))],
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,
-                child: const Text('Delete'),
+                child: Text(Nof1Localizations.of(context).translate('delete')),
               )),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -48,7 +49,7 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
                           saveFormChanges();
                         },
                         name: 'reason',
-                        decoration: InputDecoration(labelText: 'Reason'),
+                        decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('reason')),
                         initialValue: widget.eligibilityCriterion.reason),
                   ],
                 ),

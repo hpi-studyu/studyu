@@ -5,6 +5,7 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/consent/consent_item.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class ConsentItemEditor extends StatefulWidget {
   final ConsentItem consentItem;
@@ -38,8 +39,9 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                title: Text('Consent Item'),
-                trailing: FlatButton(onPressed: widget.remove, child: const Text('Delete'))),
+                title: Text(Nof1Localizations.of(context).translate('consent_item')),
+                trailing: FlatButton(
+                    onPressed: widget.remove, child: Text(Nof1Localizations.of(context).translate('delete')))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -55,13 +57,13 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
                             },
                             name: 'title',
                             maxLength: 40,
-                            decoration: InputDecoration(labelText: 'Title'),
+                            decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
                             initialValue: widget.consentItem.title),
                         Row(children: [
                           Expanded(
                             child: FlatButton(
                               onPressed: _pickIcon,
-                              child: Text('Choose Icon'),
+                              child: Text(Nof1Localizations.of(context).translate('choose_icon')),
                             ),
                           ),
                           if (MdiIcons.fromString(widget.consentItem.iconName) != null)
@@ -72,7 +74,8 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
                               saveFormChanges();
                             },
                             name: 'description',
-                            decoration: InputDecoration(labelText: 'Description'),
+                            decoration:
+                                InputDecoration(labelText: Nof1Localizations.of(context).translate('description')),
                             initialValue: widget.consentItem.description),
                       ],
                     )),

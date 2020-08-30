@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
 import '../../widgets/question/slider_question_editor_section.dart';
@@ -48,12 +49,12 @@ class _QuestionEditorState extends State<QuestionEditor> {
                       );
                     }).toList(),
                   ),
-                  Text('Question')
+                  Text(Nof1Localizations.of(context).translate('question'))
                 ],
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,
-                child: const Text('Delete'),
+                child: Text(Nof1Localizations.of(context).translate('delete')),
               )),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -69,14 +70,14 @@ class _QuestionEditorState extends State<QuestionEditor> {
                             _saveFormChanges();
                           },
                           name: 'prompt',
-                          decoration: InputDecoration(labelText: 'Prompt'),
+                          decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('prompt')),
                           initialValue: widget.question.prompt),
                       FormBuilderTextField(
                           onChanged: (value) {
                             _saveFormChanges();
                           },
                           name: 'rationale',
-                          decoration: InputDecoration(labelText: 'Rationale'),
+                          decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('rationale')),
                           initialValue: widget.question.rationale),
                     ])),
                 if (questionBody != null) questionBody

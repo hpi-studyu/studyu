@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/report_models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import 'average_section_editor_section.dart';
 import 'linear_regression_section_editor_section.dart';
@@ -49,7 +50,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                leading: widget.isPrimary ? Text('[Primary]') : null,
+                leading: widget.isPrimary ? Text('[${Nof1Localizations.of(context).translate('primary')}]') : null,
                 title: Row(
                   children: [
                     DropdownButton<String>(
@@ -63,10 +64,11 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                         );
                       }).toList(),
                     ),
-                    Text('Section')
+                    Text(Nof1Localizations.of(context).translate('section'))
                   ],
                 ),
-                trailing: FlatButton(onPressed: widget.remove, child: const Text('Delete'))),
+                trailing: FlatButton(
+                    onPressed: widget.remove, child: Text(Nof1Localizations.of(context).translate('delete')))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -82,14 +84,15 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                             },
                             name: 'title',
                             maxLength: 40,
-                            decoration: InputDecoration(labelText: 'Title'),
+                            decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
                             initialValue: widget.section.title),
                         FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'description',
-                            decoration: InputDecoration(labelText: 'Description'),
+                            decoration:
+                                InputDecoration(labelText: Nof1Localizations.of(context).translate('description')),
                             initialValue: widget.section.description),
                       ],
                     )),

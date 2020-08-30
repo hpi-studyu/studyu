@@ -31,7 +31,7 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
                       saveFormChanges();
                     },
                     name: 'hour',
-                    decoration: InputDecoration(labelText: 'Hour'),
+                    decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('hour')),
                     initialValue: widget.schedule.time.hour.toString()),
               ),
               Expanded(
@@ -40,13 +40,13 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
                       saveFormChanges();
                     },
                     name: 'minute',
-                    decoration: InputDecoration(labelText: 'Minute'),
+                    decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minute')),
                     initialValue: widget.schedule.time.minute.toString()),
               ),
               Expanded(
                 child: FlatButton(
                   onPressed: widget.remove,
-                  child: const Text('Delete'),
+                  child: const Text(Nof1Localizations.of(context).translate('delete')),
                 ),
               )
             ],

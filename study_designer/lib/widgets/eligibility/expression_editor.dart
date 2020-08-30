@@ -5,6 +5,7 @@ import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/expressions/types/not_expression.dart';
 import 'package:studyou_core/models/expressions/types/value_expression.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import './not_expression_editor.dart';
 import './value_expression_editor.dart';
@@ -57,7 +58,7 @@ class _ExpressionEditorState extends State<ExpressionEditor> {
                   );
                 }).toList(),
               ),
-              Text('Expression')
+              Text(Nof1Localizations.of(context).translate('expression'))
             ],
           )),
           Padding(padding: const EdgeInsets.all(8), child: _buildExpressionBody())

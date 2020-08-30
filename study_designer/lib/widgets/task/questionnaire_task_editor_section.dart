@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:uuid/uuid.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../widgets/question/questionnaire_editor.dart';
 
@@ -16,12 +16,8 @@ class QuestionnaireTaskEditorSection extends StatefulWidget {
 
 class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection> {
   void _addQuestion() {
-    final question = BooleanQuestion()
-      ..id = Uuid().v4()
-      ..prompt = ''
-      ..rationale = '';
     setState(() {
-      widget.task.questions.questions.add(question);
+      widget.task.questions.questions.add(BooleanQuestion.designerDefault());
     });
   }
 
@@ -30,7 +26,10 @@ class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection
     return Column(children: [
       QuestionnaireEditor(questionnaire: widget.task.questions, questionTypes: Question.questionTypes.keys.toList()),
       RaisedButton.icon(
-          onPressed: _addQuestion, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Question'))
+          onPressed: _addQuestion,
+          icon: Icon(Icons.add),
+          color: Colors.green,
+          label: Text(Nof1Localizations.of(context).translate('add_question')))
     ]);
   }
 }
