@@ -109,8 +109,13 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       BuildContext context, LinearRegressionResult<num> coefficients, LinearRegressionResult<num> pValues) {
     final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
 
-    final factorA = coefficients.variables[1];
-    final factorB = coefficients.variables[2];
+    var factorA = coefficients.variables[1];
+    var factorB = coefficients.variables[2];
+    if (section.improvement == ImprovementDirection.negative) {
+      factorA = -factorA;
+      factorB = -factorB;
+    }
+
     final interventionA = PlotUtilities.getInterventionA(instance.interventionSet);
     final interventionB = PlotUtilities.getInterventionB(instance.interventionSet);
 

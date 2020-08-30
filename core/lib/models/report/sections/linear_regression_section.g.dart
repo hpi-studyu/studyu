@@ -16,7 +16,9 @@ LinearRegressionSection _$LinearRegressionSectionFromJson(
     ..resultProperty =
         DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
     ..compareAB = json['compareAB'] as bool
-    ..alpha = (json['alpha'] as num).toDouble();
+    ..alpha = (json['alpha'] as num).toDouble()
+    ..improvement =
+        _$enumDecode(_$ImprovementDirectionEnumMap, json['improvement']);
 }
 
 Map<String, dynamic> _$LinearRegressionSectionToJson(
@@ -29,4 +31,31 @@ Map<String, dynamic> _$LinearRegressionSectionToJson(
       'resultProperty': instance.resultProperty.toJson(),
       'compareAB': instance.compareAB,
       'alpha': instance.alpha,
+      'improvement': _$ImprovementDirectionEnumMap[instance.improvement],
     };
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+const _$ImprovementDirectionEnumMap = {
+  ImprovementDirection.positive: 'positive',
+  ImprovementDirection.negative: 'negative',
+};
