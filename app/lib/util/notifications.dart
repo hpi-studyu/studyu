@@ -38,17 +38,17 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
   final study = appState.activeStudy;
 
   if (study != null) {
+    final interventionTaskLists =
+        study.interventionSet.interventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
+    var interventionTasks = [];
+    if (interventionTaskLists.isNotEmpty) {
+      interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
+    }
     final tasks = [
       ...study.observations,
-      ...study.interventionSet.interventions
-              ?.map((intervention) => intervention.tasks)
-              ?.reduce((firstList, secondList) => [...firstList, ...secondList]) ??
-          []
+      ...interventionTasks,
     ];
-    final taskAmount = tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
-    if (taskAmount == 0) {
-      return;
-    }
+    if (tasks.isEmpty) return;
     final now = DateTime.now();
     var id = 0;
     for (final index in List.generate(3, (index) => index)) {
@@ -60,7 +60,9 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
       }
       for (final intervention in study.interventionSet?.interventions ?? <models.Intervention>[]) {
         if (intervention.id == null || intervention.id != study.getInterventionForDate(date)?.id) {
-          id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
+          if (intervention.tasks.isNotEmpty) {
+            id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
+          }
           continue;
         }
         intervention.tasks.map((task) {
