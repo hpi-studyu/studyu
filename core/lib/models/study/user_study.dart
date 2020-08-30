@@ -40,7 +40,11 @@ extension UserStudyExtension on UserStudyBase {
   List<Result> resultsFor(String taskId) => results[taskId];
 
   bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
-      resultsFor(taskId)?.any((result) => result.timeStamp.day == dateTime.day) ?? false;
+      resultsFor(taskId)?.any((result) =>
+          result.timeStamp.year == dateTime.year &&
+          result.timeStamp.month == dateTime.month &&
+          result.timeStamp.day == dateTime.day) ??
+      false;
 
   void addResult(Result result) {
     var nextResults = results;
