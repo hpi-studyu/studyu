@@ -1,11 +1,11 @@
-import 'package:StudyU_Designer/widgets/report/linear_regression_section_editor_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/report_models.dart';
 
-import './average_section_editor_section.dart';
+import 'average_section_editor_section.dart';
+import 'linear_regression_section_editor_section.dart';
 
 class ReportSectionEditor extends StatefulWidget {
   final bool isPrimary;
