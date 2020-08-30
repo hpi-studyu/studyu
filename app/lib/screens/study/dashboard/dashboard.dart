@@ -53,10 +53,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           )
         ],
       ),
-      body: TaskOverview(
-          study: study,
-          scheduleToday: scheduleToday,
-          interventionIcon: study.getInterventionForDate(DateTime.now()).icon),
+      body: study.completedStudy
+          ? StudyFinishedPlaceholder()
+          : TaskOverview(
+              study: study,
+              scheduleToday: scheduleToday,
+              interventionIcon: study.getInterventionForDate(DateTime.now())?.icon),
       bottomSheet: kDebugMode
           ? FlatButton(
               onPressed: () {
@@ -69,5 +71,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
             )
           : null,
     );
+  }
+}
+
+class StudyFinishedPlaceholder extends StatelessWidget {
+  static const space = SizedBox(height: 80);
+
+  @override
+  Widget build(BuildContext context) {
+    const fontSize = 30.0;
+    final textStyle = TextStyle(fontSize: fontSize);
+    final theme = Theme.of(context);
+    return Center(
+        child: Padding(
+      padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(Nof1Localizations.of(context).translate('completed_study'),
+              style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold)),
+          space,
+          OutlineButton.icon(
+              onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
+              icon: Icon(MdiIcons.history, size: fontSize),
+              label: Text(Nof1Localizations.of(context).translate('report_history'), style: textStyle)),
+          space,
+          OutlineButton.icon(
+              onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
+              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
+              label: Text(Nof1Localizations.of(context).translate('study_selection'), style: textStyle)),
+        ],
+      ),
+    ));
   }
 }

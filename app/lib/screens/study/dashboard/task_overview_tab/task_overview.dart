@@ -3,9 +3,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
 
+import '../../../../routes.dart';
 import '../../../../util/localization.dart';
 import '../../../../widgets/intervention_card.dart';
-import '../../report/report_details.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
 
@@ -23,7 +23,8 @@ class TaskOverview extends StatefulWidget {
 class _TaskOverviewState extends State<TaskOverview> {
   void _navigateToReportIfStudyCompleted(BuildContext context) {
     if (widget.study.completedStudy) {
-      Navigator.pushAndRemoveUntil(context, ReportDetailsScreen.routeFor(reportStudy: widget.study), (_) => false);
+      // Workaround to reload dashboard
+      Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     }
   }
 

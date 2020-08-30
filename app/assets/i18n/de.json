@@ -128,5 +128,7 @@
   "report_outcome_neither": "Beide Interventionen scheinen einen negativen Effekt auf das Ereignis zu haben.",
   "report_outcome_one": "Die Intervention {intervention} scheint das Ergebnis zu verbessen.",
 
-  "report_axis_phase": "Phase"
+  "report_axis_phase": "Phase",
+
+  "completed_study": "Du hast deine letzte Studie abgeschlossen. Schaue dir vergangene Ergebnisse an oder starte eine neue Studie."
 }
