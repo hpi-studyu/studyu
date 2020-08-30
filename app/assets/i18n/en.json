@@ -122,5 +122,9 @@
   "performance_overview_interventions": "Interventions",
   "performance_overview_observations": "Observations",
 
+  "report_outcome_inconclusive": "The results are inconclusive. There does not seem to be a statistically significant difference between the interventions.",
+  "report_outcome_neither": "Both interventions seem to have a negative effect on the outcome for you.",
+  "report_outcome_one": "The intervention {intervention} seems to improve the outcome for you.",
+
   "report_axis_phase": "Phase"
 }

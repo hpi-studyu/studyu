@@ -28,6 +28,20 @@ class PlotUtilities {
     return order;
   }
 
+  static String getInterventionA(InterventionSet interventionSet) {
+    final interventions = [
+      ...interventionSet.interventions.where((intervention) => intervention.id != StudyBase.baselineID)
+    ];
+    return interventions[0].id;
+  }
+
+  static String getInterventionB(InterventionSet interventionSet) {
+    final interventions = [
+      ...interventionSet.interventions.where((intervention) => intervention.id != StudyBase.baselineID)
+    ];
+    return interventions[1].id;
+  }
+
   static Map<String, String> getInterventionNames(InterventionSet interventionSet) =>
       {for (var intervention in interventionSet.interventions) intervention.id: intervention.name};
 

@@ -124,5 +124,9 @@
   "performance_overview_interventions": "Maßnahmen",
   "performance_overview_observations": "Messungen",
 
+  "report_outcome_inconclusive": "Die Ergebnisse sind unschlüssig. Es gibt anscheinend keinen statistisch signifikanten Unterschied zwischen den Interventionen.",
+  "report_outcome_neither": "Beide Interventionen scheinen einen negativen Effekt auf das Ereignis zu haben.",
+  "report_outcome_one": "Die Intervention {intervention} scheint das Ergebnis zu verbessen.",
+
   "report_axis_phase": "Phase"
 }

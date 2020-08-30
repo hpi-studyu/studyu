@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/sections/report_sections.dart';
 import 'package:studyou_core/models/study/studies.dart';
 
+import '../../../../util/localization.dart';
 import '../report_section_widget.dart';
 import '../util/plot_utilities.dart';
 
@@ -14,10 +15,28 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
+    final interventionOrder = PlotUtilities.getInterventionPositions(instance.interventionSet);
+    final values = section.resultProperty.retrieveFromResults(instance);
+    final samples = values.entries.map((e) {
+      final intervention = instance.getInterventionForDate(e.key).id;
+      return MapEntry([
+        instance.getDayOfStudyFor(e.key), //time
+        interventionOrder[intervention] == 1 ? 1 : 0, //A
+        interventionOrder[intervention] == 2 ? 1 : 0, //B
+      ], e.value);
+    });
+
+    final regression = LinearRegression(samples);
+    final coefficients = regression.getEstimatedCoefficients();
+    final pValues = regression.getPValues();
+    final confidenceIntervals = regression.getConfidenceIntervals(section.alpha);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AspectRatio(aspectRatio: 1.5, child: getDiagram(context)),
+        AspectRatio(aspectRatio: 1.5, child: _buildDiagram(context, coefficients, confidenceIntervals)),
+        _buildResultDescription(context, coefficients, pValues),
       ],
     );
   }
@@ -25,46 +44,52 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
   charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) =>
       charts.NumericExtents(instance.schedule.includeBaseline ? 0 : 1, 2);
 
-  Widget getDiagram(BuildContext context) {
+  Widget _buildDiagram(BuildContext context, LinearRegressionResult<num> coefficients,
+      LinearRegressionResult<Range<num>> confidenceIntervals) {
     final numberOfPhases = instance.interventionOrder.length;
     final phaseDuration = instance.schedule.phaseDuration;
     return charts.NumericComboChart(
-      getBarData(),
+      _getChartData(coefficients, confidenceIntervals),
       animate: true,
       behaviors: [
         charts.SeriesLegend(desiredMaxColumns: 2),
+        charts.RangeAnnotation(
+            [PlotUtilities.createSeparator(coefficients.intercept, axis: charts.RangeAnnotationAxisType.measure)]),
       ],
       domainAxis: charts.NumericAxisSpec(
         viewport: getExtents(numberOfPhases, phaseDuration),
         tickProviderSpec: charts.StaticNumericTickProviderSpec(const []),
       ),
-      defaultRenderer: charts.BarRendererConfig<num>(groupingType: charts.BarGroupingType.stacked),
+      defaultRenderer: charts.BarRendererConfig<num>(
+        groupingType: charts.BarGroupingType.stacked,
+        barRendererDecorator: charts.BarErrorDecorator<num>(),
+      ),
     );
   }
 
-  List<charts.Series<_ResultDatum, num>> getBarData() {
+  List<charts.Series<_ResultDatum, num>> _getChartData(
+      LinearRegressionResult<num> coefficients, LinearRegressionResult<Range<num>> confidenceIntervals) {
     final colorPalette = PlotUtilities.getInterventionPalette(instance.interventionSet);
     final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
     final interventionOrder = PlotUtilities.getInterventionPositions(instance.interventionSet);
-    final values = section.resultProperty.retrieveFromResults(instance);
-    final samples = values.entries
-        .map((e) => _SampleDatum(instance.getDayOfStudyFor(e.key), e.value, instance.getInterventionForDate(e.key).id))
-        .map((e) => MapEntry([
-              e.day, //time
-              interventionOrder[e.intervention] == 1 ? 1 : 0, //A
-              interventionOrder[e.intervention] == 2 ? 1 : 0, //B
-            ], e.value));
 
-    final regression = LinearRegression(samples);
-    final coefficients = regression.getEstimatedCoefficients();
+    final intercept = coefficients.intercept;
     final factorA = coefficients.variables[1];
     final factorB = coefficients.variables[2];
-    final interventionA = interventionOrder.entries.firstWhere((element) => element.value == 1).key;
-    final interventionB = interventionOrder.entries.firstWhere((element) => element.value == 2).key;
+    final interventionA = PlotUtilities.getInterventionA(instance.interventionSet);
+    final interventionB = PlotUtilities.getInterventionB(instance.interventionSet);
+
+    final ciIntercept = confidenceIntervals.intercept;
+    final ciA = confidenceIntervals.variables[1];
+    final ciB = confidenceIntervals.variables[2];
 
     return {
-      interventionA: factorA,
-      interventionB: factorB,
+      if (instance.schedule.includeBaseline)
+        StudyBase.baselineID: _ResultDatum(interventionOrder[StudyBase.baselineID], intercept, ciIntercept),
+      interventionA: _ResultDatum(
+          interventionOrder[interventionA], intercept + factorA, Range(intercept + ciA.min, intercept + ciA.max)),
+      interventionB: _ResultDatum(
+          interventionOrder[interventionB], intercept + factorB, Range(intercept + ciB.min, intercept + ciB.max)),
     }
         .entries
         .map((entry) => charts.Series<_ResultDatum, num>(
@@ -73,9 +98,45 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
               seriesColor: colorPalette[entry.key],
               domainFn: (datum, _) => datum.pos,
               measureFn: (datum, _) => datum.value,
-              data: [_ResultDatum(interventionOrder[entry.key], entry.value, entry.key)],
+              measureLowerBoundFn: (datum, _) => datum.confidenceInterval.min,
+              measureUpperBoundFn: (datum, _) => datum.confidenceInterval.max,
+              data: [entry.value],
             ))
         .toList();
+  }
+
+  Widget _buildResultDescription(
+      BuildContext context, LinearRegressionResult<num> coefficients, LinearRegressionResult<num> pValues) {
+    final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
+
+    final intercept = coefficients.intercept;
+    final factorA = coefficients.variables[1];
+    final factorB = coefficients.variables[2];
+    final interventionA = PlotUtilities.getInterventionA(instance.interventionSet);
+    final interventionB = PlotUtilities.getInterventionB(instance.interventionSet);
+
+    final pIntercept = pValues.intercept;
+    final pA = pValues.variables[1];
+    final pB = pValues.variables[2];
+
+    String text;
+    if (pA > section.alpha || pB > section.alpha || pIntercept > section.alpha) {
+      text = Nof1Localizations.of(context).translate('report_outcome_inconclusive');
+    }
+    if (instance.schedule.includeBaseline && factorA < 0 && factorB < 0) {
+      text = Nof1Localizations.of(context).translate('report_outcome_neither');
+    }
+    if (factorA > factorB) {
+      text = Nof1Localizations.of(context)
+          .translate('report_outcome_one')
+          .replaceAll('{intervention}', interventionNames[interventionA]);
+    } else {
+      text = Nof1Localizations.of(context)
+          .translate('report_outcome_one')
+          .replaceAll('{intervention}', interventionNames[interventionB]);
+    }
+
+    return Text(text);
   }
 }
 
@@ -90,7 +151,7 @@ class _SampleDatum {
 class _ResultDatum {
   final num pos;
   final num value;
-  final String intervention;
+  final Range<num> confidenceInterval;
 
-  _ResultDatum(this.pos, this.value, this.intervention);
+  _ResultDatum(this.pos, this.value, this.confidenceInterval);
 }
