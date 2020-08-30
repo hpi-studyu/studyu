@@ -1,3 +1,4 @@
+import 'package:StudyU/screens/study/report/report_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -38,10 +39,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
-    final studyInstance = await StudyQueries.getUserStudy(selectedStudyObjectId);
-    if (studyInstance != null) {
-      model.activeStudy = studyInstance;
-      notificationInit.then((value) => scheduleStudyNotifications(context));
+
+    final userStudy = await StudyQueries.getUserStudy(selectedStudyObjectId);
+    if (userStudy != null) {
+      model.activeStudy = userStudy;
+      if (userStudy.completedStudy) {
+        Navigator.pushReplacement(context, ReportDetailsScreen.routeFor(reportStudy: userStudy));
+      } else {
+        notificationInit.then((value) => scheduleStudyNotifications(context));
+      }
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);

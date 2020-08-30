@@ -9,8 +9,9 @@ import '../../tasks/task_screen.dart';
 class TaskBox extends StatefulWidget {
   final Task task;
   final Icon icon;
+  final Function() onCompleted;
 
-  const TaskBox({@required this.task, this.icon});
+  const TaskBox({@required this.task, @required this.icon, @required this.onCompleted});
 
   @override
   State<TaskBox> createState() => _TaskBoxState();
@@ -22,6 +23,7 @@ class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     final completed =
         await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => TaskScreen(task: widget.task)));
+    widget.onCompleted();
     setState(() {
       _isCompleted = completed;
     });

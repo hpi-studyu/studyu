@@ -5,6 +5,7 @@ import 'package:studyou_core/models/models.dart';
 
 import '../../../../util/localization.dart';
 import '../../../../widgets/intervention_card.dart';
+import '../../report/report_details.dart';
 import 'progress_row.dart';
 import 'task_box.dart';
 
@@ -20,6 +21,12 @@ class TaskOverview extends StatefulWidget {
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
+  void _navigateToReportIfStudyCompleted(BuildContext context) {
+    if (widget.study.completedStudy) {
+      Navigator.pushAndRemoveUntil(context, ReportDetailsScreen.routeFor(reportStudy: widget.study), (_) => false);
+    }
+  }
+
   List<Widget> buildScheduleToday(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -38,6 +45,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               ),
               ...widget.scheduleToday[time].map((task) => TaskBox(
                   task: task,
+                  onCompleted: () => _navigateToReportIfStudyCompleted(context),
                   icon: Icon(task is Observation
                       ? MdiIcons.orderBoolAscendingVariant
                       : MdiIcons.fromString(widget.interventionIcon))))

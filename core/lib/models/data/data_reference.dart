@@ -24,8 +24,7 @@ class DataReference<T> {
         studyInstance.interventionSet.interventions.firstWhere((task) => task.id == this.task, orElse: null);
     if (sourceTask == null) throw new ArgumentError('Could not find a task with the id \'${this.task}\'.');
 
-    List<Result> sourceResults = studyInstance.resultsFor(this.task);
-    if (sourceResults == null) sourceResults = [];
+    List<Result> sourceResults = studyInstance.resultsFor(this.task) ?? [];
 
     return sourceTask.extractPropertyResults<T>(this.property, sourceResults);
   }
