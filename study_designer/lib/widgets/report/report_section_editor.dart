@@ -1,8 +1,9 @@
+import 'package:StudyU_Designer/widgets/report/linear_regression_section_editor_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/report/report_section.dart';
+import 'package:studyou_core/models/report/report_models.dart';
 
 import './average_section_editor_section.dart';
 
@@ -10,8 +11,10 @@ class ReportSectionEditor extends StatefulWidget {
   final bool isPrimary;
   final ReportSection section;
   final void Function() remove;
+  final void Function(ReportSection) updateSection;
 
-  const ReportSectionEditor({@required this.section, @required this.isPrimary, @required this.remove, Key key})
+  const ReportSectionEditor(
+      {@required this.section, @required this.isPrimary, @required this.remove, @required this.updateSection, Key key})
       : super(key: key);
 
   @override
@@ -20,6 +23,22 @@ class ReportSectionEditor extends StatefulWidget {
 
 class _ReportSectionEditorState extends State<ReportSectionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
+
+  void _changeSectionType(String newType) {
+    ReportSection newSection;
+
+    if (newType == LinearRegressionSection.sectionType) {
+      newSection = LinearRegressionSection.designerDefault();
+    } else {
+      newSection = AverageSection.designerDefault();
+    }
+
+    newSection
+      ..title = widget.section.title
+      ..description = widget.section.description;
+
+    widget.updateSection(newSection);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +49,23 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                title: Text(
-                    '${widget.isPrimary ? '[Primary]' : ''} ${widget.section.type[0].toUpperCase()}${widget.section.type.substring(1)} Section'),
+                leading: widget.isPrimary ? Text('[Primary]') : null,
+                title: Row(
+                  children: [
+                    DropdownButton<String>(
+                      value: widget.section.type,
+                      onChanged: _changeSectionType,
+                      items: [AverageSection.sectionType, LinearRegressionSection.sectionType]
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
+                        );
+                      }).toList(),
+                    ),
+                    Text('Section')
+                  ],
+                ),
                 trailing: FlatButton(onPressed: widget.remove, child: const Text('Delete'))),
             Padding(
               padding: const EdgeInsets.all(8),
@@ -72,6 +106,10 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
     switch (widget.section.runtimeType) {
       case AverageSection:
         return AverageSectionEditorSection(
+          section: widget.section,
+        );
+      case LinearRegressionSection:
+        return LinearRegressionSectionEditorSection(
           section: widget.section,
         );
       default:
