@@ -15,7 +15,6 @@ LinearRegressionSection _$LinearRegressionSectionFromJson(
     ..description = json['description'] as String
     ..resultProperty =
         DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
-    ..compareAB = json['compareAB'] as bool
     ..alpha = (json['alpha'] as num).toDouble()
     ..improvement =
         _$enumDecode(_$ImprovementDirectionEnumMap, json['improvement']);
@@ -29,7 +28,6 @@ Map<String, dynamic> _$LinearRegressionSectionToJson(
       'title': instance.title,
       'description': instance.description,
       'resultProperty': instance.resultProperty.toJson(),
-      'compareAB': instance.compareAB,
       'alpha': instance.alpha,
       'improvement': _$ImprovementDirectionEnumMap[instance.improvement],
     };

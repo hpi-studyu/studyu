@@ -10,7 +10,7 @@ class LinearRegressionSection extends ReportSection {
   static const String sectionType = 'linearRegression';
 
   DataReference<num> resultProperty;
-  bool compareAB;
+  //TODO: Add model type enum, e.g. compare A vs B, compare A vs 0 and B, compare 0 vs A and B
   double alpha;
   ImprovementDirection improvement;
 
