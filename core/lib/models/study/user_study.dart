@@ -108,6 +108,12 @@ extension UserStudyExtension on UserStudyBase {
         .firstWhere((intervention) => intervention.id == interventionId, orElse: () => null);
   }
 
+  List<Intervention> getInterventionsInOrder() {
+    return interventionOrder
+        .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))
+        .toList();
+  }
+
   int completedTasksFor(Task task) {
     return resultsFor(task.id)?.length ?? 0;
   }
@@ -120,12 +126,6 @@ extension UserStudyExtension on UserStudyBase {
     }
 
     return daysCount * task.schedule.length;
-  }
-
-  List<Intervention> getInterventionsInOrder() {
-    return interventionOrder
-        .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))
-        .toList();
   }
 
   Multimap<Time, Task> scheduleFor(DateTime dateTime) {
