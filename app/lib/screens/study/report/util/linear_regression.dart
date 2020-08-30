@@ -1,6 +1,6 @@
-import 'package:dart_numerics/dart_numerics.dart';
 import 'package:extended_math/extended_math.dart';
 import 'package:grizzly_distuv/grizzly_distuv.dart';
+import 'package:grizzly_distuv/math.dart';
 
 class Range<T> {
   final T min;
@@ -73,7 +73,7 @@ class LinearRegression {
     final df = _coefficientDistribution.df;
     final halfDf = df / 2;
     final x = df / (t * t + df);
-    return 1 - (0.5 * betaRegularized(halfDf, 0.5, x));
+    return 1 - (0.5 * ibetaReg(halfDf, 0.5, x));
   }
 
   Vector _getPValues({Vector mu0}) {

@@ -24,7 +24,6 @@ dependencies:
       path: charts_flutter
   chewie:
   cupertino_icons:
-  dart_numerics:
   ext_storage:
   extended_math:
   grizzly_distuv:
