@@ -74,15 +74,3 @@ class _TaskOverviewState extends State<TaskOverview> {
     );
   }
 }
-
-class TaskOverviewModel extends ChangeNotifier {
-  DateTime _selectedDate = DateTime.now();
-
-  DateTime get selectedDate => _selectedDate;
-  DateTime get currentDate => DateTime.now();
-
-  void setDate(DateTime date) {
-    _selectedDate = date;
-    notifyListeners();
-  }
-}

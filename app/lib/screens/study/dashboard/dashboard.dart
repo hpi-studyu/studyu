@@ -53,13 +53,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           )
         ],
       ),
-      body: ChangeNotifierProvider(
-        create: (context) => TaskOverviewModel(),
-        child: TaskOverview(
-            study: study,
-            scheduleToday: scheduleToday,
-            interventionIcon: study.getInterventionForDate(DateTime.now()).icon),
-      ),
+      body: TaskOverview(
+          study: study,
+          scheduleToday: scheduleToday,
+          interventionIcon: study.getInterventionForDate(DateTime.now()).icon),
       bottomSheet: kDebugMode
           ? FlatButton(
               onPressed: () {
