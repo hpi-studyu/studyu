@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class FixedScheduleEditor extends StatefulWidget {
   final FixedSchedule schedule;
@@ -46,7 +47,7 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
               Expanded(
                 child: FlatButton(
                   onPressed: widget.remove,
-                  child: const Text(Nof1Localizations.of(context).translate('delete')),
+                  child: Text(Nof1Localizations.of(context).translate('delete')),
                 ),
               )
             ],

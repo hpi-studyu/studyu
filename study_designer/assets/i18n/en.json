@@ -15,7 +15,11 @@
   "description": "Description",
   "choose_icon": "Choose Icon",
   "name": "Name",
-
+  "draft_studies": "Draft studies",
+  "published_studies": "Published studies",
+  "deleted": "deleted",
+  "export_csv": "Export CSV",
+  "delete_draft_study": "Delete draft study?",
   "add_consent_item": "Add Consent Item",
   "consent_item": "Consent Item",
   "add_criterion": "Add Criterion",
