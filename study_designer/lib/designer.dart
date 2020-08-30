@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import './designer/eligibility_designer.dart';
 import './designer/results_designer.dart';
@@ -117,7 +118,7 @@ class _DesignerState extends State<Designer> {
       value: _designerState,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Create New Study'),
+          title: Text(Nof1Localizations.of(context).translate('create_new_study')),
         ),
         body: Row(children: [
           NavigationRail(
