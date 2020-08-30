@@ -114,11 +114,7 @@ extension UserStudyExtension on UserStudyBase {
 
   // TODO: Add index to support same task multiple times per day
   bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
-      resultsFor(taskId)?.any((result) =>
-          result.timeStamp.year == dateTime.year &&
-          result.timeStamp.month == dateTime.month &&
-          result.timeStamp.day == dateTime.day) ??
-      false;
+      resultsFor(taskId)?.any((result) => result.timeStamp.isSameDate(dateTime)) ?? false;
 
   int completedTasksFor(Task task) {
     return resultsFor(task.id)?.length ?? 0;
