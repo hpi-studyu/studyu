@@ -1,9 +1,9 @@
+import 'package:StudyU/screens/study/report/util/linear_regression.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/sections/report_sections.dart';
 import 'package:studyou_core/models/study/studies.dart';
 
-import '../../../../util/data_processing.dart';
 import '../report_section_widget.dart';
 import '../util/plot_utilities.dart';
 
@@ -42,50 +42,55 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     );
   }
 
-  Iterable<_DiagramDatum> getAggregatedData() {
-    final values = section.resultProperty.retrieveFromResults(instance);
-    final data = values.entries.map((e) => _DiagramDatum(
-          instance.getDayOfStudyFor(e.key),
-          e.value,
-          e.key,
-          instance.getInterventionForDate(e.key).id,
-        ));
-
-    final order = PlotUtilities.getInterventionPositions(instance.interventionSet);
-    return data
-        .groupBy((e) => e.intervention)
-        .aggregateWithKey((data, intervention) => _DiagramDatum(
-              order[intervention],
-              FoldAggregators.mean()(data.map((e) => e.value)),
-              null,
-              intervention,
-            ))
-        .map((e) => e.value);
-  }
-
-  List<charts.Series<_DiagramDatum, num>> getBarData() {
+  List<charts.Series<_ResultDatum, num>> getBarData() {
     final colorPalette = PlotUtilities.getInterventionPalette(instance.interventionSet);
     final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
+    final interventionOrder = PlotUtilities.getInterventionPositions(instance.interventionSet);
+    final values = section.resultProperty.retrieveFromResults(instance);
+    final samples = values.entries
+        .map((e) => _SampleDatum(instance.getDayOfStudyFor(e.key), e.value, instance.getInterventionForDate(e.key).id))
+        .map((e) => MapEntry([
+              e.day, //time
+              interventionOrder[e.intervention] == 1 ? 1 : 0, //A
+              interventionOrder[e.intervention] == 2 ? 1 : 0, //B
+            ], e.value));
 
-    return getAggregatedData()
-        .groupBy((datum) => datum.intervention)
-        .map((entry) => charts.Series<_DiagramDatum, num>(
+    final regression = LinearRegression(samples);
+    final coefficients = regression.getEstimatedCoefficients();
+    final factorA = coefficients.variables[1];
+    final factorB = coefficients.variables[2];
+    final interventionA = interventionOrder.entries.firstWhere((element) => element.value == 1).key;
+    final interventionB = interventionOrder.entries.firstWhere((element) => element.value == 2).key;
+
+    return {
+      interventionA: factorA,
+      interventionB: factorB,
+    }
+        .entries
+        .map((entry) => charts.Series<_ResultDatum, num>(
               id: entry.key,
               displayName: interventionNames[entry.key],
               seriesColor: colorPalette[entry.key],
-              domainFn: (datum, _) => datum.x,
+              domainFn: (datum, _) => datum.pos,
               measureFn: (datum, _) => datum.value,
-              data: entry.value.toList(),
+              data: [_ResultDatum(interventionOrder[entry.key], entry.value, entry.key)],
             ))
         .toList();
   }
 }
 
-class _DiagramDatum {
-  final num x;
+class _SampleDatum {
+  final num day;
   final num value;
-  final DateTime timestamp;
   final String intervention;
 
-  _DiagramDatum(this.x, this.value, this.timestamp, this.intervention);
+  _SampleDatum(this.day, this.value, this.intervention);
+}
+
+class _ResultDatum {
+  final num pos;
+  final num value;
+  final String intervention;
+
+  _ResultDatum(this.pos, this.value, this.intervention);
 }
