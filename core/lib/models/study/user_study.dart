@@ -129,9 +129,6 @@ extension UserStudyExtension on UserStudyBase {
   bool get minimumStudyLengthCompleted => DateTime.now().differenceInDays(startDate).inDays >= totalDaysCount;
 
   bool get completedStudy {
-    print(minimumStudyLengthCompleted);
-    print(totalDaysCount);
-    print(DateTime.now().differenceInDays(startDate).inDays);
     return minimumStudyLengthCompleted && allTasksCompletedFor(DateTime.now());
   }
 
