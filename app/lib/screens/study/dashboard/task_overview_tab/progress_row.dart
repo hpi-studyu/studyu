@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intersperse/intersperse.dart';
@@ -48,6 +50,7 @@ class _ProgressRowState extends State<ProgressRow> {
                       intervention: entry.value,
                       isCurrent: currentPhase == entry.key,
                       isFuture: currentPhase < entry.key,
+                      phaseDuration: widget.study.schedule.phaseDuration,
                       percentCompleted: widget.study.percentCompletedForPhase(entry.key),
                       percentMissed: widget.study.percentMissedForPhase(entry.key, DateTime.now()),
                     );
@@ -68,6 +71,7 @@ class InterventionSegment extends StatelessWidget {
   final double percentMissed;
   final bool isCurrent;
   final bool isFuture;
+  final int phaseDuration;
 
   const InterventionSegment(
       {@required this.intervention,
@@ -75,8 +79,34 @@ class InterventionSegment extends StatelessWidget {
       @required this.percentMissed,
       @required this.isCurrent,
       @required this.isFuture,
+      @required this.phaseDuration,
       Key key})
       : super(key: key);
+
+  List<Widget> buildSeparators(int nbSeparators) {
+    final sep = <Widget>[];
+    for (var i = 0; i < nbSeparators; i++) {
+      sep.add(
+        Transform.rotate(
+          angle: i * 1 / nbSeparators * 2 * pi,
+          child: SizedBox(
+            width: 2,
+            height: 40,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: 8,
+                  height: 10,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    return sep;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +124,9 @@ class InterventionSegment extends StatelessWidget {
         CircularProgressIndicator(
           value: percentCompleted,
           valueColor: AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+        ),
+        Stack(
+          children: buildSeparators(phaseDuration),
         ),
         RawMaterialButton(
             onPressed: () {
