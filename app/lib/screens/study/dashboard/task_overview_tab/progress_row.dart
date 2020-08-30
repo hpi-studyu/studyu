@@ -29,6 +29,8 @@ class _ProgressRowState extends State<ProgressRow> {
       ),
     );
 
+    final currentPhase = widget.study.getInterventionIndexForDate(DateTime.now());
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Stack(
@@ -42,11 +44,12 @@ class _ProgressRowState extends State<ProgressRow> {
               ...intersperse(
                   divider,
                   widget.study.getInterventionsInOrder().asMap().entries.map((entry) {
-                    final currentInterventionIndex = widget.study.getInterventionIndexForDate(DateTime.now());
                     return InterventionSegment(
-                        intervention: entry.value,
-                        isCurrent: currentInterventionIndex == entry.key,
-                        isFuture: currentInterventionIndex < entry.key);
+                      intervention: entry.value,
+                      isCurrent: currentPhase == entry.key,
+                      percentCompleted: widget.study.percentCompletedForPhase(entry.key),
+                      percentMissed: widget.study.percentMissedForPhase(entry.key, DateTime.now()),
+                    );
                   })),
               SizedBox(width: 8),
               Icon(MdiIcons.flagCheckered, size: 30),
@@ -60,17 +63,33 @@ class _ProgressRowState extends State<ProgressRow> {
 
 class InterventionSegment extends StatelessWidget {
   final Intervention intervention;
+  final double percentCompleted;
+  final double percentMissed;
   final bool isCurrent;
-  final bool isFuture;
 
-  const InterventionSegment({@required this.intervention, this.isCurrent, this.isFuture, Key key}) : super(key: key);
+  const InterventionSegment(
+      {@required this.intervention,
+      @required this.percentCompleted,
+      @required this.percentMissed,
+      @required this.isCurrent,
+      Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Expanded(
-        child: Column(
+        child: Stack(
+      alignment: Alignment.center,
       children: [
+        CircularProgressIndicator(
+          value: percentMissed + percentCompleted,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+        ),
+        CircularProgressIndicator(
+          value: percentCompleted,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.lightGreen),
+        ),
         RawMaterialButton(
             onPressed: () {
               showDialog(
@@ -81,8 +100,8 @@ class InterventionSegment extends StatelessWidget {
                       ));
             },
             elevation: 0,
-            fillColor: isCurrent || !isFuture ? theme.accentColor : theme.primaryColor,
-            shape: CircleBorder(),
+            fillColor: isCurrent ? theme.accentColor : theme.primaryColor,
+            shape: CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
             child: interventionIcon(intervention)),
       ],
     ));
