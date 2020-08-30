@@ -124,13 +124,12 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     final pB = pValues.variables[2];
 
     String text;
+    //TODO: Talk to a statistics guy about this evaluation logic and model design
     if (pA > section.alpha || pB > section.alpha || pIntercept > section.alpha) {
       text = Nof1Localizations.of(context).translate('report_outcome_inconclusive');
-    }
-    if (instance.schedule.includeBaseline && factorA < 0 && factorB < 0) {
+    } else if (instance.schedule.includeBaseline && factorA < 0 && factorB < 0) {
       text = Nof1Localizations.of(context).translate('report_outcome_neither');
-    }
-    if (factorA > factorB) {
+    } else if (factorA > factorB) {
       text = Nof1Localizations.of(context)
           .translate('report_outcome_one')
           .replaceAll('{intervention}', interventionNames[interventionA]);
