@@ -21,6 +21,8 @@ dependencies:
   chewie:
   cupertino_icons:
   ext_storage:
+  extended_math:
+  grizzly_distuv:
   intersperse:
   intl:
   json_annotation:

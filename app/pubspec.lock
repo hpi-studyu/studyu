@@ -274,6 +274,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  extended_math:
+    dependency: "direct main"
+    description:
+      name: extended_math
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.29+1"
   fake_async:
     dependency: transitive
     description:
@@ -350,6 +357,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  grizzly_distuv:
+    dependency: "direct main"
+    description:
+      name: grizzly_distuv
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   html:
     dependency: transitive
     description:
