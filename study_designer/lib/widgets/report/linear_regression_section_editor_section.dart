@@ -29,7 +29,7 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
 
     return Column(children: [
       Row(children: [
-        Text('Temporal Aggregation:'),
+        Text('Improvement Direction:'),
         SizedBox(width: 10),
         DropdownButton<ImprovementDirection>(
           value: widget.section.improvement,
