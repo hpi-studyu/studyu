@@ -130,6 +130,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     } else if (instance.schedule.includeBaseline && factorA < 0 && factorB < 0) {
       text = Nof1Localizations.of(context).translate('report_outcome_neither');
     } else if (factorA > factorB) {
+      //TODO: This if else might be problematic if a baseline is present and A and B are an improvement over it
       text = Nof1Localizations.of(context)
           .translate('report_outcome_one')
           .replaceAll('{intervention}', interventionNames[interventionA]);
