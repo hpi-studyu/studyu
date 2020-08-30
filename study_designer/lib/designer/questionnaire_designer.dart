@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/question/questionnaire_editor.dart';
@@ -34,7 +35,7 @@ class _QuestionnaireDesignerState extends State<QuestionnaireDesigner> {
                       questionnaire: questionnaire,
                       questionTypes: [BooleanQuestion.questionType, ChoiceQuestion.questionType]),
                 ))),
-        DesignerAddButton(label: Text('Add Question'), add: _addQuestion),
+        DesignerAddButton(label: Text(Nof1Localizations.of(context).translate('add_question')), add: _addQuestion),
       ],
     );
   }

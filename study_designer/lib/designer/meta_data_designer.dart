@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../models/designer_state.dart';
 
@@ -51,18 +52,18 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                       onChanged: _saveFormChanges,
                       name: 'title',
                       maxLength: 40,
-                      decoration: InputDecoration(labelText: 'Title'),
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
                       initialValue: _draftStudy.title),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'description',
-                      decoration: InputDecoration(labelText: 'Description'),
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('description')),
                       initialValue: _draftStudy.description),
                   Row(children: [
                     Expanded(
                       child: FlatButton(
                         onPressed: _pickIcon,
-                        child: Text('Choose Icon'),
+                        child: Text(Nof1Localizations.of(context).translate('choose_icon')),
                       ),
                     ),
                     if (MdiIcons.fromString(_draftStudy.iconName) != null)

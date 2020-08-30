@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/study_results/results/intervention_result.dart';
 import 'package:studyou_core/models/study_results/results/numeric_result.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/study_result/study_result_editor.dart';
@@ -66,7 +67,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
             ),
           ),
         ),
-        DesignerAddButton(label: Text('Add Result'), add: _addResult),
+        DesignerAddButton(label: Text(Nof1Localizations.of(context).translate('add_result')), add: _addResult),
       ],
     );
   }

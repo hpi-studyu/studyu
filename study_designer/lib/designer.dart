@@ -134,52 +134,52 @@ class _DesignerState extends State<Designer> {
               NavigationRailDestination(
                 icon: Icon(Icons.favorite_border),
                 selectedIcon: Icon(Icons.favorite),
-                label: Text('Meta Data'),
+                label: Text(Nof1Localizations.of(context).translate('meta_data')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.accessibility_new),
                 selectedIcon: Icon(Icons.accessibility_new),
-                label: Text('Interventions'),
+                label: Text(Nof1Localizations.of(context).translate('interventions')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.question_answer),
                 selectedIcon: Icon(Icons.question_answer),
-                label: Text('Questionnaire'),
+                label: Text(Nof1Localizations.of(context).translate('questionnaire')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.verified_user),
                 selectedIcon: Icon(Icons.verified_user),
-                label: Text('Eligibility'),
+                label: Text(Nof1Localizations.of(context).translate('eligibility')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.zoom_in),
                 selectedIcon: Icon(Icons.zoom_in),
-                label: Text('Observations'),
+                label: Text(Nof1Localizations.of(context).translate('observations')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.schedule),
                 selectedIcon: Icon(Icons.schedule),
-                label: Text('Schedule'),
+                label: Text(Nof1Localizations.of(context).translate('schedule')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.content_paste),
                 selectedIcon: Icon(Icons.content_paste),
-                label: Text('Report'),
+                label: Text(Nof1Localizations.of(context).translate('report')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.assignment_turned_in),
                 selectedIcon: Icon(Icons.assignment_turned_in),
-                label: Text('Results'),
+                label: Text(Nof1Localizations.of(context).translate('results')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.warning),
                 selectedIcon: Icon(Icons.warning),
-                label: Text('Consent'),
+                label: Text(Nof1Localizations.of(context).translate('consent')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.publish),
                 selectedIcon: Icon(Icons.publish),
-                label: Text('Save'),
+                label: Text(Nof1Localizations.of(context).translate('save')),
               )
             ],
           ),

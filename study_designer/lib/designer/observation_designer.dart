@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/task/task_editor.dart';
@@ -44,7 +45,7 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
             ),
           ),
         ),
-        DesignerAddButton(label: Text('Add Observation'), add: _addObservation)
+        DesignerAddButton(label: Text(Nof1Localizations.of(context).translate('add_observation')), add: _addObservation)
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/report/report_models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/report/report_section_editor.dart';
@@ -82,7 +83,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
             ),
           ),
         ),
-        DesignerAddButton(label: Text('Add Section'), add: _addSection)
+        DesignerAddButton(label: Text(Nof1Localizations.of(context).translate('add_section')), add: _addSection)
       ],
     );
   }
