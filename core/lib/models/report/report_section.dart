@@ -6,6 +6,7 @@ typedef SectionParser = ReportSection Function(Map<String, dynamic> data);
 abstract class ReportSection {
   static Map<String, SectionParser> sectionTypes = {
     AverageSection.sectionType: (json) => AverageSection.fromJson(json),
+    LinearRegressionSection.sectionType: (json) => LinearRegressionSection.fromJson(json),
   };
   static const String keyType = 'type';
   String type;
