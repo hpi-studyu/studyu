@@ -47,6 +47,7 @@ class _ProgressRowState extends State<ProgressRow> {
                     return InterventionSegment(
                       intervention: entry.value,
                       isCurrent: currentPhase == entry.key,
+                      isFuture: currentPhase < entry.key,
                       percentCompleted: widget.study.percentCompletedForPhase(entry.key),
                       percentMissed: widget.study.percentMissedForPhase(entry.key, DateTime.now()),
                     );
@@ -66,18 +67,22 @@ class InterventionSegment extends StatelessWidget {
   final double percentCompleted;
   final double percentMissed;
   final bool isCurrent;
+  final bool isFuture;
 
   const InterventionSegment(
       {@required this.intervention,
       @required this.percentCompleted,
       @required this.percentMissed,
       @required this.isCurrent,
+      @required this.isFuture,
       Key key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final color = isFuture ? Colors.grey : (isCurrent ? theme.accentColor : theme.primaryColor);
+
     return Expanded(
         child: Stack(
       alignment: Alignment.center,
@@ -100,7 +105,7 @@ class InterventionSegment extends StatelessWidget {
                       ));
             },
             elevation: 0,
-            fillColor: isCurrent ? theme.accentColor : theme.primaryColor,
+            fillColor: color,
             shape: CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
             child: interventionIcon(intervention)),
       ],
