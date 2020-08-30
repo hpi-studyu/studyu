@@ -37,7 +37,7 @@ extension UserStudyExtension on UserStudyBase {
       ..reportSpecification = reportSpecification;
   }
 
-  int get totalDaysCount => schedule.numberOfCycles * schedule.phaseDuration;
+  int get daysPerIntervention => schedule.numberOfCycles * schedule.phaseDuration;
 
   void addResult(Result result) {
     var nextResults = results;
@@ -126,14 +126,15 @@ extension UserStudyExtension on UserStudyBase {
 
   // Currently the end of the study, as there is no real minimum, just a set study length
   //TODO: Check if correctly finishes study
-  bool get minimumStudyLengthCompleted => DateTime.now().differenceInDays(startDate).inDays >= totalDaysCount;
+  bool get minimumStudyLengthCompleted =>
+      DateTime.now().differenceInDays(startDate).inDays >= daysPerIntervention * StudySchedule.numberOfPhases;
 
   bool get completedStudy {
     return minimumStudyLengthCompleted && allTasksCompletedFor(DateTime.now());
   }
 
   int totalTaskCountFor(Task task) {
-    var daysCount = totalDaysCount;
+    var daysCount = daysPerIntervention;
 
     if (task is Observation) {
       daysCount = 2 * daysCount + (schedule.includeBaseline ? schedule.phaseDuration : 0);
