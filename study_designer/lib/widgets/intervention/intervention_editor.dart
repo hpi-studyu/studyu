@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/interventions/intervention.dart';
 import 'package:studyou_core/models/interventions/interventions.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../task/task_editor.dart';
 
@@ -53,8 +54,9 @@ class _InterventionEditorState extends State<InterventionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                title: Text('Intervention'),
-                trailing: FlatButton(onPressed: widget.remove, child: const Text('Delete'))),
+                title: Text(Nof1Localizations.of(context).translate('intervention')),
+                trailing: FlatButton(
+                    onPressed: widget.remove, child: Text(Nof1Localizations.of(context).translate('delete')))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -70,13 +72,13 @@ class _InterventionEditorState extends State<InterventionEditor> {
                             },
                             name: 'name',
                             maxLength: 40,
-                            decoration: InputDecoration(labelText: 'Name'),
+                            decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('name')),
                             initialValue: widget.intervention.name),
                         Row(children: [
                           Expanded(
                             child: FlatButton(
                               onPressed: _pickIcon,
-                              child: Text('Choose Icon'),
+                              child: Text(Nof1Localizations.of(context).translate('choose_icon')),
                             ),
                           ),
                           if (MdiIcons.fromString(widget.intervention.icon) != null)
@@ -87,7 +89,8 @@ class _InterventionEditorState extends State<InterventionEditor> {
                               saveFormChanges();
                             },
                             name: 'description',
-                            decoration: InputDecoration(labelText: 'Description'),
+                            decoration:
+                                InputDecoration(labelText: Nof1Localizations.of(context).translate('description')),
                             initialValue: widget.intervention.description),
                       ],
                     )),
@@ -100,7 +103,10 @@ class _InterventionEditorState extends State<InterventionEditor> {
                           key: UniqueKey(), task: widget.intervention.tasks[index], remove: () => _removeTask(index));
                     }),
                 RaisedButton.icon(
-                    onPressed: _addCheckMarkTask, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Task')),
+                    onPressed: _addCheckMarkTask,
+                    icon: Icon(Icons.add),
+                    color: Colors.green,
+                    label: Text(Nof1Localizations.of(context).translate('add_task'))),
               ]),
             ),
           ]),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class ChoiceEditor extends StatefulWidget {
   final Choice choice;
@@ -27,7 +28,7 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
             children: <Widget>[
               FlatButton(
                 onPressed: widget.remove,
-                child: const Text('Delete'),
+                child: Text(Nof1Localizations.of(context).translate('delete')),
               ),
             ],
           ),
@@ -36,7 +37,7 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
                 saveFormChanges();
               },
               name: 'text',
-              decoration: InputDecoration(labelText: 'Choice'),
+              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('choice')),
               initialValue: widget.choice.text),
         ]));
   }

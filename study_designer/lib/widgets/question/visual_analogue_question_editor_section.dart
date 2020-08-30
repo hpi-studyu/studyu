@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class VisualAnalogueQuestionEditorSection extends StatefulWidget {
   final VisualAnalogueQuestion question;
@@ -25,24 +26,24 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
           FormBuilderTextField(
               onChanged: _saveFormChanges,
               name: 'minimumAnnotation',
-              decoration: InputDecoration(labelText: 'Minimum Annotation'),
+              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minimum_annotation')),
               initialValue: widget.question.minimumAnnotation),
           FormBuilderColorPickerField(
               onChanged: _saveFormChanges,
               name: 'minimumColor',
               showCursor: true,
-              decoration: InputDecoration(labelText: 'Minimum Color'),
+              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minimum_color')),
               initialValue: widget.question.minimumColor),
           FormBuilderTextField(
               onChanged: _saveFormChanges,
               name: 'maximumAnnotation',
-              decoration: InputDecoration(labelText: 'Maximum Annotation'),
+              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('maximum_annotation')),
               initialValue: widget.question.maximumAnnotation),
           FormBuilderColorPickerField(
               onChanged: _saveFormChanges,
               name: 'maximumColor',
               showCursor: true,
-              decoration: InputDecoration(labelText: 'Maximum Color'),
+              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('maximum_color')),
               initialValue: widget.question.maximumColor)
         ]));
   }

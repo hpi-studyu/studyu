@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import './annotation_editor.dart';
 
@@ -43,7 +44,10 @@ class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQues
       Row(children: [
         Spacer(),
         RaisedButton.icon(
-            onPressed: _addAnnotation, icon: Icon(Icons.add), color: Colors.green, label: Text('Add Annotation')),
+            onPressed: _addAnnotation,
+            icon: Icon(Icons.add),
+            color: Colors.green,
+            label: Text(Nof1Localizations.of(context).translate('add_annotation'))),
         Spacer()
       ])
     ]);

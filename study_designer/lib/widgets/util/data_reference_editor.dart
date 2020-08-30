@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/data/data_reference.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class DataReferenceEditor<T> extends StatefulWidget {
   final DataReference<T> reference;
@@ -41,7 +42,7 @@ class _DataReferenceEditorState<T> extends State<DataReferenceEditor<T>> {
 
     return Row(
       children: [
-        Text('Data Source:'),
+        Text(Nof1Localizations.of(context).translate('data_source')),
         DropdownButton<_DataReferenceIdentifier>(
           value: widget.reference != null
               ? _DataReferenceIdentifier(widget.reference.task, widget.reference.property)

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class ChoiceExpressionEditorSection extends StatefulWidget {
   final ChoiceExpression expression;
@@ -47,7 +48,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
                   children: <Widget>[
                     FlatButton(
                       onPressed: () => _removeChoice(index),
-                      child: const Text('Delete'),
+                      child: Text(Nof1Localizations.of(context).translate('delete')),
                     ),
                   ],
                 ),
@@ -63,7 +64,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
   Widget _buildAddButton() {
     if (selectedChoices.length < widget.targetQuestion.choices.length) {
       return Row(children: [
-        Text('Add choice:'),
+        Text(Nof1Localizations.of(context).translate('add_choice')),
         SizedBox(width: 10),
         DropdownButton<Choice>(
             onChanged: (choice) {
