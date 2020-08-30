@@ -7,6 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import 'designer.dart';
@@ -60,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
                     title: Row(children: [
                       Icon(Icons.edit, color: theme.accentColor),
                       SizedBox(width: 8),
-                      Text('Draft studies')
+                      Text(Nof1Localizations.of(context).translate('draft_studies'))
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
@@ -74,7 +75,7 @@ class _DashboardState extends State<Dashboard> {
                     title: Row(children: [
                       Icon(Icons.lock, color: theme.accentColor),
                       SizedBox(width: 8),
-                      Text('Published studies')
+                      Text(Nof1Localizations.of(context).translate('published_studies'))
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
@@ -129,14 +130,15 @@ class StudyCard extends StatelessWidget {
                 final isDeleted =
                     await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
                 if (isDeleted) {
-                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Draft study ${study.title} deleted.')));
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('${study.title} ${Nof1Localizations.of(context).translate('deleted')}')));
                   if (reload != null) reload();
                 }
               },
             )
           : IconButton(
               icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-              tooltip: 'Export CSV',
+              tooltip: Nof1Localizations.of(context).translate('export_csv'),
               onPressed: () async {
                 final dl = ResultDownloader(study);
                 await dl.loadDetails();
@@ -164,7 +166,7 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Delete draft study ${study.title}?'),
+        title: Text(Nof1Localizations.of(context).translate('delete_draft_study')),
         actions: [
           FlatButton.icon(
             onPressed: () async {
@@ -174,7 +176,7 @@ class DeleteAlertDialog extends StatelessWidget {
             },
             icon: Icon(Icons.delete),
             color: Colors.red,
-            label: Text('Delete ${study.title}'),
+            label: Text(Nof1Localizations.of(context).translate('delete')),
           )
         ],
       );
