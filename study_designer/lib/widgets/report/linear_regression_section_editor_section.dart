@@ -50,7 +50,7 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
             onChanged: _changeAlpha,
             name: 'alpha',
             decoration: InputDecoration(labelText: 'Alpha (confidence)'),
-            initialValue: widget.section.improvement.toString(),
+            initialValue: widget.section.alpha.toString(),
             validator: FormBuilderValidators.numeric(context),
           ),
         ]),
