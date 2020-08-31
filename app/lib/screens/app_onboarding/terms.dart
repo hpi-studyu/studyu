@@ -33,7 +33,8 @@ class _TermsScreenState extends State<TermsScreen> {
       'privacy_agree',
       'disclaimer',
       'disclaimer_content',
-      'disclaimer_agree'
+      'disclaimer_agree',
+      'save_pdf'
     ].map((key) => MapEntry(key, Nof1Localizations.of(context).translate(key))));
   }
 
@@ -98,7 +99,7 @@ class _TermsScreenState extends State<TermsScreen> {
                   ),
                   FlatButton.icon(
                     onPressed: () async => savePDF(context, 'StudyU_Terms_of_Service', await generatePdfContent()),
-                    label: Text('Download'),
+                    label: Text(translations['save_pdf']),
                     icon: Icon(Icons.save),
                   )
                 ],
