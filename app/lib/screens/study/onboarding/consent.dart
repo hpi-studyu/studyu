@@ -9,8 +9,8 @@ import 'package:studyou_core/models/models.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
-import '../../../util/download.dart';
 import '../../../util/localization.dart';
+import '../../../util/save_pdf.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
@@ -62,8 +62,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
         leading: Icon(MdiIcons.fromString(study.iconName)),
         actions: [
           IconButton(
-            icon: Icon(MdiIcons.download),
-            onPressed: () async => pdfDownload(context, '${study.title}_consent', await generatePdfContent()),
+            icon: Icon(Icons.save),
+            onPressed: () async => savePDF(context, '${study.title}_consent', await generatePdfContent()),
           ),
         ],
       ),

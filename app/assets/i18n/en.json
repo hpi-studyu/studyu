@@ -107,10 +107,10 @@
   "disclaimer_content": "Euismod nisi porta lorem mollis aliquam ut porttitor. Id leo in vitae turpis. Consequat mauris nunc congue nisi vitae suscipit tellus mauris a. At tellus at urna condimentum mattis pellentesque id nibh tortor. Quis blandit turpis cursus in. Faucibus turpis in eu mi bibendum neque egestas congue quisque. Sit amet porttitor eget dolor morbi. Bibendum ut tristique et egestas quis ipsum suspendisse ultrices. Tortor consequat id porta nibh venenatis cras sed. Lacinia quis vel eros donec ac odio.",
   "disclaimer_agree": "I read and understand the disclaimer",
 
-  "download_finished": "Download finished",
-  "download_finished_description": "The file has been saved to \"Downloads\".",
-  "download_not_supported": "Error",
-  "download_not_supported_description": "Downloading files is currently not supported in the web version.",
+  "save_finished": "Saved",
+  "save_finished_description": "The file has been saved to \"Downloads\".",
+  "save_not_supported": "Error",
+  "save_not_supported_description": "Downloading files is currently not supported in the web version.",
 
   "eligible_no": "You are not eligible for this study",
   "eligible_yes": "You are eligible for this study",

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:studyou_core/queries/queries.dart';
 
 import '../../routes.dart';
-import '../../util/download.dart';
 import '../../util/localization.dart';
+import '../../util/save_pdf.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
@@ -98,9 +97,9 @@ class _TermsScreenState extends State<TermsScreen> {
                     height: 20,
                   ),
                   FlatButton.icon(
-                    onPressed: () async => pdfDownload(context, 'StudyU_Terms_of_Service', await generatePdfContent()),
+                    onPressed: () async => savePDF(context, 'StudyU_Terms_of_Service', await generatePdfContent()),
                     label: Text('Download'),
-                    icon: Icon(MdiIcons.download),
+                    icon: Icon(Icons.save),
                   )
                 ],
               ),
