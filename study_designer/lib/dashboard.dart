@@ -1,15 +1,19 @@
 import 'dart:convert';
-import 'dart:html';
+import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:ext_storage/ext_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
+import 'package:universal_html/prefer_universal/html.dart' as html;
 
 import 'designer.dart';
 import 'routes.dart';
@@ -133,12 +137,29 @@ class StudyCard extends StatelessWidget {
 
   const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
 
-  //TODO: Make this work on other platforms as well
-  void downloadFile(String contentString, String filename) {
-    final content = base64Encode(utf8.encode(contentString));
-    AnchorElement(href: 'data:application/octet-stream;charset=utf-8;base64,$content')
-      ..setAttribute('download', filename)
-      ..click();
+  Future<void> downloadFile(String contentString, String filename) async {
+    if (kIsWeb) {
+      final bytes = utf8.encode(contentString);
+      final blob = html.Blob([bytes]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      // ignore: avoid_as
+      final anchor = html.document.createElement('a') as html.AnchorElement
+        ..href = url
+        ..style.display = 'none'
+        ..download = filename;
+      html.document.body.children.add(anchor);
+
+      anchor.click();
+
+      html.document.body.children.remove(anchor);
+      html.Url.revokeObjectUrl(url);
+    } else {
+      final dirPath = Platform.isIOS
+          ? (await getApplicationDocumentsDirectory()).path
+          : await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOCUMENTS);
+
+      File('$dirPath/$filename').writeAsString(contentString);
+    }
   }
 
   @override

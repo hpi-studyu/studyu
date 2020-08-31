@@ -18,6 +18,7 @@ dependencies:
   csv:
   clipboard:
   cupertino_icons:
+  ext_storage:
   # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4
   flutter_form_builder:
     git:
@@ -30,8 +31,10 @@ dependencies:
     git:
       url: https://github.com/parse-community/Parse-SDK-Flutter.git
       ref: release/1.0.28
+  path_provider:
   pretty_json:
   provider:
+  universal_html:
   uuid:
 
 dev_dependencies:
