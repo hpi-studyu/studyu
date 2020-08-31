@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               study: study,
               scheduleToday: scheduleToday,
               interventionIcon: study.getInterventionForDate(DateTime.now())?.icon),
-      bottomSheet: kDebugMode
+      bottomSheet: kDebugMode && !study.completedStudy
           ? FlatButton(
               onPressed: () {
                 setState(() {
