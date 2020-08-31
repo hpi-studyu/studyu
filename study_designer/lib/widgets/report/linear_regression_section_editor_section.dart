@@ -4,7 +4,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
-import 'package:studyou_core/util/localization.dart';
 
 import '../../models/designer_state.dart';
 import '../util/data_reference_editor.dart';
