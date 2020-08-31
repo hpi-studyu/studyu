@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rainbow_color/rainbow_color.dart';
@@ -10,13 +12,17 @@ class PerformanceSection extends GenericSection {
   const PerformanceSection(ParseUserStudy instance, {Function onTap}) : super(instance, onTap: onTap);
 
   // TODO move to model
-  final minimum = 0.1;
-  final maximum = 100;
+  final minimumRatio = 0.1;
+  final maximum = 4;
 
   @override
   Widget buildContent(BuildContext context) {
     final interventions =
         instance.interventionSet.interventions.where((intervention) => intervention.id != '__baseline').toList();
+    final interventionProgress = interventions.map((intervention) {
+      final countableInterventions = getCountableObservationAmount(intervention);
+      return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
+    }).toList();
     return interventions.length != 2 || instance.reportSpecification?.primary == null
         ? Center(
             child: Text('ERROR!'),
@@ -26,7 +32,7 @@ class PerformanceSection extends GenericSection {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
-                  '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription(0)}',
+                  '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription(context, interventionProgress)}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -44,12 +50,11 @@ class PerformanceSection extends GenericSection {
                         ),
                       );
                     } else {
-                      final countableInterventions = getCountableObservationAmount(interventions[i]);
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: PerformanceBar(
-                          progress: countableInterventions == 0 ? 0 : countableInterventions / maximum,
-                          minimum: minimum,
+                          progress: interventionProgress[i],
+                          minimum: minimumRatio,
                         ),
                       );
                     }
@@ -58,16 +63,13 @@ class PerformanceSection extends GenericSection {
           );
   }
 
-  String getPowerLevelDescription(double powerLevel) {
-    // TODO add useful power level wording
-    if (powerLevel == 0) {
-      return 'Not enough data.';
-    } else if (powerLevel < minimum) {
-      return 'Too low';
-    } else if (powerLevel < 0.9) {
-      return 'High enough';
+  String getPowerLevelDescription(BuildContext context, List<num> interventionProgress) {
+    if (interventionProgress.any((progress) => progress < minimumRatio)) {
+      return Nof1Localizations.of(context).translate('not_enough_data');
+    } else if (interventionProgress.any((progress) => progress < 1)) {
+      return Nof1Localizations.of(context).translate('barely_enough_data');
     } else {
-      return 'OVER 9000';
+      return Nof1Localizations.of(context).translate('enough_data');
     }
   }
 
