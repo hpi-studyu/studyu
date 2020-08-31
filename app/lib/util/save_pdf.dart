@@ -46,7 +46,12 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
   ;
 
   // TODO: Android, ask for file permissions to save
-  File('$dirPath/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(doc.save());
+  try {
+    File('$dirPath/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(doc.save());
+  } on FileSystemException catch (e) {
+    print('Probably no file storage permissions ${e.toString()}');
+  }
+
   showDialog(
       context: context,
       builder: (context) => AlertDialog(
