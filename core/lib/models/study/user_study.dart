@@ -166,9 +166,10 @@ extension UserStudyExtension on UserStudyBase {
       scheduleFor(dateTime).values.every((task) => isTaskFinishedFor(task.id, dateTime));
 
   // Currently the end of the study, as there is no real minimum, just a set study length
-  //TODO: Check if correctly finishes study
-  bool get minimumStudyLengthCompleted =>
-      DateTime.now().differenceInDays(startDate).inDays >= daysPerIntervention * StudySchedule.numberOfPhases;
+  bool get minimumStudyLengthCompleted {
+    var diff = DateTime.now().differenceInDays(startDate).inDays;
+    return diff >= interventionOrder.length * schedule.phaseDuration - 1;
+  }
 
   bool get completedStudy {
     return minimumStudyLengthCompleted && allTasksCompletedFor(DateTime.now());
