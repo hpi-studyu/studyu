@@ -5,6 +5,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/localization.dart';
@@ -21,10 +22,12 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   Future<ParseResponse> _studiesFuture;
+  Locale _selectedLocal;
 
   @override
   void initState() {
     super.initState();
+    _selectedLocal = context.read<AppLanguage>().appLocal;
     reloadStudies();
   }
 
@@ -34,6 +37,33 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  Widget _buildLanguageDropdown() {
+    final dropDownItems = <DropdownMenuItem<Locale>>[];
+
+    for (final locale in AppLanguage.supportedLocales) {
+      dropDownItems.add(DropdownMenuItem(
+        value: locale,
+        child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),
+      ));
+    }
+
+    dropDownItems.add(DropdownMenuItem(
+      value: null,
+      child: Text('System'),
+    ));
+
+    return DropdownButton(
+      value: _selectedLocal,
+      items: dropDownItems,
+      onChanged: (value) {
+        setState(() {
+          _selectedLocal = value;
+        });
+        context.read<AppLanguage>().changeLanguage(value);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -41,10 +71,7 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         title: Text('StudyU Designer'),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(MdiIcons.logout),
-          )
+          Theme(data: ThemeData.dark(), child: DropdownButtonHideUnderline(child: _buildLanguageDropdown())),
         ],
       ),
       body: Center(

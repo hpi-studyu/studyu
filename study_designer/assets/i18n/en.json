@@ -1,4 +1,8 @@
 {
+  "language": "Language",
+  "en": "English",
+  "de": "German",
+
   "create_new_study": "Create New Study",
   "meta_data": "Meta Data",
   "interventions": "Interventions",
@@ -70,7 +74,7 @@
   "improvement_direction": "Improvement Direction",
   "temporal_aggregation": "Temporal Aggregation",
   "alpha": "alpha",
-  "alpha_confidence": "alpha_confidence",
+  "alpha_confidence": "alpha (confidence)",
   "primary": "Primary",
   "result": "Result",
   "filename": "Filename",
