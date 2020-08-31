@@ -13,7 +13,7 @@ class PerformanceSection extends GenericSection {
 
   // TODO move to model
   final minimumRatio = 0.1;
-  final maximum = 4;
+  final maximum = 100;
 
   @override
   Widget buildContent(BuildContext context) {

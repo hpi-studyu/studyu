@@ -8,11 +8,9 @@ class GeneralDetailsSection extends GenericSection {
   const GeneralDetailsSection(ParseUserStudy instance, {Function onTap}) : super(instance, onTap: onTap);
 
   @override
-  Widget buildContent(BuildContext context) => Expanded(
-        child: Column(
-          children: [
-            Text(instance.description),
-          ],
-        ),
+  Widget buildContent(BuildContext context) => Column(
+        children: [
+          Text(instance.description),
+        ],
       );
 }
