@@ -125,7 +125,7 @@ class InterventionSegment extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(emptyColor),
             ),
           ),
-          if (this.isCurrent)
+          if (isCurrent)
             AspectRatio(
               aspectRatio: 1,
               child: CircularProgressIndicator(
