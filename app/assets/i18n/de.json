@@ -111,6 +111,7 @@
 
   "save_finished": "Speichern abgeschlossen",
   "save_finished_description": "Die Datei wurde in \"Downloads\" gespeichert.",
+  "save_finished_description_ios": "Die Datei wurde in \"Dateien\" > \"Auf meinem iPhone\" > \"StudyU\" gespeichert.",
   "save_not_supported": "Fehler",
   "save_not_supported_description": "Dateidownload ist in der Web-Version zur Zeit nicht unterstützt.",
 
