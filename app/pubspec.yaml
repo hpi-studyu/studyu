@@ -35,7 +35,7 @@ dependencies:
   parse_server_sdk:
     git:
       url: https://github.com/parse-community/Parse-SDK-Flutter.git
-      ref: release/1.0.28
+      ref: efbb9c68ea8b329860e7320eace8879c6bb41ea4
   path_provider:
   pdf:
   pimp_my_button:

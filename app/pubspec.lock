@@ -531,8 +531,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "release/1.0.28"
-      resolved-ref: "7462a01a934c263ba91d67e3815438784987c1d4"
+      ref: efbb9c68ea8b329860e7320eace8879c6bb41ea4
+      resolved-ref: efbb9c68ea8b329860e7320eace8879c6bb41ea4
       url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "1.0.28"
