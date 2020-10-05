@@ -20,10 +20,7 @@ dependencies:
   cupertino_icons:
   ext_storage:
   # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4
-  flutter_form_builder:
-    git:
-      url: git://github.com/nstrelow/flutter_form_builder.git
-      ref: version_4
+  flutter_form_builder: 4.0.0-pre.3
   material_design_icons_flutter:
   flutter_iconpicker:
   flutter_json_widget:
