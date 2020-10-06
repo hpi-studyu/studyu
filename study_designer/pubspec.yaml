@@ -22,7 +22,7 @@ dependencies:
   # prerelease: https://github.com/danvick/flutter_form_builder/tree/version_4
   flutter_form_builder: 4.0.0-pre.3
   material_design_icons_flutter:
-  flutter_iconpicker:
+  flutter_iconpicker: 2.1.5
   flutter_json_widget:
   parse_server_sdk:
     git:
@@ -33,6 +33,10 @@ dependencies:
   provider:
   universal_html:
   uuid:
+
+dependency_overrides:
+  # Remove when this issue is solved: https://github.com/Ahmadre/FlutterIconPicker/issues/16
+  font_awesome_flutter: 8.8.1
 
 dev_dependencies:
   effective_dart:
