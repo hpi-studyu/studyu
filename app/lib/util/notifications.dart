@@ -33,7 +33,8 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
   final androidPlatformChannelSpecifics =
       AndroidNotificationDetails('0', 'StudyU main', 'The main StudyU notification channel.');
   final iOSPlatformChannelSpecifics = IOSNotificationDetails();
-  final platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  final platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
   final study = appState.activeStudy;
 

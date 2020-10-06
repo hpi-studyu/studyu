@@ -93,7 +93,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    final initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    final initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: selectNotification);
     context.read<AppState>().notificationsPlugin = flutterLocalNotificationsPlugin;
   }
