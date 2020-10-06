@@ -40,7 +40,7 @@ class Environment extends InheritedWidget {
   const Environment.local({@required Widget child})
       : keyParseApplicationId = 'nof1-local',
         keyParseServerUrl = 'http://localhost:1337/parse',
-        keyParseMasterKey = '2d?xz*63GyZ4nDKp#WPKL5?5HLE=dDKm+epsA%Bp',
+        keyParseMasterKey = 'nof1-local',
         debug = true,
         super(child: child);
 
@@ -48,7 +48,7 @@ class Environment extends InheritedWidget {
   const Environment.localAndroidEmulator({@required Widget child})
       : keyParseApplicationId = 'nof1-local',
         keyParseServerUrl = 'http://10.0.2.2:1337/parse',
-        keyParseMasterKey = '2d?xz*63GyZ4nDKp#WPKL5?5HLE=dDKm+epsA%Bp',
+        keyParseMasterKey = 'nof1-local',
         debug = true,
         super(child: child);
 }
