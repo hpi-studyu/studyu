@@ -46,7 +46,7 @@ dependencies:
   research_package:
   shared_preferences:
   stats:
-  timeline_tile: 0.1.2
+  timeline_tile:
   video_player:
 
 dev_dependencies:

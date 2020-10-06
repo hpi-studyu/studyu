@@ -124,7 +124,7 @@ class InterventionTile extends StatelessWidget {
     final theme = Theme.of(context);
     return TimelineTile(
       alignment: TimelineAlign.manual,
-      lineX: 0.4,
+      lineXY: 0.4,
       isFirst: isFirst,
       isLast: isLast,
       indicatorStyle: IndicatorStyle(
@@ -133,12 +133,12 @@ class InterventionTile extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         indicator: IconIndicator(iconName: iconName, color: color),
       ),
-      topLineStyle: LineStyle(color: theme.primaryColor),
-      bottomLineStyle: LineStyle(color: theme.primaryColor),
-      rightChild: TimelineChild(
+      beforeLineStyle: LineStyle(color: theme.primaryColor),
+      afterLineStyle: LineStyle(color: theme.primaryColor),
+      endChild: TimelineChild(
         child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
       ),
-      leftChild: TimelineChild(
+      startChild: TimelineChild(
         child: Text(DateFormat('dd-MM-yyyy').format(date), style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
