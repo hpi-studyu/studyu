@@ -3,12 +3,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart' as models;
 import 'package:studyou_core/util/extensions.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../models/app_state.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
-  void scheduleReminderForDate(
-      int initialId, models.Task task, DateTime date, NotificationDetails notificationDetails) {
+  Future<void> scheduleReminderForDate(
+      int initialId, models.Task task, DateTime date, NotificationDetails notificationDetails) async {
     var id = initialId;
     for (final taskSchedule in task.schedule) {
       switch (taskSchedule.type) {
@@ -18,10 +20,14 @@ extension Reminders on FlutterLocalNotificationsPlugin {
               !models.Time(hour: date.hour, minute: date.minute).earlierThan(fixedSchedule.time)) {
             break;
           }
-          final reminderTime =
-              DateTime(date.year, date.month, date.day, fixedSchedule.time.hour, fixedSchedule.time.minute);
+
+          final reminderTime = tz.TZDateTime(
+              tz.local, date.year, date.month, date.day, fixedSchedule.time.hour, fixedSchedule.time.minute);
           // TODO add body
-          schedule(id, task.title, '', reminderTime, notificationDetails, payload: task.id);
+          zonedSchedule(id, task.title, '', reminderTime, notificationDetails,
+              payload: task.id,
+              uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
+              androidAllowWhileIdle: true);
       }
       id++;
     }

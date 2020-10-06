@@ -27,6 +27,7 @@ dependencies:
   ext_storage:
   extended_math:
   flutter_local_notifications:
+  flutter_native_timezone:
   grizzly_distuv:
   intersperse:
   intl:
