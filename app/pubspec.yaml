@@ -26,6 +26,7 @@ dependencies:
   cupertino_icons:
   ext_storage:
   extended_math:
+  flutter_local_notifications: 1.5.0+1
   grizzly_distuv:
   intersperse:
   intl:
@@ -45,9 +46,8 @@ dependencies:
   research_package:
   shared_preferences:
   stats:
-  timeline_tile:
+  timeline_tile: 0.1.2
   video_player:
-  flutter_local_notifications:
 
 dev_dependencies:
   build_runner:
