@@ -29,7 +29,7 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
       child: SingleChildScrollView(
         child: FormBuilder(
           key: _editFormKey,
-          autovalidate: true,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: <Widget>[
               FormBuilderTextField(

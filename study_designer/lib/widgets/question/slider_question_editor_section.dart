@@ -27,7 +27,7 @@ class _SliderQuestionEditorSectionState extends State<SliderQuestionEditorSectio
       children: [
         FormBuilder(
             key: _editFormKey,
-            autovalidate: true,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             // readonly: true,
             child: Column(children: <Widget>[
               FormBuilderTextField(

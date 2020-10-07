@@ -62,7 +62,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
               children: [
                 FormBuilder(
                     key: _editFormKey,
-                    autovalidate: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     // readonly: true,
                     child: Column(children: <Widget>[
                       FormBuilderTextField(

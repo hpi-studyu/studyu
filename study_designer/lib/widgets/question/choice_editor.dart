@@ -21,7 +21,7 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
   Widget build(BuildContext context) {
     return FormBuilder(
         key: _editFormKey,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         // readonly: true,
         child: Column(children: <Widget>[
           ButtonBar(

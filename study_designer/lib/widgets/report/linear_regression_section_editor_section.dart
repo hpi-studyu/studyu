@@ -44,7 +44,7 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
       ]),
       FormBuilder(
         key: _editFormKey,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         // readonly: true,
         child: Column(children: <Widget>[
           FormBuilderTextField(
