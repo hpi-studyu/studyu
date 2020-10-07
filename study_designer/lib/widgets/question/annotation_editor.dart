@@ -21,7 +21,7 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
   Widget build(BuildContext context) {
     return FormBuilder(
         key: _editFormKey,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         // readonly: true,
         child: Column(children: <Widget>[
           ButtonBar(

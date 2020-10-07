@@ -74,7 +74,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
               child: Column(children: [
                 FormBuilder(
                     key: _editFormKey,
-                    autovalidate: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     // readonly: true,
                     child: Column(
                       children: <Widget>[

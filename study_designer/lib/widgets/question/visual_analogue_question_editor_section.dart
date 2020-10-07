@@ -20,7 +20,7 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
   Widget build(BuildContext context) {
     return FormBuilder(
         key: _editFormKey,
-        autovalidate: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         // readonly: true,
         child: Column(children: <Widget>[
           FormBuilderTextField(

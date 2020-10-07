@@ -62,7 +62,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
               child: Column(children: [
                 FormBuilder(
                     key: _editFormKey,
-                    autovalidate: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     // readonly: true,
                     child: Column(
                       children: <Widget>[

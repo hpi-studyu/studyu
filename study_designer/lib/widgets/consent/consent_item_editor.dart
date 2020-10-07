@@ -47,7 +47,7 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
               child: Column(children: [
                 FormBuilder(
                     key: _editFormKey,
-                    autovalidate: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     // readonly: true,
                     child: Column(
                       children: <Widget>[
