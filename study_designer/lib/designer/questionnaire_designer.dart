@@ -8,12 +8,12 @@ import '../models/designer_state.dart';
 import '../widgets/question/questionnaire_editor.dart';
 import '../widgets/util/designer_add_button.dart';
 
-class QuestionnaireDesigner extends StatefulWidget {
+class EligibilityQuestionsDesigner extends StatefulWidget {
   @override
-  _QuestionnaireDesignerState createState() => _QuestionnaireDesignerState();
+  _EligibilityQuestionsDesignerState createState() => _EligibilityQuestionsDesignerState();
 }
 
-class _QuestionnaireDesignerState extends State<QuestionnaireDesigner> {
+class _EligibilityQuestionsDesignerState extends State<EligibilityQuestionsDesigner> {
   Questionnaire questionnaire;
 
   void _addQuestion() {

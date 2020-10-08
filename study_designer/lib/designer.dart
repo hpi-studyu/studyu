@@ -62,10 +62,10 @@ class _DesignerState extends State<Designer> {
                 builder = (context) => InterventionsDesigner();
                 break;
               case designerQuestionnaireRoute:
-                builder = (context) => QuestionnaireDesigner();
+                builder = (context) => EligibilityQuestionsDesigner();
                 break;
               case designerEligibilityRoute:
-                builder = (context) => EligibilityDesigner();
+                builder = (context) => EligibilityCriteriaDesigner();
                 break;
               case designerObservationsRoute:
                 builder = (context) => ObservationDesigner();
@@ -144,12 +144,12 @@ class _DesignerState extends State<Designer> {
               NavigationRailDestination(
                 icon: Icon(Icons.question_answer),
                 selectedIcon: Icon(Icons.question_answer),
-                label: Text(Nof1Localizations.of(context).translate('questionnaire')),
+                label: Text(Nof1Localizations.of(context).translate('eligibility_questions')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.verified_user),
                 selectedIcon: Icon(Icons.verified_user),
-                label: Text(Nof1Localizations.of(context).translate('eligibility')),
+                label: Text(Nof1Localizations.of(context).translate('eligibility_criteria')),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.zoom_in),
