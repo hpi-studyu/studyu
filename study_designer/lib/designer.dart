@@ -45,6 +45,33 @@ class _DesignerState extends State<Designer> {
     if (widget.study != null) _designerState.draftStudy = widget.study;
   }
 
+  Future<void> _showHelpDialog(title, body) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(body),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildDesignerRouter() => Expanded(
         child: Navigator(
           key: _navigatorKey,
@@ -53,46 +80,76 @@ class _DesignerState extends State<Designer> {
             if (_selectedIndex != designerRoutes.indexOf(settings.name)) {
               _selectedIndex = designerRoutes.indexOf(settings.name);
             }
-            WidgetBuilder builder;
+            Widget specificDesigner;
+            String title;
+            String body;
             switch (settings.name) {
               case designerRoute:
-                builder = (context) => MetaDataDesigner();
+                specificDesigner = MetaDataDesigner();
+                title = Nof1Localizations.of(context).translate('meta_data_help_title');
+                body = Nof1Localizations.of(context).translate('meta_data_help_body');
                 break;
               case designerInterventionsRoute:
-                builder = (context) => InterventionsDesigner();
+                specificDesigner = InterventionsDesigner();
+                title = Nof1Localizations.of(context).translate('interventions_help_title');
+                body = Nof1Localizations.of(context).translate('interventions_help_body');
                 break;
               case designerQuestionnaireRoute:
-                builder = (context) => EligibilityQuestionsDesigner();
+                specificDesigner = EligibilityQuestionsDesigner();
+                title = Nof1Localizations.of(context).translate('eligibility_questions_help_title');
+                body = Nof1Localizations.of(context).translate('eligibility_questions_help_body');
                 break;
               case designerEligibilityRoute:
-                builder = (context) => EligibilityCriteriaDesigner();
+                specificDesigner = EligibilityCriteriaDesigner();
+                title = Nof1Localizations.of(context).translate('eligibility_criteria_help_title');
+                body = Nof1Localizations.of(context).translate('eligibility_criteria_help_body');
                 break;
               case designerObservationsRoute:
-                builder = (context) => ObservationDesigner();
+                specificDesigner = ObservationDesigner();
+                title = Nof1Localizations.of(context).translate('observations_help_title');
+                body = Nof1Localizations.of(context).translate('observations_help_body');
                 break;
               case designerScheduleRoute:
-                builder = (context) => ScheduleDesigner();
-                break;
-              case designerConsentRoute:
-                builder = (context) => ConsentDesigner();
+                specificDesigner = ScheduleDesigner();
+                title = Nof1Localizations.of(context).translate('schedule_help_title');
+                body = Nof1Localizations.of(context).translate('schedule_help_body');
                 break;
               case designerReportRoute:
-                builder = (context) => ReportDesigner();
+                specificDesigner = ReportDesigner();
+                title = Nof1Localizations.of(context).translate('report_help_title');
+                body = Nof1Localizations.of(context).translate('report_help_body');
                 break;
               case designerResultsRoute:
-                builder = (context) => ResultsDesigner();
+                specificDesigner = ResultsDesigner();
+                title = Nof1Localizations.of(context).translate('results_help_title');
+                body = Nof1Localizations.of(context).translate('results_help_body');
+                break;
+              case designerConsentRoute:
+                specificDesigner = ConsentDesigner();
+                title = Nof1Localizations.of(context).translate('create_new_study');
+                body = Nof1Localizations.of(context).translate('create_new_study');
                 break;
               case designerSaveRoute:
-                builder = (context) => Save();
+                specificDesigner = Save();
                 break;
               default:
-                builder = (context) => Container();
+                specificDesigner = Container();
               //throw Exception('Invalid route: ${settings.name}');
             }
+
+            final Widget specificDesignerWithHelpbar = Column(
+              children: [
+                Row(children: [
+                  Spacer(),
+                  IconButton(icon: Icon(Icons.help), onPressed: () => _showHelpDialog(title, body))
+                ]),
+                Expanded(child: specificDesigner),
+              ],
+            );
             // You can also return a PageRouteBuilder and
             // define custom transitions between pages
             return MaterialPageRoute(
-              builder: builder,
+              builder: (context) => specificDesignerWithHelpbar,
               settings: settings,
             );
           },

@@ -30,21 +30,24 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
   @override
   Widget build(BuildContext context) {
     _interventions = context.watch<DesignerState>().draftStudy.studyDetails.interventionSet.interventions;
+    final theme = Theme.of(context);
     return Stack(
       children: [
         Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  ..._interventions
-                      .asMap()
-                      .entries
-                      .map((entry) => InterventionEditor(
-                          key: UniqueKey(), intervention: entry.value, remove: () => _removeIntervention(entry.key)))
-                      .toList()
-                ],
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    ..._interventions
+                        .asMap()
+                        .entries
+                        .map((entry) => InterventionEditor(
+                            key: UniqueKey(), intervention: entry.value, remove: () => _removeIntervention(entry.key)))
+                        .toList()
+                  ],
+                ),
               ),
             ),
           ),
