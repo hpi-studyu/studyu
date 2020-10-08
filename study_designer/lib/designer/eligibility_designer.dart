@@ -7,12 +7,12 @@ import '../models/designer_state.dart';
 import '../widgets/eligibility/eligibility_criterion_editor.dart';
 import '../widgets/util/designer_add_button.dart';
 
-class EligibilityDesigner extends StatefulWidget {
+class EligibilityCriteriaDesigner extends StatefulWidget {
   @override
-  _EligibilityDesignerState createState() => _EligibilityDesignerState();
+  _EligibilityCriteriaDesignerState createState() => _EligibilityCriteriaDesignerState();
 }
 
-class _EligibilityDesignerState extends State<EligibilityDesigner> {
+class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigner> {
   List<EligibilityCriterion> _eligibility;
   List<Question> _questions;
 
