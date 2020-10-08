@@ -1,0 +1,14 @@
+.dockerignore
+.git*
+**/.idea
+**/.vscode
+**/Dockerfile
+
+# Flutter specific
+**/.dart_tool
+**/.pub
+**/build/
+**/.analysis-options
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages

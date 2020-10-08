@@ -51,4 +51,12 @@ class Environment extends InheritedWidget {
         keyParseMasterKey = 'nof1-local',
         debug = true,
         super(child: child);
+
+  // Uses env vars set via flutter build/run android/web/... --dart-define=ENV_VAR=VALUE
+  const Environment.fromEnv({@required Widget child})
+      : keyParseApplicationId = const String.fromEnvironment('PARSE_APP_ID'),
+        keyParseServerUrl = const String.fromEnvironment('PARSE_SERVER_URL'),
+        keyParseMasterKey = const String.fromEnvironment('PARSE_MASTER_KEY'),
+        debug = true,
+        super(child: child);
 }
