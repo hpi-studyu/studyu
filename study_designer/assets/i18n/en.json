@@ -23,6 +23,8 @@
   "consent_help_body": "",
 
   "create_new_study": "Create New Study",
+  "organization": "Responsible Organization",
+  "researchers": "Responsible Researchers",
   "meta_data": "Meta Data",
   "interventions": "Interventions",
   "eligibility_questions": "Eligibility Questions",

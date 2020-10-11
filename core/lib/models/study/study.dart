@@ -9,6 +9,8 @@ class StudyBase {
   static const String baselineID = '__baseline';
 
   String id;
+  String organization;
+  String researchers;
   String title;
   String description;
   String iconName;
@@ -31,6 +33,8 @@ extension StudyExtension on StudyBase {
   StudyBase toBase() {
     return StudyBase()
       ..id = id
+      ..organization = organization
+      ..researchers = researchers
       ..title = title
       ..description = description
       ..iconName = iconName

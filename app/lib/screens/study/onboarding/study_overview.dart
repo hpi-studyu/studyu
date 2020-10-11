@@ -60,7 +60,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
                 queryFunction: () => _futureStudyDetails,
                 builder: (_context, study) {
                   context.read<AppState>().selectedStudy = study;
-                  return StudyDetailsView(studyDetails: study.studyDetails);
+                  return StudyDetailsView(study: study, studyDetails: study.studyDetails);
                 }),
           ],
         ),
@@ -73,9 +73,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 }
 
 class StudyDetailsView extends StatelessWidget {
+  final StudyBase study;
+
   final StudyDetailsBase studyDetails;
 
-  const StudyDetailsView({@required this.studyDetails, Key key}) : super(key: key);
+  const StudyDetailsView({@required this.study, @required this.studyDetails, Key key}) : super(key: key);
 
   final double iconSize = 40;
 
@@ -104,16 +106,13 @@ class StudyDetailsView extends StatelessWidget {
         ),
         SizedBox(height: 16),
         ListTile(
-          title: Text('Research Facility'),
-          subtitle: Text('Hasso Plattner Institute'),
-          leading: Icon(MdiIcons.hospitalBuilding, color: theme.accentColor, size: iconSize),
-          trailing: Image.asset('assets/images/hpi.png', height: 200),
-        ),
+            title: Text('Organization'),
+            subtitle: Text(study.organization),
+            leading: Icon(MdiIcons.hospitalBuilding, color: theme.accentColor, size: iconSize)),
         SizedBox(height: 16),
         ListTile(
           title: Text('Responsible Researchers'),
-          subtitle: Text(
-              'Darius Rüther, Manisha Manaswini, Alexander Zenner, Florian Henschel, Fabian Pottbäcker, Nils Strelow'),
+          subtitle: Text(study.researchers),
           leading: Icon(MdiIcons.doctor, color: theme.accentColor, size: iconSize),
         ),
       ],

@@ -24,6 +24,8 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   factory ParseStudy.fromBase(StudyBase study) {
     return ParseStudy()
       ..id = study.id
+      ..organization = study.organization
+      ..researchers = study.researchers
       ..title = study.title
       ..description = study.description
       ..iconName = study.iconName
@@ -34,6 +36,14 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   static const keyId = 'study_id';
   String get id => get<String>(keyId);
   set id(String id) => set<String>(keyId, id);
+
+  static const keyOrganization = 'organization';
+  String get organization => get<String>(keyOrganization);
+  set organization(String organization) => set<String>(keyOrganization, organization);
+
+  static const keyResearchers = 'researchers';
+  String get researchers => get<String>(keyResearchers);
+  set researchers(String researchers) => set<String>(keyResearchers, researchers);
 
   static const keyTitle = 'title';
   String get title => get<String>(keyTitle);
@@ -58,6 +68,8 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   ParseUserStudy extractUserStudy(
       String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
     final userStudy = ParseUserStudy()
+      ..organization = organization
+      ..researchers = researchers
       ..title = title
       ..description = description
       ..iconName = iconName
