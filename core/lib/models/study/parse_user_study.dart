@@ -11,6 +11,8 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
 
   factory ParseUserStudy.fromBase(UserStudyBase userStudy) {
     return ParseUserStudy()
+      ..organization = userStudy.organization
+      ..researchers = userStudy.researchers
       ..studyId = userStudy.studyId
       ..userId = userStudy.userId
       ..title = userStudy.title
@@ -36,6 +38,14 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   static const keyUserId = 'user_id';
   String get userId => get<String>(keyUserId);
   set userId(String userId) => set<String>(keyUserId, userId);
+
+  static const keyOrganization = 'organization';
+  String get organization => get<String>(keyOrganization);
+  set organization(String organization) => set<String>(keyOrganization, organization);
+
+  static const keyResearchers = 'researchers';
+  String get researchers => get<String>(keyResearchers);
+  set researchers(String organization) => set<String>(keyResearchers, researchers);
 
   static const keyTitle = 'title';
   String get title => get<String>(keyTitle);

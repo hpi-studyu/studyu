@@ -50,6 +50,18 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                 children: <Widget>[
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
+                      name: 'organization',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('organization')),
+                      initialValue: _draftStudy.organization),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
+                      name: 'researchers',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('researchers')),
+                      initialValue: _draftStudy.researchers),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
                       name: 'title',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
@@ -83,6 +95,8 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         _draftStudy
+          ..organization = _editFormKey.currentState.value['organization']
+          ..researchers = _editFormKey.currentState.value['researchers']
           ..title = _editFormKey.currentState.value['title']
           ..description = _editFormKey.currentState.value['description'];
       });

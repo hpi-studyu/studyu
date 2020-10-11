@@ -7,6 +7,8 @@ import '../models.dart';
 
 class UserStudyBase {
   String studyId;
+  String organization;
+  String researchers;
   String userId;
   String title;
   String description;
@@ -25,6 +27,8 @@ extension UserStudyExtension on UserStudyBase {
   UserStudyBase toBase() {
     return UserStudyBase()
       ..studyId = studyId
+      ..organization = organization
+      ..researchers = researchers
       ..userId = userId
       ..title = title
       ..description = description
