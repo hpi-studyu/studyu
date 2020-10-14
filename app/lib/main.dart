@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/environment.dart';
 
 import 'app.dart';
 
@@ -7,5 +6,5 @@ import 'app.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(Environment.development(child: MyApp()));
+  runApp(MyApp());
 }

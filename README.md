@@ -17,7 +17,9 @@ We have 3 different Flutter packages all contained in this monorepo.
 
 #### A word about beta
 
-We only developed on beta, since it is required for web and we did not build a have a running production app. It is stable, but some plugins may not be instantly adapted to beta, causing incompatibilities. This was the case a few times, we managed to find fixes in the GitHub issues of those packages.
+We only developed on beta, since it is required for web and we did not build a have a running production app.
+It is stable, but some plugins may not be instantly adapted to beta, causing incompatibilities.
+This was the case a few times, we managed to find fixes in the GitHub issues of those packages.
 
 ### Running the app and designer
 
@@ -42,21 +44,21 @@ There exist 4 different compose files to run locally:
 1. Inside run `docker-compose up --build`. This starts a nodejs docker container running the Parse Server and Dashboard and a MongoDB container, which is used by Parse.
 2. You can login with the credentials specified in the env vars: `admin: nof1`
 3. You should now be able to see your parse dashboard under http://localhost:1337/dashboard
-4. To stop the local parse server you can press CTRL-C in your terminal
+4. To stop the services you can press CTRL-C in your terminal
 
-To run the study designer with backend:
+To run the study designer with parse:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-designer.yml up --build
 ```
 
-To run app with backend:
+To run app with parse:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-app.yml up --build
 ```
 
-To run both with backend:
+To run both with parse:
 
 ```
 docker-compose -f docker-compose-full.yml up --build
@@ -65,26 +67,40 @@ docker-compose -f docker-compose-full.yml up --build
 ### Environments
 
 Above command starts the app or designer using the `development` environment. This currently points to our hosted Heroku instance (will be shut down on Nov 10th).
-Environments (Envs) are defined in the core package under [core/lib/environment.dart](./core/lib/environment.dart). It defines the 3 variables used to connect to the Parse Server. Those are definied in the [parse repo](https://gitlab.hpi.de/nof1/parse):
-
-- keyParseApplicationId
-- keyParseMasterKey
-- keyParseServerUrl
-
-The forEnv configuration uses ENV vars passed when executing flutter run/build.
-Recommended for running under different environments without changing the code.
-Pass the vars using:
+We use .env (environment) files, to specify the parse App ID, server URL and debug mode.
+We have multiple configurations stored under `envs/` in both app and study_designer.
+By default `.env` (see below) is used, which contains the instance running on Heroku.
+We can specify the other files by using e.g. `--dart-define=ENV=.env.local`.
+This can also be added to the run configuration in Android Studio or VS Code.
 
 ```
-flutter build/run android/web/... --dart-define=ENV_VAR1=VALUE1 --dart-define=ENV_VAR2=VALUE2
+flutter build/run android/web/... --dart-define=ENV=.env.dev/.env.prod/.env.local/...
 ```
 
-Additionally we have 4 envs for convenience:
+**envs/.env file example**
+```
+PARSE_APP_ID=nof1
+PARSE_SERVER_URL=https://nof1.herokuapp.com/parse
+PARSE_DEBUG=true
+```
+(Previously listed the Master key as well, but it should never be used for client applications. It is only used for changing ACLs)
 
-- development: Points to our Heroku instance. What we mainly use.
-- production: Same as development currently
-- local: Used when connecting to a local running parse server.
-- localAndroidEmulator: Same as local, but for connecting from an android emulator.
+The great advantage of this new approach
+(compared to the previous approach which different entrypoint `main.dart` files)
+is can set the configuration of already compiled web apps. Previously, once built,
+a Flutter web app and its container would be hardcoded to whatever variable was given at the build time.
+In the docker-compose setup, we leverage this by copying the config (`envs/.env`)
+to the right place in the container, without needing to rebuild.
+Now we can publish a docker image studyU-designer:1.3.4 and the same image can be used in multiple environments.
+This is also needed for a Kubernetes setup.
+
+Additionally we have 5 envs for convenience. Replace or create for more convenience:
+
+- `.env`: Used by default, same as .env.dev
+- `.env.dev`: Points to our Heroku instance. What we mainly use.
+- `.env.prod`: Same as development currently
+- `.env.local`: Used when connecting to a local running parse server.
+- `.env.local-android`: Same as local, but for connecting from an android emulator.
 
 ### Coding
 
