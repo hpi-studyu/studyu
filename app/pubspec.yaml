@@ -75,3 +75,4 @@ flutter:
      - assets/i18n/
      - assets/studies/
      - assets/fonts/
+     - envs/
