@@ -1,4 +1,4 @@
-import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/user.dart';
 
