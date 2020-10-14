@@ -25,10 +25,7 @@ dependencies:
   material_design_icons_flutter: ^4.0.5655
   flutter_iconpicker: ^2.1.5
   flutter_json_widget: ^1.0.2
-  parse_server_sdk:
-    git:
-      url: https://github.com/parse-community/Parse-SDK-Flutter.git
-      ref: efbb9c68ea8b329860e7320eace8879c6bb41ea4
+  parse_server_sdk_flutter: 2.0.0
   path_provider: ^1.6.18
   pretty_json: ^1.1.0
   provider: ^4.3.2+2

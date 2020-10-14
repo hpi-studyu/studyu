@@ -1,7 +1,7 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_json_widget/flutter_json_widget.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
