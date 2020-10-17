@@ -59,7 +59,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('consent')),
-        leading: Icon(MdiIcons.fromString(study.iconName)),
+        leading: Icon(MdiIcons.textBoxCheck),
         actions: [
           IconButton(
             icon: Icon(Icons.save),
@@ -145,27 +145,46 @@ class ConsentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
-      color: isChecked ? Colors.blue[100] : Colors.grey[300],
+      elevation: 0,
+      color: isChecked ? Colors.blue[100] : Colors.grey[50],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(
+          color: theme.primaryColor,
+          width: 1,
+        ),
+      ),
       child: InkWell(
-        splashColor: Colors.orange.withAlpha(100),
+        splashColor: theme.accentColor.withAlpha(100),
         onTap: () {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text(consent.description),
+              title: Row(
+                children: [
+                  Icon(MdiIcons.fromString(consent.iconName), color: theme.primaryColor),
+                  SizedBox(width: 8),
+                  Text(consent.title),
+                ],
+              ),
+              content: Text(consent.description),
             ),
           );
           onTapped(index);
-          print('Card tapped.');
         },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(consent.title, style: Theme.of(context).textTheme.headline6),
-            SizedBox(height: 10),
-            Icon(MdiIcons.fromString(consent.iconName), size: 60),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(MdiIcons.fromString(consent.iconName), size: 60, color: Colors.blue),
+              SizedBox(height: 10),
+              Text(consent.title, style: Theme.of(context).textTheme.subtitle2),
+            ],
+          ),
         ),
       ),
     );
