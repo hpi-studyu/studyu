@@ -89,8 +89,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedStudy.title),
-        leading: Icon(MdiIcons.fromString(selectedStudy.iconName)),
+        title: Text(Nof1Localizations.of(context).translate('intervention_selection_title')),
+        leading: Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

@@ -1,3 +1,4 @@
+import 'package:StudyU/util/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
@@ -45,8 +46,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(MdiIcons.fromString(study.iconName)),
-        title: Text(study.title),
+        leading: Icon(MdiIcons.textSubject),
+        title: Text(Nof1Localizations.of(context).translate('study_overview_title')),
       ),
       body: SingleChildScrollView(
         child: Column(

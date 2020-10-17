@@ -115,8 +115,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.study.title),
-        leading: Icon(MdiIcons.fromString(widget.study.iconName)),
+        title: Text(Nof1Localizations.of(context).translate('eligibility_questionnaire_title')),
+        leading: Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [

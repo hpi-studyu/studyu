@@ -44,7 +44,6 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       appBar: AppBar(
         title: Text(Nof1Localizations.of(context).translate('your_journey')),
         leading: Icon(MdiIcons.mapMarkerPath),
-        centerTitle: true,
       ),
       body: Center(
         child: SingleChildScrollView(
