@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/study/studies.dart';
 
+import '../../../widgets/study_tile.dart';
 import 'generic_section.dart';
 
 class GeneralDetailsSection extends GenericSection {
@@ -10,7 +10,12 @@ class GeneralDetailsSection extends GenericSection {
   @override
   Widget buildContent(BuildContext context) => Column(
         children: [
-          Text(study.description),
+          StudyTile(
+            title: study.title,
+            description: study.description,
+            iconName: study.iconName,
+            contentPadding: EdgeInsets.all(0),
+          ),
         ],
       );
 }
