@@ -128,7 +128,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         onBack: () => Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection)),
         nextLabel: Nof1Localizations.of(context).translate('accept'),
         nextIcon: Icon(Icons.check),
-        onNext: () => Navigator.pop(context, true),
+        onNext: boxLogic.every((element) => element) ? () => Navigator.pop(context, true) : null,
         progress: OnboardingProgress(stage: 2, progress: 2.5),
       ),
     );
@@ -163,7 +163,6 @@ class ConsentCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(consent.title, style: Theme.of(context).textTheme.headline6),
-            // Text(consentElement.descriptionText),
             SizedBox(height: 10),
             Icon(MdiIcons.fromString(consent.iconName), size: 60),
           ],
