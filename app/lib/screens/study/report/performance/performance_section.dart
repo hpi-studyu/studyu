@@ -18,12 +18,12 @@ class PerformanceSection extends GenericSection {
   @override
   Widget buildContent(BuildContext context) {
     final interventions =
-        instance.interventionSet.interventions.where((intervention) => intervention.id != '__baseline').toList();
+        study.interventionSet.interventions.where((intervention) => intervention.id != '__baseline').toList();
     final interventionProgress = interventions.map((intervention) {
       final countableInterventions = getCountableObservationAmount(intervention);
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
     }).toList();
-    return interventions.length != 2 || instance.reportSpecification?.primary == null
+    return interventions.length != 2 || study.reportSpecification?.primary == null
         ? Center(
             child: Text('ERROR!'),
           )
@@ -80,13 +80,13 @@ class PerformanceSection extends GenericSection {
     }
 
     var countable = 0;
-    instance.getResultsByDate(interventionId: intervention.id).values.forEach((resultList) {
+    study.getResultsByDate(interventionId: intervention.id).values.forEach((resultList) {
       if (resultList
               .where((result) => intervention.tasks.any((interventionTask) => interventionTask.id == result.taskId))
               .length ==
           interventionsPerDay) {
         countable += resultList
-            .where((result) => instance.observations.any((observation) => observation.id == result.taskId))
+            .where((result) => study.observations.any((observation) => observation.id == result.taskId))
             .length;
       }
     });

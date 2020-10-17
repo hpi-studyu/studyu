@@ -10,7 +10,7 @@ class GeneralDetailsSection extends GenericSection {
   @override
   Widget buildContent(BuildContext context) => Column(
         children: [
-          Text(instance.description),
+          Text(study.description),
         ],
       );
 }

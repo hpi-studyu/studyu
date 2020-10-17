@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/study/studies.dart';
 
 abstract class GenericSection extends StatelessWidget {
-  final ParseUserStudy instance;
+  final ParseUserStudy study;
   final Function onTap;
 
-  const GenericSection(this.instance, {this.onTap});
+  const GenericSection(this.study, {this.onTap});
 
   Widget buildContent(BuildContext context);
 
