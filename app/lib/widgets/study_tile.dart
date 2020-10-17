@@ -10,17 +10,25 @@ class StudyTile extends StatelessWidget {
 
   final Future<void> Function() onTap;
 
+  final EdgeInsetsGeometry contentPadding;
+
   const StudyTile(
-      {@required this.title, @required this.description, @required this.iconName, @required this.onTap, Key key})
+      {@required this.title,
+      @required this.description,
+      @required this.iconName,
+      this.onTap,
+      this.contentPadding = const EdgeInsets.all(16),
+      Key key})
       : super(key: key);
 
-  StudyTile.fromStudy({@required StudyBase study, this.onTap, Key key})
+  StudyTile.fromStudy({@required StudyBase study, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key key})
       : title = study.title,
         description = study.description,
         iconName = study.iconName,
         super(key: key);
 
-  StudyTile.fromUserStudy({@required UserStudyBase study, this.onTap, Key key})
+  StudyTile.fromUserStudy(
+      {@required UserStudyBase study, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key key})
       : title = study.title,
         description = study.description,
         iconName = study.iconName,
@@ -33,7 +41,7 @@ class StudyTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-            contentPadding: EdgeInsets.all(16),
+            contentPadding: contentPadding,
             onTap: onTap,
             title: Center(child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
             subtitle: Center(child: Text(description)),

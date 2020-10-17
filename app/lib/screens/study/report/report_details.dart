@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../routes.dart';
 import '../../../util/localization.dart';
+import 'disclaimer_section.dart';
 import 'general_details_section.dart';
 import 'performance/performance_details.dart';
 import 'performance/performance_section.dart';
@@ -38,6 +38,7 @@ class ReportDetailsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             GeneralDetailsSection(reportStudy),
+            DisclaimerSection(reportStudy),
             PerformanceSection(
               reportStudy,
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),

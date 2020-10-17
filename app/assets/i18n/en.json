@@ -124,6 +124,7 @@
 
   "report_overview": "Report overview",
   "report_primary_result": "Primary Result",
+  "report_disclaimer": "This report is only valid if you entered all information correctly.",
   "performance": "Performance",
   "performance_overview": "Overview of completion of tasks",
   "performance_overview_interventions": "Interventions",
