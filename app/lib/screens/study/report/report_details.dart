@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
 
 import '../../../routes.dart';
@@ -25,13 +24,13 @@ class ReportDetailsScreen extends StatelessWidget {
         title: Text(
           Nof1Localizations.of(context).translate('report_overview'),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(MdiIcons.download),
-            // TODO add pdf download
-            onPressed: () => null,
-          ),
-        ],
+        // TODO add pdf download
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(MdiIcons.download),
+        //     onPressed: () => null,
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
