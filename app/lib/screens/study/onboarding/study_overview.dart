@@ -102,7 +102,7 @@ class StudyDetailsView extends StatelessWidget {
           leading: Icon(MdiIcons.calendar, color: theme.accentColor, size: iconSize),
         ),
         SizedBox(height: 16),
-        Text('Study publisher', style: theme.textTheme.headline6),
+        Text('Study publisher', style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
         ListTile(
             title: Text('Organization'),
             subtitle: Text(study.contact.organization),
