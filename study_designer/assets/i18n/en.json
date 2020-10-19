@@ -23,8 +23,12 @@
   "consent_help_body": "",
 
   "create_new_study": "Create New Study",
+  "contact_details": "Contact details",
   "organization": "Responsible Organization",
   "researchers": "Responsible Researchers",
+  "website": "Website",
+  "email": "Email",
+  "phone": "Phone",
   "meta_data": "About",
   "interventions": "Interventions",
   "eligibility_questions": "Eligibility Questions",
