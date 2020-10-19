@@ -1,4 +1,5 @@
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:studyou_core/models/study/contact.dart';
 
 import '../models.dart';
 
@@ -24,8 +25,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   factory ParseStudy.fromBase(StudyBase study) {
     return ParseStudy()
       ..id = study.id
-      ..organization = study.organization
-      ..researchers = study.researchers
+      ..contact = study.contact
       ..title = study.title
       ..description = study.description
       ..iconName = study.iconName
@@ -37,17 +37,13 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   String get id => get<String>(keyId);
   set id(String id) => set<String>(keyId, id);
 
-  static const keyOrganization = 'organization';
-  String get organization => get<String>(keyOrganization);
-  set organization(String organization) => set<String>(keyOrganization, organization);
-
-  static const keyResearchers = 'researchers';
-  String get researchers => get<String>(keyResearchers);
-  set researchers(String researchers) => set<String>(keyResearchers, researchers);
-
   static const keyTitle = 'title';
   String get title => get<String>(keyTitle);
   set title(String title) => set<String>(keyTitle, title);
+
+  static const keyContact = 'contact';
+  Contact get contact => Contact.fromJson(get<Map<String, dynamic>>(keyContact));
+  set contact(Contact contact) => set<Map<String, dynamic>>(keyContact, contact.toJson());
 
   static const keyDescription = 'description';
   String get description => get<String>(keyDescription);
@@ -68,10 +64,9 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   ParseUserStudy extractUserStudy(
       String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
     final userStudy = ParseUserStudy()
-      ..organization = organization
-      ..researchers = researchers
       ..title = title
       ..description = description
+      ..contact = contact
       ..iconName = iconName
       ..studyId = id
       ..userId = userId
