@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
@@ -100,6 +101,8 @@ class StudyDetailsView extends StatelessWidget {
           subtitle: Text('$studyLength days'),
           leading: Icon(MdiIcons.calendar, color: theme.accentColor, size: iconSize),
         ),
+        SizedBox(height: 16),
+        Text('Study publisher', style: theme.textTheme.headline6),
         ListTile(
             title: Text('Organization'),
             subtitle: Text(study.contact.organization),
