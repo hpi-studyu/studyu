@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/models/study/contact.dart';
 import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/localization.dart';
 
@@ -21,7 +23,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    initParseConfig();
     initStudy();
+  }
+
+  Future<void> initParseConfig() async {
+    final configs = await ParseConfig().getConfigs();
+    context.read<AppState>().appSupportContact = Contact.fromJson(configs.result['contact']);
   }
 
   Future<void> initStudy() async {

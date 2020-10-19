@@ -29,6 +29,13 @@ class WelcomeScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               OutlineButton.icon(
+                icon: Icon(MdiIcons.accountBox),
+                onPressed: () => Navigator.pushNamed(context, Routes.contact),
+                label: Text(Nof1Localizations.of(context).translate('contact'),
+                    style: theme.textTheme.button.copyWith(color: theme.primaryColor, fontSize: 20)),
+              ),
+              SizedBox(height: 20),
+              OutlineButton.icon(
                 icon: Icon(MdiIcons.rocket),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
                 label: Text(Nof1Localizations.of(context).translate('get_started'),

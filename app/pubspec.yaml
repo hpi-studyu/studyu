@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^0.5.12
   stats: ^1.0.0
   timeline_tile: ^1.0.0
+  url_launcher: ^5.7.5
   # Upgrade, when Chewie is upgraded: https://github.com/brianegan/chewie/issues/370
   video_player: ^0.10.12+5
 
