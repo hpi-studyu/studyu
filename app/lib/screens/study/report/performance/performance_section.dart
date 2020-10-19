@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
-import '../../../../util/localization.dart';
 import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {

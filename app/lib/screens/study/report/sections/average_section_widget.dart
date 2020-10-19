@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/sections/average_section.dart';
 import 'package:studyou_core/models/report/temporal_aggregation.dart';
 import 'package:studyou_core/models/study/studies.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../../../util/data_processing.dart';
-import '../../../../util/localization.dart';
 import '../report_section_widget.dart';
 import '../util/plot_utilities.dart';
 

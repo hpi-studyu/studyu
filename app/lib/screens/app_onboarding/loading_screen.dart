@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
-import '../../util/localization.dart';
 import '../../util/notifications.dart';
 import '../study/tasks/task_screen.dart';
 

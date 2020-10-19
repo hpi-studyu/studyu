@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../util/localization.dart';
+import 'package:studyou_core/util/localization.dart';
 
 class BottomOnboardingNavigation extends StatelessWidget {
   final Function onBack;

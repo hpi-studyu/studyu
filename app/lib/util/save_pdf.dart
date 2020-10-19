@@ -8,8 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
-import 'localization.dart';
+import 'package:studyou_core/util/localization.dart';
 
 Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content) async {
   if (kIsWeb) {

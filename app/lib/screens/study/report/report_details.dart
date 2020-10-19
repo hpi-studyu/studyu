@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../../routes.dart';
-import '../../../util/localization.dart';
 import 'disclaimer_section.dart';
 import 'general_details_section.dart';
 import 'performance/performance_details.dart';

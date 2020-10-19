@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../routes.dart';
-import '../../util/localization.dart';
 
 class AboutScreen extends StatelessWidget {
   @override

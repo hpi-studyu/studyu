@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
-import '../../util/localization.dart';
 import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
