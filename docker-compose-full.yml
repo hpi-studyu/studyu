@@ -4,6 +4,7 @@ services:
     environment:
       - FLUTTER_PARSE_APP_ID=nof1-local
       - FLUTTER_PARSE_SERVER_URL=http://localhost:1337/parse
+      - FLUTTER_PARSE_MASTER_KEY=nof1-local
       - FLUTTER_PARSE_DEBUG=true
     build:
       context: .
@@ -17,6 +18,7 @@ services:
     environment:
       - FLUTTER_PARSE_APP_ID=nof1-local
       - FLUTTER_PARSE_SERVER_URL=http://localhost:1337/parse
+      - FLUTTER_PARSE_MASTER_KEY=nof1-local
       - FLUTTER_PARSE_DEBUG=true
     build:
       context: .
