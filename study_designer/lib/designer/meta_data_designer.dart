@@ -50,18 +50,6 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                 children: <Widget>[
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
-                      name: 'organization',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('organization')),
-                      initialValue: _draftStudy.organization),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'researchers',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('researchers')),
-                      initialValue: _draftStudy.researchers),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
                       name: 'title',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
@@ -81,6 +69,18 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                     if (MdiIcons.fromString(_draftStudy.iconName) != null)
                       Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
                   ]),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
+                      name: 'organization',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('organization')),
+                      initialValue: _draftStudy.organization),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
+                      name: 'researchers',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('researchers')),
+                      initialValue: _draftStudy.researchers),
                 ],
               ),
             ),
