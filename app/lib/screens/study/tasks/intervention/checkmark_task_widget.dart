@@ -5,9 +5,9 @@ import 'package:studyou_core/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../../../models/app_state.dart';
-import '../../../../util/localization.dart';
 
 class CheckmarkTaskWidget extends StatelessWidget {
   final CheckmarkTask task;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/report_models.dart';
 import 'package:studyou_core/models/study/parse_user_study.dart';
+import 'package:studyou_core/util/localization.dart';
 
-import '../../../util/localization.dart';
 import 'report_section_widget.dart';
 import 'sections/report_section_widgets.dart';
 

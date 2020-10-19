@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/study/studies.dart';
+import 'package:studyou_core/util/localization.dart';
 
-import '../../../util/localization.dart';
 import 'generic_section.dart';
 
 class DisclaimerSection extends GenericSection {

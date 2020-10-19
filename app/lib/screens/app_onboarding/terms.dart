@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../routes.dart';
-import '../../util/localization.dart';
 import '../../util/save_pdf.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 

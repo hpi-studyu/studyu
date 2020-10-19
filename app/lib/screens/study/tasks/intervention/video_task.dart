@@ -1,8 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:studyou_core/util/localization.dart';
 import 'package:video_player/video_player.dart';
-
-import '../../../../util/localization.dart';
 
 class VideoTask extends StatefulWidget {
   final String _asset;

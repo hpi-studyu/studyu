@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/localization.dart';
 
-import '../../util/localization.dart';
 import 'question_widget.dart';
 
 class AnnotatedScaleQuestionWidget extends QuestionWidget {

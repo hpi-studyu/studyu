@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/localization.dart';
 
 import '../../../../models/app_state.dart';
-import '../../../../util/localization.dart';
 import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:studyou_core/util/localization.dart';
 
-import '../../../../util/localization.dart';
 import '../../../app_onboarding/about.dart';
 import 'contact_us.dart';
 import 'faq.dart';
