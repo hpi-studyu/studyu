@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -15,9 +16,9 @@ class TermsScreen extends StatefulWidget {
 }
 
 class _TermsScreenState extends State<TermsScreen> {
-  bool _acceptedTerms = false;
-  bool _acceptedPrivacy = false;
-  bool _acceptedDisclaimer = false;
+  bool _acceptedTerms = kDebugMode;
+  bool _acceptedPrivacy = kDebugMode;
+  bool _acceptedDisclaimer = kDebugMode;
 
   Map<String, String> translations = <String, String>{};
 
