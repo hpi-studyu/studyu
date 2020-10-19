@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -128,7 +129,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         onBack: () => Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection)),
         nextLabel: Nof1Localizations.of(context).translate('accept'),
         nextIcon: Icon(Icons.check),
-        onNext: boxLogic.every((element) => element) ? () => Navigator.pop(context, true) : null,
+        onNext: boxLogic.every((element) => element) || kDebugMode ? () => Navigator.pop(context, true) : null,
         progress: OnboardingProgress(stage: 2, progress: 2.5),
       ),
     );
