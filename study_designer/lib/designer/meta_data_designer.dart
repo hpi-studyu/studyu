@@ -37,6 +37,7 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
@@ -69,18 +70,39 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                     if (MdiIcons.fromString(_draftStudy.iconName) != null)
                       Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
                   ]),
+                  SizedBox(height: 32),
+                  Text(Nof1Localizations.of(context).translate('contact_details'), style: theme.textTheme.headline6),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'organization',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('organization')),
-                      initialValue: _draftStudy.organization),
+                      initialValue: _draftStudy.contact.organization),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'researchers',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('researchers')),
-                      initialValue: _draftStudy.researchers),
+                      initialValue: _draftStudy.contact.researchers),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
+                      name: 'website',
+                      maxLength: 40,
+                      validator: FormBuilderValidators.url(context),
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('website')),
+                      initialValue: _draftStudy.contact.website),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
+                      name: 'email',
+                      maxLength: 40,
+                      validator: FormBuilderValidators.email(context),
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('email')),
+                      initialValue: _draftStudy.contact.email),
+                  FormBuilderPhoneField(
+                      onChanged: _saveFormChanges,
+                      name: 'phone',
+                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('phone')),
+                      initialValue: _draftStudy.contact.phone),
                 ],
               ),
             ),
@@ -95,10 +117,13 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         _draftStudy
-          ..organization = _editFormKey.currentState.value['organization']
-          ..researchers = _editFormKey.currentState.value['researchers']
           ..title = _editFormKey.currentState.value['title']
-          ..description = _editFormKey.currentState.value['description'];
+          ..description = _editFormKey.currentState.value['description']
+          ..contact.organization = _editFormKey.currentState.value['organization']
+          ..contact.researchers = _editFormKey.currentState.value['researchers']
+          ..contact.website = _editFormKey.currentState.value['website']
+          ..contact.email = _editFormKey.currentState.value['email']
+          ..contact.phone = _editFormKey.currentState.value['phone'];
       });
     }
   }
