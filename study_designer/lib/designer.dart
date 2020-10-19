@@ -190,7 +190,7 @@ class _DesignerState extends State<Designer> {
             destinations: [
               NavigationRailDestination(
                 icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.favorite),
+                selectedIcon: Icon(Icons.info_outline),
                 label: Text(Nof1Localizations.of(context).translate('meta_data')),
               ),
               NavigationRailDestination(
