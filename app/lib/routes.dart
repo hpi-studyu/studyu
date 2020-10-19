@@ -5,7 +5,8 @@ import 'screens/app_onboarding/about.dart';
 import 'screens/app_onboarding/loading_screen.dart';
 import 'screens/app_onboarding/terms.dart';
 import 'screens/app_onboarding/welcome.dart';
-import 'screens/study/dashboard/contact_tab/contact.dart';
+import 'screens/study/dashboard/contact_tab/contact_us.dart';
+import 'screens/study/dashboard/contact_tab/faq.dart';
 import 'screens/study/dashboard/dashboard.dart';
 import 'screens/study/dashboard/settings.dart';
 import 'screens/study/onboarding/consent.dart';
@@ -29,6 +30,7 @@ class Routes {
   static const String consent = '/consent';
   static const String kickoff = '/kickoff';
   static const String contact = '/contact';
+  static const String faq = '/faq';
   static const String appSettings = '/settings';
   static const String questionnaire = '/questionnaire';
   static const String reportHistory = '/reportHistory';
@@ -62,7 +64,8 @@ class Routes {
       journey: (_) => JourneyOverviewScreen(),
       consent: (_) => ConsentScreen(),
       kickoff: (_) => KickoffScreen(),
-      contact: (_) => Contact(),
+      contact: (_) => ContactUs(),
+      faq: (_) => FAQ(),
       appSettings: (_) => Settings(),
       reportHistory: (_) => ReportHistoryScreen(),
     };
