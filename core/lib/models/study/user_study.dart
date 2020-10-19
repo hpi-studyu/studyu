@@ -4,13 +4,13 @@ import 'package:quiver/collection.dart';
 
 import '../../util/extensions.dart';
 import '../models.dart';
+import 'contact.dart';
 
 class UserStudyBase {
   String studyId;
-  String organization;
-  String researchers;
   String userId;
   String title;
+  Contact contact;
   String description;
   String iconName;
   DateTime startDate;
@@ -27,8 +27,7 @@ extension UserStudyExtension on UserStudyBase {
   UserStudyBase toBase() {
     return UserStudyBase()
       ..studyId = studyId
-      ..organization = organization
-      ..researchers = researchers
+      ..contact = contact
       ..userId = userId
       ..title = title
       ..description = description

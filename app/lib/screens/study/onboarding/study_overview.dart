@@ -93,28 +93,36 @@ class StudyDetailsView extends StatelessWidget {
         ListTile(
           title: Text('Intervention phase duration'),
           subtitle: Text('${studyDetails.schedule.phaseDuration} days'),
-          leading: Icon(
-            MdiIcons.clock,
-            color: theme.accentColor,
-            size: iconSize,
-          ),
+          leading: Icon(MdiIcons.clock, color: theme.accentColor, size: iconSize),
         ),
-        SizedBox(height: 16),
         ListTile(
           title: Text('Minimum study length'),
           subtitle: Text('$studyLength days'),
           leading: Icon(MdiIcons.calendar, color: theme.accentColor, size: iconSize),
         ),
-        SizedBox(height: 16),
         ListTile(
             title: Text('Organization'),
-            subtitle: Text(study.organization),
+            subtitle: Text(study.contact.organization),
             leading: Icon(MdiIcons.hospitalBuilding, color: theme.accentColor, size: iconSize)),
-        SizedBox(height: 16),
         ListTile(
           title: Text('Responsible Researchers'),
-          subtitle: Text(study.researchers),
+          subtitle: Text(study.contact.researchers),
           leading: Icon(MdiIcons.doctor, color: theme.accentColor, size: iconSize),
+        ),
+        ListTile(
+          title: Text('Email'),
+          subtitle: Text(study.contact.email),
+          leading: Icon(MdiIcons.email, color: theme.accentColor, size: iconSize),
+        ),
+        ListTile(
+          title: Text('Website'),
+          subtitle: Text(study.contact.website),
+          leading: Icon(MdiIcons.web, color: theme.accentColor, size: iconSize),
+        ),
+        ListTile(
+          title: Text('Phone'),
+          subtitle: Text(study.contact.phone),
+          leading: Icon(MdiIcons.phone, color: theme.accentColor, size: iconSize),
         ),
       ],
     );

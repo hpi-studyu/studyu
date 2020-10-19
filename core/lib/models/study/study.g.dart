@@ -9,10 +9,9 @@ part of 'study.dart';
 StudyBase _$StudyBaseFromJson(Map<String, dynamic> json) {
   return StudyBase()
     ..id = json['id'] as String
-    ..organization = json['organization'] as String
-    ..researchers = json['researchers'] as String
     ..title = json['title'] as String
     ..description = json['description'] as String
+    ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..iconName = json['iconName'] as String
     ..published = json['published'] as bool
     ..studyDetails =
@@ -21,10 +20,9 @@ StudyBase _$StudyBaseFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$StudyBaseToJson(StudyBase instance) => <String, dynamic>{
       'id': instance.id,
-      'organization': instance.organization,
-      'researchers': instance.researchers,
       'title': instance.title,
       'description': instance.description,
+      'contact': instance.contact.toJson(),
       'iconName': instance.iconName,
       'published': instance.published,
       'studyDetails': instance.studyDetails.toJson(),

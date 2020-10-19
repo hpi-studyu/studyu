@@ -1,6 +1,7 @@
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
 import '../models.dart';
+import 'contact.dart';
 
 class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBase {
   static const _keyTableName = 'UserStudy';
@@ -11,12 +12,11 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
 
   factory ParseUserStudy.fromBase(UserStudyBase userStudy) {
     return ParseUserStudy()
-      ..organization = userStudy.organization
-      ..researchers = userStudy.researchers
       ..studyId = userStudy.studyId
       ..userId = userStudy.userId
       ..title = userStudy.title
       ..description = userStudy.description
+      ..contact = userStudy.contact
       ..iconName = userStudy.iconName
       ..startDate = userStudy.startDate
       ..schedule = userStudy.schedule
@@ -39,14 +39,6 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   String get userId => get<String>(keyUserId);
   set userId(String userId) => set<String>(keyUserId, userId);
 
-  static const keyOrganization = 'organization';
-  String get organization => get<String>(keyOrganization);
-  set organization(String organization) => set<String>(keyOrganization, organization);
-
-  static const keyResearchers = 'researchers';
-  String get researchers => get<String>(keyResearchers);
-  set researchers(String organization) => set<String>(keyResearchers, researchers);
-
   static const keyTitle = 'title';
   String get title => get<String>(keyTitle);
   set title(String title) => set<String>(keyTitle, title);
@@ -54,6 +46,10 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   static const keyDescription = 'description';
   String get description => get<String>(keyDescription);
   set description(String description) => set<String>(keyDescription, description);
+
+  static const keyContact = 'contact';
+  Contact get contact => Contact.fromJson(get<Map<String, dynamic>>(keyContact));
+  set contact(Contact contact) => set<Map<String, dynamic>>(keyContact, contact.toJson());
 
   static const keyIconName = 'icon_name';
   String get iconName => get<String>(keyIconName);
