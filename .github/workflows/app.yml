@@ -5,6 +5,8 @@ on:
     # paths:
     #     - 'app/*'
     branches:
+    - master
+    - dev
     - github-action
 
 jobs:
