@@ -7,7 +7,6 @@ import 'screens/app_onboarding/loading_screen.dart';
 import 'screens/app_onboarding/terms.dart';
 import 'screens/app_onboarding/welcome.dart';
 import 'screens/study/dashboard/contact_tab/faq.dart';
-import 'screens/study/dashboard/contact_tab/support.dart';
 import 'screens/study/dashboard/dashboard.dart';
 import 'screens/study/dashboard/settings.dart';
 import 'screens/study/onboarding/consent.dart';
@@ -30,7 +29,6 @@ class Routes {
   static const String journey = '/journey';
   static const String consent = '/consent';
   static const String kickoff = '/kickoff';
-  static const String support = '/support';
   static const String contact = '/contact';
   static const String faq = '/faq';
   static const String appSettings = '/settings';
@@ -67,7 +65,6 @@ class Routes {
       consent: (_) => ConsentScreen(),
       kickoff: (_) => KickoffScreen(),
       contact: (_) => ContactScreen(),
-      support: (_) => Contact(),
       faq: (_) => FAQ(),
       appSettings: (_) => Settings(),
       reportHistory: (_) => ReportHistoryScreen(),

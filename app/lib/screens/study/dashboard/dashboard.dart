@@ -1,4 +1,3 @@
-import 'package:StudyU/screens/study/report/report_details.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -9,6 +8,7 @@ import 'package:studyou_core/util/localization.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
+import '../report/report_details.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -61,7 +61,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return {
                 OverflowMenuItem(
                     Nof1Localizations.of(context).translate('report_history'), MdiIcons.history, Routes.reportHistory),
-                OverflowMenuItem('Support', Icons.account_box, Routes.support),
                 OverflowMenuItem(
                     Nof1Localizations.of(context).translate('FAQ'), MdiIcons.frequentlyAskedQuestions, Routes.faq),
                 OverflowMenuItem(
