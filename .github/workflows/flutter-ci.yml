@@ -15,7 +15,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - run: cd app
-      - run: flutter pub get
-      - run: flutter build apk
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: ./app
+      - name: Build apk
+        run: flutter build apk
+        working-directory: ./app
 
