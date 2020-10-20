@@ -2,8 +2,8 @@ name: Flutter CI
 
 on:
   push:
-    paths:
-        - 'app/*'
+    # paths:
+    #     - 'app/*'
     branches:
     - github-action
 
