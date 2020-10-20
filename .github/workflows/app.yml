@@ -22,6 +22,17 @@ jobs:
         run: flutter analyze
         working-directory: ./app
 
+  test:
+    runs-on: ubuntu-latest
+    container: cirrusci/flutter:beta
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Test
+        run: flutter test
+        working-directory: ./app
+
   build-web:
     runs-on: ubuntu-latest
     container: cirrusci/flutter:beta
