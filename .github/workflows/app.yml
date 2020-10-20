@@ -2,8 +2,8 @@ name: App CI
 
 on:
   push:
-    # paths:
-    #     - 'app/*'
+    paths:
+        - 'app/*'
     branches:
     - master
     - dev
