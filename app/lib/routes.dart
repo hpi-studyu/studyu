@@ -1,4 +1,3 @@
-import 'package:StudyU/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
@@ -6,6 +5,7 @@ import 'screens/app_onboarding/about.dart';
 import 'screens/app_onboarding/loading_screen.dart';
 import 'screens/app_onboarding/terms.dart';
 import 'screens/app_onboarding/welcome.dart';
+import 'screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'screens/study/dashboard/contact_tab/faq.dart';
 import 'screens/study/dashboard/dashboard.dart';
 import 'screens/study/dashboard/settings.dart';
