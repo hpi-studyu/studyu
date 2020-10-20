@@ -41,8 +41,6 @@ class _ParseInitState extends State<ParseInit> {
       final masterKey = DotEnv().env['FLUTTER_PARSE_MASTER_KEY'];
       assert(parseAppId != null && parseAppId.isNotEmpty, "Parse App ID is null or empty");
       assert(serverUrl != null && serverUrl.isNotEmpty, "Parse Server URL is null or empty");
-      assert(masterKey != null && masterKey.isNotEmpty,
-          "Master key is null or empty. Needed to create a new anonymous user");
       await Parse().initialize(
         parseAppId,
         serverUrl,
