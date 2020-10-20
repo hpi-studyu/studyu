@@ -5,9 +5,11 @@ on:
     paths:
         - 'core/**'
     branches:
-    - master
+    - main
     - dev
-    - github-action
+  pull_request:
+    paths:
+        - 'core/**'
 
 jobs:
   lint:
