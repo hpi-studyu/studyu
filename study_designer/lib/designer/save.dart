@@ -20,6 +20,7 @@ class _SaveState extends State<Save> {
   StudyBase _draftStudy;
   Future<ParseResponse> _futureParseStudy;
   String studyObjectId;
+  bool _hasAcceptedTerms = false;
 
   @override
   void initState() {
@@ -70,17 +71,29 @@ class _SaveState extends State<Save> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text(Nof1Localizations.of(context).translate('terms_title'), style: theme.textTheme.headline6),
+                  CheckboxListTile(
+                      title: Text(Nof1Localizations.of(context).translate('terms_agree')),
+                      value: _hasAcceptedTerms,
+                      onChanged: (val) => setState(() => _hasAcceptedTerms = val)),
+                  SizedBox(height: 16),
+                  Text(Nof1Localizations.of(context).translate('save'), style: theme.textTheme.headline6),
+                  if (!_hasAcceptedTerms) Text(Nof1Localizations.of(context).translate('terms_description')),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       OutlineButton.icon(
-                          onPressed: () => _saveDraft(study?.objectId, study?.studyDetails?.objectId),
+                          onPressed: _hasAcceptedTerms
+                              ? () => _saveDraft(study?.objectId, study?.studyDetails?.objectId)
+                              : null,
                           icon: Icon(Icons.save),
                           label: Text(Nof1Localizations.of(context).translate('save_draft'),
                               style: TextStyle(fontSize: 30))),
                       SizedBox(width: 16),
                       OutlineButton.icon(
-                          onPressed: () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId),
+                          onPressed: _hasAcceptedTerms
+                              ? () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId)
+                              : null,
                           icon: Icon(Icons.publish),
                           label: Text(Nof1Localizations.of(context).translate('publish_study'),
                               style: TextStyle(fontSize: 30))),
