@@ -36,9 +36,9 @@ services:
     image: parseplatform/parse-server
     environment:
       # All env vars: https://github.com/parse-community/parse-server/blob/master/src/Options/Definitions.js
-      - PARSE_SERVER_DATABASE_URI=mongodb://mongodb
       - PARSE_SERVER_APPLICATION_ID=nof1-local
       - PARSE_SERVER_MASTER_KEY=nof1-local
+      - PARSE_SERVER_DATABASE_URI=mongodb://mongodb
       - PARSE_SERVER_HOST=0.0.0.0
       - PARSE_SERVER_ALLOW_HEADERS=X-Parse-Installation-Id
     ports:
