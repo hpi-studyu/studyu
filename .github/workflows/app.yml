@@ -50,14 +50,14 @@ jobs:
         run: flutter build web
         working-directory: ./app
 
-  build-android:
-    runs-on: ubuntu-latest
-    container: cirrusci/flutter:beta
+  # build-android:
+  #   runs-on: ubuntu-latest
+  #   container: cirrusci/flutter:beta
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Build android apk
-        run: flutter build apk --no-tree-shake-icons
-        working-directory: ./app
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Build android apk
+  #       run: flutter build apk --no-tree-shake-icons
+  #       working-directory: ./app
 
