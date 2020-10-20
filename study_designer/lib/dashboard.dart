@@ -168,42 +168,39 @@ class StudyCard extends StatelessWidget {
         study.iconName != null && study.iconName.isNotEmpty ? MdiIcons.fromString(study.iconName) : MdiIcons.cropSquare;
 
     return ListTile(
-      title: Text(study.title),
-      subtitle: Text(study.description),
-      leading: Icon(icon),
-      trailing: !study.published
-          ? IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () async {
-                final isDeleted =
-                    await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
-                if (isDeleted) {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('${study.title} ${Nof1Localizations.of(context).translate('deleted')}')));
-                  if (reload != null) reload();
-                }
-              },
-            )
-          : IconButton(
-              icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-              tooltip: Nof1Localizations.of(context).translate('export_csv'),
-              onPressed: () async {
-                final dl = ResultDownloader(study);
-                await dl.loadDetails();
-                final results = await dl.loadAllResults();
-                for (final entry in results.entries) {
-                  downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
-                }
-              },
-            ),
-      onTap: !study.published
-          ? () async {
-              final res = await StudyQueries.getStudyWithDetails(study);
-              final ParseStudy fullStudy = res.results.first;
-              Navigator.push(context, Designer.draftRoute(study: fullStudy.toBase())).then((_) => reload());
-            }
-          : null,
-    );
+        title: Text(study.title),
+        subtitle: Text(study.description),
+        leading: Icon(icon),
+        trailing: !study.published
+            ? IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  final isDeleted =
+                      await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
+                  if (isDeleted) {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('${study.title} ${Nof1Localizations.of(context).translate('deleted')}')));
+                    if (reload != null) reload();
+                  }
+                },
+              )
+            : IconButton(
+                icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
+                tooltip: Nof1Localizations.of(context).translate('export_csv'),
+                onPressed: () async {
+                  final dl = ResultDownloader(study);
+                  await dl.loadDetails();
+                  final results = await dl.loadAllResults();
+                  for (final entry in results.entries) {
+                    downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+                  }
+                },
+              ),
+        onTap: () async {
+          final res = await StudyQueries.getStudyWithDetails(study);
+          final ParseStudy fullStudy = res.results.first;
+          Navigator.push(context, Designer.draftRoute(study: fullStudy.toBase())).then((_) => reload());
+        });
   }
 }
 

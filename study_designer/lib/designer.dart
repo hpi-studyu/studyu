@@ -175,7 +175,9 @@ class _DesignerState extends State<Designer> {
       value: _designerState,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Nof1Localizations.of(context).translate('create_new_study')),
+          title: Text(widget.study != null
+              ? Nof1Localizations.of(context).translate('view_published_study')
+              : Nof1Localizations.of(context).translate('create_new_study')),
         ),
         body: Row(children: [
           NavigationRail(
@@ -233,11 +235,12 @@ class _DesignerState extends State<Designer> {
                 selectedIcon: Icon(Icons.warning),
                 label: Text(Nof1Localizations.of(context).translate('consent')),
               ),
-              NavigationRailDestination(
-                icon: Icon(Icons.publish),
-                selectedIcon: Icon(Icons.publish),
-                label: Text(Nof1Localizations.of(context).translate('save')),
-              )
+              if (!(widget.study != null && widget.study.published))
+                NavigationRailDestination(
+                  icon: Icon(Icons.publish),
+                  selectedIcon: Icon(Icons.publish),
+                  label: Text(Nof1Localizations.of(context).translate('save')),
+                )
             ],
           ),
           VerticalDivider(thickness: 1, width: 1),
