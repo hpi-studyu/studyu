@@ -48,6 +48,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Enable web support
+        run: flutter config --enable-web
       - name: Build apk
         run: flutter build web
         working-directory: ./app
