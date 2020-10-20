@@ -3,7 +3,7 @@ name: Core CI
 on:
   push:
     paths:
-        - 'core/*'
+        - 'core/**'
     branches:
     - master
     - dev

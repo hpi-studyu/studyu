@@ -3,7 +3,7 @@ name: Study Designer CI
 on:
   push:
     paths:
-        - 'study_designer/*'
+        - 'study_designer/**'
     branches:
     - master
     - dev
