@@ -1,0 +1,19 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: cirrusci/flutter:beta
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: cd app
+      - run: flutter pub get
+      - run: flutter build apk
+
