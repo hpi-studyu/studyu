@@ -83,5 +83,8 @@
   "filename": "Dateiname",
   "hour": "Stunde",
   "minute": "Minute",
-  "data_source": "Datenquelle"
+  "data_source": "Datenquelle",
+  "terms_title": "App Bedingungen und Rechtlinien",
+  "terms_description": "Bevor Sie Ihre Studie speichern oder publizieren können müssen Sie den App Bedingungen und Rechtlinien zustimmen",
+  "terms_agree": "Ich akzeptiere die App Bedingungen und Rechtlinien"
 }
