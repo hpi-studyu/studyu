@@ -15,6 +15,14 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
+class OverflowMenuItem {
+  final String name;
+  final IconData icon;
+  final String routeName;
+
+  OverflowMenuItem(this.name, this.icon, this.routeName);
+}
+
 class _DashboardScreenState extends State<DashboardScreen> {
   ParseUserStudy study;
   Multimap<Time, Task> scheduleToday;
@@ -36,21 +44,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             tooltip: Nof1Localizations.of(context).translate('contact'),
-            icon: Icon(MdiIcons.commentAccount),
+            icon: Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: Nof1Localizations.of(context).translate('report_history'),
-            icon: Icon(MdiIcons.history),
+            icon: Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
           ),
-          IconButton(
-            tooltip: Nof1Localizations.of(context).translate('settings'),
-            icon: Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, Routes.appSettings),
-          )
+          PopupMenuButton<OverflowMenuItem>(
+            onSelected: (value) => Navigator.pushNamed(context, value.routeName),
+            itemBuilder: (context) {
+              return {
+                OverflowMenuItem('Support', Icons.account_box, Routes.support),
+                OverflowMenuItem(
+                    Nof1Localizations.of(context).translate('FAQ'), MdiIcons.frequentlyAskedQuestions, Routes.faq),
+                OverflowMenuItem(
+                    Nof1Localizations.of(context).translate('about'), MdiIcons.informationOutline, Routes.about),
+                OverflowMenuItem(
+                    Nof1Localizations.of(context).translate('settings'), Icons.settings, Routes.appSettings),
+              }.map((choice) {
+                return PopupMenuItem<OverflowMenuItem>(
+                  value: choice,
+                  child: Row(children: [Icon(choice.icon, color: Colors.black), SizedBox(width: 8), Text(choice.name)]),
+                );
+              }).toList();
+            },
+          ),
         ],
       ),
       body: study.completedStudy
