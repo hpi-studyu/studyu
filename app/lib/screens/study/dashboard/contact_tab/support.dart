@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/util/localization.dart';
 
 import '../../../app_onboarding/about.dart';
-import 'contact_us.dart';
+import 'contact_screen.dart';
 import 'faq.dart';
 
 class Contact extends StatelessWidget {
@@ -42,7 +42,7 @@ class Contact extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ContactUs()),
+                    MaterialPageRoute(builder: (context) => ContactScreen()),
                   );
                 },
                 textColor: Colors.white,

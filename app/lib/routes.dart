@@ -1,3 +1,4 @@
+import 'package:StudyU/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
@@ -5,8 +6,8 @@ import 'screens/app_onboarding/about.dart';
 import 'screens/app_onboarding/loading_screen.dart';
 import 'screens/app_onboarding/terms.dart';
 import 'screens/app_onboarding/welcome.dart';
-import 'screens/study/dashboard/contact_tab/contact_us.dart';
 import 'screens/study/dashboard/contact_tab/faq.dart';
+import 'screens/study/dashboard/contact_tab/support.dart';
 import 'screens/study/dashboard/dashboard.dart';
 import 'screens/study/dashboard/settings.dart';
 import 'screens/study/onboarding/consent.dart';
@@ -29,6 +30,7 @@ class Routes {
   static const String journey = '/journey';
   static const String consent = '/consent';
   static const String kickoff = '/kickoff';
+  static const String support = '/support';
   static const String contact = '/contact';
   static const String faq = '/faq';
   static const String appSettings = '/settings';
@@ -64,7 +66,8 @@ class Routes {
       journey: (_) => JourneyOverviewScreen(),
       consent: (_) => ConsentScreen(),
       kickoff: (_) => KickoffScreen(),
-      contact: (_) => ContactUs(),
+      contact: (_) => ContactScreen(),
+      support: (_) => Contact(),
       faq: (_) => FAQ(),
       appSettings: (_) => Settings(),
       reportHistory: (_) => ReportHistoryScreen(),
