@@ -34,20 +34,20 @@ class ReportHistoryScreen extends StatelessWidget {
 }
 
 class ReportHistoryItem extends StatelessWidget {
-  final ParseUserStudy instance;
+  final ParseUserStudy study;
 
-  const ReportHistoryItem(this.instance);
+  const ReportHistoryItem(this.study);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.watch<AppState>();
-    final isActiveStudy = model.activeStudy.studyId == instance.studyId;
+    final isActiveStudy = model.activeStudy.studyId == study.studyId;
     return Card(
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
-          Navigator.push(context, ReportDetailsScreen.routeFor(reportStudy: instance));
+          Navigator.push(context, ReportDetailsScreen.routeFor(reportStudy: study));
         },
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -55,9 +55,9 @@ class ReportHistoryItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Icon(MdiIcons.fromString(instance.iconName) ?? MdiIcons.accountHeart,
+                Icon(MdiIcons.fromString(study.iconName) ?? MdiIcons.accountHeart,
                     color: isActiveStudy ? Colors.white : Colors.black),
-                Text(instance.title,
+                Text(study.title,
                     style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black)),
               ],
             ),

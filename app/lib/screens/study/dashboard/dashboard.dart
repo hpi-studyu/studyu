@@ -1,3 +1,4 @@
+import 'package:StudyU/screens/study/report/report_details.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -50,14 +51,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
           IconButton(
-            tooltip: Nof1Localizations.of(context).translate('report_history'),
+            tooltip: 'Current report',
             icon: Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
+            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(reportStudy: study)),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) => Navigator.pushNamed(context, value.routeName),
             itemBuilder: (context) {
               return {
+                OverflowMenuItem(
+                    Nof1Localizations.of(context).translate('report_history'), MdiIcons.history, Routes.reportHistory),
                 OverflowMenuItem('Support', Icons.account_box, Routes.support),
                 OverflowMenuItem(
                     Nof1Localizations.of(context).translate('FAQ'), MdiIcons.frequentlyAskedQuestions, Routes.faq),
