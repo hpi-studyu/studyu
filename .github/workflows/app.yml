@@ -10,6 +10,7 @@ on:
   pull_request:
     paths:
         - 'app/**'
+  workflow_dispatch:
 
 jobs:
   lint:
