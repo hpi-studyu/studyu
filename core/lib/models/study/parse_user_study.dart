@@ -48,7 +48,12 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   set description(String description) => set<String>(keyDescription, description);
 
   static const keyContact = 'contact';
-  Contact get contact => Contact.fromJson(get<Map<String, dynamic>>(keyContact));
+  Contact get contact {
+    final contactMap = get<Map<String, dynamic>>(keyContact);
+    if (contactMap == null) return null;
+    return Contact.fromJson(contactMap);
+  }
+
   set contact(Contact contact) => set<Map<String, dynamic>>(keyContact, contact.toJson());
 
   static const keyIconName = 'icon_name';
