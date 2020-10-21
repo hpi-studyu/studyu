@@ -43,7 +43,8 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
                       .entries
                       .map((entry) => ConsentItemEditor(
                           key: UniqueKey(), consentItem: entry.value, remove: () => _removeConsentItem(entry.key)))
-                      .toList()
+                      .toList(),
+                  SizedBox(height: 200)
                 ],
               ),
             ),
