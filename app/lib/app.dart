@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -24,7 +25,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     appLanguage = AppLanguage()..fetchLocale();
-    _configureLocalTimeZone();
+    if (!kIsWeb) {
+      _configureLocalTimeZone();
+    }
   }
 
   /// This is needed for flutter_local_notifications
