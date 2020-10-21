@@ -139,6 +139,14 @@ class _DesignerState extends State<Designer> {
 
             final Widget specificDesignerWithHelpbar = Column(
               children: [
+                if (widget.study != null && widget.study.published)
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      Nof1Localizations.of(context).translate('view_mode_warning'),
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
                 Row(children: [
                   Spacer(),
                   IconButton(icon: Icon(Icons.help), onPressed: () => _showHelpDialog(title, body))

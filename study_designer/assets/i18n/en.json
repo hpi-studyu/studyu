@@ -25,6 +25,7 @@
   "create_new_study": "Create New Study",
   "contact_details": "Contact details",
   "view_published_study": "View Published Study",
+  "view_mode_warning": "This is a view mode only. The study is published already and therefore changes can not be saved.",
   "organization": "Responsible Organization",
   "researchers": "Responsible Researchers",
   "website": "Website",
