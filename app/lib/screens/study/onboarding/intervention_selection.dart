@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +81,9 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Future<void> onFinished() async {
     final model = context.read<AppState>();
     model.activeStudy = model.selectedStudy.extractUserStudy(null, selectedInterventions, DateTime.now(), 0);
-    scheduleStudyNotifications(context);
+    if (kIsWeb) {
+      scheduleStudyNotifications(context);
+    }
     Navigator.pushNamed(context, Routes.journey);
   }
 
