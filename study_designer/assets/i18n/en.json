@@ -96,7 +96,7 @@
   "publish": "Publish",
   "number_of_cycles": "Number of Cycles",
   "phase_duration": "Phase Duration",
-  "Include Baseline": "Include Baseline",
+  "include_baseline": "Include Baseline",
   "Sequence": "Sequence",
   "improvement_direction": "Improvement Direction",
   "temporal_aggregation": "Temporal Aggregation",
