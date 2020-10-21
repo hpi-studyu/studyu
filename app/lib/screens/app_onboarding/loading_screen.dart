@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
@@ -37,7 +38,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final prefs = await SharedPreferences.getInstance();
     final selectedStudyObjectId = prefs.getString(UserQueries.selectedStudyObjectIdKey);
     print('Selected study: $selectedStudyObjectId');
-    final notificationInit = initNotifications();
     if (selectedStudyObjectId == null) {
       if (await UserQueries.isUserLoggedIn()) {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
@@ -50,7 +50,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final userStudy = await StudyQueries.getUserStudy(selectedStudyObjectId);
     if (userStudy != null) {
       model.activeStudy = userStudy;
-      notificationInit.then((value) => scheduleStudyNotifications(context));
+      if (!kIsWeb) {
+        // Notifications not supported on web
+        initNotifications().then((value) => scheduleStudyNotifications(context));
+      }
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);
