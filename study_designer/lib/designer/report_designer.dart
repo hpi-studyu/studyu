@@ -75,7 +75,8 @@ class _ReportDesignerState extends State<ReportDesigner> {
                             remove: () => _removeSection(entry.key),
                             updateSection: (section) => _replaceSection(entry.key, section),
                           ))
-                      .toList()
+                      .toList(),
+                  SizedBox(height: 200)
                 ],
               ),
             ),

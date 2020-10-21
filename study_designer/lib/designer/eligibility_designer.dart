@@ -44,7 +44,8 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
                             key: UniqueKey(),
                             eligibilityCriterion: entry.value,
                             questions: _questions,
-                            remove: () => _removeEligibilityCriterion(entry.key)))
+                            remove: () => _removeEligibilityCriterion(entry.key))),
+                        SizedBox(height: 200)
                       ])))),
               DesignerAddButton(
                   label: Text(Nof1Localizations.of(context).translate('add_criterion')), add: _addCriterion),

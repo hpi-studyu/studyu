@@ -39,7 +39,8 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
               child: Column(
                 children: <Widget>[
                   ..._observations.asMap().entries.map((entry) =>
-                      TaskEditor(key: UniqueKey(), task: entry.value, remove: () => _removeObservation(entry.key)))
+                      TaskEditor(key: UniqueKey(), task: entry.value, remove: () => _removeObservation(entry.key))),
+                  SizedBox(height: 200)
                 ],
               ),
             ),
