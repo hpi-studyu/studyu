@@ -55,7 +55,7 @@ class _DesignerState extends State<Designer> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(body),
+                Text(body, overflow: TextOverflow.clip),
               ],
             ),
           ),
@@ -126,11 +126,13 @@ class _DesignerState extends State<Designer> {
                 break;
               case designerConsentRoute:
                 specificDesigner = ConsentDesigner();
-                title = Nof1Localizations.of(context).translate('create_new_study');
-                body = Nof1Localizations.of(context).translate('create_new_study');
+                title = Nof1Localizations.of(context).translate('consent_help_title');
+                body = Nof1Localizations.of(context).translate('consent_help_body');
                 break;
               case designerSaveRoute:
                 specificDesigner = Save();
+                title = Nof1Localizations.of(context).translate('save_help_title');
+                body = Nof1Localizations.of(context).translate('save_help_body');
                 break;
               default:
                 specificDesigner = Container();
