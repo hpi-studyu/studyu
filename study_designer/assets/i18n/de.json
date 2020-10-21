@@ -78,7 +78,7 @@
   "publish": "Publizieren",
   "number_of_cycles": "Anzahl an Zyklen",
   "phase_duration": "Länge einer Phase",
-  "Include Baseline": "Baseline hinzufügen",
+  "include_baseline": "Baseline hinzufügen",
   "Sequence": "Sequenz",
   "improvement_direction": "Verbesserungsrichtung",
   "temporal_aggregation": "Zeitliche Aggregation",
