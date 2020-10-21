@@ -12,6 +12,7 @@ import '../../../models/app_state.dart';
 import '../../../routes.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/study_tile.dart';
+import '../dashboard/contact_tab/contact_screen.dart';
 import 'eligibility_screen.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
@@ -94,38 +95,18 @@ class StudyDetailsView extends StatelessWidget {
         ListTile(
           title: Text('Intervention phase duration'),
           subtitle: Text('${studyDetails.schedule.phaseDuration} days'),
-          leading: Icon(MdiIcons.clock, color: theme.accentColor, size: iconSize),
+          leading: Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
         ),
         ListTile(
           title: Text('Minimum study length'),
           subtitle: Text('$studyLength days'),
-          leading: Icon(MdiIcons.calendar, color: theme.accentColor, size: iconSize),
+          leading: Icon(MdiIcons.calendar, color: theme.primaryColor, size: iconSize),
         ),
         SizedBox(height: 16),
-        Text('Study publisher', style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
-        ListTile(
-            title: Text('Organization'),
-            subtitle: Text(study.contact.organization),
-            leading: Icon(MdiIcons.hospitalBuilding, color: theme.accentColor, size: iconSize)),
-        ListTile(
-          title: Text('Responsible Researchers'),
-          subtitle: Text(study.contact.researchers),
-          leading: Icon(MdiIcons.doctor, color: theme.accentColor, size: iconSize),
-        ),
-        ListTile(
-          title: Text('Email'),
-          subtitle: Text(study.contact.email),
-          leading: Icon(MdiIcons.email, color: theme.accentColor, size: iconSize),
-        ),
-        ListTile(
-          title: Text('Website'),
-          subtitle: Text(study.contact.website),
-          leading: Icon(MdiIcons.web, color: theme.accentColor, size: iconSize),
-        ),
-        ListTile(
-          title: Text('Phone'),
-          subtitle: Text(study.contact.phone),
-          leading: Icon(MdiIcons.phone, color: theme.accentColor, size: iconSize),
+        ContactWidget(
+          contact: study.contact,
+          title: 'Study Publisher',
+          color: theme.accentColor,
         ),
       ],
     );
