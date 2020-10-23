@@ -91,6 +91,8 @@
   "was_saved_as_draft": "was saved as draft.",
   "save_draft": "Save draft",
   "publish_study": "Publish study",
+  "debug_output": "Debug Output",
+  "show_debug_output": "Show debug output",
   "study_model_in_json": "Resulting study model in JSON format",
   "copied_json": "Copied JSON",
   "copy": "Copy",

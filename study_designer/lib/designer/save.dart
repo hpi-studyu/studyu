@@ -21,6 +21,7 @@ class _SaveState extends State<Save> {
   Future<ParseResponse> _futureParseStudy;
   String studyObjectId;
   bool _hasAcceptedTerms = false;
+  bool _showDebugOutput = false;
 
   @override
   void initState() {
@@ -99,24 +100,31 @@ class _SaveState extends State<Save> {
                               style: TextStyle(fontSize: 30))),
                     ],
                   ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Text(Nof1Localizations.of(context).translate('study_model_in_json'),
-                          style: theme.textTheme.headline6),
-                      SizedBox(width: 8),
-                      OutlineButton.icon(
-                          onPressed: () async {
-                            await FlutterClipboard.copy(prettyJson(_draftStudy.toJson()));
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text(Nof1Localizations.of(context).translate('copy_json'))));
-                          },
-                          icon: Icon(Icons.copy),
-                          label: Text(Nof1Localizations.of(context).translate('copy'))),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  JsonViewerWidget(_draftStudy.toJson()),
+                  SizedBox(height: 80),
+                  Text(Nof1Localizations.of(context).translate('debug_output'), style: theme.textTheme.headline6),
+                  CheckboxListTile(
+                      title: Text(Nof1Localizations.of(context).translate('show_debug_output')),
+                      value: _showDebugOutput,
+                      onChanged: (val) => setState(() => _showDebugOutput = val)),
+                  if (_showDebugOutput)
+                    Column(children: [
+                      Row(
+                        children: [
+                          Text(Nof1Localizations.of(context).translate('study_model_in_json')),
+                          SizedBox(width: 8),
+                          OutlineButton.icon(
+                              onPressed: () async {
+                                await FlutterClipboard.copy(prettyJson(_draftStudy.toJson()));
+                                Scaffold.of(context).showSnackBar(
+                                    SnackBar(content: Text(Nof1Localizations.of(context).translate('copy_json'))));
+                              },
+                              icon: Icon(Icons.copy),
+                              label: Text(Nof1Localizations.of(context).translate('copy'))),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      JsonViewerWidget(_draftStudy.toJson()),
+                    ])
                 ],
               ),
             ),
