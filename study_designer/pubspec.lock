@@ -184,12 +184,12 @@ packages:
     source: hosted
     version: "3.0.10"
   dropdown_search:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: dropdown_search
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.5"
+    version: "0.4.4"
   effective_dart:
     dependency: "direct dev"
     description:
@@ -231,7 +231,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9+1"
+    version: "2.0.10"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -268,9 +268,11 @@ packages:
   flutter_form_builder:
     dependency: "direct main"
     description:
-      name: flutter_form_builder
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: version_4
+      resolved-ref: "313581cb78e63cd5334f75e05f7418bfb03783ce"
+      url: "https://github.com/danvick/flutter_form_builder.git"
+    source: git
     version: "4.0.0-pre.4"
   flutter_iconpicker:
     dependency: "direct main"
