@@ -5,7 +5,7 @@ on:
     paths:
         - 'study_designer/**'
     branches:
-    - main
+    - master
     - dev
   pull_request:
     paths:
