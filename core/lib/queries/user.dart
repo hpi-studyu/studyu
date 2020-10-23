@@ -11,7 +11,7 @@ class UserQueries {
     ParseUser currentUser = await ParseUser.currentUser();
 
     if (currentUser == null) {
-      final response = await ParseUser(null, null, null).loginAnonymous();
+      final response = await ParseUser(null, null, null).loginAnonymous(doNotSendInstallationID: true);
       if (response.success) {
         currentUser = response.result;
       }

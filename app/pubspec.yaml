@@ -34,7 +34,11 @@ dependencies:
   json_annotation: ^3.1.0
   material_design_icons_flutter: ^4.0.5655
   normal: ^0.5.1
-  parse_server_sdk_flutter: 2.0.0
+  parse_server_sdk_flutter:
+    git:
+      url: git://github.com/fischerscode/Parse-SDK-Flutter.git
+      ref: issue-490
+      path: packages/flutter
   path_provider: ^1.6.18
   pdf: ^1.11.2
   pimp_my_button: ^1.0.0
