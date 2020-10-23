@@ -9,7 +9,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: europe-west1
-  SERVICE_NAME: studyu-app
+  SERVICE_NAME: studyu-designer
 
 jobs:
   setup-build-deploy:
@@ -33,7 +33,7 @@ jobs:
     
     - name: Build
       run: |
-        docker build -t gcr.io/${{ secrets.RUN_PROJECT }}/$SERVICE_NAME:latest --build-arg FLUTTER_APP_FOLDER=app .
+        docker build -t gcr.io/${{ secrets.RUN_PROJECT }}/$SERVICE_NAME:latest --build-arg FLUTTER_APP_FOLDER=study_designer .
 
     - name: Push
       run: |
