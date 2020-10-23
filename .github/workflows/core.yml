@@ -5,7 +5,7 @@ on:
     paths:
         - 'core/**'
     branches:
-    - main
+    - master
     - dev
   pull_request:
     paths:
