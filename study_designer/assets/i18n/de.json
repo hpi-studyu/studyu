@@ -70,6 +70,8 @@
   "was_saved_as_draft": "wurde als Entwurf gespeichert.",
   "save_draft": "Entwurf speichern",
   "publish_study": "Studie publizieren",
+  "debug_output": "Debug Informationen",
+  "show_debug_output": "Debug Informationen anzeigen",
   "study_model_in_json": "resultierendes Study Model im JSON-Format",
   "copied_json": "JSON kopiert",
   "copy": "kopieren",
