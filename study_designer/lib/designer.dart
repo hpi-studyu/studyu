@@ -1,4 +1,7 @@
+import 'package:clipboard/clipboard.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
@@ -188,6 +191,19 @@ class _DesignerState extends State<Designer> {
           title: Text(widget.study != null
               ? Nof1Localizations.of(context).translate('view_published_study')
               : Nof1Localizations.of(context).translate('create_new_study')),
+          actions: [
+            kReleaseMode
+                ? Container()
+                : Builder(
+                    builder: (context) => IconButton(
+                          icon: Icon(Icons.copy),
+                          onPressed: () async {
+                            await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text(Nof1Localizations.of(context).translate('copied_json'))));
+                          },
+                        )),
+          ],
         ),
         body: Row(children: [
           NavigationRail(
