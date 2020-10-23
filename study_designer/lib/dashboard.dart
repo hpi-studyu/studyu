@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:ext_storage/ext_storage.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
@@ -75,7 +75,65 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         title: Text('StudyU Designer'),
         actions: [
-          Theme(data: ThemeData.dark(), child: DropdownButtonHideUnderline(child: _buildLanguageDropdown())),
+          kReleaseMode
+              ? Container()
+              : Builder(builder: (context) {
+                  return Theme(
+                    data: ThemeData.dark(),
+                    child: FlatButton.icon(
+                      label: Text('Upload'),
+                      icon: Icon(MdiIcons.upload),
+                      onPressed: () async {
+                        final controller = TextEditingController();
+                        final wasUploaded = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Paster Study JSON here'),
+                            actions: [
+                              FlatButton.icon(
+                                label: Text('Cancel'),
+                                icon: Icon(MdiIcons.close),
+                                onPressed: () {
+                                  Navigator.pop(context, false);
+                                },
+                              ),
+                              FlatButton.icon(
+                                label: Text('Upload'),
+                                icon: Icon(MdiIcons.upload),
+                                onPressed: () {
+                                  try {
+                                    final Map<String, dynamic> studyJson = json.decode(controller.text);
+                                    final study = StudyBase.fromJson(studyJson);
+                                    ParseStudy.fromBase(study).save();
+                                    Navigator.pop(context, true);
+                                  } on FormatException {
+                                    controller.text = 'This is not valid JSON! Please paste valid JSON.';
+                                  }
+                                },
+                              ),
+                            ],
+                            content: TextField(
+                              controller: controller,
+                              minLines: 100,
+                              maxLines: 10000,
+                            ),
+                          ),
+                        );
+                        if (wasUploaded) {
+                          print('uploaded');
+                          Scaffold.of(context)
+                              .showSnackBar(SnackBar(content: Text('Successfully imported study JSON 🎉')));
+                        }
+                      },
+                    ),
+                  );
+                }),
+          Theme(
+            data: ThemeData.dark(),
+            child: DropdownButtonHideUnderline(
+              child: _buildLanguageDropdown(),
+            ),
+          ),
         ],
       ),
       body: Center(
