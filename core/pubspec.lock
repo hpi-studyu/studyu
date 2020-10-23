@@ -390,16 +390,20 @@ packages:
   parse_server_sdk:
     dependency: transitive
     description:
-      name: parse_server_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/dart"
+      ref: issue-490
+      resolved-ref: d845aff0c31fc35fba06abf361f4f0ac39efb4a1
+      url: "git://github.com/fischerscode/Parse-SDK-Flutter.git"
+    source: git
     version: "2.0.0"
   parse_server_sdk_flutter:
     dependency: "direct main"
     description:
-      name: parse_server_sdk_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/flutter"
+      ref: issue-490
+      resolved-ref: d845aff0c31fc35fba06abf361f4f0ac39efb4a1
+      url: "git://github.com/fischerscode/Parse-SDK-Flutter.git"
+    source: git
     version: "2.0.0"
   path:
     dependency: transitive
