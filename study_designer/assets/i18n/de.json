@@ -73,7 +73,7 @@
   "debug_output": "Debug Informationen",
   "show_debug_output": "Debug Informationen anzeigen",
   "study_model_in_json": "resultierendes Study Model im JSON-Format",
-  "copied_json": "JSON kopiert",
+  "copied_json": "JSON kopiert zur Zwischenablage",
   "copy": "kopieren",
   "lock_and_publish": "Studie publizieren und für Bearbeitungen sperren?",
   "really_want_to_publish": " wird publiziert. Danach können keine Bearbeitungen vorgenommen werden!",
