@@ -21,7 +21,6 @@ class _SaveState extends State<Save> {
   Future<ParseResponse> _futureParseStudy;
   String studyObjectId;
   bool _hasAcceptedTerms = false;
-  bool _showDebugOutput = false;
 
   @override
   void initState() {
@@ -101,35 +100,58 @@ class _SaveState extends State<Save> {
                     ],
                   ),
                   SizedBox(height: 80),
-                  Text(Nof1Localizations.of(context).translate('debug_output'), style: theme.textTheme.headline6),
-                  CheckboxListTile(
-                      title: Text(Nof1Localizations.of(context).translate('show_debug_output')),
-                      value: _showDebugOutput,
-                      onChanged: (val) => setState(() => _showDebugOutput = val)),
-                  if (_showDebugOutput)
-                    Column(children: [
-                      Row(
-                        children: [
-                          Text(Nof1Localizations.of(context).translate('study_model_in_json')),
-                          SizedBox(width: 8),
-                          OutlineButton.icon(
-                              onPressed: () async {
-                                await FlutterClipboard.copy(prettyJson(_draftStudy.toJson()));
-                                Scaffold.of(context).showSnackBar(
-                                    SnackBar(content: Text(Nof1Localizations.of(context).translate('copy_json'))));
-                              },
-                              icon: Icon(Icons.copy),
-                              label: Text(Nof1Localizations.of(context).translate('copy'))),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      JsonViewerWidget(_draftStudy.toJson()),
-                    ])
+                  JSONExportSection(study: _draftStudy),
                 ],
               ),
             ),
           );
         });
+  }
+}
+
+class JSONExportSection extends StatefulWidget {
+  final StudyBase study;
+
+  const JSONExportSection({@required this.study, Key key}) : super(key: key);
+
+  @override
+  _JSONExportSectionState createState() => _JSONExportSectionState();
+}
+
+class _JSONExportSectionState extends State<JSONExportSection> {
+  bool _showDebugOutput = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Text(Nof1Localizations.of(context).translate('debug_output'), style: theme.textTheme.headline6),
+        CheckboxListTile(
+            title: Text(Nof1Localizations.of(context).translate('show_debug_output')),
+            value: _showDebugOutput,
+            onChanged: (val) => setState(() => _showDebugOutput = val)),
+        if (_showDebugOutput)
+          Column(children: [
+            Row(
+              children: [
+                Text(Nof1Localizations.of(context).translate('study_model_in_json')),
+                SizedBox(width: 8),
+                OutlineButton.icon(
+                    onPressed: () async {
+                      await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
+                      Scaffold.of(context)
+                          .showSnackBar(SnackBar(content: Text(Nof1Localizations.of(context).translate('copy_json'))));
+                    },
+                    icon: Icon(Icons.copy),
+                    label: Text(Nof1Localizations.of(context).translate('copy'))),
+              ],
+            ),
+            SizedBox(height: 8),
+            JsonViewerWidget(widget.study.toJson()),
+          ])
+      ],
+    );
   }
 }
 
