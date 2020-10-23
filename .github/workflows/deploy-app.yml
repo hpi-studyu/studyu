@@ -1,4 +1,4 @@
-name: Build and Deploy app to Cloud Run
+name: App Deploy
 
 on:
   push:
