@@ -94,7 +94,7 @@
   "debug_output": "Debug Output",
   "show_debug_output": "Show debug output",
   "study_model_in_json": "Resulting study model in JSON format",
-  "copied_json": "Copied JSON",
+  "copied_json": "Copied JSON to clipboard",
   "copy": "Copy",
   "lock_and_publish": "Lock and publish study?",
   "really_want_to_publish": " will be published. You will not be able to make changes afterwards!",

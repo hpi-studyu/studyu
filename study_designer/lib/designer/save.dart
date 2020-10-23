@@ -140,8 +140,8 @@ class _JSONExportSectionState extends State<JSONExportSection> {
                 OutlineButton.icon(
                     onPressed: () async {
                       await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
-                      Scaffold.of(context)
-                          .showSnackBar(SnackBar(content: Text(Nof1Localizations.of(context).translate('copy_json'))));
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text(Nof1Localizations.of(context).translate('copied_json'))));
                     },
                     icon: Icon(Icons.copy),
                     label: Text(Nof1Localizations.of(context).translate('copy'))),
