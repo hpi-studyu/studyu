@@ -33,17 +33,17 @@ jobs:
     
     - name: Build
       run: |
-        docker build -t gcr.io/${{ secrets.PROJECT_ID }}/$SERVICE_NAME:latest --build-arg FLUTTER_APP_FOLDER=app .
+        docker build -t gcr.io/${{ secrets.RUN_PROJECT }}/$SERVICE_NAME:latest --build-arg FLUTTER_APP_FOLDER=app .
 
     - name: Push
       run: |
-        docker push gcr.io/${{ secrets.PROJECT_ID }}/studyu-app:latest
+        docker push gcr.io/${{ secrets.RUN_PROJECT }}/studyu-app:latest
 
     - name: Deploy
       run: |
         gcloud run deploy "$SERVICE_NAME" \
         --region "$RUN_REGION" \
-        --image gcr.io/${{ secrets.PROJECT_ID }}/$SERVICE_NAME \
+        --image gcr.io/${{ secrets.RUN_PROJECT }}/$SERVICE_NAME \
         --platform managed \
         --allow-unauthenticated \
-        --project ${{ secrets.PROJECT_ID }}
+        --project ${{ secrets.RUN_PROJECT }}
