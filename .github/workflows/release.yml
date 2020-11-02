@@ -1,6 +1,9 @@
 name: Create release
 
 on:
+  push:
+    branches:
+    - create-release
   workflow_dispatch:
 
 jobs:
