@@ -18,4 +18,4 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version-file: app/pubspec.yaml
+          version-file: ./app/pubspec.yaml
