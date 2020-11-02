@@ -508,18 +508,18 @@ packages:
     dependency: transitive
     description:
       path: "packages/dart"
-      ref: issue-490
-      resolved-ref: d845aff0c31fc35fba06abf361f4f0ac39efb4a1
-      url: "git://github.com/fischerscode/Parse-SDK-Flutter.git"
+      ref: development
+      resolved-ref: a35fe3a86bfbdb0f2e6d864145b0202754776781
+      url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.0"
   parse_server_sdk_flutter:
     dependency: "direct main"
     description:
       path: "packages/flutter"
-      ref: issue-490
-      resolved-ref: d845aff0c31fc35fba06abf361f4f0ac39efb4a1
-      url: "git://github.com/fischerscode/Parse-SDK-Flutter.git"
+      ref: development
+      resolved-ref: a35fe3a86bfbdb0f2e6d864145b0202754776781
+      url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.0"
   path:
