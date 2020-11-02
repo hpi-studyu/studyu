@@ -10,8 +10,8 @@ dependencies:
   # Change back to main branch when we do not use back4app or issue is fixed: https://github.com/parse-community/Parse-SDK-Flutter/issues/490
   parse_server_sdk_flutter:
     git:
-      url: git://github.com/fischerscode/Parse-SDK-Flutter.git
-      ref: issue-490
+      url: git://github.com/parse-community/Parse-SDK-Flutter.git
+      ref: development
       path: packages/flutter
   quiver: ^2.1.4
   uuid: ^2.2.2

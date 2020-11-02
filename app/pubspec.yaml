@@ -36,8 +36,8 @@ dependencies:
   normal: ^0.5.1
   parse_server_sdk_flutter:
     git:
-      url: git://github.com/fischerscode/Parse-SDK-Flutter.git
-      ref: issue-490
+      url: git://github.com/parse-community/Parse-SDK-Flutter.git
+      ref: development
       path: packages/flutter
   path_provider: ^1.6.22
   pdf: ^1.11.2
