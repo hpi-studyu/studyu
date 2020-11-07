@@ -15,6 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Conventional Changelog Action
+        id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
