@@ -19,8 +19,8 @@ class _KickoffScreen extends State<KickoffScreen> {
   bool ready;
 
   Future<void> _storeUserStudy() async {
-    final userId = await UserQueries.getOrCreateUser().then((user) => user.objectId);
-    study.userId = userId;
+    final user = await UserQueries.getOrCreateUser();
+    study.userId = user.objectId;
 
     final selectedStudyObjectId = await StudyQueries.saveUserStudy(study);
     if (selectedStudyObjectId != null) {
