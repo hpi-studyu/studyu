@@ -98,8 +98,9 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                       validator: FormBuilderValidators.email(context),
                       decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('email')),
                       initialValue: _draftStudy.contact.email),
-                  FormBuilderPhoneField(
+                  FormBuilderTextField(
                       onChanged: _saveFormChanges,
+                      validator: FormBuilderValidators.numeric(context),
                       name: 'phone',
                       decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('phone')),
                       initialValue: _draftStudy.contact.phone),
