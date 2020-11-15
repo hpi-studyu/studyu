@@ -1,4 +1,6 @@
 {
+  "@@locale": "de",
+
   "loading": "Laden",
 
   "what_is_studyu": "Was ist StudyU?",
@@ -80,8 +82,8 @@
   "yes": "Ja",
   "no": "Nein",
   "confirm": "Auswahl bestätigen",
-  "Frequently Asked Questions": "Häufig Gestellte Fragen",
-  "FAQ": "FAQ",
+  "faq": "FAQ",
+  "faq_full": "Häufig Gestellte Fragen",
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 

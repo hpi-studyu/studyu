@@ -1,4 +1,6 @@
 {
+  "@@locale": "en",
+
   "loading": "Loading",
 
   "what_is_studyu": "What is StudyU?",
@@ -78,8 +80,8 @@
   "back": "Back",
   "done": "Done",
   "completed": "Completed",
-  "Frequently Asked Questions": "Frequently Asked Questions",
-  "FAQ": "FAQ",
+  "faq_full": "Frequently Asked Questions",
+  "faq": "FAQ",
 
   "could_not_save_results": "Could not save results",
 
