@@ -68,11 +68,11 @@ flutter_icons:
 
 
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:
      - assets/
      - assets/images/
-     - assets/i18n/
      - assets/fonts/
      - envs/
