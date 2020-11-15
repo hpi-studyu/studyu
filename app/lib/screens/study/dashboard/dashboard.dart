@@ -62,7 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 OverflowMenuItem(
                     Nof1Localizations.of(context).translate('report_history'), MdiIcons.history, Routes.reportHistory),
                 OverflowMenuItem(
-                    Nof1Localizations.of(context).translate('FAQ'), MdiIcons.frequentlyAskedQuestions, Routes.faq),
+                    Nof1Localizations.of(context).translate('faq'), MdiIcons.frequentlyAskedQuestions, Routes.faq),
                 OverflowMenuItem(
                     Nof1Localizations.of(context).translate('about'), MdiIcons.informationOutline, Routes.about),
                 OverflowMenuItem(

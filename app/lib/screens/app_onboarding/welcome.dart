@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
               OutlineButton.icon(
                 icon: Icon(MdiIcons.frequentlyAskedQuestions),
                 onPressed: () => Navigator.pushNamed(context, Routes.faq),
-                label: Text(Nof1Localizations.of(context).translate('FAQ'),
+                label: Text(Nof1Localizations.of(context).translate('faq'),
                     style: theme.textTheme.button.copyWith(color: theme.primaryColor, fontSize: 20)),
               ),
               SizedBox(height: 20),
