@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/study_results/results/numeric_result.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../widgets/study_result/numeric_result_editor_section.dart';
 
@@ -42,12 +42,12 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
                       );
                     }).toList(),
                   ),
-                  Text(Nof1Localizations.of(context).translate('result'))
+                  Text(AppLocalizations.of(context).result)
                 ],
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,
-                child: Text(Nof1Localizations.of(context).translate('delete')),
+                child: Text(AppLocalizations.of(context).delete),
               )),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -63,7 +63,7 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
                             _saveFormChanges();
                           },
                           name: 'filename',
-                          decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('filename')),
+                          decoration: InputDecoration(labelText: AppLocalizations.of(context).filename),
                           initialValue: widget.result.filename),
                     ])),
                 if (questionBody != null) questionBody

@@ -5,7 +5,7 @@ import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/designer_state.dart';
 
@@ -53,56 +53,56 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                       onChanged: _saveFormChanges,
                       name: 'title',
                       maxLength: 40,
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
                       initialValue: _draftStudy.title),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'description',
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('description')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                       initialValue: _draftStudy.description),
                   Row(children: [
                     Expanded(
                       child: FlatButton(
                         onPressed: _pickIcon,
-                        child: Text(Nof1Localizations.of(context).translate('choose_icon')),
+                        child: Text(AppLocalizations.of(context).choose_icon),
                       ),
                     ),
                     if (MdiIcons.fromString(_draftStudy.iconName) != null)
                       Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
                   ]),
                   SizedBox(height: 32),
-                  Text(Nof1Localizations.of(context).translate('contact_details'), style: theme.textTheme.headline6),
+                  Text(AppLocalizations.of(context).contact_details, style: theme.textTheme.headline6),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'organization',
                       maxLength: 40,
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('organization')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).organization),
                       initialValue: _draftStudy.contact.organization),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'researchers',
                       maxLength: 40,
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('researchers')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
                       initialValue: _draftStudy.contact.researchers),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'website',
                       maxLength: 40,
                       validator: FormBuilderValidators.url(context),
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('website')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
                       initialValue: _draftStudy.contact.website),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'email',
                       maxLength: 40,
                       validator: FormBuilderValidators.email(context),
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('email')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
                       initialValue: _draftStudy.contact.email),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       validator: FormBuilderValidators.numeric(context),
                       name: 'phone',
-                      decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('phone')),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).phone),
                       initialValue: _draftStudy.contact.phone),
                 ],
               ),

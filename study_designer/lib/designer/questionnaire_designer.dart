@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/question/questionnaire_editor.dart';
@@ -35,7 +35,7 @@ class _EligibilityQuestionsDesignerState extends State<EligibilityQuestionsDesig
                       questionnaire: questionnaire,
                       questionTypes: [BooleanQuestion.questionType, ChoiceQuestion.questionType]),
                 ))),
-        DesignerAddButton(label: Text(Nof1Localizations.of(context).translate('add_question')), add: _addQuestion),
+        DesignerAddButton(label: Text(AppLocalizations.of(context).add_question), add: _addQuestion),
       ],
     );
   }

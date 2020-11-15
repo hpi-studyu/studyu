@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
 import 'choice_editor.dart';
@@ -34,7 +34,7 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
   Widget build(BuildContext context) {
     return Column(children: [
       Row(children: [
-        Text(Nof1Localizations.of(context).translate('multiple')),
+        Text(AppLocalizations.of(context).multiple),
         SizedBox(width: 10),
         Switch(
           value: widget.question.multiple,
@@ -59,7 +59,7 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
             onPressed: _addChoice,
             icon: Icon(Icons.add),
             color: Colors.green,
-            label: Text(Nof1Localizations.of(context).translate('add_choice'))),
+            label: Text(AppLocalizations.of(context).add_choice)),
         Spacer()
       ])
     ]);

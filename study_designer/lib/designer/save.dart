@@ -6,7 +6,7 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/study.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../models/designer_state.dart';
@@ -36,7 +36,7 @@ class _SaveState extends State<Save> {
     if (isSaved) {
       await _saveStudy(studyObjectId, studyDetailsObjectId);
       Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('${_draftStudy.title} ${Nof1Localizations.of(context).translate('was_saved_and_published')}')));
+          content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published')}));
       Navigator.popUntil(context, (route) => route.settings.name == '/');
     }
   }
@@ -44,7 +44,7 @@ class _SaveState extends State<Save> {
   Future<void> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
     await _saveStudy(studyObjectId, studyDetailsObjectId);
     Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('${_draftStudy.title} ${Nof1Localizations.of(context).translate('was_saved_as_draft')}')));
+        content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft')}));
   }
 
   Future<void> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
@@ -71,14 +71,14 @@ class _SaveState extends State<Save> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(Nof1Localizations.of(context).translate('terms_title'), style: theme.textTheme.headline6),
+                  Text(AppLocalizations.of(context).terms_title, style: theme.textTheme.headline6),
                   CheckboxListTile(
-                      title: Text(Nof1Localizations.of(context).translate('terms_agree')),
+                      title: Text(AppLocalizations.of(context).terms_agree),
                       value: _hasAcceptedTerms,
                       onChanged: (val) => setState(() => _hasAcceptedTerms = val)),
                   SizedBox(height: 16),
-                  Text(Nof1Localizations.of(context).translate('save'), style: theme.textTheme.headline6),
-                  if (!_hasAcceptedTerms) Text(Nof1Localizations.of(context).translate('terms_description')),
+                  Text(AppLocalizations.of(context).save, style: theme.textTheme.headline6),
+                  if (!_hasAcceptedTerms) Text(AppLocalizations.of(context).terms_description),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -87,7 +87,7 @@ class _SaveState extends State<Save> {
                               ? () => _saveDraft(study?.objectId, study?.studyDetails?.objectId)
                               : null,
                           icon: Icon(Icons.save),
-                          label: Text(Nof1Localizations.of(context).translate('save_draft'),
+                          label: Text(AppLocalizations.of(context).save_draft,
                               style: TextStyle(fontSize: 30))),
                       SizedBox(width: 16),
                       OutlineButton.icon(
@@ -95,7 +95,7 @@ class _SaveState extends State<Save> {
                               ? () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId)
                               : null,
                           icon: Icon(Icons.publish),
-                          label: Text(Nof1Localizations.of(context).translate('publish_study'),
+                          label: Text(AppLocalizations.of(context).publish_study,
                               style: TextStyle(fontSize: 30))),
                     ],
                   ),
@@ -126,25 +126,25 @@ class _JSONExportSectionState extends State<JSONExportSection> {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Text(Nof1Localizations.of(context).translate('debug_output'), style: theme.textTheme.headline6),
+        Text(AppLocalizations.of(context).debug_output, style: theme.textTheme.headline6),
         CheckboxListTile(
-            title: Text(Nof1Localizations.of(context).translate('show_debug_output')),
+            title: Text(AppLocalizations.of(context).show_debug_output),
             value: _showDebugOutput,
             onChanged: (val) => setState(() => _showDebugOutput = val)),
         if (_showDebugOutput)
           Column(children: [
             Row(
               children: [
-                Text(Nof1Localizations.of(context).translate('study_model_in_json')),
+                Text(AppLocalizations.of(context).study_model_in_json),
                 SizedBox(width: 8),
                 OutlineButton.icon(
                     onPressed: () async {
                       await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
                       Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text(Nof1Localizations.of(context).translate('copied_json'))));
+                          SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                     },
                     icon: Icon(Icons.copy),
-                    label: Text(Nof1Localizations.of(context).translate('copy'))),
+                    label: Text(AppLocalizations.of(context).copy)),
               ],
             ),
             SizedBox(height: 8),
@@ -164,14 +164,14 @@ class PublishAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(Nof1Localizations.of(context).translate('lock_and_publish')),
+      title: Text(AppLocalizations.of(context).lock_and_publish),
       content: RichText(
         text: TextSpan(style: TextStyle(color: Colors.black), children: [
           TextSpan(text: 'The study '),
           TextSpan(
               text: study.title,
               style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
-          TextSpan(text: Nof1Localizations.of(context).translate('really_want_to_publish')),
+          TextSpan(text: AppLocalizations.of(context).really_want_to_publish),
         ]),
       ),
       actions: [
@@ -181,7 +181,7 @@ class PublishAlertDialog extends StatelessWidget {
           },
           icon: Icon(Icons.publish),
           color: Colors.green,
-          label: Text('${Nof1Localizations.of(context).translate('publish')} ${study.title}'),
+          label: Text('${AppLocalizations.of(context).publish')} ${study.title},
         )
       ],
     );

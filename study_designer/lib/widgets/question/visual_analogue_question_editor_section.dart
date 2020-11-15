@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VisualAnalogueQuestionEditorSection extends StatefulWidget {
   final VisualAnalogueQuestion question;
@@ -25,24 +25,24 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
           FormBuilderTextField(
               onChanged: _saveFormChanges,
               name: 'minimumAnnotation',
-              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minimum_annotation')),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_annotation),
               initialValue: widget.question.minimumAnnotation),
           FormBuilderColorPickerField(
               onChanged: _saveFormChanges,
               name: 'minimumColor',
               showCursor: true,
-              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minimum_color')),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_color),
               initialValue: widget.question.minimumColor),
           FormBuilderTextField(
               onChanged: _saveFormChanges,
               name: 'maximumAnnotation',
-              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('maximum_annotation')),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_annotation),
               initialValue: widget.question.maximumAnnotation),
           FormBuilderColorPickerField(
               onChanged: _saveFormChanges,
               name: 'maximumColor',
               showCursor: true,
-              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('maximum_color')),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_color),
               initialValue: widget.question.maximumColor)
         ]));
   }

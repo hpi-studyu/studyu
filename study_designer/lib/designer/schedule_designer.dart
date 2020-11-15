@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/study_schedule/study_schedule.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/designer_state.dart';
 
@@ -35,22 +35,22 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'numberOfCycles',
-                  decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('number_of_cycles')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).number_of_cycles),
                   initialValue: _draftStudy.studyDetails.schedule.numberOfCycles.toString()),
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'phaseDuration',
-                  decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('phase_duration')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).phase_duration),
                   initialValue: _draftStudy.studyDetails.schedule.phaseDuration.toString()),
               FormBuilderSwitch(
                   onChanged: _saveFormChanges,
-                  title: Text(Nof1Localizations.of(context).translate('include_baseline')),
+                  title: Text(AppLocalizations.of(context).include_baseline),
                   name: 'includeBaseline',
                   initialValue: _draftStudy.studyDetails.schedule.includeBaseline),
               FormBuilderDropdown(
                 onChanged: _saveFormChanges,
                 name: 'sequence',
-                decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('schedule')),
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).schedule),
                 initialValue: _draftStudy.studyDetails.schedule.sequence,
                 items: PhaseSequence.values
                     .map((sequence) => DropdownMenuItem(
