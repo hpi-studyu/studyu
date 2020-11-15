@@ -6,10 +6,10 @@ class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO(Manisha): Transfer strings to translation files
-    if (Nof1Localizations.of(context).translate('Frequently Asked Questions') == 'Frequently Asked Questions') {
+    if (Nof1Localizations.of(context).translate('faq_full') == 'Frequently Asked Questions') {
       return Scaffold(
         appBar: AppBar(
-          title: Text(Nof1Localizations.of(context).translate('Frequently Asked Questions')),
+          title: Text(Nof1Localizations.of(context).translate('faq_full')),
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(20),
@@ -20,7 +20,7 @@ class FAQ extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(Nof1Localizations.of(context).translate('Frequently Asked Questions')),
+          title: Text(Nof1Localizations.of(context).translate('faq_full')),
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(20),
