@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
@@ -47,7 +48,7 @@ class _DashboardState extends State<Dashboard> {
     for (final locale in AppLanguage.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
-        child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),
+        child: Text(localeName(locale.languageCode)),
       ));
     }
 
@@ -150,7 +151,7 @@ class _DashboardState extends State<Dashboard> {
                     title: Row(children: [
                       Icon(Icons.edit, color: theme.accentColor),
                       SizedBox(width: 8),
-                      Text(Nof1Localizations.of(context).translate('draft_studies'))
+                      Text(AppLocalizations.of(context).draft_studies)
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
@@ -164,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
                     title: Row(children: [
                       Icon(Icons.lock, color: theme.accentColor),
                       SizedBox(width: 8),
-                      Text(Nof1Localizations.of(context).translate('published_studies'))
+                      Text(AppLocalizations.of(context).published_studies)
                     ]),
                     initiallyExpanded: true,
                     children: ListTile.divideTiles(
@@ -237,14 +238,14 @@ class StudyCard extends StatelessWidget {
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
                   if (isDeleted) {
                     Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('${study.title} ${Nof1Localizations.of(context).translate('deleted')}')));
+                        content: Text('${study.title} ${AppLocalizations.of(context).deleted')}));
                     if (reload != null) reload();
                   }
                 },
               )
             : IconButton(
                 icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-                tooltip: Nof1Localizations.of(context).translate('export_csv'),
+                tooltip: AppLocalizations.of(context).export_csv,
                 onPressed: () async {
                   final dl = ResultDownloader(study);
                   await dl.loadDetails();
@@ -269,7 +270,7 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(Nof1Localizations.of(context).translate('delete_draft_study')),
+        title: Text(AppLocalizations.of(context).delete_draft_study),
         actions: [
           FlatButton.icon(
             onPressed: () async {
@@ -279,7 +280,7 @@ class DeleteAlertDialog extends StatelessWidget {
             },
             icon: Icon(Icons.delete),
             color: Colors.red,
-            label: Text(Nof1Localizations.of(context).translate('delete')),
+            label: Text(AppLocalizations.of(context).delete),
           )
         ],
       );

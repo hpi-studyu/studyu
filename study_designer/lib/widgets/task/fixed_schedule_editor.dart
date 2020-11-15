@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FixedScheduleEditor extends StatefulWidget {
   final FixedSchedule schedule;
@@ -31,7 +31,7 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
                       saveFormChanges();
                     },
                     name: 'hour',
-                    decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('hour')),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context).hour),
                     initialValue: widget.schedule.time.hour.toString()),
               ),
               Expanded(
@@ -40,13 +40,13 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
                       saveFormChanges();
                     },
                     name: 'minute',
-                    decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minute')),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context).minute),
                     initialValue: widget.schedule.time.minute.toString()),
               ),
               Expanded(
                 child: FlatButton(
                   onPressed: widget.remove,
-                  child: Text(Nof1Localizations.of(context).translate('delete')),
+                  child: Text(AppLocalizations.of(context).delete),
                 ),
               )
             ],

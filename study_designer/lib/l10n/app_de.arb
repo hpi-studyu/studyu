@@ -1,4 +1,6 @@
 {
+  "@@locale": "de",
+
   "language": "Sprache",
   "en": "Englisch",
   "de": "Deutsch",
@@ -81,7 +83,7 @@
   "number_of_cycles": "Anzahl an Zyklen",
   "phase_duration": "Länge einer Phase",
   "include_baseline": "Baseline hinzufügen",
-  "Sequence": "Sequenz",
+  "sequence": "Sequenz",
   "improvement_direction": "Verbesserungsrichtung",
   "temporal_aggregation": "Zeitliche Aggregation",
   "alpha": "Alpha",

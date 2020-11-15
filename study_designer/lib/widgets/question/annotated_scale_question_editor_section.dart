@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './annotation_editor.dart';
 
@@ -46,7 +46,7 @@ class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQues
             onPressed: _addAnnotation,
             icon: Icon(Icons.add),
             color: Colors.green,
-            label: Text(Nof1Localizations.of(context).translate('add_annotation'))),
+            label: Text(AppLocalizations.of(context).add_annotation)),
         Spacer()
       ])
     ]);

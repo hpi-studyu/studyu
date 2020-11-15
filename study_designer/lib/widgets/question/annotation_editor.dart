@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AnnotationEditor extends StatefulWidget {
   final Annotation annotation;
@@ -27,7 +27,7 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
             children: <Widget>[
               FlatButton(
                 onPressed: widget.remove,
-                child: Text(Nof1Localizations.of(context).translate('delete')),
+                child: Text(AppLocalizations.of(context).delete),
               ),
             ],
           ),
@@ -36,14 +36,14 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
                 saveFormChanges();
               },
               name: 'value',
-              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('value')),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context).value),
               initialValue: widget.annotation.value.toString()),
           FormBuilderTextField(
               onChanged: (value) {
                 saveFormChanges();
               },
               name: 'annotation',
-              decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('annotation')),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context).annotation),
               initialValue: widget.annotation.annotation),
         ]));
   }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './designer/eligibility_designer.dart';
 import './designer/results_designer.dart';
@@ -89,53 +89,53 @@ class _DesignerState extends State<Designer> {
             switch (settings.name) {
               case designerRoute:
                 specificDesigner = MetaDataDesigner();
-                title = Nof1Localizations.of(context).translate('meta_data_help_title');
-                body = Nof1Localizations.of(context).translate('meta_data_help_body');
+                title = AppLocalizations.of(context).meta_data_help_title;
+                body = AppLocalizations.of(context).meta_data_help_body;
                 break;
               case designerInterventionsRoute:
                 specificDesigner = InterventionsDesigner();
-                title = Nof1Localizations.of(context).translate('interventions_help_title');
-                body = Nof1Localizations.of(context).translate('interventions_help_body');
+                title = AppLocalizations.of(context).interventions_help_title;
+                body = AppLocalizations.of(context).interventions_help_body;
                 break;
               case designerQuestionnaireRoute:
                 specificDesigner = EligibilityQuestionsDesigner();
-                title = Nof1Localizations.of(context).translate('eligibility_questions_help_title');
-                body = Nof1Localizations.of(context).translate('eligibility_questions_help_body');
+                title = AppLocalizations.of(context).eligibility_questions_help_title;
+                body = AppLocalizations.of(context).eligibility_questions_help_body;
                 break;
               case designerEligibilityRoute:
                 specificDesigner = EligibilityCriteriaDesigner();
-                title = Nof1Localizations.of(context).translate('eligibility_criteria_help_title');
-                body = Nof1Localizations.of(context).translate('eligibility_criteria_help_body');
+                title = AppLocalizations.of(context).eligibility_criteria_help_title;
+                body = AppLocalizations.of(context).eligibility_criteria_help_body;
                 break;
               case designerObservationsRoute:
                 specificDesigner = ObservationDesigner();
-                title = Nof1Localizations.of(context).translate('observations_help_title');
-                body = Nof1Localizations.of(context).translate('observations_help_body');
+                title = AppLocalizations.of(context).observations_help_title;
+                body = AppLocalizations.of(context).observations_help_body;
                 break;
               case designerScheduleRoute:
                 specificDesigner = ScheduleDesigner();
-                title = Nof1Localizations.of(context).translate('schedule_help_title');
-                body = Nof1Localizations.of(context).translate('schedule_help_body');
+                title = AppLocalizations.of(context).schedule_help_title;
+                body = AppLocalizations.of(context).schedule_help_body;
                 break;
               case designerReportRoute:
                 specificDesigner = ReportDesigner();
-                title = Nof1Localizations.of(context).translate('report_help_title');
-                body = Nof1Localizations.of(context).translate('report_help_body');
+                title = AppLocalizations.of(context).report_help_title;
+                body = AppLocalizations.of(context).report_help_body;
                 break;
               case designerResultsRoute:
                 specificDesigner = ResultsDesigner();
-                title = Nof1Localizations.of(context).translate('results_help_title');
-                body = Nof1Localizations.of(context).translate('results_help_body');
+                title = AppLocalizations.of(context).results_help_title;
+                body = AppLocalizations.of(context).results_help_body;
                 break;
               case designerConsentRoute:
                 specificDesigner = ConsentDesigner();
-                title = Nof1Localizations.of(context).translate('consent_help_title');
-                body = Nof1Localizations.of(context).translate('consent_help_body');
+                title = AppLocalizations.of(context).consent_help_title;
+                body = AppLocalizations.of(context).consent_help_body;
                 break;
               case designerSaveRoute:
                 specificDesigner = Save();
-                title = Nof1Localizations.of(context).translate('save_help_title');
-                body = Nof1Localizations.of(context).translate('save_help_body');
+                title = AppLocalizations.of(context).save_help_title;
+                body = AppLocalizations.of(context).save_help_body;
                 break;
               default:
                 specificDesigner = Container();
@@ -148,7 +148,7 @@ class _DesignerState extends State<Designer> {
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      Nof1Localizations.of(context).translate('view_mode_warning'),
+                      AppLocalizations.of(context).view_mode_warning,
                       style: TextStyle(color: Colors.red),
                     ),
                   ),
@@ -189,8 +189,8 @@ class _DesignerState extends State<Designer> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.study != null
-              ? Nof1Localizations.of(context).translate('view_published_study')
-              : Nof1Localizations.of(context).translate('create_new_study')),
+              ? AppLocalizations.of(context).view_published_study
+              : AppLocalizations.of(context).create_new_study),
           actions: [
             kReleaseMode
                 ? Container()
@@ -200,7 +200,7 @@ class _DesignerState extends State<Designer> {
                           onPressed: () async {
                             await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
                             Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text(Nof1Localizations.of(context).translate('copied_json'))));
+                                SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                           },
                         )),
           ],
@@ -219,53 +219,53 @@ class _DesignerState extends State<Designer> {
               NavigationRailDestination(
                 icon: Icon(Icons.favorite_border),
                 selectedIcon: Icon(Icons.info_outline),
-                label: Text(Nof1Localizations.of(context).translate('meta_data')),
+                label: Text(AppLocalizations.of(context).meta_data),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.accessibility_new),
                 selectedIcon: Icon(Icons.accessibility_new),
-                label: Text(Nof1Localizations.of(context).translate('interventions')),
+                label: Text(AppLocalizations.of(context).interventions),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.question_answer),
                 selectedIcon: Icon(Icons.question_answer),
-                label: Text(Nof1Localizations.of(context).translate('eligibility_questions')),
+                label: Text(AppLocalizations.of(context).eligibility_questions),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.verified_user),
                 selectedIcon: Icon(Icons.verified_user),
-                label: Text(Nof1Localizations.of(context).translate('eligibility_criteria')),
+                label: Text(AppLocalizations.of(context).eligibility_criteria),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.zoom_in),
                 selectedIcon: Icon(Icons.zoom_in),
-                label: Text(Nof1Localizations.of(context).translate('observations')),
+                label: Text(AppLocalizations.of(context).observations),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.schedule),
                 selectedIcon: Icon(Icons.schedule),
-                label: Text(Nof1Localizations.of(context).translate('schedule')),
+                label: Text(AppLocalizations.of(context).schedule),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.content_paste),
                 selectedIcon: Icon(Icons.content_paste),
-                label: Text(Nof1Localizations.of(context).translate('report')),
+                label: Text(AppLocalizations.of(context).report),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.assignment_turned_in),
                 selectedIcon: Icon(Icons.assignment_turned_in),
-                label: Text(Nof1Localizations.of(context).translate('results')),
+                label: Text(AppLocalizations.of(context).results),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.warning),
                 selectedIcon: Icon(Icons.warning),
-                label: Text(Nof1Localizations.of(context).translate('consent')),
+                label: Text(AppLocalizations.of(context).consent),
               ),
               if (!(widget.study != null && widget.study.published))
                 NavigationRailDestination(
                   icon: Icon(Icons.publish),
                   selectedIcon: Icon(Icons.publish),
-                  label: Text(Nof1Localizations.of(context).translate('save')),
+                  label: Text(AppLocalizations.of(context).save),
                 )
             ],
           ),

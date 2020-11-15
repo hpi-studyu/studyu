@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/designer_state.dart';
 import '../widgets/eligibility/eligibility_criterion_editor.dart';
@@ -48,9 +48,9 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
                         SizedBox(height: 200)
                       ])))),
               DesignerAddButton(
-                  label: Text(Nof1Localizations.of(context).translate('add_criterion')), add: _addCriterion),
+                  label: Text(AppLocalizations.of(context).add_criterion), add: _addCriterion),
             ],
           )
-        : Center(child: Text(Nof1Localizations.of(context).translate('no_questions_yet')));
+        : Center(child: Text(AppLocalizations.of(context).no_questions_yet));
   }
 }

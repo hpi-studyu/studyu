@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/report_models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'average_section_editor_section.dart';
 import 'linear_regression_section_editor_section.dart';
@@ -49,7 +49,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                leading: widget.isPrimary ? Text('[${Nof1Localizations.of(context).translate('primary')}]') : null,
+                leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary')}] : null,
                 title: Row(
                   children: [
                     DropdownButton<String>(
@@ -63,11 +63,11 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                         );
                       }).toList(),
                     ),
-                    Text(Nof1Localizations.of(context).translate('section'))
+                    Text(AppLocalizations.of(context).section)
                   ],
                 ),
                 trailing: FlatButton(
-                    onPressed: widget.remove, child: Text(Nof1Localizations.of(context).translate('delete')))),
+                    onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -83,7 +83,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                             },
                             name: 'title',
                             maxLength: 40,
-                            decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
+                            decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
                             initialValue: widget.section.title),
                         FormBuilderTextField(
                             onChanged: (value) {
@@ -91,7 +91,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                             },
                             name: 'description',
                             decoration:
-                                InputDecoration(labelText: Nof1Localizations.of(context).translate('description')),
+                                InputDecoration(labelText: AppLocalizations.of(context).description),
                             initialValue: widget.section.description),
                       ],
                     )),

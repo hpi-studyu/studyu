@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/questionnaire/questionnaire_models.dart';
 import 'package:studyou_core/models/questionnaire/questions/slider_question.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../widgets/question/annotated_scale_question_editor_section.dart';
 import '../../widgets/question/visual_analogue_question_editor_section.dart';
@@ -32,22 +32,22 @@ class _SliderQuestionEditorSectionState extends State<SliderQuestionEditorSectio
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'minimum',
-                  decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('minimum')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum),
                   initialValue: widget.question.minimum.toString()),
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'maximum',
-                  decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('maximum')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum),
                   initialValue: widget.question.maximum.toString()),
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'initial',
-                  decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('initial')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).initial),
                   initialValue: widget.question.initial.toString()),
               FormBuilderTextField(
                   onChanged: _saveFormChanges,
                   name: 'step',
-                  decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('step')),
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).step),
                   initialValue: widget.question.step.toString())
             ])),
         if (questionBody != null) questionBody

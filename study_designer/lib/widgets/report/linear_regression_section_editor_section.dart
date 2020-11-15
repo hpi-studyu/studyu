@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/designer_state.dart';
 import '../util/data_reference_editor.dart';
@@ -48,8 +48,8 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
         child: Column(children: <Widget>[
           FormBuilderTextField(
             onChanged: _changeAlpha,
-            name: Nof1Localizations.of(context).translate('alpha'),
-            decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('alpha_confidence')),
+            name: AppLocalizations.of(context).alpha,
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).alpha_confidence),
             initialValue: widget.section.alpha.toString(),
             validator: FormBuilderValidators.numeric(context),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
 import '../../widgets/question/slider_question_editor_section.dart';
@@ -48,12 +48,12 @@ class _QuestionEditorState extends State<QuestionEditor> {
                       );
                     }).toList(),
                   ),
-                  Text(Nof1Localizations.of(context).translate('question'))
+                  Text(AppLocalizations.of(context).question)
                 ],
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,
-                child: Text(Nof1Localizations.of(context).translate('delete')),
+                child: Text(AppLocalizations.of(context).delete),
               )),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -69,14 +69,14 @@ class _QuestionEditorState extends State<QuestionEditor> {
                             _saveFormChanges();
                           },
                           name: 'prompt',
-                          decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('prompt')),
+                          decoration: InputDecoration(labelText: AppLocalizations.of(context).prompt),
                           initialValue: widget.question.prompt),
                       FormBuilderTextField(
                           onChanged: (value) {
                             _saveFormChanges();
                           },
                           name: 'rationale',
-                          decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('rationale')),
+                          decoration: InputDecoration(labelText: AppLocalizations.of(context).rationale),
                           initialValue: widget.question.rationale),
                     ])),
                 if (questionBody != null) questionBody

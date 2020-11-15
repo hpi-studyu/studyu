@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'questionnaire_task_editor_section.dart';
 import 'task_schedule_editor_section.dart';
@@ -32,7 +32,7 @@ class _TaskEditorState extends State<TaskEditor> {
               ),
               trailing: FlatButton(
                 onPressed: widget.remove,
-                child: Text(Nof1Localizations.of(context).translate('delete')),
+                child: Text(AppLocalizations.of(context).delete),
               )),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -48,7 +48,7 @@ class _TaskEditorState extends State<TaskEditor> {
                           saveFormChanges();
                         },
                         name: 'title',
-                        decoration: InputDecoration(labelText: Nof1Localizations.of(context).translate('title')),
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
                         initialValue: widget.task.title),
                   ],
                 ),
