@@ -484,11 +484,11 @@ packages:
     source: hosted
     version: "0.4.3+2"
   parse_server_sdk:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       path: "packages/dart"
-      ref: a35fe3a86bfbdb0f2e6d864145b0202754776781
-      resolved-ref: a35fe3a86bfbdb0f2e6d864145b0202754776781
+      ref: development
+      resolved-ref: "7668ae8132f109c3bc788f4c06214560c90901a6"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.0"
@@ -496,8 +496,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/flutter"
-      ref: a35fe3a86bfbdb0f2e6d864145b0202754776781
-      resolved-ref: a35fe3a86bfbdb0f2e6d864145b0202754776781
+      ref: development
+      resolved-ref: "7668ae8132f109c3bc788f4c06214560c90901a6"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.0"
