@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
@@ -47,6 +48,11 @@ class _ParseInitState extends State<ParseInit> {
         masterKey: masterKey,
         debug: DotEnv().env['FLUTTER_PARSE_DEBUG'] == 'true',
         coreStore: await CoreStoreSharedPrefsImp.getInstance(),
+        // Dio is better, but slower on the web. Thus use http for web
+        // https://github.com/parse-community/Parse-SDK-Flutter/tree/development/packages/flutter#network-client
+        clientCreator: ({sendSessionId, securityContext}) => kIsWeb
+            ? ParseHTTPClient(sendSessionId: sendSessionId, securityContext: securityContext)
+            : ParseDioClient(sendSessionId: sendSessionId, securityContext: securityContext),
       );
     }
     return Parse().healthCheck();
