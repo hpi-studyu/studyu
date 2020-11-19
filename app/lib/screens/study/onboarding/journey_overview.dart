@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../models/app_state.dart';
@@ -25,7 +25,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.kickoff);
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context).user_did_not_give_consent),
         duration: Duration(seconds: 30),
       ));

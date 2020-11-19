@@ -123,7 +123,7 @@ class _DashboardState extends State<Dashboard> {
                         );
                         if (wasUploaded) {
                           print('uploaded');
-                          Scaffold.of(context)
+                          ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text('Successfully imported study JSON 🎉')));
                         }
                       },
@@ -238,7 +238,7 @@ class StudyCard extends StatelessWidget {
                   final isDeleted =
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
                   if (isDeleted) {
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).deleted}')));
                     if (reload != null) reload();
                   }
