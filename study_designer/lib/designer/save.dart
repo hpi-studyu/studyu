@@ -35,7 +35,7 @@ class _SaveState extends State<Save> {
         context: context, builder: (_) => PublishAlertDialog(study: ParseStudy.fromBase(_draftStudy)));
     if (isSaved) {
       await _saveStudy(studyObjectId, studyDetailsObjectId);
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
       Navigator.popUntil(context, (route) => route.settings.name == '/');
     }
@@ -43,7 +43,7 @@ class _SaveState extends State<Save> {
 
   Future<void> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
     await _saveStudy(studyObjectId, studyDetailsObjectId);
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
   }
 
@@ -138,7 +138,7 @@ class _JSONExportSectionState extends State<JSONExportSection> {
                 OutlineButton.icon(
                     onPressed: () async {
                       await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
-                      Scaffold.of(context)
+                      ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                     },
                     icon: Icon(Icons.copy),

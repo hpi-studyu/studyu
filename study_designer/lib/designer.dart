@@ -1,10 +1,10 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './designer/eligibility_designer.dart';
 import './designer/results_designer.dart';
@@ -199,7 +199,7 @@ class _DesignerState extends State<Designer> {
                           icon: Icon(Icons.copy),
                           onPressed: () async {
                             await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
-                            Scaffold.of(context)
+                            ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                           },
                         )),

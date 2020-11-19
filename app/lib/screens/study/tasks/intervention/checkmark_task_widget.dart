@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../models/app_state.dart';
 
@@ -26,7 +26,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
       await animation;
       Navigator.pop(context, true);
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context).could_not_save_results),
         duration: Duration(seconds: 10),
         action: SnackBarAction(label: 'retry', onPressed: () => _handleCompletion(context, animation)),
