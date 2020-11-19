@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/report_models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'average_section_editor_section.dart';
 import 'linear_regression_section_editor_section.dart';
@@ -49,7 +49,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary')}] : null,
+                leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary}]') : null,
                 title: Row(
                   children: [
                     DropdownButton<String>(
@@ -66,8 +66,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                     Text(AppLocalizations.of(context).section)
                   ],
                 ),
-                trailing: FlatButton(
-                    onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+                trailing: FlatButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -90,8 +89,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                               saveFormChanges();
                             },
                             name: 'description',
-                            decoration:
-                                InputDecoration(labelText: AppLocalizations.of(context).description),
+                            decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                             initialValue: widget.section.description),
                       ],
                     )),
