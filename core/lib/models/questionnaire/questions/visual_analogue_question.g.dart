@@ -6,31 +6,25 @@ part of 'visual_analogue_question.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
-    Map<String, dynamic> json) {
+VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(Map<String, dynamic> json) {
   return VisualAnalogueQuestion()
     ..type = json['type'] as String
     ..id = json['id'] as String
     ..prompt = json['prompt'] as String
     ..rationale = json['rationale'] as String
-    ..conditional = json['conditional'] == null
-        ? null
-        : QuestionConditional.fromJson(
-            json['conditional'] as Map<String, dynamic>)
+    ..conditional =
+        json['conditional'] == null ? null : QuestionConditional.fromJson(json['conditional'] as Map<String, dynamic>)
     ..minimum = (json['minimum'] as num).toDouble()
     ..maximum = (json['maximum'] as num).toDouble()
     ..initial = (json['initial'] as num).toDouble()
     ..step = (json['step'] as num)?.toDouble()
-    ..minimumColor =
-        VisualAnalogueQuestion.parseColor(json['minimumColor'] as String)
-    ..maximumColor =
-        VisualAnalogueQuestion.parseColor(json['maximumColor'] as String)
+    ..minimumColor = VisualAnalogueQuestion.parseColor(json['minimumColor'] as String)
+    ..maximumColor = VisualAnalogueQuestion.parseColor(json['maximumColor'] as String)
     ..minimumAnnotation = json['minimumAnnotation'] as String
     ..maximumAnnotation = json['maximumAnnotation'] as String;
 }
 
-Map<String, dynamic> _$VisualAnalogueQuestionToJson(
-    VisualAnalogueQuestion instance) {
+Map<String, dynamic> _$VisualAnalogueQuestionToJson(VisualAnalogueQuestion instance) {
   final val = <String, dynamic>{
     'type': instance.type,
     'id': instance.id,
@@ -49,10 +43,8 @@ Map<String, dynamic> _$VisualAnalogueQuestionToJson(
   val['maximum'] = instance.maximum;
   val['initial'] = instance.initial;
   writeNotNull('step', instance.step);
-  writeNotNull('minimumColor',
-      VisualAnalogueQuestion.colorToJson(instance.minimumColor));
-  writeNotNull('maximumColor',
-      VisualAnalogueQuestion.colorToJson(instance.maximumColor));
+  writeNotNull('minimumColor', VisualAnalogueQuestion.colorToJson(instance.minimumColor));
+  writeNotNull('maximumColor', VisualAnalogueQuestion.colorToJson(instance.maximumColor));
   val['minimumAnnotation'] = instance.minimumAnnotation;
   val['maximumAnnotation'] = instance.maximumAnnotation;
   return val;

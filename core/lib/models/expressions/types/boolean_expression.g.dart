@@ -12,8 +12,7 @@ BooleanExpression _$BooleanExpressionFromJson(Map<String, dynamic> json) {
     ..target = json['target'] as String;
 }
 
-Map<String, dynamic> _$BooleanExpressionToJson(BooleanExpression instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$BooleanExpressionToJson(BooleanExpression instance) => <String, dynamic>{
       'type': instance.type,
       'target': instance.target,
     };

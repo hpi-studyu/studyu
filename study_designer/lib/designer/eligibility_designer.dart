@@ -47,8 +47,7 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
                             remove: () => _removeEligibilityCriterion(entry.key))),
                         SizedBox(height: 200)
                       ])))),
-              DesignerAddButton(
-                  label: Text(AppLocalizations.of(context).add_criterion), add: _addCriterion),
+              DesignerAddButton(label: Text(AppLocalizations.of(context).add_criterion), add: _addCriterion),
             ],
           )
         : Center(child: Text(AppLocalizations.of(context).no_questions_yet));

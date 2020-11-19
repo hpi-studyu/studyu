@@ -34,8 +34,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text(AppLocalizations.of(context).performance_overview,
-                      style: theme.textTheme.subtitle1),
+                  child: Text(AppLocalizations.of(context).performance_overview, style: theme.textTheme.subtitle1),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),

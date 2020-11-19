@@ -39,8 +39,7 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
           child: Column(children: [
             ListTile(
                 title: Text(AppLocalizations.of(context).consent_item),
-                trailing: FlatButton(
-                    onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+                trailing: FlatButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -73,8 +72,7 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
                               saveFormChanges();
                             },
                             name: 'description',
-                            decoration:
-                                InputDecoration(labelText: AppLocalizations.of(context).description),
+                            decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                             initialValue: widget.consentItem.description),
                       ],
                     )),

@@ -52,8 +52,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
             ),
           ),
         ),
-        DesignerAddButton(
-            label: Text(AppLocalizations.of(context).add_intervention), add: _addIntervention)
+        DesignerAddButton(label: Text(AppLocalizations.of(context).add_intervention), add: _addIntervention)
       ],
     );
   }
