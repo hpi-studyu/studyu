@@ -1,12 +1,12 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_json_widget/flutter_json_widget.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/study.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../models/designer_state.dart';
@@ -35,16 +35,16 @@ class _SaveState extends State<Save> {
         context: context, builder: (_) => PublishAlertDialog(study: ParseStudy.fromBase(_draftStudy)));
     if (isSaved) {
       await _saveStudy(studyObjectId, studyDetailsObjectId);
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published')}));
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
       Navigator.popUntil(context, (route) => route.settings.name == '/');
     }
   }
 
   Future<void> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
     await _saveStudy(studyObjectId, studyDetailsObjectId);
-    Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft')}));
+    Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
   }
 
   Future<void> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
@@ -87,16 +87,14 @@ class _SaveState extends State<Save> {
                               ? () => _saveDraft(study?.objectId, study?.studyDetails?.objectId)
                               : null,
                           icon: Icon(Icons.save),
-                          label: Text(AppLocalizations.of(context).save_draft,
-                              style: TextStyle(fontSize: 30))),
+                          label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
                       SizedBox(width: 16),
                       OutlineButton.icon(
                           onPressed: _hasAcceptedTerms
                               ? () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId)
                               : null,
                           icon: Icon(Icons.publish),
-                          label: Text(AppLocalizations.of(context).publish_study,
-                              style: TextStyle(fontSize: 30))),
+                          label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
                     ],
                   ),
                   SizedBox(height: 80),
@@ -140,8 +138,8 @@ class _JSONExportSectionState extends State<JSONExportSection> {
                 OutlineButton.icon(
                     onPressed: () async {
                       await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
+                      Scaffold.of(context)
+                          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                     },
                     icon: Icon(Icons.copy),
                     label: Text(AppLocalizations.of(context).copy)),
@@ -181,7 +179,7 @@ class PublishAlertDialog extends StatelessWidget {
           },
           icon: Icon(Icons.publish),
           color: Colors.green,
-          label: Text('${AppLocalizations.of(context).publish')} ${study.title},
+          label: Text('${AppLocalizations.of(context).publish} ${study.title}'),
         )
       ],
     );

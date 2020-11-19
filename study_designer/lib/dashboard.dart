@@ -5,19 +5,20 @@ import 'package:csv/csv.dart';
 import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
 
 import 'designer.dart';
 import 'routes.dart';
+import 'util/localization.dart';
 import 'util/result_downloader.dart';
 
 class Dashboard extends StatefulWidget {
@@ -48,7 +49,7 @@ class _DashboardState extends State<Dashboard> {
     for (final locale in AppLanguage.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
-        child: Text(localeName(locale.languageCode)),
+        child: Text(localeName(context, locale.languageCode)),
       ));
     }
 
@@ -237,8 +238,8 @@ class StudyCard extends StatelessWidget {
                   final isDeleted =
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
                   if (isDeleted) {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('${study.title} ${AppLocalizations.of(context).deleted')}));
+                    Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).deleted}')));
                     if (reload != null) reload();
                   }
                 },

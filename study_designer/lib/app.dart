@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
 import 'dashboard.dart';
@@ -47,12 +47,8 @@ class _MyAppState extends State<MyApp> {
             return MaterialPageRoute(builder: routes[settings.name], settings: settings);
           },
           locale: model.appLocal,
-          supportedLocales: AppLanguage.supportedLocales,
-          localizationsDelegates: [
-            Nof1Localizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
         );
       }),
     );
