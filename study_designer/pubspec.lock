@@ -177,11 +177,13 @@ packages:
     source: hosted
     version: "3.0.10"
   dropdown_search:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: dropdown_search
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "8a0c38d8be0354ebba60f709017bfdcdf115d577"
+      url: "https://github.com/kartalbas/searchable_dropdown.git"
+    source: git
     version: "0.4.6"
   effective_dart:
     dependency: "direct dev"
@@ -245,11 +247,13 @@ packages:
     source: hosted
     version: "0.3.4"
   flutter_datetime_picker:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: flutter_datetime_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "7681e2065405b1e194423e0af113712573486c9f"
+      url: "https://github.com/espresso3389/flutter_datetime_picker.git"
+    source: git
     version: "1.4.0"
   flutter_dotenv:
     dependency: transitive
