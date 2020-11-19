@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.0-nullsafety.1"
+    version: "2.5.0-nullsafety.3"
   basic_utils:
     dependency: transitive
     description:
@@ -42,21 +42,21 @@ packages:
       name: boolean_selector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.1"
+    version: "2.1.0-nullsafety.3"
   characters:
     dependency: transitive
     description:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.3"
+    version: "1.1.0-nullsafety.5"
   charcode:
     dependency: transitive
     description:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0-nullsafety.1"
+    version: "1.2.0-nullsafety.3"
   clipboard:
     dependency: "direct main"
     description:
@@ -70,14 +70,14 @@ packages:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.1"
+    version: "1.1.0-nullsafety.3"
   collection:
     dependency: transitive
     description:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.15.0-nullsafety.3"
+    version: "1.15.0-nullsafety.5"
   community_material_icon:
     dependency: transitive
     description:
@@ -154,7 +154,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1+1"
   date_range_picker:
     dependency: transitive
     description:
@@ -203,7 +203,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0-nullsafety.1"
+    version: "1.2.0-nullsafety.3"
   ffi:
     dependency: transitive
     description:
@@ -264,7 +264,7 @@ packages:
       name: flutter_form_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0-pre.6"
+    version: "4.0.0-pre.7"
   flutter_iconpicker:
     dependency: "direct main"
     description:
@@ -329,20 +329,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.10.0"
-  google_maps_flutter:
-    dependency: transitive
-    description:
-      name: google_maps_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.6"
-  google_maps_flutter_platform_interface:
-    dependency: transitive
-    description:
-      name: google_maps_flutter_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
   html:
     dependency: transitive
     description:
@@ -412,7 +398,7 @@ packages:
       name: js
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.3-nullsafety.1"
+    version: "0.6.3-nullsafety.3"
   json_annotation:
     dependency: transitive
     description:
@@ -440,7 +426,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10-nullsafety.1"
+    version: "0.12.10-nullsafety.3"
   material_design_icons_flutter:
     dependency: "direct main"
     description:
@@ -454,7 +440,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0-nullsafety.4"
+    version: "1.3.0-nullsafety.6"
   mime_type:
     dependency: transitive
     description:
@@ -488,26 +474,26 @@ packages:
     description:
       path: "packages/dart"
       ref: development
-      resolved-ref: "7668ae8132f109c3bc788f4c06214560c90901a6"
+      resolved-ref: "120aae513414da5d878e41a8b1a51cc4261e1ba8"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
-    version: "2.0.0"
+    version: "2.0.1"
   parse_server_sdk_flutter:
     dependency: "direct main"
     description:
       path: "packages/flutter"
       ref: development
-      resolved-ref: "7668ae8132f109c3bc788f4c06214560c90901a6"
+      resolved-ref: "120aae513414da5d878e41a8b1a51cc4261e1ba8"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
-    version: "2.0.0"
+    version: "2.0.1"
   path:
     dependency: transitive
     description:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0-nullsafety.1"
+    version: "1.8.0-nullsafety.3"
   path_provider:
     dependency: "direct main"
     description:
@@ -715,35 +701,28 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0-nullsafety.2"
+    version: "1.8.0-nullsafety.4"
   stack_trace:
     dependency: transitive
     description:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.0-nullsafety.2"
+    version: "1.10.0-nullsafety.6"
   stream_channel:
     dependency: transitive
     description:
       name: stream_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.1"
-  stream_transform:
-    dependency: transitive
-    description:
-      name: stream_transform
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
+    version: "2.1.0-nullsafety.3"
   string_scanner:
     dependency: transitive
     description:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.1"
+    version: "1.1.0-nullsafety.3"
   studyou_core:
     dependency: "direct main"
     description:
@@ -764,21 +743,21 @@ packages:
       name: term_glyph
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0-nullsafety.1"
+    version: "1.2.0-nullsafety.3"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19-nullsafety.2"
+    version: "0.2.19-nullsafety.6"
   typed_data:
     dependency: transitive
     description:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0-nullsafety.3"
+    version: "1.3.0-nullsafety.5"
   universal_html:
     dependency: "direct main"
     description:
@@ -813,7 +792,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.3"
+    version: "2.1.0-nullsafety.5"
   vin_decoder:
     dependency: transitive
     description:
@@ -864,5 +843,5 @@ packages:
     source: hosted
     version: "0.1.2"
 sdks:
-  dart: ">=2.10.0-110 <=2.11.0-213.1.beta"
+  dart: ">=2.12.0-0.0 <3.0.0"
   flutter: ">=1.22.0 <2.0.0"
