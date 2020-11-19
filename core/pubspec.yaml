@@ -2,6 +2,8 @@ name: studyou_core
 description: StudYou Models and common functions for app and study designer
 version: 0.0.2
 
+publish_to: 'none'
+
 environment:
   sdk: '>=2.7.0 <3.0.0'
 
