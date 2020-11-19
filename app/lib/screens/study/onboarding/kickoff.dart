@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -51,8 +51,8 @@ class _KickoffScreen extends State<KickoffScreen> {
         );
 
   String _getStatusText(BuildContext context) => !ready
-      ? Nof1Localizations.of(context).translate('setting_up_study')
-      : Nof1Localizations.of(context).translate('good_to_go');
+      ? AppLocalizations.of(context).setting_up_study
+      : AppLocalizations.of(context).good_to_go;
 
   Widget _constructStatusButton(BuildContext context) {
     final theme = Theme.of(context);
@@ -60,7 +60,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       icon: Icon(MdiIcons.rocket),
       onPressed: ready ? () => Navigator.pushNamed(context, Routes.dashboard) : null,
       label: Text(
-        Nof1Localizations.of(context).translate('get_started'),
+        AppLocalizations.of(context).get_started,
         style: theme.textTheme.button.copyWith(
           color: ready ? theme.primaryColor : theme.disabledColor,
           fontSize: 20,

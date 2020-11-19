@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../util/intervention.dart';
 
@@ -81,7 +81,7 @@ class InterventionCardTitle extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   final description = isBaseline(intervention)
-                      ? Nof1Localizations.of(context).translate('baseline')
+                      ? AppLocalizations.of(context).baseline
                       : intervention.description;
                   return AlertDialog(
                     title: ListTile(
@@ -109,7 +109,7 @@ class InterventionCardDescription extends StatelessWidget {
     final theme = Theme.of(context);
 
     final description =
-        isBaseline(intervention) ? Nof1Localizations.of(context).translate('baseline') : intervention.description;
+        isBaseline(intervention) ? AppLocalizations.of(context).baseline : intervention.description;
     if (description == null) return Container();
 
     return Padding(
@@ -151,7 +151,7 @@ class _TaskList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Nof1Localizations.of(context).translate('tasks_daily'), style: theme.textTheme.bodyText2),
+              Text(AppLocalizations.of(context).tasks_daily, style: theme.textTheme.bodyText2),
             ],
           ),
         ),

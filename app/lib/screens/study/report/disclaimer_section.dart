@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/study/studies.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'generic_section.dart';
 
@@ -10,7 +10,7 @@ class DisclaimerSection extends GenericSection {
   @override
   Widget buildContent(BuildContext context) => Column(
         children: [
-          Text(Nof1Localizations.of(context).translate('report_disclaimer')),
+          Text(AppLocalizations.of(context).report_disclaimer),
         ],
       );
 }

@@ -4,7 +4,7 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
@@ -48,7 +48,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: Icon(MdiIcons.textSubject),
-        title: Text(Nof1Localizations.of(context).translate('study_overview_title')),
+        title: Text(AppLocalizations.of(context).study_overview_title),
       ),
       body: SingleChildScrollView(
         child: Column(

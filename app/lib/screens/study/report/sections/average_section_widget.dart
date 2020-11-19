@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/sections/average_section.dart';
 import 'package:studyou_core/models/report/temporal_aggregation.dart';
 import 'package:studyou_core/models/study/studies.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../util/data_processing.dart';
 import '../report_section_widget.dart';
@@ -69,7 +69,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         if (needsSeperators) generateSeperators(numberOfPhases, phaseDuration),
         if (needsDomainLabel)
           charts.ChartTitle(
-            Nof1Localizations.of(context).translate('report_axis_phase'),
+            AppLocalizations.of(context).report_axis_phase,
             behaviorPosition: charts.BehaviorPosition.bottom,
             titleStyleSpec: PlotUtilities.convertTextTheme(Theme.of(context).textTheme.caption),
           )

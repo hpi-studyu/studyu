@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
@@ -27,7 +27,7 @@ class QuestionContainer extends StatelessWidget {
         return ChoiceQuestionWidget(
           question: question,
           onDone: _onDone,
-          multiSelectionText: Nof1Localizations.of(context).translate('eligible_choice_multi_selection'),
+          multiSelectionText: AppLocalizations.of(context).eligible_choice_multi_selection,
         );
       case BooleanQuestion:
         return BooleanQuestionWidget(

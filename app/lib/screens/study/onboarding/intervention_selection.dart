@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -33,12 +33,12 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       child: Column(
         children: [
           Text(
-            Nof1Localizations.of(context).translate('please_select_interventions'),
+            AppLocalizations.of(context).please_select_interventions,
             style: theme.textTheme.subtitle1,
           ),
           SizedBox(height: 8),
           Text(
-            Nof1Localizations.of(context).translate('please_select_interventions_description'),
+            AppLocalizations.of(context).please_select_interventions_description,
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
           ),
         ],
@@ -49,7 +49,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Widget _buildInterventionSelectionList() {
     final interventions = selectedStudy.studyDetails?.interventionSet?.interventions;
     if (interventions == null || interventions.isEmpty) {
-      return Text(Nof1Localizations.of(context).translate('no_interventions_available'));
+      return Text(AppLocalizations.of(context).no_interventions_available);
     }
 
     return ListView.builder(
@@ -91,7 +91,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('intervention_selection_title')),
+        title: Text(AppLocalizations.of(context).intervention_selection_title),
         leading: Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(

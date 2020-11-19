@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'question_widget.dart';
 
@@ -74,7 +74,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
         ),
         RaisedButton(
           onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
-          child: Text(Nof1Localizations.of(context).translate('done')),
+          child: Text(AppLocalizations.of(context).done),
         )
       ],
     );

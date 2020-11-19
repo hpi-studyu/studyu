@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO(Manisha): Transfer strings to translation files
-    if (Nof1Localizations.of(context).translate('faq_full') == 'Frequently Asked Questions') {
+    if (AppLocalizations.of(context).faq_full == 'Frequently Asked Questions') {
       return Scaffold(
         appBar: AppBar(
-          title: Text(Nof1Localizations.of(context).translate('faq_full')),
+          title: Text(AppLocalizations.of(context).faq_full),
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(20),
@@ -20,7 +20,7 @@ class FAQ extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(Nof1Localizations.of(context).translate('faq_full')),
+          title: Text(AppLocalizations.of(context).faq_full),
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(20),

@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -41,10 +41,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
         automaticallyImplyLeading: false,
-        title: Text(Nof1Localizations.of(context).translate('dashboard')),
+        title: Text(AppLocalizations.of(context).dashboard),
         actions: [
           IconButton(
-            tooltip: Nof1Localizations.of(context).translate('contact'),
+            tooltip: AppLocalizations.of(context).contact,
             icon: Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
@@ -60,13 +60,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             itemBuilder: (context) {
               return {
                 OverflowMenuItem(
-                    Nof1Localizations.of(context).translate('report_history'), MdiIcons.history, Routes.reportHistory),
+                    AppLocalizations.of(context).report_history, MdiIcons.history, Routes.reportHistory),
                 OverflowMenuItem(
-                    Nof1Localizations.of(context).translate('faq'), MdiIcons.frequentlyAskedQuestions, Routes.faq),
+                    AppLocalizations.of(context).faq, MdiIcons.frequentlyAskedQuestions, Routes.faq),
                 OverflowMenuItem(
-                    Nof1Localizations.of(context).translate('about'), MdiIcons.informationOutline, Routes.about),
+                    AppLocalizations.of(context).about, MdiIcons.informationOutline, Routes.about),
                 OverflowMenuItem(
-                    Nof1Localizations.of(context).translate('settings'), Icons.settings, Routes.appSettings),
+                    AppLocalizations.of(context).settings, Icons.settings, Routes.appSettings),
               }.map((choice) {
                 return PopupMenuItem<OverflowMenuItem>(
                   value: choice,
@@ -112,18 +112,18 @@ class StudyFinishedPlaceholder extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(Nof1Localizations.of(context).translate('completed_study'),
+          Text(AppLocalizations.of(context).completed_study,
               style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold)),
           space,
           OutlineButton.icon(
               onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
               icon: Icon(MdiIcons.history, size: fontSize),
-              label: Text(Nof1Localizations.of(context).translate('report_history'), style: textStyle)),
+              label: Text(AppLocalizations.of(context).report_history, style: textStyle)),
           space,
           OutlineButton.icon(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
-              label: Text(Nof1Localizations.of(context).translate('study_selection'), style: textStyle)),
+              label: Text(AppLocalizations.of(context).study_selection, style: textStyle)),
         ],
       ),
     ));

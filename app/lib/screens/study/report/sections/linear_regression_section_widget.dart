@@ -2,7 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/sections/report_sections.dart';
 import 'package:studyou_core/models/study/studies.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../report_section_widget.dart';
 import '../util/linear_regression.dart';
@@ -126,17 +126,17 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     String text;
     //TODO: Talk to a statistics guy about this evaluation logic and model design
     if (pA > section.alpha || pB > section.alpha || pIntercept > section.alpha) {
-      text = Nof1Localizations.of(context).translate('report_outcome_inconclusive');
+      text = AppLocalizations.of(context).report_outcome_inconclusive;
     } else if (instance.schedule.includeBaseline && factorA < 0 && factorB < 0) {
-      text = Nof1Localizations.of(context).translate('report_outcome_neither');
+      text = AppLocalizations.of(context).report_outcome_neither;
     } else if (factorA > factorB) {
       //TODO: This if else might be problematic if a baseline is present and A and B are an improvement over it
-      text = Nof1Localizations.of(context)
-          .translate('report_outcome_one')
+      text = AppLocalizations.of(context)
+          .report_outcome_one
           .replaceAll('{intervention}', interventionNames[interventionA]);
     } else {
-      text = Nof1Localizations.of(context)
-          .translate('report_outcome_one')
+      text = AppLocalizations.of(context)
+          .report_outcome_one
           .replaceAll('{intervention}', interventionNames[interventionB]);
     }
 

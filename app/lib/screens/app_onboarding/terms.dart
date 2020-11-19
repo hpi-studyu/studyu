@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../routes.dart';
 import '../../util/save_pdf.dart';
@@ -24,18 +24,18 @@ class _TermsScreenState extends State<TermsScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    translations = Map.fromEntries([
-      'terms',
-      'terms_content',
-      'terms_agree',
-      'privacy',
-      'privacy_content',
-      'privacy_agree',
-      'disclaimer',
-      'disclaimer_content',
-      'disclaimer_agree',
-      'save_pdf'
-    ].map((key) => MapEntry(key, Nof1Localizations.of(context).translate(key))));
+    translations = {
+      'terms': AppLocalizations.of(context).terms,
+      'terms_content': AppLocalizations.of(context).terms_content,
+      'terms_agree': AppLocalizations.of(context).terms_agree,
+      'privacy': AppLocalizations.of(context).privacy,
+      'privacy_content': AppLocalizations.of(context).privacy_content,
+      'privacy_agree': AppLocalizations.of(context).privacy_agree,
+      'disclaimer': AppLocalizations.of(context).disclaimer,
+      'disclaimer_content': AppLocalizations.of(context).disclaimer_content,
+      'disclaimer_agree': AppLocalizations.of(context).disclaimer_agree,
+      'save_pdf': AppLocalizations.of(context).save_pdf
+    };
   }
 
   bool userCanContinue() {

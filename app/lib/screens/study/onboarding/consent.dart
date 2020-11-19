@@ -6,7 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -58,7 +58,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('consent')),
+        title: Text(AppLocalizations.of(context).consent),
         leading: Icon(MdiIcons.textBoxCheck),
         actions: [
           IconButton(
@@ -78,7 +78,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 RichText(
                   text: TextSpan(children: [
                     TextSpan(
-                      text: Nof1Localizations.of(context).translate('please_give_consent'),
+                      text: AppLocalizations.of(context).please_give_consent,
                       style: theme.textTheme.subtitle1,
                     ),
                     TextSpan(
@@ -86,13 +86,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
                       style: theme.textTheme.subtitle1,
                     ),
                     TextSpan(
-                      text: Nof1Localizations.of(context).translate('please_give_consent_why'),
+                      text: AppLocalizations.of(context).please_give_consent_why,
                       style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () => showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                content: Text(Nof1Localizations.of(context).translate('please_give_consent_reason')),
+                                content: Text(AppLocalizations.of(context).please_give_consent_reason),
                               ),
                             ),
                     )
@@ -123,10 +123,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        backLabel: Nof1Localizations.of(context).translate('decline'),
+        backLabel: AppLocalizations.of(context).decline,
         backIcon: Icon(Icons.close),
         onBack: () => Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection)),
-        nextLabel: Nof1Localizations.of(context).translate('accept'),
+        nextLabel: AppLocalizations.of(context).accept,
         nextIcon: Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode ? () => Navigator.pop(context, true) : null,
         progress: OnboardingProgress(stage: 2, progress: 2.5),

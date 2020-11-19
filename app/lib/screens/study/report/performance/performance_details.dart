@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../routes.dart';
 import '../../../../util/intervention.dart';
@@ -22,7 +22,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('performance')),
+        title: Text(AppLocalizations.of(context).performance),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -34,14 +34,14 @@ class PerformanceDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text(Nof1Localizations.of(context).translate('performance_overview'),
+                  child: Text(AppLocalizations.of(context).performance_overview,
                       style: theme.textTheme.subtitle1),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(Nof1Localizations.of(context).translate('performance_overview_interventions'),
+                      child: Text(AppLocalizations.of(context).performance_overview_interventions,
                           style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
                 ),
                 ListView.builder(
@@ -55,7 +55,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(Nof1Localizations.of(context).translate('performance_overview_observations'),
+                      child: Text(AppLocalizations.of(context).performance_overview_observations,
                           style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
                 ),
                 ListView.builder(

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../generic_section.dart';
 
@@ -31,7 +31,7 @@ class PerformanceSection extends GenericSection {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
-                  '${Nof1Localizations.of(context).translate('current_power_level')}: ${getPowerLevelDescription(context, interventionProgress)}',
+                  '${AppLocalizations.of(context).current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -64,11 +64,11 @@ class PerformanceSection extends GenericSection {
 
   String getPowerLevelDescription(BuildContext context, List<num> interventionProgress) {
     if (interventionProgress.any((progress) => progress < minimumRatio)) {
-      return Nof1Localizations.of(context).translate('not_enough_data');
+      return AppLocalizations.of(context).not_enough_data;
     } else if (interventionProgress.any((progress) => progress < 1)) {
-      return Nof1Localizations.of(context).translate('barely_enough_data');
+      return AppLocalizations.of(context).barely_enough_data;
     } else {
-      return Nof1Localizations.of(context).translate('enough_data');
+      return AppLocalizations.of(context).enough_data;
     }
   }
 

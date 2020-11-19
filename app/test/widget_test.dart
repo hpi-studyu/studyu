@@ -9,15 +9,12 @@ import 'package:StudyU/screens/app_onboarding/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget setup(Widget child) {
   return MaterialApp(
-    localizationsDelegates: [
-      Nof1LocalizationsDelegate(testing: true),
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ],
+    supportedLocales: AppLocalizations.supportedLocales,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
     home: child,
   );
 }

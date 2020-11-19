@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:studyou_core/util/localization.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
+import '../../../util/localization.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -34,7 +36,7 @@ class _SettingsState extends State<Settings> {
     for (final locale in AppLanguage.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
-        child: Text(Nof1Localizations.of(context).translate(locale.languageCode)),
+        child: Text(localeName(context, locale.languageCode)),
       ));
     }
 
@@ -46,7 +48,7 @@ class _SettingsState extends State<Settings> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text("${Nof1Localizations.of(context).translate("language")}:"),
+        Text('${AppLocalizations.of(context).language}:'),
         SizedBox(
           width: 5,
         ),
@@ -69,7 +71,7 @@ class _SettingsState extends State<Settings> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('settings')),
+        title: Text(AppLocalizations.of(context).settings),
       ),
       body: Center(
         child: Column(
@@ -85,7 +87,7 @@ class _SettingsState extends State<Settings> {
                 }),
             getDropdownRow(context),
             SizedBox(height: 24),
-            Text('${Nof1Localizations.of(context).translate('study_current')} ${activeStudy.title}',
+            Text('${AppLocalizations.of(context).study_current} ${activeStudy.title}',
                 style: theme.textTheme.headline6),
             SizedBox(height: 8),
             RaisedButton.icon(
@@ -94,7 +96,7 @@ class _SettingsState extends State<Settings> {
               },
               color: Colors.orange[800],
               icon: Icon(MdiIcons.exitToApp),
-              label: Text(Nof1Localizations.of(context).translate('opt_out')),
+              label: Text(AppLocalizations.of(context).opt_out),
             ),
             SizedBox(height: 24),
             RaisedButton.icon(
@@ -103,7 +105,7 @@ class _SettingsState extends State<Settings> {
               },
               color: Colors.red,
               icon: Icon(Icons.delete),
-              label: Text(Nof1Localizations.of(context).translate('delete_data')),
+              label: Text(AppLocalizations.of(context).delete_data),
             )
           ],
         ),
