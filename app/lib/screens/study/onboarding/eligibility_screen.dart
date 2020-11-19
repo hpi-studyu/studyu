@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/questionnaire/questionnaire_widget.dart';
@@ -76,7 +76,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           size: 32,
         ),
         content:
-            Text(Nof1Localizations.of(context).translate('eligible_yes'), style: Theme.of(context).textTheme.subtitle1),
+            Text(AppLocalizations.of(context).eligible_yes, style: Theme.of(context).textTheme.subtitle1),
         actions: [Container()],
         forceActionsBelow: true,
         backgroundColor: Colors.green[50],
@@ -91,17 +91,17 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Nof1Localizations.of(context).translate('eligible_no'), style: Theme.of(context).textTheme.subtitle1),
+            Text(AppLocalizations.of(context).eligible_no, style: Theme.of(context).textTheme.subtitle1),
             SizedBox(height: 4),
             Text(activeResult.firstFailed.reason),
             SizedBox(height: 4),
-            Text(Nof1Localizations.of(context).translate('eligible_mistake')),
+            Text(AppLocalizations.of(context).eligible_mistake),
           ],
         ),
         actions: [
           FlatButton(
             onPressed: _finish,
-            child: Text(Nof1Localizations.of(context).translate('eligible_back')),
+            child: Text(AppLocalizations.of(context).eligible_back),
           )
         ],
         forceActionsBelow: true,
@@ -115,7 +115,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('eligibility_questionnaire_title')),
+        title: Text(AppLocalizations.of(context).eligibility_questionnaire_title),
         leading: Icon(MdiIcons.clipboardList),
       ),
       body: Column(
@@ -123,7 +123,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text(
-              Nof1Localizations.of(context).translate('please_answer_eligibility'),
+              AppLocalizations.of(context).please_answer_eligibility,
               style: theme.textTheme.subtitle1,
             ),
           ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../routes.dart';
 import '../../../../widgets/intervention_card.dart';
@@ -65,11 +65,11 @@ class _TaskOverviewState extends State<TaskOverview> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: 8),
-              Text(Nof1Localizations.of(context).translate('intervention_current'), style: theme.textTheme.headline6),
+              Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
               SizedBox(height: 8),
               InterventionCardTitle(intervention: widget.study.getInterventionForDate(DateTime.now())),
               SizedBox(height: 8),
-              Text(Nof1Localizations.of(context).translate('today_tasks'), style: theme.textTheme.headline6)
+              Text(AppLocalizations.of(context).today_tasks, style: theme.textTheme.headline6)
             ])),
         // Todo: find good way to calculate duration of intervention and display it
         Expanded(

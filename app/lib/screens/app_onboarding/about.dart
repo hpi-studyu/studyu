@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../routes.dart';
 
@@ -9,7 +9,7 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('what_is_studyu')),
+        title: Text(AppLocalizations.of(context).what_is_studyu),
       ),
       body: PageView(
         scrollDirection: Axis.vertical,
@@ -31,7 +31,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 100),
-              Text(Nof1Localizations.of(context).translate('description_part1'),
+              Text(AppLocalizations.of(context).description_part1,
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -59,7 +59,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 100),
-              Text(Nof1Localizations.of(context).translate('description_part2'),
+              Text(AppLocalizations.of(context).description_part2,
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -87,7 +87,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part3'),
+              Text(AppLocalizations.of(context).description_part3,
                   textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -115,7 +115,7 @@ class AboutScreen extends StatelessWidget {
                 )
               ]),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part4'),
+              Text(AppLocalizations.of(context).description_part4,
                   textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -152,7 +152,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part5'),
+              Text(AppLocalizations.of(context).description_part5,
                   textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -180,7 +180,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part6'),
+              Text(AppLocalizations.of(context).description_part6,
                   textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -208,7 +208,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part7'),
+              Text(AppLocalizations.of(context).description_part7,
                   textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -236,7 +236,7 @@ class AboutScreen extends StatelessWidget {
                 ),
               ]),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part8'),
+              Text(AppLocalizations.of(context).description_part8,
                   textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
               Expanded(
                 child: Align(
@@ -259,13 +259,13 @@ class AboutScreen extends StatelessWidget {
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
               SizedBox(height: 50),
-              Text(Nof1Localizations.of(context).translate('description_part9'),
+              Text(AppLocalizations.of(context).description_part9,
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
               SizedBox(height: 40),
               OutlineButton.icon(
                 icon: Icon(MdiIcons.rocket),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                label: Text(Nof1Localizations.of(context).translate('get_started'),
+                label: Text(AppLocalizations.of(context).get_started,
                     style: Theme.of(context)
                         .textTheme
                         .button

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
@@ -111,7 +111,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${Nof1Localizations.of(context).translate('loading')}...',
+                '${AppLocalizations.of(context).loading}...',
                 style: Theme.of(context).textTheme.headline4,
               ),
               CircularProgressIndicator(),

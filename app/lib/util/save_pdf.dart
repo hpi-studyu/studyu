@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content) async {
   if (kIsWeb) {
@@ -16,8 +16,8 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
         context: context,
         builder: (context) => AlertDialog(
               elevation: 24,
-              title: Text(Nof1Localizations.of(context).translate('save_not_supported')),
-              content: Text(Nof1Localizations.of(context).translate('save_not_supported_description')),
+              title: Text(AppLocalizations.of(context).save_not_supported),
+              content: Text(AppLocalizations.of(context).save_not_supported_description),
             ));
     return;
   }
@@ -55,9 +55,9 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
       context: context,
       builder: (context) => AlertDialog(
             elevation: 24,
-            title: Text(Nof1Localizations.of(context).translate('save_finished')),
+            title: Text(AppLocalizations.of(context).save_finished),
             content: Platform.isIOS
-                ? Text(Nof1Localizations.of(context).translate('save_finished_description_ios'))
-                : Text(Nof1Localizations.of(context).translate('save_finished_description')),
+                ? Text(AppLocalizations.of(context).save_finished_description_ios)
+                : Text(AppLocalizations.of(context).save_finished_description),
           ));
 }

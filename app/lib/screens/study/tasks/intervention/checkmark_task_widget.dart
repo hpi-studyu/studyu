@@ -5,7 +5,7 @@ import 'package:studyou_core/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../models/app_state.dart';
 
@@ -27,7 +27,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
       Navigator.pop(context, true);
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(Nof1Localizations.of(context).translate('could_not_save_results')),
+        content: Text(AppLocalizations.of(context).could_not_save_results),
         duration: Duration(seconds: 10),
         action: SnackBarAction(label: 'retry', onPressed: () => _handleCompletion(context, animation)),
       ));
@@ -41,6 +41,6 @@ class CheckmarkTaskWidget extends StatelessWidget {
         pimpedWidgetBuilder: (context, controller) => RaisedButton.icon(
             onPressed: () => _handleCompletion(context, controller.forward(from: 0)),
             icon: Icon(Icons.check, size: 32),
-            label: Text(Nof1Localizations.of(context).translate('completed'), style: TextStyle(fontSize: 24))));
+            label: Text(AppLocalizations.of(context).completed, style: TextStyle(fontSize: 24))));
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
@@ -44,14 +44,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   child: Column(
                     children: [
                       Text(
-                        Nof1Localizations.of(context).translate('study_selection_description'),
+                        AppLocalizations.of(context).study_selection_description,
                         style: theme.textTheme.headline5,
                       ),
                       SizedBox(height: 8),
                       RichText(
                         text: TextSpan(children: [
                           TextSpan(
-                            text: Nof1Localizations.of(context).translate('study_selection_single'),
+                            text: AppLocalizations.of(context).study_selection_single,
                             style: theme.textTheme.subtitle2,
                           ),
                           TextSpan(
@@ -59,14 +59,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             style: theme.textTheme.subtitle2,
                           ),
                           TextSpan(
-                            text: Nof1Localizations.of(context).translate('study_selection_single_why'),
+                            text: AppLocalizations.of(context).study_selection_single_why,
                             style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       content: Text(
-                                          Nof1Localizations.of(context).translate('study_selection_single_reason')),
+                                          AppLocalizations.of(context).study_selection_single_reason),
                                     ),
                                   ),
                           )

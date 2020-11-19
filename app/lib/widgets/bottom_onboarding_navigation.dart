@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomOnboardingNavigation extends StatelessWidget {
   final Function onBack;
@@ -35,7 +35,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               child: Row(
                 children: [
                   backIcon ?? Icon(Icons.navigate_before),
-                  Text(backLabel ?? Nof1Localizations.of(context).translate('back')),
+                  Text(backLabel ?? AppLocalizations.of(context).back),
                 ],
               ),
             ),
@@ -49,7 +49,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 onPressed: onNext,
                 child: Row(
                   children: [
-                    Text(nextLabel ?? Nof1Localizations.of(context).translate('next')),
+                    Text(nextLabel ?? AppLocalizations.of(context).next),
                     nextIcon ?? Icon(Icons.navigate_next),
                   ],
                 ),

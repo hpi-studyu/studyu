@@ -128,19 +128,21 @@ packages:
     source: hosted
     version: "1.2.0-nullsafety.3"
   charts_common:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: charts_common
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: charts_common
+      ref: git_export
+      resolved-ref: e457f328eb5713a31bff7b722fcc71bc05522527
+      url: "https://github.com/hpi-studyu/charts.git"
+    source: git
     version: "0.9.0"
   charts_flutter:
     dependency: "direct main"
     description:
       path: charts_flutter
       ref: git_export
-      resolved-ref: "75a6ff8fbbcca9a8ea0a1374159239e675361de9"
-      url: "https://github.com/Pottiman/charts.git"
+      resolved-ref: e457f328eb5713a31bff7b722fcc71bc05522527
+      url: "https://github.com/hpi-studyu/charts.git"
     source: git
     version: "0.9.0"
   checked_yaml:
@@ -303,7 +305,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.1"
+    version: "6.0.0-nullsafety.4"
   fixnum:
     dependency: transitive
     description:
@@ -394,13 +396,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0+4"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.12.2"
   http_multi_server:
     dependency: transitive
     description:
@@ -449,7 +444,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.1"
+    version: "0.17.0-nullsafety.2"
   io:
     dependency: transitive
     description:
@@ -663,7 +658,7 @@ packages:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.0-nullsafety.4"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -684,7 +679,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.13"
+    version: "4.0.0-nullsafety.4"
   provider:
     dependency: "direct main"
     description:

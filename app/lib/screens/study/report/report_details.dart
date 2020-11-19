@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../routes.dart';
 import 'disclaimer_section.dart';
@@ -22,7 +22,7 @@ class ReportDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Nof1Localizations.of(context).translate('report_overview'),
+          AppLocalizations.of(context).report_overview,
         ),
         // TODO add pdf download
         // actions: [

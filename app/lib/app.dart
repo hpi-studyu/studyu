@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
           onUnknownRoute: Routes.unknownRoute,
           locale: model.appLocal,
           supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: [...AppLocalizations.localizationsDelegates, Nof1Localizations.delegate],
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
         );
       }),
     );

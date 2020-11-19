@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../models/app_state.dart';
@@ -26,7 +26,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       Navigator.pushNamed(context, Routes.kickoff);
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(Nof1Localizations.of(context).translate('user_did_not_give_consent')),
+        content: Text(AppLocalizations.of(context).user_did_not_give_consent),
         duration: Duration(seconds: 30),
       ));
     }
@@ -42,7 +42,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Nof1Localizations.of(context).translate('your_journey')),
+        title: Text(AppLocalizations.of(context).your_journey),
         leading: Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
@@ -90,7 +90,7 @@ class Timeline extends StatelessWidget {
           );
         }).toList(),
         InterventionTile(
-            title: Nof1Localizations.of(context).translate('journey_results_available'),
+            title: AppLocalizations.of(context).journey_results_available,
             iconName: 'flagCheckered',
             color: Colors.green,
             isLast: true,

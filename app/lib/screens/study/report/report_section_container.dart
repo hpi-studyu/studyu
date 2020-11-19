@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/models/report/report_models.dart';
 import 'package:studyou_core/models/study/parse_user_study.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'report_section_widget.dart';
 import 'sections/report_section_widgets.dart';
@@ -25,7 +25,7 @@ class ReportSectionContainer extends StatelessWidget {
 
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
-          Nof1Localizations.of(context).translate('report_primary_result').toUpperCase(),
+          AppLocalizations.of(context).report_primary_result.toUpperCase(),
           style: theme.textTheme.overline.copyWith(color: theme.accentColor),
         ),
         SizedBox(height: 4),

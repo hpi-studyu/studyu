@@ -1,6 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:studyou_core/util/localization.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoTask extends StatefulWidget {
@@ -46,7 +46,7 @@ class _VideoTaskState extends State<VideoTask> {
         ),
         RaisedButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(Nof1Localizations.of(context).translate('finished')),
+          child: Text(AppLocalizations.of(context).finished),
         )
       ],
     ));
