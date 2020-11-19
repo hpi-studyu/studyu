@@ -199,8 +199,8 @@ class _DesignerState extends State<Designer> {
                           icon: Icon(Icons.copy),
                           onPressed: () async {
                             await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
+                            Scaffold.of(context)
+                                .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                           },
                         )),
           ],

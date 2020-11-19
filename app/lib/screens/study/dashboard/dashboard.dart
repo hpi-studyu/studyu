@@ -59,14 +59,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onSelected: (value) => Navigator.pushNamed(context, value.routeName),
             itemBuilder: (context) {
               return {
-                OverflowMenuItem(
-                    AppLocalizations.of(context).report_history, MdiIcons.history, Routes.reportHistory),
-                OverflowMenuItem(
-                    AppLocalizations.of(context).faq, MdiIcons.frequentlyAskedQuestions, Routes.faq),
-                OverflowMenuItem(
-                    AppLocalizations.of(context).about, MdiIcons.informationOutline, Routes.about),
-                OverflowMenuItem(
-                    AppLocalizations.of(context).settings, Icons.settings, Routes.appSettings),
+                OverflowMenuItem(AppLocalizations.of(context).report_history, MdiIcons.history, Routes.reportHistory),
+                OverflowMenuItem(AppLocalizations.of(context).faq, MdiIcons.frequentlyAskedQuestions, Routes.faq),
+                OverflowMenuItem(AppLocalizations.of(context).about, MdiIcons.informationOutline, Routes.about),
+                OverflowMenuItem(AppLocalizations.of(context).settings, Icons.settings, Routes.appSettings),
               }.map((choice) {
                 return PopupMenuItem<OverflowMenuItem>(
                   value: choice,

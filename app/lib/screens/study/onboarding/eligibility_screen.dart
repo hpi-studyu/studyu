@@ -75,8 +75,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           color: Colors.green,
           size: 32,
         ),
-        content:
-            Text(AppLocalizations.of(context).eligible_yes, style: Theme.of(context).textTheme.subtitle1),
+        content: Text(AppLocalizations.of(context).eligible_yes, style: Theme.of(context).textTheme.subtitle1),
         actions: [Container()],
         forceActionsBelow: true,
         backgroundColor: Colors.green[50],

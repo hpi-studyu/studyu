@@ -50,9 +50,8 @@ class _KickoffScreen extends State<KickoffScreen> {
           size: 64,
         );
 
-  String _getStatusText(BuildContext context) => !ready
-      ? AppLocalizations.of(context).setting_up_study
-      : AppLocalizations.of(context).good_to_go;
+  String _getStatusText(BuildContext context) =>
+      !ready ? AppLocalizations.of(context).setting_up_study : AppLocalizations.of(context).good_to_go;
 
   Widget _constructStatusButton(BuildContext context) {
     final theme = Theme.of(context);

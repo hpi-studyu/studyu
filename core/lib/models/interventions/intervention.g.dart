@@ -13,13 +13,10 @@ Intervention _$InterventionFromJson(Map<String, dynamic> json) {
   )
     ..description = json['description'] as String
     ..icon = json['icon'] as String
-    ..tasks = (json['tasks'] as List)
-        .map((e) => InterventionTask.fromJson(e as Map<String, dynamic>))
-        .toList();
+    ..tasks = (json['tasks'] as List).map((e) => InterventionTask.fromJson(e as Map<String, dynamic>)).toList();
 }
 
-Map<String, dynamic> _$InterventionToJson(Intervention instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$InterventionToJson(Intervention instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'description': instance.description,

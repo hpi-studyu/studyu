@@ -13,8 +13,7 @@ InterventionResult _$InterventionResultFromJson(Map<String, dynamic> json) {
     ..filename = json['filename'] as String;
 }
 
-Map<String, dynamic> _$InterventionResultToJson(InterventionResult instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$InterventionResultToJson(InterventionResult instance) => <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
       'filename': instance.filename,

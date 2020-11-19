@@ -54,8 +54,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
           child: Column(children: [
             ListTile(
                 title: Text(AppLocalizations.of(context).intervention),
-                trailing: FlatButton(
-                    onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+                trailing: FlatButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -88,8 +87,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
                               saveFormChanges();
                             },
                             name: 'description',
-                            decoration:
-                                InputDecoration(labelText: AppLocalizations.of(context).description),
+                            decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                             initialValue: widget.intervention.description),
                       ],
                     )),

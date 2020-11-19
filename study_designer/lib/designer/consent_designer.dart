@@ -50,8 +50,7 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
             ),
           ),
         ),
-        DesignerAddButton(
-            label: Text(AppLocalizations.of(context).add_consent_item), add: _addConsentItem)
+        DesignerAddButton(label: Text(AppLocalizations.of(context).add_consent_item), add: _addConsentItem)
       ],
     );
   }

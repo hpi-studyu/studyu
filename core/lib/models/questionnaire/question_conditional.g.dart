@@ -6,15 +6,10 @@ part of 'question_conditional.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-QuestionConditional<V> _$QuestionConditionalFromJson<V>(
-    Map<String, dynamic> json) {
-  return QuestionConditional<V>()
-    ..condition =
-        Expression.fromJson(json['condition'] as Map<String, dynamic>);
+QuestionConditional<V> _$QuestionConditionalFromJson<V>(Map<String, dynamic> json) {
+  return QuestionConditional<V>()..condition = Expression.fromJson(json['condition'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$QuestionConditionalToJson<V>(
-        QuestionConditional<V> instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$QuestionConditionalToJson<V>(QuestionConditional<V> instance) => <String, dynamic>{
       'condition': instance.condition.toJson(),
     };

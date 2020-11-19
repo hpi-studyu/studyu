@@ -65,8 +65,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      content: Text(
-                                          AppLocalizations.of(context).study_selection_single_reason),
+                                      content: Text(AppLocalizations.of(context).study_selection_single_reason),
                                     ),
                                   ),
                           )
