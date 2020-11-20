@@ -177,14 +177,12 @@ packages:
     source: hosted
     version: "3.0.10"
   dropdown_search:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: master
-      resolved-ref: "8a0c38d8be0354ebba60f709017bfdcdf115d577"
-      url: "https://github.com/kartalbas/searchable_dropdown.git"
-    source: git
-    version: "0.4.6"
+      name: dropdown_search
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.8"
   effective_dart:
     dependency: "direct dev"
     description:
@@ -226,7 +224,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.13"
+    version: "2.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
