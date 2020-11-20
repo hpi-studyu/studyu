@@ -40,12 +40,14 @@ class _ParseInitState extends State<ParseInit> {
       final parseAppId = DotEnv().env['FLUTTER_PARSE_APP_ID'];
       final serverUrl = DotEnv().env['FLUTTER_PARSE_SERVER_URL'];
       final masterKey = DotEnv().env['FLUTTER_PARSE_MASTER_KEY'];
+      final clientKey = DotEnv().env['FLUTTER_PARSE_CLIENT_KEY'];
       assert(parseAppId != null && parseAppId.isNotEmpty, "Parse App ID is null or empty");
       assert(serverUrl != null && serverUrl.isNotEmpty, "Parse Server URL is null or empty");
       await Parse().initialize(
         parseAppId,
         serverUrl,
         masterKey: masterKey,
+        clientKey: clientKey,
         debug: DotEnv().env['FLUTTER_PARSE_DEBUG'] == 'true',
         coreStore: await CoreStoreSharedPrefsImp.getInstance(),
         // Dio is better, but slower on the web. Thus use http for web
