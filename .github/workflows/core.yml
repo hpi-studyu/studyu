@@ -22,11 +22,10 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
-      - run: flutter config --no-analytics
-      - name: Check format
-        working-directory: ./app
-        run: flutter format -l 120 -n . > unformatted_files.txt
-      - run: cat unformatted_files.txt
+      - name: Disable analytics
+        run: flutter config --no-analytics
+      - name: Get dependencies
+        run: flutter pub get
         working-directory: ./app
       - name: Check format
         working-directory: ./app
