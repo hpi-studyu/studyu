@@ -14,6 +14,7 @@ Widget setup(Widget child) {
   return MaterialApp(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
+    locale: Locale('en'),
     home: child,
   );
 }
@@ -23,6 +24,6 @@ void main() {
     await tester.pumpWidget(setup(WelcomeScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text('get_started'), findsOneWidget);
+    expect(find.text('Get started'), findsOneWidget);
   });
 }
