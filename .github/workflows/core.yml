@@ -55,6 +55,6 @@ jobs:
           channel: beta
       - name: Test
         run: flutter test
-        working-directory: ./app
+        working-directory: ./core
 
 
