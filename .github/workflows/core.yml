@@ -15,11 +15,13 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    container: cirrusci/flutter:beta
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+          with:
+            channel: beta
       - name: Check format
         working-directory: ./app
         run: |
@@ -40,11 +42,13 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    container: cirrusci/flutter:beta
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+          with:
+            channel: beta
       - name: Test
         run: flutter test
         working-directory: ./app
