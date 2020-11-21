@@ -25,6 +25,11 @@ jobs:
       - run: flutter config --no-analytics
       - name: Check format
         working-directory: ./app
+        run: flutter format -l 120 -n . > unformatted_files.txt
+      - run: cat unformatted_files.txt
+        working-directory: ./app
+      - name: Check format
+        working-directory: ./app
         run: |
           flutter format -l 120 -n . > unformatted_files.txt
           cat unformatted_files.txt
