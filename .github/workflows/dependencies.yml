@@ -1,3 +1,5 @@
+name: Upgrade dependencies
+
 on:
   schedule:
     - cron: 0 3 * * *
