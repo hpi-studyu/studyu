@@ -20,8 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
-          with:
-            channel: beta
+        with:
+          channel: beta
       - name: Check format
         working-directory: ./app
         run: |
@@ -47,8 +47,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
-          with:
-            channel: beta
+        with:
+          channel: beta
       - name: Test
         run: flutter test
         working-directory: ./app
