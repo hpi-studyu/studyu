@@ -38,6 +38,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
+      - run: flutter config --no-analytics
       - name: Test
         run: flutter test
         working-directory: ./study_designer

@@ -22,6 +22,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
+      - run: flutter config --no-analytics
       - name: Check format
         working-directory: ./app
         run: |
