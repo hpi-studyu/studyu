@@ -12,7 +12,8 @@ DataReference<T> _$DataReferenceFromJson<T>(Map<String, dynamic> json) {
     ..property = json['property'] as String;
 }
 
-Map<String, dynamic> _$DataReferenceToJson<T>(DataReference<T> instance) => <String, dynamic>{
+Map<String, dynamic> _$DataReferenceToJson<T>(DataReference<T> instance) =>
+    <String, dynamic>{
       'task': instance.task,
       'property': instance.property,
     };

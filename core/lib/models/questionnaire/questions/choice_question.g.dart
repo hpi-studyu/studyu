@@ -12,10 +12,14 @@ ChoiceQuestion _$ChoiceQuestionFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String
     ..prompt = json['prompt'] as String
     ..rationale = json['rationale'] as String
-    ..conditional =
-        json['conditional'] == null ? null : QuestionConditional.fromJson(json['conditional'] as Map<String, dynamic>)
+    ..conditional = json['conditional'] == null
+        ? null
+        : QuestionConditional.fromJson(
+            json['conditional'] as Map<String, dynamic>)
     ..multiple = json['multiple'] as bool
-    ..choices = (json['choices'] as List).map((e) => Choice.fromJson(e as Map<String, dynamic>)).toList();
+    ..choices = (json['choices'] as List)
+        .map((e) => Choice.fromJson(e as Map<String, dynamic>))
+        .toList();
 }
 
 Map<String, dynamic> _$ChoiceQuestionToJson(ChoiceQuestion instance) {

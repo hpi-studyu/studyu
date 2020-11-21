@@ -13,10 +13,12 @@ AverageSection _$AverageSectionFromJson(Map<String, dynamic> json) {
     ..title = json['title'] as String
     ..description = json['description'] as String
     ..aggregate = _$enumDecode(_$TemporalAggregationEnumMap, json['aggregate'])
-    ..resultProperty = DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>);
+    ..resultProperty =
+        DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) => <String, dynamic>{
+Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) =>
+    <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
       'title': instance.title,
@@ -35,7 +37,9 @@ T _$enumDecode<T>(
         '${enumValues.values.join(', ')}');
   }
 
-  final value = enumValues.entries.singleWhere((e) => e.value == source, orElse: () => null)?.key;
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
 
   if (value == null && unknownValue == null) {
     throw ArgumentError('`$source` is not one of the supported values: '

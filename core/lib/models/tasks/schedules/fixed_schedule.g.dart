@@ -12,7 +12,8 @@ FixedSchedule _$FixedScheduleFromJson(Map<String, dynamic> json) {
     ..time = Time.fromJson(json['time'] as String);
 }
 
-Map<String, dynamic> _$FixedScheduleToJson(FixedSchedule instance) => <String, dynamic>{
+Map<String, dynamic> _$FixedScheduleToJson(FixedSchedule instance) =>
+    <String, dynamic>{
       'type': instance.type,
       'time': instance.time.toJson(),
     };
