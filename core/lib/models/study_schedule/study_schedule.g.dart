@@ -14,7 +14,8 @@ StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) {
     ..sequence = _$enumDecode(_$PhaseSequenceEnumMap, json['sequence']);
 }
 
-Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) => <String, dynamic>{
+Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
+    <String, dynamic>{
       'numberOfCycles': instance.numberOfCycles,
       'phaseDuration': instance.phaseDuration,
       'includeBaseline': instance.includeBaseline,
@@ -31,7 +32,9 @@ T _$enumDecode<T>(
         '${enumValues.values.join(', ')}');
   }
 
-  final value = enumValues.entries.singleWhere((e) => e.value == source, orElse: () => null)?.key;
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
 
   if (value == null && unknownValue == null) {
     throw ArgumentError('`$source` is not one of the supported values: '

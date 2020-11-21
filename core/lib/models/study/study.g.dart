@@ -14,7 +14,8 @@ StudyBase _$StudyBaseFromJson(Map<String, dynamic> json) {
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..iconName = json['iconName'] as String
     ..published = json['published'] as bool
-    ..studyDetails = StudyDetailsBase.fromJson(json['studyDetails'] as Map<String, dynamic>);
+    ..studyDetails =
+        StudyDetailsBase.fromJson(json['studyDetails'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$StudyBaseToJson(StudyBase instance) => <String, dynamic>{

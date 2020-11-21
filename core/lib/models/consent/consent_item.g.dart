@@ -14,7 +14,8 @@ ConsentItem _$ConsentItemFromJson(Map<String, dynamic> json) {
     ..iconName = json['iconName'] as String;
 }
 
-Map<String, dynamic> _$ConsentItemToJson(ConsentItem instance) => <String, dynamic>{
+Map<String, dynamic> _$ConsentItemToJson(ConsentItem instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'description': instance.description,

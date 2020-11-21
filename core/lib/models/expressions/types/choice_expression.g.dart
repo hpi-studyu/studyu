@@ -13,7 +13,8 @@ ChoiceExpression _$ChoiceExpressionFromJson(Map<String, dynamic> json) {
     ..choices = (json['choices'] as List).map((e) => e as String).toSet();
 }
 
-Map<String, dynamic> _$ChoiceExpressionToJson(ChoiceExpression instance) => <String, dynamic>{
+Map<String, dynamic> _$ChoiceExpressionToJson(ChoiceExpression instance) =>
+    <String, dynamic>{
       'type': instance.type,
       'target': instance.target,
       'choices': instance.choices.toList(),
