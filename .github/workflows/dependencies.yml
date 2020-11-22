@@ -22,5 +22,5 @@ jobs:
           flutter-project: './app'
           git-email: 'strelow.nils@gmail.com'
           git-name: 'Nils Strelow'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.NILS_GITHUB_TOKEN }}
           target-branch: dev
