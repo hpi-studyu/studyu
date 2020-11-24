@@ -323,7 +323,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   json_serializable:
     dependency: "direct dev"
     description:
@@ -372,14 +372,14 @@ packages:
       name: node_interop
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   node_io:
     dependency: transitive
     description:
       name: node_io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   package_config:
     dependency: transitive
     description:
@@ -399,7 +399,7 @@ packages:
     description:
       path: "packages/dart"
       ref: development
-      resolved-ref: "120aae513414da5d878e41a8b1a51cc4261e1ba8"
+      resolved-ref: e8c9b94b0915052f32d6b6939642729dd6326943
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
@@ -408,7 +408,7 @@ packages:
     description:
       path: "packages/flutter"
       ref: development
-      resolved-ref: "120aae513414da5d878e41a8b1a51cc4261e1ba8"
+      resolved-ref: e8c9b94b0915052f32d6b6939642729dd6326943
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"

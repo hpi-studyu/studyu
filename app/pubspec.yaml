@@ -27,7 +27,7 @@ dependencies:
   grizzly_distuv: ^1.0.0
   intersperse: ^1.0.1+1
   intl: 0.16.1
-  json_annotation: ^3.1.0
+  json_annotation: ^3.1.1
   material_design_icons_flutter: ^4.0.5655
   normal: ^0.5.1
   parse_server_sdk_flutter:
