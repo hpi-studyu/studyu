@@ -295,7 +295,7 @@ packages:
       name: idb_shim
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.12.2"
+    version: "1.12.2+1"
   intl:
     dependency: transitive
     description:
@@ -399,7 +399,7 @@ packages:
     description:
       path: "packages/dart"
       ref: development
-      resolved-ref: e8c9b94b0915052f32d6b6939642729dd6326943
+      resolved-ref: "1b0fdd643280fb6b998f848e7713ca9baab31334"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
@@ -408,7 +408,7 @@ packages:
     description:
       path: "packages/flutter"
       ref: development
-      resolved-ref: e8c9b94b0915052f32d6b6939642729dd6326943
+      resolved-ref: "1b0fdd643280fb6b998f848e7713ca9baab31334"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
