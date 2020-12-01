@@ -25,11 +25,10 @@ dependencies:
     sdk: flutter
   flutter_native_timezone: ^1.0.4
   grizzly_distuv: ^1.0.0
-  intersperse: ^1.0.1+1
+  intersperse: ^1.0.1
   intl: 0.16.1
   json_annotation: ^3.1.1
   material_design_icons_flutter: ^4.0.5655
-  normal: ^0.5.1
   parse_server_sdk_flutter:
     git:
       url: git://github.com/parse-community/Parse-SDK-Flutter.git
@@ -41,9 +40,7 @@ dependencies:
   provider: ^4.3.2+2
   quiver: ^2.1.5
   rainbow_color: ^0.1.1
-  research_package: ^0.3.1+1
   shared_preferences: ^0.5.12
-  stats: ^1.0.0
   studyou_core:
     path: ../core
   timeline_tile: ^1.0.0

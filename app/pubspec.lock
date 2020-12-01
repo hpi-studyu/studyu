@@ -541,13 +541,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.12"
-  normal:
-    dependency: "direct main"
-    description:
-      name: normal
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.1"
   package_config:
     dependency: transitive
     description:
@@ -734,20 +727,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  research_package:
-    dependency: "direct main"
-    description:
-      name: research_package
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.2+2"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.24.1"
   sembast:
     dependency: transitive
     description:
@@ -832,13 +811,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.3"
-  signature:
-    dependency: transitive
-    description:
-      name: signature
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -872,13 +844,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0-nullsafety.6"
-  stats:
-    dependency: "direct main"
-    description:
-      name: stats
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
