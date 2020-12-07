@@ -23,14 +23,15 @@ class Result<T> {
     switch (result.runtimeType) {
       case QuestionnaireState:
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
+        type = 'QuestionnaireState';
         break;
       case bool:
         resultMap = {keyResult: result};
+        type = 'bool';
         break;
       default:
         resultMap = {keyResult: ''};
     }
-    type = result.runtimeType.toString();
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);
   }
 
