@@ -1,81 +1,22 @@
-include: package:effective_dart/analysis_options.1.2.0.yaml
+include: package:lint/analysis_options.yaml
 
 analyzer:
   exclude:
     - lib/**/*.g.dart
-  errors:
-    # treat missing required parameters as an error (not a hint)
-    missing_required_param: error
-    # treat missing returns as an error (not a hint)
-    missing_return: error
 
 # All lints: https://dart-lang.github.io/linter/lints/
 linter:
   rules:
-    public_member_api_docs: false
-    lines_longer_than_80_chars: false
-    # additional lints from pedantic: https://pub.dev/packages/pedantic
-    no_duplicate_case_values: true
-    always_declare_return_types: true
-    always_require_non_null_named_parameters: true
-    annotate_overrides: true
-    avoid_shadowing_type_parameters: true
-    empty_catches: true
-    null_closures: true
-    prefer_conditional_assignment: true
-    prefer_contains: true
-    prefer_for_elements_to_map_fromIterable: true
-    prefer_if_null_operators: true
-    prefer_is_empty: true
+    # STYLE
     prefer_single_quotes: true
-    prefer_spread_collections: true
-    recursive_getters: true
-    unnecessary_const: true
-    unnecessary_null_in_if_null_operators: true
-    use_function_type_syntax_for_parameters: true
-    # even more linters
-    always_put_required_named_parameters_first: true
-    avoid_as: true
-    avoid_double_and_int_checks: true
-    avoid_escaping_inner_quotes: true
-    avoid_single_cascade_in_expression_statements: true
-    avoid_unnecessary_containers: true
-    avoid_unused_constructor_parameters: true
-    avoid_void_async: true
-    cascade_invocations: true
-    exhaustive_cases: true
-    join_return_with_assignment: true
-    leading_newlines_in_multiline_strings: true
+    cascade_invocations: true # May have issues: https://github.com/dart-lang/linter/issues/1589
     only_throw_errors: true
-    overridden_fields: true
-    parameter_assignments: true
-    prefer_asserts_in_initializer_lists: true
-    prefer_const_constructors_in_immutables: true
-    prefer_const_declarations: true
-    prefer_const_literals_to_create_immutables: true
-    prefer_constructors_over_static_methods: true
-    # maybe remove
-    #prefer_expression_function_bodies: true
-    prefer_final_in_for_each: true
-    prefer_final_locals: true
     prefer_foreach: true
-    prefer_inlined_adds: true
     prefer_int_literals: true
-    prefer_is_not_operator: true
-    prefer_null_aware_operators: true
-    prefer_typing_uninitialized_variables: true
-    sized_box_for_whitespace: true
-    sort_child_properties_last: true
-    sort_unnamed_constructors_first: true
-    sort_pub_dependencies: true
-    unnecessary_await_in_return: true
-    unnecessary_null_aware_assignments: true
-    unnecessary_overrides: true
-    unnecessary_parenthesis: true
-    unnecessary_raw_strings: true
-    unnecessary_string_escapes: true
-    unnecessary_string_interpolations: true
     use_is_even_rather_than_modulo: true
     use_raw_strings: true
-    use_string_buffers: true
-    void_checks: true
+
+    # FLUTTER WEB IMPORTANT
+    avoid_type_to_string: true
+    avoid_as: true # May be deprecated: https://github.com/dart-lang/linter/issues/1401
+    avoid_double_and_int_checks: true

@@ -36,9 +36,9 @@ dependencies:
   uuid: ^2.2.2
 
 dev_dependencies:
-  effective_dart: ^1.3.0
   flutter_test:
     sdk: flutter
+  lint: ^1.5.1
 
 dependency_overrides:
   # remove when merged: https://github.com/Realank/flutter_datetime_picker/pull/199
