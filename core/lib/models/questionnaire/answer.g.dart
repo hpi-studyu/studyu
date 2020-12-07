@@ -9,7 +9,7 @@ part of 'answer.dart';
 Answer<V> _$AnswerFromJson<V>(Map<String, dynamic> json) {
   return Answer<V>(
     json['question'] as String,
-    DateTime.parse(json['timestamp'] as String),
+    DateTime.parse(json['timestamp'].toString()),
   );
 }
 

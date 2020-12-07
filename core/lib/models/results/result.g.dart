@@ -9,7 +9,7 @@ part of 'result.dart';
 Result<T> _$ResultFromJson<T>(Map<String, dynamic> json) {
   return Result<T>()
     ..taskId = json['taskId'] as String
-    ..timeStamp = DateTime.parse(json['timeStamp'] as String)
+    ..timeStamp = DateTime.parse(json['timeStamp'].toString())
     ..type = json['type'] as String;
 }
 
