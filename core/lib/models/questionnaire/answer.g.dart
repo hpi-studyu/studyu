@@ -9,6 +9,7 @@ part of 'answer.dart';
 Answer<V> _$AnswerFromJson<V>(Map<String, dynamic> json) {
   return Answer<V>(
     json['question'] as String,
+    // Keep .toString() until fixed: https://github.com/google/json_serializable.dart/issues/656
     DateTime.parse(json['timestamp'].toString()),
   );
 }
