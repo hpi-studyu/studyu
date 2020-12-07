@@ -38,11 +38,12 @@ jobs:
       - name: Lint
         run: flutter analyze
         working-directory: ./core
-      - name: Check generation of json_serializer
-        working-directory: ./core
-        run: |
-          flutter pub run build_runner build --delete-conflicting-outputs
-          git diff HEAD --exit-code -- "**/*.g.dart"
+        # Keep disabled until fixed: https://github.com/google/json_serializable.dart/issues/656
+#      - name: Check generation of json_serializer
+#        working-directory: ./core
+#        run: |
+#          flutter pub run build_runner build --delete-conflicting-outputs
+#          git diff HEAD --exit-code -- "**/*.g.dart"
 
   test:
     runs-on: ubuntu-latest
