@@ -3,7 +3,7 @@ import 'package:studyou_core/models/study/studies.dart';
 
 abstract class GenericSection extends StatelessWidget {
   final ParseUserStudy study;
-  final Function onTap;
+  final GestureTapCallback onTap;
 
   const GenericSection(this.study, {this.onTap});
 

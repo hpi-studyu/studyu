@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../util/intervention.dart';
 
@@ -163,7 +163,6 @@ class _TaskList extends StatelessWidget {
                 (task) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
                       Row(

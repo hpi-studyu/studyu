@@ -86,7 +86,7 @@ class InterventionPerformanceBar extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            InterventionCard(intervention, showCheckbox: false, showTasks: false, showDescription: false),
+            InterventionCard(intervention, showTasks: false, showDescription: false),
             SizedBox(height: 8),
             ...intervention.tasks
                 .map((task) => PerformanceBar(

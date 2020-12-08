@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomOnboardingNavigation extends StatelessWidget {
-  final Function onBack;
-  final Function onNext;
+  final VoidCallback onBack;
+  final VoidCallback onNext;
   final String backLabel;
   final String nextLabel;
   final bool hideNext;

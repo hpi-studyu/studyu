@@ -56,7 +56,6 @@ class _SaveState extends State<Save> {
     setState(() {
       _futureParseStudy = parseStudy.save();
     });
-    ;
   }
 
   @override

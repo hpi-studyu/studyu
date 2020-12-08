@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 import 'question_widget.dart';
 
@@ -46,8 +46,6 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
                   colors: [widget.question.minimumColor, widget.question.maximumColor],
                 ),
               ),

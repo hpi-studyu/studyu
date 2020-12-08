@@ -41,7 +41,6 @@ class _SettingsState extends State<Settings> {
     }
 
     dropDownItems.add(DropdownMenuItem(
-      value: null,
       child: Text('System'),
     ));
 
@@ -52,7 +51,7 @@ class _SettingsState extends State<Settings> {
         SizedBox(
           width: 5,
         ),
-        DropdownButton(
+        DropdownButton<Locale>(
           value: _selectedValue,
           items: dropDownItems,
           onChanged: (value) {

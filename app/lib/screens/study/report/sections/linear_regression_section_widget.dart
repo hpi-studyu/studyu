@@ -1,8 +1,8 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/report/sections/report_sections.dart';
 import 'package:studyou_core/models/study/studies.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../report_section_widget.dart';
 import '../util/linear_regression.dart';
@@ -21,8 +21,8 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       final intervention = instance.getInterventionForDate(e.key).id;
       return MapEntry([
         instance.getDayOfStudyFor(e.key), //time
-        interventionOrder[intervention] == 1 ? 1 : 0, //A
-        interventionOrder[intervention] == 2 ? 1 : 0, //B
+        if (interventionOrder[intervention] == 1) 1 else 0, //A
+        if (interventionOrder[intervention] == 2) 1 else 0, //B
       ], e.value);
     });
 

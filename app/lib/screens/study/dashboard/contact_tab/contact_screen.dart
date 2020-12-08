@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/study/contact.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,7 +46,7 @@ class _ContactScreenState extends State<ContactScreen> {
               height: 80,
             ),
           ),
-          RetryFutureBuilder(
+          RetryFutureBuilder<Contact>(
               tryFunction: getParseConfigContact,
               successBuilder: (context, appSupportContact) => ContactWidget(
                     contact: appSupportContact,

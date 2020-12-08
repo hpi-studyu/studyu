@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -68,7 +68,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -99,7 +98,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   ]),
                 ),
                 Flexible(
-                  fit: FlexFit.loose,
                   child: GridView.builder(
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -153,7 +151,6 @@ class ConsentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(
           color: theme.primaryColor,
-          width: 1,
         ),
       ),
       child: InkWell(

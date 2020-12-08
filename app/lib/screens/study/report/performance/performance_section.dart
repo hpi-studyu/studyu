@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rainbow_color/rainbow_color.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../generic_section.dart';
 
@@ -11,8 +11,8 @@ class PerformanceSection extends GenericSection {
   const PerformanceSection(ParseUserStudy instance, {Function onTap}) : super(instance, onTap: onTap);
 
   // TODO move to model
-  final minimumRatio = 0.1;
-  final maximum = 100;
+  double get minimumRatio => 0.1;
+  double get maximum => 100;
 
   @override
   Widget buildContent(BuildContext context) {
@@ -147,15 +147,12 @@ class PerformanceBar extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
                       colors: fullSpectrum,
                     ),
                   ),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Flexible(
                       child: FractionallySizedBox(
@@ -164,8 +161,6 @@ class PerformanceBar extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
                               colors: colorSamples,
                             ),
                           ),

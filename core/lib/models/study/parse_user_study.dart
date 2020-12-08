@@ -29,7 +29,9 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   }
 
   @override
-  ParseUserStudy clone(Map<String, dynamic> map) => ParseUserStudy.clone()..fromJson(map);
+  ParseUserStudy clone(Map<String, dynamic> map) {
+    return ParseUserStudy.clone()..fromJson(map);
+  }
 
   static const keyStudyId = 'study_id';
   String get studyId => get<String>(keyStudyId);

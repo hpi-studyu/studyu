@@ -1,5 +1,5 @@
 import 'package:clipboard/clipboard.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pretty_json/pretty_json.dart';
@@ -142,7 +142,7 @@ class _DesignerState extends State<Designer> {
               //throw Exception('Invalid route: ${settings.name}');
             }
 
-            final Widget specificDesignerWithHelpbar = Column(
+            final Widget specificDesignerWithHelpBar = Column(
               children: [
                 if (widget.study != null && widget.study.published)
                   Padding(
@@ -162,7 +162,7 @@ class _DesignerState extends State<Designer> {
             // You can also return a PageRouteBuilder and
             // define custom transitions between pages
             return MaterialPageRoute(
-              builder: (context) => specificDesignerWithHelpbar,
+              builder: (context) => specificDesignerWithHelpBar,
               settings: settings,
             );
           },
@@ -192,17 +192,16 @@ class _DesignerState extends State<Designer> {
               ? AppLocalizations.of(context).view_published_study
               : AppLocalizations.of(context).create_new_study),
           actions: [
-            kReleaseMode
-                ? Container()
-                : Builder(
-                    builder: (context) => IconButton(
-                          icon: Icon(Icons.copy),
-                          onPressed: () async {
-                            await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
-                          },
-                        )),
+            if (kDebugMode)
+              Builder(
+                  builder: (context) => IconButton(
+                        icon: Icon(Icons.copy),
+                        onPressed: () async {
+                          await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
+                        },
+                      )),
           ],
         ),
         body: Row(children: [

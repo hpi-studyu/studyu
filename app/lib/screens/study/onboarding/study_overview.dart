@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
@@ -80,8 +80,7 @@ class StudyDetailsView extends StatelessWidget {
   final StudyDetailsBase studyDetails;
 
   const StudyDetailsView({@required this.study, @required this.studyDetails, Key key}) : super(key: key);
-
-  final double iconSize = 40;
+  double get iconSize => 40;
 
   @override
   Widget build(BuildContext context) {

@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content) async {
   if (kIsWeb) {
@@ -30,7 +30,6 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
   doc.addPage(
     pw.MultiPage(
       pageFormat: PdfPageFormat.a4,
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
       header: (context) => pw.Container(
         alignment: pw.Alignment.centerRight,
         child: pw.Image(_logo, height: 30),
@@ -42,7 +41,6 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
   final dirPath = Platform.isIOS
       ? (await getApplicationDocumentsDirectory()).path
       : await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOWNLOADS);
-  ;
 
   // TODO: Android, ask for file permissions to save
   try {

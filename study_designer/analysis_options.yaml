@@ -3,6 +3,10 @@ include: package:lint/analysis_options.yaml
 analyzer:
   exclude:
     - lib/**/*.g.dart
+  strong-mode:
+    # Implicit casts will not be allowed once non-nullable types land
+    # https://github.com/dart-lang/sdk/issues/31410#issuecomment-510683629
+    implicit-casts: true
 
 # All lints: https://dart-lang.github.io/linter/lints/
 linter:
@@ -20,3 +24,7 @@ linter:
     avoid_type_to_string: true
     avoid_as: true # May be deprecated: https://github.com/dart-lang/linter/issues/1401
     avoid_double_and_int_checks: true
+
+    # DISABLE
+    avoid_print: false
+    prefer_const_constructors: false

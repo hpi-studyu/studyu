@@ -42,7 +42,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
             end,
             (context, animation) => SizeTransition(
                   sizeFactor: animation,
-                  axis: Axis.vertical,
                   child: lastQuestion,
                 ));
       }

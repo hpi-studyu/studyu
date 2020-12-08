@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:studyou_core/queries/queries.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../routes.dart';
 import '../../util/save_pdf.dart';
@@ -120,7 +120,7 @@ class _TermsScreenState extends State<TermsScreen> {
   }
 
   List<Widget> buildSection(ThemeData theme,
-      {String title, String descriptionText, String acknowledgmentText, Function onChange, bool isChecked}) {
+      {String title, String descriptionText, String acknowledgmentText, ValueChanged<bool> onChange, bool isChecked}) {
     return <Widget>[
       Text(title, style: theme.textTheme.headline3),
       Text(descriptionText),
