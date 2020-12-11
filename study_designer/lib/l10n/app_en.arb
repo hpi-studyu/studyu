@@ -32,6 +32,8 @@
   "view_published_study": "View Published Study",
   "view_mode_warning": "This is a view mode only. The study is published already and therefore changes can not be saved.",
   "organization": "Responsible Organization",
+  "irb": "Institutional Review Board",
+  "irb_number": "Institutional Review Board Protocol Number",
   "researchers": "Responsible Researchers",
   "website": "Website",
   "email": "Email",

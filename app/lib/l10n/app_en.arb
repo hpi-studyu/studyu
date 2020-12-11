@@ -137,5 +137,16 @@
 
   "report_axis_phase": "Phase",
 
-  "completed_study": "You completed your last study. Look at past reports or start a new study."
+  "completed_study": "You completed your last study. Look at past reports or start a new study.",
+
+  "app_support": "App support",
+  "app_support_text": "Contact for problems or questions with the app",
+  "study_support": "Study support",
+  "study_support_text": "Contact for problems or questions with the study",
+  "organization": "Organization",
+  "irb": "Institutional Review Board",
+  "researchers": "Researchers",
+  "website": "Website",
+  "email": "Email",
+  "phone": "Phone"
 }

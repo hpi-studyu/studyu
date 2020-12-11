@@ -80,6 +80,18 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                       initialValue: _draftStudy.contact.organization),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
+                      name: 'institutionalReviewBoard',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).irb),
+                      initialValue: _draftStudy.contact.institutionalReviewBoard),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
+                      name: 'institutionalReviewBoardNumber',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).irb_number),
+                      initialValue: _draftStudy.contact.institutionalReviewBoardNumber),
+                  FormBuilderTextField(
+                      onChanged: _saveFormChanges,
                       name: 'researchers',
                       maxLength: 40,
                       decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
@@ -100,7 +112,6 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
                       initialValue: _draftStudy.contact.email),
                   FormBuilderTextField(
                       onChanged: _saveFormChanges,
-                      validator: FormBuilderValidators.numeric(context),
                       name: 'phone',
                       decoration: InputDecoration(labelText: AppLocalizations.of(context).phone),
                       initialValue: _draftStudy.contact.phone),
@@ -121,6 +132,8 @@ class _MetaDataDesignerState extends State<MetaDataDesigner> {
           ..title = _editFormKey.currentState.value['title']
           ..description = _editFormKey.currentState.value['description']
           ..contact.organization = _editFormKey.currentState.value['organization']
+          ..contact.institutionalReviewBoard = _editFormKey.currentState.value['institutionalReviewBoard']
+          ..contact.institutionalReviewBoardNumber = _editFormKey.currentState.value['institutionalReviewBoardNumber']
           ..contact.researchers = _editFormKey.currentState.value['researchers']
           ..contact.website = _editFormKey.currentState.value['website']
           ..contact.email = _editFormKey.currentState.value['email']

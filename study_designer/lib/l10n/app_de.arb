@@ -9,6 +9,8 @@
   "view_published_study": "Publizierte Studien betrachten",
   "view_mode_warning": "Studie Betrachten Modus. Die Studie ist bereits publiziert und daher können Änderungen nicht gespeichert werden.",
   "organization": "Verantwortliche Organisation",
+  "irb": "Zuständige Ethikkommission",
+  "irb_number": "Studiennummer",
   "researchers": "Verantwortliche Forscher",
   "website": "Webseite",
   "email": "E-Mail",

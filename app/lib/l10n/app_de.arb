@@ -139,5 +139,16 @@
 
   "report_axis_phase": "Phase",
 
-  "completed_study": "Du hast deine letzte Studie abgeschlossen. Schaue dir vergangene Ergebnisse an oder starte eine neue Studie."
+  "completed_study": "Du hast deine letzte Studie abgeschlossen. Schaue dir vergangene Ergebnisse an oder starte eine neue Studie.",
+
+  "app_support": "App Support",
+  "app_support_text": "Bei Problemen oder Fragen zur App kontaktieren",
+  "study_support": "Studien Support",
+  "study_support_text": "Bei Problemen oder Fragen zur Studie kontaktieren",
+  "organization": "Organisation",
+  "irb": "Zuständige Ethikkommission",
+  "researchers": "Forscher",
+  "website": "Website",
+  "email": "Email",
+  "phone": "Telefon"
 }

@@ -5,6 +5,8 @@ part 'contact.g.dart';
 @JsonSerializable()
 class Contact {
   String organization;
+  String institutionalReviewBoard;
+  String institutionalReviewBoardNumber;
   String researchers;
   String email;
   String website;
@@ -14,6 +16,8 @@ class Contact {
 
   Contact.designerDefault()
       : organization = '',
+        institutionalReviewBoard = '',
+        institutionalReviewBoardNumber = '',
         researchers = '',
         email = '',
         website = '',

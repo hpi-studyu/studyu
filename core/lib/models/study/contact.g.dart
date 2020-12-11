@@ -9,6 +9,9 @@ part of 'contact.dart';
 Contact _$ContactFromJson(Map<String, dynamic> json) {
   return Contact()
     ..organization = json['organization'] as String
+    ..institutionalReviewBoard = json['institutionalReviewBoard'] as String
+    ..institutionalReviewBoardNumber =
+        json['institutionalReviewBoardNumber'] as String
     ..researchers = json['researchers'] as String
     ..email = json['email'] as String
     ..website = json['website'] as String
@@ -17,6 +20,8 @@ Contact _$ContactFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
       'organization': instance.organization,
+      'institutionalReviewBoard': instance.institutionalReviewBoard,
+      'institutionalReviewBoardNumber': instance.institutionalReviewBoardNumber,
       'researchers': instance.researchers,
       'email': instance.email,
       'website': instance.website,

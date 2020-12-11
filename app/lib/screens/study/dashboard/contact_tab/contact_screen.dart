@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/study/contact.dart';
+import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -50,15 +51,15 @@ class _ContactScreenState extends State<ContactScreen> {
               tryFunction: getParseConfigContact,
               successBuilder: (context, appSupportContact) => ContactWidget(
                     contact: appSupportContact,
-                    title: 'App support',
-                    subtitle: 'Contact for problems or questions with the app',
+                    title: AppLocalizations.of(context).app_support,
+                    subtitle: AppLocalizations.of(context).app_support_text,
                     color: theme.primaryColor,
                   )),
           SizedBox(height: 20),
           ContactWidget(
             contact: studyContact,
-            title: 'Study support',
-            subtitle: 'Contact for problems or questions with the study',
+            title: AppLocalizations.of(context).study_support,
+            subtitle: AppLocalizations.of(context).study_support_text,
             color: theme.accentColor,
           ),
         ],
@@ -95,33 +96,42 @@ class ContactWidget extends StatelessWidget {
           children: titles,
         ),
         ContactItem(
-          itemName: 'Organization',
+          itemName: AppLocalizations.of(context).organization,
           itemValue: contact?.organization,
           iconData: MdiIcons.hospitalBuilding,
           iconColor: color,
         ),
+        if (contact?.institutionalReviewBoard != null)
+          ContactItem(
+            itemName: AppLocalizations.of(context).irb,
+            itemValue: contact.institutionalReviewBoard + (contact?.institutionalReviewBoardNumber != null
+                ? ': ${contact?.institutionalReviewBoardNumber}'
+                : ''),
+            iconData: MdiIcons.clipboardCheck,
+            iconColor: color,
+          ),
         ContactItem(
-          itemName: 'Researchers',
+          itemName: AppLocalizations.of(context).researchers,
           itemValue: contact?.researchers,
           iconData: MdiIcons.doctor,
           iconColor: color,
         ),
         ContactItem(
-          itemName: 'Website',
+          itemName: AppLocalizations.of(context).website,
           itemValue: contact?.website,
           iconData: MdiIcons.web,
           type: ContactItemType.website,
           iconColor: color,
         ),
         ContactItem(
-          itemName: 'Email',
+          itemName: AppLocalizations.of(context).email,
           itemValue: contact?.email,
           iconData: MdiIcons.email,
           type: ContactItemType.email,
           iconColor: color,
         ),
         ContactItem(
-          itemName: 'Phone',
+          itemName: AppLocalizations.of(context).phone,
           itemValue: contact?.phone,
           iconData: MdiIcons.phone,
           type: ContactItemType.phone,
