@@ -63,7 +63,7 @@ packages:
       name: build_config
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.4"
+    version: "0.4.5"
   build_daemon:
     dependency: transitive
     description:
@@ -84,14 +84,14 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.7"
+    version: "1.10.9"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.2"
+    version: "6.1.4"
   build_test:
     dependency: "direct dev"
     description:
@@ -149,7 +149,7 @@ packages:
       name: checked_yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   chewie:
     dependency: "direct main"
     description:
@@ -698,7 +698,7 @@ packages:
       name: pubspec_parse
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.7"
   qr:
     dependency: transitive
     description:
@@ -892,7 +892,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.16.0-nullsafety.12"
+    version: "1.16.0-nullsafety.13"
   test_api:
     dependency: transitive
     description:
@@ -906,7 +906,7 @@ packages:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.12-nullsafety.11"
+    version: "0.3.12-nullsafety.12"
   timeline_tile:
     dependency: "direct main"
     description:
@@ -927,7 +927,7 @@ packages:
       name: timing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+2"
+    version: "0.1.1+3"
   typed_data:
     dependency: transitive
     description:
