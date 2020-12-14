@@ -260,7 +260,7 @@ class _DesignerState extends State<Designer> {
                 selectedIcon: Icon(Icons.warning),
                 label: Text(AppLocalizations.of(context).consent),
               ),
-              if (!(widget.study != null && widget.study.published))
+              if (widget.study == null || !widget.study.published || kDebugMode)
                 NavigationRailDestination(
                   icon: Icon(Icons.publish),
                   selectedIcon: Icon(Icons.publish),
