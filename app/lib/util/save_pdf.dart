@@ -23,16 +23,13 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
   }
 
   final doc = pw.Document();
-  final _logo = PdfImage.file(
-    doc.document,
-    bytes: (await rootBundle.load('assets/images/icon_wide.png')).buffer.asUint8List(),
-  );
+  final _logo = pw.MemoryImage((await rootBundle.load('assets/images/icon_wide.png')).buffer.asUint8List());
   doc.addPage(
     pw.MultiPage(
       pageFormat: PdfPageFormat.a4,
       header: (context) => pw.Container(
         alignment: pw.Alignment.centerRight,
-        child: pw.Image(_logo, height: 30),
+        child: pw.Image.provider(_logo, height: 30),
       ),
       build: (context) => content,
     ),
