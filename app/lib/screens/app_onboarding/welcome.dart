@@ -18,6 +18,7 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Spacer(),
               Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
               SizedBox(height: 20),
               OutlineButton.icon(
@@ -40,13 +41,14 @@ class WelcomeScreen extends StatelessWidget {
                 label: Text(AppLocalizations.of(context).faq,
                     style: theme.textTheme.button.copyWith(color: theme.primaryColor, fontSize: 20)),
               ),
-              SizedBox(height: 20),
+              Spacer(),
               OutlineButton.icon(
-                icon: Icon(MdiIcons.rocket),
+                icon: Icon(MdiIcons.rocket, size: 30),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
                 label: Text(AppLocalizations.of(context).get_started,
-                    style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor, fontSize: 20)),
+                    style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor, fontSize: 30)),
               ),
+              Spacer()
             ],
           ),
         ),
