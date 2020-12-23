@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
+import 'package:studyou_core/util/retry_future_builder.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes.dart';
-import '../../util/save_pdf.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
@@ -17,95 +19,63 @@ class TermsScreen extends StatefulWidget {
 class _TermsScreenState extends State<TermsScreen> {
   bool _acceptedTerms = kDebugMode;
   bool _acceptedPrivacy = kDebugMode;
-  bool _acceptedDisclaimer = kDebugMode;
 
-  Map<String, String> translations = <String, String>{};
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    translations = {
-      'terms': AppLocalizations.of(context).terms,
-      'terms_content': AppLocalizations.of(context).terms_content,
-      'terms_agree': AppLocalizations.of(context).terms_agree,
-      'privacy': AppLocalizations.of(context).privacy,
-      'privacy_content': AppLocalizations.of(context).privacy_content,
-      'privacy_agree': AppLocalizations.of(context).privacy_agree,
-      'disclaimer': AppLocalizations.of(context).disclaimer,
-      'disclaimer_content': AppLocalizations.of(context).disclaimer_content,
-      'disclaimer_agree': AppLocalizations.of(context).disclaimer_agree,
-      'save_pdf': AppLocalizations.of(context).save_pdf
-    };
+  Future<ParseStudyUConfig> getParseConfig() async {
+    final configs = await ParseConfig().getConfigs();
+    return ParseStudyUConfig.fromJson(configs.result);
   }
 
   bool userCanContinue() {
-    return _acceptedTerms && _acceptedPrivacy && _acceptedDisclaimer;
-  }
-
-  Future<List<pw.Widget>> generatePdfContent() async {
-    final ttf = pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Regular.ttf'));
-    return <pw.Widget>[
-      pw.Header(
-        level: 0,
-        child: pw.Text(translations['terms'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
-      ),
-      pw.Paragraph(text: translations['terms_content'], style: pw.TextStyle(font: ttf)),
-      pw.Header(
-        level: 0,
-        child: pw.Text(translations['privacy'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
-      ),
-      pw.Paragraph(text: translations['privacy_content'], style: pw.TextStyle(font: ttf)),
-      pw.Header(
-        level: 0,
-        child: pw.Text(translations['disclaimer'], textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
-      ),
-      pw.Paragraph(text: translations['disclaimer_content'], style: pw.TextStyle(font: ttf)),
-    ];
+    return _acceptedTerms && _acceptedPrivacy;
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final appLocale = Localizations.localeOf(context);
 
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ...buildSection(theme,
-                      title: translations['terms'],
-                      descriptionText: translations['terms_content'],
-                      acknowledgmentText: translations['terms_agree'],
-                      onChange: (val) => setState(() => _acceptedTerms = val),
-                      isChecked: _acceptedTerms),
-                  ...buildSection(theme,
-                      title: translations['privacy'],
-                      descriptionText: translations['privacy_content'],
-                      acknowledgmentText: translations['privacy_agree'],
-                      onChange: (val) => setState(() => _acceptedPrivacy = val),
-                      isChecked: _acceptedPrivacy),
-                  ...buildSection(theme,
-                      title: translations['disclaimer'],
-                      descriptionText: translations['disclaimer_content'],
-                      acknowledgmentText: translations['disclaimer_agree'],
-                      onChange: (val) => setState(() => _acceptedDisclaimer = val),
-                      isChecked: _acceptedDisclaimer),
-                  SizedBox(
-                    height: 20,
+          child: RetryFutureBuilder<ParseStudyUConfig>(
+              tryFunction: getParseConfig,
+              successBuilder: (context, appConfig) => SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LegalSection(
+                          title: AppLocalizations.of(context).terms,
+                          description: AppLocalizations.of(context).terms_content,
+                          acknowledgment: AppLocalizations.of(context).terms_agree,
+                          onChange: (val) => setState(() => _acceptedTerms = val),
+                          isChecked: _acceptedTerms,
+                          icon: Icon(MdiIcons.fileDocumentEdit),
+                          pdfUrl: appConfig.app_terms[appLocale.toString()],
+                          pdfUrlLabel: AppLocalizations.of(context).terms_read,
+                      ),
+                      SizedBox(height: 20),
+                      LegalSection(
+                          title: AppLocalizations.of(context).privacy,
+                          description: AppLocalizations.of(context).privacy_content,
+                          acknowledgment: AppLocalizations.of(context).privacy_agree,
+                          onChange: (val) => setState(() => _acceptedPrivacy = val),
+                          isChecked: _acceptedPrivacy,
+                          icon: Icon(MdiIcons.shieldLock),
+                          pdfUrl: appConfig.app_privacy[appLocale.toString()],
+                        pdfUrlLabel: AppLocalizations.of(context).privacy_read,
+                      ),
+                      SizedBox(height: 30),
+                      OutlineButton.icon(
+                        icon: Icon(MdiIcons.scaleBalance),
+                        onPressed: () => launch(appConfig.imprint[appLocale.toString()]),
+                        label: Text(AppLocalizations.of(context).imprint_read,
+                            style: Theme.of(context).textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                      ),
+                    ],
                   ),
-                  FlatButton.icon(
-                    onPressed: () async => savePDF(context, 'StudyU_Terms_of_Service', await generatePdfContent()),
-                    label: Text(translations['save_pdf']),
-                    icon: Icon(Icons.save),
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
+              ),),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -118,14 +88,39 @@ class _TermsScreenState extends State<TermsScreen> {
       ),
     );
   }
+}
 
-  List<Widget> buildSection(ThemeData theme,
-      {String title, String descriptionText, String acknowledgmentText, ValueChanged<bool> onChange, bool isChecked}) {
-    return <Widget>[
-      Text(title, style: theme.textTheme.headline3),
-      Text(descriptionText),
-      CheckboxListTile(title: Text(acknowledgmentText), value: isChecked, onChanged: onChange),
-      SizedBox(height: 40),
-    ];
+class LegalSection extends StatelessWidget {
+  final String title;
+  final String description;
+  final Icon icon;
+  final String pdfUrl;
+  final String pdfUrlLabel;
+  final String acknowledgment;
+  final bool isChecked;
+  final ValueChanged<bool> onChange;
+
+  const LegalSection({Key key, this.title, this.description, this.icon, this.pdfUrl, this.pdfUrlLabel, this.acknowledgment, this.isChecked, this.onChange}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Text(title, style: theme.textTheme.headline4.copyWith(color: theme.primaryColor)),
+        SizedBox(height: 20),
+        Text(description),
+        SizedBox(height: 20),
+        OutlineButton.icon(
+          icon: icon,
+          onPressed: () => launch(pdfUrl),
+          label: Text(pdfUrlLabel,
+              style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+        ),
+        CheckboxListTile(title: Text(acknowledgment), value: isChecked, onChanged: onChange),
+      ],
+    );
   }
 }
+
+
