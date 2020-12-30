@@ -37,45 +37,46 @@ class _TermsScreenState extends State<TermsScreen> {
       body: SafeArea(
         child: Center(
           child: RetryFutureBuilder<ParseStudyUConfig>(
-              tryFunction: getParseConfig,
-              successBuilder: (context, appConfig) => SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      LegalSection(
-                          title: AppLocalizations.of(context).terms,
-                          description: AppLocalizations.of(context).terms_content,
-                          acknowledgment: AppLocalizations.of(context).terms_agree,
-                          onChange: (val) => setState(() => _acceptedTerms = val),
-                          isChecked: _acceptedTerms,
-                          icon: Icon(MdiIcons.fileDocumentEdit),
-                          pdfUrl: appConfig.app_terms[appLocale.toString()],
-                          pdfUrlLabel: AppLocalizations.of(context).terms_read,
-                      ),
-                      SizedBox(height: 20),
-                      LegalSection(
-                          title: AppLocalizations.of(context).privacy,
-                          description: AppLocalizations.of(context).privacy_content,
-                          acknowledgment: AppLocalizations.of(context).privacy_agree,
-                          onChange: (val) => setState(() => _acceptedPrivacy = val),
-                          isChecked: _acceptedPrivacy,
-                          icon: Icon(MdiIcons.shieldLock),
-                          pdfUrl: appConfig.app_privacy[appLocale.toString()],
-                        pdfUrlLabel: AppLocalizations.of(context).privacy_read,
-                      ),
-                      SizedBox(height: 30),
-                      OutlineButton.icon(
-                        icon: Icon(MdiIcons.scaleBalance),
-                        onPressed: () => launch(appConfig.imprint[appLocale.toString()]),
-                        label: Text(AppLocalizations.of(context).imprint_read,
-                            style: Theme.of(context).textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
-                      ),
-                    ],
-                  ),
+            tryFunction: getParseConfig,
+            successBuilder: (context, appConfig) => SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LegalSection(
+                      title: AppLocalizations.of(context).terms,
+                      description: AppLocalizations.of(context).terms_content,
+                      acknowledgment: AppLocalizations.of(context).terms_agree,
+                      onChange: (val) => setState(() => _acceptedTerms = val),
+                      isChecked: _acceptedTerms,
+                      icon: Icon(MdiIcons.fileDocumentEdit),
+                      pdfUrl: appConfig.app_terms[appLocale.toString()],
+                      pdfUrlLabel: AppLocalizations.of(context).terms_read,
+                    ),
+                    SizedBox(height: 20),
+                    LegalSection(
+                      title: AppLocalizations.of(context).privacy,
+                      description: AppLocalizations.of(context).privacy_content,
+                      acknowledgment: AppLocalizations.of(context).privacy_agree,
+                      onChange: (val) => setState(() => _acceptedPrivacy = val),
+                      isChecked: _acceptedPrivacy,
+                      icon: Icon(MdiIcons.shieldLock),
+                      pdfUrl: appConfig.app_privacy[appLocale.toString()],
+                      pdfUrlLabel: AppLocalizations.of(context).privacy_read,
+                    ),
+                    SizedBox(height: 30),
+                    OutlineButton.icon(
+                      icon: Icon(MdiIcons.scaleBalance),
+                      onPressed: () => launch(appConfig.imprint[appLocale.toString()]),
+                      label: Text(AppLocalizations.of(context).imprint_read,
+                          style: Theme.of(context).textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                    ),
+                  ],
                 ),
-              ),),
+              ),
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -100,7 +101,17 @@ class LegalSection extends StatelessWidget {
   final bool isChecked;
   final ValueChanged<bool> onChange;
 
-  const LegalSection({Key key, this.title, this.description, this.icon, this.pdfUrl, this.pdfUrlLabel, this.acknowledgment, this.isChecked, this.onChange}) : super(key: key);
+  const LegalSection(
+      {Key key,
+      this.title,
+      this.description,
+      this.icon,
+      this.pdfUrl,
+      this.pdfUrlLabel,
+      this.acknowledgment,
+      this.isChecked,
+      this.onChange})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +125,10 @@ class LegalSection extends StatelessWidget {
         OutlineButton.icon(
           icon: icon,
           onPressed: () => launch(pdfUrl),
-          label: Text(pdfUrlLabel,
-              style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+          label: Text(pdfUrlLabel, style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
         ),
         CheckboxListTile(title: Text(acknowledgment), value: isChecked, onChanged: onChange),
       ],
     );
   }
 }
-
-

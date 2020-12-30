@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -18,13 +17,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AppLanguage appLanguage;
-  ParseUserStudy selectedStudy;
-
   @override
   void initState() {
     super.initState();
-    appLanguage = AppLanguage()..fetchLocale();
     if (!kIsWeb) {
       _configureLocalTimeZone();
     }
@@ -41,8 +36,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppLanguage>.value(value: appLanguage),
-        Provider<AppState>(create: (context) => AppState(selectedStudy)),
+        ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
+        Provider<AppState>(create: (context) => AppState()),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return MaterialApp(

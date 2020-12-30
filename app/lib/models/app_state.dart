@@ -7,5 +7,5 @@ class AppState {
   ParseUserStudy activeStudy;
   FlutterLocalNotificationsPlugin notificationsPlugin;
 
-  AppState(this.activeStudy);
+  AppState();
 }

@@ -33,7 +33,7 @@ class _SettingsState extends State<Settings> {
   Widget getDropdownRow(BuildContext context) {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
-    for (final locale in AppLanguage.supportedLocales) {
+    for (final locale in AppLocalizations.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
         child: Text(localeName(context, locale.languageCode)),

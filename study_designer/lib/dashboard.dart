@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildLanguageDropdown() {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
-    for (final locale in AppLanguage.supportedLocales) {
+    for (final locale in AppLocalizations.supportedLocales) {
       dropDownItems.add(DropdownMenuItem(
         value: locale,
         child: Text(localeName(context, locale.languageCode)),

@@ -15,13 +15,11 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  Future<Contact> appSupportContactFuture;
   Contact studyContact;
 
   @override
   void initState() {
     super.initState();
-    appSupportContactFuture = getParseConfigContact();
     studyContact = context.read<AppState>().activeStudy?.contact;
   }
 
