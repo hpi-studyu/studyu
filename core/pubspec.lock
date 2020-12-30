@@ -399,7 +399,7 @@ packages:
     description:
       path: "packages/dart"
       ref: development
-      resolved-ref: "1b0fdd643280fb6b998f848e7713ca9baab31334"
+      resolved-ref: b0013f2d4a549044f267ffb362b5aae417555672
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
@@ -408,7 +408,7 @@ packages:
     description:
       path: "packages/flutter"
       ref: development
-      resolved-ref: "1b0fdd643280fb6b998f848e7713ca9baab31334"
+      resolved-ref: b0013f2d4a549044f267ffb362b5aae417555672
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
