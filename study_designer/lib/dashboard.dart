@@ -14,7 +14,9 @@ import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
+import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'designer.dart';
 import 'routes.dart';
@@ -29,12 +31,66 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   Future<ParseResponse> _studiesFuture;
   Locale _selectedLocal;
+  bool termsDialogAlreadyShown = false;
 
   @override
   void initState() {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
     reloadStudies();
+    showTermsAndPrivacyDialog();
+  }
+
+  Future<ParseStudyUConfig> getParseConfig() async {
+    final configs = await ParseConfig().getConfigs();
+    return ParseStudyUConfig.fromJson(configs.result);
+  }
+
+  void showTermsAndPrivacyDialog() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!termsDialogAlreadyShown) {
+        setState(() {
+          termsDialogAlreadyShown = true;
+        });
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              final theme = Theme.of(context);
+              final appLocale = Localizations.localeOf(context);
+
+              return RetryFutureBuilder<ParseStudyUConfig>(
+                tryFunction: getParseConfig,
+                successBuilder: (context, appConfig) => AlertDialog(
+                  title: Text(AppLocalizations.of(context).terms_privacy),
+                  actions: [
+                    FlatButton(
+                        onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context).terms_agree))
+                  ],
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(AppLocalizations.of(context).terms_content),
+                      SizedBox(height: 20),
+                      OutlineButton.icon(
+                        icon: Icon(MdiIcons.fileDocumentEdit),
+                        onPressed: () => launch(appConfig.designer_terms[appLocale.toString()]),
+                        label: Text(AppLocalizations.of(context).terms_read,
+                            style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                      ),
+                      OutlineButton.icon(
+                        icon: Icon(MdiIcons.shieldLock),
+                        onPressed: () => launch(appConfig.designer_privacy[appLocale.toString()]),
+                        label: Text(AppLocalizations.of(context).privacy_read,
+                            style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            });
+      }
+    });
   }
 
   void reloadStudies() {

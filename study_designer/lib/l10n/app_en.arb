@@ -117,7 +117,10 @@
   "hour": "Hour",
   "minute": "Minute",
   "data_source": "Data Source",
-  "terms_title": "Terms and App Guidelines",
-  "terms_description": "Before you can save or publish your study you need to agree to the terms and app guidelines",
-  "terms_agree": "I agree to the terms and app guidelines"
+
+  "terms_privacy": "Terms of Use & Privacy Policy",
+  "terms_read": "Read Terms of Use",
+  "privacy_read": "Read Privacy Policy",
+  "terms_content": "The terms of use give an overview on the purpose and use of the StudyU Designer. The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the imprint.",
+  "terms_agree": "I have read and agree to the terms of use and the privacy policy"
 }

@@ -20,7 +20,6 @@ class _SaveState extends State<Save> {
   StudyBase _draftStudy;
   Future<ParseResponse> _futureParseStudy;
   String studyObjectId;
-  bool _hasAcceptedTerms = false;
 
   @override
   void initState() {
@@ -70,28 +69,17 @@ class _SaveState extends State<Save> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(AppLocalizations.of(context).terms_title, style: theme.textTheme.headline6),
-                  CheckboxListTile(
-                      title: Text(AppLocalizations.of(context).terms_agree),
-                      value: _hasAcceptedTerms,
-                      onChanged: (val) => setState(() => _hasAcceptedTerms = val)),
-                  SizedBox(height: 16),
                   Text(AppLocalizations.of(context).save, style: theme.textTheme.headline6),
-                  if (!_hasAcceptedTerms) Text(AppLocalizations.of(context).terms_description),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       OutlineButton.icon(
-                          onPressed: _hasAcceptedTerms
-                              ? () => _saveDraft(study?.objectId, study?.studyDetails?.objectId)
-                              : null,
+                          onPressed: () => _saveDraft(study?.objectId, study?.studyDetails?.objectId),
                           icon: Icon(Icons.save),
                           label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
                       SizedBox(width: 16),
                       OutlineButton.icon(
-                          onPressed: _hasAcceptedTerms
-                              ? () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId)
-                              : null,
+                          onPressed: () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId),
                           icon: Icon(Icons.publish),
                           label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
                     ],
