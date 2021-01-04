@@ -1,51 +1,67 @@
-# 1.2.0 (2020-12-22)
+# [1.4.0](https://github.com/hpi-studyu/studyu/compare/v1.2.0...v1.4.0) (2021-01-04)
 
 
 ### Bug Fixes
 
-* add sizedbox at bottom of designer lists to make sure the add button doesn't block the user from seeing the element he is editing ([243973d](https://github.com/hpi-studyu/studyu/commit/243973d2063ec8d46d6c94658ecd21a19e6d7dd2))
-* Cleanup of study_designer gen i10n ([06b8d1e](https://github.com/hpi-studyu/studyu/commit/06b8d1ee744038b04e9cac332baf5d74736731a5))
-* Correct tranlsation ([a8740d1](https://github.com/hpi-studyu/studyu/commit/a8740d14d1420c2060f6ec89b85a4ad55e0b9a97))
-* Disable notifications on web ([51fde32](https://github.com/hpi-studyu/studyu/commit/51fde32faad081beff797c650e50a4b75ef6fd87))
-* Do not call notifications for web ([593342b](https://github.com/hpi-studyu/studyu/commit/593342b970b35335cc52bb7adb8bcd0e5e9abc0d))
-* Fix compatibility with newest beta ([7cfd163](https://github.com/hpi-studyu/studyu/commit/7cfd16378fbbd963db49067b797aff62d2a6f1d8))
-* Fix contact not displaying correctly ([b6330f9](https://github.com/hpi-studyu/studyu/commit/b6330f9cecf84214cfcc0e175b8764d7ea69a337))
-* Fix installation-id for back4app ([b62e8d3](https://github.com/hpi-studyu/studyu/commit/b62e8d34ba65260afcad296069e538b1f852fbba))
-* Fix release build web: Remove type.toString ([bb74ee3](https://github.com/hpi-studyu/studyu/commit/bb74ee36db98b3b8849529a8415edc01506a06f3))
-* json_serializer DateTime.parse needs toString ([57ab660](https://github.com/hpi-studyu/studyu/commit/57ab66005cebb91ae6c42d44f1cd9668ca9af184))
-* Make compatible with beta ([cbd0a85](https://github.com/hpi-studyu/studyu/commit/cbd0a8572a7f8933ac7da47746e8995274b3442e))
-* Masterkey needed to create a user ([f6c7375](https://github.com/hpi-studyu/studyu/commit/f6c73752a0480ab750bac9531fcea0e6169c95a3))
-* Scaffold.of deprecated ([ba88113](https://github.com/hpi-studyu/studyu/commit/ba881135f12156f35fe59078004d42a92f269f0b))
-* spelling ([9203658](https://github.com/hpi-studyu/studyu/commit/9203658f433fc3b292814d8d5e39de112d86ef6e))
-* Upgrade packages to beta channel ([9ad5395](https://github.com/hpi-studyu/studyu/commit/9ad5395742d5a5bcf7b412e236a0ccdc31d1b2bd))
-* Use dart conform names ([b507149](https://github.com/hpi-studyu/studyu/commit/b507149660ab48afed6a635f6e067c8f553b5b5a))
-* **security:** Use clientKey instead of masterKey ([fb08290](https://github.com/hpi-studyu/studyu/commit/fb08290054ace3a86e141397b644f209e6b682b7))
-* Return null rather than failing to parse ([7404eba](https://github.com/hpi-studyu/studyu/commit/7404ebae978aa1142fa336cb44741ac4adc37c19))
-* text is not shown at include baseline button because of wrong text label ([39e372c](https://github.com/hpi-studyu/studyu/commit/39e372cd5b750c601cc9e976910d86a57ef1e719))
-* Typo not kIsWeb ([217dd18](https://github.com/hpi-studyu/studyu/commit/217dd180cb0f00de2b02bddb9fc0414581f0586b))
-* Use ParseHTTPClient for web bc faster ([6c616dd](https://github.com/hpi-studyu/studyu/commit/6c616dd79d976562d429add5bf976e3c57241a3c))
-* Use TextField instead of buggy PhoneField ([50554f2](https://github.com/hpi-studyu/studyu/commit/50554f29491975b9029d72f39f744243ca95d5b4))
+* **ios:** Add language options for ios ([8fbe434](https://github.com/hpi-studyu/studyu/commit/8fbe43474e8df7659710a5bc6a59117a4af7eb48))
 
 
 ### Features
 
-* Add IRB contact field ([1e8aff1](https://github.com/hpi-studyu/studyu/commit/1e8aff1ef27eef89d74a9c63a5465ed301e7ca4f))
-* Define generate localizations ([d07219b](https://github.com/hpi-studyu/studyu/commit/d07219b96337cb54146a3b80f2830b8ab8cb9cc2))
-* Enable editing published studies locally ([3dc4174](https://github.com/hpi-studyu/studyu/commit/3dc4174d7b102eec2245157858ff016eaf225b55))
-* **app:** Add FAQ and contact to Welcome page ([5facadc](https://github.com/hpi-studyu/studyu/commit/5facadc52beb6407e746fde5f3b28b79e2bb3138))
-* **app:** Color Study publisher header ([41228e5](https://github.com/hpi-studyu/studyu/commit/41228e50e554d4f6cbe633c35a2a642a9fec6772))
-* **app:** Display support contact ([77e0593](https://github.com/hpi-studyu/studyu/commit/77e0593c303aec894a0955e806978ce8a8bc8edf))
-* **app:** Remove support/contact overview page ([adcf205](https://github.com/hpi-studyu/studyu/commit/adcf2056f81f07ad03273c9521901c544a942b9c))
-* **app:** Restructure contact screen ([c103786](https://github.com/hpi-studyu/studyu/commit/c10378698edfc19ffa498838bf6c9c8d7285426e))
-* **app:** Separate study publisher contact ([4219cdb](https://github.com/hpi-studyu/studyu/commit/4219cdb0821eaf25eb8f9cf218edf4149b342a64))
-* **designer:** Add copy JSON to app bar in debug ([0b8310f](https://github.com/hpi-studyu/studyu/commit/0b8310f2cba839138d84cd44a3767c99ef76ea32))
-* **designer:** Upload of JSON support in debug ([8c86717](https://github.com/hpi-studyu/studyu/commit/8c867178ac15194aa0d38663997b58001eebbe78))
+* Add terms and privacy disclaimer to designer ([9ab16b4](https://github.com/hpi-studyu/studyu/commit/9ab16b45310307a4a1784a17d158633f3b6411b0))
+* Rework terms & privacy screen ([ac3e2bd](https://github.com/hpi-studyu/studyu/commit/ac3e2bd956facbba9935cd772c6faf21d747306b))
+* WelcomeScreen: Make Get Started more apparent ([e8e2a16](https://github.com/hpi-studyu/studyu/commit/e8e2a1658edbd858cd50a7d7f0895a676bcef661))
+
+
+
+# [1.2.0](https://github.com/hpi-studyu/studyu/compare/bd4cb52097f460f0729e18185b40ad3b8f577a4c...v1.2.0) (2020-12-22)
+
+
+### Bug Fixes
+
+* add sizedbox at bottom of designer lists to make sure the add button doesn't block the user from seeing the element he is editing ([67fceda](https://github.com/hpi-studyu/studyu/commit/67fcedab1f3354e1fa4f3654ce92ec2c9e034323))
+* Cleanup of study_designer gen i10n ([5811fbb](https://github.com/hpi-studyu/studyu/commit/5811fbbb6d8dca1497d3a9826f3f12f844f5fb7c))
+* Correct tranlsation ([3609e0d](https://github.com/hpi-studyu/studyu/commit/3609e0d9b0648c62797020664e4e0d062c69ccb1))
+* Disable notifications on web ([ff7b2d4](https://github.com/hpi-studyu/studyu/commit/ff7b2d4c0e7499d5b16efb90a90a88ede5920103))
+* Do not call notifications for web ([df370dd](https://github.com/hpi-studyu/studyu/commit/df370ddeb740458fc363e2930fb71203c04d0daa))
+* Fix compatibility with newest beta ([1ce948e](https://github.com/hpi-studyu/studyu/commit/1ce948ea5234e53e54d3dfb05333b4dfb50cface))
+* Fix contact not displaying correctly ([019c9ea](https://github.com/hpi-studyu/studyu/commit/019c9ea85b2a92cd20626391370fe74fb1db5844))
+* Fix installation-id for back4app ([f672124](https://github.com/hpi-studyu/studyu/commit/f6721242e02053b537dab38aa1ba15a9dc4da187))
+* Fix release build web: Remove type.toString ([f0035bc](https://github.com/hpi-studyu/studyu/commit/f0035bc88b3c5fe3483d46515cdf8d2a159dff1b))
+* json_serializer DateTime.parse needs toString ([a9681da](https://github.com/hpi-studyu/studyu/commit/a9681da792d6f32e01e6b955046175d7f9f22965))
+* Make compatible with beta ([97f1064](https://github.com/hpi-studyu/studyu/commit/97f10644726256adfea674130d883ef67e08f358))
+* Masterkey needed to create a user ([e3f3792](https://github.com/hpi-studyu/studyu/commit/e3f37927f54ee94c6c97379f5ac51128e0ccfe23))
+* Scaffold.of deprecated ([0913e76](https://github.com/hpi-studyu/studyu/commit/0913e7672c4f3b6b721256713d0ff17ca501b19d))
+* spelling ([0975f2a](https://github.com/hpi-studyu/studyu/commit/0975f2a3f7b9eb412748722fe12b13ccd17ded9c))
+* Upgrade packages to beta channel ([6db36da](https://github.com/hpi-studyu/studyu/commit/6db36dab7d9b63a433e4812a9e02d7ebadd56446))
+* Use dart conform names ([678ceab](https://github.com/hpi-studyu/studyu/commit/678ceabdbaa26cfb5d5e7757a98c8e858f9e2426))
+* **security:** Use clientKey instead of masterKey ([114112f](https://github.com/hpi-studyu/studyu/commit/114112f8fc57e1d094d6b228aab09aade72a4b23))
+* Return null rather than failing to parse ([2c20b93](https://github.com/hpi-studyu/studyu/commit/2c20b93d1b8b4fbd59784f5c71d67dd78370924d))
+* text is not shown at include baseline button because of wrong text label ([a0b45df](https://github.com/hpi-studyu/studyu/commit/a0b45df24cf3f54df7ebf794f3bb7e4417477c81))
+* Typo not kIsWeb ([4a7b054](https://github.com/hpi-studyu/studyu/commit/4a7b0549a1dec4c3c48e51048511fe121c39b949))
+* Use ParseHTTPClient for web bc faster ([c9584a1](https://github.com/hpi-studyu/studyu/commit/c9584a116753b6222080e3455bde0af7433a2f8f))
+* Use TextField instead of buggy PhoneField ([cc129af](https://github.com/hpi-studyu/studyu/commit/cc129af617e8f474441f6ccd92d2ab3adeabed75))
+
+
+### Features
+
+* Add IRB contact field ([056c023](https://github.com/hpi-studyu/studyu/commit/056c023e4170525653cdc88fc6703ded58a743e9))
+* Define generate localizations ([0fb852a](https://github.com/hpi-studyu/studyu/commit/0fb852a8610937376b244f1eb234cbae45c511b1))
+* Enable editing published studies locally ([f246a25](https://github.com/hpi-studyu/studyu/commit/f246a25b3e315751ad7096fef0ebfc9ec4825251))
+* **app:** Add FAQ and contact to Welcome page ([ccadc97](https://github.com/hpi-studyu/studyu/commit/ccadc97ff8dfeda769782266e2b6263ed1c5a966))
+* **app:** Color Study publisher header ([7281004](https://github.com/hpi-studyu/studyu/commit/72810047f1401d9216b3f5c915b208afaa22de16))
+* **app:** Display support contact ([337c0c6](https://github.com/hpi-studyu/studyu/commit/337c0c68667b20119c46f963851ce1b7048d7807))
+* **app:** Remove support/contact overview page ([9fd2b1f](https://github.com/hpi-studyu/studyu/commit/9fd2b1f34d48aaf87fca839212fc779f3f8db7a4))
+* **app:** Restructure contact screen ([b7720e6](https://github.com/hpi-studyu/studyu/commit/b7720e6a284ab4dc81b88c8d503d46493c3ea797))
+* **app:** Separate study publisher contact ([2176c5c](https://github.com/hpi-studyu/studyu/commit/2176c5c299318165c99eb695b6e7dd4351de9d47))
+* **designer:** Add copy JSON to app bar in debug ([bbb76fa](https://github.com/hpi-studyu/studyu/commit/bbb76fac8da8a6132759226d1da1737c368a1b6f))
+* **designer:** Upload of JSON support in debug ([bd6a2b1](https://github.com/hpi-studyu/studyu/commit/bd6a2b1519b31b12d2cd9cc14e6ce9447fa0ec57))
 
 
 ### Reverts
 
-* Revert "Adjust study designer build process" ([54a979e](https://github.com/hpi-studyu/studyu/commit/54a979eb44f7fb02020136ecf925f92fa48e204a))
-* Revert "update flutter-form-builder" ([e8dcdd7](https://github.com/hpi-studyu/studyu/commit/e8dcdd72a10308d99e8fee6c916e5c9ce2e06f3a))
+* Revert "Adjust study designer build process" ([f3e18ea](https://github.com/hpi-studyu/studyu/commit/f3e18eaab4cf36db501c7039434ff76117a4281d))
+* Revert "update flutter-form-builder" ([bd4cb52](https://github.com/hpi-studyu/studyu/commit/bd4cb52097f460f0729e18185b40ad3b8f577a4c))
 
 
 
