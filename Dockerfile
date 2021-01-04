@@ -17,6 +17,7 @@ RUN flutter pub get
 COPY ./$FLUTTER_APP_FOLDER/web ./web
 COPY ./$FLUTTER_APP_FOLDER/assets ./assets
 COPY ./$FLUTTER_APP_FOLDER/lib ./lib
+COPY ./$FLUTTER_APP_FOLDER/l10n.yaml ./l10n.yaml
 
 RUN flutter build web --pwa-strategy none --web-renderer auto
 
