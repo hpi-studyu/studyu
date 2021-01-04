@@ -1,4 +1,4 @@
-FROM cirrusci/flutter:stable as builder
+FROM cirrusci/flutter:beta as builder
 
 COPY ./core /src/core
 
