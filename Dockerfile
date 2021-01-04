@@ -18,7 +18,7 @@ COPY ./$FLUTTER_APP_FOLDER/web ./web
 COPY ./$FLUTTER_APP_FOLDER/assets ./assets
 COPY ./$FLUTTER_APP_FOLDER/lib ./lib
 
-RUN flutter build web --pwa-strategy none
+RUN flutter build web --pwa-strategy none --web-renderer auto
 
 FROM nginx:stable-alpine
 ARG FLUTTER_APP_FOLDER
