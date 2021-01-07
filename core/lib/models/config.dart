@@ -7,7 +7,6 @@ part 'config.g.dart';
 
 @JsonSerializable()
 class ParseStudyUConfig {
-
   Contact contact;
   Map<String, String> app_privacy;
   Map<String, String> app_terms;
@@ -20,4 +19,3 @@ class ParseStudyUConfig {
   factory ParseStudyUConfig.fromJson(Map<String, dynamic> json) => _$ParseStudyUConfigFromJson(json);
   Map<String, dynamic> toJson() => _$ParseStudyUConfigToJson(this);
 }
-

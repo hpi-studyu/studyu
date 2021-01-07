@@ -29,7 +29,7 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
       pageFormat: PdfPageFormat.a4,
       header: (context) => pw.Container(
         alignment: pw.Alignment.centerRight,
-        child: pw.Image.provider(_logo, height: 30),
+        child: pw.Image(_logo, height: 30),
       ),
       build: (context) => content,
     ),
@@ -41,7 +41,8 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
 
   // TODO: Android, ask for file permissions to save
   try {
-    File('$dirPath/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(doc.save());
+    final savedDoc = await doc.save();
+    File('$dirPath/${title.replaceAll(' ', '_')}.pdf').writeAsBytesSync(savedDoc);
   } on FileSystemException catch (e) {
     print('Probably no file storage permissions ${e.toString()}');
   }

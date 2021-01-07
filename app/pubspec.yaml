@@ -34,7 +34,7 @@ dependencies:
       ref: development
       path: packages/flutter
   path_provider: ^1.6.24
-  pdf: ^1.13.0
+  pdf: ^2.0.0
   pimp_my_button: ^1.0.0
   provider: ^4.3.2+2
   quiver: ^2.1.5
