@@ -47,6 +47,8 @@ dependency_overrides:
     git:
       url: https://github.com/espresso3389/flutter_datetime_picker.git
       ref: master
+  # remove when fixed: https://github.com/AbdulRahmanAlHamali/flutter_typeahead/issues/270
+  flutter_typeahead: 1.9.1
   intl: 0.17.0-nullsafety.2
   intl_translation:
     git:

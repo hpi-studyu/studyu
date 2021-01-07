@@ -313,12 +313,12 @@ packages:
     source: hosted
     version: "1.0.1"
   flutter_typeahead:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: flutter_typeahead
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.2"
+    version: "1.9.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
