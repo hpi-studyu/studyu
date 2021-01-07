@@ -6,6 +6,10 @@ We have 3 different Flutter packages all contained in this monorepo.
 - StudyU Study Designer
 - Core: shared code
 
+## App Test Instances
+- StudyU App [Instance](https://studyu.codemagic.app/#/welcome)
+- StudyU Study Designer [Instance](https://studyu-designer.codemagic.app/#/)
+
 ## Setup
 
 ### Install Flutter
