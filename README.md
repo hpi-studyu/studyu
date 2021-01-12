@@ -10,6 +10,10 @@ We have 3 different Flutter packages all contained in this monorepo.
 - StudyU App [Instance](https://studyu.codemagic.app/#/welcome)
 - StudyU Study Designer [Instance](https://studyu-designer.codemagic.app/#/)
 
+## Publications
+
+More information on the scientific background and a detailed description of the StudyU platform is available [here](https://arxiv.org/abs/2012.14201). 
+
 ## Setup
 
 ### Install Flutter
