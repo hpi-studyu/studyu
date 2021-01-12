@@ -29,7 +29,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Future<ParseResponse> _studiesFuture;
   Locale _selectedLocal;
   bool termsDialogAlreadyShown = false;
 
@@ -37,7 +36,6 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
-    reloadStudies();
     showTermsAndPrivacyDialog();
   }
 
@@ -93,10 +91,9 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void reloadStudies() {
-    setState(() {
-      _studiesFuture = ParseStudy().getAll();
-    });
+  void reloadDashboard() {
+    // setState triggers the build method again, which then reloads all studies
+    setState(() {});
   }
 
   Widget _buildLanguageDropdown() {
@@ -196,7 +193,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: () => _studiesFuture,
+            queryFunction: ParseStudy().getAll,
             builder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
@@ -213,7 +210,7 @@ class _DashboardState extends State<Dashboard> {
                         context: context,
                         tiles: draftStudies.map((study) => StudyCard(
                               study: study,
-                              reload: reloadStudies,
+                              reload: reloadDashboard,
                             ))).toList(),
                   ),
                   ExpansionTile(
@@ -227,7 +224,7 @@ class _DashboardState extends State<Dashboard> {
                         context: context,
                         tiles: publishedStudies.map((study) => StudyCard(
                               study: study,
-                              reload: reloadStudies,
+                              reload: reloadDashboard,
                             ))).toList(),
                   )
                 ],
@@ -237,7 +234,7 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, designerRoute).then((_) => reloadStudies()),
+        onPressed: () => Navigator.pushNamed(context, designerRoute).then((_) => reloadDashboard()),
         tooltip: 'Add',
         child: Icon(Icons.add),
       ),

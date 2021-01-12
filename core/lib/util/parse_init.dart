@@ -14,7 +14,7 @@ class ParseInit extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: ParseListFutureBuilder<bool>(
-          queryFunction: () => initParse(),
+          queryFunction: initParse,
           builder: (context, _) => child,
         ),
       ),

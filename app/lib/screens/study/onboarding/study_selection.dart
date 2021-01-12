@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
@@ -11,20 +11,7 @@ import '../../../routes.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/study_tile.dart';
 
-class StudySelectionScreen extends StatefulWidget {
-  @override
-  _StudySelectionScreenState createState() => _StudySelectionScreenState();
-}
-
-class _StudySelectionScreenState extends State<StudySelectionScreen> {
-  Future _studiesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _studiesFuture = StudyQueries.getPublishedStudies();
-  }
-
+class StudySelectionScreen extends StatelessWidget {
   Future<void> navigateToStudyOverview(BuildContext context, StudyBase study) async {
     context.read<AppState>().selectedStudy = study;
     Navigator.pushNamed(context, Routes.studyOverview);
@@ -75,7 +62,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   ),
                 ),
                 ParseListFutureBuilder<ParseStudy>(
-                  queryFunction: () => _studiesFuture,
+                  queryFunction: StudyQueries.getPublishedStudies,
                   builder: (_context, studies) {
                     return ListView.builder(
                         shrinkWrap: true,

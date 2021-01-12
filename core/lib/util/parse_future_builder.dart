@@ -19,7 +19,7 @@ class ParseListFutureBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RetryFutureBuilder<ParseResponse>(
-      tryFunction: () => _parseQuery(),
+      tryFunction: _parseQuery,
       successBuilder: (context, response) => builder(context, List<T>.from(response.results ?? [])),
     );
   }
@@ -34,7 +34,7 @@ class ParseFetchOneFutureBuilder<T> extends StatelessWidget {
   const ParseFetchOneFutureBuilder({Key key, @required this.queryFunction, @required this.builder}) : super(key: key);
 
   // throw error to be handled by RetryFutureBuilder
-  Future<ParseResponse> parseQuery() async {
+  Future<ParseResponse> _parseQuery() async {
     final response = await queryFunction();
     if (!response.success) throw response.error;
     assert(response.count <= 1, 'Use ParseListFutureBuilder if fetching multiple elements.');
@@ -44,7 +44,7 @@ class ParseFetchOneFutureBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RetryFutureBuilder<ParseResponse>(
-        tryFunction: parseQuery,
+        tryFunction: _parseQuery,
         successBuilder: (context, response) => builder(context, response.count == 1 ? response.results.first : null));
   }
 }
