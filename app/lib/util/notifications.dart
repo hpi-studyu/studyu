@@ -55,10 +55,9 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
       ...interventionTasks,
     ];
     if (tasks.isEmpty) return;
-    final now = DateTime.now();
     var id = 0;
     for (final index in List.generate(3, (index) => index)) {
-      final date = now.add(Duration(days: index));
+      final date = DateTime.now().add(Duration(days: index));
       for (final observation in study.observations) {
         appState.notificationsPlugin
             .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
@@ -71,10 +70,10 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
           }
           continue;
         }
-        intervention.tasks.map((task) {
-          appState.notificationsPlugin.scheduleReminderForDate(id, task, date, platformChannelSpecifics);
+        for (final task in intervention.tasks) {
+          (await appState.notificationsPlugin).scheduleReminderForDate(id, task, date, platformChannelSpecifics);
           id += task.schedule.length;
-        });
+        }
       }
     }
   }
