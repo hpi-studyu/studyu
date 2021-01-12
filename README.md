@@ -7,14 +7,18 @@ We have 3 different Flutter packages all contained in this monorepo.
 - Core: shared code
 
 ## App Test Instances
-- StudyU App [Instance](https://studyu.codemagic.app/#/welcome)
-- StudyU Study Designer [Instance](https://studyu-designer.codemagic.app/#/)
+- StudyU App [Instance](https://studyu-app-v1.web.app)
+- StudyU Study Designer [Instance](https://studyu-designer-v1.web.app)
+
+## App Stores
+
+- [Google Play Store](https://play.google.com/store/apps/details?id=health.studyu.app)
 
 ## Publications
 
 More information on the scientific background and a detailed description of the StudyU platform is available at:
 
-Konigorski S, Wernicke S, Slosarek T, Zenner AM, Strelow N, Ruether FD, Henschel F, Manaswini M, Pottbäcker F, Edelman JA, Owoyele B, Danieletto M, Golden E, Zweig M, Nadkarni G, Böttinger E (2020). StudyU: a platform for designing and conducting innovative digital N-of-1 trials. arXiv:2012.1420. [https://arxiv.org/abs/2012.14201](https://arxiv.org/abs/2012.14201). 
+Konigorski S, Wernicke S, Slosarek T, Zenner AM, Strelow N, Ruether FD, Henschel F, Manaswini M, Pottbäcker F, Edelman JA, Owoyele B, Danieletto M, Golden E, Zweig M, Nadkarni G, Böttinger E (2020). StudyU: a platform for designing and conducting innovative digital N-of-1 trials. arXiv:2012.1420. [https://arxiv.org/abs/2012.14201](https://arxiv.org/abs/2012.14201).
 
 ## Setup
 
