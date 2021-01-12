@@ -93,6 +93,7 @@
   "add_result": "Add Result",
   "was_saved_and_published": "was saved and published.",
   "was_saved_as_draft": "was saved as draft.",
+  "failed_saving": "failed saving. Please try again.",
   "save_draft": "Save draft",
   "publish_study": "Publish study",
   "debug_output": "Debug Output",

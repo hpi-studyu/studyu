@@ -72,6 +72,7 @@
   "add_result": "Ergebniss hinzufügen",
   "was_saved_and_published": "wurde gespeichert und publiziert.",
   "was_saved_as_draft": "wurde als Entwurf gespeichert.",
+  "failed_saving": "speichern fehlgeschlagen. Bitte nocheinmal versuchen.",
   "save_draft": "Entwurf speichern",
   "publish_study": "Studie publizieren",
   "debug_output": "Debug Informationen",

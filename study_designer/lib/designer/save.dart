@@ -2,7 +2,6 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_json_widget/flutter_json_widget.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
@@ -18,50 +17,57 @@ class Save extends StatefulWidget {
 
 class _SaveState extends State<Save> {
   StudyBase _draftStudy;
-  Future<ParseResponse> _futureParseStudy;
   String studyObjectId;
 
   @override
   void initState() {
     super.initState();
     _draftStudy = context.read<DesignerState>().draftStudy;
-    _futureParseStudy = StudyQueries.getStudyWithDetailsByStudyId(_draftStudy.id);
   }
 
   Future<void> _publishStudy(BuildContext context, String studyObjectId, String studyDetailsObjectId) async {
     _draftStudy.published = true;
-    final isSaved = await showDialog<bool>(
+    final publishingAccepted = await showDialog<bool>(
         context: context, builder: (_) => PublishAlertDialog(study: ParseStudy.fromBase(_draftStudy)));
-    if (isSaved) {
-      await _saveStudy(studyObjectId, studyDetailsObjectId);
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
-      Navigator.popUntil(context, (route) => route.settings.name == '/');
+    if (publishingAccepted) {
+      final wasSaved = await _saveStudy(studyObjectId, studyDetailsObjectId);
+      if (wasSaved) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
+        Navigator.popUntil(context, (route) => route.settings.name == '/');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).failed_saving}')));
+      }
     }
   }
 
   Future<void> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
-    await _saveStudy(studyObjectId, studyDetailsObjectId);
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
+    final wasSaved = await _saveStudy(studyObjectId, studyDetailsObjectId);
+    if (wasSaved) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).failed_saving}')));
+    }
   }
 
-  Future<void> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
+  Future<bool> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
     final parseStudy = ParseStudy.fromBase(_draftStudy);
     if (studyObjectId != null) {
       parseStudy.objectId = studyObjectId;
       parseStudy.studyDetails.objectId = studyDetailsObjectId;
     }
-    setState(() {
-      _futureParseStudy = parseStudy.save();
-    });
+    final response = await parseStudy.save();
+    return response.success;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ParseFetchOneFutureBuilder<ParseStudy>(
-        queryFunction: () => _futureParseStudy,
+        queryFunction: () => StudyQueries.getStudyWithDetailsByStudyId(_draftStudy.id),
         builder: (context, study) {
           return Padding(
             padding: const EdgeInsets.all(32),
