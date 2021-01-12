@@ -4,31 +4,18 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 
-class ParseInit extends StatefulWidget {
+class ParseInit extends StatelessWidget {
   final Widget child;
 
   const ParseInit({Key key, this.child}) : super(key: key);
-
-  @override
-  _ParseInitState createState() => _ParseInitState();
-}
-
-class _ParseInitState extends State<ParseInit> {
-  Future<ParseResponse> _initParseFuture;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _initParseFuture = initParse();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: ParseListFutureBuilder<bool>(
-          queryFunction: () => _initParseFuture,
-          builder: (context, _) => widget.child,
+          queryFunction: () => initParse(),
+          builder: (context, _) => child,
         ),
       ),
     );
