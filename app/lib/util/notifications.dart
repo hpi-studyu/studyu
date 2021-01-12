@@ -59,7 +59,7 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
     for (final index in List.generate(3, (index) => index)) {
       final date = DateTime.now().add(Duration(days: index));
       for (final observation in study.observations) {
-        appState.notificationsPlugin
+        (await appState.notificationsPlugin)
             .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
         id += observation.schedule.length;
       }
