@@ -20,20 +20,20 @@ dependencies:
   extended_math: ^0.0.29+1
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^3.0.2
+  flutter_local_notifications: ^3.0.3
   flutter_localizations:
     sdk: flutter
   flutter_native_timezone: ^1.0.4
   grizzly_distuv: ^1.0.0
   intersperse: ^1.1.1
   intl: 0.17.0-nullsafety.2
-  material_design_icons_flutter: ^4.0.5655
+  material_design_icons_flutter: ^4.0.5855
   parse_server_sdk_flutter:
     git:
       url: git://github.com/parse-community/Parse-SDK-Flutter.git
       ref: development
       path: packages/flutter
-  path_provider: ^1.6.24
+  path_provider: ^1.6.27
   pdf: ^2.0.0
   pimp_my_button: ^1.0.0
   provider: ^4.3.2+2

@@ -21,18 +21,18 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: 0.17.0-nullsafety.2
-  material_design_icons_flutter: ^4.0.5655
+  material_design_icons_flutter: ^4.0.5855
   parse_server_sdk_flutter:
     git:
       url: git://github.com/parse-community/Parse-SDK-Flutter.git
       ref: development
       path: packages/flutter
-  path_provider: ^1.6.24
+  path_provider: ^1.6.27
   pretty_json: ^1.1.0
   provider: ^4.3.2+2
   studyou_core:
     path: ../core
-  universal_html: ^1.2.3
+  universal_html: ^1.2.4
   url_launcher: ^5.7.10
   uuid: ^2.2.2
 
@@ -47,8 +47,6 @@ dependency_overrides:
     git:
       url: https://github.com/espresso3389/flutter_datetime_picker.git
       ref: master
-  # remove when fixed: https://github.com/AbdulRahmanAlHamali/flutter_typeahead/issues/270
-  flutter_typeahead: 1.9.1
   intl: 0.17.0-nullsafety.2
   intl_translation:
     git:
