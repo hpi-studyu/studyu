@@ -1,3 +1,18 @@
+## [1.4.1](https://github.com/hpi-studyu/studyu/compare/v1.4.0...v1.4.1) (2021-01-13)
+
+
+### Bug Fixes
+
+* **designer:** Make Navigation Sidebar scrollable ([f4b1c12](https://github.com/hpi-studyu/studyu/commit/f4b1c12a8c6e57784e6f3f634b0e9d79e5a06dcf))
+* add links to app instances for testing ([5051403](https://github.com/hpi-studyu/studyu/commit/50514036f22325435f962f88fb5afc6076fa3656))
+* Fix error display on start ([681a525](https://github.com/hpi-studyu/studyu/commit/681a525413576ef2304477e1dd6f290a9d581932))
+* Future retry button not reloading ([c2d7984](https://github.com/hpi-studyu/studyu/commit/c2d79846754b4cadea72ea8eb9b3f20ecdee6eae))
+* Initialize notifications before scheduling ([fd059a4](https://github.com/hpi-studyu/studyu/commit/fd059a483d1a593280498d56c80210a192bf2c48))
+* **designer:** Notify if study saving failed ([7678e4e](https://github.com/hpi-studyu/studyu/commit/7678e4e96944ae5c8fd09b8fe87bad223dd1971e))
+* ParseInit not reloading on error ([6a12bc3](https://github.com/hpi-studyu/studyu/commit/6a12bc3b8c2b50028296568d3cd9218c06ac633b))
+
+
+
 # [1.4.0](https://github.com/hpi-studyu/studyu/compare/v1.2.0...v1.4.0) (2021-01-04)
 
 
