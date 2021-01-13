@@ -205,69 +205,76 @@ class _DesignerState extends State<Designer> {
           ],
         ),
         body: Row(children: [
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-              _navigatorKey.currentState.pushReplacementNamed(designerRoutes[_selectedIndex]);
-            },
-            labelType: NavigationRailLabelType.all,
-            destinations: [
-              NavigationRailDestination(
-                icon: Icon(Icons.favorite_border),
-                selectedIcon: Icon(Icons.info_outline),
-                label: Text(AppLocalizations.of(context).meta_data),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.accessibility_new),
-                selectedIcon: Icon(Icons.accessibility_new),
-                label: Text(AppLocalizations.of(context).interventions),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.question_answer),
-                selectedIcon: Icon(Icons.question_answer),
-                label: Text(AppLocalizations.of(context).eligibility_questions),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.verified_user),
-                selectedIcon: Icon(Icons.verified_user),
-                label: Text(AppLocalizations.of(context).eligibility_criteria),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.zoom_in),
-                selectedIcon: Icon(Icons.zoom_in),
-                label: Text(AppLocalizations.of(context).observations),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.schedule),
-                selectedIcon: Icon(Icons.schedule),
-                label: Text(AppLocalizations.of(context).schedule),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.content_paste),
-                selectedIcon: Icon(Icons.content_paste),
-                label: Text(AppLocalizations.of(context).report),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.assignment_turned_in),
-                selectedIcon: Icon(Icons.assignment_turned_in),
-                label: Text(AppLocalizations.of(context).results),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.warning),
-                selectedIcon: Icon(Icons.warning),
-                label: Text(AppLocalizations.of(context).consent),
-              ),
-              if (widget.study == null || !widget.study.published || kDebugMode)
-                NavigationRailDestination(
-                  icon: Icon(Icons.publish),
-                  selectedIcon: Icon(Icons.publish),
-                  label: Text(AppLocalizations.of(context).save),
-                )
-            ],
-          ),
+          LayoutBuilder(
+              builder: (context, constraint) => SingleChildScrollView(
+                      child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                    child: IntrinsicHeight(
+                      child: NavigationRail(
+                        selectedIndex: _selectedIndex,
+                        onDestinationSelected: (index) {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                          _navigatorKey.currentState.pushReplacementNamed(designerRoutes[_selectedIndex]);
+                        },
+                        labelType: NavigationRailLabelType.all,
+                        destinations: [
+                          NavigationRailDestination(
+                            icon: Icon(Icons.favorite_border),
+                            selectedIcon: Icon(Icons.info_outline),
+                            label: Text(AppLocalizations.of(context).meta_data),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.accessibility_new),
+                            selectedIcon: Icon(Icons.accessibility_new),
+                            label: Text(AppLocalizations.of(context).interventions),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.question_answer),
+                            selectedIcon: Icon(Icons.question_answer),
+                            label: Text(AppLocalizations.of(context).eligibility_questions),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.verified_user),
+                            selectedIcon: Icon(Icons.verified_user),
+                            label: Text(AppLocalizations.of(context).eligibility_criteria),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.zoom_in),
+                            selectedIcon: Icon(Icons.zoom_in),
+                            label: Text(AppLocalizations.of(context).observations),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.schedule),
+                            selectedIcon: Icon(Icons.schedule),
+                            label: Text(AppLocalizations.of(context).schedule),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.content_paste),
+                            selectedIcon: Icon(Icons.content_paste),
+                            label: Text(AppLocalizations.of(context).report),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.assignment_turned_in),
+                            selectedIcon: Icon(Icons.assignment_turned_in),
+                            label: Text(AppLocalizations.of(context).results),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(Icons.warning),
+                            selectedIcon: Icon(Icons.warning),
+                            label: Text(AppLocalizations.of(context).consent),
+                          ),
+                          if (widget.study == null || !widget.study.published || kDebugMode)
+                            NavigationRailDestination(
+                              icon: Icon(Icons.publish),
+                              selectedIcon: Icon(Icons.publish),
+                              label: Text(AppLocalizations.of(context).save),
+                            )
+                        ],
+                      ),
+                    ),
+                  ))),
           VerticalDivider(thickness: 1, width: 1),
           buildDesignerRouter()
         ]),
