@@ -42,7 +42,7 @@ packages:
       name: basic_utils
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.0-rc.4"
+    version: "2.7.0-rc.5"
   boolean_selector:
     dependency: transitive
     description:
@@ -242,7 +242,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "7681e2065405b1e194423e0af113712573486c9f"
+      resolved-ref: "2e8d5ceaf7f99fe5c8d0aca5576b77f2f7fa1444"
       url: "https://github.com/espresso3389/flutter_datetime_picker.git"
     source: git
     version: "1.4.0"
@@ -499,7 +499,7 @@ packages:
     description:
       path: "packages/dart"
       ref: development
-      resolved-ref: "8c883756d6f13ae81647799bd9d1503f40b104ee"
+      resolved-ref: da674d20d510166c189df21085f90ec2162f5398
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
@@ -508,7 +508,7 @@ packages:
     description:
       path: "packages/flutter"
       ref: development
-      resolved-ref: "8c883756d6f13ae81647799bd9d1503f40b104ee"
+      resolved-ref: da674d20d510166c189df21085f90ec2162f5398
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "2.0.1"
@@ -588,7 +588,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   pretty_json:
     dependency: "direct main"
     description:
@@ -609,7 +609,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.2+3"
+    version: "4.3.2+4"
   pub_semver:
     dependency: transitive
     description:
