@@ -8,9 +8,9 @@ import 'package:studyou_core/models/models.dart';
 
 import './designer/eligibility_designer.dart';
 import './designer/results_designer.dart';
+import 'designer/about_designer.dart';
 import 'designer/consent_designer.dart';
 import 'designer/interventions_designer.dart';
-import 'designer/meta_data_designer.dart';
 import 'designer/observation_designer.dart';
 import 'designer/questionnaire_designer.dart';
 import 'designer/report_designer.dart';
@@ -88,9 +88,9 @@ class _DesignerState extends State<Designer> {
             String body;
             switch (settings.name) {
               case designerRoute:
-                specificDesigner = MetaDataDesigner();
-                title = AppLocalizations.of(context).meta_data_help_title;
-                body = AppLocalizations.of(context).meta_data_help_body;
+                specificDesigner = AboutDesigner();
+                title = AppLocalizations.of(context).about_help_title;
+                body = AppLocalizations.of(context).about_help_body;
                 break;
               case designerInterventionsRoute:
                 specificDesigner = InterventionsDesigner();
@@ -223,7 +223,7 @@ class _DesignerState extends State<Designer> {
                           NavigationRailDestination(
                             icon: Icon(Icons.favorite_border),
                             selectedIcon: Icon(Icons.info_outline),
-                            label: Text(AppLocalizations.of(context).meta_data),
+                            label: Text(AppLocalizations.of(context).about),
                           ),
                           NavigationRailDestination(
                             icon: Icon(Icons.accessibility_new),

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/designer_state.dart';
 
-class MetaDataDesigner extends StatefulWidget {
+class AboutDesigner extends StatefulWidget {
   @override
-  _MetaDataDesignerState createState() => _MetaDataDesignerState();
+  _AboutDesignerState createState() => _AboutDesignerState();
 }
 
-class _MetaDataDesignerState extends State<MetaDataDesigner> {
+class _AboutDesignerState extends State<AboutDesigner> {
   StudyBase _draftStudy;
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
