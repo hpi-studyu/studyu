@@ -8,7 +8,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  flutter_dotenv: 2.1.0
+  flutter_dotenv: 3.1.0
   json_annotation: ^3.1.1
   # Change back to main branch when we do not use back4app or issue is fixed: https://github.com/parse-community/Parse-SDK-Flutter/issues/490
   parse_server_sdk_flutter:
