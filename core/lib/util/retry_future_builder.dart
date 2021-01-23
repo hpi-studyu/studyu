@@ -68,7 +68,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
   @override
   void didUpdateWidget(RetryFutureBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // triggers tryFunction again, so we always have the freshest data
+    // ATTENTION: This is based on the equality of functions. Not equal, if they are part of different instances
     if (widget.tryFunction != oldWidget.tryFunction) {
       reload();
     }
@@ -81,28 +81,30 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder<T>(
-        key: widget.key,
-        initialData: widget.initialData,
-        future: _future,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                if (widget.errorWidgetBuilder != null) {
-                  final errorWidget = widget.errorWidgetBuilder(context, snapshot.error, reload);
-                  if (errorWidget != null) return errorWidget;
-                }
-                return buildErrorView(context, snapshot.error);
+  Widget build(BuildContext context) {
+    return FutureBuilder<T>(
+      key: widget.key,
+      initialData: widget.initialData,
+      future: _future,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              if (widget.errorWidgetBuilder != null) {
+                final errorWidget = widget.errorWidgetBuilder(context, snapshot.error, reload);
+                if (errorWidget != null) return errorWidget;
               }
-              return widget.successBuilder(context, snapshot.data);
-            default:
-              return widget.loadingBuilder != null
-                  ? widget.loadingBuilder(context)
-                  : Center(child: CircularProgressIndicator());
-          }
-        },
-      );
+              return buildErrorView(context, snapshot.error);
+            }
+            return widget.successBuilder(context, snapshot.data);
+          default:
+            return widget.loadingBuilder != null
+                ? widget.loadingBuilder(context)
+                : Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
 
   Widget buildErrorView(BuildContext context, Object error) {
     final theme = Theme.of(context);
