@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/study.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
-
-import '../models/designer_state.dart';
+import 'package:studyu_designer/designer/help_wrapper.dart';
+import 'package:studyu_designer/models/app_state.dart';
 
 class Save extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class _SaveState extends State<Save> {
   @override
   void initState() {
     super.initState();
-    _draftStudy = context.read<DesignerState>().draftStudy;
+    _draftStudy = context.read<AppState>().draftStudy;
   }
 
   Future<void> _publishStudy(BuildContext context, String studyObjectId, String studyDetailsObjectId) async {
@@ -66,37 +66,43 @@ class _SaveState extends State<Save> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ParseFetchOneFutureBuilder<ParseStudy>(
-        queryFunction: () => StudyQueries.getStudyWithDetailsByStudyId(_draftStudy.id),
-        builder: (context, study) {
-          return Padding(
-            padding: const EdgeInsets.all(32),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(AppLocalizations.of(context).save, style: theme.textTheme.headline6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlineButton.icon(
-                          onPressed: () => _saveDraft(study?.objectId, study?.studyDetails?.objectId),
-                          icon: Icon(Icons.save),
-                          label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
-                      SizedBox(width: 16),
-                      OutlineButton.icon(
-                          onPressed: () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId),
-                          icon: Icon(Icons.publish),
-                          label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
-                    ],
-                  ),
-                  SizedBox(height: 80),
-                  JSONExportSection(study: _draftStudy),
-                ],
+    return DesignerHelpWrapper(
+      helpTitle: AppLocalizations.of(context).save_help_title,
+      helpText: AppLocalizations.of(context).save_help_body,
+      studyPublished: _draftStudy.published,
+      child: ParseFetchOneFutureBuilder<ParseStudy>(
+          // TODO: only fetch objectId of study and details
+          queryFunction: () => StudyQueries.getStudyWithDetailsByStudyId(_draftStudy.id),
+          builder: (context, study) {
+            return Padding(
+              padding: const EdgeInsets.all(32),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(AppLocalizations.of(context).save, style: theme.textTheme.headline6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlineButton.icon(
+                            onPressed: () => _saveDraft(study?.objectId, study?.studyDetails?.objectId),
+                            icon: Icon(Icons.save),
+                            label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
+                        SizedBox(width: 16),
+                        OutlineButton.icon(
+                            onPressed: () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId),
+                            icon: Icon(Icons.publish),
+                            label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
+                      ],
+                    ),
+                    SizedBox(height: 80),
+                    JSONExportSection(study: _draftStudy),
+                  ],
+                ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 }
 

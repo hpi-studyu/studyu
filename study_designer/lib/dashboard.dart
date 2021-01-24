@@ -11,15 +11,13 @@ import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
-import 'designer.dart';
-import 'routes.dart';
+import 'models/app_state.dart';
 import 'util/localization.dart';
 import 'util/result_downloader.dart';
 
@@ -32,11 +30,14 @@ class _DashboardState extends State<Dashboard> {
   Locale _selectedLocal;
   bool termsDialogAlreadyShown = false;
 
+  ParseStudy parseStudyInstance;
+
   @override
   void initState() {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
-    showTermsAndPrivacyDialog();
+    //showTermsAndPrivacyDialog();
+    parseStudyInstance = ParseStudy();
   }
 
   Future<ParseStudyUConfig> getParseConfig() async {
@@ -173,7 +174,6 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     );
                     if (wasUploaded) {
-                      print('uploaded');
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('Successfully imported study JSON 🎉')));
                     }
@@ -193,7 +193,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: ParseStudy().getAll,
+            queryFunction: parseStudyInstance.getAll,
             builder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
@@ -234,7 +234,10 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, designerRoute).then((_) => reloadDashboard()),
+        onPressed: () {
+          context.read<AppState>().createStudy();
+          //Navigator.pushNamed(context, designerRoute).then((_) => reloadDashboard());
+        },
         tooltip: 'Add',
         child: Icon(Icons.add),
       ),
@@ -308,9 +311,10 @@ class StudyCard extends StatelessWidget {
                 },
               ),
         onTap: () async {
-          final res = await StudyQueries.getStudyWithDetails(study);
-          final ParseStudy fullStudy = res.results.first;
-          Navigator.push(context, Designer.draftRoute(study: fullStudy.toBase())).then((_) => reload());
+          //final res = await StudyQueries.getStudyWithDetails(study);
+          //final ParseStudy fullStudy = res.results.first;
+          //Navigator.push(context, Designer.draftRoute(study: fullStudy.toBase())).then((_) => reload());
+          context.read<AppState>().openStudy(study.id);
         });
   }
 }

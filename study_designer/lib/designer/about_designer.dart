@@ -6,8 +6,8 @@ import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-
-import '../models/designer_state.dart';
+import 'package:studyu_designer/designer/help_wrapper.dart';
+import 'package:studyu_designer/models/app_state.dart';
 
 class AboutDesigner extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _AboutDesignerState extends State<AboutDesigner> {
   @override
   void initState() {
     super.initState();
-    _draftStudy = context.read<DesignerState>().draftStudy;
+    _draftStudy = context.read<AppState>().draftStudy;
   }
 
   Future<void> _pickIcon() async {
@@ -38,87 +38,92 @@ class _AboutDesignerState extends State<AboutDesigner> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            FormBuilder(
-              key: _editFormKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              // readonly: true,
-              child: Column(
-                children: <Widget>[
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'title',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
-                      initialValue: _draftStudy.title),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'description',
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
-                      initialValue: _draftStudy.description),
-                  Row(children: [
-                    Expanded(
-                      child: FlatButton(
-                        onPressed: _pickIcon,
-                        child: Text(AppLocalizations.of(context).choose_icon),
+    return DesignerHelpWrapper(
+      helpTitle: AppLocalizations.of(context).about_help_title,
+      helpText: AppLocalizations.of(context).about_help_body,
+      studyPublished: _draftStudy.published,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              FormBuilder(
+                key: _editFormKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                // readonly: true,
+                child: Column(
+                  children: <Widget>[
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'title',
+                        maxLength: 40,
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
+                        initialValue: _draftStudy.title),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'description',
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
+                        initialValue: _draftStudy.description),
+                    Row(children: [
+                      Expanded(
+                        child: FlatButton(
+                          onPressed: _pickIcon,
+                          child: Text(AppLocalizations.of(context).choose_icon),
+                        ),
                       ),
-                    ),
-                    if (MdiIcons.fromString(_draftStudy.iconName) != null)
-                      Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
-                  ]),
-                  SizedBox(height: 32),
-                  Text(AppLocalizations.of(context).contact_details, style: theme.textTheme.headline6),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'organization',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).organization),
-                      initialValue: _draftStudy.contact.organization),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'institutionalReviewBoard',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).irb),
-                      initialValue: _draftStudy.contact.institutionalReviewBoard),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'institutionalReviewBoardNumber',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).irb_number),
-                      initialValue: _draftStudy.contact.institutionalReviewBoardNumber),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'researchers',
-                      maxLength: 40,
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
-                      initialValue: _draftStudy.contact.researchers),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'website',
-                      maxLength: 40,
-                      validator: FormBuilderValidators.url(context),
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
-                      initialValue: _draftStudy.contact.website),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'email',
-                      maxLength: 40,
-                      validator: FormBuilderValidators.email(context),
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
-                      initialValue: _draftStudy.contact.email),
-                  FormBuilderTextField(
-                      onChanged: _saveFormChanges,
-                      name: 'phone',
-                      decoration: InputDecoration(labelText: AppLocalizations.of(context).phone),
-                      initialValue: _draftStudy.contact.phone),
-                ],
+                      if (MdiIcons.fromString(_draftStudy.iconName) != null)
+                        Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
+                    ]),
+                    SizedBox(height: 32),
+                    Text(AppLocalizations.of(context).contact_details, style: theme.textTheme.headline6),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'organization',
+                        maxLength: 40,
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).organization),
+                        initialValue: _draftStudy.contact.organization),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'institutionalReviewBoard',
+                        maxLength: 40,
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).irb),
+                        initialValue: _draftStudy.contact.institutionalReviewBoard),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'institutionalReviewBoardNumber',
+                        maxLength: 40,
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).irb_number),
+                        initialValue: _draftStudy.contact.institutionalReviewBoardNumber),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'researchers',
+                        maxLength: 40,
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
+                        initialValue: _draftStudy.contact.researchers),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'website',
+                        maxLength: 40,
+                        validator: FormBuilderValidators.url(context),
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
+                        initialValue: _draftStudy.contact.website),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'email',
+                        maxLength: 40,
+                        validator: FormBuilderValidators.email(context),
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
+                        initialValue: _draftStudy.contact.email),
+                    FormBuilderTextField(
+                        onChanged: _saveFormChanges,
+                        name: 'phone',
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).phone),
+                        initialValue: _draftStudy.contact.phone),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

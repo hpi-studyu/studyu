@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_designer/designer/help_wrapper.dart';
+import 'package:studyu_designer/models/app_state.dart';
 
-import '../models/designer_state.dart';
 import '../widgets/task/task_editor.dart';
 import '../widgets/util/designer_add_button.dart';
 
@@ -29,25 +30,32 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _observations = context.watch<DesignerState>().draftStudy.studyDetails.observations;
-    return Stack(
-      children: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  ..._observations.asMap().entries.map((entry) =>
-                      TaskEditor(key: UniqueKey(), task: entry.value, remove: () => _removeObservation(entry.key))),
-                  SizedBox(height: 200)
-                ],
+    print('build observations desinger');
+    _observations = context.watch<AppState>().draftStudy.studyDetails.observations;
+    print('get observations from state');
+    return DesignerHelpWrapper(
+      helpTitle: AppLocalizations.of(context).observations_help_title,
+      helpText: AppLocalizations.of(context).observations_help_body,
+      studyPublished: context.watch<AppState>().draftStudy.published,
+      child: Stack(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    ..._observations.asMap().entries.map((entry) =>
+                        TaskEditor(key: UniqueKey(), task: entry.value, remove: () => _removeObservation(entry.key))),
+                    SizedBox(height: 200)
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        DesignerAddButton(label: Text(AppLocalizations.of(context).add_observation), add: _addObservation)
-      ],
+          DesignerAddButton(label: Text(AppLocalizations.of(context).add_observation), add: _addObservation)
+        ],
+      ),
     );
   }
 }

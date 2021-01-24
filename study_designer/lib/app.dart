@@ -4,39 +4,48 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
-import 'dashboard.dart';
-import 'designer.dart';
+import 'models/app_state.dart';
 import 'routes.dart';
 import 'theme.dart';
 
-class MyApp extends StatelessWidget {
-  final routes = {
-    designerRoute: (_) => Designer(route: designerRoute),
-    homeRoute: (_) => ParseInit(child: Dashboard()),
-  };
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  AppState _appState;
+
+  RootRouterDelegate _rootRouterDelegate;
+  RootRouteInformationParser _rootRouteInformationParser;
+
+  @override
+  void initState() {
+    super.initState();
+    _appState = AppState();
+    _rootRouterDelegate = RootRouterDelegate(_appState);
+    _rootRouteInformationParser = RootRouteInformationParser();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppLanguage>(
-        create: (context) => AppLanguage(AppLocalizations.supportedLocales),
-        child: Consumer<AppLanguage>(builder: (context, model, child) {
-          return MaterialApp(
-            title: 'StudyU Designer',
-            theme: theme,
-            onGenerateRoute: (settings) {
-              if (settings.name.startsWith(designerRoute)) {
-                return MaterialPageRoute(builder: (_) => Designer(route: settings.name), settings: settings);
-              }
-              // Go back to home, if route not found
-              if (!routes.containsKey(settings.name)) {
-                return MaterialPageRoute(builder: routes[homeRoute]);
-              }
-              return MaterialPageRoute(builder: routes[settings.name], settings: settings);
-            },
-            locale: model.appLocal,
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-          );
-        }));
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
+        ChangeNotifierProvider<AppState>.value(value: _appState),
+      ],
+      child: Consumer<AppLanguage>(builder: (context, model, child) {
+        return MaterialApp.router(
+          title: 'StudyU Designer',
+          theme: theme,
+          routerDelegate: _rootRouterDelegate,
+          routeInformationParser: _rootRouteInformationParser,
+          locale: model.appLocal,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          builder: (context, child) => ParseInit(child: child),
+        );
+      }),
+    );
   }
 }

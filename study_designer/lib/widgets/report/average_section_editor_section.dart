@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/report/temporal_aggregation.dart';
+import 'package:studyu_designer/models/app_state.dart';
 
-import '../../models/designer_state.dart';
 import '../util/data_reference_editor.dart';
 
 class AverageSectionEditorSection extends StatefulWidget {
@@ -19,7 +19,7 @@ class AverageSectionEditorSection extends StatefulWidget {
 class _AverageSectionEditorSectionState extends State<AverageSectionEditorSection> {
   @override
   Widget build(BuildContext context) {
-    final studyDetails = context.watch<DesignerState>().draftStudy.studyDetails;
+    final studyDetails = context.watch<AppState>().draftStudy.studyDetails;
     final tasks = <Task>[
       ...studyDetails.interventionSet.interventions.expand((intervention) => intervention.tasks),
       ...studyDetails.observations,
