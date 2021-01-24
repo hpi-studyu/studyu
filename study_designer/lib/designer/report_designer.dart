@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/report/report_models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_designer/designer/help_wrapper.dart';
+import 'package:studyu_designer/models/app_state.dart';
 
-import '../models/designer_state.dart';
 import '../widgets/report/report_section_editor.dart';
 import '../widgets/util/designer_add_button.dart';
 
@@ -48,42 +49,47 @@ class _ReportDesignerState extends State<ReportDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _reportSpecification = context.watch<DesignerState>().draftStudy.studyDetails.reportSpecification;
-    return Stack(
-      children: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  if (_reportSpecification.primary != null)
-                    ReportSectionEditor(
-                      key: UniqueKey(),
-                      section: _reportSpecification.primary,
-                      isPrimary: true,
-                      remove: () => _removeSection(-1),
-                      updateSection: (section) => _replaceSection(-1, section),
-                    ),
-                  ..._reportSpecification.secondary
-                      .asMap()
-                      .entries
-                      .map((entry) => ReportSectionEditor(
-                            key: UniqueKey(),
-                            section: entry.value,
-                            isPrimary: false,
-                            remove: () => _removeSection(entry.key),
-                            updateSection: (section) => _replaceSection(entry.key, section),
-                          ))
-                      .toList(),
-                  SizedBox(height: 200)
-                ],
+    _reportSpecification = context.watch<AppState>().draftStudy.studyDetails.reportSpecification;
+    return DesignerHelpWrapper(
+      helpTitle: AppLocalizations.of(context).report_help_title,
+      helpText: AppLocalizations.of(context).report_help_body,
+      studyPublished: context.watch<AppState>().draftStudy.published,
+      child: Stack(
+        children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    if (_reportSpecification.primary != null)
+                      ReportSectionEditor(
+                        key: UniqueKey(),
+                        section: _reportSpecification.primary,
+                        isPrimary: true,
+                        remove: () => _removeSection(-1),
+                        updateSection: (section) => _replaceSection(-1, section),
+                      ),
+                    ..._reportSpecification.secondary
+                        .asMap()
+                        .entries
+                        .map((entry) => ReportSectionEditor(
+                              key: UniqueKey(),
+                              section: entry.value,
+                              isPrimary: false,
+                              remove: () => _removeSection(entry.key),
+                              updateSection: (section) => _replaceSection(entry.key, section),
+                            ))
+                        .toList(),
+                    SizedBox(height: 200)
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        DesignerAddButton(label: Text(AppLocalizations.of(context).add_section), add: _addSection)
-      ],
+          DesignerAddButton(label: Text(AppLocalizations.of(context).add_section), add: _addSection)
+        ],
+      ),
     );
   }
 }
