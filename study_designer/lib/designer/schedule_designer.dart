@@ -24,6 +24,7 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<AppState>().draftStudy == null) return Container();
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).schedule_help_title,
       helpText: AppLocalizations.of(context).schedule_help_body,

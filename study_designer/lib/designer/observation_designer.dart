@@ -30,9 +30,8 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    print('build observations desinger');
+    if (context.watch<AppState>().draftStudy == null) return Container();
     _observations = context.watch<AppState>().draftStudy.studyDetails.observations;
-    print('get observations from state');
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).observations_help_title,
       helpText: AppLocalizations.of(context).observations_help_body,

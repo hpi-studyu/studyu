@@ -44,6 +44,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<AppState>().draftStudy == null) return Container();
     _results = context.watch<AppState>().draftStudy.studyDetails.results;
 
     return DesignerHelpWrapper(
