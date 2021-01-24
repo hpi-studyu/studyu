@@ -65,6 +65,7 @@ class _SaveState extends State<Save> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<AppState>().draftStudy == null) return Container();
     final theme = Theme.of(context);
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).save_help_title,

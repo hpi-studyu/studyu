@@ -30,8 +30,8 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
 
   @override
   Widget build(BuildContext context) {
-    _consent = context.watch<AppState>().draftStudy?.studyDetails?.consent;
-    if (_consent == null) return Container();
+    if (context.watch<AppState>().draftStudy == null) return Container();
+    _consent = context.watch<AppState>().draftStudy.studyDetails.consent;
 
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).consent_help_title,

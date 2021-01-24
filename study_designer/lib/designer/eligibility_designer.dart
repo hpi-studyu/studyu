@@ -31,6 +31,7 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<AppState>().draftStudy == null) return Container();
     _eligibility = context.watch<AppState>().draftStudy.studyDetails.eligibility;
     _questions = context.watch<AppState>().draftStudy.studyDetails.questionnaire.questions;
     return DesignerHelpWrapper(

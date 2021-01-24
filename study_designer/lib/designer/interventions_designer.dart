@@ -30,6 +30,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<AppState>().draftStudy == null) return Container();
     _interventions = context.watch<AppState>().draftStudy.studyDetails.interventionSet.interventions;
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).interventions_help_title,

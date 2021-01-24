@@ -49,6 +49,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<AppState>().draftStudy == null) return Container();
     _reportSpecification = context.watch<AppState>().draftStudy.studyDetails.reportSpecification;
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).report_help_title,
