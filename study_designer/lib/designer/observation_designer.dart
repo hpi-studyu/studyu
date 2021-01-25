@@ -22,9 +22,9 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
     });
   }
 
-  void _removeObservation(index) {
+  void _removeObservation(Observation observation) {
     setState(() {
-      _observations.removeAt(index);
+      _observations.remove(observation);
     });
   }
 
@@ -44,8 +44,12 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    ..._observations.asMap().entries.map((entry) =>
-                        TaskEditor(key: UniqueKey(), task: entry.value, remove: () => _removeObservation(entry.key))),
+                    for (final observation in _observations)
+                      TaskEditor(
+                        key: ValueKey(observation.id),
+                        task: observation,
+                        remove: () => _removeObservation(observation),
+                      ),
                     SizedBox(height: 200)
                   ],
                 ),
