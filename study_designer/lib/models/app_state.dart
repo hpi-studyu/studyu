@@ -34,16 +34,18 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> openStudy(String studyId) async {
+  Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
     final res = await StudyQueries.getStudyWithDetailsByStudyId(studyId);
     draftStudy = res.results.first;
     _selectedStudyId = studyId;
+    _selectedDesignerPage = page;
     notifyListeners();
   }
 
   void closeDesigner() {
     _selectedStudyId = null;
     draftStudy = null;
+    _selectedDesignerPage = DesignerPage.about;
     notifyListeners();
   }
 
