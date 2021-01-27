@@ -35,34 +35,21 @@ class _DesignerState extends State<Designer> {
   void initState() {
     super.initState();
     _designerRouterDelegate = DesignerRouterDelegate();
-    print('designer init state');
-    //if (widget.studyId != null) _designerState.draftStudy = widget.study;
-  }
-
-  @override
-  void didUpdateWidget(covariant Designer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    print('didUpdateWidget');
-    // This triggers the notifyListeners of RouterDelegate
-    // _designerRouterDelegate.appState = widget.appState;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print('didChangeDependencies');
     // Defer back button dispatching to the child router
     _backButtonDispatcher = Router.of(context).backButtonDispatcher.createChildBackButtonDispatcher();
   }
 
-  // TODO: Execute ParseInit at beginning (maybe do not wrap as widget)
   @override
   Widget build(BuildContext context) {
     // Claim priority, If there are parallel sub router, you will need
     // to pick which one should take priority;
     _backButtonDispatcher.takePriority();
 
-    print('BUILD DESIGNER ============================================================');
     final appState = context.watch<AppState>();
     final study = appState.draftStudy;
     return Scaffold(
@@ -152,7 +139,6 @@ class _DesignerState extends State<Designer> {
                   ),
                 ))),
         VerticalDivider(thickness: 1, width: 1),
-        //buildDesignerRouter()
         Expanded(
           child: Router(
             routerDelegate: _designerRouterDelegate,
@@ -172,7 +158,6 @@ class DesignerRouterDelegate extends RouterDelegate<RoutePath>
   DesignerRouterDelegate();
 
   Widget selectedEditor(DesignerPage selectedPage) {
-    print('get selected editor');
     switch (selectedPage) {
       case DesignerPage.about:
         return AboutDesigner();
@@ -201,19 +186,18 @@ class DesignerRouterDelegate extends RouterDelegate<RoutePath>
 
   @override
   Widget build(BuildContext context) {
-    print('BUILD DESIGNER ROUTER ============================================================');
     final appState = context.read<AppState>();
     return Navigator(
       key: navigatorKey,
       pages: [
         MaterialPage(
-          //key: ValueKey(appState.selectedDesignerPage),
+          key: ValueKey(appState.selectedDesignerPage),
           child: selectedEditor(appState.selectedDesignerPage),
         )
       ],
       onPopPage: (route, result) {
         appState.selectedDesignerPage = null;
-        //notifyListeners();
+        notifyListeners();
         return route.didPop(result);
       },
     );

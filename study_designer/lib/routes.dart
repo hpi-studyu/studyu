@@ -68,7 +68,6 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
 
   @override
   Widget build(BuildContext context) {
-    print('BUILD ROOT ROUTER DEL ============================================================');
     return Navigator(
       key: navigatorKey,
       pages: [
@@ -96,18 +95,14 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
     );
   }
 
-  // is executed before build, therefore parse is not initialized yet
   @override
   Future<void> setNewRoutePath(RoutePath path) async {
     if (path is HomePath) {
-      print('IS HOME PATH, CLOSING NOW');
       appState.closeDesigner();
     } else if (path is DesignerPath) {
       if (path.studyId != null) {
-        print('IS designer with study, opening NOW');
         appState.openStudy(path.studyId);
       } else {
-        print('IS NEW STUDY');
         appState.createStudy();
       }
     }
