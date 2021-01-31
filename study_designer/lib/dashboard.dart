@@ -30,14 +30,14 @@ class _DashboardState extends State<Dashboard> {
   Locale _selectedLocal;
   bool termsDialogAlreadyShown = false;
 
-  ParseStudy parseStudyInstance;
+  ParseStudy _parseStudyInstance;
 
   @override
   void initState() {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
     //showTermsAndPrivacyDialog();
-    parseStudyInstance = ParseStudy();
+    _parseStudyInstance = ParseStudy();
   }
 
   Future<ParseStudyUConfig> getParseConfig() async {
@@ -94,7 +94,9 @@ class _DashboardState extends State<Dashboard> {
 
   void reloadDashboard() {
     // setState triggers the build method again, which then reloads all studies
-    setState(() {});
+    setState(() {
+      _parseStudyInstance = ParseStudy();
+    });
   }
 
   Widget _buildLanguageDropdown() {
@@ -193,7 +195,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: parseStudyInstance.getAll,
+            queryFunction: _parseStudyInstance.getAll,
             builder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
