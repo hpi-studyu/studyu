@@ -34,7 +34,7 @@ class _ParseListFutureBuilderState<T> extends State<ParseListFutureBuilder<T>> {
 
   void reload() {
     setState(() {
-      _tryFunction = _parseQuery;
+      _tryFunction = () => _parseQuery();
     });
   }
 
