@@ -39,9 +39,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createStudy() {
+  void createStudy({DesignerPage page = DesignerPage.about}) {
     draftStudy = StudyBase.designerDefault();
     _selectedStudyId = null;
+    _selectedDesignerPage = page;
     notifyListeners();
   }
 
