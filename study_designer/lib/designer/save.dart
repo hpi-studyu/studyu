@@ -5,8 +5,6 @@ import 'package:flutter_json_widget/flutter_json_widget.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/study.dart';
-import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:studyu_designer/designer/help_wrapper.dart';
 import 'package:studyu_designer/models/app_state.dart';
 
@@ -17,7 +15,6 @@ class Save extends StatefulWidget {
 
 class _SaveState extends State<Save> {
   StudyBase _draftStudy;
-  String studyObjectId;
 
   @override
   void initState() {
@@ -25,12 +22,12 @@ class _SaveState extends State<Save> {
     _draftStudy = context.read<AppState>().draftStudy;
   }
 
-  Future<StudyBase> _publishStudy(BuildContext context, String studyObjectId, String studyDetailsObjectId) async {
+  Future<StudyBase> _publishStudy(BuildContext context, StudyBase study) async {
     _draftStudy.published = true;
-    final publishingAccepted = await showDialog<bool>(
-        context: context, builder: (_) => PublishAlertDialog(study: ParseStudy.fromBase(_draftStudy)));
+    final publishingAccepted =
+        await showDialog<bool>(context: context, builder: (_) => PublishAlertDialog(studyTitle: _draftStudy.title));
     if (publishingAccepted) {
-      final savedStudy = await _saveStudy(studyObjectId, studyDetailsObjectId);
+      final savedStudy = await _saveStudy(study);
       if (savedStudy != null) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
@@ -43,8 +40,8 @@ class _SaveState extends State<Save> {
     return null;
   }
 
-  Future<StudyBase> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
-    final savedStudy = await _saveStudy(studyObjectId, studyDetailsObjectId);
+  Future<StudyBase> _saveDraft(StudyBase study) async {
+    final savedStudy = _saveStudy(study);
     if (savedStudy != null) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
@@ -56,12 +53,8 @@ class _SaveState extends State<Save> {
     }
   }
 
-  Future<StudyBase> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
-    final parseStudy = ParseStudy.fromBase(_draftStudy);
-    if (studyObjectId != null) {
-      parseStudy.objectId = studyObjectId;
-      parseStudy.studyDetails.objectId = studyDetailsObjectId;
-    }
+  Future<StudyBase> _saveStudy(StudyBase study) async {
+    final parseStudy = study is ParseStudy ? study : ParseStudy.fromBase(study);
     final response = await parseStudy.save();
     return response.success ? response.results.first : null;
   }
@@ -71,50 +64,43 @@ class _SaveState extends State<Save> {
     if (context.watch<AppState>().draftStudy == null) return Container();
     final theme = Theme.of(context);
     return DesignerHelpWrapper(
-      helpTitle: AppLocalizations.of(context).save_help_title,
-      helpText: AppLocalizations.of(context).save_help_body,
-      studyPublished: _draftStudy.published,
-      child: ParseFetchOneFutureBuilder<ParseStudy>(
-          // TODO: only fetch objectId of study and details
-          queryFunction: () => StudyQueries.getStudyWithDetailsByStudyId(_draftStudy.id),
-          builder: (context, study) {
-            return Padding(
-              padding: const EdgeInsets.all(32),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(AppLocalizations.of(context).save, style: theme.textTheme.headline6),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        OutlineButton.icon(
-                            onPressed: () async {
-                              final ParseStudy newStudy =
-                                  await _saveDraft(study?.objectId, study?.studyDetails?.objectId);
-                              if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
-                            },
-                            icon: Icon(Icons.save),
-                            label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
-                        SizedBox(width: 16),
-                        OutlineButton.icon(
-                            onPressed: () async {
-                              final ParseStudy newStudy =
-                                  await _publishStudy(context, study?.objectId, study?.studyDetails?.objectId);
-                              if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
-                            },
-                            icon: Icon(Icons.publish),
-                            label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
-                      ],
-                    ),
-                    SizedBox(height: 80),
-                    JSONExportSection(study: _draftStudy),
+        helpTitle: AppLocalizations.of(context).save_help_title,
+        helpText: AppLocalizations.of(context).save_help_body,
+        studyPublished: _draftStudy.published,
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(AppLocalizations.of(context).save, style: theme.textTheme.headline6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlineButton.icon(
+                        onPressed: () async {
+                          final ParseStudy newStudy = await _saveDraft(_draftStudy);
+                          print(newStudy);
+                          if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                        },
+                        icon: Icon(Icons.save),
+                        label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
+                    SizedBox(width: 16),
+                    OutlineButton.icon(
+                        onPressed: () async {
+                          final ParseStudy newStudy = await _publishStudy(context, _draftStudy);
+                          if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                        },
+                        icon: Icon(Icons.publish),
+                        label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
                   ],
                 ),
-              ),
-            );
-          }),
-    );
+                SizedBox(height: 80),
+                JSONExportSection(study: _draftStudy),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -165,9 +151,9 @@ class _JSONExportSectionState extends State<JSONExportSection> {
 }
 
 class PublishAlertDialog extends StatelessWidget {
-  final ParseStudy study;
+  final String studyTitle;
 
-  const PublishAlertDialog({@required this.study}) : super();
+  const PublishAlertDialog({@required this.studyTitle}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +164,7 @@ class PublishAlertDialog extends StatelessWidget {
         text: TextSpan(style: TextStyle(color: Colors.black), children: [
           TextSpan(text: 'The study '),
           TextSpan(
-              text: study.title,
-              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
+              text: studyTitle, style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
           TextSpan(text: AppLocalizations.of(context).really_want_to_publish),
         ]),
       ),
@@ -190,7 +175,7 @@ class PublishAlertDialog extends StatelessWidget {
           },
           icon: Icon(Icons.publish),
           color: Colors.green,
-          label: Text('${AppLocalizations.of(context).publish} ${study.title}'),
+          label: Text('${AppLocalizations.of(context).publish} $studyTitle'),
         )
       ],
     );
