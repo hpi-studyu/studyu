@@ -42,11 +42,6 @@ dev_dependencies:
   lint: ^1.5.1
 
 dependency_overrides:
-  # remove when merged: https://github.com/Realank/flutter_datetime_picker/pull/199
-  flutter_datetime_picker:
-    git:
-      url: https://github.com/espresso3389/flutter_datetime_picker.git
-      ref: master
   intl: 0.17.0-nullsafety.2
   intl_translation:
     git:
