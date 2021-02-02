@@ -53,6 +53,12 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> openNewStudy(StudyBase study) async {
+    draftStudy = study;
+    _selectedStudyId = study.id;
+    notifyListeners();
+  }
+
   void closeDesigner() {
     _selectedStudyId = null;
     draftStudy = null;
