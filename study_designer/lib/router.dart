@@ -17,6 +17,10 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
     if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == DesignerPath.basePath) {
       // Parses only with id /designer/:id and not /designer/
       if (uri.pathSegments.length == 2 && uri.pathSegments[1].isNotEmpty) {
+        final page = enumFromString<DesignerPage>(DesignerPage.values, uri.pathSegments[1]);
+        if (page != null) {
+          return DesignerPath(page: page);
+        }
         return DesignerPath(studyId: uri.pathSegments[1]);
       }
       // /designer/:id/:page
@@ -106,7 +110,7 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
       if (path.studyId != null) {
         appState.openStudy(path.studyId, page: path.page);
       } else {
-        appState.createStudy();
+        appState.createStudy(page: path.page);
       }
     }
   }
