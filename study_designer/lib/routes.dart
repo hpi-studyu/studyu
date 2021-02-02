@@ -100,7 +100,9 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
         }
 
         if (appState.isDesigner) {
-          appState.closeDesigner();
+          appState
+            ..closeDesigner()
+            ..reloadStudies();
         }
         notifyListeners();
         return true;

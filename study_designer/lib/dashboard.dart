@@ -30,14 +30,11 @@ class _DashboardState extends State<Dashboard> {
   Locale _selectedLocal;
   bool termsDialogAlreadyShown = false;
 
-  ParseStudy _parseStudyInstance;
-
   @override
   void initState() {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
     //showTermsAndPrivacyDialog();
-    _parseStudyInstance = ParseStudy();
   }
 
   Future<ParseStudyUConfig> getParseConfig() async {
@@ -89,13 +86,6 @@ class _DashboardState extends State<Dashboard> {
               );
             });
       }
-    });
-  }
-
-  void reloadDashboard() {
-    // setState triggers the build method again, which then reloads all studies
-    setState(() {
-      _parseStudyInstance = ParseStudy();
     });
   }
 
@@ -195,7 +185,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: _parseStudyInstance.getAll,
+            queryFunction: context.watch<AppState>().parseStudyInstance.getAll,
             builder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
@@ -212,7 +202,7 @@ class _DashboardState extends State<Dashboard> {
                         context: context,
                         tiles: draftStudies.map((study) => StudyCard(
                               study: study,
-                              reload: reloadDashboard,
+                              reload: context.read<AppState>().reloadStudies,
                             ))).toList(),
                   ),
                   ExpansionTile(
@@ -226,7 +216,7 @@ class _DashboardState extends State<Dashboard> {
                         context: context,
                         tiles: publishedStudies.map((study) => StudyCard(
                               study: study,
-                              reload: reloadDashboard,
+                              reload: context.read<AppState>().reloadStudies,
                             ))).toList(),
                   )
                 ],
@@ -238,7 +228,6 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<AppState>().createStudy();
-          //Navigator.pushNamed(context, designerRoute).then((_) => reloadDashboard());
         },
         tooltip: 'Add',
         child: Icon(Icons.add),
@@ -312,12 +301,7 @@ class StudyCard extends StatelessWidget {
                   }
                 },
               ),
-        onTap: () async {
-          //final res = await StudyQueries.getStudyWithDetails(study);
-          //final ParseStudy fullStudy = res.results.first;
-          //Navigator.push(context, Designer.draftRoute(study: fullStudy.toBase())).then((_) => reload());
-          context.read<AppState>().openStudy(study.id);
-        });
+        onTap: () => context.read<AppState>().openStudy(study.id));
   }
 }
 

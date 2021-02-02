@@ -19,6 +19,7 @@ class AppState extends ChangeNotifier {
   String _selectedStudyId;
   StudyBase draftStudy;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
+  ParseStudy _parseStudyInstance;
 
   AppState();
 
@@ -26,7 +27,17 @@ class AppState extends ChangeNotifier {
 
   bool get isDesigner => draftStudy != null;
 
+  ParseStudy get parseStudyInstance {
+    // _parseStudyInstance should always be initialized, but only after ParseInit
+    return _parseStudyInstance ??= ParseStudy();
+  }
+
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
+
+  set selectedDesignerPage(DesignerPage page) {
+    _selectedDesignerPage = page;
+    notifyListeners();
+  }
 
   void createStudy() {
     draftStudy = StudyBase.designerDefault();
@@ -46,11 +57,12 @@ class AppState extends ChangeNotifier {
     _selectedStudyId = null;
     draftStudy = null;
     _selectedDesignerPage = DesignerPage.about;
+    _parseStudyInstance = ParseStudy();
     notifyListeners();
   }
 
-  set selectedDesignerPage(DesignerPage page) {
-    _selectedDesignerPage = page;
+  void reloadStudies() {
+    _parseStudyInstance = ParseStudy();
     notifyListeners();
   }
 }
