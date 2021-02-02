@@ -5,7 +5,7 @@ import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_init.dart';
 
 import 'models/app_state.dart';
-import 'routes.dart';
+import 'router.dart';
 import 'theme.dart';
 
 class MyApp extends StatefulWidget {

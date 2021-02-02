@@ -16,7 +16,7 @@ import 'designer/report_designer.dart';
 import 'designer/save.dart';
 import 'designer/schedule_designer.dart';
 import 'models/app_state.dart';
-import 'routes.dart';
+import 'router.dart';
 
 class Designer extends StatefulWidget {
   final String studyId;

@@ -4,18 +4,6 @@ import 'dashboard.dart';
 import 'designer.dart';
 import 'models/app_state.dart';
 
-const String designerRoute = '/designer/';
-
-const String designerInterventionsRoute = '${designerRoute}interventions';
-const String designerQuestionnaireRoute = '${designerRoute}questionnaire';
-const String designerEligibilityRoute = '${designerRoute}eligibility';
-const String designerObservationsRoute = '${designerRoute}observations';
-const String designerScheduleRoute = '${designerRoute}schedule';
-const String designerConsentRoute = '${designerRoute}consent';
-const String designerReportRoute = '${designerRoute}report';
-const String designerResultsRoute = '${designerRoute}results';
-const String designerSaveRoute = '${designerRoute}save';
-
 /// Transforms String to Enum value. Dart does not have support for this (yet)
 T enumFromString<T>(Iterable<T> values, String value) {
   return values.firstWhere((type) => type.toString().split('.').last == value, orElse: () => null);
