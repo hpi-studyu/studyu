@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
-    //showTermsAndPrivacyDialog();
+    showTermsAndPrivacyDialog();
   }
 
   Future<ParseStudyUConfig> getParseConfig() async {
