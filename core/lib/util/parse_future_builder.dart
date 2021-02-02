@@ -86,7 +86,7 @@ class _ParseFetchOneFutureBuilderState<T> extends State<ParseFetchOneFutureBuild
 
   void reload() {
     setState(() {
-      _tryFunction = _parseQuery;
+      _tryFunction = () => _parseQuery();
     });
   }
 
