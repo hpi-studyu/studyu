@@ -25,42 +25,45 @@ class _SaveState extends State<Save> {
     _draftStudy = context.read<AppState>().draftStudy;
   }
 
-  Future<void> _publishStudy(BuildContext context, String studyObjectId, String studyDetailsObjectId) async {
+  Future<StudyBase> _publishStudy(BuildContext context, String studyObjectId, String studyDetailsObjectId) async {
     _draftStudy.published = true;
     final publishingAccepted = await showDialog<bool>(
         context: context, builder: (_) => PublishAlertDialog(study: ParseStudy.fromBase(_draftStudy)));
     if (publishingAccepted) {
-      final wasSaved = await _saveStudy(studyObjectId, studyDetailsObjectId);
-      if (wasSaved) {
+      final savedStudy = await _saveStudy(studyObjectId, studyDetailsObjectId);
+      if (savedStudy != null) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
-        Navigator.popUntil(context, (route) => route.settings.name == '/');
+        return savedStudy;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).failed_saving}')));
       }
     }
+    return null;
   }
 
-  Future<void> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
-    final wasSaved = await _saveStudy(studyObjectId, studyDetailsObjectId);
-    if (wasSaved) {
+  Future<StudyBase> _saveDraft(String studyObjectId, String studyDetailsObjectId) async {
+    final savedStudy = await _saveStudy(studyObjectId, studyDetailsObjectId);
+    if (savedStudy != null) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
+      return savedStudy;
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).failed_saving}')));
+      return null;
     }
   }
 
-  Future<bool> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
+  Future<StudyBase> _saveStudy(String studyObjectId, String studyDetailsObjectId) async {
     final parseStudy = ParseStudy.fromBase(_draftStudy);
     if (studyObjectId != null) {
       parseStudy.objectId = studyObjectId;
       parseStudy.studyDetails.objectId = studyDetailsObjectId;
     }
     final response = await parseStudy.save();
-    return response.success;
+    return response.success ? response.results.first : null;
   }
 
   @override
@@ -86,12 +89,20 @@ class _SaveState extends State<Save> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         OutlineButton.icon(
-                            onPressed: () => _saveDraft(study?.objectId, study?.studyDetails?.objectId),
+                            onPressed: () async {
+                              final ParseStudy newStudy =
+                                  await _saveDraft(study?.objectId, study?.studyDetails?.objectId);
+                              if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                            },
                             icon: Icon(Icons.save),
                             label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
                         SizedBox(width: 16),
                         OutlineButton.icon(
-                            onPressed: () => _publishStudy(context, study?.objectId, study?.studyDetails?.objectId),
+                            onPressed: () async {
+                              final ParseStudy newStudy =
+                                  await _publishStudy(context, study?.objectId, study?.studyDetails?.objectId);
+                              if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                            },
                             icon: Icon(Icons.publish),
                             label: Text(AppLocalizations.of(context).publish_study, style: TextStyle(fontSize: 30))),
                       ],
