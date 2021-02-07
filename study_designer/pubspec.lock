@@ -163,11 +163,13 @@ packages:
     source: hosted
     version: "1.3.6"
   date_range_picker:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: date_range_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "8f7718e70e5303a99ecde0070365fc7794e7fe8e"
+      url: "https://github.com/tiholic/date_range_picker"
+    source: git
     version: "1.0.6"
   datetime_picker_formfield:
     dependency: transitive
