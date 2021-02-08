@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:ext_storage/ext_storage.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode, kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -44,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
 
   void showTermsAndPrivacyDialog() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!termsDialogAlreadyShown) {
+      if (!termsDialogAlreadyShown && kReleaseMode) {
         setState(() {
           termsDialogAlreadyShown = true;
         });
