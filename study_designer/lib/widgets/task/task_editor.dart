@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 import 'questionnaire_task_editor_section.dart';
 import 'task_schedule_editor_section.dart';
@@ -30,7 +30,7 @@ class _TaskEditorState extends State<TaskEditor> {
               title: Row(
                 children: [Text('${widget.task.type[0].toUpperCase()}${widget.task.type.substring(1)}'), Text(' Task')],
               ),
-              trailing: FlatButton(
+              trailing: TextButton(
                 onPressed: widget.remove,
                 child: Text(AppLocalizations.of(context).delete),
               )),

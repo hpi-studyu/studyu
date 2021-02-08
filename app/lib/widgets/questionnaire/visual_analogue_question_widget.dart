@@ -60,7 +60,7 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
           max: widget.question.maximum,
           divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
-        RaisedButton(
+        ElevatedButton(
           onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
           child: Text(AppLocalizations.of(context).done),
         )

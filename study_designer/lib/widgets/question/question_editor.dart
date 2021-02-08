@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
 import '../../widgets/question/slider_question_editor_section.dart';
@@ -51,7 +51,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
                   Text(AppLocalizations.of(context).question)
                 ],
               ),
-              trailing: FlatButton(
+              trailing: TextButton(
                 onPressed: widget.remove,
                 child: Text(AppLocalizations.of(context).delete),
               )),

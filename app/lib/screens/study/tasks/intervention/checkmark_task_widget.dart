@@ -38,7 +38,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return PimpedButton(
         particle: DemoParticle(),
-        pimpedWidgetBuilder: (context, controller) => RaisedButton.icon(
+        pimpedWidgetBuilder: (context, controller) => ElevatedButton.icon(
             onPressed: () => _handleCompletion(context, controller.forward(from: 0)),
             icon: Icon(Icons.check, size: 32),
             label: Text(AppLocalizations.of(context).completed, style: TextStyle(fontSize: 24))));

@@ -10,6 +10,8 @@ class SelectableButton extends StatelessWidget {
 
   Color _getFillColor(ThemeData theme) => selected ? theme.primaryColor : theme.cardColor;
 
+  Color _getTextColor(ThemeData theme) => selected ? Colors.white : Colors.blue;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -17,13 +19,13 @@ class SelectableButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: 48,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: Divider.createBorderSide(context, color: theme.primaryColor),
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          primary: _getTextColor(theme),
+          backgroundColor: _getFillColor(theme),
+          side: BorderSide(color: theme.primaryColor),
         ),
         onPressed: onTap,
-        color: _getFillColor(theme),
         child: child,
       ),
     );

@@ -77,7 +77,7 @@ class _SaveState extends State<Save> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    OutlineButton.icon(
+                    OutlinedButton.icon(
                         onPressed: () async {
                           final ParseStudy newStudy = await _saveDraft(_draftStudy);
                           print(newStudy);
@@ -86,7 +86,7 @@ class _SaveState extends State<Save> {
                         icon: Icon(Icons.save),
                         label: Text(AppLocalizations.of(context).save_draft, style: TextStyle(fontSize: 30))),
                     SizedBox(width: 16),
-                    OutlineButton.icon(
+                    OutlinedButton.icon(
                         onPressed: () async {
                           final ParseStudy newStudy = await _publishStudy(context, _draftStudy);
                           if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
@@ -132,7 +132,7 @@ class _JSONExportSectionState extends State<JSONExportSection> {
               children: [
                 Text(AppLocalizations.of(context).study_model_in_json),
                 SizedBox(width: 8),
-                OutlineButton.icon(
+                OutlinedButton.icon(
                     onPressed: () async {
                       await FlutterClipboard.copy(prettyJson(widget.study.toJson()));
                       ScaffoldMessenger.of(context)
@@ -169,12 +169,12 @@ class PublishAlertDialog extends StatelessWidget {
         ]),
       ),
       actions: [
-        FlatButton.icon(
+        ElevatedButton.icon(
           onPressed: () async {
             Navigator.pop(context, true);
           },
           icon: Icon(Icons.publish),
-          color: Colors.green,
+          style: ElevatedButton.styleFrom(primary: Colors.green, elevation: 0),
           label: Text('${AppLocalizations.of(context).publish} $studyTitle'),
         )
       ],

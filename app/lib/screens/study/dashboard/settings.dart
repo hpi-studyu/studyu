@@ -89,22 +89,22 @@ class _SettingsState extends State<Settings> {
             Text('${AppLocalizations.of(context).study_current} ${activeStudy.title}',
                 style: theme.textTheme.headline6),
             SizedBox(height: 8),
-            RaisedButton.icon(
+            ElevatedButton.icon(
+              icon: Icon(MdiIcons.exitToApp),
+              label: Text(AppLocalizations.of(context).opt_out),
+              style: ElevatedButton.styleFrom(primary: Colors.orange[800]),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(activeStudy: activeStudy));
               },
-              color: Colors.orange[800],
-              icon: Icon(MdiIcons.exitToApp),
-              label: Text(AppLocalizations.of(context).opt_out),
             ),
             SizedBox(height: 24),
-            RaisedButton.icon(
+            ElevatedButton.icon(
+              icon: Icon(Icons.delete),
+              label: Text(AppLocalizations.of(context).delete_data),
+              style: ElevatedButton.styleFrom(primary: Colors.red),
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog());
               },
-              color: Colors.red,
-              icon: Icon(Icons.delete),
-              label: Text(AppLocalizations.of(context).delete_data),
             )
           ],
         ),
@@ -133,15 +133,15 @@ class OptOutAlertDialog extends StatelessWidget {
         ]),
       ),
       actions: [
-        FlatButton.icon(
+        ElevatedButton.icon(
+          icon: Icon(MdiIcons.exitToApp),
+          label: Text('Opt-out'),
+          style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
           onPressed: () async {
             activeStudy.delete();
             await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
             Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           },
-          icon: Icon(MdiIcons.exitToApp),
-          color: Colors.orange[800],
-          label: Text('Opt-out'),
         )
       ],
     );
@@ -155,15 +155,15 @@ class DeleteAlertDialog extends StatelessWidget {
         content: Text(
             'You will not be able to restore your data. Parts of your anonymized data may still be used for research purposes.'),
         actions: [
-          FlatButton.icon(
+          ElevatedButton.icon(
+            icon: Icon(Icons.delete),
+            label: Text('Delete all data'),
+            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
             onPressed: () async {
               UserQueries.deleteUserAccount();
               await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             },
-            icon: Icon(Icons.delete),
-            color: Colors.red,
-            label: Text('Delete all data'),
           )
         ],
       );

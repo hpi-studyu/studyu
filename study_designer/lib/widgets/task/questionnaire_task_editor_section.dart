@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../../widgets/question/questionnaire_editor.dart';
 
@@ -24,10 +24,10 @@ class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection
   Widget build(BuildContext context) {
     return Column(children: [
       QuestionnaireEditor(questionnaire: widget.task.questions, questionTypes: Question.questionTypes.keys.toList()),
-      RaisedButton.icon(
+      ElevatedButton.icon(
           onPressed: _addQuestion,
           icon: Icon(Icons.add),
-          color: Colors.green,
+          style: ElevatedButton.styleFrom(primary: Colors.green),
           label: Text(AppLocalizations.of(context).add_question))
     ]);
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 class ChoiceEditor extends StatefulWidget {
   final Choice choice;
@@ -25,7 +25,7 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
         child: Column(children: <Widget>[
           ButtonBar(
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: widget.remove,
                 child: Text(AppLocalizations.of(context).delete),
               ),

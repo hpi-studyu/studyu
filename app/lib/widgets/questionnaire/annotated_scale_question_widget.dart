@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 import 'question_widget.dart';
 
@@ -72,7 +72,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           max: widget.question.maximum,
           divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
-        RaisedButton(
+        ElevatedButton(
           onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
           child: Text(AppLocalizations.of(context).done),
         )

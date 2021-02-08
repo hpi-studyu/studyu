@@ -11,7 +11,6 @@ import '../../routes.dart';
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -21,32 +20,28 @@ class WelcomeScreen extends StatelessWidget {
               Spacer(),
               Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
               SizedBox(height: 20),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: Icon(Icons.info),
                 onPressed: () => Navigator.pushNamed(context, Routes.about),
-                label: Text(AppLocalizations.of(context).what_is_studyu,
-                    style: theme.textTheme.button.copyWith(color: theme.primaryColor, fontSize: 20)),
+                label: Text(AppLocalizations.of(context).what_is_studyu, style: TextStyle(fontSize: 20)),
               ),
               SizedBox(height: 20),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: Icon(MdiIcons.accountBox),
                 onPressed: () => Navigator.pushNamed(context, Routes.contact),
-                label: Text(AppLocalizations.of(context).contact,
-                    style: theme.textTheme.button.copyWith(color: theme.primaryColor, fontSize: 20)),
+                label: Text(AppLocalizations.of(context).contact, style: TextStyle(fontSize: 20)),
               ),
               SizedBox(height: 20),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: Icon(MdiIcons.frequentlyAskedQuestions),
                 onPressed: () => Navigator.pushNamed(context, Routes.faq),
-                label: Text(AppLocalizations.of(context).faq,
-                    style: theme.textTheme.button.copyWith(color: theme.primaryColor, fontSize: 20)),
+                label: Text(AppLocalizations.of(context).faq, style: TextStyle(fontSize: 20)),
               ),
               Spacer(),
-              OutlineButton.icon(
+              OutlinedButton.icon(
                 icon: Icon(MdiIcons.rocket, size: 30),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                label: Text(AppLocalizations.of(context).get_started,
-                    style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor, fontSize: 30)),
+                label: Text(AppLocalizations.of(context).get_started, style: TextStyle(fontSize: 20)),
               ),
               Spacer()
             ],
@@ -57,7 +52,7 @@ class WelcomeScreen extends StatelessWidget {
       persistentFooterButtons: kReleaseMode
           ? null
           : [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   context.read<AppState>()
                     ..selectedStudy = ParseStudy()

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/consent/consent_item.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConsentItemEditor extends StatefulWidget {
   final ConsentItem consentItem;
@@ -39,7 +39,7 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
           child: Column(children: [
             ListTile(
                 title: Text(AppLocalizations.of(context).consent_item),
-                trailing: FlatButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+                trailing: TextButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
@@ -59,7 +59,7 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
                             initialValue: widget.consentItem.title),
                         Row(children: [
                           Expanded(
-                            child: FlatButton(
+                            child: TextButton(
                               onPressed: _pickIcon,
                               child: Text(AppLocalizations.of(context).choose_icon),
                             ),

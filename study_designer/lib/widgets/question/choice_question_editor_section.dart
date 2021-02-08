@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
 
 import 'choice_editor.dart';
@@ -55,10 +55,10 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
       ),
       Row(children: [
         Spacer(),
-        RaisedButton.icon(
+        ElevatedButton.icon(
             onPressed: _addChoice,
             icon: Icon(Icons.add),
-            color: Colors.green,
+            style: ElevatedButton.styleFrom(primary: Colors.green),
             label: Text(AppLocalizations.of(context).add_choice)),
         Spacer()
       ])

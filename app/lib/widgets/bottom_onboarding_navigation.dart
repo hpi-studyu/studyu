@@ -30,7 +30,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            FlatButton(
+            TextButton(
               onPressed: onBack ?? () => Navigator.pop(context),
               child: Row(
                 children: [
@@ -45,7 +45,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
-              child: FlatButton(
+              child: TextButton(
                 onPressed: onNext,
                 child: Row(
                   children: [

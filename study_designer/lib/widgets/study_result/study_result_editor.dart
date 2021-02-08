@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/study_results/results/numeric_result.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../widgets/study_result/numeric_result_editor_section.dart';
 
@@ -45,7 +45,7 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
                   Text(AppLocalizations.of(context).result)
                 ],
               ),
-              trailing: FlatButton(
+              trailing: TextButton(
                 onPressed: widget.remove,
                 child: Text(AppLocalizations.of(context).delete),
               )),

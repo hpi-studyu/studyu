@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../selectable_button.dart';
 import 'question_widget.dart';
@@ -56,10 +56,9 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         .toList();
 
     if (widget.question.multiple) {
-      choiceWidgets.add(RaisedButton(
-        color: Theme.of(context).accentColor,
-        textColor: Colors.white,
+      choiceWidgets.add(ElevatedButton(
         onPressed: confirm,
+        style: ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
         child: Text(AppLocalizations.of(context).confirm),
       ));
     }

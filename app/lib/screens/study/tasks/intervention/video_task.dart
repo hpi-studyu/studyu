@@ -44,7 +44,7 @@ class _VideoTaskState extends State<VideoTask> {
             controller: _chewieController,
           ),
         ),
-        RaisedButton(
+        ElevatedButton(
           onPressed: () => Navigator.pop(context),
           child: Text(AppLocalizations.of(context).finished),
         )

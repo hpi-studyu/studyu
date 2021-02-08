@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/queries/queries.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -54,17 +54,10 @@ class _KickoffScreen extends State<KickoffScreen> {
       !ready ? AppLocalizations.of(context).setting_up_study : AppLocalizations.of(context).good_to_go;
 
   Widget _constructStatusButton(BuildContext context) {
-    final theme = Theme.of(context);
-    return OutlineButton.icon(
+    return OutlinedButton.icon(
       icon: Icon(MdiIcons.rocket),
       onPressed: ready ? () => Navigator.pushNamed(context, Routes.dashboard) : null,
-      label: Text(
-        AppLocalizations.of(context).get_started,
-        style: theme.textTheme.button.copyWith(
-          color: ready ? theme.primaryColor : theme.disabledColor,
-          fontSize: 20,
-        ),
-      ),
+      label: Text(AppLocalizations.of(context).get_started, style: TextStyle(fontSize: 20)),
     );
   }
 

@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -80,7 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               scheduleToday: scheduleToday,
               interventionIcon: study.getInterventionForDate(DateTime.now())?.icon),
       bottomSheet: kDebugMode && !study.completedStudy
-          ? FlatButton(
+          ? TextButton(
               onPressed: () {
                 setState(() {
                   study.setStartDateBackBy(days: 1);
@@ -111,12 +111,12 @@ class StudyFinishedPlaceholder extends StatelessWidget {
           Text(AppLocalizations.of(context).completed_study,
               style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold)),
           space,
-          OutlineButton.icon(
+          OutlinedButton.icon(
               onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
               icon: Icon(MdiIcons.history, size: fontSize),
               label: Text(AppLocalizations.of(context).report_history, style: textStyle)),
           space,
-          OutlineButton.icon(
+          OutlinedButton.icon(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
               label: Text(AppLocalizations.of(context).study_selection, style: textStyle)),

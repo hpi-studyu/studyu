@@ -66,11 +66,10 @@ class _TermsScreenState extends State<TermsScreen> {
                       pdfUrlLabel: AppLocalizations.of(context).privacy_read,
                     ),
                     SizedBox(height: 30),
-                    OutlineButton.icon(
+                    OutlinedButton.icon(
                       icon: Icon(MdiIcons.scaleBalance),
                       onPressed: () => launch(appConfig.imprint[appLocale.toString()]),
-                      label: Text(AppLocalizations.of(context).imprint_read,
-                          style: Theme.of(context).textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                      label: Text(AppLocalizations.of(context).imprint_read),
                     ),
                   ],
                 ),
@@ -122,10 +121,10 @@ class LegalSection extends StatelessWidget {
         SizedBox(height: 20),
         Text(description),
         SizedBox(height: 20),
-        OutlineButton.icon(
+        OutlinedButton.icon(
           icon: icon,
           onPressed: () => launch(pdfUrl),
-          label: Text(pdfUrlLabel, style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+          label: Text(pdfUrlLabel),
         ),
         CheckboxListTile(title: Text(acknowledgment), value: isChecked, onChanged: onChange),
       ],

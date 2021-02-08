@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChoiceExpressionEditorSection extends StatefulWidget {
   final ChoiceExpression expression;
@@ -45,7 +45,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
               Expanded(
                 child: ButtonBar(
                   children: <Widget>[
-                    FlatButton(
+                    TextButton(
                       onPressed: () => _removeChoice(index),
                       child: Text(AppLocalizations.of(context).delete),
                     ),

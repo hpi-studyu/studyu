@@ -67,7 +67,7 @@ class _AboutDesignerState extends State<AboutDesigner> {
                         initialValue: _draftStudy.description),
                     Row(children: [
                       Expanded(
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: _pickIcon,
                           child: Text(AppLocalizations.of(context).choose_icon),
                         ),

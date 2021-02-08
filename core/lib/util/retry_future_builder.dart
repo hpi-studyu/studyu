@@ -117,11 +117,11 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
           SizedBox(height: 16),
           Text(error.toString()),
           SizedBox(height: 16),
-          RaisedButton.icon(
+          ElevatedButton.icon(
             onPressed: reload,
-            color: theme.accentColor,
             icon: Icon(Icons.sync),
             label: Text('Retry'),
+            style: ElevatedButton.styleFrom(primary: theme.accentColor),
           ),
           ...widget.extraWidgets
         ],

@@ -52,7 +52,6 @@ class _DashboardState extends State<Dashboard> {
             context: context,
             barrierDismissible: false,
             builder: (context) {
-              final theme = Theme.of(context);
               final appLocale = Localizations.localeOf(context);
 
               return RetryFutureBuilder<ParseStudyUConfig>(
@@ -60,25 +59,25 @@ class _DashboardState extends State<Dashboard> {
                 successBuilder: (context, appConfig) => AlertDialog(
                   title: Text(AppLocalizations.of(context).terms_privacy),
                   actions: [
-                    FlatButton(
-                        onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context).terms_agree))
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(AppLocalizations.of(context).terms_agree),
+                    )
                   ],
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(AppLocalizations.of(context).terms_content),
                       SizedBox(height: 20),
-                      OutlineButton.icon(
+                      OutlinedButton.icon(
                         icon: Icon(MdiIcons.fileDocumentEdit),
                         onPressed: () => launch(appConfig.designer_terms[appLocale.toString()]),
-                        label: Text(AppLocalizations.of(context).terms_read,
-                            style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                        label: Text(AppLocalizations.of(context).terms_read),
                       ),
-                      OutlineButton.icon(
+                      OutlinedButton.icon(
                         icon: Icon(MdiIcons.shieldLock),
                         onPressed: () => launch(appConfig.designer_privacy[appLocale.toString()]),
-                        label: Text(AppLocalizations.of(context).privacy_read,
-                            style: theme.textTheme.button.copyWith(color: Theme.of(context).primaryColor)),
+                        label: Text(AppLocalizations.of(context).privacy_read),
                       ),
                     ],
                   ),
@@ -126,9 +125,10 @@ class _DashboardState extends State<Dashboard> {
             Builder(builder: (context) {
               return Theme(
                 data: ThemeData.dark(),
-                child: FlatButton.icon(
+                child: TextButton.icon(
                   label: Text('Upload'),
                   icon: Icon(MdiIcons.upload),
+                  style: TextButton.styleFrom(primary: Colors.white),
                   onPressed: () async {
                     final controller = TextEditingController();
                     final wasUploaded = await showDialog<bool>(
@@ -136,14 +136,14 @@ class _DashboardState extends State<Dashboard> {
                       builder: (context) => AlertDialog(
                         title: Text('Paster Study JSON here'),
                         actions: [
-                          FlatButton.icon(
+                          TextButton.icon(
                             label: Text('Cancel'),
                             icon: Icon(MdiIcons.close),
                             onPressed: () {
                               Navigator.pop(context, false);
                             },
                           ),
-                          FlatButton.icon(
+                          TextButton.icon(
                             label: Text('Upload'),
                             icon: Icon(MdiIcons.upload),
                             onPressed: () {
@@ -314,15 +314,15 @@ class DeleteAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(AppLocalizations.of(context).delete_draft_study),
         actions: [
-          FlatButton.icon(
+          ElevatedButton.icon(
             onPressed: () async {
               await study.studyDetails.delete();
               await study.delete();
               Navigator.pop(context, true);
             },
             icon: Icon(Icons.delete),
-            color: Colors.red,
             label: Text(AppLocalizations.of(context).delete),
+            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
           )
         ],
       );

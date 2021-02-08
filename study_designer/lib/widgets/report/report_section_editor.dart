@@ -66,7 +66,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
                     Text(AppLocalizations.of(context).section)
                   ],
                 ),
-                trailing: FlatButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+                trailing: TextButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [
