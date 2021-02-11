@@ -20,13 +20,13 @@ dependencies:
   extended_math: ^0.0.29+1
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^4.0.0
+  flutter_local_notifications: ^4.0.1
   flutter_localizations:
     sdk: flutter
   flutter_native_timezone: ^1.0.4
   grizzly_distuv: ^1.0.0
   intersperse: ^1.1.1
-  intl: 0.17.0-nullsafety.2
+  intl: 0.17.0
   material_design_icons_flutter: ^4.0.5855
   parse_server_sdk_flutter:
     git:
@@ -34,7 +34,7 @@ dependencies:
       ref: development
       path: packages/flutter
   path_provider: ^1.6.27
-  pdf: ^2.0.0
+  pdf: ^2.1.0
   pimp_my_button: ^1.0.0
   provider: ^4.3.3
   quiver: ^2.1.5
@@ -53,7 +53,7 @@ dev_dependencies:
   lint: ^1.5.1
 
 dependency_overrides:
-  intl: 0.17.0-nullsafety.2
+  intl: 0.17.0
 
 flutter_icons:
   image_path: 'assets/images/icon.png'

@@ -20,7 +20,7 @@ dependencies:
   flutter_json_widget: ^1.0.2
   flutter_localizations:
     sdk: flutter
-  intl: 0.17.0-nullsafety.2
+  intl: 0.17.0
   material_design_icons_flutter: ^4.0.5855
   parse_server_sdk_flutter:
     git:
@@ -46,7 +46,7 @@ dependency_overrides:
   date_range_picker:
     git:
       url: https://github.com/tiholic/date_range_picker
-  intl: 0.17.0-nullsafety.2
+  intl: 0.17.0
   intl_translation:
     git:
       url: https://github.com/Zazo032/intl_translation.git
