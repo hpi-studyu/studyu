@@ -147,7 +147,7 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.9+5"
+    version: "2.0.2"
   connectivity_for_web:
     dependency: transitive
     description:
@@ -217,7 +217,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.0"
+    version: "5.2.1"
   fixnum:
     dependency: transitive
     description:
@@ -289,6 +289,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.12.2+2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.1"
   io:
     dependency: transitive
     description:
@@ -372,7 +379,7 @@ packages:
       name: node_io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   package_config:
     dependency: transitive
     description:
@@ -392,19 +399,19 @@ packages:
     description:
       path: "packages/dart"
       ref: development
-      resolved-ref: da674d20d510166c189df21085f90ec2162f5398
+      resolved-ref: "0e604ecd9a6235b1eabc7df9634f8a4cefa096c5"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
-    version: "2.0.1"
+    version: "2.1.0"
   parse_server_sdk_flutter:
     dependency: "direct main"
     description:
       path: "packages/flutter"
       ref: development
-      resolved-ref: da674d20d510166c189df21085f90ec2162f5398
+      resolved-ref: "0e604ecd9a6235b1eabc7df9634f8a4cefa096c5"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
-    version: "2.0.1"
+    version: "2.1.0"
   path:
     dependency: transitive
     description:
@@ -481,7 +488,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "3.0.13"
   pub_semver:
     dependency: transitive
     description:
