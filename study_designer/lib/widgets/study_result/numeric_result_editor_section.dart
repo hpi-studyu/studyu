@@ -18,10 +18,10 @@ class NumericResultEditorSection extends StatefulWidget {
 class _NumericResultEditorSectionState extends State<NumericResultEditorSection> {
   @override
   Widget build(BuildContext context) {
-    final studyDetails = context.watch<AppState>().draftStudy.studyDetails;
+    final study = context.watch<AppState>().draftStudy;
     final tasks = <Task>[
-      ...studyDetails.interventionSet.interventions.expand((intervention) => intervention.tasks),
-      ...studyDetails.observations,
+      ...study.interventionSet.interventions.expand((intervention) => intervention.tasks),
+      ...study.observations,
     ];
 
     return Column(children: [

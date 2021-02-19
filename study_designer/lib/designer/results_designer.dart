@@ -45,7 +45,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
   @override
   Widget build(BuildContext context) {
     if (context.watch<AppState>().draftStudy == null) return Container();
-    _results = context.watch<AppState>().draftStudy.studyDetails.results;
+    _results = context.watch<AppState>().draftStudy.results;
 
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).results_help_title,

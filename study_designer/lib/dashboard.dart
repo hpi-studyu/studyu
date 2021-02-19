@@ -294,7 +294,6 @@ class StudyCard extends StatelessWidget {
                 tooltip: AppLocalizations.of(context).export_csv,
                 onPressed: () async {
                   final dl = ResultDownloader(study);
-                  await dl.loadDetails();
                   final results = await dl.loadAllResults();
                   for (final entry in results.entries) {
                     downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
@@ -316,7 +315,6 @@ class DeleteAlertDialog extends StatelessWidget {
         actions: [
           ElevatedButton.icon(
             onPressed: () async {
-              await study.studyDetails.delete();
               await study.delete();
               Navigator.pop(context, true);
             },
