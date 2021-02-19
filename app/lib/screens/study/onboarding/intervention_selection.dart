@@ -47,7 +47,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   }
 
   Widget _buildInterventionSelectionList() {
-    final interventions = selectedStudy.studyDetails?.interventionSet?.interventions;
+    final interventions = selectedStudy?.interventionSet?.interventions;
     if (interventions == null || interventions.isEmpty) {
       return Text(AppLocalizations.of(context).no_interventions_available);
     }
