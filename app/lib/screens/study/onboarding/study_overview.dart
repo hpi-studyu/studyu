@@ -3,8 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/queries.dart';
-import 'package:studyou_core/util/parse_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -55,12 +53,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
             SizedBox(height: 16),
-            ParseFetchOneFutureBuilder<ParseStudy>(
-                queryFunction: () => StudyQueries.getStudyWithDetails(study),
-                builder: (_context, study) {
-                  context.read<AppState>().selectedStudy = study;
-                  return StudyDetailsView(study: study, studyDetails: study.studyDetails);
-                }),
+            StudyDetailsView(study: study),
           ],
         ),
       ),
@@ -74,22 +67,20 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 class StudyDetailsView extends StatelessWidget {
   final StudyBase study;
 
-  final StudyDetailsBase studyDetails;
-
-  const StudyDetailsView({@required this.study, @required this.studyDetails, Key key}) : super(key: key);
+  const StudyDetailsView({@required this.study, Key key}) : super(key: key);
   double get iconSize => 40;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baselineLength = studyDetails.schedule.includeBaseline ? studyDetails.schedule.phaseDuration : 0;
-    final studyLength = baselineLength +
-        studyDetails.schedule.phaseDuration * studyDetails.schedule.numberOfCycles * StudySchedule.numberOfPhases;
+    final baselineLength = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
+    final studyLength =
+        baselineLength + study.schedule.phaseDuration * study.schedule.numberOfCycles * StudySchedule.numberOfPhases;
     return Column(
       children: [
         ListTile(
           title: Text('Intervention phase duration'),
-          subtitle: Text('${studyDetails.schedule.phaseDuration} days'),
+          subtitle: Text('${study.schedule.phaseDuration} days'),
           leading: Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
         ),
         ListTile(
