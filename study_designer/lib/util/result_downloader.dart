@@ -9,11 +9,7 @@ class ResultDownloader {
 
   ResultDownloader(this.study);
 
-  Future<void> loadDetails() async {
-    study = (await StudyQueries.getStudyWithDetails(study)).results.first;
-  }
-
-  List<StudyResult> availableResults() => study.studyDetails.results;
+  List<StudyResult> availableResults() => study.results;
 
   Future<List<ParseUserStudy>> loadAllInstances() async {
     final response = await StudyQueries.getUserStudiesFor(study);

@@ -41,22 +41,22 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
                     onChanged: _saveFormChanges,
                     name: 'numberOfCycles',
                     decoration: InputDecoration(labelText: AppLocalizations.of(context).number_of_cycles),
-                    initialValue: _draftStudy.studyDetails.schedule.numberOfCycles.toString()),
+                    initialValue: _draftStudy.schedule.numberOfCycles.toString()),
                 FormBuilderTextField(
                     onChanged: _saveFormChanges,
                     name: 'phaseDuration',
                     decoration: InputDecoration(labelText: AppLocalizations.of(context).phase_duration),
-                    initialValue: _draftStudy.studyDetails.schedule.phaseDuration.toString()),
+                    initialValue: _draftStudy.schedule.phaseDuration.toString()),
                 FormBuilderSwitch(
                     onChanged: _saveFormChanges,
                     title: Text(AppLocalizations.of(context).include_baseline),
                     name: 'includeBaseline',
-                    initialValue: _draftStudy.studyDetails.schedule.includeBaseline),
+                    initialValue: _draftStudy.schedule.includeBaseline),
                 FormBuilderDropdown(
                   onChanged: _saveFormChanges,
                   name: 'sequence',
                   decoration: InputDecoration(labelText: AppLocalizations.of(context).schedule),
-                  initialValue: _draftStudy.studyDetails.schedule.sequence,
+                  initialValue: _draftStudy.schedule.sequence,
                   items: PhaseSequence.values
                       .map((sequence) => DropdownMenuItem(
                           value: sequence,
@@ -75,7 +75,7 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        _draftStudy.studyDetails.schedule
+        _draftStudy.schedule
           ..numberOfCycles = int.parse(_editFormKey.currentState.value['numberOfCycles'])
           ..phaseDuration = int.parse(_editFormKey.currentState.value['phaseDuration'])
           ..includeBaseline = _editFormKey.currentState.value['includeBaseline']

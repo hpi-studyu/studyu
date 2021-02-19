@@ -26,7 +26,7 @@ class _EligibilityQuestionsDesignerState extends State<EligibilityQuestionsDesig
   @override
   Widget build(BuildContext context) {
     if (context.watch<AppState>().draftStudy == null) return Container();
-    questionnaire = context.watch<AppState>().draftStudy.studyDetails.questionnaire;
+    questionnaire = context.watch<AppState>().draftStudy.questionnaire;
     return DesignerHelpWrapper(
       helpTitle: AppLocalizations.of(context).eligibility_questions_help_title,
       helpText: AppLocalizations.of(context).eligibility_questions_help_body,
