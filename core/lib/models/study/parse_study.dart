@@ -13,15 +13,6 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   @override
   ParseStudy clone(Map<String, dynamic> map) => ParseStudy.clone()..fromJson(map);
 
-  @override
-  ParseStudy fromJson(Map<String, dynamic> objectData) {
-    super.fromJson(objectData);
-    if (objectData.containsKey(keyStudyDetails)) {
-      studyDetails = ParseStudyDetails.clone().fromJson(objectData[keyStudyDetails]);
-    }
-    return this;
-  }
-
   factory ParseStudy.fromBase(StudyBase study) {
     return ParseStudy()
       ..id = study.id
@@ -30,7 +21,14 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
       ..description = study.description
       ..iconName = study.iconName
       ..published = study.published
-      ..studyDetails = ParseStudyDetails.fromBase(study.studyDetails);
+      ..interventionSet = study.interventionSet
+      ..questionnaire = study.questionnaire
+      ..eligibility = study.eligibility
+      ..observations = study.observations
+      ..schedule = study.schedule
+      ..consent = study.consent
+      ..reportSpecification = study.reportSpecification
+      ..results = study.results;
   }
 
   static const keyId = 'study_id';
@@ -57,9 +55,45 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   bool get published => get<bool>(keyPublished);
   set published(bool published) => set<bool>(keyPublished, published);
 
-  static const keyStudyDetails = 'study_details';
-  ParseStudyDetails get studyDetails => get<ParseStudyDetails>(keyStudyDetails);
-  set studyDetails(StudyDetailsBase studyDetails) => set<ParseStudyDetails>(keyStudyDetails, studyDetails);
+  static const keyQuestionnaire = 'questionnaire';
+  Questionnaire get questionnaire => Questionnaire.fromJson(get<List<dynamic>>(keyQuestionnaire));
+  set questionnaire(Questionnaire questionnaire) => set<List<dynamic>>(keyQuestionnaire, questionnaire.toJson());
+
+  static const keyEligibility = 'eligibilityCriteria';
+  List<EligibilityCriterion> get eligibility =>
+      get<List<dynamic>>(keyEligibility)?.map((e) => EligibilityCriterion.fromJson(e))?.toList() ?? [];
+  set eligibility(List<EligibilityCriterion> eligibility) =>
+      set<List<dynamic>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
+
+  static const keyConsent = 'consent';
+  List<ConsentItem> get consent =>
+      get<List<dynamic>>(keyConsent, defaultValue: []).map((e) => ConsentItem.fromJson(e)).toList();
+  set consent(List<ConsentItem> consent) => set<List<dynamic>>(keyConsent, consent.map((e) => e.toJson()).toList());
+
+  static const keyInterventionSet = 'interventionSet';
+  InterventionSet get interventionSet => InterventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
+  set interventionSet(InterventionSet interventionSet) =>
+      set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
+
+  static const keyObservations = 'observations';
+  List<Observation> get observations =>
+      get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
+  set observations(List<Observation> observations) =>
+      set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
+
+  static const keySchedule = 'schedule';
+  StudySchedule get schedule => StudySchedule.fromJson(get<Map<String, dynamic>>(keySchedule));
+  set schedule(StudySchedule schedule) => set<Map<String, dynamic>>(keySchedule, schedule.toJson());
+
+  static const keyReportSpecification = 'report_specification';
+  ReportSpecification get reportSpecification =>
+      ReportSpecification.fromJson(get<Map<String, dynamic>>(keyReportSpecification));
+  set reportSpecification(ReportSpecification reportSpecification) =>
+      set<Map<String, dynamic>>(keyReportSpecification, reportSpecification.toJson());
+
+  static const keyResults = 'results';
+  List<StudyResult> get results => get<List<dynamic>>(keyResults)?.map((e) => StudyResult.fromJson(e))?.toList() ?? [];
+  set results(List<StudyResult> results) => set<List<dynamic>>(keyResults, results.map((e) => e.toJson()).toList());
 
   ParseUserStudy extractUserStudy(
       String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
@@ -72,15 +106,15 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
       ..userId = userId
       ..startDate = startDate
       ..interventionSet = InterventionSet(selectedInterventions)
-      ..observations = studyDetails.observations ?? []
-      ..reportSpecification = studyDetails.reportSpecification;
-    if (studyDetails.schedule != null) {
+      ..observations = observations ?? []
+      ..reportSpecification = reportSpecification;
+    if (schedule != null) {
       const baselineId = StudyBase.baselineID;
       var addBaseline = false;
       userStudy
-        ..schedule = studyDetails.schedule
-        ..consent = studyDetails.consent
-        ..interventionOrder = studyDetails.schedule.generateWith(firstIntervention).map<String>((index) {
+        ..schedule = schedule
+        ..consent = consent
+        ..interventionOrder = schedule.generateWith(firstIntervention).map<String>((index) {
           if (index == null) {
             addBaseline = true;
             return baselineId;
@@ -96,7 +130,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
         ]);
       }
     } else {
-      print('Study is missing schedule or StudyDetails not fetched!');
+      print('Study is missing schedule!');
       return null;
     }
     return userStudy;

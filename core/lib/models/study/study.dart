@@ -16,7 +16,14 @@ class StudyBase {
   Contact contact;
   String iconName;
   bool published;
-  StudyDetailsBase studyDetails;
+  Questionnaire questionnaire;
+  List<EligibilityCriterion> eligibility;
+  List<ConsentItem> consent;
+  InterventionSet interventionSet;
+  List<Observation> observations;
+  StudySchedule schedule;
+  ReportSpecification reportSpecification;
+  List<StudyResult> results;
 
   StudyBase();
 
@@ -25,7 +32,14 @@ class StudyBase {
         iconName = '',
         published = false,
         contact = Contact.designerDefault(),
-        studyDetails = StudyDetailsBase.designerDefault();
+        interventionSet = InterventionSet.designerDefault(),
+        questionnaire = Questionnaire.designerDefault(),
+        eligibility = [],
+        observations = [],
+        consent = [],
+        schedule = StudySchedule.designerDefault(),
+        reportSpecification = ReportSpecification.designerDefault(),
+        results = [];
 
   factory StudyBase.fromJson(Map<String, dynamic> json) => _$StudyBaseFromJson(json);
   Map<String, dynamic> toJson() => _$StudyBaseToJson(this);
@@ -40,6 +54,13 @@ extension StudyExtension on StudyBase {
       ..contact = contact
       ..iconName = iconName
       ..published = published
-      ..studyDetails = studyDetails.toBase();
+      ..questionnaire = questionnaire
+      ..eligibility = eligibility
+      ..consent = consent
+      ..interventionSet = interventionSet
+      ..observations = observations
+      ..schedule = schedule
+      ..reportSpecification = reportSpecification
+      ..results = results;
   }
 }

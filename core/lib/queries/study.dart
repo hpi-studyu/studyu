@@ -4,16 +4,7 @@ import 'package:studyou_core/queries/user.dart';
 
 class StudyQueries {
   static Future<ParseResponse> getPublishedStudies() async {
-    final builder = QueryBuilder<ParseStudy>(ParseStudy())
-      ..whereEqualTo('published', true)
-      ..includeObject(['study_details']);
-    return builder.query();
-  }
-
-  static Future<ParseResponse> getStudyWithDetails(ParseStudy study) async {
-    final builder = QueryBuilder<ParseStudy>(ParseStudy())
-      ..whereEqualTo('objectId', study.objectId)
-      ..includeObject(['study_details']);
+    final builder = QueryBuilder<ParseStudy>(ParseStudy())..whereEqualTo('published', true);
     return builder.query();
   }
 
@@ -22,10 +13,8 @@ class StudyQueries {
     return builder.query();
   }
 
-  static Future<ParseResponse> getStudyWithDetailsByStudyId(String studyId) async {
-    final builder = QueryBuilder<ParseStudy>(ParseStudy())
-      ..whereEqualTo(ParseStudy.keyId, studyId)
-      ..includeObject(['study_details']);
+  static Future<ParseResponse> getStudyById(String studyId) async {
+    final builder = QueryBuilder<ParseStudy>(ParseStudy())..whereEqualTo(ParseStudy.keyId, studyId);
     return builder.query();
   }
 
