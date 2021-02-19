@@ -19,7 +19,7 @@ class InterventionResult extends StudyResult {
 
   @override
   List<String> getHeaders(StudyBase studySpec) {
-    var schedule = studySpec.studyDetails.schedule;
+    var schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
     return Iterable<int>.generate(numberOfDays).map((e) => e.toString()).toList();
   }
