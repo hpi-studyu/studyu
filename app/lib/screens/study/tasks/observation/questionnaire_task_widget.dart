@@ -21,7 +21,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
       ..timeStamp = DateTime.now()
       ..taskId = task.id;
     activeStudy.addResult(result);
-    if (await StudyQueries.saveUserStudy(activeStudy) != null) {
+    if (await ParseUserStudy().saveUserStudy(activeStudy) != null) {
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

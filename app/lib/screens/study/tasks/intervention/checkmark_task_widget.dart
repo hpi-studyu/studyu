@@ -22,7 +22,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
       ..timeStamp = DateTime.now()
       ..taskId = task.id;
     activeStudy.addResult(result);
-    if (await StudyQueries.saveUserStudy(activeStudy) != null) {
+    if (await ParseUserStudy().saveUserStudy(activeStudy) != null) {
       await animation;
       Navigator.pop(context, true);
     } else {
