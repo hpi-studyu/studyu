@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
 
 enum DesignerPage {
@@ -18,7 +19,7 @@ class AppState extends ChangeNotifier {
   String _selectedStudyId;
   StudyBase draftStudy;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
-  ParseStudy _parseStudyInstance;
+  Future<ParseResponse> Function() _researcherDashboardQuery;
 
   AppState();
 
@@ -26,10 +27,12 @@ class AppState extends ChangeNotifier {
 
   bool get isDesigner => draftStudy != null;
 
-  ParseStudy get parseStudyInstance {
-    // _parseStudyInstance should always be initialized, but only after ParseInit
-    return _parseStudyInstance ??= ParseStudy();
+  Future<ParseResponse> Function() get researcherDashboardQuery {
+    // _researcherDashboardQuery should always be initialized, but only after ParseInit
+    return _researcherDashboardQuery ??= ParseStudy().getResearcherDashboardStudies;
   }
+
+  void reloadResearcherDashboard() => _researcherDashboardQuery = ParseStudy().getResearcherDashboardStudies;
 
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
 
@@ -63,12 +66,12 @@ class AppState extends ChangeNotifier {
     _selectedStudyId = null;
     draftStudy = null;
     _selectedDesignerPage = DesignerPage.about;
-    _parseStudyInstance = ParseStudy();
+    reloadResearcherDashboard();
     notifyListeners();
   }
 
   void reloadStudies() {
-    _parseStudyInstance = ParseStudy();
+    reloadResearcherDashboard();
     notifyListeners();
   }
 }

@@ -185,7 +185,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: context.watch<AppState>().parseStudyInstance.getAll,
+            queryFunction: context.watch<AppState>().researcherDashboardQuery,
             builder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
