@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
-import 'package:studyou_core/queries/queries.dart';
 
 import '../../../../models/app_state.dart';
 

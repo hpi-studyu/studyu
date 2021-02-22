@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
-import 'package:studyou_core/queries/queries.dart';
 
 import '../../../../models/app_state.dart';
 import '../../../../widgets/questionnaire/questionnaire_widget.dart';

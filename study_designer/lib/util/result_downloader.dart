@@ -1,6 +1,5 @@
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
-import 'package:studyou_core/queries/queries.dart';
 
 class ResultDownloader {
   static const participantHeader = 'participant';

@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/queries/queries.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
+import 'package:studyou_core/util/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes.dart';
