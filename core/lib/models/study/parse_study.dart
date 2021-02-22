@@ -137,21 +137,19 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   }
 }
 
-final researcherDashboardStudyKeys = ["objectId", "study_id", "title", "description", "published", "icon_name"];
-
 extension StudyQueries on ParseStudy {
   Future<ParseResponse> getPublishedStudies() async {
-    final builder = QueryBuilder<ParseStudy>(this)..whereEqualTo('published', true);
-    return builder.query();
-  }
-
-  Future<ParseResponse> getAllStudiesWith(List<String> keys) async {
-    final builder = QueryBuilder<ParseStudy>(this)..keysToReturn(keys);
+    final keys = ["objectId", "study_id", "title", "description", "published", "icon_name"];
+    final builder = QueryBuilder<ParseStudy>(this)
+      ..whereEqualTo('published', true)
+      ..keysToReturn(keys);
     return builder.query();
   }
 
   Future<ParseResponse> getResearcherDashboardStudies() async {
-    return getAllStudiesWith(researcherDashboardStudyKeys);
+    final keys = ["objectId", "study_id", "title", "description", "published", "icon_name"];
+    final builder = QueryBuilder<ParseStudy>(this)..keysToReturn(keys);
+    return builder.query();
   }
 
   Future<ParseResponse> getStudyById(String studyId) async {
