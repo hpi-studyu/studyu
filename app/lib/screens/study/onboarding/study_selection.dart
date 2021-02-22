@@ -62,7 +62,7 @@ class StudySelectionScreen extends StatelessWidget {
                   ),
                 ),
                 ParseListFutureBuilder<ParseStudy>(
-                  queryFunction: StudyQueries.getPublishedStudies,
+                  queryFunction: ParseStudy().getPublishedStudies,
                   builder: (_context, studies) {
                     return ListView.builder(
                         shrinkWrap: true,
