@@ -70,7 +70,7 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.11.4"
+    version: "1.11.5"
   build_runner_core:
     dependency: transitive
     description:
@@ -288,7 +288,7 @@ packages:
       name: idb_shim
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.12.2+2"
+    version: "1.12.2+3"
   io:
     dependency: transitive
     description:
@@ -495,7 +495,7 @@ packages:
       name: sembast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.10"
+    version: "2.4.10+1"
   sembast_web:
     dependency: transitive
     description:
@@ -558,7 +558,7 @@ packages:
       name: shelf_web_socket
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.4+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -612,7 +612,7 @@ packages:
       name: synchronized
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "2.2.0+2"
   term_glyph:
     dependency: transitive
     description:
