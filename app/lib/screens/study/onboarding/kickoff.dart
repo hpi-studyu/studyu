@@ -22,7 +22,7 @@ class _KickoffScreen extends State<KickoffScreen> {
     final user = await UserQueries.getOrCreateUser();
     study.userId = user.objectId;
 
-    final selectedStudyObjectId = await ParseUserStudy().saveUserStudy(study);
+    final selectedStudyObjectId = await study.saveUserStudy();
     if (selectedStudyObjectId != null) {
       await SharedPreferences.getInstance()
           .then((pref) => pref.setString(UserQueries.selectedStudyObjectIdKey, selectedStudyObjectId));

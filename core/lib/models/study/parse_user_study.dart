@@ -158,10 +158,10 @@ extension UserStudyQueries on ParseUserStudy {
         .then((response) => response.success && response.results.isNotEmpty ? response.results.first : null);
   }
 
-  Future<String> saveUserStudy(ParseUserStudy userStudy) async {
-    final response = await userStudy.save();
+  Future<String> saveUserStudy() async {
+    final response = await this.save();
     if (response.success) {
-      return userStudy.objectId;
+      return objectId;
     }
     print('Could not save UserStudy!');
     return null;
