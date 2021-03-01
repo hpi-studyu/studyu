@@ -33,7 +33,7 @@ services:
     volumes:
       - mongodb_data:/data/db
   parse:
-    image: parseplatform/parse-server
+    image: parseplatform/parse-server:4.5.0
     environment:
       # All env vars: https://github.com/parse-community/parse-server/blob/master/src/Options/Definitions.js
       - PARSE_SERVER_APPLICATION_ID=nof1-local
