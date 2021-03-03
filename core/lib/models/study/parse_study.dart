@@ -147,7 +147,7 @@ extension StudyQueries on ParseStudy {
   }
 
   Future<ParseResponse> getResearcherDashboardStudies() async {
-    final keys = ["objectId", "study_id", "title", "description", "published", "icon_name"];
+    final keys = ["objectId", "study_id", "title", "description", "published", "icon_name", "results", "schedule"];
     final builder = QueryBuilder<ParseStudy>(this)..keysToReturn(keys);
     return builder.query();
   }
