@@ -16,6 +16,7 @@ class StudyBase {
   Contact contact;
   String iconName;
   bool published;
+  int participantCount;
   Questionnaire questionnaire;
   List<EligibilityCriterion> eligibility;
   List<ConsentItem> consent;
@@ -54,6 +55,7 @@ extension StudyExtension on StudyBase {
       ..contact = contact
       ..iconName = iconName
       ..published = published
+      ..participantCount = participantCount
       ..questionnaire = questionnaire
       ..eligibility = eligibility
       ..consent = consent

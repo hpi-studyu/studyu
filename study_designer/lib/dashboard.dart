@@ -272,34 +272,51 @@ class StudyCard extends StatelessWidget {
     final icon =
         study.iconName != null && study.iconName.isNotEmpty ? MdiIcons.fromString(study.iconName) : MdiIcons.cropSquare;
 
+    final iconButton = !study.published
+        ? IconButton(
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed: () async {
+              final isDeleted =
+                  await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
+              if (isDeleted) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).deleted}')));
+                if (reload != null) reload();
+              }
+            },
+          )
+        : IconButton(
+            icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
+            tooltip: AppLocalizations.of(context).export_csv,
+            onPressed: () async {
+              final dl = ResultDownloader(study);
+              final results = await dl.loadAllResults();
+              for (final entry in results.entries) {
+                downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+              }
+            },
+          );
+
+    final trailing = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextButton.icon(
+          icon: Icon(MdiIcons.accountGroup),
+          label: Text(study.participantCount.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          onPressed: null,
+        ),
+        VerticalDivider(),
+        iconButton,
+      ],
+    );
+
     return ListTile(
         title: Text(study.title),
         subtitle: Text(study.description),
-        leading: Icon(icon),
-        trailing: !study.published
-            ? IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: () async {
-                  final isDeleted =
-                      await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
-                  if (isDeleted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).deleted}')));
-                    if (reload != null) reload();
-                  }
-                },
-              )
-            : IconButton(
-                icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-                tooltip: AppLocalizations.of(context).export_csv,
-                onPressed: () async {
-                  final dl = ResultDownloader(study);
-                  final results = await dl.loadAllResults();
-                  for (final entry in results.entries) {
-                    downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
-                  }
-                },
-              ),
+        leading: Icon(
+          icon,
+        ),
+        trailing: trailing,
         onTap: () => context.read<AppState>().openStudy(study.id));
   }
 }
