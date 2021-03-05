@@ -23,7 +23,7 @@ dependencies:
   flutter_local_notifications: ^4.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_native_timezone: ^1.0.4
+  flutter_native_timezone: ^1.0.9
   grizzly_distuv: ^1.0.0
   intersperse: ^1.1.1
   intl: 0.17.0
@@ -50,7 +50,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.8.1
   flutter_test:
     sdk: flutter
-  lint: ^1.5.1
+  lint: ^1.5.2
 
 dependency_overrides:
   intl: 0.17.0
