@@ -78,7 +78,7 @@ class LinearRegression {
 
   Vector _getPValues({Vector mu0}) {
     final tValues = _getTValues(mu0: mu0);
-    return tValues.map((t) => (1 - _getStudentTCDF(t.abs())) * 2);
+    return tValues.map((t) => (1 - _getStudentTCDF(t.abs() as double)) * 2);
   }
 
   LinearRegressionResult<num> getPValues() {

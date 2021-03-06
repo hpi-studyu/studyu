@@ -129,7 +129,7 @@ class _TaskList extends StatelessWidget {
     return schedules.map((schedule) {
       switch (schedule.runtimeType) {
         case FixedSchedule:
-          final FixedSchedule fixedSchedule = schedule;
+          final FixedSchedule fixedSchedule = schedule as FixedSchedule;
           return fixedSchedule.time.toString();
 
         default:

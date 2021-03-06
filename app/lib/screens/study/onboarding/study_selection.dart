@@ -12,7 +12,7 @@ import '../../../widgets/study_tile.dart';
 
 class StudySelectionScreen extends StatelessWidget {
   Future<void> navigateToStudyOverview(BuildContext context, StudyBase study) async {
-    context.read<AppState>().selectedStudy = study;
+    context.read<AppState>().selectedStudy = study as ParseStudy;
     Navigator.pushNamed(context, Routes.studyOverview);
   }
 

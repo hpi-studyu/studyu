@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
@@ -25,23 +25,23 @@ class QuestionContainer extends StatelessWidget {
     switch (question.runtimeType) {
       case ChoiceQuestion:
         return ChoiceQuestionWidget(
-          question: question,
+          question: question as ChoiceQuestion,
           onDone: _onDone,
           multiSelectionText: AppLocalizations.of(context).eligible_choice_multi_selection,
         );
       case BooleanQuestion:
         return BooleanQuestionWidget(
-          question: question,
+          question: question as BooleanQuestion,
           onDone: _onDone,
         );
       case VisualAnalogueQuestion:
         return VisualAnalogueQuestionWidget(
-          question: question,
+          question: question as VisualAnalogueQuestion,
           onDone: _onDone,
         );
       case AnnotatedScaleQuestion:
         return AnnotatedScaleQuestionWidget(
-          question: question,
+          question: question as AnnotatedScaleQuestion,
           onDone: _onDone,
         );
       default:

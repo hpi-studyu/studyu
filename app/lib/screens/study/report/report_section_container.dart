@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/report/report_models.dart';
 import 'package:studyou_core/models/study/parse_user_study.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'report_section_widget.dart';
 import 'sections/report_section_widgets.dart';
@@ -10,14 +10,15 @@ typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, Par
 
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
-    AverageSection: (section, instance) => AverageSectionWidget(instance, section),
-    LinearRegressionSection: (section, instance) => LinearRegressionSectionWidget(instance, section),
+    AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
+    LinearRegressionSection: (section, instance) =>
+        LinearRegressionSectionWidget(instance, section as LinearRegressionSection),
   };
 
   final ReportSection section;
   final ParseUserStudy instance;
   final bool primary;
-  final Function onTap;
+  final GestureTapCallback onTap;
 
   const ReportSectionContainer(this.section, {@required this.instance, this.onTap, this.primary = false});
 

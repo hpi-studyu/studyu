@@ -22,7 +22,7 @@ class _TermsScreenState extends State<TermsScreen> {
 
   Future<ParseStudyUConfig> getParseConfig() async {
     final configs = await ParseConfig().getConfigs();
-    return ParseStudyUConfig.fromJson(configs.result);
+    return ParseStudyUConfig.fromJson(configs.result as Map<String, dynamic>);
   }
 
   bool userCanContinue() {

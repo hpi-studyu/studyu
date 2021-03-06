@@ -14,7 +14,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     for (final taskSchedule in task.schedule) {
       switch (taskSchedule.type) {
         case models.FixedSchedule.scheduleType:
-          final models.FixedSchedule fixedSchedule = taskSchedule;
+          final models.FixedSchedule fixedSchedule = taskSchedule as models.FixedSchedule;
           if (date.isSameDate(DateTime.now()) &&
               !models.Time(hour: date.hour, minute: date.minute).earlierThan(fixedSchedule.time)) {
             break;

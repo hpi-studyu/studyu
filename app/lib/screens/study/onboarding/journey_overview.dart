@@ -21,7 +21,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   ParseUserStudy study;
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
-    final consentGiven = await Navigator.pushNamed(context, Routes.consent);
+    final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
     if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.kickoff);
     } else {
