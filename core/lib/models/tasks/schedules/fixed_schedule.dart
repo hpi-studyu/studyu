@@ -36,6 +36,6 @@ class Time {
   String toString() => '$hour:${minute.toString().padLeft(2, '0')}';
 
   bool earlierThan(Time time) {
-    return this.hour < time.hour || this.hour == time.hour && this.minute < time.minute;
+    return hour < time.hour || hour == time.hour && minute < time.minute;
   }
 }

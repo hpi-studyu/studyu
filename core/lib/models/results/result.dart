@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyou_core/models/models.dart';
 
-part "result.g.dart";
+part 'result.g.dart';
 
 @JsonSerializable()
 class Result<T> {
@@ -18,6 +18,7 @@ class Result<T> {
   Result();
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> resultMap;
     switch (result.runtimeType) {
@@ -39,8 +40,7 @@ class Result<T> {
     switch (data[keyType]) {
       case 'QuestionnaireState':
         return Result<QuestionnaireState>.parseJson(data)
-          ..result = QuestionnaireState.fromJson(
-              data[keyResult].map<Map<String, dynamic>>((e) => e as Map<String, dynamic>).toList());
+          ..result = QuestionnaireState.fromJson((data[keyResult] as List).cast<Map<String, dynamic>>());
       case 'bool':
         return Result<bool>.parseJson(data)..result = data[keyResult];
       default:

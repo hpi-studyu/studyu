@@ -45,15 +45,17 @@ extension UserStudyExtension on UserStudyBase {
   int get daysPerIntervention => schedule.numberOfCycles * schedule.phaseDuration;
 
   void addResult(Result result) {
-    var nextResults = results;
+    final nextResults = results;
     nextResults.putIfAbsent(result.taskId, () => []).add(result);
     results = nextResults;
   }
 
   void addResults(List<Result> newResults) {
     if (newResults.isEmpty) return;
-    var nextResults = results;
-    newResults.forEach((result) => nextResults.putIfAbsent(result.taskId, () => []).add(result));
+    final nextResults = results;
+    for (final result in newResults) {
+      nextResults.putIfAbsent(result.taskId, () => []).add(result);
+    }
     results = nextResults;
   }
 
@@ -67,6 +69,7 @@ extension UserStudyExtension on UserStudyBase {
         .expand((element) => element)
         .where((element) => element != null)
         .forEach((element) => resultMap.putIfAbsent(element.key, () => []).add(element.value));
+    print(results);
     return resultMap;
   }
 
@@ -116,15 +119,16 @@ extension UserStudyExtension on UserStudyBase {
   }
 
   DateTime startOfPhase(int index) => startDate.add(Duration(days: schedule.phaseDuration * index));
+
   DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: schedule.phaseDuration));
 
   List<Result> resultsFor(String taskId) => results[taskId];
 
   Map<String, int> completedPerTaskForPhase(int index) =>
-      resultsForPhase(index).map(((taskId, taskResults) => MapEntry(taskId, taskResults.length)));
+      resultsForPhase(index).map((taskId, taskResults) => MapEntry(taskId, taskResults.length));
 
   Map<String, List<Result>> resultsForPhase(int index) {
-    return resultsBetween(startOfPhase(index).subtract(Duration(days: 1)), dayAfterEndOfPhase(index));
+    return resultsBetween(startOfPhase(index).subtract(const Duration(days: 1)), dayAfterEndOfPhase(index));
   }
 
   // Excluding start and end
@@ -170,7 +174,7 @@ extension UserStudyExtension on UserStudyBase {
 
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
-    var diff = DateTime.now().differenceInDays(startDate).inDays;
+    final diff = DateTime.now().differenceInDays(startDate).inDays;
     return diff >= interventionOrder.length * schedule.phaseDuration - 1;
   }
 

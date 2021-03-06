@@ -25,7 +25,8 @@ class _ContactScreenState extends State<ContactScreen> {
 
   Future<Contact> getParseConfigContact() async {
     final configs = await ParseConfig().getConfigs();
-    return Contact.fromJson(configs.result['contact']);
+    final Map<String, dynamic> contactJson = configs.result;
+    return Contact.fromJson(contactJson['contact']);
   }
 
   @override

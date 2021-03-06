@@ -1,9 +1,9 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/report/sections/average_section.dart';
 import 'package:studyou_core/models/report/temporal_aggregation.dart';
 import 'package:studyou_core/models/study/studies.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../util/data_processing.dart';
 import '../report_section_widget.dart';
@@ -28,7 +28,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
 
   charts.RangeAnnotation generateSeperators(int numberOfPhases, int phaseDuration) => charts.RangeAnnotation(
-        Iterable.generate(numberOfPhases + 1)
+        Iterable<int>.generate(numberOfPhases + 1)
             .map((i) => PlotUtilities.createSeparator(i * phaseDuration - 0.5))
             .toList(),
       );
@@ -38,11 +38,11 @@ class AverageSectionWidget extends ReportSectionWidget {
       return charts.StaticNumericTickProviderSpec(const []);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return PlotUtilities.createNumericTicks(
-        Iterable.generate(numberOfPhases).map((i) => MapEntry(i, (i + 1).toString())),
+        Iterable<int>.generate(numberOfPhases).map((i) => MapEntry(i, (i + 1).toString())),
       );
     } else {
       return PlotUtilities.createNumericTicks(
-        Iterable.generate(numberOfPhases)
+        Iterable<int>.generate(numberOfPhases)
             .map((i) => MapEntry(i * phaseDuration + (phaseDuration - 1) / 2, (i + 1).toString())),
       );
     }

@@ -238,7 +238,7 @@ class _DashboardState extends State<Dashboard> {
 
 class StudyCard extends StatelessWidget {
   final ParseStudy study;
-  final Function reload;
+  final void Function() reload;
 
   const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
 
@@ -247,7 +247,6 @@ class StudyCard extends StatelessWidget {
       final bytes = utf8.encode(contentString);
       final blob = html.Blob([bytes]);
       final url = html.Url.createObjectUrlFromBlob(blob);
-      // ignore: avoid_as
       final anchor = html.document.createElement('a') as html.AnchorElement
         ..href = url
         ..style.display = 'none'

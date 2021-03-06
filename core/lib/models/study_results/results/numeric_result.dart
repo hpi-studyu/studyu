@@ -22,14 +22,14 @@ class NumericResult extends StudyResult {
 
   @override
   List<String> getHeaders(StudyBase studySpec) {
-    var schedule = studySpec.schedule;
+    final schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
     return Iterable<int>.generate(numberOfDays).map((e) => e.toString()).toList();
   }
 
   @override
   List getValues(UserStudyBase instance) {
-    var resultSet = resultProperty
+    final resultSet = resultProperty
         .retrieveFromResults(instance)
         .map<int, num>((key, value) => MapEntry(instance.getDayOfStudyFor(key), value));
     final numberOfDays = instance.schedule.getNumberOfPhases() * instance.schedule.phaseDuration;

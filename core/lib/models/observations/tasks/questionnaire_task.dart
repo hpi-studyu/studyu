@@ -18,7 +18,7 @@ class QuestionnaireTask extends Observation {
   QuestionnaireTask() : super(taskType);
 
   QuestionnaireTask.designerDefault()
-      : this.questions = Questionnaire.designerDefault(),
+      : questions = Questionnaire.designerDefault(),
         super.designer(taskType);
 
   factory QuestionnaireTask.fromJson(Map<String, dynamic> json) => _$QuestionnaireTaskFromJson(json);
@@ -28,11 +28,12 @@ class QuestionnaireTask extends Observation {
 
   @override
   Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
-    Question targetQuestion = questions.questions.firstWhere((q) => q.id == property, orElse: null);
-    if (targetQuestion == null)
-      throw new ArgumentError('Questionnaire \'${this.id}\' does not have a question with \'$property\'.');
-    var typedResults = sourceResults.cast<Result<QuestionnaireState>>();
-    return Map.fromEntries(typedResults.map((r) => new MapEntry(r.timeStamp, r.result.getAnswer<T>(property))));
+    final Question targetQuestion = questions.questions.firstWhere((q) => q.id == property, orElse: () => null);
+    if (targetQuestion == null) {
+      throw ArgumentError("Questionnaire '$id' does not have a question with '$property'.");
+    }
+    final typedResults = sourceResults.cast<Result<QuestionnaireState>>();
+    return Map.fromEntries(typedResults.map((r) => MapEntry(r.timeStamp, r.result.getAnswer<T>(property))));
   }
 
   @override
@@ -40,5 +41,5 @@ class QuestionnaireTask extends Observation {
 
   @override
   String getHumanReadablePropertyName(String property) =>
-      questions.questions.firstWhere((q) => q.id == property, orElse: null).prompt;
+      questions.questions.firstWhere((q) => q.id == property, orElse: () => null).prompt;
 }

@@ -42,7 +42,7 @@ class RetryFutureBuilder<T> extends StatefulWidget {
   final CustomErrorWidgetBuilder errorWidgetBuilder;
   final List<Widget> extraWidgets;
 
-  RetryFutureBuilder({
+  const RetryFutureBuilder({
     Key key,
     @required this.tryFunction,
     @required this.successBuilder,
@@ -100,7 +100,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
           default:
             return widget.loadingBuilder != null
                 ? widget.loadingBuilder(context)
-                : Center(child: CircularProgressIndicator());
+                : const Center(child: CircularProgressIndicator());
         }
       },
     );
@@ -113,14 +113,14 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
       child: Center(
           child: Column(
         children: [
-          Text('Something went wrong:'),
-          SizedBox(height: 16),
+          const Text('Something went wrong:'),
+          const SizedBox(height: 16),
           Text(error.toString()),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: reload,
-            icon: Icon(Icons.sync),
-            label: Text('Retry'),
+            icon: const Icon(Icons.sync),
+            label: const Text('Retry'),
             style: ElevatedButton.styleFrom(primary: theme.accentColor),
           ),
           ...widget.extraWidgets

@@ -24,7 +24,7 @@ class NotExpression extends Expression {
 
   @override
   bool evaluate(QuestionnaireState state) {
-    bool result = expression.evaluate(state);
+    final bool result = expression.evaluate(state);
     return result != null ? !result : result;
   }
 }

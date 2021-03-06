@@ -40,6 +40,7 @@ class _ParseListFutureBuilderState<T> extends State<ParseListFutureBuilder<T>> {
 
   Future<ParseResponse> _parseQuery() async {
     final response = await widget.queryFunction();
+    // ignore: only_throw_errors
     if (!response.success) throw response.error;
     return response;
   }
@@ -92,6 +93,7 @@ class _ParseFetchOneFutureBuilderState<T> extends State<ParseFetchOneFutureBuild
 
   Future<ParseResponse> _parseQuery() async {
     final response = await widget.queryFunction();
+    // ignore: only_throw_errors
     if (!response.success) throw response.error;
     assert(response.count <= 1, 'Use ParseListFutureBuilder if fetching multiple elements.');
     return response;

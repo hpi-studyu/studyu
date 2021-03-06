@@ -36,98 +36,128 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
 
   static const keyStudyId = 'study_id';
 
+  @override
   String get studyId => get<String>(keyStudyId);
 
+  @override
   set studyId(String studyId) => set<String>(keyStudyId, studyId);
 
   static const keyUserId = 'user_id';
 
+  @override
   String get userId => get<String>(keyUserId);
 
+  @override
   set userId(String userId) => set<String>(keyUserId, userId);
 
   static const keyTitle = 'title';
 
+  @override
   String get title => get<String>(keyTitle);
 
+  @override
   set title(String title) => set<String>(keyTitle, title);
 
   static const keyDescription = 'description';
 
+  @override
   String get description => get<String>(keyDescription);
 
+  @override
   set description(String description) => set<String>(keyDescription, description);
 
   static const keyContact = 'contact';
 
+  @override
   Contact get contact {
     final contactMap = get<Map<String, dynamic>>(keyContact);
     if (contactMap == null) return null;
     return Contact.fromJson(contactMap);
   }
 
+  @override
   set contact(Contact contact) => set<Map<String, dynamic>>(keyContact, contact.toJson());
 
   static const keyIconName = 'icon_name';
 
+  @override
   String get iconName => get<String>(keyIconName);
 
+  @override
   set iconName(String iconName) => set<String>(keyIconName, iconName);
 
   static const keyStartDate = 'start_date';
 
+  @override
   DateTime get startDate => get<DateTime>(keyStartDate);
 
+  @override
   set startDate(DateTime startDate) => set<DateTime>(keyStartDate, startDate);
 
   static const keySchedule = 'schedule';
 
+  @override
   StudySchedule get schedule => StudySchedule.fromJson(get<Map<String, dynamic>>(keySchedule));
 
+  @override
   set schedule(StudySchedule schedule) => set<Map<String, dynamic>>(keySchedule, schedule.toJson());
 
   static const keyInterventionOrder = 'intervention_order_ids';
 
+  @override
   List<String> get interventionOrder => get<List<dynamic>>(keyInterventionOrder).map<String>((e) => e).toList();
 
+  @override
   set interventionOrder(List<String> interventionOrder) => set<List<String>>(keyInterventionOrder, interventionOrder);
 
   static const keyInterventionSet = 'intervention_set';
 
+  @override
   InterventionSet get interventionSet => InterventionSet.fromJson(get<Map<String, dynamic>>(keyInterventionSet));
 
+  @override
   set interventionSet(InterventionSet interventionSet) =>
       set<Map<String, dynamic>>(keyInterventionSet, interventionSet.toJson());
 
   static const keyObservations = 'observations';
 
+  @override
   List<Observation> get observations =>
       get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
 
+  @override
   set observations(List<Observation> observations) =>
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
 
   static const keyConsent = 'consent';
 
+  @override
   List<ConsentItem> get consent =>
       get<List<dynamic>>(keyConsent, defaultValue: []).map((e) => ConsentItem.fromJson(e)).toList();
 
+  @override
   set consent(List<ConsentItem> consent) => set<List<dynamic>>(keyConsent, consent.map((e) => e.toJson()).toList());
 
   static const keyResults = 'results';
 
+  @override
   Map<String, List<Result>> get results =>
-      get<Map<String, dynamic>>(keyResults, defaultValue: {}).map<String, List<Result>>((key, resultsData) =>
-          MapEntry(key, resultsData.map<Result>((resultData) => Result.fromJson(resultData)).toList()));
+      get<Map<String, dynamic>>(keyResults, defaultValue: {}).map<String, List<Result>>((key, resultsData) {
+        final results = (resultsData as List).map<Result>((resultData) => Result.fromJson(resultData)).toList();
+        return MapEntry(key, results);
+      });
 
+  @override
   set results(Map<String, List<Result>> results) => set<Map<String, dynamic>>(keyResults,
       results.map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())));
 
   static const keyReportSpecification = 'report_specification';
 
+  @override
   ReportSpecification get reportSpecification =>
       ReportSpecification.fromJson(get<Map<String, dynamic>>(keyReportSpecification));
 
+  @override
   set reportSpecification(ReportSpecification reportSpecification) =>
       set<Map<String, dynamic>>(keyReportSpecification, reportSpecification.toJson());
 
@@ -138,8 +168,7 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
         results.map((result) {
           final json = result.toJson();
           json['timeStamp'] = result.timeStamp.subtract(Duration(days: days)).toString();
-          result = Result.fromJson(json);
-          return result;
+          return Result.fromJson(json);
         }).toList()));
     save();
   }
@@ -159,7 +188,7 @@ extension UserStudyQueries on ParseUserStudy {
   }
 
   Future<String> saveUserStudy() async {
-    final response = await this.save();
+    final response = await save();
     if (response.success) {
       return objectId;
     }

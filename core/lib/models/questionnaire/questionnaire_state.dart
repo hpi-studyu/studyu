@@ -6,7 +6,8 @@ class QuestionnaireState {
   QuestionnaireState() : answers = {};
 
   QuestionnaireState.fromJson(List<Map<String, dynamic>> json)
-      : answers = Map.fromIterable(json.map<Answer>(Answer.fromJson), key: (answer) => answer.question);
+      : answers = Map<String, Answer>.fromIterable(json.map<Answer>(Answer.fromJson),
+            key: (answer) => (answer as Answer).question);
   List<Map<String, dynamic>> toJson() => answers.values.map((answer) => answer.toJson()).toList();
 
   bool hasAnswer<T>(String question) {
@@ -18,7 +19,7 @@ class QuestionnaireState {
     if (answer is Answer<T>) {
       return answer.response;
     } else {
-      throw ArgumentError('\'Answer<${T.toString()}>\' requested but found \'${answer.runtimeType.toString()}\'.');
+      throw ArgumentError("'Answer<${T.toString()}>' requested but found '${answer.runtimeType.toString()}'.");
     }
   }
 }

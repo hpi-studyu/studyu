@@ -98,7 +98,7 @@ class LinearRegression {
     final lower = (coeffecients - radius).toList();
     final upper = (coeffecients + radius).toList();
     return LinearRegressionResult(Range(lower.first, upper.first),
-        Iterable.generate(designMatrix.columns - 1).map((e) => Range(lower[e + 1], upper[e + 1])).toList());
+        Iterable<int>.generate(designMatrix.columns - 1).map((e) => Range(lower[e + 1], upper[e + 1])).toList());
   }
 
   num _squaredStandardError() => _getResiduals().dot(_getResiduals()) / _getDegreesOfFreedom();

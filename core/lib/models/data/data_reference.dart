@@ -14,18 +14,19 @@ class DataReference<T> {
   DataReference();
 
   factory DataReference.fromJson(Map<String, dynamic> json) => _$DataReferenceFromJson(json);
+
   Map<String, dynamic> toJson() => _$DataReferenceToJson(this);
 
   @override
   String toString() => toJson().toString();
 
   Map<DateTime, T> retrieveFromResults(UserStudyBase studyInstance) {
-    Task sourceTask = studyInstance.observations.firstWhere((task) => task.id == this.task, orElse: null) ??
-        studyInstance.interventionSet.interventions.firstWhere((task) => task.id == this.task, orElse: null);
-    if (sourceTask == null) throw new ArgumentError('Could not find a task with the id \'${this.task}\'.');
+    final Task sourceTask = studyInstance.observations.firstWhere((task) => task.id == this.task, orElse: () => null) ??
+        studyInstance.interventionSet.interventions.firstWhere((task) => task.id == this.task, orElse: () => null);
+    if (sourceTask == null) throw ArgumentError("Could not find a task with the id '$task'.");
 
-    List<Result> sourceResults = studyInstance.resultsFor(this.task) ?? [];
+    final List<Result> sourceResults = studyInstance.resultsFor(task) ?? [];
 
-    return sourceTask.extractPropertyResults<T>(this.property, sourceResults);
+    return sourceTask.extractPropertyResults<T>(property, sourceResults);
   }
 }
