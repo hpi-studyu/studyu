@@ -40,7 +40,7 @@ class Result<T> {
     switch (data[keyType]) {
       case 'QuestionnaireState':
         return Result<QuestionnaireState>.parseJson(data)
-          ..result = QuestionnaireState.fromJson((data[keyResult] as List).cast<Map<String, dynamic>>());
+          ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult]));
       case 'bool':
         return Result<bool>.parseJson(data)..result = data[keyResult];
       default:

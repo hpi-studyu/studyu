@@ -12,7 +12,7 @@ class ResultDownloader {
 
   Future<List<ParseUserStudy>> loadAllInstances() async {
     final response = await ParseUserStudy().getUserStudiesFor(study);
-    return response.results?.cast<ParseUserStudy>() ?? [];
+    return List<ParseUserStudy>.from(response.results ?? []);
   }
 
   List<List<dynamic>> getResultsFor(List<ParseUserStudy> instances, {StudyResult result}) {
