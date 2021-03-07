@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyou_core/models/models.dart';
 
 class VisualAnalogueQuestionEditorSection extends StatefulWidget {
   final VisualAnalogueQuestion question;
@@ -51,10 +51,10 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.question.minimumAnnotation = _editFormKey.currentState.value['minimumAnnotation'];
-        widget.question.minimumColor = _editFormKey.currentState.value['minimumColor'];
-        widget.question.maximumAnnotation = _editFormKey.currentState.value['maximumAnnotation'];
-        widget.question.maximumColor = _editFormKey.currentState.value['maximumColor'];
+        widget.question.minimumAnnotation = _editFormKey.currentState.value['minimumAnnotation'] as String;
+        widget.question.minimumColor = _editFormKey.currentState.value['minimumColor'] as Color;
+        widget.question.maximumAnnotation = _editFormKey.currentState.value['maximumAnnotation'] as String;
+        widget.question.maximumColor = _editFormKey.currentState.value['maximumColor'] as Color;
       });
     }
   }

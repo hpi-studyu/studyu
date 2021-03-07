@@ -147,7 +147,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
       userStudy
         ..schedule = schedule
         ..consent = consent
-        ..interventionOrder = schedule.generateWith(firstIntervention).map<String>((index) {
+        ..interventionOrder = schedule.generateWith(firstIntervention).map<String>((int index) {
           if (index == null) {
             addBaseline = true;
             return baselineId;

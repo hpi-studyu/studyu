@@ -39,7 +39,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
     });
   }
 
-  void _removeTask(taskIndex) {
+  void _removeTask(int taskIndex) {
     setState(() {
       widget.intervention.tasks.removeAt(taskIndex);
     });
@@ -116,8 +116,8 @@ class _InterventionEditorState extends State<InterventionEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.intervention.name = _editFormKey.currentState.value['name'];
-        widget.intervention.description = _editFormKey.currentState.value['description'];
+        widget.intervention.name = _editFormKey.currentState.value['name'] as String;
+        widget.intervention.description = _editFormKey.currentState.value['description'] as String;
       });
     }
   }

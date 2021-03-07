@@ -24,7 +24,7 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
     });
   }
 
-  void _removeChoice(index) {
+  void _removeChoice(int index) {
     setState(() {
       widget.question.choices.removeAt(index);
     });

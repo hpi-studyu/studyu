@@ -22,7 +22,7 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
     });
   }
 
-  void _removeConsentItem(index) {
+  void _removeConsentItem(int index) {
     setState(() {
       _consent.removeAt(index);
     });

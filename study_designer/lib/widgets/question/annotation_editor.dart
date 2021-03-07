@@ -52,8 +52,8 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.annotation.value = int.parse(_editFormKey.currentState.value['value']);
-        widget.annotation.annotation = _editFormKey.currentState.value['annotation'];
+        widget.annotation.value = int.parse(_editFormKey.currentState.value['value'] as String);
+        widget.annotation.annotation = _editFormKey.currentState.value['annotation'] as String;
       });
     }
   }

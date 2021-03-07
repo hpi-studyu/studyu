@@ -39,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
 
   Future<ParseStudyUConfig> getParseConfig() async {
     final configs = await ParseConfig().getConfigs();
-    return ParseStudyUConfig.fromJson(configs.result);
+    return ParseStudyUConfig.fromJson(configs.result as Map<String, dynamic>);
   }
 
   void showTermsAndPrivacyDialog() {
@@ -148,7 +148,7 @@ class _DashboardState extends State<Dashboard> {
                             icon: Icon(MdiIcons.upload),
                             onPressed: () {
                               try {
-                                final Map<String, dynamic> studyJson = json.decode(controller.text);
+                                final studyJson = json.decode(controller.text) as Map<String, dynamic>;
                                 final study = StudyBase.fromJson(studyJson);
                                 ParseStudy.fromBase(study).save();
                                 Navigator.pop(context, true);

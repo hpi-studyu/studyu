@@ -78,7 +78,7 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
   Widget _buildResultBody() {
     switch (widget.result.runtimeType) {
       case NumericResult:
-        return NumericResultEditorSection(result: widget.result);
+        return NumericResultEditorSection(result: widget.result as NumericResult);
       default:
         return null;
     }
@@ -88,7 +88,7 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.result.filename = _editFormKey.currentState.value['filename'];
+        widget.result.filename = _editFormKey.currentState.value['filename'] as String;
       });
     }
   }

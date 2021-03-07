@@ -24,7 +24,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
     });
   }
 
-  void _removeResult(index) {
+  void _removeResult(int index) {
     setState(() {
       _results.removeAt(index);
     });

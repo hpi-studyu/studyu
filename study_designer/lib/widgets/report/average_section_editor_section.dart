@@ -46,7 +46,7 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
     ]);
   }
 
-  void _changeAggregation(value) {
+  void _changeAggregation(TemporalAggregation value) {
     setState(() {
       widget.section.aggregate = value;
     });

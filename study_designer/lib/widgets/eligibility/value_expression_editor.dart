@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
 import 'package:studyou_core/models/expressions/types/choice_expression.dart';
 import 'package:studyou_core/models/expressions/types/value_expression.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './choice_expression_editor_section.dart';
 
@@ -71,7 +71,8 @@ class _ValueExpressionEditorState extends State<ValueExpressionEditor> {
   Widget _buildExpressionBody() {
     switch (widget.expression.runtimeType) {
       case ChoiceExpression:
-        return ChoiceExpressionEditorSection(expression: widget.expression, targetQuestion: targetQuestion);
+        return ChoiceExpressionEditorSection(
+            expression: widget.expression as ChoiceExpression, targetQuestion: targetQuestion as ChoiceQuestion);
       default:
         return null;
     }

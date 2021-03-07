@@ -45,7 +45,7 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.choice.text = _editFormKey.currentState.value['text'];
+        widget.choice.text = _editFormKey.currentState.value['text'] as String;
       });
     }
   }

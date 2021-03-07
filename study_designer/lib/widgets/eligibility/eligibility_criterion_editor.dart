@@ -70,7 +70,7 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.eligibilityCriterion.reason = _editFormKey.currentState.value['reason'];
+        widget.eligibilityCriterion.reason = _editFormKey.currentState.value['reason'] as String;
       });
     }
   }

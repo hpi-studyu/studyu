@@ -135,15 +135,15 @@ class _AboutDesignerState extends State<AboutDesigner> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         _draftStudy
-          ..title = _editFormKey.currentState.value['title']
-          ..description = _editFormKey.currentState.value['description']
-          ..contact.organization = _editFormKey.currentState.value['organization']
-          ..contact.institutionalReviewBoard = _editFormKey.currentState.value['institutionalReviewBoard']
-          ..contact.institutionalReviewBoardNumber = _editFormKey.currentState.value['institutionalReviewBoardNumber']
-          ..contact.researchers = _editFormKey.currentState.value['researchers']
-          ..contact.website = _editFormKey.currentState.value['website']
-          ..contact.email = _editFormKey.currentState.value['email']
-          ..contact.phone = _editFormKey.currentState.value['phone'];
+          ..title = _editFormKey.currentState.value['title'] as String
+          ..description = _editFormKey.currentState.value['description'] as String
+          ..contact.organization = _editFormKey.currentState.value['organization'] as String
+          ..contact.institutionalReviewBoard = _editFormKey.currentState.value['institutionalReviewBoard'] as String
+          ..contact.institutionalReviewBoardNumber = _editFormKey.currentState.value['institutionalReviewBoardNumber'] as String
+          ..contact.researchers = _editFormKey.currentState.value['researchers'] as String
+          ..contact.website = _editFormKey.currentState.value['website'] as String
+          ..contact.email = _editFormKey.currentState.value['email'] as String
+          ..contact.phone = _editFormKey.currentState.value['phone'] as String;
       });
     }
   }

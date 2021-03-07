@@ -58,8 +58,8 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.schedule.time.hour = int.parse(_editFormKey.currentState.value['hour']);
-        widget.schedule.time.minute = int.parse(_editFormKey.currentState.value['minute']);
+        widget.schedule.time.hour = int.parse(_editFormKey.currentState.value['hour'] as String);
+        widget.schedule.time.minute = int.parse(_editFormKey.currentState.value['minute'] as String);
       });
     }
   }

@@ -27,7 +27,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
     });
   }
 
-  void _removeSection(index) {
+  void _removeSection(int index) {
     setState(() {
       if (index == -1) {
         _reportSpecification.primary = null;
@@ -37,7 +37,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
     });
   }
 
-  void _replaceSection(index, ReportSection section) {
+  void _replaceSection(int index, ReportSection section) {
     setState(() {
       if (index == -1) {
         _reportSpecification.primary = section;

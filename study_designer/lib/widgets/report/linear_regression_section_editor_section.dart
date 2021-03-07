@@ -62,17 +62,17 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
     ]);
   }
 
-  void _changeImprovement(value) {
+  void _changeImprovement(ImprovementDirection value) {
     setState(() {
       widget.section.improvement = value;
     });
   }
 
-  void _changeAlpha(value) {
+  void _changeAlpha(String value) {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.section.alpha = value;
+        widget.section.alpha = double.parse(value);
       });
     }
   }

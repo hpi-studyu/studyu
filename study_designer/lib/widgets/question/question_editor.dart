@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/models/questionnaire/questions/slider_question.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
 import '../../widgets/question/slider_question_editor_section.dart';
@@ -92,11 +93,11 @@ class _QuestionEditorState extends State<QuestionEditor> {
     switch (widget.question.runtimeType) {
       case ChoiceQuestion:
         return ChoiceQuestionEditorSection(
-          question: widget.question,
+          question: widget.question as ChoiceQuestion,
         );
       case VisualAnalogueQuestion:
       case AnnotatedScaleQuestion:
-        return SliderQuestionEditorSection(question: widget.question);
+        return SliderQuestionEditorSection(question: widget.question as SliderQuestion);
       default:
         return null;
     }
@@ -106,8 +107,8 @@ class _QuestionEditorState extends State<QuestionEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.question.prompt = _editFormKey.currentState.value['prompt'];
-        widget.question.rationale = _editFormKey.currentState.value['rationale'];
+        widget.question.prompt = _editFormKey.currentState.value['prompt'] as String;
+        widget.question.rationale = _editFormKey.currentState.value['rationale'] as String;
       });
     }
   }

@@ -56,7 +56,7 @@ class _SaveState extends State<Save> {
   Future<StudyBase> _saveStudy(StudyBase study) async {
     final parseStudy = study is ParseStudy ? study : ParseStudy.fromBase(study);
     final response = await parseStudy.save();
-    return response.success ? response.results.first : null;
+    return response.success ? response.results.first as ParseStudy : null;
   }
 
   @override
@@ -79,7 +79,7 @@ class _SaveState extends State<Save> {
                   children: [
                     OutlinedButton.icon(
                         onPressed: () async {
-                          final ParseStudy newStudy = await _saveDraft(_draftStudy);
+                          final newStudy = await _saveDraft(_draftStudy) as ParseStudy;
                           print(newStudy);
                           if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
                         },
@@ -88,7 +88,7 @@ class _SaveState extends State<Save> {
                     SizedBox(width: 16),
                     OutlinedButton.icon(
                         onPressed: () async {
-                          final ParseStudy newStudy = await _publishStudy(context, _draftStudy);
+                          final newStudy = await _publishStudy(context, _draftStudy) as ParseStudy;
                           if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
                         },
                         icon: Icon(Icons.publish),

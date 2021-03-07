@@ -23,7 +23,7 @@ class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQues
     });
   }
 
-  void _removeAnnotation(index) {
+  void _removeAnnotation(int index) {
     setState(() {
       widget.question.annotations.removeAt(index);
     });

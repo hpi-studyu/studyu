@@ -23,7 +23,7 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
     });
   }
 
-  void _removeEligibilityCriterion(index) {
+  void _removeEligibilityCriterion(int index) {
     setState(() {
       _eligibility.removeAt(index);
     });

@@ -66,7 +66,7 @@ class _TaskEditorState extends State<TaskEditor> {
     switch (widget.task.runtimeType) {
       case QuestionnaireTask:
         return QuestionnaireTaskEditorSection(
-          task: widget.task,
+          task: widget.task as QuestionnaireTask,
         );
       default:
         return null;
@@ -77,7 +77,7 @@ class _TaskEditorState extends State<TaskEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.task.title = _editFormKey.currentState.value['title'];
+        widget.task.title = _editFormKey.currentState.value['title'] as String;
 //        task.hour = int.parse(_editFormKey.currentState.value['hour']);
 //        task.minute = int.parse(_editFormKey.currentState.value['minute']);
       });

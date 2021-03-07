@@ -23,7 +23,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
     super.initState();
   }
 
-  void _removeChoice(index) {
+  void _removeChoice(int index) {
     final choice = selectedChoices[index];
     setState(() {
       selectedChoices.removeAt(index);

@@ -88,8 +88,8 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.consentItem.title = _editFormKey.currentState.value['title'];
-        widget.consentItem.description = _editFormKey.currentState.value['description'];
+        widget.consentItem.title = _editFormKey.currentState.value['title'] as String;
+        widget.consentItem.description = _editFormKey.currentState.value['description'] as String;
       });
     }
   }

@@ -22,7 +22,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
     });
   }
 
-  void _removeIntervention(index) {
+  void _removeIntervention(int index) {
     setState(() {
       _interventions.removeAt(index);
     });

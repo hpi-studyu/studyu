@@ -50,7 +50,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
     final res = await ParseStudy().getStudyById(studyId);
-    draftStudy = res.results.first;
+    draftStudy = res.results.first as ParseStudy;
     _selectedStudyId = studyId;
     _selectedDesignerPage = page;
     notifyListeners();

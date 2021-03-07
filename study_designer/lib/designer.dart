@@ -78,7 +78,7 @@ class _DesignerState extends State<Designer> {
                   child: IntrinsicHeight(
                     child: NavigationRail(
                       selectedIndex: appState.selectedDesignerPage.index,
-                      onDestinationSelected: (index) {
+                      onDestinationSelected: (int index) {
                         appState.selectedDesignerPage = DesignerPage.values[index];
                       },
                       labelType: NavigationRailLabelType.all,

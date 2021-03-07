@@ -16,7 +16,7 @@ class QuestionnaireEditor extends StatefulWidget {
 }
 
 class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
-  void _removeQuestion(index) {
+  void _removeQuestion(int index) {
     setState(() {
       widget.questionnaire.questions.removeAt(index);
     });

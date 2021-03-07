@@ -23,7 +23,7 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
     });
   }
 
-  void _remove(index) {
+  void _remove(int index) {
     setState(() {
       widget.task.schedule.removeAt(index);
     });
@@ -40,7 +40,7 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
         itemCount: widget.task.schedule.length,
         itemBuilder: (buildContext, index) {
           return FixedScheduleEditor(
-              key: UniqueKey(), schedule: widget.task.schedule[index], remove: () => _remove(index));
+              key: UniqueKey(), schedule: widget.task.schedule[index] as FixedSchedule, remove: () => _remove(index));
         },
       ),
       Row(children: [Spacer(), IconButton(icon: Icon(Icons.add), onPressed: _add), Spacer()])

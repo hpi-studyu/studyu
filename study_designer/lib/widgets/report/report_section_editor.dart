@@ -106,11 +106,11 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
     switch (widget.section.runtimeType) {
       case AverageSection:
         return AverageSectionEditorSection(
-          section: widget.section,
+          section: widget.section as AverageSection,
         );
       case LinearRegressionSection:
         return LinearRegressionSectionEditorSection(
-          section: widget.section,
+          section: widget.section as LinearRegressionSection,
         );
       default:
         return null;
@@ -121,8 +121,8 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
       setState(() {
-        widget.section.title = _editFormKey.currentState.value['title'];
-        widget.section.description = _editFormKey.currentState.value['description'];
+        widget.section.title = _editFormKey.currentState.value['title'] as String;
+        widget.section.description = _editFormKey.currentState.value['description'] as String;
       });
     }
   }
