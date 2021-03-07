@@ -139,7 +139,8 @@ class _AboutDesignerState extends State<AboutDesigner> {
           ..description = _editFormKey.currentState.value['description'] as String
           ..contact.organization = _editFormKey.currentState.value['organization'] as String
           ..contact.institutionalReviewBoard = _editFormKey.currentState.value['institutionalReviewBoard'] as String
-          ..contact.institutionalReviewBoardNumber = _editFormKey.currentState.value['institutionalReviewBoardNumber'] as String
+          ..contact.institutionalReviewBoardNumber =
+              _editFormKey.currentState.value['institutionalReviewBoardNumber'] as String
           ..contact.researchers = _editFormKey.currentState.value['researchers'] as String
           ..contact.website = _editFormKey.currentState.value['website'] as String
           ..contact.email = _editFormKey.currentState.value['email'] as String
