@@ -47,7 +47,7 @@ class AppState {
     );
   }
 
-  void selectNotification(String taskId) {
+  Future selectNotification(String taskId) async {
     if (taskId != null) {
       Navigator.push(
         context,
