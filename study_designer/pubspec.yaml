@@ -39,7 +39,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lint: ^1.5.2
+  lint: ^1.5.3
 
 dependency_overrides:
   # change if merged: https://github.com/tiholic/date_range_picker
