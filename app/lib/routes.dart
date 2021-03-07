@@ -51,30 +51,41 @@ class Routes {
   }
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final routeMap = {
+    switch (settings.name) {
       // init Parse on our initial route
-      loading: (_) => ParseInit(child: LoadingScreen()),
-      dashboard: (_) => DashboardScreen(),
-      welcome: (_) => WelcomeScreen(),
-      about: (_) => AboutScreen(),
-      terms: (_) => TermsScreen(),
-      studySelection: (_) => StudySelectionScreen(),
-      studyOverview: (_) => StudyOverviewScreen(),
-      interventionSelection: (_) => InterventionSelectionScreen(),
-      journey: (_) => JourneyOverviewScreen(),
-      consent: (_) => ConsentScreen(),
-      kickoff: (_) => KickoffScreen(),
-      contact: (_) => ContactScreen(),
-      faq: (_) => FAQ(),
-      appSettings: (_) => Settings(),
-      reportHistory: (_) => ReportHistoryScreen(),
-    };
-
-    if (!routeMap.containsKey(settings.name)) {
-      // null will be handled by onUnknownRoute
-      return null;
+      case loading:
+        return MaterialPageRoute(builder: (_) => ParseInit(child: LoadingScreen()), settings: settings);
+      case dashboard:
+        return MaterialPageRoute(builder: (_) => DashboardScreen(), settings: settings);
+      case welcome:
+        return MaterialPageRoute(builder: (_) => WelcomeScreen(), settings: settings);
+      case about:
+        return MaterialPageRoute(builder: (_) => AboutScreen(), settings: settings);
+      case terms:
+        return MaterialPageRoute(builder: (_) => TermsScreen(), settings: settings);
+      case studySelection:
+        return MaterialPageRoute(builder: (_) => StudySelectionScreen(), settings: settings);
+      case studyOverview:
+        return MaterialPageRoute(builder: (_) => StudyOverviewScreen(), settings: settings);
+      case interventionSelection:
+        return MaterialPageRoute(builder: (_) => InterventionSelectionScreen(), settings: settings);
+      case journey:
+        return MaterialPageRoute(builder: (_) => JourneyOverviewScreen(), settings: settings);
+      case consent:
+        return MaterialPageRoute<bool>(builder: (_) => ConsentScreen(), settings: settings);
+      case kickoff:
+        return MaterialPageRoute(builder: (_) => KickoffScreen(), settings: settings);
+      case contact:
+        return MaterialPageRoute(builder: (_) => ContactScreen(), settings: settings);
+      case faq:
+        return MaterialPageRoute(builder: (_) => FAQ(), settings: settings);
+      case appSettings:
+        return MaterialPageRoute(builder: (_) => Settings(), settings: settings);
+      case reportHistory:
+        return MaterialPageRoute(builder: (_) => ReportHistoryScreen(), settings: settings);
+      default:
+        // null will be handled by onUnknownRoute
+        return null;
     }
-
-    return MaterialPageRoute(builder: routeMap[settings.name], settings: settings);
   }
 }

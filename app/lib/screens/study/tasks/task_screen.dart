@@ -42,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
       }
     }
     if (task == null) {
-      Navigator.of(context).pop();
+      Navigator.pop(context, false);
     }
   }
 

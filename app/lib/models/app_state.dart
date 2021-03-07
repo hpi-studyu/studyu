@@ -47,9 +47,9 @@ class AppState {
     );
   }
 
-  Future selectNotification(String taskId) async {
+  void selectNotification(String taskId) {
     if (taskId != null) {
-      await Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => TaskScreen(
