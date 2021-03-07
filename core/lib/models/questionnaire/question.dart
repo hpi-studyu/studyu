@@ -31,7 +31,7 @@ abstract class Question<V> {
   Question.designer(this.type) : id = Uuid().v4();
 
   factory Question.fromJson(Map<String, dynamic> data) {
-    return questionTypes[data[keyType]](data);
+    return questionTypes[data[keyType]](data) as Question<V>;
   }
 
   Map<String, dynamic> toJson();

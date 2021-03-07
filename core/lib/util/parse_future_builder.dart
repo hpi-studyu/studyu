@@ -24,7 +24,7 @@ class _ParseListFutureBuilderState<T> extends State<ParseListFutureBuilder<T>> {
   }
 
   @override
-  void didUpdateWidget(ParseListFutureBuilder oldWidget) {
+  void didUpdateWidget(ParseListFutureBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     // ATTENTION: This is based on the equality of functions. Not equal, if they are part of different instances
     if (widget.queryFunction != oldWidget.queryFunction) {
@@ -77,7 +77,7 @@ class _ParseFetchOneFutureBuilderState<T> extends State<ParseFetchOneFutureBuild
   }
 
   @override
-  void didUpdateWidget(ParseFetchOneFutureBuilder oldWidget) {
+  void didUpdateWidget(ParseFetchOneFutureBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     // ATTENTION: This is based on the equality of functions. Not equal, if they are part of different instances
     if (widget.queryFunction != oldWidget.queryFunction) {
@@ -104,6 +104,6 @@ class _ParseFetchOneFutureBuilderState<T> extends State<ParseFetchOneFutureBuild
     return RetryFutureBuilder<ParseResponse>(
         tryFunction: _tryFunction,
         successBuilder: (context, response) =>
-            widget.builder(context, response.count == 1 ? response.results.first : null));
+            widget.builder(context, response.count == 1 ? response.results.first as T : null));
   }
 }

@@ -105,7 +105,7 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   static const keyInterventionOrder = 'intervention_order_ids';
 
   @override
-  List<String> get interventionOrder => get<List<dynamic>>(keyInterventionOrder).map<String>((e) => e).toList();
+  List<String> get interventionOrder => List<String>.from(get<List<dynamic>>(keyInterventionOrder));
 
   @override
   set interventionOrder(List<String> interventionOrder) => set<List<String>>(keyInterventionOrder, interventionOrder);
@@ -123,7 +123,7 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
 
   @override
   List<Observation> get observations =>
-      get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
+      get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e as Map<String, dynamic>))?.toList() ?? [];
 
   @override
   set observations(List<Observation> observations) =>
@@ -132,8 +132,9 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   static const keyConsent = 'consent';
 
   @override
-  List<ConsentItem> get consent =>
-      get<List<dynamic>>(keyConsent, defaultValue: []).map((e) => ConsentItem.fromJson(e)).toList();
+  List<ConsentItem> get consent => get<List<dynamic>>(keyConsent, defaultValue: [])
+      .map((e) => ConsentItem.fromJson(e as Map<String, dynamic>))
+      .toList();
 
   @override
   set consent(List<ConsentItem> consent) => set<List<dynamic>>(keyConsent, consent.map((e) => e.toJson()).toList());
@@ -143,7 +144,9 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   @override
   Map<String, List<Result>> get results =>
       get<Map<String, dynamic>>(keyResults, defaultValue: {}).map<String, List<Result>>((key, resultsData) {
-        final results = (resultsData as List).map<Result>((resultData) => Result.fromJson(resultData)).toList();
+        final results = (resultsData as List)
+            .map<Result>((resultData) => Result.fromJson(resultData as Map<String, dynamic>))
+            .toList();
         return MapEntry(key, results);
       });
 
@@ -182,9 +185,8 @@ extension UserStudyQueries on ParseUserStudy {
 
   Future<ParseUserStudy> getUserStudy(String objectId) async {
     final builder = QueryBuilder<ParseUserStudy>(this)..whereEqualTo('objectId', objectId);
-    return builder
-        .query()
-        .then((response) => response.success && response.results.isNotEmpty ? response.results.first : null);
+    return builder.query().then((response) =>
+        response.success && response.results.isNotEmpty ? response.results.first as ParseUserStudy : null);
   }
 
   Future<String> saveUserStudy() async {

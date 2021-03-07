@@ -76,15 +76,19 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   static const keyEligibility = 'eligibilityCriteria';
   @override
   List<EligibilityCriterion> get eligibility =>
-      get<List<dynamic>>(keyEligibility)?.map((e) => EligibilityCriterion.fromJson(e))?.toList() ?? [];
+      get<List<dynamic>>(keyEligibility)
+          ?.map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
+          ?.toList() ??
+      [];
   @override
   set eligibility(List<EligibilityCriterion> eligibility) =>
       set<List<dynamic>>(keyEligibility, eligibility.map((e) => e.toJson()).toList());
 
   static const keyConsent = 'consent';
   @override
-  List<ConsentItem> get consent =>
-      get<List<dynamic>>(keyConsent, defaultValue: []).map((e) => ConsentItem.fromJson(e)).toList();
+  List<ConsentItem> get consent => get<List<dynamic>>(keyConsent, defaultValue: [])
+      .map((e) => ConsentItem.fromJson(e as Map<String, dynamic>))
+      .toList();
   @override
   set consent(List<ConsentItem> consent) => set<List<dynamic>>(keyConsent, consent.map((e) => e.toJson()).toList());
 
@@ -98,7 +102,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   static const keyObservations = 'observations';
   @override
   List<Observation> get observations =>
-      get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e))?.toList() ?? [];
+      get<List<dynamic>>(keyObservations)?.map((e) => Observation.fromJson(e as Map<String, dynamic>))?.toList() ?? [];
   @override
   set observations(List<Observation> observations) =>
       set<List<dynamic>>(keyObservations, observations.map((e) => e.toJson()).toList());
@@ -119,7 +123,8 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
 
   static const keyResults = 'results';
   @override
-  List<StudyResult> get results => get<List<dynamic>>(keyResults)?.map((e) => StudyResult.fromJson(e))?.toList() ?? [];
+  List<StudyResult> get results =>
+      get<List<dynamic>>(keyResults)?.map((e) => StudyResult.fromJson(e as Map<String, dynamic>))?.toList() ?? [];
   @override
   set results(List<StudyResult> results) => set<List<dynamic>>(keyResults, results.map((e) => e.toJson()).toList());
 

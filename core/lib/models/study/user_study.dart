@@ -133,8 +133,8 @@ extension UserStudyExtension on UserStudyBase {
 
   // Excluding start and end
   Map<String, List<Result>> resultsBetween(DateTime start, DateTime end) {
-    return results.map((taskId, taskResults) => MapEntry(
-        taskId, taskResults.where((result) => result.timeStamp.isBefore(end) && result.timeStamp.isAfter(start))));
+    return results.map((taskId, taskResults) => MapEntry(taskId,
+        taskResults.where((result) => result.timeStamp.isBefore(end) && result.timeStamp.isAfter(start)).toList()));
   }
 
   int completedForPhase(int index) {

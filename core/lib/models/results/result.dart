@@ -37,12 +37,12 @@ class Result<T> {
   }
 
   static Result fromJson(Map<String, dynamic> data) {
-    switch (data[keyType]) {
+    switch (data[keyType] as String) {
       case 'QuestionnaireState':
         return Result<QuestionnaireState>.parseJson(data)
-          ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult]));
+          ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult] as List));
       case 'bool':
-        return Result<bool>.parseJson(data)..result = data[keyResult];
+        return Result<bool>.parseJson(data)..result = data[keyResult] as bool;
       default:
         throw ArgumentError('Type ${data[keyType]} not supported.');
     }

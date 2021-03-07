@@ -24,7 +24,7 @@ SOFTWARE.
 
 import 'package:flutter/material.dart';
 
-typedef CustomErrorWidgetBuilder = dynamic Function(BuildContext context, dynamic error, void Function() reload);
+typedef CustomErrorWidgetBuilder = Widget Function(BuildContext context, dynamic error, void Function() reload);
 
 class RetryFutureBuilder<T> extends StatefulWidget {
   static RetryFutureBuilderState of(BuildContext context) => context.findAncestorStateOfType<RetryFutureBuilderState>();
@@ -66,7 +66,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
   }
 
   @override
-  void didUpdateWidget(RetryFutureBuilder oldWidget) {
+  void didUpdateWidget(RetryFutureBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     // ATTENTION: This is based on the equality of functions. Not equal, if they are part of different instances
     if (widget.tryFunction != oldWidget.tryFunction) {
