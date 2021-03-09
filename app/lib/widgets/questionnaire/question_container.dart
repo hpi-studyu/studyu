@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 
 import 'annotated_scale_question_widget.dart';
@@ -57,34 +56,20 @@ class QuestionContainer extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: ChangeNotifierProvider<QuestionWidgetModel>(
-          create: (context) => QuestionWidgetModel(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              QuestionHeader(
-                prompt: question.prompt,
-                subtitle: questionBody.subtitle,
-                rationale: question.rationale,
-              ),
-              SizedBox(height: 16),
-              questionBody,
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            QuestionHeader(
+              prompt: question.prompt,
+              subtitle: questionBody.subtitle,
+              rationale: question.rationale,
+            ),
+            SizedBox(height: 16),
+            questionBody,
+          ],
         ),
       ),
     );
-  }
-}
-
-class QuestionWidgetModel extends ChangeNotifier {
-  Answer _answer;
-
-  Answer get answer => _answer;
-
-  set answer(Answer answer) {
-    _answer = answer;
-    notifyListeners();
   }
 }
