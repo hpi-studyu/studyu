@@ -1,3 +1,4 @@
+import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -62,7 +63,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       ),
       defaultRenderer: charts.BarRendererConfig<num>(
         groupingType: charts.BarGroupingType.stacked,
-        barRendererDecorator: charts.BarErrorDecorator<num>(),
+        barRendererDecorator: BarErrorDecorator<num>(),
       ),
     );
   }
