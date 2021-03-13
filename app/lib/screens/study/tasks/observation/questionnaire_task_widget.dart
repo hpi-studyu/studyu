@@ -12,7 +12,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
 
   const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
 
-  Future<void> _evaluateResponse(QuestionnaireState qs, BuildContext context) async {
+  Future<void> _addQuestionnaireResponse(QuestionnaireState qs, BuildContext context) async {
     final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
     final result = Result<QuestionnaireState>()
@@ -26,7 +26,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context).could_not_save_results),
         duration: Duration(seconds: 10),
-        action: SnackBarAction(label: 'retry', onPressed: () => _evaluateResponse(qs, context)),
+        action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResponse(qs, context)),
       ));
     }
   }
@@ -36,7 +36,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
     return Expanded(
       child: QuestionnaireWidget(
         task.questions.questions,
-        onComplete: (qs) => _evaluateResponse(qs, context),
+        onComplete: (qs) => _addQuestionnaireResponse(qs, context),
       ),
     );
   }
