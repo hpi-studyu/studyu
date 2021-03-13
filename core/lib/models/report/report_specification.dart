@@ -6,7 +6,6 @@ part 'report_specification.g.dart';
 
 @JsonSerializable()
 class ReportSpecification {
-  @JsonKey(nullable: true)
   ReportSection primary;
   List<ReportSection> secondary;
 

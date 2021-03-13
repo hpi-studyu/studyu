@@ -8,19 +8,22 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  flutter_dotenv: 3.1.0
-  json_annotation: ^3.1.1
+  flutter_dotenv: ^4.0.0-nullsafety.0
+  json_annotation: ^4.0.0
   parse_server_sdk_flutter:
     git:
       url: git://github.com/parse-community/Parse-SDK-Flutter.git
       ref: development
       path: packages/flutter
-  quiver: ^2.1.5
-  uuid: ^2.2.2
+  quiver: ^3.0.0
+  uuid: ^3.0.1
 
 dev_dependencies:
   build_runner: ^1.11.5
   flutter_test:
     sdk: flutter
-  json_serializable: ^3.5.1
+  json_serializable: ^4.0.2
   lint: ^1.5.3
+
+dependency_overrides:
+  uuid: ^3.0.1

@@ -1,4 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/questionnaire/question_conditional.dart';
 import 'package:uuid/uuid.dart';
@@ -19,11 +18,9 @@ abstract class Question<V> {
 
   String id;
   String prompt;
-  @JsonKey(nullable: true)
   String rationale;
 
   static const String keyConditional = 'conditional';
-  @JsonKey(nullable: true)
   QuestionConditional<V> conditional;
 
   Question(this.type);
