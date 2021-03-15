@@ -32,7 +32,7 @@ dependencies:
   provider: ^5.0.0
   studyou_core:
     path: ../core
-  universal_html: ^1.2.4
+  universal_html: ^2.0.2
   url_launcher: ^6.0.2
   uuid: ^3.0.1
 
