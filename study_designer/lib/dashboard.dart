@@ -14,7 +14,7 @@ import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
-import 'package:universal_html/prefer_universal/html.dart' as html;
+import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'models/app_state.dart';
