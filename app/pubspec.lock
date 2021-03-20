@@ -91,28 +91,28 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "3.0.3"
   connectivity_for_web:
     dependency: transitive
     description:
       name: connectivity_for_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1+4"
+    version: "0.4.0"
   connectivity_macos:
     dependency: transitive
     description:
       name: connectivity_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0+7"
+    version: "0.2.0"
   connectivity_platform_interface:
     dependency: transitive
     description:
       name: connectivity_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.6"
+    version: "2.0.1"
   crypto:
     dependency: transitive
     description:
@@ -133,7 +133,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.10"
+    version: "4.0.0-prev3"
   ext_storage:
     dependency: "direct main"
     description:
@@ -196,14 +196,14 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-nullsafety.1"
+    version: "5.0.0"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0-nullsafety.4"
+    version: "3.0.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -239,28 +239,28 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.2"
+    version: "0.13.1"
   http_parser:
     dependency: transitive
     description:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.4"
+    version: "4.0.0"
   idb_shim:
     dependency: transitive
     description:
       name: idb_shim
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.12.2+3"
+    version: "2.0.0+2"
   image:
     dependency: transitive
     description:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   intersperse:
     dependency: "direct main"
     description:
@@ -288,7 +288,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   lint:
     dependency: "direct dev"
     description:
@@ -330,7 +330,7 @@ packages:
       name: mime_type
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2"
+    version: "1.0.0"
   nested:
     dependency: transitive
     description:
@@ -338,31 +338,62 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  package_info:
+  package_info_plus:
     dependency: transitive
     description:
-      name: package_info
+      name: package_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3+4"
-  parse_server_sdk:
+    version: "1.0.0"
+  package_info_plus_linux:
     dependency: transitive
     description:
-      path: "packages/dart"
-      ref: development
-      resolved-ref: "0e604ecd9a6235b1eabc7df9634f8a4cefa096c5"
-      url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
-    source: git
-    version: "2.1.0"
+      name: package_info_plus_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  package_info_plus_macos:
+    dependency: transitive
+    description:
+      name: package_info_plus_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  package_info_plus_web:
+    dependency: transitive
+    description:
+      name: package_info_plus_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  package_info_plus_windows:
+    dependency: transitive
+    description:
+      name: package_info_plus_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  parse_server_sdk:
+    dependency: "direct overridden"
+    description:
+      path: "../../Parse-SDK-Flutter/packages/dart"
+      relative: true
+    source: path
+    version: "3.0.0"
   parse_server_sdk_flutter:
     dependency: "direct main"
     description:
-      path: "packages/flutter"
-      ref: development
-      resolved-ref: "0e604ecd9a6235b1eabc7df9634f8a4cefa096c5"
-      url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
-    source: git
-    version: "2.1.0"
+      path: "../../Parse-SDK-Flutter/packages/flutter"
+      relative: true
+    source: path
+    version: "3.0.0"
   path:
     dependency: transitive
     description:
@@ -448,7 +479,7 @@ packages:
     source: hosted
     version: "3.0.0"
   plugin_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
@@ -502,21 +533,21 @@ packages:
       name: sembast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.10+4"
+    version: "3.0.0+4"
   sembast_web:
     dependency: transitive
     description:
       name: sembast_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0+1"
+    version: "2.0.0+2"
   shared_preferences:
     dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -563,7 +594,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.8.1"
   stack_trace:
     dependency: transitive
     description:
@@ -677,7 +708,7 @@ packages:
     source: hosted
     version: "2.0.0"
   uuid:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: uuid
       url: "https://pub.dartlang.org"
@@ -745,7 +776,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "2.0.0"
   win32:
     dependency: transitive
     description:
