@@ -19,7 +19,7 @@ dependencies:
       url: https://github.com/nstrelow/extended_math.git
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^5.0.0-nullsafety.1
+  flutter_local_notifications: ^5.0.0
   flutter_localizations:
     sdk: flutter
   flutter_native_timezone: ^1.0.10
@@ -28,17 +28,14 @@ dependencies:
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
   parse_server_sdk_flutter:
-    git:
-      url: git://github.com/parse-community/Parse-SDK-Flutter.git
-      ref: development
-      path: packages/flutter
+    path: ../../Parse-SDK-Flutter/packages/flutter
   path_provider: ^2.0.1
   pdf: ^3.0.1
   pimp_my_button: ^1.0.0
   provider: ^5.0.0
   quiver: ^3.0.0
   rainbow_color: ^2.0.1
-  shared_preferences: ^2.0.4
+  shared_preferences: ^2.0.5
   studyou_core:
     path: ../core
   timeline_tile: ^2.0.0
@@ -53,10 +50,12 @@ dev_dependencies:
 
 dependency_overrides:
   intl: 0.17.0
-  path_provider: ^2.0.1
-  plugin_platform_interface: ^2.0.0
-  shared_preferences: ^2.0.4
-  uuid: ^3.0.1
+  parse_server_sdk:
+    path: ../../Parse-SDK-Flutter/packages/dart
+#  path_provider: ^2.0.1
+#  plugin_platform_interface: ^2.0.0
+#  shared_preferences: ^2.0.4
+#  uuid: ^3.0.1
 
 flutter_icons:
   image_path: 'assets/images/icon.png'
