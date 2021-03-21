@@ -39,16 +39,11 @@ dev_dependencies:
   lint: ^1.5.3
 
 dependency_overrides:
-  # change if merged: https://github.com/tiholic/date_range_picker
-  date_range_picker:
-    git:
-      url: https://github.com/tiholic/date_range_picker
   parse_server_sdk:
     path: ../../Parse-SDK-Flutter/packages/dart
   image: ^3.0.2
   plugin_platform_interface: ^2.0.0
   vin_decoder: ^0.2.0-nullsafety
-  http: 0.13.1
 
 flutter:
   generate: true
