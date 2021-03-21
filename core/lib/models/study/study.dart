@@ -1,3 +1,4 @@
+import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
@@ -24,6 +25,8 @@ class StudyBase {
   StudySchedule schedule;
   ReportSpecification reportSpecification;
   List<StudyResult> results;
+
+  fhir.Questionnaire fhirQuestionnaire;
 
   StudyBase();
 

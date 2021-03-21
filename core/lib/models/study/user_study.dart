@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fhir/r4.dart' as fhir;
 import 'package:quiver/collection.dart';
 
 import '../../util/extensions.dart';
@@ -21,6 +22,8 @@ class UserStudyBase {
   List<ConsentItem> consent;
   Map<String, List<Result>> results;
   ReportSpecification reportSpecification;
+
+  fhir.Questionnaire fhirQuestionnaire;
 }
 
 extension UserStudyExtension on UserStudyBase {
