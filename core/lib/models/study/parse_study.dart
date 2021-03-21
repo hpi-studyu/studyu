@@ -1,3 +1,4 @@
+import 'package:fhir/r4.dart' as fhir;
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:studyou_core/models/study/contact.dart';
 
@@ -128,6 +129,15 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   @override
   set results(List<StudyResult> results) => set<List<dynamic>>(keyResults, results.map((e) => e.toJson()).toList());
 
+  static const keyFhirQuestionnaire = 'fhir_questionnaire';
+  @override
+  fhir.Questionnaire get fhirQuestionnaire =>
+      fhir.Questionnaire.fromJson(get<Map<String, dynamic>>(keyFhirQuestionnaire));
+
+  @override
+  set fhirQuestionnaire(fhir.Questionnaire questionnaire) =>
+      set<Map<String, dynamic>>(keyFhirQuestionnaire, questionnaire.toJson());
+
   ParseUserStudy extractUserStudy(
       String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
     final userStudy = ParseUserStudy()
@@ -140,7 +150,8 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
       ..startDate = startDate
       ..interventionSet = InterventionSet(selectedInterventions)
       ..observations = observations ?? []
-      ..reportSpecification = reportSpecification;
+      ..reportSpecification = reportSpecification
+      ..fhirQuestionnaire = fhirQuestionnaire;
     if (schedule != null) {
       const baselineId = StudyBase.baselineID;
       var addBaseline = false;
@@ -172,7 +183,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
 
 extension StudyQueries on ParseStudy {
   Future<ParseResponse> getPublishedStudies() async {
-    final keys = ['objectId', 'study_id', 'title', 'description', 'published', 'icon_name'];
+    final keys = ['objectId', 'study_id', 'title', 'description', 'published', 'icon_name', 'fhir_questionnaire'];
     final builder = QueryBuilder<ParseStudy>(this)
       ..whereEqualTo('published', true)
       ..keysToReturn(keys);

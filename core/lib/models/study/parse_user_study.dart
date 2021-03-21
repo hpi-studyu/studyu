@@ -1,3 +1,4 @@
+import 'package:fhir/r4.dart' as fhir;
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
 import '../../util/user.dart';
@@ -163,6 +164,15 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
   @override
   set reportSpecification(ReportSpecification reportSpecification) =>
       set<Map<String, dynamic>>(keyReportSpecification, reportSpecification.toJson());
+
+  static const keyFhirQuestionnaire = 'fhir_questionnaire';
+  @override
+  fhir.Questionnaire get fhirQuestionnaire =>
+      fhir.Questionnaire.fromJson(get<Map<String, dynamic>>(keyFhirQuestionnaire));
+
+  @override
+  set fhirQuestionnaire(fhir.Questionnaire questionnaire) =>
+      set<Map<String, dynamic>>(keyFhirQuestionnaire, questionnaire.toJson());
 
   void setStartDateBackBy({int days}) {
     startDate = startDate.subtract(Duration(days: days));

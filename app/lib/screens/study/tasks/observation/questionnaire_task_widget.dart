@@ -3,9 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/results/result.dart';
+import 'package:studyu/widgets/fhir_questionnaire/questionnaire_widget.dart';
 
 import '../../../../models/app_state.dart';
-import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatelessWidget {
   final QuestionnaireTask task;
@@ -34,8 +34,8 @@ class QuestionnaireTaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: QuestionnaireWidget(
-        task.questions.questions,
+      child: FhirQuestionnaireWidget(
+        context.read<AppState>().activeStudy.fhirQuestionnaire,
         onComplete: (qs) => _addQuestionnaireResponse(qs, context),
       ),
     );

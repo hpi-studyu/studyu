@@ -8,6 +8,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
+  fhir: 0.4.0
   flutter_dotenv: ^4.0.0-nullsafety.0
   json_annotation: ^4.0.1
   parse_server_sdk_flutter:
