@@ -14,7 +14,7 @@ dependencies:
   parse_server_sdk_flutter:
     path: ../../Parse-SDK-Flutter/packages/flutter
   quiver: ^3.0.0
-  uuid: ^3.0.1
+  uuid: ^3.0.2
 
 dev_dependencies:
   build_runner: ^1.12.2

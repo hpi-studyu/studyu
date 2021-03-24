@@ -15,7 +15,7 @@ dependencies:
   ext_storage: ^1.0.3
   flutter:
     sdk: flutter
-  flutter_form_builder: ^5.0.0-alpha.1
+  flutter_form_builder: ^5.0.0
   flutter_iconpicker: ^3.0.0
   flutter_json_widget: ^1.0.2
   flutter_localizations:
@@ -31,7 +31,7 @@ dependencies:
     path: ../core
   universal_html: ^2.0.4
   url_launcher: ^6.0.2
-  uuid: ^3.0.1
+  uuid: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -39,10 +39,9 @@ dev_dependencies:
   lint: ^1.5.3
 
 dependency_overrides:
+  image: ^3.0.2
   parse_server_sdk:
     path: ../../Parse-SDK-Flutter/packages/dart
-  image: ^3.0.2
-  plugin_platform_interface: ^2.0.0
   vin_decoder: ^0.2.0-nullsafety
 
 flutter:
