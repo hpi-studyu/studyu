@@ -25,12 +25,12 @@ dependencies:
   parse_server_sdk_flutter:
     path: ../../Parse-SDK-Flutter/packages/flutter
   path_provider: ^2.0.1
-  pretty_json: ^1.1.0
+  pretty_json: ^2.0.0
   provider: ^5.0.0
   studyou_core:
     path: ../core
-  universal_html: ^2.0.4
-  url_launcher: ^6.0.2
+  universal_html: ^2.0.7
+  url_launcher: ^6.0.3
   uuid: ^3.0.2
 
 dev_dependencies:
