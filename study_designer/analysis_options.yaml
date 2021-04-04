@@ -22,3 +22,6 @@ linter:
     # DISABLE
     avoid_print: false
     prefer_const_constructors: false
+
+    # designer specific
+    unsafe_html: false
