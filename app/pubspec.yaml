@@ -28,7 +28,10 @@ dependencies:
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
   parse_server_sdk_flutter:
-    path: ../../Parse-SDK-Flutter/packages/flutter
+    git:
+      url: https://github.com/parse-community/Parse-SDK-Flutter.git
+      ref: nullsafety
+      path: packages/flutter
   path_provider: ^2.0.1
   pdf: ^3.1.0
   pimp_my_button: ^1.0.0
@@ -47,10 +50,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: ^1.5.3
-
-dependency_overrides:
-  parse_server_sdk:
-    path: ../../Parse-SDK-Flutter/packages/dart
 
 flutter_icons:
   image_path: 'assets/images/icon.png'

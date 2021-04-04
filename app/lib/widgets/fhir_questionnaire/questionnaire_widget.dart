@@ -73,7 +73,6 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
 
     widget.onChange?.call(questionnaireResponse);
     final nextQuestion = _nextQuestion();
-    print(nextQuestion);
     if (nextQuestion != null) {
       if (!(widget.shouldContinue?.call(questionnaireResponse) ?? true)) {
         return; // Checks if answer is wrong => not eligible ==> VALIDATION OF ANSWERS GIVEN!

@@ -248,6 +248,7 @@ class StudyCard extends StatelessWidget {
       final blob = html.Blob([bytes]);
       final url = html.Url.createObjectUrlFromBlob(blob);
       final anchor = html.document.createElement('a') as html.AnchorElement
+        // ignore: unsafe_html
         ..href = url
         ..style.display = 'none'
         ..download = filename;

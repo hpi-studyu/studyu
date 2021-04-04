@@ -33,7 +33,7 @@ class Result<T> {
         resultMap = {keyResult: result};
         break;
       default:
-        print('Unsupported question type: ${type}');
+        print('Unsupported question type: $type');
         resultMap = {keyResult: ''};
     }
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);
