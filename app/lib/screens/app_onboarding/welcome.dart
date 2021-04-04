@@ -48,20 +48,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      // Only display button in debug
-      persistentFooterButtons: kReleaseMode
-          ? null
-          : [
-              TextButton(
-                onPressed: () {
-                  context.read<AppState>()
-                    ..selectedStudy = ParseStudy()
-                    ..selectedInterventions = [Intervention('a', 'A'), Intervention('a', 'B')];
-                  Navigator.pushNamed(context, Routes.dashboard);
-                },
-                child: Text('Skip to Dashboard'),
-              ),
-            ],
     );
   }
 }
