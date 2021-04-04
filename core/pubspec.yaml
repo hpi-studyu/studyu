@@ -12,7 +12,10 @@ dependencies:
   flutter_dotenv: ^4.0.0-nullsafety.0
   json_annotation: ^4.0.1
   parse_server_sdk_flutter:
-    path: ../../Parse-SDK-Flutter/packages/flutter
+    git:
+      url: https://github.com/parse-community/Parse-SDK-Flutter.git
+      ref: nullsafety
+      path: packages/flutter
   quiver: ^3.0.0
   uuid: ^3.0.3
 
@@ -22,9 +25,3 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^4.1.0
   lint: ^1.5.3
-
-dependency_overrides:
-  parse_server_sdk:
-    path: ../../Parse-SDK-Flutter/packages/dart
-  #uuid: ^3.0.1
-

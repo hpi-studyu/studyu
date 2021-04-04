@@ -133,7 +133,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
   @override
   fhir.Questionnaire get fhirQuestionnaire {
     final parseQuestionnaire = get<Map<String, dynamic>>(keyFhirQuestionnaire);
-    if (parseQuestionnaire != null ) {
+    if (parseQuestionnaire != null) {
       return fhir.Questionnaire.fromJson(parseQuestionnaire);
     } else {
       return null;
