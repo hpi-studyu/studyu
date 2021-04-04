@@ -131,8 +131,14 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
 
   static const keyFhirQuestionnaire = 'fhir_questionnaire';
   @override
-  fhir.Questionnaire get fhirQuestionnaire =>
-      fhir.Questionnaire.fromJson(get<Map<String, dynamic>>(keyFhirQuestionnaire));
+  fhir.Questionnaire get fhirQuestionnaire {
+    final parseQuestionnaire = get<Map<String, dynamic>>(keyFhirQuestionnaire);
+    if (parseQuestionnaire != null ) {
+      return fhir.Questionnaire.fromJson(parseQuestionnaire);
+    } else {
+      return null;
+    }
+  }
 
   @override
   set fhirQuestionnaire(fhir.Questionnaire questionnaire) =>
