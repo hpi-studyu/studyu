@@ -167,12 +167,18 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
 
   static const keyFhirQuestionnaire = 'fhir_questionnaire';
   @override
-  fhir.Questionnaire get fhirQuestionnaire =>
-      fhir.Questionnaire.fromJson(get<Map<String, dynamic>>(keyFhirQuestionnaire));
+  fhir.Questionnaire get fhirQuestionnaire {
+    final parseQuestionnaire = get<Map<String, dynamic>>(keyFhirQuestionnaire);
+    if (parseQuestionnaire != null) {
+      return fhir.Questionnaire.fromJson(parseQuestionnaire);
+    } else {
+      return null;
+    }
+  }
 
   @override
   set fhirQuestionnaire(fhir.Questionnaire questionnaire) =>
-      set<Map<String, dynamic>>(keyFhirQuestionnaire, questionnaire.toJson());
+      set<Map<String, dynamic>>(keyFhirQuestionnaire, questionnaire?.toJson());
 
   void setStartDateBackBy({int days}) {
     startDate = startDate.subtract(Duration(days: days));
