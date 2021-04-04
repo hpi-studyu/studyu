@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/util/parse_config.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:studyu/util/user.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,11 +19,6 @@ class TermsScreen extends StatefulWidget {
 class _TermsScreenState extends State<TermsScreen> {
   bool _acceptedTerms = kDebugMode;
   bool _acceptedPrivacy = kDebugMode;
-
-  Future<ParseStudyUConfig> getParseConfig() async {
-    final configs = await ParseConfig().getConfigs();
-    return ParseStudyUConfig.fromJson(configs.result as Map<String, dynamic>);
-  }
 
   bool userCanContinue() {
     return _acceptedTerms && _acceptedPrivacy;

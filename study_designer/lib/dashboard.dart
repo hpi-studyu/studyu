@@ -7,11 +7,11 @@ import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode, kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
+import 'package:studyou_core/util/parse_config.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:universal_html/html.dart' as html;
@@ -35,11 +35,6 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     _selectedLocal = context.read<AppLanguage>().appLocal;
     showTermsAndPrivacyDialog();
-  }
-
-  Future<ParseStudyUConfig> getParseConfig() async {
-    final configs = await ParseConfig().getConfigs();
-    return ParseStudyUConfig.fromJson(configs.result as Map<String, dynamic>);
   }
 
   void showTermsAndPrivacyDialog() {

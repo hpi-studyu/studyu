@@ -465,7 +465,7 @@ packages:
     source: git
     version: "3.0.0"
   parse_server_sdk_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "packages/flutter"
       ref: nullsafety

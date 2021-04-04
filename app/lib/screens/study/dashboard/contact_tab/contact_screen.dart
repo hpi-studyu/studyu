@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/study/contact.dart';
+import 'package:studyou_core/util/parse_config.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,12 +21,6 @@ class _ContactScreenState extends State<ContactScreen> {
   void initState() {
     super.initState();
     studyContact = context.read<AppState>().activeStudy?.contact;
-  }
-
-  Future<Contact> getParseConfigContact() async {
-    final configs = await ParseConfig().getConfigs();
-    final contactJson = configs.result as Map<String, dynamic>;
-    return Contact.fromJson(contactJson['contact'] as Map<String, dynamic>);
   }
 
   @override
