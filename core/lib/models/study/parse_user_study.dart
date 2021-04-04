@@ -1,7 +1,6 @@
 import 'package:fhir/r4.dart' as fhir;
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
-import '../../util/user.dart';
 import '../models.dart';
 import 'contact.dart';
 
@@ -214,9 +213,8 @@ extension UserStudyQueries on ParseUserStudy {
     return null;
   }
 
-  Future<ParseResponse> getStudyHistory() async {
-    final builder = QueryBuilder<ParseUserStudy>(this)
-      ..whereEqualTo(ParseUserStudy.keyUserId, await UserQueries.getOrCreateUser().then((user) => user.objectId));
+  Future<ParseResponse> getStudyHistory(String userId) async {
+    final builder = QueryBuilder<ParseUserStudy>(this)..whereEqualTo(ParseUserStudy.keyUserId, userId);
     return builder.query();
   }
 }

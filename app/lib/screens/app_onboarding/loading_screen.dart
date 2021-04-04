@@ -3,9 +3,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/user.dart';
+import 'package:studyu/util/user.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
@@ -25,11 +24,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final model = context.read<AppState>()..activeStudy = ParseUserStudy();
-    final prefs = await SharedPreferences.getInstance();
-    final selectedStudyObjectId = prefs.getString(UserQueries.selectedStudyObjectIdKey);
+    final selectedStudyObjectId = await UserQueries.loadActiveStudyObjectId();
     print('Selected study: $selectedStudyObjectId');
     if (selectedStudyObjectId == null) {
-      if (await UserQueries.isUserLoggedIn()) {
+      if (await UserQueries.isUserIdPresent()) {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }

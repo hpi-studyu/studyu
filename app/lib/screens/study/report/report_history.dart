@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/parse_future_builder.dart';
+import 'package:studyu/util/user.dart';
 
 import '../../../models/app_state.dart';
 import 'report_details.dart';
@@ -18,7 +19,7 @@ class ReportHistoryScreen extends StatelessWidget {
         ),
       ),
       body: ParseListFutureBuilder<ParseUserStudy>(
-        queryFunction: ParseUserStudy().getStudyHistory,
+        queryFunction: () async => ParseUserStudy().getStudyHistory(await UserQueries.loadUserId()),
         builder: (context, pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,

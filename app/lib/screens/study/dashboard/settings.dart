@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
-import 'package:studyou_core/util/user.dart';
+import 'package:studyu/util/user.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -19,14 +17,12 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Locale _selectedValue;
-  Future<ParseUser> _userFuture;
   ParseUserStudy activeStudy;
 
   @override
   void initState() {
     super.initState();
     _selectedValue = context.read<AppLanguage>().appLocal;
-    _userFuture = UserQueries.getOrCreateUser();
     activeStudy = context.read<AppState>().activeStudy;
   }
 
@@ -77,13 +73,6 @@ class _SettingsState extends State<Settings> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            FutureBuilder<ParseUser>(
-                future: _userFuture,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return Container();
-                  final user = snapshot.data;
-                  return SelectableText('User ID: ${user.username}');
-                }),
             getDropdownRow(context),
             SizedBox(height: 24),
             Text('${AppLocalizations.of(context).study_current} ${activeStudy.title}',
@@ -139,7 +128,7 @@ class OptOutAlertDialog extends StatelessWidget {
           style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
           onPressed: () async {
             activeStudy.delete();
-            await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
+            UserQueries.deleteActiveStudyReference();
             Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           },
         )
@@ -151,17 +140,16 @@ class OptOutAlertDialog extends StatelessWidget {
 class DeleteAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Delete all data?'),
+        title: Text('Delete all local data?'),
         content: Text(
-            'You will not be able to restore your data. Parts of your anonymized data may still be used for research purposes.'),
+            'You will not be able to restore your data. Your anonymized data may still be used for research purposes.'),
         actions: [
           ElevatedButton.icon(
             icon: Icon(Icons.delete),
-            label: Text('Delete all data'),
+            label: Text('Delete all local data'),
             style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
             onPressed: () async {
-              UserQueries.deleteUserAccount();
-              await SharedPreferences.getInstance().then((prefs) => prefs.remove(UserQueries.selectedStudyObjectIdKey));
+              UserQueries.deleteLocalData();
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             },
           )
