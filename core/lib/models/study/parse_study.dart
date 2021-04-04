@@ -185,9 +185,7 @@ class ParseStudy extends ParseObject implements ParseCloneable, StudyBase {
     }
     return userStudy;
   }
-}
 
-extension StudyQueries on ParseStudy {
   Future<ParseResponse> getPublishedStudies() async {
     final keys = ['objectId', 'study_id', 'title', 'description', 'published', 'icon_name', 'fhir_questionnaire'];
     final builder = QueryBuilder<ParseStudy>(this)

@@ -190,9 +190,7 @@ class ParseUserStudy extends ParseObject implements ParseCloneable, UserStudyBas
         }).toList()));
     save();
   }
-}
 
-extension UserStudyQueries on ParseUserStudy {
   Future<ParseResponse> getUserStudiesFor(ParseStudy study) async {
     final builder = QueryBuilder<ParseUserStudy>(this)..whereEqualTo('study_id', study.id);
     return builder.query();
