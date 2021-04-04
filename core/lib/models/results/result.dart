@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:fhir/r4.dart' as fhir;
 
 part 'result.g.dart';
 
@@ -21,16 +22,18 @@ class Result<T> {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> resultMap;
-    switch (result.runtimeType) {
-      case QuestionnaireState:
+    switch (type) {
+      case 'QuestionnaireState':
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
-        type = 'QuestionnaireState';
         break;
-      case bool:
+      case 'fhir.QuestionnaireResponse':
+        resultMap = {keyResult: (result as fhir.QuestionnaireResponse).toJson()};
+        break;
+      case 'bool':
         resultMap = {keyResult: result};
-        type = 'bool';
         break;
       default:
+        print('Unsupported question type: ${type}');
         resultMap = {keyResult: ''};
     }
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);
@@ -38,6 +41,9 @@ class Result<T> {
 
   static Result fromJson(Map<String, dynamic> data) {
     switch (data[keyType] as String) {
+      case 'fhir.QuestionnaireResponse':
+        return Result<fhir.QuestionnaireResponse>.parseJson(data)
+          ..result = fhir.QuestionnaireResponse.fromJson(data[keyResult] as Map<String, dynamic>);
       case 'QuestionnaireState':
         return Result<QuestionnaireState>.parseJson(data)
           ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult] as List));

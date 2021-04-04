@@ -17,6 +17,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
     final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
     final result = Result<bool>()
+      ..type = 'bool'
       ..result = true
       ..timeStamp = DateTime.now()
       ..taskId = task.id;
