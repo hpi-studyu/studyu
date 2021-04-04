@@ -42,7 +42,7 @@ class QuestionContainer extends StatelessWidget {
       //     onDone: _onDone,
       //   );
       default:
-        print('Question not supported!');
+        print('QuestionType: ${question.type} not supported!');
         return null;
     }
   }
