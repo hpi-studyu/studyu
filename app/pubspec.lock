@@ -210,7 +210,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "5.0.0+1"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
@@ -288,7 +288,7 @@ packages:
       name: intersperse
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "2.0.0"
   intl:
     dependency: "direct main"
     description:
@@ -406,7 +406,7 @@ packages:
     description:
       path: "packages/dart"
       ref: nullsafety
-      resolved-ref: b09fb71e34ac5096973f5f80462540d933f1baeb
+      resolved-ref: "7c06ff1f13df3f4f8165b816e40a9a34e4bdff05"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "3.0.0"
@@ -415,7 +415,7 @@ packages:
     description:
       path: "packages/flutter"
       ref: nullsafety
-      resolved-ref: b09fb71e34ac5096973f5f80462540d933f1baeb
+      resolved-ref: "7c06ff1f13df3f4f8165b816e40a9a34e4bdff05"
       url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "3.0.0"

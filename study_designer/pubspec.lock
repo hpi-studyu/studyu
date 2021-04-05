@@ -460,7 +460,7 @@ packages:
     description:
       path: "packages/dart"
       ref: nullsafety
-      resolved-ref: b09fb71e34ac5096973f5f80462540d933f1baeb
+      resolved-ref: "7c06ff1f13df3f4f8165b816e40a9a34e4bdff05"
       url: "git://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "3.0.0"
@@ -469,7 +469,7 @@ packages:
     description:
       path: "packages/flutter"
       ref: nullsafety
-      resolved-ref: b09fb71e34ac5096973f5f80462540d933f1baeb
+      resolved-ref: "7c06ff1f13df3f4f8165b816e40a9a34e4bdff05"
       url: "https://github.com/parse-community/Parse-SDK-Flutter.git"
     source: git
     version: "3.0.0"
