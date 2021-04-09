@@ -1,7 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:studyou_core/models/interventions/intervention_set.dart';
-import 'package:studyou_core/models/study/study.dart';
+import 'package:studyou_core/models/models.dart';
 
 class PlotUtilities {
   static Map<String, charts.Color> getInterventionPalette(InterventionSet interventionSet) {

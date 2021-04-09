@@ -1,6 +1,7 @@
+import 'package:studyou_core/models/tables/study.dart';
+import 'package:studyou_core/models/tables/user_study.dart';
 import 'package:uuid/uuid.dart';
 
-import '../study/studies.dart';
 import 'results/results.dart';
 
 typedef StudyResultParser = StudyResult Function(Map<String, dynamic> json);

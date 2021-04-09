@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../study/studies.dart';
+import '../../tables/study.dart';
+import '../../tables/user_study.dart';
 import '../study_result.dart';
 
 part 'intervention_result.g.dart';
@@ -14,6 +15,7 @@ class InterventionResult extends StudyResult {
   InterventionResult.designerDefault() : super.designer(studyResultType);
 
   factory InterventionResult.fromJson(Map<String, dynamic> json) => _$InterventionResultFromJson(json);
+
   @override
   Map<String, dynamic> toJson() => _$InterventionResultToJson(this);
 

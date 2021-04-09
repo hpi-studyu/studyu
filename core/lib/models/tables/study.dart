@@ -1,10 +1,11 @@
 import 'package:fhir/r4.dart' as fhir;
 import 'package:postgrest/postgrest.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/study/supabase_object.dart';
 import 'package:uuid/uuid.dart';
 
-import 'contact.dart';
+import '../../util/supabase_object.dart';
+import '../consent/consent_item.dart';
+import '../contact.dart';
+import '../models.dart';
 
 class Study extends SupabaseObjectFunctions implements SupabaseObject {
   static const String baselineID = '__baseline';
