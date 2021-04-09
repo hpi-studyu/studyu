@@ -1,7 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../data/data_reference.dart';
-import '../../study/studies.dart';
+import '../../tables/study.dart';
+import '../../tables/user_study.dart';
 import '../study_result.dart';
 
 part 'numeric_result.g.dart';
@@ -17,6 +18,7 @@ class NumericResult extends StudyResult {
   NumericResult.designerDefault() : super.designer(studyResultType);
 
   factory NumericResult.fromJson(Map<String, dynamic> json) => _$NumericResultFromJson(json);
+
   @override
   Map<String, dynamic> toJson() => _$NumericResultToJson(this);
 

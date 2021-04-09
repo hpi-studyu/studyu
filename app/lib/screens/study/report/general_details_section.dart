@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/models/study/studies.dart';
+import 'package:studyou_core/models/models.dart';
 
 import '../../../widgets/study_tile.dart';
 import 'generic_section.dart';

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../results/result.dart';
-import '../study/user_study.dart';
+import '../tables/user_study.dart';
 import '../tasks/task.dart';
 
 part 'data_reference.g.dart';

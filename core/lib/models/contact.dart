@@ -1,4 +1,3 @@
-
 class Contact {
   String organization;
   String institutionalReviewBoard;

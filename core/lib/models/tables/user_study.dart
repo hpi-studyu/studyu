@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:fhir/r4.dart' as fhir;
 import 'package:postgrest/postgrest.dart';
 import 'package:quiver/collection.dart';
-import 'package:studyou_core/models/study/supabase_object.dart';
 
 import '../../util/extensions.dart';
+import '../../util/supabase_object.dart';
+import '../consent/consent_item.dart';
+import '../contact.dart';
 import '../models.dart';
-import 'contact.dart';
 
 class UserStudy extends SupabaseObjectFunctions implements SupabaseObject {
   @override

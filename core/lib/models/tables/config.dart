@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
-import 'package:studyou_core/models/study/supabase_object.dart';
+import 'file:///C:/Users/nilss/projects/studyu/core/lib/util/supabase_object.dart';
 
-import 'study/contact.dart';
-
+import '../contact.dart';
 class StudyUConfig extends SupabaseObjectFunctions implements SupabaseObject {
   @override
   String id;
