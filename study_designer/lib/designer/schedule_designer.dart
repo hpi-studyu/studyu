@@ -13,7 +13,7 @@ class ScheduleDesigner extends StatefulWidget {
 }
 
 class _ScheduleDesignerState extends State<ScheduleDesigner> {
-  StudyBase _draftStudy;
+  Study _draftStudy;
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override

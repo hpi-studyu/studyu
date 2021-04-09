@@ -17,7 +17,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Locale _selectedValue;
-  ParseUserStudy activeStudy;
+  UserStudy activeStudy;
 
   @override
   void initState() {
@@ -103,7 +103,7 @@ class _SettingsState extends State<Settings> {
 }
 
 class OptOutAlertDialog extends StatelessWidget {
-  final ParseUserStudy activeStudy;
+  final UserStudy activeStudy;
 
   const OptOutAlertDialog({@required this.activeStudy}) : super();
 

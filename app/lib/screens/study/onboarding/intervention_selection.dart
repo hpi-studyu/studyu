@@ -19,7 +19,7 @@ class InterventionSelectionScreen extends StatefulWidget {
 
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<Intervention> selectedInterventions = [];
-  ParseStudy selectedStudy;
+  Study selectedStudy;
 
   @override
   void initState() {

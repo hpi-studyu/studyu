@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:postgrest/postgrest.dart';
 import 'package:studyou_core/models/models.dart';
 
 enum DesignerPage {
@@ -17,9 +17,9 @@ enum DesignerPage {
 
 class AppState extends ChangeNotifier {
   String _selectedStudyId;
-  StudyBase draftStudy;
+  Study draftStudy;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
-  Future<ParseResponse> Function() _researcherDashboardQuery;
+  Future<PostgrestResponse> Function() _researcherDashboardQuery;
 
   AppState();
 
@@ -27,12 +27,12 @@ class AppState extends ChangeNotifier {
 
   bool get isDesigner => draftStudy != null;
 
-  Future<ParseResponse> Function() get researcherDashboardQuery {
+  Future<PostgrestResponse> Function() get researcherDashboardQuery {
     // _researcherDashboardQuery should always be initialized, but only after ParseInit
-    return _researcherDashboardQuery ??= ParseStudy().getResearcherDashboardStudies;
+    return _researcherDashboardQuery ??= Study().getResearcherDashboardStudies;
   }
 
-  void reloadResearcherDashboard() => _researcherDashboardQuery = ParseStudy().getResearcherDashboardStudies;
+  void reloadResearcherDashboard() => _researcherDashboardQuery = Study().getResearcherDashboardStudies;
 
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
 
@@ -42,21 +42,21 @@ class AppState extends ChangeNotifier {
   }
 
   void createStudy({DesignerPage page = DesignerPage.about}) {
-    draftStudy = StudyBase.designerDefault();
+    draftStudy = Study.designerDefault();
     _selectedStudyId = null;
     _selectedDesignerPage = page;
     notifyListeners();
   }
 
   Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
-    final res = await ParseStudy().getStudyById(studyId);
-    draftStudy = res.results.first as ParseStudy;
+    final res = await Study().getById(studyId);
+    draftStudy = Study.fromJson(res.data as Map<String, dynamic>);
     _selectedStudyId = studyId;
     _selectedDesignerPage = page;
     notifyListeners();
   }
 
-  Future<void> openNewStudy(StudyBase study) async {
+  Future<void> openNewStudy(Study study) async {
     draftStudy = study;
     _selectedStudyId = study.id;
     notifyListeners();

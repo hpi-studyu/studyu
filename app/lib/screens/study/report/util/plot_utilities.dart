@@ -7,9 +7,9 @@ class PlotUtilities {
   static Map<String, charts.Color> getInterventionPalette(InterventionSet interventionSet) {
     final interventions = [...interventionSet.interventions];
     final colors = <String, charts.Color>{};
-    if (interventions.any((intervention) => intervention.id == StudyBase.baselineID)) {
-      colors[StudyBase.baselineID] = charts.MaterialPalette.gray.shadeDefault;
-      interventions.removeWhere((intervention) => intervention.id == StudyBase.baselineID);
+    if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
+      colors[Study.baselineID] = charts.MaterialPalette.gray.shadeDefault;
+      interventions.removeWhere((intervention) => intervention.id == Study.baselineID);
     }
     colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
     colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
@@ -19,9 +19,9 @@ class PlotUtilities {
   static Map<String, int> getInterventionPositions(InterventionSet interventionSet) {
     final interventions = [...interventionSet.interventions];
     final order = <String, int>{};
-    if (interventions.any((intervention) => intervention.id == StudyBase.baselineID)) {
-      order[StudyBase.baselineID] = 0;
-      interventions.removeWhere((intervention) => intervention.id == StudyBase.baselineID);
+    if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
+      order[Study.baselineID] = 0;
+      interventions.removeWhere((intervention) => intervention.id == Study.baselineID);
     }
     order[interventions.first.id] = 1;
     order[interventions.last.id] = 2;
@@ -30,14 +30,14 @@ class PlotUtilities {
 
   static String getInterventionA(InterventionSet interventionSet) {
     final interventions = [
-      ...interventionSet.interventions.where((intervention) => intervention.id != StudyBase.baselineID)
+      ...interventionSet.interventions.where((intervention) => intervention.id != Study.baselineID)
     ];
     return interventions[0].id;
   }
 
   static String getInterventionB(InterventionSet interventionSet) {
     final interventions = [
-      ...interventionSet.interventions.where((intervention) => intervention.id != StudyBase.baselineID)
+      ...interventionSet.interventions.where((intervention) => intervention.id != Study.baselineID)
     ];
     return interventions[1].id;
   }

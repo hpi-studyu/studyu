@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/util/parse_init.dart';
 
 import 'screens/app_onboarding/about.dart';
 import 'screens/app_onboarding/loading_screen.dart';
@@ -54,7 +53,7 @@ class Routes {
     switch (settings.name) {
       // init Parse on our initial route
       case loading:
-        return MaterialPageRoute(builder: (_) => ParseInit(child: LoadingScreen()), settings: settings);
+        return MaterialPageRoute(builder: (_) => LoadingScreen(), settings: settings);
       case dashboard:
         return MaterialPageRoute(builder: (_) => DashboardScreen(), settings: settings);
       case welcome:

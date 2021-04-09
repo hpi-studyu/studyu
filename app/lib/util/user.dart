@@ -25,7 +25,7 @@ class UserQueries {
     return prefs.getString(selectedStudyObjectIdKey);
   }
 
-  static Future<void> saveActiveStudyObjectId(String studyObjectId) async {
+  static Future<void> saveActiveUserStudyId(String studyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(selectedStudyObjectIdKey, studyObjectId);
   }

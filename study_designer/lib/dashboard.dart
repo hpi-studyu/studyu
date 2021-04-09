@@ -11,9 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
-import 'package:studyou_core/util/parse_config.dart';
-import 'package:studyou_core/util/parse_future_builder.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
+import 'package:studyou_core/util/supabase_future_builder.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,8 +48,8 @@ class _DashboardState extends State<Dashboard> {
             builder: (context) {
               final appLocale = Localizations.localeOf(context);
 
-              return RetryFutureBuilder<ParseStudyUConfig>(
-                tryFunction: getParseConfig,
+              return RetryFutureBuilder<StudyUConfig>(
+                tryFunction: StudyUConfig().getAppConfig,
                 successBuilder: (context, appConfig) => AlertDialog(
                   title: Text(AppLocalizations.of(context).terms_privacy),
                   actions: [
@@ -144,8 +143,7 @@ class _DashboardState extends State<Dashboard> {
                             onPressed: () {
                               try {
                                 final studyJson = json.decode(controller.text) as Map<String, dynamic>;
-                                final study = StudyBase.fromJson(studyJson);
-                                ParseStudy.fromBase(study).save();
+                                Study.fromJson(studyJson).save();
                                 Navigator.pop(context, true);
                               } on FormatException {
                                 controller.text = 'This is not valid JSON! Please paste valid JSON.';
@@ -179,8 +177,9 @@ class _DashboardState extends State<Dashboard> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: ParseListFutureBuilder<ParseStudy>(
-            queryFunction: context.watch<AppState>().researcherDashboardQuery,
+          child: SupabaseListFutureBuilder<Study>(
+            fromJsonConverter: (jsonList) => jsonList.map((e) => Study.fromJson(e)).toList(),
+            queryFunction: () => Study().getAll(),
             builder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
@@ -232,7 +231,7 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class StudyCard extends StatelessWidget {
-  final ParseStudy study;
+  final Study study;
   final void Function() reload;
 
   const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
@@ -287,7 +286,7 @@ class StudyCard extends StatelessWidget {
                 icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
                 tooltip: AppLocalizations.of(context).export_csv,
                 onPressed: () async {
-                  final dl = ResultDownloader(study);
+                  final dl = ResultDownloader(study: study);
                   final results = await dl.loadAllResults();
                   for (final entry in results.entries) {
                     downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
@@ -299,7 +298,7 @@ class StudyCard extends StatelessWidget {
 }
 
 class DeleteAlertDialog extends StatelessWidget {
-  final ParseStudy study;
+  final Study study;
 
   const DeleteAlertDialog({@required this.study, Key key}) : super(key: key);
 

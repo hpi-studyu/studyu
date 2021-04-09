@@ -3,7 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/parse_future_builder.dart';
+
+import 'package:studyou_core/util/supabase_future_builder.dart';
 import 'package:studyu/util/user.dart';
 
 import '../../../models/app_state.dart';
@@ -18,8 +19,9 @@ class ReportHistoryScreen extends StatelessWidget {
           AppLocalizations.of(context).report_history,
         ),
       ),
-      body: ParseListFutureBuilder<ParseUserStudy>(
-        queryFunction: () async => ParseUserStudy().getStudyHistory(await UserQueries.loadUserId()),
+      body: SupabaseListFutureBuilder<UserStudy>(
+        fromJsonConverter: (jsonList) => jsonList.map((e) => UserStudy.fromJson(e)).toList(),
+        queryFunction: () async => UserStudy().getStudyHistory(await UserQueries.loadUserId()),
         builder: (context, pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,
@@ -34,7 +36,7 @@ class ReportHistoryScreen extends StatelessWidget {
 }
 
 class ReportHistoryItem extends StatelessWidget {
-  final ParseUserStudy study;
+  final UserStudy study;
 
   const ReportHistoryItem(this.study);
 

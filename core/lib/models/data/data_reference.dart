@@ -20,7 +20,7 @@ class DataReference<T> {
   @override
   String toString() => toJson().toString();
 
-  Map<DateTime, T> retrieveFromResults(UserStudyBase studyInstance) {
+  Map<DateTime, T> retrieveFromResults(UserStudy studyInstance) {
     final Task sourceTask = studyInstance.observations.firstWhere((task) => task.id == this.task, orElse: () => null) ??
         studyInstance.interventionSet.interventions
             .expand((i) => i.tasks)

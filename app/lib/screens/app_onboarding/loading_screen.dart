@@ -23,7 +23,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> initStudy() async {
-    final model = context.read<AppState>()..activeStudy = ParseUserStudy();
+    final model = context.read<AppState>()..activeStudy = UserStudy();
     final selectedStudyObjectId = await UserQueries.loadActiveStudyObjectId();
     print('Selected study: $selectedStudyObjectId');
     if (selectedStudyObjectId == null) {
@@ -35,7 +35,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
 
-    final userStudy = await ParseUserStudy().getUserStudy(selectedStudyObjectId);
+    final userStudy = await UserStudy().getUserStudy(selectedStudyObjectId);
     if (userStudy != null) {
       model.activeStudy = userStudy;
       if (!kIsWeb) {

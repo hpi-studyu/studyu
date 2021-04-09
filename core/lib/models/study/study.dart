@@ -1,16 +1,17 @@
 import 'package:fhir/r4.dart' as fhir;
-import 'package:json_annotation/json_annotation.dart';
+import 'package:postgrest/postgrest.dart';
 import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/models/study/supabase_object.dart';
 import 'package:uuid/uuid.dart';
 
 import 'contact.dart';
 
-part 'study.g.dart';
-
-@JsonSerializable()
-class StudyBase {
+class Study extends SupabaseObjectFunctions implements SupabaseObject {
   static const String baselineID = '__baseline';
 
+  @override
+  String tableName = 'study';
+  @override
   String id;
   String title;
   String description;
@@ -28,9 +29,9 @@ class StudyBase {
 
   fhir.Questionnaire fhirQuestionnaire;
 
-  StudyBase();
+  Study();
 
-  StudyBase.designerDefault()
+  Study.designerDefault()
       : id = Uuid().v4(),
         iconName = '',
         published = false,
@@ -44,26 +45,95 @@ class StudyBase {
         reportSpecification = ReportSpecification.designerDefault(),
         results = [];
 
-  factory StudyBase.fromJson(Map<String, dynamic> json) => _$StudyBaseFromJson(json);
-  Map<String, dynamic> toJson() => _$StudyBaseToJson(this);
-}
+  factory Study.fromJson(Map<String, dynamic> json) {
+    return Study()
+      ..id = json['id'] as String
+      ..title = json['title'] as String
+      ..description = json['description'] as String
+      ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
+      ..iconName = json['icon_name'] as String
+      ..published = json['published'] as bool
+      ..questionnaire = Questionnaire.fromJson(json['questionnaire'] as List)
+      ..eligibility = json['eligibility_criteria'] != null
+          ? ((json['eligibility_criteria'] as List)
+              .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
+              .toList())
+          : []
+      ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
+      ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
+      ..observations =
+          (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
+      ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+      ..reportSpecification = json['report_specification'] != null
+          ? ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
+          : null
+      ..results = (json['results'] as List).map((e) => StudyResult.fromJson(e as Map<String, dynamic>)).toList();
+  }
 
-extension StudyExtension on StudyBase {
-  StudyBase toBase() {
-    return StudyBase()
-      ..id = id
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'title': title,
+        'description': description,
+        'contact': contact.toJson(),
+        'icon_name': iconName,
+        'published': published,
+        'questionnaire': questionnaire.toJson(),
+        'eligibility_criteria': eligibility.map((e) => e.toJson()).toList(),
+        'consent': consent.map((e) => e.toJson()).toList(),
+        'intervention_set': interventionSet.toJson(),
+        'observations': observations.map((e) => e.toJson()).toList(),
+        'schedule': schedule.toJson(),
+        'report_specification': reportSpecification?.toJson(),
+        'results': results.map((e) => e.toJson()).toList(),
+      };
+
+  UserStudy extractUserStudy(
+      String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
+    final userStudy = UserStudy()
       ..title = title
       ..description = description
       ..contact = contact
       ..iconName = iconName
-      ..published = published
-      ..questionnaire = questionnaire
-      ..eligibility = eligibility
-      ..consent = consent
-      ..interventionSet = interventionSet
-      ..observations = observations
-      ..schedule = schedule
+      ..studyId = id
+      ..userId = userId
+      ..startDate = startDate
+      ..interventionSet = InterventionSet(selectedInterventions)
+      ..observations = observations ?? []
       ..reportSpecification = reportSpecification
-      ..results = results;
+      ..fhirQuestionnaire = fhirQuestionnaire;
+    if (schedule != null) {
+      const baselineId = Study.baselineID;
+      var addBaseline = false;
+      userStudy
+        ..schedule = schedule
+        ..consent = consent
+        ..interventionOrder = schedule.generateWith(firstIntervention).map<String>((int index) {
+          if (index == null) {
+            addBaseline = true;
+            return baselineId;
+          }
+          return selectedInterventions[index].id;
+        }).toList();
+      if (addBaseline) {
+        userStudy.interventionSet = InterventionSet([
+          ...userStudy.interventionSet.interventions,
+          Intervention(baselineId, 'Baseline')
+            ..tasks = []
+            ..icon = 'rayStart'
+        ]);
+      }
+    } else {
+      print('Study is missing schedule!');
+      return null;
+    }
+    return userStudy;
   }
+
+  // TODO: Add null checks in fromJson to allow selecting columns
+  Future<PostgrestResponse> getResearcherDashboardStudies() async =>
+      getAll(/*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
+
+  // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
+  Future<PostgrestResponse> publishedStudies() async => client.from(tableName).select().eq('published', true).execute();
 }

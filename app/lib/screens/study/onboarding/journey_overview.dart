@@ -18,7 +18,7 @@ class JourneyOverviewScreen extends StatefulWidget {
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
-  ParseUserStudy study;
+  UserStudy study;
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
@@ -67,7 +67,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 }
 
 class Timeline extends StatelessWidget {
-  final UserStudyBase study;
+  final UserStudy study;
 
   const Timeline({@required this.study, Key key}) : super(key: key);
 

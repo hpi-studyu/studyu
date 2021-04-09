@@ -11,13 +11,11 @@ dependencies:
   fhir: 0.4.2
   flutter_dotenv: ^4.0.0-nullsafety.0
   json_annotation: ^4.0.1
-  parse_server_sdk_flutter:
-    git:
-      url: https://github.com/parse-community/Parse-SDK-Flutter.git
-      ref: nullsafety
-      path: packages/flutter
-  quiver: ^3.0.0
-  uuid: ^3.0.3
+  postgrest: ^0.0.8
+  quiver: ^3.0.1
+  shared_preferences: ^2.0.5
+  supabase: ^0.0.1-dev.11
+  uuid: ^3.0.4
 
 dev_dependencies:
   build_runner: ^1.12.2

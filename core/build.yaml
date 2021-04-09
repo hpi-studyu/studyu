@@ -6,4 +6,3 @@ targets:
           explicit_to_json: true
           field_rename: none
           include_if_null: false
-          nullable: false

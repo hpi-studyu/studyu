@@ -14,7 +14,7 @@ class Save extends StatefulWidget {
 }
 
 class _SaveState extends State<Save> {
-  StudyBase _draftStudy;
+  Study _draftStudy;
 
   @override
   void initState() {
@@ -22,7 +22,7 @@ class _SaveState extends State<Save> {
     _draftStudy = context.read<AppState>().draftStudy;
   }
 
-  Future<StudyBase> _publishStudy(BuildContext context, StudyBase study) async {
+  Future<Study> _publishStudy(BuildContext context, Study study) async {
     _draftStudy.published = true;
     final publishingAccepted =
         await showDialog<bool>(context: context, builder: (_) => PublishAlertDialog(studyTitle: _draftStudy.title));
@@ -40,7 +40,7 @@ class _SaveState extends State<Save> {
     return null;
   }
 
-  Future<StudyBase> _saveDraft(StudyBase study) async {
+  Future<Study> _saveDraft(Study study) async {
     final savedStudy = _saveStudy(study);
     if (savedStudy != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,10 +53,9 @@ class _SaveState extends State<Save> {
     }
   }
 
-  Future<StudyBase> _saveStudy(StudyBase study) async {
-    final parseStudy = study is ParseStudy ? study : ParseStudy.fromBase(study);
-    final response = await parseStudy.save();
-    return response.success ? response.results.first as ParseStudy : null;
+  Future<Study> _saveStudy(Study study) async {
+    final response = await study.save();
+    return (response.data as List).map((json) => Study.fromJson(json as Map<String, dynamic>)).first;
   }
 
   @override
@@ -79,7 +78,7 @@ class _SaveState extends State<Save> {
                   children: [
                     OutlinedButton.icon(
                         onPressed: () async {
-                          final newStudy = await _saveDraft(_draftStudy) as ParseStudy;
+                          final newStudy = await _saveDraft(_draftStudy);
                           print(newStudy);
                           if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
                         },
@@ -88,7 +87,7 @@ class _SaveState extends State<Save> {
                     SizedBox(width: 16),
                     OutlinedButton.icon(
                         onPressed: () async {
-                          final newStudy = await _publishStudy(context, _draftStudy) as ParseStudy;
+                          final newStudy = await _publishStudy(context, _draftStudy);
                           if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
                         },
                         icon: Icon(Icons.publish),
@@ -105,7 +104,7 @@ class _SaveState extends State<Save> {
 }
 
 class JSONExportSection extends StatefulWidget {
-  final StudyBase study;
+  final Study study;
 
   const JSONExportSection({@required this.study, Key key}) : super(key: key);
 

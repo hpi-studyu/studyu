@@ -12,7 +12,7 @@ import '../util/plot_utilities.dart';
 class LinearRegressionSectionWidget extends ReportSectionWidget {
   final LinearRegressionSection section;
 
-  const LinearRegressionSectionWidget(ParseUserStudy instance, this.section) : super(instance);
+  const LinearRegressionSectionWidget(UserStudy instance, this.section) : super(instance);
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
     return {
       if (instance.schedule.includeBaseline)
-        StudyBase.baselineID: _ResultDatum(interventionOrder[StudyBase.baselineID], intercept, ciIntercept),
+        Study.baselineID: _ResultDatum(interventionOrder[Study.baselineID], intercept, ciIntercept),
       interventionA: _ResultDatum(
           interventionOrder[interventionA], intercept + factorA, Range(intercept + ciA.min, intercept + ciA.max)),
       interventionB: _ResultDatum(

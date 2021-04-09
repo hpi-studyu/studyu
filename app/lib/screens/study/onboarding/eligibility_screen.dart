@@ -16,9 +16,9 @@ class EligibilityResult {
 }
 
 class EligibilityScreen extends StatefulWidget {
-  final ParseStudy study;
+  final Study study;
 
-  static MaterialPageRoute<EligibilityResult> routeFor({@required ParseStudy study}) => MaterialPageRoute(
+  static MaterialPageRoute<EligibilityResult> routeFor({@required Study study}) => MaterialPageRoute(
       builder: (_) => EligibilityScreen(study: study), settings: RouteSettings(name: '/eligibilityCheck'));
 
   const EligibilityScreen({@required this.study, Key key}) : super(key: key);

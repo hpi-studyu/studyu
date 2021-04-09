@@ -18,14 +18,14 @@ class InterventionResult extends StudyResult {
   Map<String, dynamic> toJson() => _$InterventionResultToJson(this);
 
   @override
-  List<String> getHeaders(StudyBase studySpec) {
+  List<String> getHeaders(Study studySpec) {
     final schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
     return Iterable<int>.generate(numberOfDays).map((e) => e.toString()).toList();
   }
 
   @override
-  List getValues(UserStudyBase instance) {
+  List getValues(UserStudy instance) {
     return instance.interventionOrder
         .expand((intervention) => List<String>.filled(instance.schedule.phaseDuration, intervention))
         .toList();

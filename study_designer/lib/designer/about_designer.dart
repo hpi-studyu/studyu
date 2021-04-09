@@ -15,7 +15,7 @@ class AboutDesigner extends StatefulWidget {
 }
 
 class _AboutDesignerState extends State<AboutDesigner> {
-  StudyBase _draftStudy;
+  Study _draftStudy;
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
+import 'package:postgrest/postgrest.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyou_core/models/models.dart';
@@ -22,10 +23,11 @@ class CheckmarkTaskWidget extends StatelessWidget {
       ..timeStamp = DateTime.now()
       ..taskId = task.id;
     activeStudy.addResult(result);
-    if (await activeStudy.saveUserStudy() != null) {
+    try {
+      await activeStudy.saveUserStudy();
       await animation;
       Navigator.pop(context, true);
-    } else {
+    } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context).could_not_save_results),
         duration: Duration(seconds: 10),
