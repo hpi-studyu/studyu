@@ -1,13 +1,19 @@
 import 'dart:math';
 
 import 'package:fhir/r4.dart' as fhir;
+import 'package:postgrest/postgrest.dart';
 import 'package:quiver/collection.dart';
+import 'package:studyou_core/models/study/supabase_object.dart';
 
 import '../../util/extensions.dart';
 import '../models.dart';
 import 'contact.dart';
 
-class UserStudyBase {
+class UserStudy extends SupabaseObjectFunctions implements SupabaseObject {
+  @override
+  String tableName = 'user_study';
+  @override
+  String id;
   String studyId;
   String userId;
   String title;
@@ -24,26 +30,55 @@ class UserStudyBase {
   ReportSpecification reportSpecification;
 
   fhir.Questionnaire fhirQuestionnaire;
-}
 
-extension UserStudyExtension on UserStudyBase {
-  UserStudyBase toBase() {
-    return UserStudyBase()
-      ..studyId = studyId
-      ..contact = contact
-      ..userId = userId
-      ..title = title
-      ..description = description
-      ..iconName = iconName
-      ..startDate = startDate
-      ..schedule = schedule
-      ..interventionOrder = interventionOrder
-      ..interventionSet = interventionSet
-      ..observations = observations
-      ..consent = consent
-      ..results = results
-      ..reportSpecification = reportSpecification;
-  }
+  UserStudy();
+
+  factory UserStudy.fromJson(Map<String, dynamic> json) => UserStudy()
+    ..id = json['id'] as String
+    ..studyId = json['study_id'] as String
+    ..userId = json['user_id'] as String
+    ..title = json['title'] as String
+    ..description = json['description'] as String
+    ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
+    ..iconName = json['icon_name'] as String
+    ..startDate = DateTime.tryParse(json['start_date'] as String)
+    ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
+    ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
+    ..interventionOrder = List<String>.from(json['intervention_order_ids'] as List)
+    ..observations = (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
+    ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+    ..reportSpecification = json['report_specification'] != null
+        ? ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
+        : null
+    ..results = (json['results'] as Map<String, dynamic>)?.map<String, List<Result>>((key, resultsData) {
+          final results = (resultsData as List)
+              .map<Result>((resultData) => Result.fromJson(resultData as Map<String, dynamic>))
+              .toList();
+          return MapEntry(key, results);
+        }) ??
+        {};
+
+  @override
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'study_id': studyId,
+        'user_id': userId,
+        'title': title,
+        'description': description,
+        'contact': contact.toJson(),
+        'icon_name': iconName,
+        'start_date': startDate.toIso8601String(),
+        'consent': consent.map((e) => e.toJson()).toList(),
+        'intervention_set': interventionSet.toJson(),
+        'intervention_order_ids': interventionOrder,
+        'observations': observations.map((e) => e.toJson()).toList(),
+        'schedule': schedule.toJson(),
+        'report_specification': reportSpecification?.toJson(),
+        'results': results?.map<String, dynamic>(
+                (key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())) ??
+            {},
+        // Some values could be null (id), therefore remove all null values
+      }..removeWhere((key, value) => value == null);
 
   int get daysPerIntervention => schedule.numberOfCycles * schedule.phaseDuration;
 
@@ -72,7 +107,6 @@ extension UserStudyExtension on UserStudyBase {
         .expand((element) => element)
         .where((element) => element != null)
         .forEach((element) => resultMap.putIfAbsent(element.key, () => []).add(element.value));
-    print(results);
     return resultMap;
   }
 
@@ -218,4 +252,35 @@ extension UserStudyExtension on UserStudyBase {
     }
     return taskSchedule;
   }
+
+  void setStartDateBackBy({int days}) {
+    startDate = startDate.subtract(Duration(days: days));
+    results = results.map((task, results) => MapEntry(
+        task,
+        results.map((result) {
+          final json = result.toJson();
+          json['timeStamp'] = result.timeStamp.subtract(Duration(days: days)).toString();
+          return Result.fromJson(json);
+        }).toList()));
+    save();
+  }
+
+  Future<PostgrestResponse> getUserStudiesFor(Study study) async =>
+      client.from('study').select().eq('study_id', study.id).execute();
+
+  Future<UserStudy> getUserStudy(String id) async =>
+      UserStudy.fromJson(((await getById(id)).data as List).first as Map<String, dynamic>); // TODO: Add error checking
+
+  Future<UserStudy> saveUserStudy() async {
+    final response = await save();
+    if (response.error != null) {
+      print('Error: ${response.error.message}');
+      // ignore: only_throw_errors
+      throw response.error;
+    }
+    return UserStudy.fromJson((response.data as List).first as Map<String, dynamic>);
+  }
+
+  Future<PostgrestResponse> getStudyHistory(String userId) async =>
+      client.from('user_study').select().eq('user_id', userId).execute();
 }

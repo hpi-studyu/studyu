@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/models/study/parse_user_study.dart';
+import 'package:studyou_core/models/models.dart';
 
 abstract class ReportSectionWidget extends StatelessWidget {
-  final ParseUserStudy instance;
+  final UserStudy instance;
 
   const ReportSectionWidget(this.instance);
 }

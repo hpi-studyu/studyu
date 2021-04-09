@@ -12,7 +12,7 @@ import '../util/plot_utilities.dart';
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
 
-  const AverageSectionWidget(ParseUserStudy instance, this.section) : super(instance);
+  const AverageSectionWidget(UserStudy instance, this.section) : super(instance);
 
   @override
   Widget build(BuildContext context) {

@@ -14,17 +14,19 @@ class KickoffScreen extends StatefulWidget {
 }
 
 class _KickoffScreen extends State<KickoffScreen> {
-  ParseUserStudy study;
+  UserStudy study;
   bool ready;
 
-  Future<void> _storeUserStudy() async {
+  Future<void> _storeUserStudy(BuildContext context) async {
     study.userId = await UserQueries.loadUserId();
 
-    final selectedStudyObjectId = await study.saveUserStudy();
-    if (selectedStudyObjectId != null) {
-      await UserQueries.saveActiveStudyObjectId(selectedStudyObjectId);
+    try {
+      study = await study.saveUserStudy();
+      context.read<AppState>().activeStudy = study;
+      await UserQueries.saveActiveUserStudyId(study.id);
+    } finally {
+      setState(() => ready = true);
     }
-    setState(() => ready = true);
   }
 
   @override
@@ -32,7 +34,7 @@ class _KickoffScreen extends State<KickoffScreen> {
     super.initState();
     ready = false;
     study = context.read<AppState>().activeStudy;
-    _storeUserStudy();
+    _storeUserStudy(context);
   }
 
   Widget _constructStatusIcon(BuildContext context) => !ready
@@ -60,6 +62,7 @@ class _KickoffScreen extends State<KickoffScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(study.toJson().toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(study.title),

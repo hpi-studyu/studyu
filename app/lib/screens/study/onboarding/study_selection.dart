@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/parse_future_builder.dart';
+
+import 'package:studyou_core/util/supabase_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -11,8 +12,8 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/study_tile.dart';
 
 class StudySelectionScreen extends StatelessWidget {
-  Future<void> navigateToStudyOverview(BuildContext context, StudyBase study) async {
-    context.read<AppState>().selectedStudy = study as ParseStudy;
+  Future<void> navigateToStudyOverview(BuildContext context, Study study) async {
+    context.read<AppState>().selectedStudy = study;
     Navigator.pushNamed(context, Routes.studyOverview);
   }
 
@@ -60,8 +61,9 @@ class StudySelectionScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                ParseListFutureBuilder<ParseStudy>(
-                  queryFunction: ParseStudy().getPublishedStudies, // does not return complete study data
+                SupabaseListFutureBuilder<Study>(
+                  fromJsonConverter: (jsonList) => jsonList.map((e) => Study.fromJson(e)).toList(),
+                  queryFunction: () => Study().publishedStudies(),
                   builder: (_context, studies) {
                     return ListView.builder(
                         shrinkWrap: true,

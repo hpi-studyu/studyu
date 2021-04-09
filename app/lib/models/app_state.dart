@@ -5,9 +5,9 @@ import 'package:studyou_core/models/models.dart';
 import 'package:studyu/screens/study/tasks/task_screen.dart';
 
 class AppState {
-  ParseStudy selectedStudy;
+  Study selectedStudy;
   List<Intervention> selectedInterventions;
-  ParseUserStudy activeStudy;
+  UserStudy activeStudy;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   /// Context used for FlutterLocalNotificationsPlugin

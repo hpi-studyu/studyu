@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyou_core/models/report/report_models.dart';
-import 'package:studyou_core/models/study/parse_user_study.dart';
+import 'package:studyou_core/models/models.dart';
 
 import 'report_section_widget.dart';
 import 'sections/report_section_widgets.dart';
 
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, ParseUserStudy instance);
+typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, UserStudy instance);
 
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
@@ -16,7 +15,7 @@ class ReportSectionContainer extends StatelessWidget {
   };
 
   final ReportSection section;
-  final ParseUserStudy instance;
+  final UserStudy instance;
   final bool primary;
   final GestureTapCallback onTap;
 

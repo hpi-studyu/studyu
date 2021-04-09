@@ -1,21 +1,23 @@
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/models/study_results/study_result.dart';
+import 'package:supabase/supabase.dart';
 
 class ResultDownloader {
   static const participantHeader = 'participant';
 
-  ParseStudy study;
+  Study study;
+  SupabaseClient client;
 
-  ResultDownloader(this.study);
+  ResultDownloader({this.client, this.study});
 
   List<StudyResult> availableResults() => study.results;
 
-  Future<List<ParseUserStudy>> loadAllInstances() async {
-    final response = await ParseUserStudy().getUserStudiesFor(study);
-    return List<ParseUserStudy>.from(response.results ?? []);
+  Future<List<UserStudy>> loadAllInstances() async {
+    final response = await UserStudy().getUserStudiesFor(study);
+    return (response.data as List).map((json) => UserStudy.fromJson(json as Map<String, dynamic>)).toList();
   }
 
-  List<List<dynamic>> getResultsFor(List<ParseUserStudy> instances, {StudyResult result}) {
+  List<List<dynamic>> getResultsFor(List<UserStudy> instances, {StudyResult result}) {
     final header = [participantHeader, ...result.getHeaders(study)];
     return [
       header,

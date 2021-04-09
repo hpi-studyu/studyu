@@ -3,7 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/parse_future_builder.dart';
+
+import 'package:studyou_core/util/supabase_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -18,7 +19,7 @@ class StudyOverviewScreen extends StatefulWidget {
 }
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
-  ParseStudy study;
+  Study study;
 
   @override
   void initState() {
@@ -54,11 +55,12 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
             SizedBox(height: 16),
-            ParseFetchOneFutureBuilder<ParseStudy>(
-              queryFunction: () => ParseStudy().getStudyById(study.id),
+            SupabaseListFutureBuilder<Study>(
+              fromJsonConverter: (jsonList) => jsonList.map((e) => Study.fromJson(e)).toList(),
+              queryFunction: () => Study().getById(study.id),
               builder: (context, study) {
-                context.read<AppState>().selectedStudy = study;
-                return StudyDetailsView(study: study);
+                context.read<AppState>().selectedStudy = study.first;
+                return StudyDetailsView(study: study.first);
               },
             ),
           ],
@@ -72,7 +74,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 }
 
 class StudyDetailsView extends StatelessWidget {
-  final StudyBase study;
+  final Study study;
 
   const StudyDetailsView({@required this.study, Key key}) : super(key: key);
 

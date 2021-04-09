@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/parse_config.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
 import 'package:studyu/util/user.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,8 +30,8 @@ class _TermsScreenState extends State<TermsScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: RetryFutureBuilder<ParseStudyUConfig>(
-            tryFunction: getParseConfig,
+          child: RetryFutureBuilder<StudyUConfig>(
+            tryFunction: StudyUConfig().getAppConfig,
             successBuilder: (context, appConfig) => SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),

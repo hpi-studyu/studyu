@@ -25,6 +25,6 @@ abstract class StudyResult {
   }
   Map<String, dynamic> toJson();
 
-  List<String> getHeaders(StudyBase studySpec);
-  List<dynamic> getValues(UserStudyBase instance);
+  List<String> getHeaders(Study studySpec);
+  List<dynamic> getValues(UserStudy instance);
 }
