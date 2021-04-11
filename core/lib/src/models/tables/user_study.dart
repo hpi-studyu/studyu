@@ -228,10 +228,10 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     return daysCount * task.schedule.length;
   }
 
-  Multimap<Time, Task> scheduleFor(DateTime dateTime) {
+  Multimap<ScheduleTime, Task> scheduleFor(DateTime dateTime) {
     final activeIntervention = getInterventionForDate(dateTime);
 
-    final taskSchedule = Multimap<Time, Task>();
+    final taskSchedule = Multimap<ScheduleTime, Task>();
 
     if (activeIntervention == null) return taskSchedule;
 

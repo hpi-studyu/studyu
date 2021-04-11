@@ -1,21 +1,21 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/core.dart' as core;
+import 'package:studyou_core/core.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../models/app_state.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
   Future<void> scheduleReminderForDate(
-      int initialId, core.Task task, DateTime date, NotificationDetails notificationDetails) async {
+      int initialId, Task task, DateTime date, NotificationDetails notificationDetails) async {
     var id = initialId;
     for (final taskSchedule in task.schedule) {
       switch (taskSchedule.type) {
-        case core.FixedSchedule.scheduleType:
-          final core.FixedSchedule fixedSchedule = taskSchedule as core.FixedSchedule;
+        case FixedSchedule.scheduleType:
+          final FixedSchedule fixedSchedule = taskSchedule as FixedSchedule;
           if (date.isSameDate(DateTime.now()) &&
-              !core.Time(hour: date.hour, minute: date.minute).earlierThan(fixedSchedule.time)) {
+              !ScheduleTime(hour: date.hour, minute: date.minute).earlierThan(fixedSchedule.time)) {
             break;
           }
 
@@ -62,7 +62,7 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
             .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
         id += observation.schedule.length;
       }
-      for (final intervention in study.interventionSet?.interventions ?? <core.Intervention>[]) {
+      for (final intervention in study.interventionSet?.interventions ?? <Intervention>[]) {
         if (intervention.id == null || intervention.id != study.getInterventionForDate(date)?.id) {
           if (intervention.tasks.isNotEmpty) {
             id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);

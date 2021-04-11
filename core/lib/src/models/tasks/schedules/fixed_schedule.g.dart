@@ -9,7 +9,7 @@ part of 'fixed_schedule.dart';
 FixedSchedule _$FixedScheduleFromJson(Map<String, dynamic> json) {
   return FixedSchedule()
     ..type = json['type'] as String
-    ..time = Time.fromJson(json['time'] as String);
+    ..time = ScheduleTime.fromJson(json['time'] as String);
 }
 
 Map<String, dynamic> _$FixedScheduleToJson(FixedSchedule instance) =>

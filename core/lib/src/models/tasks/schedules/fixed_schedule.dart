@@ -8,7 +8,7 @@ part 'fixed_schedule.g.dart';
 class FixedSchedule extends Schedule {
   static const String scheduleType = 'fixed';
 
-  Time time;
+  ScheduleTime time;
 
   FixedSchedule() : super(scheduleType);
 
@@ -18,13 +18,13 @@ class FixedSchedule extends Schedule {
   Map<String, dynamic> toJson() => _$FixedScheduleToJson(this);
 }
 
-class Time {
+class ScheduleTime {
   int hour;
   int minute;
 
-  Time({this.hour, this.minute}) : super();
+  ScheduleTime({this.hour, this.minute}) : super();
 
-  Time.fromJson(String value) {
+  ScheduleTime.fromJson(String value) {
     final elements = value.split(':').map(int.parse);
     hour = elements.elementAt(0);
     minute = elements.elementAt(1);
@@ -35,7 +35,7 @@ class Time {
   @override
   String toString() => '$hour:${minute.toString().padLeft(2, '0')}';
 
-  bool earlierThan(Time time) {
+  bool earlierThan(ScheduleTime time) {
     return hour < time.hour || hour == time.hour && minute < time.minute;
   }
 }

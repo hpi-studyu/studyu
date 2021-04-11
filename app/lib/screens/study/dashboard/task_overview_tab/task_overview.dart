@@ -11,7 +11,7 @@ import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
   final UserStudy study;
-  final Multimap<Time, Task> scheduleToday;
+  final Multimap<ScheduleTime, Task> scheduleToday;
   final String interventionIcon;
 
   const TaskOverview({@required this.study, @required this.scheduleToday, Key key, this.interventionIcon})
