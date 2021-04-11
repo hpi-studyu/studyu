@@ -25,7 +25,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
       ..taskId = task.id;
     activeStudy.addResult(result);
     try {
-      await activeStudy.saveUserStudy();
+      await activeStudy.save();
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -46,7 +46,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
       ..taskId = task.id;
     activeStudy.addResult(result);
     try {
-      await activeStudy.saveUserStudy();
+      await activeStudy.save();
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

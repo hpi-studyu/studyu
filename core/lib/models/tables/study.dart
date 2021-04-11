@@ -1,5 +1,4 @@
 import 'package:fhir/r4.dart' as fhir;
-import 'package:postgrest/postgrest.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../util/supabase_object.dart';
@@ -7,7 +6,7 @@ import '../consent/consent_item.dart';
 import '../contact.dart';
 import '../models.dart';
 
-class Study extends SupabaseObjectFunctions implements SupabaseObject {
+class Study extends SupabaseObjectFunctions<Study> {
   static const String baselineID = '__baseline';
 
   @override
@@ -46,30 +45,28 @@ class Study extends SupabaseObjectFunctions implements SupabaseObject {
         reportSpecification = ReportSpecification.designerDefault(),
         results = [];
 
-  factory Study.fromJson(Map<String, dynamic> json) {
-    return Study()
-      ..id = json['id'] as String
-      ..title = json['title'] as String
-      ..description = json['description'] as String
-      ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
-      ..iconName = json['icon_name'] as String
-      ..published = json['published'] as bool
-      ..questionnaire = Questionnaire.fromJson(json['questionnaire'] as List)
-      ..eligibility = json['eligibility_criteria'] != null
-          ? ((json['eligibility_criteria'] as List)
-              .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
-              .toList())
-          : []
-      ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
-      ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
-      ..observations =
-          (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
-      ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
-      ..reportSpecification = json['report_specification'] != null
-          ? ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
-          : null
-      ..results = (json['results'] as List).map((e) => StudyResult.fromJson(e as Map<String, dynamic>)).toList();
-  }
+  @override
+  Study fromJson(Map<String, dynamic> json) => Study()
+    ..id = json['id'] as String
+    ..title = json['title'] as String
+    ..description = json['description'] as String
+    ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
+    ..iconName = json['icon_name'] as String
+    ..published = json['published'] as bool
+    ..questionnaire = Questionnaire.fromJson(json['questionnaire'] as List)
+    ..eligibility = json['eligibility_criteria'] != null
+        ? ((json['eligibility_criteria'] as List)
+            .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
+            .toList())
+        : []
+    ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
+    ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
+    ..observations = (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
+    ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+    ..reportSpecification = json['report_specification'] != null
+        ? ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
+        : null
+    ..results = (json['results'] as List).map((e) => StudyResult.fromJson(e as Map<String, dynamic>)).toList();
 
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -132,9 +129,10 @@ class Study extends SupabaseObjectFunctions implements SupabaseObject {
   }
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  Future<PostgrestResponse> getResearcherDashboardStudies() async =>
+  Future<List<Study>> getResearcherDashboardStudies() async =>
       getAll(/*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  Future<PostgrestResponse> publishedStudies() async => client.from(tableName).select().eq('published', true).execute();
+  Future<List<Study>> publishedStudies() async =>
+      extractSupabaseList(await client.from(tableName).select().eq('published', true).execute());
 }

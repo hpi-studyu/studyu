@@ -35,7 +35,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       return;
     }
 
-    final userStudy = await UserStudy().getUserStudy(selectedStudyObjectId);
+    final userStudy = await UserStudy().getById(selectedStudyObjectId);
     if (userStudy != null) {
       model.activeStudy = userStudy;
       if (!kIsWeb) {

@@ -27,7 +27,7 @@ class _SaveState extends State<Save> {
     final publishingAccepted =
         await showDialog<bool>(context: context, builder: (_) => PublishAlertDialog(studyTitle: _draftStudy.title));
     if (publishingAccepted) {
-      final savedStudy = await _saveStudy(study);
+      final savedStudy = await study.save();
       if (savedStudy != null) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_and_published}')));
@@ -41,7 +41,7 @@ class _SaveState extends State<Save> {
   }
 
   Future<Study> _saveDraft(Study study) async {
-    final savedStudy = _saveStudy(study);
+    final savedStudy = study.save();
     if (savedStudy != null) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).was_saved_as_draft}')));
@@ -51,11 +51,6 @@ class _SaveState extends State<Save> {
           .showSnackBar(SnackBar(content: Text('${_draftStudy.title} ${AppLocalizations.of(context).failed_saving}')));
       return null;
     }
-  }
-
-  Future<Study> _saveStudy(Study study) async {
-    final response = await study.save();
-    return (response.data as List).map((json) => Study.fromJson(json as Map<String, dynamic>)).first;
   }
 
   @override
@@ -79,7 +74,6 @@ class _SaveState extends State<Save> {
                     OutlinedButton.icon(
                         onPressed: () async {
                           final newStudy = await _saveDraft(_draftStudy);
-                          print(newStudy);
                           if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
                         },
                         icon: Icon(Icons.save),

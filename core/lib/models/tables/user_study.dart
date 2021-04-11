@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:fhir/r4.dart' as fhir;
-import 'package:postgrest/postgrest.dart';
 import 'package:quiver/collection.dart';
 
 import '../../util/extensions.dart';
@@ -10,7 +9,7 @@ import '../consent/consent_item.dart';
 import '../contact.dart';
 import '../models.dart';
 
-class UserStudy extends SupabaseObjectFunctions implements SupabaseObject {
+class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   @override
   String tableName = 'user_study';
   @override
@@ -34,7 +33,8 @@ class UserStudy extends SupabaseObjectFunctions implements SupabaseObject {
 
   UserStudy();
 
-  factory UserStudy.fromJson(Map<String, dynamic> json) => UserStudy()
+  @override
+  UserStudy fromJson(Map<String, dynamic> json) => UserStudy()
     ..id = json['id'] as String
     ..studyId = json['study_id'] as String
     ..userId = json['user_id'] as String
@@ -266,22 +266,9 @@ class UserStudy extends SupabaseObjectFunctions implements SupabaseObject {
     save();
   }
 
-  Future<PostgrestResponse> getUserStudiesFor(Study study) async =>
-      client.from('study').select().eq('study_id', study.id).execute();
+  Future<List<UserStudy>> getUserStudiesFor(Study study) async =>
+      extractSupabaseList(await client.from('study').select().eq('study_id', study.id).execute());
 
-  Future<UserStudy> getUserStudy(String id) async =>
-      UserStudy.fromJson(((await getById(id)).data as List).first as Map<String, dynamic>); // TODO: Add error checking
-
-  Future<UserStudy> saveUserStudy() async {
-    final response = await save();
-    if (response.error != null) {
-      print('Error: ${response.error.message}');
-      // ignore: only_throw_errors
-      throw response.error;
-    }
-    return UserStudy.fromJson((response.data as List).first as Map<String, dynamic>);
-  }
-
-  Future<PostgrestResponse> getStudyHistory(String userId) async =>
-      client.from('user_study').select().eq('user_id', userId).execute();
+  Future<List<UserStudy>> getStudyHistory(String userId) async =>
+      extractSupabaseList(await client.from('user_study').select().eq('user_id', userId).execute());
 }

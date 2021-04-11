@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
 import 'package:studyou_core/util/localization.dart';
 import 'package:studyou_core/util/retry_future_builder.dart';
-import 'package:studyou_core/util/supabase_future_builder.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -143,7 +142,7 @@ class _DashboardState extends State<Dashboard> {
                             onPressed: () {
                               try {
                                 final studyJson = json.decode(controller.text) as Map<String, dynamic>;
-                                Study.fromJson(studyJson).save();
+                                Study().fromJson(studyJson).save();
                                 Navigator.pop(context, true);
                               } on FormatException {
                                 controller.text = 'This is not valid JSON! Please paste valid JSON.';
@@ -177,10 +176,9 @@ class _DashboardState extends State<Dashboard> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: SupabaseListFutureBuilder<Study>(
-            fromJsonConverter: (jsonList) => jsonList.map((e) => Study.fromJson(e)).toList(),
-            queryFunction: () => Study().getAll(),
-            builder: (context, studies) {
+          child: RetryFutureBuilder<List<Study>>(
+            tryFunction: () => Study().getAll(),
+            successBuilder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
               return ListView(
