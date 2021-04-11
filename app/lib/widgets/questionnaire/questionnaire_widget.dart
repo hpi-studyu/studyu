@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/core.dart';
 
 import 'question_container.dart';
 

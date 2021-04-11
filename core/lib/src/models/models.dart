@@ -1,6 +1,9 @@
+export 'consent/consent_item.dart';
+export 'contact.dart';
 export 'data/data_reference.dart';
 export 'eligibility/eligibility_criterion.dart';
 export 'expressions/expression.dart';
+export 'expressions/types/types.dart';
 export 'interventions/interventions.dart';
 export 'observations/observations.dart';
 export 'questionnaire/questionnaire_models.dart';

@@ -4,8 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyou_core/models/interventions/intervention.dart';
-import 'package:studyou_core/models/interventions/interventions.dart';
+import 'package:studyou_core/core.dart';
 
 import '../task/task_editor.dart';
 

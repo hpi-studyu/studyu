@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_json_widget/flutter_json_widget.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/core.dart';
 import 'package:studyu_designer/designer/help_wrapper.dart';
 import 'package:studyu_designer/models/app_state.dart';
 

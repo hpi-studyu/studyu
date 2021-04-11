@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
-import 'package:studyou_core/util/supabase_object.dart';
-
+import '../../util/supabase_object.dart';
 import '../contact.dart';
 
 class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {

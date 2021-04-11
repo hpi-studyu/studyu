@@ -1,5 +1,4 @@
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/study_results/study_result.dart';
+import 'package:studyou_core/core.dart';
 import 'package:supabase/supabase.dart';
 
 class ResultDownloader {

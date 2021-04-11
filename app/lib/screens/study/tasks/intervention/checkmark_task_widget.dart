@@ -3,9 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:pimp_my_button/pimp_my_button.dart';
 import 'package:postgrest/postgrest.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/interventions/tasks/checkmark_task.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/results/result.dart';
+import 'package:studyou_core/core.dart';
 
 import '../../../../models/app_state.dart';
 

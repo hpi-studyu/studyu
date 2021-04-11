@@ -1,4 +1,4 @@
-import 'package:studyou_core/models/study_schedule/study_schedule.dart';
+import 'package:studyou_core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

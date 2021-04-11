@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyou_core/models/expressions/types/boolean_expression.dart';
-import 'package:studyou_core/models/expressions/types/choice_expression.dart';
-import 'package:studyou_core/models/expressions/types/not_expression.dart';
-import 'package:studyou_core/models/expressions/types/value_expression.dart';
-import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/core.dart';
 
 import './not_expression_editor.dart';
 import './value_expression_editor.dart';

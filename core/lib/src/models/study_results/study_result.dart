@@ -1,7 +1,7 @@
-import 'package:studyou_core/models/tables/study.dart';
-import 'package:studyou_core/models/tables/user_study.dart';
 import 'package:uuid/uuid.dart';
 
+import '../tables/study.dart';
+import '../tables/user_study.dart';
 import 'results/results.dart';
 
 typedef StudyResultParser = StudyResult Function(Map<String, dynamic> json);
@@ -24,8 +24,10 @@ abstract class StudyResult {
   factory StudyResult.fromJson(Map<String, dynamic> data) {
     return studyResultTypes[data[keyType]](data);
   }
+
   Map<String, dynamic> toJson();
 
   List<String> getHeaders(Study studySpec);
+
   List<dynamic> getValues(UserStudy instance);
 }

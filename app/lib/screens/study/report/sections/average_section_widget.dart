@@ -1,8 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/report/temporal_aggregation.dart';
+import 'package:studyou_core/core.dart';
 
 import '../../../../util/data_processing.dart';
 import '../report_section_widget.dart';

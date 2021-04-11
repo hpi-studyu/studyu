@@ -5,8 +5,6 @@ import 'package:quiver/collection.dart';
 
 import '../../util/extensions.dart';
 import '../../util/supabase_object.dart';
-import '../consent/consent_item.dart';
-import '../contact.dart';
 import '../models.dart';
 
 class UserStudy extends SupabaseObjectFunctions<UserStudy> {

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:studyou_core/models/results/result.dart';
 
+import '../../results/result.dart';
 import '../../tasks/schedule.dart';
 import '../intervention_task.dart';
 

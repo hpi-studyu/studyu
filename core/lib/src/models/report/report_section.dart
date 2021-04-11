@@ -1,5 +1,7 @@
-import 'package:studyou_core/models/models.dart';
 import 'package:uuid/uuid.dart';
+
+import 'sections/average_section.dart';
+import 'sections/linear_regression_section.dart';
 
 typedef SectionParser = ReportSection Function(Map<String, dynamic> data);
 

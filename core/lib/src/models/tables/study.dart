@@ -2,8 +2,6 @@ import 'package:fhir/r4.dart' as fhir;
 import 'package:uuid/uuid.dart';
 
 import '../../util/supabase_object.dart';
-import '../consent/consent_item.dart';
-import '../contact.dart';
 import '../models.dart';
 
 class Study extends SupabaseObjectFunctions<Study> {

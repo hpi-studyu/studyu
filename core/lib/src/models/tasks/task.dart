@@ -1,6 +1,6 @@
-import 'package:studyou_core/models/results/result.dart';
 import 'package:uuid/uuid.dart';
 
+import '../results/result.dart';
 import '../tasks/schedule.dart';
 
 abstract class Task {

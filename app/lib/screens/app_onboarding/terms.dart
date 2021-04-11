@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/retry_future_builder.dart';
+import 'package:studyou_core/core.dart';
 import 'package:studyu/util/user.dart';
 import 'package:url_launcher/url_launcher.dart';
 

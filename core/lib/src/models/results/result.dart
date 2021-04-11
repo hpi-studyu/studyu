@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:studyou_core/models/models.dart';
 import 'package:fhir/r4.dart' as fhir;
+import 'package:json_annotation/json_annotation.dart';
+
+import '../questionnaire/questionnaire_state.dart';
 
 part 'result.g.dart';
 

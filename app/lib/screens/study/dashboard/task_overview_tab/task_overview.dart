@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:quiver/collection.dart';
-import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/core.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../routes.dart';

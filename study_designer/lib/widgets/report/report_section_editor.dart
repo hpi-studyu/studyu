@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/report/report_models.dart';
+import 'package:studyou_core/core.dart';
 
 import 'average_section_editor_section.dart';
 import 'linear_regression_section_editor_section.dart';

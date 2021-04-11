@@ -1,5 +1,5 @@
 import '../tasks/task.dart';
-import 'tasks/tasks.dart';
+import 'tasks/checkmark_task.dart';
 
 typedef InterventionTaskParser = InterventionTask Function(Map<String, dynamic> data);
 

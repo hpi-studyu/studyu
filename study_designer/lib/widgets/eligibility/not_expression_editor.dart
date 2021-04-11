@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/models/expressions/types/types.dart';
-import 'package:studyou_core/models/models.dart';
+import 'package:studyou_core/core.dart';
 
 import './expression_editor.dart';
 

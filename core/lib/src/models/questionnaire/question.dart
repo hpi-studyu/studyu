@@ -1,7 +1,8 @@
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/models/questionnaire/question_conditional.dart';
 import 'package:uuid/uuid.dart';
 
+import 'answer.dart';
+import 'question_conditional.dart';
+import 'questionnaire_state.dart';
 import 'questions/questions.dart';
 
 typedef QuestionParser = Question Function(Map<String, dynamic> data);

@@ -2,8 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/retry_future_builder.dart';
+import 'package:studyou_core/core.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
