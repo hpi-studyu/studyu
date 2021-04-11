@@ -135,7 +135,7 @@ packages:
       name: fhir
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.4.3"
   fhir_yaml:
     dependency: transitive
     description:
@@ -372,7 +372,7 @@ packages:
       name: pdf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   pedantic:
     dependency: transitive
     description:
