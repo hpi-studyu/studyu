@@ -15,7 +15,7 @@ class KickoffScreen extends StatefulWidget {
 
 class _KickoffScreen extends State<KickoffScreen> {
   UserStudy study;
-  bool ready;
+  bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
     study.userId = await UserQueries.loadUserId();
@@ -26,13 +26,13 @@ class _KickoffScreen extends State<KickoffScreen> {
       await UserQueries.saveActiveUserStudyId(study.id);
     } finally {
       setState(() => ready = true);
+      Navigator.pushNamed(context, Routes.dashboard);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    ready = false;
     study = context.read<AppState>().activeStudy;
     _storeUserStudy(context);
   }
@@ -52,17 +52,8 @@ class _KickoffScreen extends State<KickoffScreen> {
   String _getStatusText(BuildContext context) =>
       !ready ? AppLocalizations.of(context).setting_up_study : AppLocalizations.of(context).good_to_go;
 
-  Widget _constructStatusButton(BuildContext context) {
-    return OutlinedButton.icon(
-      icon: Icon(MdiIcons.rocket),
-      onPressed: ready ? () => Navigator.pushNamed(context, Routes.dashboard) : null,
-      label: Text(AppLocalizations.of(context).get_started, style: TextStyle(fontSize: 20)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    debugPrint(study.toJson().toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(study.title),
@@ -81,8 +72,6 @@ class _KickoffScreen extends State<KickoffScreen> {
                     _getStatusText(context),
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                  SizedBox(height: 32),
-                  _constructStatusButton(context),
                 ],
               ),
             ),
