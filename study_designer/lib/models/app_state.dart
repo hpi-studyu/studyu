@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:postgrest/postgrest.dart';
 import 'package:studyou_core/models/models.dart';
 
 enum DesignerPage {
@@ -19,7 +18,7 @@ class AppState extends ChangeNotifier {
   String _selectedStudyId;
   Study draftStudy;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
-  Future<PostgrestResponse> Function() _researcherDashboardQuery;
+  Future<List<Study>> Function() _researcherDashboardQuery;
 
   AppState();
 
@@ -27,7 +26,7 @@ class AppState extends ChangeNotifier {
 
   bool get isDesigner => draftStudy != null;
 
-  Future<PostgrestResponse> Function() get researcherDashboardQuery {
+  Future<List<Study>> Function() get researcherDashboardQuery {
     // _researcherDashboardQuery should always be initialized, but only after ParseInit
     return _researcherDashboardQuery ??= Study().getResearcherDashboardStudies;
   }
@@ -49,8 +48,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
-    final res = await Study().getById(studyId);
-    draftStudy = Study.fromJson(res.data as Map<String, dynamic>);
+    draftStudy = await Study().getById(studyId);
     _selectedStudyId = studyId;
     _selectedDesignerPage = page;
     notifyListeners();

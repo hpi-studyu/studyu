@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-
-import 'package:studyou_core/util/supabase_future_builder.dart';
+import 'package:studyou_core/util/retry_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -61,10 +60,9 @@ class StudySelectionScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SupabaseListFutureBuilder<Study>(
-                  fromJsonConverter: (jsonList) => jsonList.map((e) => Study.fromJson(e)).toList(),
-                  queryFunction: () => Study().publishedStudies(),
-                  builder: (_context, studies) {
+                RetryFutureBuilder<List<Study>>(
+                  tryFunction: () async => Study().getAll(),
+                  successBuilder: (context, studies) {
                     return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),

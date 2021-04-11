@@ -12,11 +12,6 @@ class ResultDownloader {
 
   List<StudyResult> availableResults() => study.results;
 
-  Future<List<UserStudy>> loadAllInstances() async {
-    final response = await UserStudy().getUserStudiesFor(study);
-    return (response.data as List).map((json) => UserStudy.fromJson(json as Map<String, dynamic>)).toList();
-  }
-
   List<List<dynamic>> getResultsFor(List<UserStudy> instances, {StudyResult result}) {
     final header = [participantHeader, ...result.getHeaders(study)];
     return [
@@ -26,12 +21,12 @@ class ResultDownloader {
   }
 
   Future<List<List<dynamic>>> loadResultsFor(StudyResult result) async {
-    final instances = await loadAllInstances();
+    final instances = await UserStudy().getUserStudiesFor(study);
     return getResultsFor(instances, result: result);
   }
 
   Future<Map<StudyResult, List<List<dynamic>>>> loadAllResults() async {
-    final instances = await loadAllInstances();
+    final instances = await UserStudy().getUserStudiesFor(study);
     final results = <StudyResult, List<List<dynamic>>>{};
     for (final result in availableResults()) {
       results[result] = getResultsFor(instances, result: result);

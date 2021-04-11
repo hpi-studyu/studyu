@@ -21,7 +21,7 @@ class _KickoffScreen extends State<KickoffScreen> {
     study.userId = await UserQueries.loadUserId();
 
     try {
-      study = await study.saveUserStudy();
+      study = await study.save();
       context.read<AppState>().activeStudy = study;
       await UserQueries.saveActiveUserStudyId(study.id);
     } finally {

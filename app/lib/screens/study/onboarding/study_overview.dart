@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/models/models.dart';
-import 'package:studyou_core/util/supabase_future_builder.dart';
+import 'package:studyou_core/util/retry_future_builder.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -54,12 +54,11 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
             SizedBox(height: 16),
-            SupabaseListFutureBuilder<Study>(
-              fromJsonConverter: (jsonList) => jsonList.map((e) => Study.fromJson(e)).toList(),
-              queryFunction: () => Study().getById(study.id),
-              builder: (context, study) {
-                context.read<AppState>().selectedStudy = study.first;
-                return StudyDetailsView(study: study.first);
+            RetryFutureBuilder<Study>(
+              tryFunction: () => Study().getById(study.id),
+              successBuilder: (context, study) {
+                context.read<AppState>().selectedStudy = study;
+                return StudyDetailsView(study: study);
               },
             ),
           ],
