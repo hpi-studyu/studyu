@@ -30,7 +30,7 @@ class _TermsScreenState extends State<TermsScreen> {
       body: SafeArea(
         child: Center(
           child: RetryFutureBuilder<AppConfig>(
-            tryFunction: AppConfig().getAppConfig,
+            tryFunction: AppConfig.getAppConfig,
             successBuilder: (context, appConfig) => SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),

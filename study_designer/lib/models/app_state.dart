@@ -28,10 +28,10 @@ class AppState extends ChangeNotifier {
 
   Future<List<Study>> Function() get researcherDashboardQuery {
     // _researcherDashboardQuery should always be initialized, but only after ParseInit
-    return _researcherDashboardQuery ??= Study().getResearcherDashboardStudies;
+    return _researcherDashboardQuery ??= Study.getResearcherDashboardStudies;
   }
 
-  void reloadResearcherDashboard() => _researcherDashboardQuery = Study().getResearcherDashboardStudies;
+  void reloadResearcherDashboard() => _researcherDashboardQuery = Study.getResearcherDashboardStudies;
 
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
 

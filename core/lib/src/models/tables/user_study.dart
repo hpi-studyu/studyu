@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:fhir/r4.dart' as fhir;
 import 'package:quiver/collection.dart';
-import 'package:studyou_core/src/env/env.dart';
 
+import '../../env/env.dart';
 import '../../util/extensions.dart';
 import '../../util/supabase_object.dart';
 import '../models.dart';
@@ -264,9 +264,9 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     save();
   }
 
-  Future<List<UserStudy>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<UserStudy>(
+  static Future<List<UserStudy>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<UserStudy>(
       await client.from(tableName).select().eq('study_id', study.id).execute());
 
-  Future<List<UserStudy>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<UserStudy>(
+  static Future<List<UserStudy>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<UserStudy>(
       await client.from(tableName).select().eq('user_id', userId).execute());
 }

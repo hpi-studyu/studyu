@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
-import 'package:studyou_core/core.dart';
-
+import '../../../core.dart';
 import '../../util/supabase_object.dart';
 import '../contact.dart';
 
@@ -37,9 +36,9 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
         'imprint': imprint,
       };
 
-  Future<AppConfig> getAppConfig() async => SupabaseQuery.getById<AppConfig>('prod');
+  static Future<AppConfig> getAppConfig() async => SupabaseQuery.getById<AppConfig>('prod');
 
-  Future<Contact> getAppContact() async {
+  static Future<Contact> getAppContact() async {
     return (await getAppConfig()).contact;
   }
 }

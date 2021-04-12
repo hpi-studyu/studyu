@@ -60,7 +60,7 @@ class StudySelectionScreen extends StatelessWidget {
                   ),
                 ),
                 RetryFutureBuilder<List<Study>>(
-                  tryFunction: () async => SupabaseQuery.getAll<Study>(),
+                  tryFunction: () async => Study.publishedStudies(),
                   successBuilder: (context, studies) {
                     return ListView.builder(
                         shrinkWrap: true,

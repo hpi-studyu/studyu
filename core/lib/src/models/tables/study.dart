@@ -1,7 +1,7 @@
 import 'package:fhir/r4.dart' as fhir;
-import 'package:studyou_core/src/env/env.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../env/env.dart';
 import '../../util/supabase_object.dart';
 import '../models.dart';
 
@@ -126,10 +126,10 @@ class Study extends SupabaseObjectFunctions<Study> {
   }
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
+  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
       /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  Future<List<Study>> publishedStudies() async =>
+  static Future<List<Study>> publishedStudies() async =>
       SupabaseQuery.extractSupabaseList<Study>(await client.from(tableName).select().eq('published', true).execute());
 }

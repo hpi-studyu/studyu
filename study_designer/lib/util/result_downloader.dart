@@ -20,12 +20,12 @@ class ResultDownloader {
   }
 
   Future<List<List<dynamic>>> loadResultsFor(StudyResult result) async {
-    final instances = await UserStudy().getUserStudiesFor(study);
+    final instances = await UserStudy.getUserStudiesFor(study);
     return getResultsFor(instances, result: result);
   }
 
   Future<Map<StudyResult, List<List<dynamic>>>> loadAllResults() async {
-    final instances = await UserStudy().getUserStudiesFor(study);
+    final instances = await UserStudy.getUserStudiesFor(study);
     final results = <StudyResult, List<List<dynamic>>>{};
     for (final result in availableResults()) {
       results[result] = getResultsFor(instances, result: result);
