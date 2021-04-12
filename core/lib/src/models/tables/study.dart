@@ -31,7 +31,7 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   Study.designerDefault()
       : id = Uuid().v4(),
-        iconName = '',
+        iconName = 'accountHeart',
         published = false,
         contact = Contact.designerDefault(),
         interventionSet = InterventionSet.designerDefault(),
