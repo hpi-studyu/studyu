@@ -2,14 +2,15 @@ import 'dart:math';
 
 import 'package:fhir/r4.dart' as fhir;
 import 'package:quiver/collection.dart';
+import 'package:studyou_core/src/env/env.dart';
 
 import '../../util/extensions.dart';
 import '../../util/supabase_object.dart';
 import '../models.dart';
 
 class UserStudy extends SupabaseObjectFunctions<UserStudy> {
-  @override
-  String tableName = 'user_study';
+  static const String tableName = 'user_study';
+
   @override
   String id;
   String studyId;
@@ -31,8 +32,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
 
   UserStudy();
 
-  @override
-  UserStudy fromJson(Map<String, dynamic> json) => UserStudy()
+  factory UserStudy.fromJson(Map<String, dynamic> json) => UserStudy()
     ..id = json['id'] as String
     ..studyId = json['study_id'] as String
     ..userId = json['user_id'] as String
@@ -264,9 +264,9 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     save();
   }
 
-  Future<List<UserStudy>> getUserStudiesFor(Study study) async =>
-      extractSupabaseList(await client.from('study').select().eq('study_id', study.id).execute());
+  Future<List<UserStudy>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<UserStudy>(
+      await client.from(tableName).select().eq('study_id', study.id).execute());
 
-  Future<List<UserStudy>> getStudyHistory(String userId) async =>
-      extractSupabaseList(await client.from('user_study').select().eq('user_id', userId).execute());
+  Future<List<UserStudy>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<UserStudy>(
+      await client.from(tableName).select().eq('user_id', userId).execute());
 }

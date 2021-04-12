@@ -48,7 +48,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
-    draftStudy = await Study().getById(studyId);
+    draftStudy = await SupabaseQuery.getById<Study>(studyId);
     _selectedStudyId = studyId;
     _selectedDesignerPage = page;
     notifyListeners();

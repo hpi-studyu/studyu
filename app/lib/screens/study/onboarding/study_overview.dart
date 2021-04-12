@@ -54,7 +54,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
             ),
             SizedBox(height: 16),
             RetryFutureBuilder<Study>(
-              tryFunction: () => Study().getById(study.id),
+              tryFunction: () => SupabaseQuery.getById<Study>(study.id),
               successBuilder: (context, study) {
                 context.read<AppState>().selectedStudy = study;
                 return StudyDetailsView(study: study);

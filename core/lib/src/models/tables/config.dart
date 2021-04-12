@@ -1,12 +1,14 @@
 // ignore_for_file: non_constant_identifier_names
+import 'package:studyou_core/core.dart';
+
 import '../../util/supabase_object.dart';
 import '../contact.dart';
 
 class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {
+  static const String tableName = 'app_config';
+
   @override
   String id;
-  @override
-  String tableName = 'app_config';
 
   Contact contact;
   Map<String, String> app_privacy;
@@ -17,8 +19,7 @@ class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {
 
   StudyUConfig();
 
-  @override
-  StudyUConfig fromJson(Map<String, dynamic> json) => StudyUConfig()
+  factory StudyUConfig.fromJson(Map<String, dynamic> json) => StudyUConfig()
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..app_privacy = Map<String, String>.from(json['app_privacy'] as Map)
     ..app_terms = Map<String, String>.from(json['app_terms'] as Map)
@@ -36,7 +37,7 @@ class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {
         'imprint': imprint,
       };
 
-  Future<StudyUConfig> getAppConfig() async => getById('prod');
+  Future<StudyUConfig> getAppConfig() async => SupabaseQuery.getById<StudyUConfig>('prod');
 
   Future<Contact> getAppContact() async {
     return (await getAppConfig()).contact;

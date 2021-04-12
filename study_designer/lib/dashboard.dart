@@ -140,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
                             onPressed: () {
                               try {
                                 final studyJson = json.decode(controller.text) as Map<String, dynamic>;
-                                Study().fromJson(studyJson).save();
+                                Study.fromJson(studyJson).save();
                                 Navigator.pop(context, true);
                               } on FormatException {
                                 controller.text = 'This is not valid JSON! Please paste valid JSON.';
@@ -175,7 +175,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: RetryFutureBuilder<List<Study>>(
-            tryFunction: () => Study().getAll(),
+            tryFunction: () => SupabaseQuery.getAll<Study>(),
             successBuilder: (context, studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();

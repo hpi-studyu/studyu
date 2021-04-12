@@ -1,14 +1,14 @@
 import 'package:fhir/r4.dart' as fhir;
+import 'package:studyou_core/src/env/env.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../util/supabase_object.dart';
 import '../models.dart';
 
 class Study extends SupabaseObjectFunctions<Study> {
-  static const String baselineID = '__baseline';
+  static const String tableName = 'study';
 
-  @override
-  String tableName = 'study';
+  static const String baselineID = '__baseline';
   @override
   String id;
   String title;
@@ -43,8 +43,7 @@ class Study extends SupabaseObjectFunctions<Study> {
         reportSpecification = ReportSpecification.designerDefault(),
         results = [];
 
-  @override
-  Study fromJson(Map<String, dynamic> json) => Study()
+  factory Study.fromJson(Map<String, dynamic> json) => Study()
     ..id = json['id'] as String
     ..title = json['title'] as String
     ..description = json['description'] as String
@@ -127,10 +126,10 @@ class Study extends SupabaseObjectFunctions<Study> {
   }
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  Future<List<Study>> getResearcherDashboardStudies() async =>
-      getAll(/*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
+  Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
+      /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   Future<List<Study>> publishedStudies() async =>
-      extractSupabaseList(await client.from(tableName).select().eq('published', true).execute());
+      SupabaseQuery.extractSupabaseList<Study>(await client.from(tableName).select().eq('published', true).execute());
 }
