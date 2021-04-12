@@ -38,7 +38,7 @@ class _ContactScreenState extends State<ContactScreen> {
             ),
           ),
           RetryFutureBuilder<Contact>(
-              tryFunction: StudyUConfig().getAppContact,
+              tryFunction: AppConfig().getAppContact,
               successBuilder: (context, appSupportContact) => ContactWidget(
                     contact: appSupportContact,
                     title: AppLocalizations.of(context).app_support,

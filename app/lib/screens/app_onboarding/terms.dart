@@ -29,8 +29,8 @@ class _TermsScreenState extends State<TermsScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: RetryFutureBuilder<StudyUConfig>(
-            tryFunction: StudyUConfig().getAppConfig,
+          child: RetryFutureBuilder<AppConfig>(
+            tryFunction: AppConfig().getAppConfig,
             successBuilder: (context, appConfig) => SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),

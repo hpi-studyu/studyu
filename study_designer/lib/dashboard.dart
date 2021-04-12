@@ -45,8 +45,8 @@ class _DashboardState extends State<Dashboard> {
             builder: (context) {
               final appLocale = Localizations.localeOf(context);
 
-              return RetryFutureBuilder<StudyUConfig>(
-                tryFunction: StudyUConfig().getAppConfig,
+              return RetryFutureBuilder<AppConfig>(
+                tryFunction: AppConfig().getAppConfig,
                 successBuilder: (context, appConfig) => AlertDialog(
                   title: Text(AppLocalizations.of(context).terms_privacy),
                   actions: [

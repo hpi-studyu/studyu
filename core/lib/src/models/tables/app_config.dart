@@ -4,7 +4,7 @@ import 'package:studyou_core/core.dart';
 import '../../util/supabase_object.dart';
 import '../contact.dart';
 
-class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {
+class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static const String tableName = 'app_config';
 
   @override
@@ -17,9 +17,9 @@ class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {
   Map<String, String> designer_terms;
   Map<String, String> imprint;
 
-  StudyUConfig();
+  AppConfig();
 
-  factory StudyUConfig.fromJson(Map<String, dynamic> json) => StudyUConfig()
+  factory AppConfig.fromJson(Map<String, dynamic> json) => AppConfig()
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..app_privacy = Map<String, String>.from(json['app_privacy'] as Map)
     ..app_terms = Map<String, String>.from(json['app_terms'] as Map)
@@ -37,7 +37,7 @@ class StudyUConfig extends SupabaseObjectFunctions<StudyUConfig> {
         'imprint': imprint,
       };
 
-  Future<StudyUConfig> getAppConfig() async => SupabaseQuery.getById<StudyUConfig>('prod');
+  Future<AppConfig> getAppConfig() async => SupabaseQuery.getById<AppConfig>('prod');
 
   Future<Contact> getAppContact() async {
     return (await getAppConfig()).contact;
