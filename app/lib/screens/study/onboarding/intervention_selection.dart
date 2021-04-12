@@ -79,7 +79,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   Future<void> onFinished() async {
     final model = context.read<AppState>();
-    model.activeStudy = model.selectedStudy.extractUserStudy(null, selectedInterventions, DateTime.now(), 0);
+    // TODO: Provide userId here already
+    model.activeStudy = UserStudy.fromStudy(model.selectedStudy, null, selectedInterventions, DateTime.now(), 0);
     if (!kIsWeb) {
       scheduleStudyNotifications(context);
     }

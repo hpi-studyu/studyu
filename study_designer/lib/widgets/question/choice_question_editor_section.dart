@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/core.dart';
-import 'package:uuid/uuid.dart';
 
 import 'choice_editor.dart';
 
@@ -17,9 +16,7 @@ class ChoiceQuestionEditorSection extends StatefulWidget {
 class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSection> {
   void _addChoice() {
     setState(() {
-      final choice = Choice()
-        ..id = Uuid().v4()
-        ..text = '';
+      final choice = Choice.designerDefault();
       widget.question.choices.add(choice);
     });
   }

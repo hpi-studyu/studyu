@@ -12,14 +12,16 @@ abstract class StudyResult {
     NumericResult.studyResultType: (json) => NumericResult.fromJson(json),
   };
   static const String keyType = 'type';
-  String type;
+  String /*!*/ type;
 
-  String id;
-  String filename;
+  String /*!*/ id;
+  String/*!*/ filename;
 
   StudyResult(this.type);
 
-  StudyResult.designer(this.type) : id = Uuid().v4();
+  StudyResult.designer(this.type)
+      : id = Uuid().v4(),
+        filename = 'results.csv';
 
   factory StudyResult.fromJson(Map<String, dynamic> data) {
     return studyResultTypes[data[keyType]](data);

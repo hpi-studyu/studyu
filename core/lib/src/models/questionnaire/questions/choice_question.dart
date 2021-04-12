@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../answer.dart';
 import '../question.dart';
@@ -10,7 +11,7 @@ part 'choice_question.g.dart';
 class ChoiceQuestion extends Question<List<String>> {
   static String questionType = 'choice';
 
-  bool multiple;
+  bool /*!*/ multiple;
   List<Choice> choices;
 
   ChoiceQuestion() : super(questionType);
@@ -21,6 +22,7 @@ class ChoiceQuestion extends Question<List<String>> {
         super.designer(questionType);
 
   factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
+
   @override
   Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);
 
@@ -30,10 +32,14 @@ class ChoiceQuestion extends Question<List<String>> {
 
 @JsonSerializable()
 class Choice {
-  String id;
-  String text;
+  String/*!*/ id;
+  String/*!*/ text;
 
   Choice();
+
+  Choice.designerDefault()
+      : id = Uuid().v4(),
+        text = '';
 
   factory Choice.fromJson(Map<String, dynamic> json) => _$ChoiceFromJson(json);
 

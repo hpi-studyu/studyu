@@ -14,9 +14,7 @@ class TaskScheduleEditorSection extends StatefulWidget {
 
 class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
   void _add() {
-    final time = ScheduleTime()
-      ..hour = 0
-      ..minute = 0;
+    final time = ScheduleTime(hour: 0, minute: 0);
     final schedule = FixedSchedule()..time = time;
     setState(() {
       widget.task.schedule.add(schedule);

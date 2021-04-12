@@ -19,8 +19,8 @@ class FixedSchedule extends Schedule {
 }
 
 class ScheduleTime {
-  int hour;
-  int minute;
+  int/*!*/ hour;
+  int/*!*/ minute ;
 
   ScheduleTime({this.hour, this.minute}) : super();
 

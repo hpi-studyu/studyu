@@ -23,7 +23,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> initStudy() async {
-    final model = context.read<AppState>()..activeStudy = UserStudy();
+    final model = context.read<AppState>();
     final selectedStudyObjectId = await UserQueries.loadActiveStudyObjectId();
     print('Selected study: $selectedStudyObjectId');
     if (selectedStudyObjectId == null) {

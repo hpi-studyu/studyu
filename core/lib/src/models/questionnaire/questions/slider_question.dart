@@ -2,10 +2,10 @@ import '../answer.dart';
 import '../question.dart';
 
 abstract class SliderQuestion extends Question<num> {
-  double minimum;
-  double maximum;
-  double initial;
-  double step;
+  double/*!*/ minimum;
+  double/*!*/ maximum;
+  double/*!*/ initial;
+  double/*!*/ step;
 
   SliderQuestion(String type) : super(type);
 

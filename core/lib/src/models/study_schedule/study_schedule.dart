@@ -6,10 +6,10 @@ part 'study_schedule.g.dart';
 class StudySchedule {
   static const int numberOfPhases = 2;
 
-  int numberOfCycles;
-  int phaseDuration;
-  bool includeBaseline;
-  PhaseSequence sequence;
+  int/*!*/ numberOfCycles;
+  int/*!*/ phaseDuration;
+  bool/*!*/ includeBaseline;
+  PhaseSequence/*!*/ sequence;
 
   StudySchedule();
 
@@ -26,8 +26,9 @@ class StudySchedule {
 
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles, (index) => index);
-    final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
+    final List<int> phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
 
+    // TODO: Do not insert null as baseline
     if (includeBaseline) phases.insert(0, null);
 
     return phases;

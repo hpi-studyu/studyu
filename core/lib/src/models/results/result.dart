@@ -8,16 +8,18 @@ part 'result.g.dart';
 
 @JsonSerializable()
 class Result<T> {
-  String taskId;
-  DateTime timeStamp;
+  String/*!*/ taskId;
+  DateTime/*!*/ timeStamp;
   static const keyType = 'type';
-  String type;
+  String/*!*/ type;
 
   static const String keyResult = 'result';
   @JsonKey(ignore: true)
-  T result;
+  T/*!*/ result;
 
   Result();
+
+  Result.app({this.type, this.result, this.taskId}) : timeStamp = DateTime.now();
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
@@ -41,7 +43,7 @@ class Result<T> {
   }
 
   static Result fromJson(Map<String, dynamic> data) {
-    switch (data[keyType] as String) {
+    switch (data[keyType] as String/*!*/) {
       case 'fhir.QuestionnaireResponse':
         return Result<fhir.QuestionnaireResponse>.parseJson(data)
           ..result = fhir.QuestionnaireResponse.fromJson(data[keyResult] as Map<String, dynamic>);
@@ -49,7 +51,7 @@ class Result<T> {
         return Result<QuestionnaireState>.parseJson(data)
           ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult] as List));
       case 'bool':
-        return Result<bool>.parseJson(data)..result = data[keyResult] as bool;
+        return Result<bool/*!*/>.parseJson(data)..result = data[keyResult] as bool;
       default:
         throw ArgumentError('Type ${data[keyType]} not supported.');
     }

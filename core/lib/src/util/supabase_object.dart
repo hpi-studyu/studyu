@@ -5,7 +5,7 @@ import '../env/env.dart';
 import '../models/tables/study.dart';
 
 abstract class SupabaseObject {
-  String id;
+  String/*!*/ id;
 
   Map<String, dynamic> toJson();
 }
@@ -25,7 +25,7 @@ String tableName(Type cls) {
 }
 
 abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements SupabaseObject {
-  static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) {
+  static T fromJson<T extends SupabaseObject>(Map<String, dynamic>/*!*/ json) {
     switch (T) {
       case Study:
         return Study.fromJson(json) as T;

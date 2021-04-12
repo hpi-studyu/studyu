@@ -7,15 +7,12 @@ part 'answer.g.dart';
 
 @JsonSerializable()
 class Answer<V> {
-  static const String answerType = null;
-  String get type => answerType;
-
-  String question;
+  String/*!*/ question;
   DateTime timestamp;
 
   static const String keyResponse = 'response';
   @JsonKey(ignore: true)
-  V response;
+  V /*!*/ response;
 
   Answer(this.question, this.timestamp);
 
@@ -24,6 +21,7 @@ class Answer<V> {
         timestamp = DateTime.now();
 
   factory Answer.parseJson(Map<String, dynamic> json) => _$AnswerFromJson(json)..response = json[keyResponse] as V;
+
   Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(_$AnswerToJson(this), {keyResponse: response});
 
   static Answer fromJson(Map<String, dynamic> data) {

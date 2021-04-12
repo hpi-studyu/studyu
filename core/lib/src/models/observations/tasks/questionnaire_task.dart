@@ -27,7 +27,7 @@ class QuestionnaireTask extends Observation {
   Map<String, dynamic> toJson() => _$QuestionnaireTaskToJson(this);
 
   @override
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
+  Map<DateTime/*!*/, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
     final Question targetQuestion = questions.questions.firstWhere((q) => q.id == property, orElse: () => null);
     if (targetQuestion == null) {
       throw ArgumentError("Questionnaire '$id' does not have a question with '$property'.");
@@ -37,7 +37,7 @@ class QuestionnaireTask extends Observation {
   }
 
   @override
-  Map<String, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
+  Map<String/*!*/, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
 
   @override
   String getHumanReadablePropertyName(String property) =>

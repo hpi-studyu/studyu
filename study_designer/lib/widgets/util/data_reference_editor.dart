@@ -17,9 +17,7 @@ class DataReferenceEditor<T> extends StatefulWidget {
 
 class _DataReferenceEditorState<T> extends State<DataReferenceEditor<T>> {
   void _changeTarget(_DataReferenceIdentifier identifier) {
-    final newReference = DataReference<T>()
-      ..property = identifier.property
-      ..task = identifier.task;
+    final newReference = DataReference<T>.designer(identifier.task, identifier.property);
 
     widget.updateReference(newReference);
   }

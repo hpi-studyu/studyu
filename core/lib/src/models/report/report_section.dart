@@ -11,8 +11,8 @@ abstract class ReportSection {
     LinearRegressionSection.sectionType: (json) => LinearRegressionSection.fromJson(json),
   };
   static const String keyType = 'type';
-  String type;
-  String id;
+  String/*!*/ type;
+  String/*!*/ id;
   String title;
   String description;
 

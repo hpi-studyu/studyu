@@ -15,11 +15,7 @@ class CheckmarkTaskWidget extends StatelessWidget {
   Future<void> _handleCompletion(BuildContext context, Future<void> animation) async {
     final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
-    final result = Result<bool>()
-      ..type = 'bool'
-      ..result = true
-      ..timeStamp = DateTime.now()
-      ..taskId = task.id;
+    final result = Result<bool>.app(type: 'bool', result: true, taskId: task.id);
     activeStudy.addResult(result);
     try {
       await activeStudy.save();
