@@ -7,10 +7,10 @@ part 'intervention.g.dart';
 
 @JsonSerializable()
 class Intervention {
-  String id;
+  String/*!*/ id;
   String name;
   String description;
-  String icon;
+  String/*!*/ icon;
 
   List<InterventionTask> tasks;
 

@@ -7,7 +7,7 @@ abstract class Schedule {
     FixedSchedule.scheduleType: (json) => FixedSchedule.fromJson(json),
   };
   static const String keyType = 'type';
-  String type;
+  String/*!*/ type;
 
   Schedule(this.type);
 

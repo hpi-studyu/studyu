@@ -53,11 +53,11 @@ class RetryFutureBuilder<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RetryFutureBuilder<T>> createState() => RetryFutureBuilderState<T>();
+  State<RetryFutureBuilder<T/*!*/>> createState() => RetryFutureBuilderState<T>();
 }
 
-class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
-  Future<T> _future;
+class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T/*!*/>> {
+  /*late*/Future<T>/*!*/ _future;
 
   @override
   void initState() {
@@ -91,8 +91,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
           case ConnectionState.done:
             if (snapshot.hasError) {
               if (widget.errorWidgetBuilder != null) {
-                final errorWidget = widget.errorWidgetBuilder(context, snapshot.error, reload);
-                if (errorWidget != null) return errorWidget;
+                return widget.errorWidgetBuilder(context, snapshot.error, reload);
               }
               return buildErrorView(context, snapshot.error);
             }

@@ -13,20 +13,20 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
 
   @override
   String id;
-  String studyId;
-  String userId;
-  String title;
+  String /*!*/ studyId;
+  String /*!*/ userId;
+  String /*!*/ title;
   Contact contact;
-  String description;
-  String iconName;
-  DateTime startDate;
+  String /*!*/ description;
+  String /*!*/ iconName;
+  DateTime /*!*/ startDate;
   StudySchedule schedule;
-  List<String> interventionOrder;
+  List<String>/*!*/ interventionOrder;
   InterventionSet interventionSet;
   List<Observation> observations;
   List<ConsentItem> consent;
-  Map<String, List<Result>> results;
-  ReportSpecification reportSpecification;
+  Map<String, List<Result>>/*!*/ results;
+  ReportSpecification/*!*/ reportSpecification;
 
   fhir.Questionnaire fhirQuestionnaire;
 
@@ -79,6 +79,38 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
         // Some values could be null (id), therefore remove all null values
       }..removeWhere((key, value) => value == null);
 
+  UserStudy.fromStudy(
+      Study study, this.userId, List<Intervention> selectedInterventions, this.startDate, int firstIntervention)
+      : title = study.title,
+        description = study.description,
+        contact = study.contact,
+        iconName = study.iconName,
+        studyId = study.id,
+        schedule = study.schedule,
+        consent = study.consent,
+        interventionSet = InterventionSet(selectedInterventions),
+        observations = study.observations ?? [],
+        reportSpecification = study.reportSpecification,
+        fhirQuestionnaire = study.fhirQuestionnaire {
+    const baselineId = Study.baselineID;
+    var addBaseline = false;
+    interventionOrder = schedule.generateWith(firstIntervention).map<String>((int index) {
+      if (index == null) {
+        addBaseline = true;
+        return baselineId;
+      }
+      return selectedInterventions[index].id;
+    }).toList();
+    if (addBaseline) {
+      interventionSet = InterventionSet([
+        ...interventionSet.interventions,
+        Intervention(baselineId, 'Baseline')
+          ..tasks = []
+          ..icon = 'rayStart'
+      ]);
+    }
+  }
+
   int get daysPerIntervention => schedule.numberOfCycles * schedule.phaseDuration;
 
   void addResult(Result result) {
@@ -96,7 +128,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     results = nextResults;
   }
 
-  Map<String, List<Result>> getResultsByInterventionId({String taskId}) {
+  Map<String, List<Result>> getResultsByInterventionId({String/*!*/ taskId}) {
     final resultMap = <String, List<Result>>{};
     results.values
         .map((value) => value.where((result) => taskId == null || taskId == result.taskId).map((result) {
@@ -109,7 +141,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     return resultMap;
   }
 
-  Map<DateTime, List<Result>> getResultsByDate({String interventionId}) {
+  Map<DateTime, List<Result>> getResultsByDate({String/*!*/ interventionId}) {
     final resultMap = <DateTime, List<Result>>{};
     results.values
         .map((value) => value.map((result) {
@@ -228,10 +260,10 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     return daysCount * task.schedule.length;
   }
 
-  Multimap<ScheduleTime, Task> scheduleFor(DateTime dateTime) {
+  Multimap<ScheduleTime/*!*/, Task> scheduleFor(DateTime dateTime) {
     final activeIntervention = getInterventionForDate(dateTime);
 
-    final taskSchedule = Multimap<ScheduleTime, Task>();
+    final taskSchedule = Multimap<ScheduleTime/*!*/, Task>();
 
     if (activeIntervention == null) return taskSchedule;
 

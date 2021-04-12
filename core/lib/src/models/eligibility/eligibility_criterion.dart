@@ -9,7 +9,7 @@ part 'eligibility_criterion.g.dart';
 
 @JsonSerializable()
 class EligibilityCriterion {
-  String id;
+  String/*!*/ id;
   String reason;
   Expression condition;
 

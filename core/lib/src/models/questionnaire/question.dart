@@ -15,9 +15,9 @@ abstract class Question<V> {
     VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
   };
   static const String keyType = 'type';
-  String type;
+  String/*!*/ type;
 
-  String id;
+  String/*!*/ id;
   String prompt;
   String rationale;
 
@@ -39,7 +39,7 @@ abstract class Question<V> {
     return conditional.condition.evaluate(state) != false;
   }
 
-  Answer<V> getDefaultAnswer() {
+  Answer<V/*!*/> getDefaultAnswer() {
     if (conditional == null) return null;
     return Answer.forQuestion(this, conditional.defaultValue);
   }

@@ -8,10 +8,12 @@ part 'data_reference.g.dart';
 
 @JsonSerializable()
 class DataReference<T> {
-  String task;
-  String property;
+  String/*!*/ task;
+  String/*!*/ property;
 
   DataReference();
+
+  DataReference.designer(this.task, this.property);
 
   factory DataReference.fromJson(Map<String, dynamic> json) => _$DataReferenceFromJson(json);
 

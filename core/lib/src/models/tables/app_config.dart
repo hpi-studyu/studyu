@@ -9,12 +9,12 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   @override
   String id;
 
-  Contact contact;
-  Map<String, String> app_privacy;
-  Map<String, String> app_terms;
-  Map<String, String> designer_privacy;
-  Map<String, String> designer_terms;
-  Map<String, String> imprint;
+  Contact/*!*/ contact;
+  Map<String, String>/*!*/ app_privacy;
+  Map<String, String>/*!*/ app_terms;
+  Map<String, String>/*!*/ designer_privacy;
+  Map<String, String>/*!*/ designer_terms;
+  Map<String, String>/*!*/ imprint;
 
   AppConfig();
 

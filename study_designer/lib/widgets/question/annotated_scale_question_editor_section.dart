@@ -16,9 +16,7 @@ class AnnotatedScaleQuestionEditorSection extends StatefulWidget {
 class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQuestionEditorSection> {
   void _addAnnotation() {
     setState(() {
-      final choice = Annotation()
-        ..value = 0
-        ..annotation = '';
+      final choice = Annotation.designerDefault();
       widget.question.annotations.add(choice);
     });
   }

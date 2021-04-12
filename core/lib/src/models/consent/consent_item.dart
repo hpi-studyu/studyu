@@ -5,10 +5,10 @@ part 'consent_item.g.dart';
 
 @JsonSerializable()
 class ConsentItem {
-  String id;
+  String/*!*/ id;
   String title;
   String description;
-  String iconName;
+  String/*!*/ iconName;
 
   ConsentItem();
 

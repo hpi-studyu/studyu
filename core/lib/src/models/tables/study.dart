@@ -13,16 +13,16 @@ class Study extends SupabaseObjectFunctions<Study> {
   String id;
   String title;
   String description;
-  Contact contact;
-  String iconName;
-  bool published;
+  Contact /*!*/ contact;
+  String /*!*/ iconName;
+  bool /*!*/ published;
   Questionnaire questionnaire;
   List<EligibilityCriterion> eligibility;
-  List<ConsentItem> consent;
+  List<ConsentItem> /*!*/ consent;
   InterventionSet interventionSet;
-  List<Observation> observations;
-  StudySchedule schedule;
-  ReportSpecification reportSpecification;
+  List<Observation> /*!*/ observations;
+  StudySchedule /*!*/ schedule;
+  ReportSpecification /*!*/ reportSpecification;
   List<StudyResult> results;
 
   fhir.Questionnaire fhirQuestionnaire;
@@ -82,48 +82,6 @@ class Study extends SupabaseObjectFunctions<Study> {
         'report_specification': reportSpecification?.toJson(),
         'results': results.map((e) => e.toJson()).toList(),
       };
-
-  UserStudy extractUserStudy(
-      String userId, List<Intervention> selectedInterventions, DateTime startDate, int firstIntervention) {
-    final userStudy = UserStudy()
-      ..title = title
-      ..description = description
-      ..contact = contact
-      ..iconName = iconName
-      ..studyId = id
-      ..userId = userId
-      ..startDate = startDate
-      ..interventionSet = InterventionSet(selectedInterventions)
-      ..observations = observations ?? []
-      ..reportSpecification = reportSpecification
-      ..fhirQuestionnaire = fhirQuestionnaire;
-    if (schedule != null) {
-      const baselineId = Study.baselineID;
-      var addBaseline = false;
-      userStudy
-        ..schedule = schedule
-        ..consent = consent
-        ..interventionOrder = schedule.generateWith(firstIntervention).map<String>((int index) {
-          if (index == null) {
-            addBaseline = true;
-            return baselineId;
-          }
-          return selectedInterventions[index].id;
-        }).toList();
-      if (addBaseline) {
-        userStudy.interventionSet = InterventionSet([
-          ...userStudy.interventionSet.interventions,
-          Intervention(baselineId, 'Baseline')
-            ..tasks = []
-            ..icon = 'rayStart'
-        ]);
-      }
-    } else {
-      print('Study is missing schedule!');
-      return null;
-    }
-    return userStudy;
-  }
 
   // TODO: Add null checks in fromJson to allow selecting columns
   static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
