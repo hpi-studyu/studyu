@@ -6,7 +6,7 @@ const supabaseAnonKey =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYxNzUzMDYwMSwiZXhwIjoxOTMzMTA2NjAxfQ.T-QhpPisubwjOn3P1Gj3DV-2Mb_ztzvLwiVYWrGFvVA';
 
 abstract class SupabaseObject<T> {
-  String tableName;
+  String tableName = 'SupabaseObject';
   String id;
 
   Map<String, dynamic> toJson();
