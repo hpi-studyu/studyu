@@ -43,7 +43,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   bool _checkContinuation(QuestionnaireState qs) {
-    final criteria = widget.study.eligibility;
+    final criteria = widget.study.eligibilityCriteria;
     final failingResult = criteria?.firstWhere((element) => element.isViolated(qs), orElse: () => null);
     if (failingResult == null) return true;
     setState(() {
@@ -53,7 +53,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   void _evaluateResponse(QuestionnaireState qs) {
-    final criteria = widget.study.eligibility;
+    final criteria = widget.study.eligibilityCriteria;
     setState(() {
       final conditionResult = criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
       if (conditionResult) {

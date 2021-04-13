@@ -1,8 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
+import 'package:json_annotation/json_annotation.dart';
+
 import '../../../core.dart';
 import '../../util/supabase_object.dart';
 import '../contact.dart';
 
+part 'app_config.g.dart';
+
+@JsonSerializable()
 class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static const String tableName = 'app_config';
 
