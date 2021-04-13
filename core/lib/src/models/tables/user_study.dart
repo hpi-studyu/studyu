@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fhir/r4.dart' as fhir;
+import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
 
 import '../../env/env.dart';
@@ -9,6 +10,9 @@ import '../../util/extensions.dart';
 import '../../util/supabase_object.dart';
 import '../models.dart';
 
+part 'user_study.g.dart';
+
+@JsonSerializable()
 class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   static const String tableName = 'user_study';
 
@@ -34,49 +38,52 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
 
   UserStudy();
 
-  factory UserStudy.fromJson(Map<String, dynamic> json) => UserStudy()
-    ..id = json['id'] as String
-    ..studyId = json['study_id'] as String
-    ..userId = json['user_id'] as String
-    ..title = json['title'] as String
-    ..description = json['description'] as String
-    ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
-    ..iconName = json['icon_name'] as String
-    ..startDate = DateTime.tryParse(json['start_date'] as String)!
-    ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
-    ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
-    ..interventionOrder = List<String>.from(json['intervention_order_ids'] as List)
-    ..observations = (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
-    ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
-    ..reportSpecification = ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
-    ..results = (json['results'] as Map<String, dynamic>?)?.map<String, List<Result>>((key, resultsData) {
-          final results = (resultsData as List)
-              .map<Result>((resultData) => Result.fromJson(resultData as Map<String, dynamic>))
-              .toList();
-          return MapEntry(key, results);
-        }) ??
-        {};
+  factory UserStudy.fromJson(Map<String, dynamic> json) => _$UserStudyFromJson(json);
+
+  // factory UserStudy.fromJson(Map<String, dynamic> json) => UserStudy()
+  //   ..id = json['id'] as String
+  //   ..studyId = json['study_id'] as String
+  //   ..userId = json['user_id'] as String
+  //   ..title = json['title'] as String
+  //   ..description = json['description'] as String
+  //   ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
+  //   ..iconName = json['icon_name'] as String
+  //   ..startDate = DateTime.tryParse(json['start_date'] as String)!
+  //   ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
+  //   ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
+  //   ..interventionOrder = List<String>.from(json['intervention_order_ids'] as List)
+  //   ..observations = (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
+  //   ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+  //   ..reportSpecification = ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
+  //   ..results = (json['results'] as Map<String, dynamic>?)?.map<String, List<Result>>((key, resultsData) {
+  //         final results = (resultsData as List)
+  //             .map<Result>((resultData) => Result.fromJson(resultData as Map<String, dynamic>))
+  //             .toList();
+  //         return MapEntry(key, results);
+  //       }) ??
+  //       {};
 
   @override
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
-        'study_id': studyId,
-        'user_id': userId,
-        'title': title,
-        'description': description,
-        'contact': contact.toJson(),
-        'icon_name': iconName,
-        'start_date': startDate.toIso8601String(),
-        'consent': consent.map((e) => e.toJson()).toList(),
-        'intervention_set': interventionSet.toJson(),
-        'intervention_order_ids': interventionOrder,
-        'observations': observations.map((e) => e.toJson()).toList(),
-        'schedule': schedule.toJson(),
-        'report_specification': reportSpecification.toJson(),
-        'results': results.map<String, dynamic>(
-                (key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())),
-        // Some values could be null (id), therefore remove all null values
-      }..removeWhere((key, value) => value == null);
+  Map<String, dynamic> toJson() => _$UserStudyToJson(this);
+
+  //       'id': id,
+  //       'study_id': studyId,
+  //       'user_id': userId,
+  //       'title': title,
+  //       'description': description,
+  //       'contact': contact.toJson(),
+  //       'icon_name': iconName,
+  //       'start_date': startDate.toIso8601String(),
+  //       'consent': consent.map((e) => e.toJson()).toList(),
+  //       'intervention_set': interventionSet.toJson(),
+  //       'intervention_order_ids': interventionOrder,
+  //       'observations': observations.map((e) => e.toJson()).toList(),
+  //       'schedule': schedule.toJson(),
+  //       'report_specification': reportSpecification.toJson(),
+  //       'results': results
+  //           .map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())),
+  //       // Some values could be null (id), therefore remove all null values
+  //     }..removeWhere((key, value) => value == null);
 
   UserStudy.fromStudy(
       Study study, this.userId, List<Intervention> selectedInterventions, this.startDate, int firstIntervention)
@@ -175,8 +182,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
       return null;
     }
     final interventionId = interventionOrder[index];
-    return interventionSet.interventions
-        .firstWhereOrNull((intervention) => intervention.id == interventionId);
+    return interventionSet.interventions.firstWhereOrNull((intervention) => intervention.id == interventionId);
   }
 
   List<Intervention> getInterventionsInOrder() {
@@ -296,8 +302,8 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   }
 
   static Future<List<UserStudy>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<UserStudy>(
-      await client.from(tableName).select().eq('study_id', study.id).execute());
+      await client.from(tableName).select().eq('studyId', study.id).execute());
 
   static Future<List<UserStudy>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<UserStudy>(
-      await client.from(tableName).select().eq('user_id', userId).execute());
+      await client.from(tableName).select().eq('userId', userId).execute());
 }
