@@ -27,7 +27,8 @@ import 'package:flutter/material.dart';
 typedef CustomErrorWidgetBuilder = Widget Function(BuildContext context, dynamic error, void Function() reload);
 
 class RetryFutureBuilder<T> extends StatefulWidget {
-  static RetryFutureBuilderState? of(BuildContext context) => context.findAncestorStateOfType<RetryFutureBuilderState>();
+  static RetryFutureBuilderState? of(BuildContext context) =>
+      context.findAncestorStateOfType<RetryFutureBuilderState>();
 
   final Future<T> Function() tryFunction;
   final Widget Function(BuildContext, T?) successBuilder;

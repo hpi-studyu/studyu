@@ -61,7 +61,7 @@ class StudySelectionScreen extends StatelessWidget {
                 ),
                 RetryFutureBuilder<List<Study>>(
                   tryFunction: () async => Study.publishedStudies(),
-                  successBuilder: (BuildContext context, List<Study>studies) {
+                  successBuilder: (BuildContext context, List<Study> studies) {
                     return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
