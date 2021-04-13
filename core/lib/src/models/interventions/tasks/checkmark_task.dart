@@ -12,7 +12,7 @@ class CheckmarkTask extends InterventionTask {
 
   CheckmarkTask() : super(taskType);
 
-  CheckmarkTask.designerDefault() : super.designer(taskType);
+  CheckmarkTask.withId() : super.withId(taskType);
 
   factory CheckmarkTask.fromJson(Map<String, dynamic> json) => _$CheckmarkTaskFromJson(json);
 
@@ -28,5 +28,5 @@ class CheckmarkTask extends InterventionTask {
   Map<String, Type> getAvailableProperties() => {};
 
   @override
-  String getHumanReadablePropertyName(String property) => null;
+  String? getHumanReadablePropertyName(String property) => null;
 }

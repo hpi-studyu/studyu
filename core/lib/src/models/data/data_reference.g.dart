@@ -7,9 +7,10 @@ part of 'data_reference.dart';
 // **************************************************************************
 
 DataReference<T> _$DataReferenceFromJson<T>(Map<String, dynamic> json) {
-  return DataReference<T>()
-    ..task = json['task'] as String
-    ..property = json['property'] as String;
+  return DataReference<T>(
+    json['task'] as String,
+    json['property'] as String,
+  );
 }
 
 Map<String, dynamic> _$DataReferenceToJson<T>(DataReference<T> instance) =>

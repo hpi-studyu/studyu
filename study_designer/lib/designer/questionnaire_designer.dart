@@ -18,7 +18,7 @@ class _EligibilityQuestionsDesignerState extends State<EligibilityQuestionsDesig
 
   void _addQuestion() {
     setState(() {
-      questionnaire.questions.add(BooleanQuestion.designerDefault());
+      questionnaire.questions.add(BooleanQuestion.withId());
     });
   }
 

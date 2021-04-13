@@ -24,14 +24,14 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     final oldQuestion = widget.questionnaire.questions[index];
     Question newQuestion;
     if (newType == BooleanQuestion.questionType) {
-      newQuestion = BooleanQuestion.designerDefault();
+      newQuestion = BooleanQuestion.withId();
     } else if (newType == ChoiceQuestion.questionType) {
-      newQuestion = ChoiceQuestion.designerDefault();
+      newQuestion = ChoiceQuestion.withId();
     } else if (newType == AnnotatedScaleQuestion.questionType || newType == VisualAnalogueQuestion.questionType) {
       if (newType == AnnotatedScaleQuestion.questionType) {
-        newQuestion = AnnotatedScaleQuestion.designerDefault();
+        newQuestion = AnnotatedScaleQuestion.withId();
       } else {
-        newQuestion = VisualAnalogueQuestion.designerDefault();
+        newQuestion = VisualAnalogueQuestion.withId();
       }
       if (newQuestion is SliderQuestion) {
         if (oldQuestion is SliderQuestion) {

@@ -16,7 +16,7 @@ class ChoiceQuestionEditorSection extends StatefulWidget {
 class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSection> {
   void _addChoice() {
     setState(() {
-      final choice = Choice.designerDefault();
+      final choice = Choice.withId();
       widget.question.choices.add(choice);
     });
   }

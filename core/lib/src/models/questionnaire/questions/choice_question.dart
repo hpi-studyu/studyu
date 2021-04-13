@@ -11,15 +11,12 @@ part 'choice_question.g.dart';
 class ChoiceQuestion extends Question<List<String>> {
   static String questionType = 'choice';
 
-  bool /*!*/ multiple;
-  List<Choice> choices;
+  bool multiple = false;
+  List<Choice> choices = [];
 
   ChoiceQuestion() : super(questionType);
 
-  ChoiceQuestion.designerDefault()
-      : multiple = false,
-        choices = [],
-        super.designer(questionType);
+  ChoiceQuestion.withId() : super.withId(questionType);
 
   factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
 
@@ -32,14 +29,12 @@ class ChoiceQuestion extends Question<List<String>> {
 
 @JsonSerializable()
 class Choice {
-  String/*!*/ id;
-  String/*!*/ text;
+  String id;
+  String text = '';
 
-  Choice();
+  Choice(this.id);
 
-  Choice.designerDefault()
-      : id = Uuid().v4(),
-        text = '';
+  Choice.withId() : id = Uuid().v4();
 
   factory Choice.fromJson(Map<String, dynamic> json) => _$ChoiceFromJson(json);
 

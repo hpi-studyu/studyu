@@ -9,13 +9,11 @@ part 'annotated_scale_question.g.dart';
 class AnnotatedScaleQuestion extends SliderQuestion {
   static const String questionType = 'annotatedScale';
 
-  List<Annotation> annotations;
+  List<Annotation> annotations = [];
 
   AnnotatedScaleQuestion() : super(questionType);
 
-  AnnotatedScaleQuestion.designerDefault()
-      : annotations = [],
-        super.designer(questionType);
+  AnnotatedScaleQuestion.withId() : super.withId(questionType);
 
   factory AnnotatedScaleQuestion.fromJson(Map<String, dynamic> json) => _$AnnotatedScaleQuestionFromJson(json);
 
@@ -25,14 +23,10 @@ class AnnotatedScaleQuestion extends SliderQuestion {
 
 @JsonSerializable()
 class Annotation {
-  int/*!*/ value;
-  String/*!*/ annotation;
+  int value = 0;
+  String annotation = '';
 
   Annotation();
-
-  Annotation.designerDefault()
-      : value = 0,
-        annotation = '';
 
   factory Annotation.fromJson(Map<String, dynamic> json) => _$AnnotationFromJson(json);
 

@@ -10,43 +10,30 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   static const String baselineID = '__baseline';
   @override
-  String id;
-  String title;
-  String description;
-  Contact /*!*/ contact;
-  String /*!*/ iconName;
-  bool /*!*/ published;
-  Questionnaire questionnaire;
-  List<EligibilityCriterion> eligibility;
-  List<ConsentItem> /*!*/ consent;
-  InterventionSet interventionSet;
-  List<Observation> /*!*/ observations;
-  StudySchedule /*!*/ schedule;
-  ReportSpecification /*!*/ reportSpecification;
-  List<StudyResult> results;
+  String? id;
+  String? title;
+  String? description;
+  Contact contact = Contact();
+  String iconName = 'accountHeart';
+  bool published = false;
+  Questionnaire questionnaire = Questionnaire();
+  List<EligibilityCriterion> eligibility = [];
+  List<ConsentItem> consent = [];
+  InterventionSet interventionSet = InterventionSet([]);
+  List<Observation> observations = [];
+  StudySchedule schedule = StudySchedule();
+  ReportSpecification reportSpecification = ReportSpecification();
+  List<StudyResult> results = [];
 
-  fhir.Questionnaire fhirQuestionnaire;
+  fhir.Questionnaire? fhirQuestionnaire;
 
-  Study();
+  Study(this.id);
 
-  Study.designerDefault()
-      : id = Uuid().v4(),
-        iconName = 'accountHeart',
-        published = false,
-        contact = Contact.designerDefault(),
-        interventionSet = InterventionSet.designerDefault(),
-        questionnaire = Questionnaire.designerDefault(),
-        eligibility = [],
-        observations = [],
-        consent = [],
-        schedule = StudySchedule.designerDefault(),
-        reportSpecification = ReportSpecification.designerDefault(),
-        results = [];
+  Study.withId() : id = Uuid().v4();
 
-  factory Study.fromJson(Map<String, dynamic> json) => Study()
-    ..id = json['id'] as String
-    ..title = json['title'] as String
-    ..description = json['description'] as String
+  factory Study.fromJson(Map<String, dynamic> json) => Study(json['id'] as String)
+    ..title = json['title'] as String?
+    ..description = json['description'] as String?
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..iconName = json['icon_name'] as String
     ..published = json['published'] as bool
@@ -60,9 +47,7 @@ class Study extends SupabaseObjectFunctions<Study> {
     ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
     ..observations = (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
     ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
-    ..reportSpecification = json['report_specification'] != null
-        ? ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
-        : null
+    ..reportSpecification = ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
     ..results = (json['results'] as List).map((e) => StudyResult.fromJson(e as Map<String, dynamic>)).toList();
 
   @override
@@ -79,7 +64,7 @@ class Study extends SupabaseObjectFunctions<Study> {
         'intervention_set': interventionSet.toJson(),
         'observations': observations.map((e) => e.toJson()).toList(),
         'schedule': schedule.toJson(),
-        'report_specification': reportSpecification?.toJson(),
+        'report_specification': reportSpecification.toJson(),
         'results': results.map((e) => e.toJson()).toList(),
       };
 

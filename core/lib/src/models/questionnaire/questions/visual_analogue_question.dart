@@ -12,21 +12,16 @@ class VisualAnalogueQuestion extends SliderQuestion {
   static const String questionType = 'visualAnalogue';
 
   @JsonKey(fromJson: parseColor, toJson: colorToJson)
-  Color minimumColor;
+  Color minimumColor = const Color(0xFFFFFFFF);
   @JsonKey(fromJson: parseColor, toJson: colorToJson)
-  Color maximumColor;
+  Color maximumColor = const Color(0xFFFFFFFF);
 
-  String /*!*/ minimumAnnotation;
-  String /*!*/ maximumAnnotation;
+  String minimumAnnotation = '';
+  String maximumAnnotation = '';
 
   VisualAnalogueQuestion() : super(questionType);
 
-  VisualAnalogueQuestion.designerDefault()
-      : minimumColor = const Color(0xFFFFFFFF),
-        maximumColor = const Color(0xFFFFFFFF),
-        minimumAnnotation = '',
-        maximumAnnotation = '',
-        super.designer(questionType);
+  VisualAnalogueQuestion.withId() : super.withId(questionType);
 
   factory VisualAnalogueQuestion.fromJson(Map<String, dynamic> json) => _$VisualAnalogueQuestionFromJson(json);
 

@@ -11,16 +11,16 @@ abstract class ReportSection {
     LinearRegressionSection.sectionType: (json) => LinearRegressionSection.fromJson(json),
   };
   static const String keyType = 'type';
-  String/*!*/ type;
-  String/*!*/ id;
-  String title;
-  String description;
+  String type;
+  late String id;
+  String? title;
+  String? description;
 
   ReportSection(this.type);
 
-  ReportSection.designer(this.type) : id = Uuid().v4();
+  ReportSection.withId(this.type) : id = Uuid().v4();
 
-  factory ReportSection.fromJson(Map<String, dynamic> data) => sectionTypes[data[keyType]](data);
+  factory ReportSection.fromJson(Map<String, dynamic> data) => sectionTypes[data[keyType]]!(data);
   Map<String, dynamic> toJson();
 
   @override

@@ -11,8 +11,8 @@ VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
   return VisualAnalogueQuestion()
     ..type = json['type'] as String
     ..id = json['id'] as String
-    ..prompt = json['prompt'] as String
-    ..rationale = json['rationale'] as String
+    ..prompt = json['prompt'] as String?
+    ..rationale = json['rationale'] as String?
     ..conditional = json['conditional'] == null
         ? null
         : QuestionConditional.fromJson(
@@ -20,7 +20,7 @@ VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
     ..minimum = (json['minimum'] as num).toDouble()
     ..maximum = (json['maximum'] as num).toDouble()
     ..initial = (json['initial'] as num).toDouble()
-    ..step = (json['step'] as num)?.toDouble()
+    ..step = (json['step'] as num).toDouble()
     ..minimumColor =
         VisualAnalogueQuestion.parseColor(json['minimumColor'] as String)
     ..maximumColor =
@@ -34,7 +34,6 @@ Map<String, dynamic> _$VisualAnalogueQuestionToJson(
   final val = <String, dynamic>{
     'type': instance.type,
     'id': instance.id,
-    'prompt': instance.prompt,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -43,12 +42,13 @@ Map<String, dynamic> _$VisualAnalogueQuestionToJson(
     }
   }
 
+  writeNotNull('prompt', instance.prompt);
   writeNotNull('rationale', instance.rationale);
   writeNotNull('conditional', instance.conditional?.toJson());
   val['minimum'] = instance.minimum;
   val['maximum'] = instance.maximum;
   val['initial'] = instance.initial;
-  writeNotNull('step', instance.step);
+  val['step'] = instance.step;
   writeNotNull('minimumColor',
       VisualAnalogueQuestion.colorToJson(instance.minimumColor));
   writeNotNull('maximumColor',

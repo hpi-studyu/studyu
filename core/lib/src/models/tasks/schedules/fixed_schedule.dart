@@ -8,7 +8,7 @@ part 'fixed_schedule.g.dart';
 class FixedSchedule extends Schedule {
   static const String scheduleType = 'fixed';
 
-  ScheduleTime time;
+  ScheduleTime? time;
 
   FixedSchedule() : super(scheduleType);
 
@@ -19,10 +19,10 @@ class FixedSchedule extends Schedule {
 }
 
 class ScheduleTime {
-  int/*!*/ hour;
-  int/*!*/ minute ;
+  int hour = 0;
+  int minute = 0;
 
-  ScheduleTime({this.hour, this.minute}) : super();
+  ScheduleTime({required this.hour, required this.minute}) : super();
 
   ScheduleTime.fromJson(String value) {
     final elements = value.split(':').map(int.parse);

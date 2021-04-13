@@ -7,20 +7,16 @@ part 'intervention.g.dart';
 
 @JsonSerializable()
 class Intervention {
-  String/*!*/ id;
-  String name;
-  String description;
-  String/*!*/ icon;
+  String id;
+  String? name;
+  String? description;
+  String icon = '';
 
-  List<InterventionTask> tasks;
+  List<InterventionTask> tasks = [];
 
   Intervention(this.id, this.name);
 
-  Intervention.designerDefault() {
-    id = Uuid().v4();
-    icon = '';
-    tasks = [];
-  }
+  Intervention.withId() : id = Uuid().v4();
 
   factory Intervention.fromJson(Map<String, dynamic> data) => _$InterventionFromJson(data);
 

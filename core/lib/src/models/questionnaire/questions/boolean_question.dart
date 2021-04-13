@@ -12,7 +12,7 @@ class BooleanQuestion extends Question<bool> {
 
   BooleanQuestion() : super(questionType);
 
-  BooleanQuestion.designerDefault() : super.designer(questionType);
+  BooleanQuestion.withId() : super.withId(questionType);
 
   factory BooleanQuestion.fromJson(Map<String, dynamic> json) => _$BooleanQuestionFromJson(json);
   @override

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../questionnaire/question.dart';
@@ -13,13 +14,11 @@ part 'questionnaire_task.g.dart';
 class QuestionnaireTask extends Observation {
   static const String taskType = 'questionnaire';
 
-  Questionnaire questions;
+  Questionnaire questions = Questionnaire();
 
   QuestionnaireTask() : super(taskType);
 
-  QuestionnaireTask.designerDefault()
-      : questions = Questionnaire.designerDefault(),
-        super.designer(taskType);
+  QuestionnaireTask.withId() : super.withId(taskType);
 
   factory QuestionnaireTask.fromJson(Map<String, dynamic> json) => _$QuestionnaireTaskFromJson(json);
 
@@ -27,8 +26,8 @@ class QuestionnaireTask extends Observation {
   Map<String, dynamic> toJson() => _$QuestionnaireTaskToJson(this);
 
   @override
-  Map<DateTime/*!*/, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
-    final Question targetQuestion = questions.questions.firstWhere((q) => q.id == property, orElse: () => null);
+  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
+    final Question? targetQuestion = questions.questions.firstWhereOrNull((q) => q.id == property);
     if (targetQuestion == null) {
       throw ArgumentError("Questionnaire '$id' does not have a question with '$property'.");
     }
@@ -37,9 +36,9 @@ class QuestionnaireTask extends Observation {
   }
 
   @override
-  Map<String/*!*/, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
+  Map<String, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
 
   @override
-  String getHumanReadablePropertyName(String property) =>
-      questions.questions.firstWhere((q) => q.id == property, orElse: () => null).prompt;
+  String? getHumanReadablePropertyName(String property) =>
+      questions.questions.firstWhereOrNull((q) => q.id == property)!.prompt;
 }

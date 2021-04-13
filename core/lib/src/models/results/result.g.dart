@@ -7,11 +7,11 @@ part of 'result.dart';
 // **************************************************************************
 
 Result<T> _$ResultFromJson<T>(Map<String, dynamic> json) {
-  return Result<T>()
-    ..taskId = json['taskId'] as String
-    // Keep .toString() until fixed: https://github.com/google/json_serializable.dart/issues/656
-    ..timeStamp = DateTime.parse(json['timeStamp'].toString())
-    ..type = json['type'] as String;
+  return Result<T>(
+    json['taskId'] as String,
+    DateTime.parse(json['timeStamp'] as String),
+    json['type'] as String,
+  );
 }
 
 Map<String, dynamic> _$ResultToJson<T>(Result<T> instance) => <String, dynamic>{

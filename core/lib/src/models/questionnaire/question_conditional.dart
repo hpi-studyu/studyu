@@ -8,10 +8,10 @@ part 'question_conditional.g.dart';
 class QuestionConditional<V> {
   static const String keyDefaultValue = 'defaultValue';
   @JsonKey(ignore: true)
-  V defaultValue;
-  Expression condition;
+  V? defaultValue;
+  late Expression condition;
 
   static QuestionConditional<V> fromJson<V>(Map<String, dynamic> json) =>
-      _$QuestionConditionalFromJson<V>(json)..defaultValue = json[keyDefaultValue] as V;
+      _$QuestionConditionalFromJson<V>(json)..defaultValue = json[keyDefaultValue] as V?;
   Map<String, dynamic> toJson() => _$QuestionConditionalToJson<V>(this)..[keyDefaultValue] = defaultValue;
 }

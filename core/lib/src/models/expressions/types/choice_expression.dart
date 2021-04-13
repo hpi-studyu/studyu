@@ -8,15 +8,14 @@ part 'choice_expression.g.dart';
 class ChoiceExpression extends ValueExpression<List<String>> {
   static const String expressionType = 'choice';
 
-  Set<String> choices;
+  Set<String> choices = {};
 
   ChoiceExpression() : super(expressionType);
 
-  ChoiceExpression.designerDefault()
-      : choices = {},
-        super(expressionType);
+  ChoiceExpression.withId() : super(expressionType);
 
   factory ChoiceExpression.fromJson(Map<String, dynamic> json) => _$ChoiceExpressionFromJson(json);
+
   @override
   Map<String, dynamic> toJson() => _$ChoiceExpressionToJson(this);
 

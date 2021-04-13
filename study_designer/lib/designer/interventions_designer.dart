@@ -18,7 +18,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
 
   void _addIntervention() {
     setState(() {
-      _interventions.add(Intervention.designerDefault());
+      _interventions.add(Intervention.withId());
     });
   }
 

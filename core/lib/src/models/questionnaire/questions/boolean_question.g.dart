@@ -10,8 +10,8 @@ BooleanQuestion _$BooleanQuestionFromJson(Map<String, dynamic> json) {
   return BooleanQuestion()
     ..type = json['type'] as String
     ..id = json['id'] as String
-    ..prompt = json['prompt'] as String
-    ..rationale = json['rationale'] as String
+    ..prompt = json['prompt'] as String?
+    ..rationale = json['rationale'] as String?
     ..conditional = json['conditional'] == null
         ? null
         : QuestionConditional.fromJson(
@@ -22,7 +22,6 @@ Map<String, dynamic> _$BooleanQuestionToJson(BooleanQuestion instance) {
   final val = <String, dynamic>{
     'type': instance.type,
     'id': instance.id,
-    'prompt': instance.prompt,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -31,6 +30,7 @@ Map<String, dynamic> _$BooleanQuestionToJson(BooleanQuestion instance) {
     }
   }
 
+  writeNotNull('prompt', instance.prompt);
   writeNotNull('rationale', instance.rationale);
   writeNotNull('conditional', instance.conditional?.toJson());
   return val;

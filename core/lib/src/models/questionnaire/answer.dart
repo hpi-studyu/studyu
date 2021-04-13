@@ -7,12 +7,12 @@ part 'answer.g.dart';
 
 @JsonSerializable()
 class Answer<V> {
-  String/*!*/ question;
+  String question;
   DateTime timestamp;
 
   static const String keyResponse = 'response';
   @JsonKey(ignore: true)
-  V /*!*/ response;
+  late V response;
 
   Answer(this.question, this.timestamp);
 

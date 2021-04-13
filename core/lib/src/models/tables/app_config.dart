@@ -7,24 +7,30 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static const String tableName = 'app_config';
 
   @override
-  String id;
+  String? id;
 
-  Contact/*!*/ contact;
-  Map<String, String>/*!*/ app_privacy;
-  Map<String, String>/*!*/ app_terms;
-  Map<String, String>/*!*/ designer_privacy;
-  Map<String, String>/*!*/ designer_terms;
-  Map<String, String>/*!*/ imprint;
+  Contact contact;
+  Map<String, String> app_privacy;
+  Map<String, String> app_terms;
+  Map<String, String> designer_privacy;
+  Map<String, String> designer_terms;
+  Map<String, String> imprint;
 
-  AppConfig();
+  AppConfig(
+      {required this.contact,
+      required this.app_privacy,
+      required this.app_terms,
+      required this.designer_privacy,
+      required this.designer_terms,
+      required this.imprint});
 
-  factory AppConfig.fromJson(Map<String, dynamic> json) => AppConfig()
-    ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
-    ..app_privacy = Map<String, String>.from(json['app_privacy'] as Map)
-    ..app_terms = Map<String, String>.from(json['app_terms'] as Map)
-    ..designer_privacy = Map<String, String>.from(json['designer_privacy'] as Map)
-    ..designer_terms = Map<String, String>.from(json['designer_terms'] as Map)
-    ..imprint = Map<String, String>.from(json['imprint'] as Map);
+  factory AppConfig.fromJson(Map<String, dynamic> json) => AppConfig(
+      contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
+      app_privacy: Map<String, String>.from(json['app_privacy'] as Map),
+      app_terms: Map<String, String>.from(json['app_terms'] as Map),
+      designer_privacy: Map<String, String>.from(json['designer_privacy'] as Map),
+      designer_terms: Map<String, String>.from(json['designer_terms'] as Map),
+      imprint: Map<String, String>.from(json['imprint'] as Map));
 
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{

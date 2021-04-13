@@ -17,7 +17,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
   ReportSpecification _reportSpecification;
 
   void _addSection() {
-    final section = AverageSection.designerDefault();
+    final section = AverageSection.withId();
     setState(() {
       if (_reportSpecification.primary == null) {
         _reportSpecification.primary = section;

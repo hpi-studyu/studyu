@@ -10,11 +10,11 @@ abstract class Expression {
     NotExpression.expressionType: (data) => NotExpression.fromJson(data)
   };
   static const String keyType = 'type';
-  String type;
+  String? type;
 
   Expression(this.type);
 
-  factory Expression.fromJson(Map<String, dynamic> data) => expressionTypes[data[keyType]](data);
+  factory Expression.fromJson(Map<String, dynamic> data) => expressionTypes[data[keyType]]!(data);
   Map<String, dynamic> toJson();
 
   @override
@@ -22,5 +22,5 @@ abstract class Expression {
     return toJson().toString();
   }
 
-  bool evaluate(QuestionnaireState state);
+  bool? evaluate(QuestionnaireState state);
 }

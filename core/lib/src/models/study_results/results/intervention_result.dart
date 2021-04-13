@@ -12,7 +12,7 @@ class InterventionResult extends StudyResult {
 
   InterventionResult() : super(studyResultType);
 
-  InterventionResult.designerDefault() : super.designer(studyResultType);
+  InterventionResult.withId() : super.withId(studyResultType);
 
   factory InterventionResult.fromJson(Map<String, dynamic> json) => _$InterventionResultFromJson(json);
 

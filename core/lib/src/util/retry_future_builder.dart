@@ -27,25 +27,25 @@ import 'package:flutter/material.dart';
 typedef CustomErrorWidgetBuilder = Widget Function(BuildContext context, dynamic error, void Function() reload);
 
 class RetryFutureBuilder<T> extends StatefulWidget {
-  static RetryFutureBuilderState of(BuildContext context) => context.findAncestorStateOfType<RetryFutureBuilderState>();
+  static RetryFutureBuilderState? of(BuildContext context) => context.findAncestorStateOfType<RetryFutureBuilderState>();
 
   final Future<T> Function() tryFunction;
-  final Widget Function(BuildContext, T) successBuilder;
+  final Widget Function(BuildContext, T?) successBuilder;
 
   /// a value to show immediately, before evaluating [tryFunction]
-  final T initialData;
-  final Widget Function(BuildContext) loadingBuilder;
+  final T? initialData;
+  final Widget Function(BuildContext)? loadingBuilder;
 
   /// error handler function that gets to handle the error
   /// and return a widget to be displayed instead.
   /// return [null] to revert to default behavior
-  final CustomErrorWidgetBuilder errorWidgetBuilder;
+  final CustomErrorWidgetBuilder? errorWidgetBuilder;
   final List<Widget> extraWidgets;
 
   const RetryFutureBuilder({
-    Key key,
-    @required this.tryFunction,
-    @required this.successBuilder,
+    Key? key,
+    required this.tryFunction,
+    required this.successBuilder,
     this.initialData,
     this.loadingBuilder,
     this.errorWidgetBuilder,
@@ -53,11 +53,11 @@ class RetryFutureBuilder<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RetryFutureBuilder<T/*!*/>> createState() => RetryFutureBuilderState<T>();
+  State<RetryFutureBuilder<T>> createState() => RetryFutureBuilderState<T>();
 }
 
-class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T/*!*/>> {
-  /*late*/Future<T>/*!*/ _future;
+class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
+  late Future<T> _future;
 
   @override
   void initState() {
@@ -91,21 +91,21 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T/*!*/>> {
           case ConnectionState.done:
             if (snapshot.hasError) {
               if (widget.errorWidgetBuilder != null) {
-                return widget.errorWidgetBuilder(context, snapshot.error, reload);
+                return widget.errorWidgetBuilder!(context, snapshot.error, reload);
               }
               return buildErrorView(context, snapshot.error);
             }
             return widget.successBuilder(context, snapshot.data);
           default:
             return widget.loadingBuilder != null
-                ? widget.loadingBuilder(context)
+                ? widget.loadingBuilder!(context)
                 : const Center(child: CircularProgressIndicator());
         }
       },
     );
   }
 
-  Widget buildErrorView(BuildContext context, Object error) {
+  Widget buildErrorView(BuildContext context, Object? error) {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),

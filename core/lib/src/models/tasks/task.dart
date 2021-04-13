@@ -5,18 +5,16 @@ import '../tasks/schedule.dart';
 
 abstract class Task {
   static const String keyType = 'type';
-  String/*!*/ type;
+  String type;
 
-  String/*!*/ id;
-  String title;
+  late String id;
+  String? title;
 
-  List<Schedule> schedule;
+  List<Schedule> schedule = [];
 
   Task(this.type);
 
-  Task.designer(this.type)
-      : id = Uuid().v4(),
-        schedule = [];
+  Task.withId(this.type) : id = Uuid().v4();
 
   Map<String, dynamic> toJson();
 
@@ -27,7 +25,7 @@ abstract class Task {
 
   Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults);
 
-  Map<String/*!*/, Type> getAvailableProperties();
+  Map<String, Type> getAvailableProperties();
 
-  String getHumanReadablePropertyName(String property);
+  String? getHumanReadablePropertyName(String property);
 }

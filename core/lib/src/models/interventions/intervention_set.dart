@@ -10,8 +10,6 @@ class InterventionSet {
 
   InterventionSet(this.interventions);
 
-  InterventionSet.designerDefault() : interventions = [];
-
   factory InterventionSet.fromJson(Map<String, dynamic> json) => _$InterventionSetFromJson(json);
   Map<String, dynamic> toJson() => _$InterventionSetToJson(this);
 }

@@ -10,11 +10,11 @@ part 'not_expression.g.dart';
 class NotExpression extends Expression {
   static const String expressionType = 'not';
 
-  Expression expression;
+  late Expression expression;
 
   NotExpression() : super(expressionType);
 
-  NotExpression.designerDefault()
+  NotExpression.withId()
       : expression = BooleanExpression(),
         super(expressionType);
 
@@ -24,8 +24,8 @@ class NotExpression extends Expression {
   Map<String, dynamic> toJson() => _$NotExpressionToJson(this);
 
   @override
-  bool evaluate(QuestionnaireState state) {
-    final bool result = expression.evaluate(state);
+  bool? evaluate(QuestionnaireState state) {
+    final bool? result = expression.evaluate(state);
     return result != null ? !result : result;
   }
 }

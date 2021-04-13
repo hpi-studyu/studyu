@@ -10,12 +10,12 @@ part 'average_section.g.dart';
 class AverageSection extends ReportSection {
   static const String sectionType = 'average';
 
-  TemporalAggregation aggregate;
-  DataReference<num> resultProperty;
+  TemporalAggregation? aggregate;
+  late DataReference<num> resultProperty;
 
   AverageSection() : super(sectionType);
 
-  AverageSection.designerDefault() : super.designer(sectionType);
+  AverageSection.withId() : super.withId(sectionType);
 
   factory AverageSection.fromJson(Map<String, dynamic> json) => _$AverageSectionFromJson(json);
   @override
