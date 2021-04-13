@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
 
               return RetryFutureBuilder<AppConfig>(
                 tryFunction: AppConfig.getAppConfig,
-                successBuilder: (context, appConfig) => AlertDialog(
+                successBuilder: (BuildContext context, AppConfig appConfig) => AlertDialog(
                   title: Text(AppLocalizations.of(context).terms_privacy),
                   actions: [
                     TextButton(
@@ -176,7 +176,7 @@ class _DashboardState extends State<Dashboard> {
           padding: const EdgeInsets.all(16),
           child: RetryFutureBuilder<List<Study>>(
             tryFunction: () => SupabaseQuery.getAll<Study>(),
-            successBuilder: (context, studies) {
+            successBuilder: (BuildContext context, List<Study> studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
               return ListView(

@@ -31,7 +31,7 @@ class _TermsScreenState extends State<TermsScreen> {
         child: Center(
           child: RetryFutureBuilder<AppConfig>(
             tryFunction: AppConfig.getAppConfig,
-            successBuilder: (context, appConfig) => SingleChildScrollView(
+            successBuilder: (BuildContext context, AppConfig appConfig) => SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(

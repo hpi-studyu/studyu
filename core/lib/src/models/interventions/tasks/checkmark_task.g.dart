@@ -10,16 +10,25 @@ CheckmarkTask _$CheckmarkTaskFromJson(Map<String, dynamic> json) {
   return CheckmarkTask()
     ..type = json['type'] as String
     ..id = json['id'] as String
-    ..title = json['title'] as String
-    ..schedule = (json['schedule'] as List)
+    ..title = json['title'] as String?
+    ..schedule = (json['schedule'] as List<dynamic>)
         .map((e) => Schedule.fromJson(e as Map<String, dynamic>))
         .toList();
 }
 
-Map<String, dynamic> _$CheckmarkTaskToJson(CheckmarkTask instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      'title': instance.title,
-      'schedule': instance.schedule.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$CheckmarkTaskToJson(CheckmarkTask instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('title', instance.title);
+  val['schedule'] = instance.schedule.map((e) => e.toJson()).toList();
+  return val;
+}

@@ -5,7 +5,7 @@ import '../env/env.dart';
 import '../models/tables/study.dart';
 
 abstract class SupabaseObject {
-  String/*!*/ id;
+  String? id;
 
   Map<String, dynamic> toJson();
 }
@@ -25,7 +25,7 @@ String tableName(Type cls) {
 }
 
 abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements SupabaseObject {
-  static T fromJson<T extends SupabaseObject>(Map<String, dynamic>/*!*/ json) {
+  static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) {
     switch (T) {
       case Study:
         return Study.fromJson(json) as T;
@@ -67,7 +67,7 @@ class SupabaseQuery {
     return SupabaseObjectFunctions.fromJson<T>(response.data as Map<String, dynamic>);
   }
 
-  static void catchPostgrestError(PostgrestError error) {
+  static void catchPostgrestError(PostgrestError? error) {
     if (error != null) {
       print('Error: ${error.message}');
       // ignore: only_throw_errors

@@ -16,7 +16,7 @@ class QuestionnaireTaskEditorSection extends StatefulWidget {
 class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection> {
   void _addQuestion() {
     setState(() {
-      widget.task.questions.questions.add(BooleanQuestion.designerDefault());
+      widget.task.questions.questions.add(BooleanQuestion.withId());
     });
   }
 

@@ -11,46 +11,72 @@ LinearRegressionSection _$LinearRegressionSectionFromJson(
   return LinearRegressionSection()
     ..type = json['type'] as String
     ..id = json['id'] as String
-    ..title = json['title'] as String
-    ..description = json['description'] as String
+    ..title = json['title'] as String?
+    ..description = json['description'] as String?
     ..resultProperty =
         DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
     ..alpha = (json['alpha'] as num).toDouble()
-    ..improvement =
-        _$enumDecode(_$ImprovementDirectionEnumMap, json['improvement']);
+    ..improvement = _$enumDecodeNullable(
+        _$ImprovementDirectionEnumMap, json['improvement']);
 }
 
 Map<String, dynamic> _$LinearRegressionSectionToJson(
-        LinearRegressionSection instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      'title': instance.title,
-      'description': instance.description,
-      'resultProperty': instance.resultProperty.toJson(),
-      'alpha': instance.alpha,
-      'improvement': _$ImprovementDirectionEnumMap[instance.improvement],
-    };
+    LinearRegressionSection instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+    'id': instance.id,
+  };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('title', instance.title);
+  writeNotNull('description', instance.description);
+  val['resultProperty'] = instance.resultProperty.toJson();
+  val['alpha'] = instance.alpha;
+  writeNotNull(
+      'improvement', _$ImprovementDirectionEnumMap[instance.improvement]);
+  return val;
+}
+
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
+}
 
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
   }
-  return value ?? unknownValue;
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$ImprovementDirectionEnumMap = {

@@ -20,7 +20,7 @@ class ReportHistoryScreen extends StatelessWidget {
       ),
       body: RetryFutureBuilder<List<UserStudy>>(
         tryFunction: () async => UserStudy.getStudyHistory(await UserQueries.loadUserId()),
-        successBuilder: (context, pastStudies) {
+        successBuilder: (BuildContext context, List<UserStudy> pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,
             itemBuilder: (context, index) {

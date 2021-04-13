@@ -6,27 +6,21 @@ part 'study_schedule.g.dart';
 class StudySchedule {
   static const int numberOfPhases = 2;
 
-  int/*!*/ numberOfCycles;
-  int/*!*/ phaseDuration;
-  bool/*!*/ includeBaseline;
-  PhaseSequence/*!*/ sequence;
+  int numberOfCycles = 2;
+  int phaseDuration = 7;
+  bool includeBaseline = true;
+  PhaseSequence sequence = PhaseSequence.alternating;
 
   StudySchedule();
-
-  StudySchedule.designerDefault()
-      : numberOfCycles = 2,
-        phaseDuration = 7,
-        includeBaseline = true,
-        sequence = PhaseSequence.alternating;
 
   factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
 
   int getNumberOfPhases() => numberOfCycles * numberOfPhases + (includeBaseline ? 1 : 0);
 
-  List<int> generateWith(int firstIntervention) {
+  List<int?> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles, (index) => index);
-    final List<int> phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
+    final List<int?> phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
 
     // TODO: Do not insert null as baseline
     if (includeBaseline) phases.insert(0, null);

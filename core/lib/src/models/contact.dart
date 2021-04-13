@@ -1,22 +1,13 @@
 class Contact {
-  String/*!*/ organization;
-  String/*!*/ institutionalReviewBoard;
-  String/*!*/ institutionalReviewBoardNumber;
-  String/*!*/ researchers;
-  String/*!*/ email;
-  String/*!*/ website;
-  String/*!*/ phone;
+  String organization = '';
+  String institutionalReviewBoard = '';
+  String institutionalReviewBoardNumber = '';
+  String researchers = '';
+  String email = '';
+  String website = '';
+  String phone = '';
 
   Contact();
-
-  Contact.designerDefault()
-      : organization = '',
-        institutionalReviewBoard = '',
-        institutionalReviewBoardNumber = '',
-        researchers = '',
-        email = '',
-        website = '',
-        phone = '';
 
   factory Contact.fromJson(Map<String, dynamic> json) => Contact()
     ..organization = json['organization'] as String

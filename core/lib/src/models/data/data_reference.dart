@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 
 import '../results/result.dart';
@@ -8,12 +9,10 @@ part 'data_reference.g.dart';
 
 @JsonSerializable()
 class DataReference<T> {
-  String/*!*/ task;
-  String/*!*/ property;
+  String task;
+  String property;
 
-  DataReference();
-
-  DataReference.designer(this.task, this.property);
+  DataReference(this.task, this.property);
 
   factory DataReference.fromJson(Map<String, dynamic> json) => _$DataReferenceFromJson(json);
 
@@ -23,10 +22,10 @@ class DataReference<T> {
   String toString() => toJson().toString();
 
   Map<DateTime, T> retrieveFromResults(UserStudy studyInstance) {
-    final Task sourceTask = studyInstance.observations.firstWhere((task) => task.id == this.task, orElse: () => null) ??
+    final Task? sourceTask = studyInstance.observations.firstWhereOrNull((task) => task.id == this.task) ??
         studyInstance.interventionSet.interventions
             .expand((i) => i.tasks)
-            .firstWhere((task) => task.id == this.task, orElse: () => null);
+            .firstWhereOrNull((task) => task.id == this.task);
     if (sourceTask == null) throw ArgumentError("Could not find a task with the id '$task'.");
 
     final List<Result> sourceResults = studyInstance.resultsFor(task) ?? [];

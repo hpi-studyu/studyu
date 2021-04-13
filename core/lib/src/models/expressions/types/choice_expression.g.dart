@@ -8,14 +8,23 @@ part of 'choice_expression.dart';
 
 ChoiceExpression _$ChoiceExpressionFromJson(Map<String, dynamic> json) {
   return ChoiceExpression()
-    ..type = json['type'] as String
-    ..target = json['target'] as String
-    ..choices = (json['choices'] as List).map((e) => e as String).toSet();
+    ..type = json['type'] as String?
+    ..target = json['target'] as String?
+    ..choices =
+        (json['choices'] as List<dynamic>).map((e) => e as String).toSet();
 }
 
-Map<String, dynamic> _$ChoiceExpressionToJson(ChoiceExpression instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'target': instance.target,
-      'choices': instance.choices.toList(),
-    };
+Map<String, dynamic> _$ChoiceExpressionToJson(ChoiceExpression instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('type', instance.type);
+  writeNotNull('target', instance.target);
+  val['choices'] = instance.choices.toList();
+  return val;
+}

@@ -18,7 +18,7 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
 
   void _addObservation() {
     setState(() {
-      _observations.add(QuestionnaireTask.designerDefault());
+      _observations.add(QuestionnaireTask.withId());
     });
   }
 

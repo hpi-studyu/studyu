@@ -5,16 +5,15 @@ part 'consent_item.g.dart';
 
 @JsonSerializable()
 class ConsentItem {
-  String/*!*/ id;
-  String title;
-  String description;
-  String/*!*/ iconName;
+  String id;
+  String? title;
+  String? description;
+  String iconName = 'textBoxCheck';
 
-  ConsentItem();
+  ConsentItem(this.id);
 
-  ConsentItem.designerDefault()
-      : id = Uuid().v4(),
-        iconName = '';
+  ConsentItem.withId()
+      : id = Uuid().v4();
 
   factory ConsentItem.fromJson(Map<String, dynamic> json) => _$ConsentItemFromJson(json);
   Map<String, dynamic> toJson() => _$ConsentItemToJson(this);

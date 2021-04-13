@@ -2,19 +2,14 @@ import '../answer.dart';
 import '../question.dart';
 
 abstract class SliderQuestion extends Question<num> {
-  double/*!*/ minimum;
-  double/*!*/ maximum;
-  double/*!*/ initial;
-  double/*!*/ step;
+  double minimum = 0;
+  double maximum = 0;
+  double initial = 0;
+  double step = 1;
 
   SliderQuestion(String type) : super(type);
 
-  SliderQuestion.designer(String type)
-      : minimum = 0,
-        maximum = 0,
-        initial = 0,
-        step = 1,
-        super.designer(type);
+  SliderQuestion.withId(String type) : super.withId(type);
 
   Answer<num> constructAnswer(double response) => Answer.forQuestion(this, response);
 }

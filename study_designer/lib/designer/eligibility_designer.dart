@@ -19,7 +19,7 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
 
   void _addCriterion() {
     setState(() {
-      _eligibility.add(EligibilityCriterion.designerDefault());
+      _eligibility.add(EligibilityCriterion.withId());
     });
   }
 

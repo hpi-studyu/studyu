@@ -11,11 +11,11 @@ part 'numeric_result.g.dart';
 class NumericResult extends StudyResult {
   static const String studyResultType = 'numeric';
 
-  DataReference<num> resultProperty;
+  late DataReference<num> resultProperty;
 
   NumericResult() : super(studyResultType);
 
-  NumericResult.designerDefault() : super.designer(studyResultType);
+  NumericResult.withId() : super.withId(studyResultType);
 
   factory NumericResult.fromJson(Map<String, dynamic> json) => _$NumericResultFromJson(json);
 

@@ -8,7 +8,7 @@ part of 'intervention_set.dart';
 
 InterventionSet _$InterventionSetFromJson(Map<String, dynamic> json) {
   return InterventionSet(
-    (json['interventions'] as List)
+    (json['interventions'] as List<dynamic>)
         .map((e) => Intervention.fromJson(e as Map<String, dynamic>))
         .toList(),
   );

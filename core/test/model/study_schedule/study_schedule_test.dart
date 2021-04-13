@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('generateWith()', () {
-    StudySchedule schedule;
+    StudySchedule schedule = StudySchedule();
     setUp(() => schedule = StudySchedule());
 
     void includeCommonRequirements() {

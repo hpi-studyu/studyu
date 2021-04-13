@@ -11,8 +11,8 @@ AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
   return AnnotatedScaleQuestion()
     ..type = json['type'] as String
     ..id = json['id'] as String
-    ..prompt = json['prompt'] as String
-    ..rationale = json['rationale'] as String
+    ..prompt = json['prompt'] as String?
+    ..rationale = json['rationale'] as String?
     ..conditional = json['conditional'] == null
         ? null
         : QuestionConditional.fromJson(
@@ -20,8 +20,8 @@ AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
     ..minimum = (json['minimum'] as num).toDouble()
     ..maximum = (json['maximum'] as num).toDouble()
     ..initial = (json['initial'] as num).toDouble()
-    ..step = (json['step'] as num)?.toDouble()
-    ..annotations = (json['annotations'] as List)
+    ..step = (json['step'] as num).toDouble()
+    ..annotations = (json['annotations'] as List<dynamic>)
         .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
         .toList();
 }
@@ -31,7 +31,6 @@ Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
   final val = <String, dynamic>{
     'type': instance.type,
     'id': instance.id,
-    'prompt': instance.prompt,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -40,12 +39,13 @@ Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
     }
   }
 
+  writeNotNull('prompt', instance.prompt);
   writeNotNull('rationale', instance.rationale);
   writeNotNull('conditional', instance.conditional?.toJson());
   val['minimum'] = instance.minimum;
   val['maximum'] = instance.maximum;
   val['initial'] = instance.initial;
-  writeNotNull('step', instance.step);
+  val['step'] = instance.step;
   val['annotations'] = instance.annotations.map((e) => e.toJson()).toList();
   return val;
 }

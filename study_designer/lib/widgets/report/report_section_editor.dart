@@ -27,9 +27,9 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
     ReportSection newSection;
 
     if (newType == LinearRegressionSection.sectionType) {
-      newSection = LinearRegressionSection.designerDefault();
+      newSection = LinearRegressionSection.withId();
     } else {
-      newSection = AverageSection.designerDefault();
+      newSection = AverageSection.withId();
     }
 
     newSection

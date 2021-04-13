@@ -9,13 +9,13 @@ part 'eligibility_criterion.g.dart';
 
 @JsonSerializable()
 class EligibilityCriterion {
-  String/*!*/ id;
-  String reason;
-  Expression condition;
+  String id;
+  String? reason;
+  late Expression condition;
 
-  EligibilityCriterion();
+  EligibilityCriterion(this.id);
 
-  EligibilityCriterion.designerDefault()
+  EligibilityCriterion.withId()
       : id = Uuid().v4(),
         condition = BooleanExpression();
 

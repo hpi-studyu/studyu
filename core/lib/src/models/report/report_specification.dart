@@ -6,12 +6,10 @@ part 'report_specification.g.dart';
 
 @JsonSerializable()
 class ReportSpecification {
-  ReportSection primary;
-  List<ReportSection> secondary;
+  ReportSection? primary;
+  late List<ReportSection> secondary = [];
 
   ReportSpecification();
-
-  ReportSpecification.designerDefault() : secondary = [];
 
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);

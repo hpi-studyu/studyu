@@ -9,11 +9,22 @@ part of 'fixed_schedule.dart';
 FixedSchedule _$FixedScheduleFromJson(Map<String, dynamic> json) {
   return FixedSchedule()
     ..type = json['type'] as String
-    ..time = ScheduleTime.fromJson(json['time'] as String);
+    ..time = json['time'] == null
+        ? null
+        : ScheduleTime.fromJson(json['time'] as String);
 }
 
-Map<String, dynamic> _$FixedScheduleToJson(FixedSchedule instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'time': instance.time.toJson(),
-    };
+Map<String, dynamic> _$FixedScheduleToJson(FixedSchedule instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('time', instance.time?.toJson());
+  return val;
+}
