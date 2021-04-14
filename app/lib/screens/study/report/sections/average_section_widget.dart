@@ -48,7 +48,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) {
     if (section.aggregate == TemporalAggregation.intervention) {
-      return charts.NumericExtents(instance.schedule.includeBaseline ? 0 : 1, 2);
+      return charts.NumericExtents(instance.study.schedule.includeBaseline ? 0 : 1, 2);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return charts.NumericExtents(0, numberOfPhases - 1);
     } else {
@@ -58,7 +58,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   Widget getDiagram(BuildContext context) {
     final numberOfPhases = instance.interventionOrder.length;
-    final phaseDuration = instance.schedule.phaseDuration;
+    final phaseDuration = instance.study.schedule.phaseDuration;
     return charts.NumericComboChart(
       getBarData(),
       animate: true,

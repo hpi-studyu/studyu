@@ -60,9 +60,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: reportStudy.observations.length,
+                  itemCount: reportStudy.study.observations.length,
                   itemBuilder: (context, index) =>
-                      ObservationPerformanceBar(study: reportStudy, observation: reportStudy.observations[index]),
+                      ObservationPerformanceBar(study: reportStudy, observation: reportStudy.study.observations[index]),
                 ),
               ],
             ),

@@ -74,7 +74,7 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
             getDropdownRow(context),
             SizedBox(height: 24),
-            Text('${AppLocalizations.of(context).study_current} ${activeStudy.title}',
+            Text('${AppLocalizations.of(context).study_current} ${activeStudy.study.title}',
                 style: theme.textTheme.headline6),
             SizedBox(height: 8),
             ElevatedButton.icon(
@@ -115,7 +115,7 @@ class OptOutAlertDialog extends StatelessWidget {
         text: TextSpan(style: TextStyle(color: Colors.black), children: [
           TextSpan(text: 'The progress of your current study '),
           TextSpan(
-              text: activeStudy.title,
+              text: activeStudy.study.title,
               style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
           TextSpan(text: ' will be deleted and cannot be recovered. Previously completed studies will not be deleted.'),
         ]),

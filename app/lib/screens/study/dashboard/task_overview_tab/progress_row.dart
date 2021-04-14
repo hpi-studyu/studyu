@@ -46,7 +46,7 @@ class _ProgressRowState extends State<ProgressRow> {
                       intervention: entry.value,
                       isCurrent: currentPhase == entry.key,
                       isFuture: currentPhase < entry.key,
-                      phaseDuration: widget.study.schedule.phaseDuration,
+                      phaseDuration: widget.study.study.schedule.phaseDuration,
                       percentCompleted: widget.study.percentCompletedForPhase(entry.key),
                       percentMissed: widget.study.percentMissedForPhase(entry.key, DateTime.now()),
                     );

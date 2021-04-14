@@ -34,7 +34,7 @@ class NumericResult extends StudyResult {
     final resultSet = resultProperty
         .retrieveFromResults(instance)
         .map<int, num>((key, value) => MapEntry(instance.getDayOfStudyFor(key), value));
-    final numberOfDays = instance.schedule.getNumberOfPhases() * instance.schedule.phaseDuration;
+    final numberOfDays = instance.study.schedule.getNumberOfPhases() * instance.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfDays).map((day) => resultSet[day]).toList();
   }
 }

@@ -43,11 +43,11 @@ class ReportDetailsScreen extends StatelessWidget {
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),
             ),
             ReportSectionContainer(
-              reportStudy.reportSpecification.primary,
+              reportStudy.study.reportSpecification.primary,
               instance: reportStudy,
               primary: true,
             ),
-            ...reportStudy.reportSpecification.secondary
+            ...reportStudy.study.reportSpecification.secondary
                 .map((section) => ReportSectionContainer(section, instance: reportStudy))
           ],
         ),
