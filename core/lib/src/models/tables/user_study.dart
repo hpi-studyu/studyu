@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
 
@@ -21,86 +20,29 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   String? id;
   late String studyId;
   late String userId;
-  late String title;
-  late Contact contact;
-  late String description;
-  late String iconName;
   late DateTime startDate;
-  late StudySchedule schedule;
-  late List<String> interventionOrder;
   late InterventionSet interventionSet;
-  late List<Observation> observations;
-  late List<ConsentItem> consent;
-  Map<String, List<Result>> results = {};
-  late ReportSpecification reportSpecification;
+  late List<String> interventionOrder;
+  late Map<String, List<Result>> results = {};
 
-  fhir.Questionnaire? fhirQuestionnaire;
+  @JsonKey(ignore: true)
+  late Study study;
 
   UserStudy();
 
-  factory UserStudy.fromJson(Map<String, dynamic> json) => _$UserStudyFromJson(json);
-
-  // factory UserStudy.fromJson(Map<String, dynamic> json) => UserStudy()
-  //   ..id = json['id'] as String
-  //   ..studyId = json['study_id'] as String
-  //   ..userId = json['user_id'] as String
-  //   ..title = json['title'] as String
-  //   ..description = json['description'] as String
-  //   ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
-  //   ..iconName = json['icon_name'] as String
-  //   ..startDate = DateTime.tryParse(json['start_date'] as String)!
-  //   ..consent = (json['consent'] as List).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
-  //   ..interventionSet = InterventionSet.fromJson(json['intervention_set'] as Map<String, dynamic>)
-  //   ..interventionOrder = List<String>.from(json['intervention_order_ids'] as List)
-  //   ..observations = (json['observations'] as List).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
-  //   ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
-  //   ..reportSpecification = ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
-  //   ..results = (json['results'] as Map<String, dynamic>?)?.map<String, List<Result>>((key, resultsData) {
-  //         final results = (resultsData as List)
-  //             .map<Result>((resultData) => Result.fromJson(resultData as Map<String, dynamic>))
-  //             .toList();
-  //         return MapEntry(key, results);
-  //       }) ??
-  //       {};
+  factory UserStudy.fromJson(Map<String, dynamic> json) =>
+      _$UserStudyFromJson(json)..study = Study.fromJson(json['study'] as Map<String, dynamic>);
 
   @override
   Map<String, dynamic> toJson() => _$UserStudyToJson(this);
 
-  //       'id': id,
-  //       'study_id': studyId,
-  //       'user_id': userId,
-  //       'title': title,
-  //       'description': description,
-  //       'contact': contact.toJson(),
-  //       'icon_name': iconName,
-  //       'start_date': startDate.toIso8601String(),
-  //       'consent': consent.map((e) => e.toJson()).toList(),
-  //       'intervention_set': interventionSet.toJson(),
-  //       'intervention_order_ids': interventionOrder,
-  //       'observations': observations.map((e) => e.toJson()).toList(),
-  //       'schedule': schedule.toJson(),
-  //       'report_specification': reportSpecification.toJson(),
-  //       'results': results
-  //           .map<String, dynamic>((key, value) => MapEntry(key, value.map((result) => result.toJson()).toList())),
-  //       // Some values could be null (id), therefore remove all null values
-  //     }..removeWhere((key, value) => value == null);
-
   UserStudy.fromStudy(
-      Study study, this.userId, List<Intervention> selectedInterventions, this.startDate, int firstIntervention)
-      : title = study.title!,
-        description = study.description!,
-        contact = study.contact,
-        iconName = study.iconName,
-        studyId = study.id!,
-        schedule = study.schedule,
-        consent = study.consent,
-        interventionSet = InterventionSet(selectedInterventions),
-        observations = study.observations,
-        reportSpecification = study.reportSpecification,
-        fhirQuestionnaire = study.fhirQuestionnaire {
+      this.study, this.userId, List<Intervention> selectedInterventions, this.startDate, int firstIntervention)
+      : studyId = study.id!,
+        interventionSet = InterventionSet(selectedInterventions) {
     const baselineId = Study.baselineID;
     var addBaseline = false;
-    interventionOrder = schedule.generateWith(firstIntervention).map<String>((int? index) {
+    interventionOrder = study.schedule.generateWith(firstIntervention).map<String>((int? index) {
       if (index == null) {
         addBaseline = true;
         return baselineId;
@@ -117,7 +59,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     }
   }
 
-  int get daysPerIntervention => schedule.numberOfCycles * schedule.phaseDuration;
+  int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
   void addResult(Result result) {
     final nextResults = results;
@@ -163,7 +105,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   }
 
   // Day after last intervention
-  DateTime get endDate => startDate.add(Duration(days: interventionOrder.length * schedule.phaseDuration));
+  DateTime get endDate => startDate.add(Duration(days: interventionOrder.length * study.schedule.phaseDuration));
 
   int getDayOfStudyFor(DateTime date) {
     final day = date.differenceInDays(startDate).inDays;
@@ -172,7 +114,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
 
   int getInterventionIndexForDate(DateTime date) {
     final test = date.differenceInDays(startDate).inDays;
-    return test ~/ schedule.phaseDuration;
+    return test ~/ study.schedule.phaseDuration;
   }
 
   Intervention? getInterventionForDate(DateTime date) {
@@ -191,9 +133,9 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
         .toList();
   }
 
-  DateTime startOfPhase(int index) => startDate.add(Duration(days: schedule.phaseDuration * index));
+  DateTime startOfPhase(int index) => startDate.add(Duration(days: study.schedule.phaseDuration * index));
 
-  DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: schedule.phaseDuration));
+  DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: study.schedule.phaseDuration));
 
   List<Result>? resultsFor(String taskId) => results[taskId];
 
@@ -213,7 +155,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   int completedForPhase(int index) {
     final start = startOfPhase(index);
     int completedCount = 0;
-    for (int i = 0; i < schedule.phaseDuration; i++) {
+    for (int i = 0; i < study.schedule.phaseDuration; i++) {
       if (allTasksCompletedFor(start.add(Duration(days: i)))) {
         completedCount++;
       }
@@ -222,15 +164,15 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   }
 
   double percentCompletedForPhase(int index) {
-    return completedForPhase(index) / schedule.phaseDuration;
+    return completedForPhase(index) / study.schedule.phaseDuration;
   }
 
   double percentMissedForPhase(int index, DateTime date) {
     if (startOfPhase(index).isAfter(date)) return 0;
 
     final missedInPhase =
-        min(date.differenceInDays(startOfPhase(index)).inDays, schedule.phaseDuration) - completedForPhase(index);
-    return missedInPhase / schedule.phaseDuration;
+        min(date.differenceInDays(startOfPhase(index)).inDays, study.schedule.phaseDuration) - completedForPhase(index);
+    return missedInPhase / study.schedule.phaseDuration;
   }
 
   // TODO: Add index to support same task multiple times per day
@@ -248,7 +190,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
     final diff = DateTime.now().differenceInDays(startDate).inDays;
-    return diff >= interventionOrder.length * schedule.phaseDuration - 1;
+    return diff >= interventionOrder.length * study.schedule.phaseDuration - 1;
   }
 
   bool get completedStudy {
@@ -259,7 +201,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
     var daysCount = daysPerIntervention;
 
     if (task is Observation) {
-      daysCount = 2 * daysCount + (schedule.includeBaseline ? schedule.phaseDuration : 0);
+      daysCount = 2 * daysCount + (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
     }
 
     return daysCount * task.schedule.length;
@@ -279,7 +221,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
         }
       }
     }
-    for (final observation in observations) {
+    for (final observation in study.observations) {
       for (final schedule in observation.schedule) {
         if (schedule is FixedSchedule) {
           taskSchedule.add(schedule.time, observation);
@@ -299,6 +241,26 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
           return Result.fromJson(json);
         }).toList()));
     save();
+  }
+
+  @override
+  Future<UserStudy> save() async {
+    final response = await client.from(tableName).insert(toJson(), upsert: true).execute();
+
+    SupabaseQuery.catchPostgrestError(response.error);
+    final json = List<Map<String, dynamic>>.from(response.data as List).single;
+    json['study'] = study.toJson();
+    return UserStudy.fromJson(json);
+  }
+
+  @override
+  Future<UserStudy> delete() async {
+    final response = await client.from(tableName).delete().eq('id', id).single().execute();
+
+    SupabaseQuery.catchPostgrestError(response.error);
+    final json = response.data as Map<String, dynamic>;
+    json['study'] = study.toJson();
+    return UserStudy.fromJson(json);
   }
 
   static Future<List<UserStudy>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<UserStudy>(

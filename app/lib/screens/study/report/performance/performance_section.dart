@@ -22,7 +22,7 @@ class PerformanceSection extends GenericSection {
       final countableInterventions = getCountableObservationAmount(intervention);
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
     }).toList();
-    return interventions.length != 2 || study.reportSpecification?.primary == null
+    return interventions.length != 2 || study.study.reportSpecification?.primary == null
         ? Center(
             child: Text('ERROR!'),
           )
@@ -85,7 +85,7 @@ class PerformanceSection extends GenericSection {
               .length ==
           interventionsPerDay) {
         countable += resultList
-            .where((result) => study.observations.any((observation) => observation.id == result.taskId))
+            .where((result) => study.study.observations.any((observation) => observation.id == result.taskId))
             .length;
       }
     });

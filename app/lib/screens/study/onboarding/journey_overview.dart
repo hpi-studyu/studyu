@@ -85,7 +85,7 @@ class Timeline extends StatelessWidget {
             title: intervention.name,
             iconName: intervention.icon,
             color: isBaseline(intervention) ? Colors.grey : theme.accentColor,
-            date: study.startDate.add(Duration(days: index * study.schedule.phaseDuration)),
+            date: study.startDate.add(Duration(days: index * study.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
         }).toList(),

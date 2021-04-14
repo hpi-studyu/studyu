@@ -18,7 +18,7 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   void initState() {
     super.initState();
-    studyContact = context.read<AppState>().activeStudy?.contact;
+    studyContact = context.read<AppState>().activeStudy?.study?.contact;
   }
 
   @override

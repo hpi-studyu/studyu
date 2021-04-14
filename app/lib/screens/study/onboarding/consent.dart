@@ -34,7 +34,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
   void initState() {
     super.initState();
     study = context.read<AppState>().activeStudy;
-    consentList = study.consent;
+    consentList = study.study.consent;
     boxLogic = List.filled(consentList.length, false);
   }
 
@@ -63,7 +63,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () async => savePDF(context, '${study.title}_consent', await generatePdfContent()),
+            onPressed: () async => savePDF(context, '${study.study.title}_consent', await generatePdfContent()),
           ),
         ],
       ),

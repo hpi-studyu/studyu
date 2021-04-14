@@ -42,12 +42,12 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
   }
 
   charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) =>
-      charts.NumericExtents(instance.schedule.includeBaseline ? 0 : 1, 2);
+      charts.NumericExtents(instance.study.schedule.includeBaseline ? 0 : 1, 2);
 
   Widget _buildDiagram(BuildContext context, LinearRegressionResult<num> coefficients,
       LinearRegressionResult<Range<num>> confidenceIntervals) {
     final numberOfPhases = instance.interventionOrder.length;
-    final phaseDuration = instance.schedule.phaseDuration;
+    final phaseDuration = instance.study.schedule.phaseDuration;
     return charts.NumericComboChart(
       _getChartData(coefficients, confidenceIntervals),
       animate: true,
@@ -84,7 +84,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     final ciB = confidenceIntervals.variables[2];
 
     return {
-      if (instance.schedule.includeBaseline)
+      if (instance.study.schedule.includeBaseline)
         Study.baselineID: _ResultDatum(interventionOrder[Study.baselineID], intercept, ciIntercept),
       interventionA: _ResultDatum(
           interventionOrder[interventionA], intercept + factorA, Range(intercept + ciA.min, intercept + ciA.max)),
@@ -127,7 +127,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     //TODO: Talk to a statistics guy about this evaluation logic and model design
     if (pA > section.alpha || pB > section.alpha || pIntercept > section.alpha) {
       text = AppLocalizations.of(context).report_outcome_inconclusive;
-    } else if (instance.schedule.includeBaseline && factorA < 0 && factorB < 0) {
+    } else if (instance.study.schedule.includeBaseline && factorA < 0 && factorB < 0) {
       text = AppLocalizations.of(context).report_outcome_neither;
     } else if (factorA > factorB) {
       //TODO: This if else might be problematic if a baseline is present and A and B are an improvement over it

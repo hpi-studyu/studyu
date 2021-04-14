@@ -55,9 +55,9 @@ class ReportHistoryItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Icon(MdiIcons.fromString(study.iconName) ?? MdiIcons.accountHeart,
+                Icon(MdiIcons.fromString(study.study.iconName) ?? MdiIcons.accountHeart,
                     color: isActiveStudy ? Colors.white : Colors.black),
-                Text(study.title,
+                Text(study.study.title,
                     style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black)),
               ],
             ),

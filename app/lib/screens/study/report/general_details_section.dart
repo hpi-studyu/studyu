@@ -11,9 +11,9 @@ class GeneralDetailsSection extends GenericSection {
   Widget buildContent(BuildContext context) => Column(
         children: [
           StudyTile(
-            title: study.title,
-            description: study.description,
-            iconName: study.iconName,
+            title: study.study.title,
+            description: study.study.description,
+            iconName: study.study.iconName,
             contentPadding: EdgeInsets.all(0),
           ),
         ],

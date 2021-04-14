@@ -53,8 +53,9 @@ class SupabaseQuery {
   static Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async =>
       extractSupabaseList(await client.from(tableName(T)).select(selectedColumns.join(',')).execute());
 
-  static Future<T> getById<T extends SupabaseObject>(String id) async =>
-      extractSupabaseSingleRow(await client.from(tableName(T)).select().eq('id', id).single().execute());
+  static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async =>
+      extractSupabaseSingleRow(
+          await client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
     catchPostgrestError(response.error);

@@ -51,10 +51,10 @@ class QuestionnaireTaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.read<AppState>().activeStudy.fhirQuestionnaire;
+    final fhirQuestionnaire = context.read<AppState>().activeStudy.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
-            context.read<AppState>().activeStudy.fhirQuestionnaire,
+            context.read<AppState>().activeStudy.study.fhirQuestionnaire,
             onComplete: (qs) => _addQuestionnaireResponseFhir(qs, context),
           )
         : QuestionnaireWidget(

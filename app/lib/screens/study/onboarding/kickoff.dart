@@ -56,8 +56,8 @@ class _KickoffScreen extends State<KickoffScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(study.title),
-        leading: Icon(MdiIcons.fromString(study.iconName)),
+        title: Text(study.study.title),
+        leading: Icon(MdiIcons.fromString(study.study.iconName)),
       ),
       body: Builder(builder: (_context) {
         return Center(
