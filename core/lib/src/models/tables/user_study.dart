@@ -40,19 +40,15 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
       this.study, this.userId, List<Intervention> selectedInterventions, this.startDate, int firstIntervention)
       : studyId = study.id!,
         interventionSet = InterventionSet(selectedInterventions) {
-    const baselineId = Study.baselineID;
-    var addBaseline = false;
-    interventionOrder = study.schedule.generateWith(firstIntervention).map<String>((int? index) {
-      if (index == null) {
-        addBaseline = true;
-        return baselineId;
-      }
-      return selectedInterventions[index].id;
-    }).toList();
-    if (addBaseline) {
+    interventionOrder = study.schedule
+        .generateWith(firstIntervention)
+        .map<String>((int index) => selectedInterventions[index].id)
+        .toList();
+    interventionOrder.insert(0, Study.baselineID);
+    if (study.schedule.includeBaseline) {
       interventionSet = InterventionSet([
         ...interventionSet.interventions,
-        Intervention(baselineId, 'Baseline')
+        Intervention(Study.baselineID, 'Baseline')
           ..tasks = []
           ..icon = 'rayStart'
       ]);

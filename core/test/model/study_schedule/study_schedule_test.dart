@@ -28,19 +28,6 @@ void main() {
         expect(schedule.generateWith(0).first, 0, reason: 'Did not respect first intervention');
         expect(schedule.generateWith(1).first, 1, reason: 'Did not respect first intervention');
       });
-
-      test('can include baseline', () {
-        schedule
-          ..numberOfCycles = 2
-          ..phaseDuration = 7
-          ..includeBaseline = true;
-
-        final result = schedule.generateWith(0);
-
-        expect(result.first, null, reason: 'No baseline phase was included');
-        expect(result.sublist(1).take(2).toSet().length, 2, reason: 'A cycle was not complete');
-        expect(result.sublist(3).take(2).toSet().length, 2, reason: 'A cycle was not complete');
-      });
     }
 
     group('Alternating Phase Sequence', () {
