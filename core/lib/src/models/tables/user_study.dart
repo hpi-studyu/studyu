@@ -44,9 +44,9 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
         ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index])
       ];
 
-  InterventionSet get interventionSet {
+  List<Intervention> get selectedInterventions {
     final selectedInterventions = selectedInterventionIds
-        .map((selectedInterventionId) => study.interventionSet.interventions
+        .map((selectedInterventionId) => study.interventions
             .singleWhere((intervention) => intervention.id == selectedInterventionId))
         .toList();
     if (study.schedule.includeBaseline) {
@@ -54,7 +54,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
         ..tasks = []
         ..icon = 'rayStart');
     }
-    return InterventionSet(selectedInterventions);
+    return selectedInterventions;
   }
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
@@ -122,12 +122,12 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
       return null;
     }
     final interventionId = interventionOrder[index];
-    return interventionSet.interventions.firstWhereOrNull((intervention) => intervention.id == interventionId);
+    return selectedInterventions.firstWhereOrNull((intervention) => intervention.id == interventionId);
   }
 
   List<Intervention> getInterventionsInOrder() {
     return interventionOrder
-        .map((key) => interventionSet.interventions.firstWhere((intervention) => intervention.id == key))
+        .map((key) => selectedInterventions.firstWhere((intervention) => intervention.id == key))
         .toList();
   }
 

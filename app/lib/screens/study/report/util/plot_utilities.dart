@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
 
 class PlotUtilities {
-  static Map<String, charts.Color> getInterventionPalette(InterventionSet interventionSet) {
-    final interventions = [...interventionSet.interventions];
+  static Map<String, charts.Color> getInterventionPalette(List<Intervention> interventions) {
     final colors = <String, charts.Color>{};
     if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
       colors[Study.baselineID] = charts.MaterialPalette.gray.shadeDefault;
@@ -15,8 +14,7 @@ class PlotUtilities {
     return colors;
   }
 
-  static Map<String, int> getInterventionPositions(InterventionSet interventionSet) {
-    final interventions = [...interventionSet.interventions];
+  static Map<String, int> getInterventionPositions(List<Intervention> interventions) {
     final order = <String, int>{};
     if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
       order[Study.baselineID] = 0;
@@ -27,22 +25,17 @@ class PlotUtilities {
     return order;
   }
 
-  static String getInterventionA(InterventionSet interventionSet) {
-    final interventions = [
-      ...interventionSet.interventions.where((intervention) => intervention.id != Study.baselineID)
-    ];
-    return interventions[0].id;
-  }
+  static List<Intervention> getInterventionsWithoutBaseline(List<Intervention> interventions) =>
+      interventions.where((intervention) => intervention.id != Study.baselineID).toList();
 
-  static String getInterventionB(InterventionSet interventionSet) {
-    final interventions = [
-      ...interventionSet.interventions.where((intervention) => intervention.id != Study.baselineID)
-    ];
-    return interventions[1].id;
-  }
+  static String getInterventionA(List<Intervention> interventions) =>
+      getInterventionsWithoutBaseline(interventions)[0].id;
 
-  static Map<String, String> getInterventionNames(InterventionSet interventionSet) =>
-      {for (var intervention in interventionSet.interventions) intervention.id: intervention.name};
+  static String getInterventionB(List<Intervention> interventions) =>
+      getInterventionsWithoutBaseline(interventions)[1].id;
+
+  static Map<String, String> getInterventionNames(List<Intervention> interventions) =>
+      {for (var intervention in interventions) intervention.id: intervention.name};
 
   static charts.LineAnnotationSegment<T> createSeparator<T>(T value,
           {charts.RangeAnnotationAxisType axis = charts.RangeAnnotationAxisType.domain}) =>

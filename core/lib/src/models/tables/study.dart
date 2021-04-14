@@ -23,7 +23,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   late Questionnaire questionnaire = Questionnaire();
   late List<EligibilityCriterion> eligibilityCriteria = [];
   late List<ConsentItem> consent = [];
-  late InterventionSet interventionSet = InterventionSet([]);
+  late List<Intervention> interventions = [];
   late List<Observation> observations = [];
   late StudySchedule schedule = StudySchedule();
   late ReportSpecification reportSpecification = ReportSpecification();

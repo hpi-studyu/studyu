@@ -28,7 +28,7 @@ class _TaskScreenState extends State<TaskScreen> {
       final study = context.read<AppState>().activeStudy;
       final tasks = <Task>[
         ...study.study.observations.where((observation) => observation.id == widget.taskId).toList(),
-        ...study.interventionSet.interventions
+        ...study.selectedInterventions
             .map((intervention) => intervention.tasks.where((task) => task.id == widget.taskId))
             .expand((task) => task)
             .toList()

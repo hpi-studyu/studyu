@@ -20,7 +20,7 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
   Widget build(BuildContext context) {
     final study = context.watch<AppState>().draftStudy;
     final tasks = <Task>[
-      ...study.interventionSet.interventions.expand((intervention) => intervention.tasks),
+      ...study.interventions.expand((intervention) => intervention.tasks),
       ...study.observations,
     ];
 

@@ -18,7 +18,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final interventions =
-        reportStudy.interventionSet.interventions.where((intervention) => !isBaseline(intervention)).toList();
+        reportStudy.selectedInterventions.where((intervention) => !isBaseline(intervention)).toList();
 
     return Scaffold(
       appBar: AppBar(

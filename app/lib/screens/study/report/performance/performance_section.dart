@@ -17,7 +17,7 @@ class PerformanceSection extends GenericSection {
   @override
   Widget buildContent(BuildContext context) {
     final interventions =
-        study.interventionSet.interventions.where((intervention) => intervention.id != '__baseline').toList();
+        study.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
     final interventionProgress = interventions.map((intervention) {
       final countableInterventions = getCountableObservationAmount(intervention);
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);

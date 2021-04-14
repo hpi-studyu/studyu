@@ -110,7 +110,7 @@ class AverageSectionWidget extends ReportSectionWidget {
               ))
           .map((e) => e.value);
     } else {
-      final order = PlotUtilities.getInterventionPositions(instance.interventionSet);
+      final order = PlotUtilities.getInterventionPositions(instance.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey((data, intervention) => _DiagramDatum(
@@ -124,8 +124,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   List<charts.Series<_DiagramDatum, num>> getBarData() {
-    final colorPalette = PlotUtilities.getInterventionPalette(instance.interventionSet);
-    final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
+    final colorPalette = PlotUtilities.getInterventionPalette(instance.selectedInterventions);
+    final interventionNames = PlotUtilities.getInterventionNames(instance.selectedInterventions);
 
     return getAggregatedData()
         .groupBy((datum) => datum.intervention)

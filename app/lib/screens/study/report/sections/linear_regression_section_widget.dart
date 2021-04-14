@@ -15,7 +15,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
-    final interventionOrder = PlotUtilities.getInterventionPositions(instance.interventionSet);
+    final interventionOrder = PlotUtilities.getInterventionPositions(instance.selectedInterventions);
     final values = section.resultProperty.retrieveFromResults(instance);
     final samples = values.entries.map((e) {
       final intervention = instance.getInterventionForDate(e.key).id;
@@ -69,15 +69,15 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
   List<charts.Series<_ResultDatum, num>> _getChartData(
       LinearRegressionResult<num> coefficients, LinearRegressionResult<Range<num>> confidenceIntervals) {
-    final colorPalette = PlotUtilities.getInterventionPalette(instance.interventionSet);
-    final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
-    final interventionOrder = PlotUtilities.getInterventionPositions(instance.interventionSet);
+    final colorPalette = PlotUtilities.getInterventionPalette(instance.selectedInterventions);
+    final interventionNames = PlotUtilities.getInterventionNames(instance.selectedInterventions);
+    final interventionOrder = PlotUtilities.getInterventionPositions(instance.selectedInterventions);
 
     final intercept = coefficients.intercept;
     final factorA = coefficients.variables[1];
     final factorB = coefficients.variables[2];
-    final interventionA = PlotUtilities.getInterventionA(instance.interventionSet);
-    final interventionB = PlotUtilities.getInterventionB(instance.interventionSet);
+    final interventionA = PlotUtilities.getInterventionA(instance.selectedInterventions);
+    final interventionB = PlotUtilities.getInterventionB(instance.selectedInterventions);
 
     final ciIntercept = confidenceIntervals.intercept;
     final ciA = confidenceIntervals.variables[1];
@@ -107,7 +107,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
   Widget _buildResultDescription(
       BuildContext context, LinearRegressionResult<num> coefficients, LinearRegressionResult<num> pValues) {
-    final interventionNames = PlotUtilities.getInterventionNames(instance.interventionSet);
+    final interventionNames = PlotUtilities.getInterventionNames(instance.selectedInterventions);
 
     var factorA = coefficients.variables[1];
     var factorB = coefficients.variables[2];
@@ -116,8 +116,8 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       factorB = -factorB;
     }
 
-    final interventionA = PlotUtilities.getInterventionA(instance.interventionSet);
-    final interventionB = PlotUtilities.getInterventionB(instance.interventionSet);
+    final interventionA = PlotUtilities.getInterventionA(instance.selectedInterventions);
+    final interventionB = PlotUtilities.getInterventionB(instance.selectedInterventions);
 
     final pIntercept = pValues.intercept;
     final pA = pValues.variables[1];

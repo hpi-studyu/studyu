@@ -44,7 +44,7 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
 
   if (study != null) {
     final interventionTaskLists =
-        study.interventionSet.interventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
+        study.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
     var interventionTasks = [];
     if (interventionTaskLists.isNotEmpty) {
       interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
@@ -62,7 +62,7 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
             .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
         id += observation.schedule.length;
       }
-      for (final intervention in study.interventionSet?.interventions ?? <Intervention>[]) {
+      for (final intervention in study.selectedInterventions ?? <Intervention>[]) {
         if (intervention.id == null || intervention.id != study.getInterventionForDate(date)?.id) {
           if (intervention.tasks.isNotEmpty) {
             id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
