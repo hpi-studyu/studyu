@@ -17,17 +17,17 @@ class Study extends SupabaseObjectFunctions<Study> {
   String? id;
   String? title;
   String? description;
-  Contact contact = Contact();
-  String iconName = 'accountHeart';
-  bool published = false;
-  Questionnaire questionnaire = Questionnaire();
-  List<EligibilityCriterion> eligibilityCriteria = [];
-  List<ConsentItem> consent = [];
-  InterventionSet interventionSet = InterventionSet([]);
-  List<Observation> observations = [];
-  StudySchedule schedule = StudySchedule();
-  ReportSpecification reportSpecification = ReportSpecification();
-  List<StudyResult> results = [];
+  late Contact contact = Contact();
+  late String iconName = 'accountHeart';
+  late bool published = false;
+  late Questionnaire questionnaire = Questionnaire();
+  late List<EligibilityCriterion> eligibilityCriteria = [];
+  late List<ConsentItem> consent = [];
+  late InterventionSet interventionSet = InterventionSet([]);
+  late List<Observation> observations = [];
+  late StudySchedule schedule = StudySchedule();
+  late ReportSpecification reportSpecification = ReportSpecification();
+  late List<StudyResult> results = [];
 
   fhir.Questionnaire? fhirQuestionnaire;
 
