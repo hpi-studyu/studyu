@@ -21,8 +21,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   late String studyId;
   late String userId;
   late DateTime startDate;
-  late InterventionSet interventionSet;
-  late List<String> interventionOrder;
+  late List<String> selectedInterventionIds;
   late Map<String, List<Result>> results = {};
 
   @JsonKey(ignore: true)
@@ -36,23 +35,26 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   @override
   Map<String, dynamic> toJson() => _$UserStudyToJson(this);
 
-  UserStudy.fromStudy(
-      this.study, this.userId, List<Intervention> selectedInterventions, this.startDate, int firstIntervention)
+  UserStudy.fromStudy(this.study, this.userId, List<Intervention> selectedInterventions, this.startDate)
       : studyId = study.id!,
-        interventionSet = InterventionSet(selectedInterventions) {
-    interventionOrder = study.schedule
-        .generateWith(firstIntervention)
-        .map<String>((int index) => selectedInterventions[index].id)
+        selectedInterventionIds = selectedInterventions.map((e) => e.id).toList();
+
+  List<String> get interventionOrder => [
+        if (study.schedule.includeBaseline) Study.baselineID,
+        ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index])
+      ];
+
+  InterventionSet get interventionSet {
+    final selectedInterventions = selectedInterventionIds
+        .map((selectedInterventionId) => study.interventionSet.interventions
+            .singleWhere((intervention) => intervention.id == selectedInterventionId))
         .toList();
-    interventionOrder.insert(0, Study.baselineID);
     if (study.schedule.includeBaseline) {
-      interventionSet = InterventionSet([
-        ...interventionSet.interventions,
-        Intervention(Study.baselineID, 'Baseline')
-          ..tasks = []
-          ..icon = 'rayStart'
-      ]);
+      selectedInterventions.add(Intervention(Study.baselineID, 'Baseline')
+        ..tasks = []
+        ..icon = 'rayStart');
     }
+    return InterventionSet(selectedInterventions);
   }
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;

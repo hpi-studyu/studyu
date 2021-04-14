@@ -12,11 +12,10 @@ UserStudy _$UserStudyFromJson(Map<String, dynamic> json) {
     ..studyId = json['studyId'] as String
     ..userId = json['userId'] as String
     ..startDate = DateTime.parse(json['startDate'] as String)
-    ..interventionSet = InterventionSet.fromJson(
-        json['interventionSet'] as Map<String, dynamic>)
-    ..interventionOrder = (json['interventionOrder'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList()
+    ..selectedInterventionIds =
+        (json['selectedInterventionIds'] as List<dynamic>)
+            .map((e) => e as String)
+            .toList()
     ..results = (json['results'] as Map<String, dynamic>).map(
       (k, e) => MapEntry(
           k,
@@ -39,8 +38,7 @@ Map<String, dynamic> _$UserStudyToJson(UserStudy instance) {
   val['studyId'] = instance.studyId;
   val['userId'] = instance.userId;
   val['startDate'] = instance.startDate.toIso8601String();
-  val['interventionSet'] = instance.interventionSet.toJson();
-  val['interventionOrder'] = instance.interventionOrder;
+  val['selectedInterventionIds'] = instance.selectedInterventionIds;
   val['results'] = instance.results
       .map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList()));
   return val;
