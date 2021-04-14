@@ -20,7 +20,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   String? id;
   late String studyId;
   late String userId;
-  DateTime? startDate;
+  DateTime? startedAt;
   late List<String> selectedInterventionIds;
   late Map<String, List<Result>> results = {};
 
@@ -104,12 +104,12 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   DateTime endDate(DateTime dt) => dt.add(Duration(days: interventionOrder.length * study.schedule.phaseDuration));
 
   int getDayOfStudyFor(DateTime date) {
-    final day = date.differenceInDays(startDate!).inDays;
+    final day = date.differenceInDays(startedAt!).inDays;
     return day;
   }
 
   int getInterventionIndexForDate(DateTime date) {
-    final test = date.differenceInDays(startDate!).inDays;
+    final test = date.differenceInDays(startedAt!).inDays;
     return test ~/ study.schedule.phaseDuration;
   }
 
@@ -129,7 +129,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
         .toList();
   }
 
-  DateTime startOfPhase(int index) => startDate!.add(Duration(days: study.schedule.phaseDuration * index));
+  DateTime startOfPhase(int index) => startedAt!.add(Duration(days: study.schedule.phaseDuration * index));
 
   DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: study.schedule.phaseDuration));
 
@@ -185,7 +185,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
 
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
-    final diff = DateTime.now().differenceInDays(startDate!).inDays;
+    final diff = DateTime.now().differenceInDays(startedAt!).inDays;
     return diff >= interventionOrder.length * study.schedule.phaseDuration - 1;
   }
 
@@ -228,7 +228,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   }
 
   void setStartDateBackBy({required int days}) {
-    startDate = startDate!.subtract(Duration(days: days));
+    startedAt = startedAt!.subtract(Duration(days: days));
     results = results.map((task, results) => MapEntry(
         task,
         results.map((result) {
