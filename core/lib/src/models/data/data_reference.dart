@@ -2,7 +2,7 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 
 import '../results/result.dart';
-import '../tables/user_study.dart';
+import '../tables/study_subject.dart';
 import '../tasks/task.dart';
 
 part 'data_reference.g.dart';
@@ -21,7 +21,7 @@ class DataReference<T> {
   @override
   String toString() => toJson().toString();
 
-  Map<DateTime, T> retrieveFromResults(UserStudy studyInstance) {
+  Map<DateTime, T> retrieveFromResults(StudySubject studyInstance) {
     final Task? sourceTask = studyInstance.study.observations.firstWhereOrNull((task) => task.id == this.task) ??
         studyInstance.selectedInterventions
             .expand((i) => i.tasks)

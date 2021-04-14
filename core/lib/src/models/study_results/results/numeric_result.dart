@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../data/data_reference.dart';
 import '../../tables/study.dart';
-import '../../tables/user_study.dart';
+import '../../tables/study_subject.dart';
 import '../study_result.dart';
 
 part 'numeric_result.g.dart';
@@ -30,7 +30,7 @@ class NumericResult extends StudyResult {
   }
 
   @override
-  List getValues(UserStudy instance) {
+  List getValues(StudySubject instance) {
     final resultSet = resultProperty
         .retrieveFromResults(instance)
         .map<int, num>((key, value) => MapEntry(instance.getDayOfStudyFor(key), value));

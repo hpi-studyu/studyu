@@ -16,7 +16,7 @@ class KickoffScreen extends StatefulWidget {
 }
 
 class _KickoffScreen extends State<KickoffScreen> {
-  UserStudy study;
+  StudySubject study;
   bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {

@@ -11,7 +11,7 @@ import '../util/plot_utilities.dart';
 class LinearRegressionSectionWidget extends ReportSectionWidget {
   final LinearRegressionSection section;
 
-  const LinearRegressionSectionWidget(UserStudy instance, this.section) : super(instance);
+  const LinearRegressionSectionWidget(StudySubject instance, this.section) : super(instance);
 
   @override
   Widget build(BuildContext context) {

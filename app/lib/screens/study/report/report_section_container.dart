@@ -5,7 +5,7 @@ import 'package:studyou_core/core.dart';
 import 'report_section_widget.dart';
 import 'sections/report_section_widgets.dart';
 
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, UserStudy instance);
+typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject instance);
 
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
@@ -15,7 +15,7 @@ class ReportSectionContainer extends StatelessWidget {
   };
 
   final ReportSection section;
-  final UserStudy instance;
+  final StudySubject instance;
   final bool primary;
   final GestureTapCallback onTap;
 

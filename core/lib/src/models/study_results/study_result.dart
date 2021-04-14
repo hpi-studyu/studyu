@@ -1,7 +1,7 @@
 import 'package:uuid/uuid.dart';
 
 import '../tables/study.dart';
-import '../tables/user_study.dart';
+import '../tables/study_subject.dart';
 import 'results/results.dart';
 
 typedef StudyResultParser = StudyResult Function(Map<String, dynamic> json);
@@ -29,5 +29,5 @@ abstract class StudyResult {
 
   List<String> getHeaders(Study studySpec);
 
-  List<dynamic> getValues(UserStudy instance);
+  List<dynamic> getValues(StudySubject instance);
 }

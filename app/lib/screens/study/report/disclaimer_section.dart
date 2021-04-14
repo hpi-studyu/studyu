@@ -5,7 +5,7 @@ import 'package:studyou_core/core.dart';
 import 'generic_section.dart';
 
 class DisclaimerSection extends GenericSection {
-  const DisclaimerSection(UserStudy instance, {GestureTapCallback onTap}) : super(instance, onTap: onTap);
+  const DisclaimerSection(StudySubject instance, {GestureTapCallback onTap}) : super(instance, onTap: onTap);
 
   @override
   Widget buildContent(BuildContext context) => Column(

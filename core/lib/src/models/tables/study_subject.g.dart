@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_study.dart';
+part of 'study_subject.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserStudy _$UserStudyFromJson(Map<String, dynamic> json) {
-  return UserStudy()
+StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) {
+  return StudySubject()
     ..id = json['id'] as String?
     ..studyId = json['studyId'] as String
     ..userId = json['userId'] as String
@@ -27,7 +27,7 @@ UserStudy _$UserStudyFromJson(Map<String, dynamic> json) {
     );
 }
 
-Map<String, dynamic> _$UserStudyToJson(UserStudy instance) {
+Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

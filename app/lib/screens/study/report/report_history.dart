@@ -18,9 +18,9 @@ class ReportHistoryScreen extends StatelessWidget {
           AppLocalizations.of(context).report_history,
         ),
       ),
-      body: RetryFutureBuilder<List<UserStudy>>(
-        tryFunction: () async => UserStudy.getStudyHistory(await UserQueries.loadUserId()),
-        successBuilder: (BuildContext context, List<UserStudy> pastStudies) {
+      body: RetryFutureBuilder<List<StudySubject>>(
+        tryFunction: () async => StudySubject.getStudyHistory(await UserQueries.loadUserId()),
+        successBuilder: (BuildContext context, List<StudySubject> pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,
             itemBuilder: (context, index) {
@@ -34,7 +34,7 @@ class ReportHistoryScreen extends StatelessWidget {
 }
 
 class ReportHistoryItem extends StatelessWidget {
-  final UserStudy study;
+  final StudySubject study;
 
   const ReportHistoryItem(this.study);
 

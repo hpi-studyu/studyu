@@ -10,9 +10,9 @@ import 'performance/performance_section.dart';
 import 'report_section_container.dart';
 
 class ReportDetailsScreen extends StatelessWidget {
-  final UserStudy reportStudy;
+  final StudySubject reportStudy;
 
-  static MaterialPageRoute routeFor({@required UserStudy reportStudy}) => MaterialPageRoute(
+  static MaterialPageRoute routeFor({@required StudySubject reportStudy}) => MaterialPageRoute(
       builder: (_) => ReportDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.reportDetails));
 
   const ReportDetailsScreen(this.reportStudy, {Key key}) : super(key: key);

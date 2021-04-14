@@ -8,7 +8,7 @@ import 'package:studyou_core/core.dart';
 import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {
-  const PerformanceSection(UserStudy instance, {GestureTapCallback onTap}) : super(instance, onTap: onTap);
+  const PerformanceSection(StudySubject instance, {GestureTapCallback onTap}) : super(instance, onTap: onTap);
 
   // TODO move to model
   double get minimumRatio => 0.1;

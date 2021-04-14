@@ -8,7 +8,7 @@ import '../../../../util/intervention.dart';
 import '../../../../widgets/intervention_card.dart';
 
 class ProgressRow extends StatefulWidget {
-  final UserStudy study;
+  final StudySubject study;
 
   const ProgressRow({Key key, this.study}) : super(key: key);
   @override

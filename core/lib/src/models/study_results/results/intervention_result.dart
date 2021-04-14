@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../tables/study.dart';
-import '../../tables/user_study.dart';
+import '../../tables/study_subject.dart';
 import '../study_result.dart';
 
 part 'intervention_result.g.dart';
@@ -27,7 +27,7 @@ class InterventionResult extends StudyResult {
   }
 
   @override
-  List getValues(UserStudy instance) {
+  List getValues(StudySubject instance) {
     return instance.interventionOrder
         .expand((intervention) => List<String>.filled(instance.study.schedule.phaseDuration, intervention))
         .toList();

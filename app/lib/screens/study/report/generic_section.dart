@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
 
 abstract class GenericSection extends StatelessWidget {
-  final UserStudy study;
+  final StudySubject study;
   final GestureTapCallback onTap;
 
   const GenericSection(this.study, {this.onTap});

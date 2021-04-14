@@ -27,7 +27,7 @@ class StudyTile extends StatelessWidget {
         super(key: key);
 
   StudyTile.fromUserStudy(
-      {@required UserStudy study, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key key})
+      {@required StudySubject study, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key key})
       : title = study.study.title,
         description = study.study.description,
         iconName = study.study.iconName,

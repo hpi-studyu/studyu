@@ -25,7 +25,7 @@ class OverflowMenuItem {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  UserStudy study;
+  StudySubject study;
   Multimap<ScheduleTime, Task> scheduleToday;
 
   @override

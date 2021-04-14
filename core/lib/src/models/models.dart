@@ -13,5 +13,5 @@ export 'study_results/study_results.dart';
 export 'study_schedule/study_schedule.dart';
 export 'tables/app_config.dart';
 export 'tables/study.dart';
-export 'tables/user_study.dart';
+export 'tables/study_subject.dart';
 export 'tasks/tasks.dart';

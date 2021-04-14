@@ -14,8 +14,8 @@ String tableName(Type cls) {
   switch (cls) {
     case Study:
       return Study.tableName;
-    case UserStudy:
-      return UserStudy.tableName;
+    case StudySubject:
+      return StudySubject.tableName;
     case AppConfig:
       return AppConfig.tableName;
     default:
@@ -29,8 +29,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
     switch (T) {
       case Study:
         return Study.fromJson(json) as T;
-      case UserStudy:
-        return UserStudy.fromJson(json) as T;
+      case StudySubject:
+        return StudySubject.fromJson(json) as T;
       case AppConfig:
         return AppConfig.fromJson(json) as T;
       default:

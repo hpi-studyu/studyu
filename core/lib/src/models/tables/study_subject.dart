@@ -9,11 +9,11 @@ import '../../util/extensions.dart';
 import '../../util/supabase_object.dart';
 import '../models.dart';
 
-part 'user_study.g.dart';
+part 'study_subject.g.dart';
 
 @JsonSerializable()
-class UserStudy extends SupabaseObjectFunctions<UserStudy> {
-  static const String tableName = 'user_study';
+class StudySubject extends SupabaseObjectFunctions<StudySubject> {
+  static const String tableName = 'study_subject';
 
   // Needs late to use the fromJson initializer
   @override
@@ -27,15 +27,15 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   @JsonKey(ignore: true)
   late Study study;
 
-  UserStudy();
+  StudySubject();
 
-  factory UserStudy.fromJson(Map<String, dynamic> json) =>
-      _$UserStudyFromJson(json)..study = Study.fromJson(json['study'] as Map<String, dynamic>);
+  factory StudySubject.fromJson(Map<String, dynamic> json) =>
+      _$StudySubjectFromJson(json)..study = Study.fromJson(json['study'] as Map<String, dynamic>);
 
   @override
-  Map<String, dynamic> toJson() => _$UserStudyToJson(this);
+  Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
 
-  UserStudy.fromStudy(this.study, this.userId, this.selectedInterventionIds) : studyId = study.id!;
+  StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds) : studyId = study.id!;
 
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
@@ -240,28 +240,28 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   }
 
   @override
-  Future<UserStudy> save() async {
+  Future<StudySubject> save() async {
     final response = await client.from(tableName).insert(toJson(), upsert: true).execute();
 
     SupabaseQuery.catchPostgrestError(response.error);
     final json = List<Map<String, dynamic>>.from(response.data as List).single;
     json['study'] = study.toJson();
-    return UserStudy.fromJson(json);
+    return StudySubject.fromJson(json);
   }
 
   @override
-  Future<UserStudy> delete() async {
+  Future<StudySubject> delete() async {
     final response = await client.from(tableName).delete().eq('id', id).single().execute();
 
     SupabaseQuery.catchPostgrestError(response.error);
     final json = response.data as Map<String, dynamic>;
     json['study'] = study.toJson();
-    return UserStudy.fromJson(json);
+    return StudySubject.fromJson(json);
   }
 
-  static Future<List<UserStudy>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<UserStudy>(
+  static Future<List<StudySubject>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<StudySubject>(
       await client.from(tableName).select().eq('studyId', study.id).execute());
 
-  static Future<List<UserStudy>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<UserStudy>(
+  static Future<List<StudySubject>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<StudySubject>(
       await client.from(tableName).select().eq('userId', userId).execute());
 }
