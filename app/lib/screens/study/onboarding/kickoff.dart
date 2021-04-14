@@ -1,12 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
-import 'package:studyu/util/user.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
+import '../../../util/notifications.dart';
+import '../../../util/user.dart';
 
 class KickoffScreen extends StatefulWidget {
   @override
@@ -20,10 +22,14 @@ class _KickoffScreen extends State<KickoffScreen> {
   Future<void> _storeUserStudy(BuildContext context) async {
     study.userId = await UserQueries.loadUserId();
 
+    // TODO: Add retry saving
     try {
       study = await study.save();
       context.read<AppState>().activeStudy = study;
       await UserQueries.saveActiveUserStudyId(study.id);
+      if (!kIsWeb) {
+        scheduleStudyNotifications(context);
+      }
     } finally {
       setState(() => ready = true);
       Navigator.pushNamed(context, Routes.dashboard);

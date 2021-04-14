@@ -11,7 +11,9 @@ UserStudy _$UserStudyFromJson(Map<String, dynamic> json) {
     ..id = json['id'] as String?
     ..studyId = json['studyId'] as String
     ..userId = json['userId'] as String
-    ..startDate = DateTime.parse(json['startDate'] as String)
+    ..startDate = json['startDate'] == null
+        ? null
+        : DateTime.parse(json['startDate'] as String)
     ..selectedInterventionIds =
         (json['selectedInterventionIds'] as List<dynamic>)
             .map((e) => e as String)
@@ -37,7 +39,7 @@ Map<String, dynamic> _$UserStudyToJson(UserStudy instance) {
   writeNotNull('id', instance.id);
   val['studyId'] = instance.studyId;
   val['userId'] = instance.userId;
-  val['startDate'] = instance.startDate.toIso8601String();
+  writeNotNull('startDate', instance.startDate?.toIso8601String());
   val['selectedInterventionIds'] = instance.selectedInterventionIds;
   val['results'] = instance.results
       .map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList()));

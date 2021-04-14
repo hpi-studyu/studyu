@@ -75,6 +75,7 @@ class Timeline extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final interventionsInOrder = study.getInterventionsInOrder();
+    final now = DateTime.now();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -85,7 +86,7 @@ class Timeline extends StatelessWidget {
             title: intervention.name,
             iconName: intervention.icon,
             color: isBaseline(intervention) ? Colors.grey : theme.accentColor,
-            date: study.startDate.add(Duration(days: index * study.study.schedule.phaseDuration)),
+            date: now.add(Duration(days: index * study.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
         }).toList(),
@@ -94,7 +95,7 @@ class Timeline extends StatelessWidget {
             iconName: 'flagCheckered',
             color: Colors.green,
             isLast: true,
-            date: study.endDate)
+            date: study.endDate(now))
       ],
     );
   }

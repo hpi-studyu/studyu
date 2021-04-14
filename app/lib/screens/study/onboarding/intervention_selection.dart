@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -7,7 +6,6 @@ import 'package:studyou_core/core.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
-import '../../../util/notifications.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/intervention_card.dart';
 import 'onboarding_progress.dart';
@@ -81,9 +79,6 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final model = context.read<AppState>();
     // TODO: Provide userId here already
     model.activeStudy = UserStudy.fromStudy(model.selectedStudy, null, selectedInterventionIds);
-    if (!kIsWeb) {
-      scheduleStudyNotifications(context);
-    }
     Navigator.pushNamed(context, Routes.journey);
   }
 
