@@ -35,9 +35,7 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
   @override
   Map<String, dynamic> toJson() => _$UserStudyToJson(this);
 
-  UserStudy.fromStudy(this.study, this.userId, List<Intervention> selectedInterventions, this.startDate)
-      : studyId = study.id!,
-        selectedInterventionIds = selectedInterventions.map((e) => e.id).toList();
+  UserStudy.fromStudy(this.study, this.userId, this.selectedInterventionIds) : studyId = study.id!;
 
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
@@ -46,8 +44,8 @@ class UserStudy extends SupabaseObjectFunctions<UserStudy> {
 
   List<Intervention> get selectedInterventions {
     final selectedInterventions = selectedInterventionIds
-        .map((selectedInterventionId) => study.interventions
-            .singleWhere((intervention) => intervention.id == selectedInterventionId))
+        .map((selectedInterventionId) =>
+            study.interventions.singleWhere((intervention) => intervention.id == selectedInterventionId))
         .toList();
     if (study.schedule.includeBaseline) {
       selectedInterventions.add(Intervention(Study.baselineID, 'Baseline')

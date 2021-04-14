@@ -18,7 +18,7 @@ class InterventionSelectionScreen extends StatefulWidget {
 }
 
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
-  final List<Intervention> selectedInterventions = [];
+  final List<String> selectedInterventionIds = [];
   Study selectedStudy;
 
   @override
@@ -60,19 +60,19 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         child: InterventionCard(interventions[index],
             showCheckbox: true,
             showDescription: false,
-            selected: selectedInterventions.any((intervention) => intervention.id == interventions[index].id),
-            onTap: () => onSelect(interventions[index])),
+            selected: selectedInterventionIds.any((interventionId) => interventionId == interventions[index].id),
+            onTap: () => onSelect(interventions[index].id)),
       ),
     );
   }
 
-  void onSelect(Intervention intervention) {
+  void onSelect(String interventionId) {
     setState(() {
-      if (!selectedInterventions.map<String>((intervention) => intervention.name).contains(intervention.name)) {
-        selectedInterventions.add(intervention);
-        if (selectedInterventions.length > 2) selectedInterventions.removeAt(0);
+      if (!selectedInterventionIds.contains(interventionId)) {
+        selectedInterventionIds.add(interventionId);
+        if (selectedInterventionIds.length > 2) selectedInterventionIds.removeAt(0);
       } else {
-        selectedInterventions.removeWhere((contained) => contained.name == intervention.name);
+        selectedInterventionIds.removeWhere((id) => id == interventionId);
       }
     });
   }
@@ -80,7 +80,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Future<void> onFinished() async {
     final model = context.read<AppState>();
     // TODO: Provide userId here already
-    model.activeStudy = UserStudy.fromStudy(model.selectedStudy, null, selectedInterventions, DateTime.now());
+    model.activeStudy = UserStudy.fromStudy(model.selectedStudy, null, selectedInterventionIds);
     if (!kIsWeb) {
       scheduleStudyNotifications(context);
     }
@@ -111,8 +111,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: selectedInterventions.length == 2 ? onFinished : null,
-        progress: OnboardingProgress(stage: 1, progress: selectedInterventions.length / 2),
+        onNext: selectedInterventionIds.length == 2 ? onFinished : null,
+        progress: OnboardingProgress(stage: 1, progress: selectedInterventionIds.length / 2),
       ),
     );
   }
