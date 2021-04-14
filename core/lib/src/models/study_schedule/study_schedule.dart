@@ -18,12 +18,9 @@ class StudySchedule {
 
   int getNumberOfPhases() => numberOfCycles * numberOfPhases + (includeBaseline ? 1 : 0);
 
-  List<int?> generateWith(int firstIntervention) {
-    final cycles = Iterable<int>.generate(numberOfCycles, (index) => index);
-    final List<int?> phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
-
-    // TODO: Do not insert null as baseline
-    if (includeBaseline) phases.insert(0, null);
+  List<int> generateWith(int firstIntervention) {
+    final cycles = Iterable<int>.generate(numberOfCycles);
+    final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
 
     return phases;
   }
