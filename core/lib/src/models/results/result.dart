@@ -8,8 +8,6 @@ part 'result.g.dart';
 
 @JsonSerializable()
 class Result<T> {
-  String taskId;
-  DateTime timeStamp;
   static const keyType = 'type';
   String type;
 
@@ -17,26 +15,26 @@ class Result<T> {
   @JsonKey(ignore: true)
   late T result;
 
-  Result(this.taskId, this.timeStamp, this.type);
+  Result(this.type);
 
-  Result.app({required this.type, required this.result, required this.taskId}) : timeStamp = DateTime.now();
+  Result.app({required this.type, required this.result});
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> resultMap;
-    switch (type) {
-      case 'QuestionnaireState':
+    switch (T) {
+      case QuestionnaireState:
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
         break;
-      case 'fhir.QuestionnaireResponse':
+      case fhir.QuestionnaireResponse:
         resultMap = {keyResult: (result as fhir.QuestionnaireResponse).toJson()};
         break;
-      case 'bool':
+      case bool:
         resultMap = {keyResult: result};
         break;
       default:
-        print('Unsupported question type: $type');
+        print('Unsupported question type: $T');
         resultMap = {keyResult: ''};
     }
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);

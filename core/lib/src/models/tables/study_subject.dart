@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
+import 'package:fhir/r4.dart' as fhir;
 
 import '../../env/env.dart';
 import '../../util/extensions.dart';
@@ -33,7 +34,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   factory StudySubject.fromJson(Map<String, dynamic> json) => _$StudySubjectFromJson(json)
     ..study = Study.fromJson(json['study'] as Map<String, dynamic>)
-    ..progress = (json['subject_progress'] as List)
+    ..progress = (json['subject_progress'] as List? ?? [])
         .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
         .toList();
 
@@ -62,21 +63,43 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
-  Future<void> addResult(Result result) async {
+  Future<void> addResult<T>({required String taskId, required T result}) async {
+    late final Result<T> resultObject;
+    switch (T) {
+      case QuestionnaireState:
+        resultObject = Result<T>.app(type: 'QuestionnaireState', result: result);
+        break;
+      case fhir.QuestionnaireResponse:
+        resultObject = Result<T>.app(type: 'fhir.QuestionnaireResponse', result: result);
+        break;
+      case bool:
+        resultObject = Result<T>.app(type: 'bool', result: result);
+        break;
+      default:
+        print('Unsupported question type: $T');
+        resultObject = Result<T>.app(type: 'unknown', result: result);
+    }
+
     final p = await SubjectProgress(
       subjectId: id!,
       interventionId: getInterventionForDate(DateTime.now())!.id,
-      taskId: result.taskId,
-      result: result,
-      resultType: result.type,
+      taskId: taskId,
+      result: resultObject,
+      resultType: resultObject.type,
     ).save();
     progress.add(p);
     await save();
   }
 
-  Map<DateTime, List<SubjectProgress>> getResultsByDate({required String interventionId}) => Map.fromIterable(progress
-      .where((e) => e.interventionId == interventionId)
-      .map((p) => MapEntry(DateTime(p.completedAt!.year, p.completedAt!.month, p.completedAt!.day), p)));
+  Map<DateTime, List<SubjectProgress>> getResultsByDate({required String interventionId}) {
+    final resultsByDate = <DateTime, List<SubjectProgress>>{};
+    progress.where((p) => p.interventionId == interventionId).forEach((p) {
+      final date = DateTime(p.completedAt!.year, p.completedAt!.month, p.completedAt!.day);
+      resultsByDate.putIfAbsent(date, () => []);
+      resultsByDate[date]!.add(p);
+    });
+    return resultsByDate;
+  }
 
   // Day after last intervention
   DateTime endDate(DateTime dt) => dt.add(Duration(days: interventionOrder.length * study.schedule.phaseDuration));
@@ -112,22 +135,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: study.schedule.phaseDuration));
 
   List<SubjectProgress> resultsFor(String taskId) => progress.where((p) => p.taskId == taskId).toList();
-
-  Map<String, int> completedPerTaskForPhase(int index) {
-    final Map<String, int> completed = {};
-    resultsForPhase(index).forEach((p) {
-      completed.putIfAbsent(p.taskId, () => 0);
-      completed[p.taskId] = completed[p.taskId]! + 1;
-    });
-    return completed;
-  }
-
-  List<SubjectProgress> resultsForPhase(int index) =>
-      resultsBetween(startOfPhase(index).subtract(const Duration(days: 1)), dayAfterEndOfPhase(index));
-
-  // Excluding start and end
-  List<SubjectProgress> resultsBetween(DateTime start, DateTime end) =>
-      progress.where((p) => p.completedAt!.isBefore(end) && p.completedAt!.isAfter(start)).toList();
 
   int completedForPhase(int index) {
     final start = startOfPhase(index);
@@ -207,10 +214,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> setStartDateBackBy({required int days}) async {
-    progress = await SupabaseQuery.batchUpsert(progress.map((p) {
-      p.completedAt = p.completedAt!.subtract(Duration(days: days));
-      return p.toJson();
-    }).toList());
+    progress = await SupabaseQuery.batchUpsert(progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList());
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
   }
@@ -228,6 +232,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   @override
   Future<StudySubject> delete() async {
+    SupabaseQuery.catchPostgrestError(
+        (await client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute()).error);
     final response = await client.from(tableName).delete().eq('id', id).single().execute();
 
     SupabaseQuery.catchPostgrestError(response.error);

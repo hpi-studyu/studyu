@@ -29,4 +29,9 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
 
   @override
   Map<String, dynamic> toJson() => _$SubjectProgressToJson(this);
+
+  SubjectProgress setStartDateBackBy({required int days}) {
+    completedAt = completedAt!.subtract(Duration(days: days));
+    return this;
+  }
 }

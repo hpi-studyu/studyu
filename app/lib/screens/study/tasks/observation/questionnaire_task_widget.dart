@@ -17,10 +17,8 @@ class QuestionnaireTaskWidget extends StatelessWidget {
   Future<void> _addQuestionnaireResponseFhir(fhir.QuestionnaireResponse response, BuildContext context) async {
     final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
-    final result =
-        Result<fhir.QuestionnaireResponse>.app(type: 'fhir.QuestionnaireResponse', result: response, taskId: task.id);
     try {
-      await activeStudy.addResult(result);
+      await activeStudy.addResult<fhir.QuestionnaireResponse>(taskId: task.id, result: response);
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -34,10 +32,8 @@ class QuestionnaireTaskWidget extends StatelessWidget {
   Future<void> _addQuestionnaireResponseStudyU(QuestionnaireState qs, BuildContext context) async {
     final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
-    final result = Result<QuestionnaireState>.app(type: 'QuestionnaireState', result: qs, taskId: task.id);
-
     try {
-      await activeStudy.addResult(result);
+      await activeStudy.addResult<QuestionnaireState>(taskId: task.id, result: qs);
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
