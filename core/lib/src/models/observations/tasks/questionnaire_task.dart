@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../models.dart';
 import '../../questionnaire/question.dart';
 import '../../questionnaire/questionnaire.dart';
 import '../../questionnaire/questionnaire_state.dart';
@@ -26,7 +27,7 @@ class QuestionnaireTask extends Observation {
   Map<String, dynamic> toJson() => _$QuestionnaireTaskToJson(this);
 
   @override
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
+  Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults) {
     final Question? targetQuestion = questions.questions.firstWhereOrNull((q) => q.id == property);
     if (targetQuestion == null) {
       throw ArgumentError("Questionnaire '$id' does not have a question with '$property'.");

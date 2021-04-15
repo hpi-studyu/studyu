@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyou_core/core.dart';
 
-import '../results/result.dart';
 import '../tables/study_subject.dart';
 import '../tasks/task.dart';
 
@@ -28,7 +28,7 @@ class DataReference<T> {
             .firstWhereOrNull((task) => task.id == this.task);
     if (sourceTask == null) throw ArgumentError("Could not find a task with the id '$task'.");
 
-    final List<Result> sourceResults = studyInstance.resultsFor(task) ?? [];
+    final List<SubjectProgress> sourceResults = studyInstance.resultsFor(task);
 
     return sourceTask.extractPropertyResults<T>(property, sourceResults);
   }

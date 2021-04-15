@@ -18,20 +18,16 @@ class TaskBox extends StatefulWidget {
 }
 
 class _TaskBoxState extends State<TaskBox> {
-  bool _isCompleted = false;
-
   Future<void> _navigateToTaskScreen() async {
-    final completed =
-        await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => TaskScreen(task: widget.task)));
+    await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => TaskScreen(task: widget.task)));
     widget.onCompleted();
-    setState(() {
-      _isCompleted = completed;
-    });
+    // Rebuild widget
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    _isCompleted = context.watch<AppState>().activeStudy.isTaskFinishedFor(widget.task.id, DateTime.now());
+    final completed = context.watch<AppState>().activeStudy.isTaskFinishedFor(widget.task.id, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(
@@ -45,7 +41,7 @@ class _TaskBoxState extends State<TaskBox> {
               ),
             ),
             RoundCheckbox(
-              value: _isCompleted,
+              value: completed, //_isCompleted,
               onChanged: (value) => _navigateToTaskScreen(),
             )
           ],

@@ -16,6 +16,8 @@ String tableName(Type cls) {
       return Study.tableName;
     case StudySubject:
       return StudySubject.tableName;
+    case SubjectProgress:
+      return SubjectProgress.tableName;
     case AppConfig:
       return AppConfig.tableName;
     default:
@@ -31,6 +33,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return Study.fromJson(json) as T;
       case StudySubject:
         return StudySubject.fromJson(json) as T;
+      case SubjectProgress:
+        return SubjectProgress.fromJson(json) as T;
       case AppConfig:
         return AppConfig.fromJson(json) as T;
       default:
@@ -42,11 +46,9 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
       await client.from(tableName(T)).delete().eq('id', id).single().execute());
 
-  Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(
-            await client.from(tableName(T)).insert(toJson(), upsert: true).execute())
-        .single;
-  }
+  Future<T> save() async =>
+      SupabaseQuery.extractSupabaseList<T>(await client.from(tableName(T)).insert(toJson(), upsert: true).execute())
+          .single;
 }
 
 class SupabaseQuery {
@@ -56,6 +58,9 @@ class SupabaseQuery {
   static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async =>
       extractSupabaseSingleRow(
           await client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute());
+
+  static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
+      SupabaseQuery.extractSupabaseList<T>(await client.from(tableName(T)).insert(batchJson, upsert: true).execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
     catchPostgrestError(response.error);
@@ -72,7 +77,7 @@ class SupabaseQuery {
     if (error != null) {
       print('Error: ${error.message}');
       // ignore: only_throw_errors
-      throw error;
+      throw error.message;
     }
   }
 }

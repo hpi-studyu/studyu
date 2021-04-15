@@ -16,9 +16,8 @@ class CheckmarkTaskWidget extends StatelessWidget {
     final model = context.read<AppState>();
     final activeStudy = model.activeStudy;
     final result = Result<bool>.app(type: 'bool', result: true, taskId: task.id);
-    activeStudy.addResult(result);
     try {
-      await activeStudy.save();
+      await activeStudy.addResult(result);
       await animation;
       Navigator.pop(context, true);
     } on PostgrestError {

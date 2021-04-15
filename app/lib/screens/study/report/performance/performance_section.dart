@@ -12,12 +12,12 @@ class PerformanceSection extends GenericSection {
 
   // TODO move to model
   double get minimumRatio => 0.1;
+
   double get maximum => 100;
 
   @override
   Widget buildContent(BuildContext context) {
-    final interventions =
-        study.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
+    final interventions = study.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
     final interventionProgress = interventions.map((intervention) {
       final countableInterventions = getCountableObservationAmount(intervention);
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
@@ -79,12 +79,12 @@ class PerformanceSection extends GenericSection {
     }
 
     var countable = 0;
-    study.getResultsByDate(interventionId: intervention.id).values.forEach((resultList) {
-      if (resultList
+    study.getResultsByDate(interventionId: intervention.id).values.forEach((progress) {
+      if (progress
               .where((result) => intervention.tasks.any((interventionTask) => interventionTask.id == result.taskId))
               .length ==
           interventionsPerDay) {
-        countable += resultList
+        countable += progress
             .where((result) => study.study.observations.any((observation) => observation.id == result.taskId))
             .length;
       }

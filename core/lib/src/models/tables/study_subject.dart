@@ -22,15 +22,20 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   late String userId;
   DateTime? startedAt;
   late List<String> selectedInterventionIds;
-  late Map<String, List<Result>> results = {};
 
   @JsonKey(ignore: true)
   late Study study;
 
+  @JsonKey(ignore: true)
+  late List<SubjectProgress> progress = [];
+
   StudySubject();
 
-  factory StudySubject.fromJson(Map<String, dynamic> json) =>
-      _$StudySubjectFromJson(json)..study = Study.fromJson(json['study'] as Map<String, dynamic>);
+  factory StudySubject.fromJson(Map<String, dynamic> json) => _$StudySubjectFromJson(json)
+    ..study = Study.fromJson(json['study'] as Map<String, dynamic>)
+    ..progress = (json['subject_progress'] as List)
+        .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
+        .toList();
 
   @override
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
@@ -57,48 +62,21 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
-  void addResult(Result result) {
-    final nextResults = results;
-    nextResults.putIfAbsent(result.taskId, () => []).add(result);
-    results = nextResults;
+  Future<void> addResult(Result result) async {
+    final p = await SubjectProgress(
+      subjectId: id!,
+      interventionId: getInterventionForDate(DateTime.now())!.id,
+      taskId: result.taskId,
+      result: result,
+      resultType: result.type,
+    ).save();
+    progress.add(p);
+    await save();
   }
 
-  void addResults(List<Result> newResults) {
-    if (newResults.isEmpty) return;
-    final nextResults = results;
-    for (final result in newResults) {
-      nextResults.putIfAbsent(result.taskId, () => []).add(result);
-    }
-    results = nextResults;
-  }
-
-  Map<String, List<Result>> getResultsByInterventionId({required String taskId}) {
-    final resultMap = <String, List<Result>>{};
-    results.values
-        .map((value) => value.where((result) => taskId == result.taskId).map((result) {
-              final intervention = getInterventionForDate(result.timeStamp);
-              return intervention != null ? MapEntry(intervention.id, result) : null;
-            }))
-        .expand((element) => element)
-        .where((element) => element != null)
-        .forEach((element) => resultMap.putIfAbsent(element!.key, () => []).add(element.value));
-    return resultMap;
-  }
-
-  Map<DateTime, List<Result>> getResultsByDate({required String interventionId}) {
-    final resultMap = <DateTime, List<Result>>{};
-    results.values
-        .map((value) => value.map((result) {
-              final intervention = getInterventionForDate(result.timeStamp)!;
-              return intervention.id == interventionId
-                  ? MapEntry(DateTime(result.timeStamp.year, result.timeStamp.month, result.timeStamp.day), result)
-                  : null;
-            }))
-        .expand((element) => element)
-        .where((element) => element != null)
-        .forEach((element) => resultMap.putIfAbsent(element!.key, () => []).add(element.value));
-    return resultMap;
-  }
+  Map<DateTime, List<SubjectProgress>> getResultsByDate({required String interventionId}) => Map.fromIterable(progress
+      .where((e) => e.interventionId == interventionId)
+      .map((p) => MapEntry(DateTime(p.completedAt!.year, p.completedAt!.month, p.completedAt!.day), p)));
 
   // Day after last intervention
   DateTime endDate(DateTime dt) => dt.add(Duration(days: interventionOrder.length * study.schedule.phaseDuration));
@@ -133,20 +111,23 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: study.schedule.phaseDuration));
 
-  List<Result>? resultsFor(String taskId) => results[taskId];
+  List<SubjectProgress> resultsFor(String taskId) => progress.where((p) => p.taskId == taskId).toList();
 
-  Map<String, int> completedPerTaskForPhase(int index) =>
-      resultsForPhase(index).map((taskId, taskResults) => MapEntry(taskId, taskResults.length));
-
-  Map<String, List<Result>> resultsForPhase(int index) {
-    return resultsBetween(startOfPhase(index).subtract(const Duration(days: 1)), dayAfterEndOfPhase(index));
+  Map<String, int> completedPerTaskForPhase(int index) {
+    final Map<String, int> completed = {};
+    resultsForPhase(index).forEach((p) {
+      completed.putIfAbsent(p.taskId, () => 0);
+      completed[p.taskId] = completed[p.taskId]! + 1;
+    });
+    return completed;
   }
+
+  List<SubjectProgress> resultsForPhase(int index) =>
+      resultsBetween(startOfPhase(index).subtract(const Duration(days: 1)), dayAfterEndOfPhase(index));
 
   // Excluding start and end
-  Map<String, List<Result>> resultsBetween(DateTime start, DateTime end) {
-    return results.map((taskId, taskResults) => MapEntry(taskId,
-        taskResults.where((result) => result.timeStamp.isBefore(end) && result.timeStamp.isAfter(start)).toList()));
-  }
+  List<SubjectProgress> resultsBetween(DateTime start, DateTime end) =>
+      progress.where((p) => p.completedAt!.isBefore(end) && p.completedAt!.isAfter(start)).toList();
 
   int completedForPhase(int index) {
     final start = startOfPhase(index);
@@ -173,11 +154,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   // TODO: Add index to support same task multiple times per day
   bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
-      resultsFor(taskId)?.any((result) => result.timeStamp.isSameDate(dateTime)) ?? false;
+      resultsFor(taskId).any((p) => p.completedAt!.isSameDate(dateTime));
 
-  int completedTasksFor(Task task) {
-    return resultsFor(task.id)?.length ?? 0;
-  }
+  int completedTasksFor(Task task) => resultsFor(task.id).length;
 
   // TODO: Add index to support same task multiple times per day
   bool allTasksCompletedFor(DateTime dateTime) =>
@@ -227,15 +206,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return taskSchedule as Multimap<ScheduleTime, Task>;
   }
 
-  void setStartDateBackBy({required int days}) {
+  Future<void> setStartDateBackBy({required int days}) async {
+    progress = await SupabaseQuery.batchUpsert(progress.map((p) {
+      p.completedAt = p.completedAt!.subtract(Duration(days: days));
+      return p.toJson();
+    }).toList());
     startedAt = startedAt!.subtract(Duration(days: days));
-    results = results.map((task, results) => MapEntry(
-        task,
-        results.map((result) {
-          final json = result.toJson();
-          json['timeStamp'] = result.timeStamp.subtract(Duration(days: days)).toString();
-          return Result.fromJson(json);
-        }).toList()));
     save();
   }
 
@@ -246,6 +222,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     SupabaseQuery.catchPostgrestError(response.error);
     final json = List<Map<String, dynamic>>.from(response.data as List).single;
     json['study'] = study.toJson();
+    json['subject_progress'] = progress.map((p) => p.toJson()).toList();
     return StudySubject.fromJson(json);
   }
 
@@ -259,9 +236,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return StudySubject.fromJson(json);
   }
 
-  static Future<List<StudySubject>> getUserStudiesFor(Study study) async => SupabaseQuery.extractSupabaseList<StudySubject>(
-      await client.from(tableName).select().eq('studyId', study.id).execute());
+  static Future<List<StudySubject>> getUserStudiesFor(Study study) async =>
+      SupabaseQuery.extractSupabaseList<StudySubject>(
+          await client.from(tableName).select().eq('studyId', study.id).execute());
 
-  static Future<List<StudySubject>> getStudyHistory(String userId) async => SupabaseQuery.extractSupabaseList<StudySubject>(
-      await client.from(tableName).select().eq('userId', userId).execute());
+  static Future<List<StudySubject>> getStudyHistory(String userId) async =>
+      SupabaseQuery.extractSupabaseList<StudySubject>(
+          await client.from(tableName).select().eq('userId', userId).execute());
 }

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../results/result.dart';
+import '../../tables/subject_progress.dart';
 import '../../tasks/schedule.dart';
 import '../intervention_task.dart';
 
@@ -20,7 +20,7 @@ class CheckmarkTask extends InterventionTask {
   Map<String, dynamic> toJson() => _$CheckmarkTaskToJson(this);
 
   @override
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults) {
+  Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults) {
     throw ArgumentError("${runtimeType.toString()} does not have a property named '$property'.");
   }
 

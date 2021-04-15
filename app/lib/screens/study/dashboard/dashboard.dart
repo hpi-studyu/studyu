@@ -81,9 +81,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               interventionIcon: study.getInterventionForDate(DateTime.now())?.icon),
       bottomSheet: kDebugMode && !study.completedStudy
           ? TextButton(
-              onPressed: () {
+              onPressed: () async {
+                await study.setStartDateBackBy(days: 1);
                 setState(() {
-                  study.setStartDateBackBy(days: 1);
                   scheduleToday = study.scheduleFor(DateTime.now());
                 });
               },

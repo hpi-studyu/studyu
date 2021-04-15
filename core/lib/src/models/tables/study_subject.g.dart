@@ -17,14 +17,7 @@ StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) {
     ..selectedInterventionIds =
         (json['selectedInterventionIds'] as List<dynamic>)
             .map((e) => e as String)
-            .toList()
-    ..results = (json['results'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(
-          k,
-          (e as List<dynamic>)
-              .map((e) => Result.fromJson(e as Map<String, dynamic>))
-              .toList()),
-    );
+            .toList();
 }
 
 Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
@@ -41,7 +34,5 @@ Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
   val['userId'] = instance.userId;
   writeNotNull('startedAt', instance.startedAt?.toIso8601String());
   val['selectedInterventionIds'] = instance.selectedInterventionIds;
-  val['results'] = instance.results
-      .map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList()));
   return val;
 }

@@ -1,6 +1,6 @@
+import 'package:studyou_core/core.dart';
 import 'package:uuid/uuid.dart';
 
-import '../results/result.dart';
 import '../tasks/schedule.dart';
 
 abstract class Task {
@@ -23,7 +23,7 @@ abstract class Task {
     return toJson().toString();
   }
 
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<Result> sourceResults);
+  Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults);
 
   Map<String, Type> getAvailableProperties();
 

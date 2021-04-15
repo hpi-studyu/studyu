@@ -31,7 +31,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (result == null) return;
 
     if (result.eligible != null && result.eligible) {
-      print('Patient is eligible');
       Navigator.pushNamed(context, Routes.interventionSelection);
     } else if (result.answers != null) {
       Navigator.pop(context);
