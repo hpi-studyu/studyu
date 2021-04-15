@@ -214,6 +214,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> setStartDateBackBy({required int days}) async {
+    await deleteProgress();
     progress = await SupabaseQuery.batchUpsert(progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList());
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
@@ -230,10 +231,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return StudySubject.fromJson(json);
   }
 
+  Future<void> deleteProgress() async => SupabaseQuery.catchPostgrestError(
+      (await client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute()).error);
+
   @override
   Future<StudySubject> delete() async {
-    SupabaseQuery.catchPostgrestError(
-        (await client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute()).error);
+    await deleteProgress();
     final response = await client.from(tableName).delete().eq('id', id).single().execute();
 
     SupabaseQuery.catchPostgrestError(response.error);
