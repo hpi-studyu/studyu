@@ -19,7 +19,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.food, size: 80, color: Colors.black),
                 ),
@@ -53,7 +53,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.help, size: 80, color: Colors.orange),
                 ),
@@ -81,7 +81,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.accountQuestion, size: 80, color: Colors.blue),
                 ),
@@ -109,7 +109,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.exclamationThick, size: 80, color: Colors.blue),
                 )
@@ -137,7 +137,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.alphaNBoxOutline, size: 80, color: Colors.blue),
                 ),
@@ -174,7 +174,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.notebookOutline, size: 80, color: Colors.blue),
                 ),
@@ -202,7 +202,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.alignVerticalBottom, size: 80, color: Colors.blue),
                 ),
@@ -230,7 +230,7 @@ class AboutScreen extends StatelessWidget {
             child:
                 Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               SizedBox(height: 50),
-              Row(children: [
+              Row(children: const [
                 Expanded(
                   child: Icon(MdiIcons.progressCheck, size: 80, color: Colors.blue),
                 ),
