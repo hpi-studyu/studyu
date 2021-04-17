@@ -19,7 +19,7 @@ class AppState extends ChangeNotifier {
   String _selectedStudyId;
   Study draftStudy;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
-  Future<List<Study>> Function() _researcherDashboardQuery;
+  Future<List<Study>> Function() _researcherDashboardQuery = Study.getResearcherDashboardStudies;
 
   AppState();
 
@@ -29,10 +29,7 @@ class AppState extends ChangeNotifier {
 
   bool get loggedIn => client.auth.session() != null;
 
-  Future<List<Study>> Function() get researcherDashboardQuery {
-    // _researcherDashboardQuery should always be initialized, but only after ParseInit
-    return _researcherDashboardQuery ??= Study.getResearcherDashboardStudies;
-  }
+  Future<List<Study>> Function() get researcherDashboardQuery => _researcherDashboardQuery;
 
   void reloadResearcherDashboard() => _researcherDashboardQuery = Study.getResearcherDashboardStudies;
 
@@ -54,7 +51,7 @@ class AppState extends ChangeNotifier {
     client.auth.onAuthStateChange((event, session) {
       print(session.toJson());
       print(event.toString());
-      switch(event) {
+      switch (event) {
         case AuthChangeEvent.signedIn:
           break;
         case AuthChangeEvent.signedOut:
