@@ -23,9 +23,7 @@ class DataReference<T> {
 
   Map<DateTime, T> retrieveFromResults(StudySubject studyInstance) {
     final Task? sourceTask = studyInstance.study.observations.firstWhereOrNull((task) => task.id == this.task) ??
-        studyInstance.selectedInterventions
-            .expand((i) => i.tasks)
-            .firstWhereOrNull((task) => task.id == this.task);
+        studyInstance.selectedInterventions.expand((i) => i.tasks).firstWhereOrNull((task) => task.id == this.task);
     if (sourceTask == null) throw ArgumentError("Could not find a task with the id '$task'.");
 
     final List<SubjectProgress> sourceResults = studyInstance.resultsFor(task);
