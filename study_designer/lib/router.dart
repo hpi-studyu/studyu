@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:studyou_core/core.dart';
+import 'package:studyu_designer/widgets/login_page.dart';
 
 import 'dashboard.dart';
 import 'designer.dart';
@@ -60,7 +62,9 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
   final AppState appState;
 
   RootRouterDelegate(this.appState) : navigatorKey = GlobalObjectKey<NavigatorState>(appState) {
-    appState.addListener(notifyListeners);
+    appState
+      ..addListener(notifyListeners)
+      ..registerAuthListener();
   }
 
   @override
@@ -76,11 +80,17 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(
-          key: ValueKey('Dashboard'),
-          child: Dashboard(),
-        ),
-        if (appState.isDesigner)
+        if (!appState.loggedIn)
+          MaterialPage(
+            key: ValueKey('LoginPage'),
+            child: LoginPage(),
+          ),
+        if (appState.loggedIn)
+          MaterialPage(
+            key: ValueKey('Dashboard'),
+            child: Dashboard(),
+          ),
+        if (appState.isDesigner && appState.loggedIn)
           MaterialPage(
             key: ValueKey('Designer'),
             child: Designer(studyId: appState.selectedStudyId),

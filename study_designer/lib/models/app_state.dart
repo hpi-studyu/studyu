@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
+import 'package:supabase/supabase.dart';
 
 enum DesignerPage {
   about,
@@ -26,6 +27,8 @@ class AppState extends ChangeNotifier {
 
   bool get isDesigner => draftStudy != null;
 
+  bool get loggedIn => client.auth.session() != null;
+
   Future<List<Study>> Function() get researcherDashboardQuery {
     // _researcherDashboardQuery should always be initialized, but only after ParseInit
     return _researcherDashboardQuery ??= Study.getResearcherDashboardStudies;
@@ -45,6 +48,24 @@ class AppState extends ChangeNotifier {
     _selectedStudyId = null;
     _selectedDesignerPage = page;
     notifyListeners();
+  }
+
+  void registerAuthListener() {
+    client.auth.onAuthStateChange((event, session) {
+      print(session.toJson());
+      print(event.toString());
+      switch(event) {
+        case AuthChangeEvent.signedIn:
+          break;
+        case AuthChangeEvent.signedOut:
+          break;
+        case AuthChangeEvent.userUpdated:
+          break;
+        case AuthChangeEvent.passwordRecovery:
+          break;
+      }
+      notifyListeners();
+    });
   }
 
   Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
