@@ -58,7 +58,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>flutterbooksample.com</string>
+      <string>studyu-designer.codemagic.app</string>
       <key>CFBundleURLSchemes</key>
       <array>
       <string>customscheme</string>
