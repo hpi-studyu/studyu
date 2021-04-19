@@ -241,11 +241,13 @@ packages:
     source: hosted
     version: "2.0.1"
   gotrue:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: gotrue
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: all-fixes
+      resolved-ref: "72345a6a5a04c51920241561527d18391c6a1d15"
+      url: "https://github.com/nstrelow/gotrue-dart.git"
+    source: git
     version: "0.0.1-dev.9"
   graphs:
     dependency: transitive

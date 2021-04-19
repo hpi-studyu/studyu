@@ -1,6 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/core.dart';
+import 'package:supabase/supabase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatelessWidget {
   final _emailController = TextEditingController();
@@ -10,7 +13,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -68,6 +70,33 @@ class LoginPage extends StatelessWidget {
                           }
                         },
                         child: Text('Sign Up', style: TextStyle(fontSize: 20))),
+                    SizedBox(width: 16),
+                    IconButton(
+                      icon: Icon(MdiIcons.github),
+                      onPressed: () async {
+                        final res = await client.auth.signIn(
+                          email: null,
+                          password: null,
+                          provider: Provider.github,
+                          options: ProviderOptions(scopes: 'repo gist'),
+                        );
+                        launch(res.url);
+                      },
+                    ),
+                    SizedBox(width: 16),
+                    IconButton(
+                      icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
+                      onPressed: () async {
+                        final res = await client.auth.signIn(
+                          email: null,
+                          password: null,
+                          provider: Provider.gitlab,
+                          options: ProviderOptions(
+                              scopes: 'api read_user read_api read_repository write_repository profile email'),
+                        );
+                        launch(res.url);
+                      },
+                    ),
                   ],
                 )
               ],

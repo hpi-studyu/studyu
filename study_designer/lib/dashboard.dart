@@ -169,6 +169,14 @@ class _DashboardState extends State<Dashboard> {
               child: _buildLanguageDropdown(),
             ),
           ),
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              print(client.auth.session()?.toJson());
+              print(client.auth.currentSession?.toJson());
+              client.auth.signOut();
+            },
+          ),
         ],
       ),
       body: Center(

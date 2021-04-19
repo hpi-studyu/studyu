@@ -49,8 +49,6 @@ class AppState extends ChangeNotifier {
 
   void registerAuthListener() {
     client.auth.onAuthStateChange((event, session) {
-      print(session.toJson());
-      print(event.toString());
       switch (event) {
         case AuthChangeEvent.signedIn:
           break;

@@ -24,3 +24,10 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^4.1.0
   lint: ^1.5.3
+
+dependency_overrides:
+  gotrue:
+    git:
+      url: https://github.com/nstrelow/gotrue-dart.git
+      ref: all-fixes
+    #path: ../../gotrue-dart/
