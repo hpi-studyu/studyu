@@ -28,6 +28,4 @@ dev_dependencies:
 dependency_overrides:
   gotrue:
     git:
-      url: https://github.com/nstrelow/gotrue-dart.git
-      ref: all-fixes
-    #path: ../../gotrue-dart/
+      url: https://github.com/supabase/gotrue-dart.git

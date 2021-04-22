@@ -49,6 +49,11 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.5.3
 
+dependency_overrides:
+  gotrue:
+    git:
+      url: https://github.com/supabase/gotrue-dart.git
+
 flutter_icons:
   image_path: 'assets/images/icon.png'
   android: true
