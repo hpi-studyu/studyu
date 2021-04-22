@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
+import 'package:uuid/uuid.dart';
 import 'package:fhir/r4.dart' as fhir;
 
 import '../../env/env.dart' as env;
@@ -41,7 +42,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
 
-  StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds) : studyId = study.id!;
+  StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds)
+      : id = Uuid().v4(),
+        studyId = study.id;
 
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,

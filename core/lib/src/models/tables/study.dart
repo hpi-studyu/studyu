@@ -8,6 +8,8 @@ import '../models.dart';
 
 part 'study.g.dart';
 
+enum StudyVisibility { public, private, organization }
+
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study> {
   static const String tableName = 'study';
@@ -17,6 +19,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   String id;
   String? title;
   String? description;
+  String userId;
+  StudyVisibility visibility = StudyVisibility.private;
   late Contact contact = Contact();
   late String iconName = 'accountHeart';
   late bool published = false;
@@ -31,9 +35,9 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   fhir.Questionnaire? fhirQuestionnaire;
 
-  Study(this.id);
+  Study(this.id, this.userId);
 
-  Study.withId() : id = Uuid().v4();
+  Study.withId(this.userId) : id = Uuid().v4();
 
   factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
 

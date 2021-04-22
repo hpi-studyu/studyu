@@ -13,6 +13,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
   )
     ..title = json['title'] as String?
     ..description = json['description'] as String?
+    ..visibility = _$enumDecode(_$StudyVisibilityEnumMap, json['visibility'])
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..iconName = json['iconName'] as String
     ..published = json['published'] as bool
@@ -56,6 +57,8 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
+  val['userId'] = instance.userId;
+  val['visibility'] = _$StudyVisibilityEnumMap[instance.visibility];
   val['contact'] = instance.contact.toJson();
   val['iconName'] = instance.iconName;
   val['published'] = instance.published;
@@ -71,3 +74,35 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('fhirQuestionnaire', instance.fhirQuestionnaire?.toJson());
   return val;
 }
+
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
+  }
+
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
+}
+
+const _$StudyVisibilityEnumMap = {
+  StudyVisibility.public: 'public',
+  StudyVisibility.private: 'private',
+  StudyVisibility.organization: 'organization',
+};
