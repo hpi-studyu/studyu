@@ -5,8 +5,7 @@ import '../env/env.dart' as env;
 import '../models/tables/study.dart';
 
 abstract class SupabaseObject {
-  late String id;
-
+  Map<String, dynamic> get primaryKeys;
   Map<String, dynamic> toJson();
 }
 
@@ -44,7 +43,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   }
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-      await env.client.from(tableName(T)).delete().eq('id', id).single().execute());
+      await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().execute());
 
   Future<T> save() async =>
       SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).insert(toJson(), upsert: true).execute())
@@ -80,5 +79,15 @@ class SupabaseQuery {
       // ignore: only_throw_errors
       throw error.message;
     }
+  }
+}
+
+extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
+  PostgrestFilterBuilder primaryKeys(Map<String, dynamic> primaryKeys) {
+    var primaryKeyFilter = this;
+    primaryKeys.forEach((columnKey, value) {
+      primaryKeyFilter = primaryKeyFilter.eq(columnKey, value);
+    });
+    return primaryKeyFilter;
   }
 }

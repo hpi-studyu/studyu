@@ -17,8 +17,10 @@ part 'study_subject.g.dart';
 class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   static const String tableName = 'study_subject';
 
-  // Needs late to use the fromJson initializer
   @override
+  Map<String, dynamic> get primaryKeys => {'id': id};
+
+  // Needs late to use the fromJson initializer
   String id;
   late String studyId;
   late String userId;

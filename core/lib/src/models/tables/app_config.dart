@@ -12,8 +12,9 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static const String tableName = 'app_config';
 
   @override
-  String id;
+  Map<String, dynamic> get primaryKeys => {'id': id};
 
+  String id;
   Contact contact;
   Map<String, String> app_privacy;
   Map<String, String> app_terms;

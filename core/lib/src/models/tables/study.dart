@@ -14,8 +14,10 @@ enum StudyVisibility { public, private, organization }
 class Study extends SupabaseObjectFunctions<Study> {
   static const String tableName = 'study';
 
-  static const String baselineID = '__baseline';
   @override
+  Map<String, dynamic> get primaryKeys => {'id': id};
+
+  static const String baselineID = '__baseline';
   String id;
   String? title;
   String? description;
