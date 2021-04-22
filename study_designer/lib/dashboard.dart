@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyou_core/env.dart' as env;
 import 'package:universal_html/html.dart' as html;
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'models/app_state.dart';
@@ -172,11 +173,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              print(client.auth.session()?.toJson());
-              print(client.auth.currentSession?.toJson());
-              client.auth.signOut();
-            },
+            onPressed: () => env.client.auth.signOut(),
           ),
         ],
       ),
@@ -287,16 +284,35 @@ class StudyCard extends StatelessWidget {
                   }
                 },
               )
-            : IconButton(
-                icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-                tooltip: AppLocalizations.of(context).export_csv,
-                onPressed: () async {
-                  final dl = ResultDownloader(study: study);
-                  final results = await dl.loadAllResults();
-                  for (final entry in results.entries) {
-                    downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
-                  }
-                },
+            : Expanded(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(MdiIcons.chartLine, color: Colors.green),
+                      tooltip: 'Create analysis project',
+                      onPressed: () async {
+                        final res = await http.get(Uri.parse(env.projectGeneratorUrl), headers: {
+                          'X-Session': json.encode(env.client.auth.session().toJson()),
+                          'X-Study-Id': study.id,
+                        });
+                        print(res.body);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
+                      tooltip: AppLocalizations.of(context).export_csv,
+                      onPressed: () async {
+                        final dl = ResultDownloader(study: study);
+                        final results = await dl.loadAllResults();
+                        for (final entry in results.entries) {
+                          downloadFile(
+                              ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+                        }
+                      },
+                    )
+                  ],
+                ),
               ),
         onTap: () => context.read<AppState>().openStudy(study.id));
   }
