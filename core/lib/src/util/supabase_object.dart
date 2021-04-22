@@ -1,7 +1,7 @@
 import 'package:postgrest/postgrest.dart';
 
 import '../../core.dart';
-import '../env/env.dart';
+import '../env/env.dart' as env;
 import '../models/tables/study.dart';
 
 abstract class SupabaseObject {
@@ -44,23 +44,23 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   }
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-      await client.from(tableName(T)).delete().eq('id', id).single().execute());
+      await env.client.from(tableName(T)).delete().eq('id', id).single().execute());
 
   Future<T> save() async =>
-      SupabaseQuery.extractSupabaseList<T>(await client.from(tableName(T)).insert(toJson(), upsert: true).execute())
+      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).insert(toJson(), upsert: true).execute())
           .single;
 }
 
 class SupabaseQuery {
   static Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async =>
-      extractSupabaseList(await client.from(tableName(T)).select(selectedColumns.join(',')).execute());
+      extractSupabaseList(await env.client.from(tableName(T)).select(selectedColumns.join(',')).execute());
 
   static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async =>
       extractSupabaseSingleRow(
-          await client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute());
+          await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute());
 
   static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
-      SupabaseQuery.extractSupabaseList<T>(await client.from(tableName(T)).insert(batchJson, upsert: true).execute());
+      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).insert(batchJson, upsert: true).execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
     catchPostgrestError(response.error);

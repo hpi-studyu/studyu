@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyou_core/env.dart' as env;
 import 'package:supabase/supabase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
                         icon: Icon(Icons.login),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            client.auth.signIn(email: _emailController.text, password: _passwordController.text);
+                            env.client.auth.signIn(email: _emailController.text, password: _passwordController.text);
                           }
                         },
                         label: Text('Login', style: TextStyle(fontSize: 20))),
@@ -66,7 +66,7 @@ class LoginPage extends StatelessWidget {
                     ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            client.auth.signUp(_emailController.text, _passwordController.text);
+                            env.client.auth.signUp(_emailController.text, _passwordController.text);
                           }
                         },
                         child: Text('Sign Up', style: TextStyle(fontSize: 20))),
@@ -74,7 +74,7 @@ class LoginPage extends StatelessWidget {
                     IconButton(
                       icon: Icon(MdiIcons.github),
                       onPressed: () async {
-                        final res = await client.auth.signIn(
+                        final res = await env.client.auth.signIn(
                           email: null,
                           password: null,
                           provider: Provider.github,
@@ -87,7 +87,7 @@ class LoginPage extends StatelessWidget {
                     IconButton(
                       icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
                       onPressed: () async {
-                        final res = await client.auth.signIn(
+                        final res = await env.client.auth.signIn(
                           email: null,
                           password: null,
                           provider: Provider.gitlab,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
+import 'package:studyou_core/env.dart' as env;
 import 'package:supabase/supabase.dart';
 
 enum DesignerPage {
@@ -27,7 +28,7 @@ class AppState extends ChangeNotifier {
 
   bool get isDesigner => draftStudy != null;
 
-  bool get loggedIn => client.auth.session() != null;
+  bool get loggedIn => env.client.auth.session() != null;
 
   Future<List<Study>> Function() get researcherDashboardQuery => _researcherDashboardQuery;
 
@@ -48,7 +49,7 @@ class AppState extends ChangeNotifier {
   }
 
   void registerAuthListener() {
-    client.auth.onAuthStateChange((event, session) {
+    env.client.auth.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
           break;

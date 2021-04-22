@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyou_core/env.dart' as env;
 import 'package:studyu_designer/widgets/login_page.dart';
 import 'dashboard.dart';
 import 'designer.dart';
@@ -13,7 +13,7 @@ T enumFromString<T>(Iterable<T> values, String value) {
 Future<void> oauthRedirect(Uri uri) async {
   // Workaround to parse the redirect accessToken and more
   final redirectUri = Uri.parse('http://placeholder.com/?${uri.fragment}');
-  await client.auth.getSessionFromUrl(redirectUri);
+  await env.client.auth.getSessionFromUrl(redirectUri);
 }
 
 class RootRouteInformationParser extends RouteInformationParser<RoutePath> {

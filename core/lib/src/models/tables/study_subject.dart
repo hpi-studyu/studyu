@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
 import 'package:fhir/r4.dart' as fhir;
 
-import '../../env/env.dart';
+import '../../env/env.dart' as env;
 import '../../util/extensions.dart';
 import '../../util/supabase_object.dart';
 import '../models.dart';
@@ -222,7 +222,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   @override
   Future<StudySubject> save() async {
-    final response = await client.from(tableName).insert(toJson(), upsert: true).execute();
+    final response = await env.client.from(tableName).insert(toJson(), upsert: true).execute();
 
     SupabaseQuery.catchPostgrestError(response.error);
     final json = List<Map<String, dynamic>>.from(response.data as List).single;
@@ -232,12 +232,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> deleteProgress() async => SupabaseQuery.catchPostgrestError(
-      (await client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute()).error);
+      (await env.client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute()).error);
 
   @override
   Future<StudySubject> delete() async {
     await deleteProgress();
-    final response = await client.from(tableName).delete().eq('id', id).single().execute();
+    final response = await env.client.from(tableName).delete().eq('id', id).single().execute();
 
     SupabaseQuery.catchPostgrestError(response.error);
     final json = response.data as Map<String, dynamic>;
@@ -247,9 +247,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   static Future<List<StudySubject>> getUserStudiesFor(Study study) async =>
       SupabaseQuery.extractSupabaseList<StudySubject>(
-          await client.from(tableName).select().eq('studyId', study.id).execute());
+          await env.client.from(tableName).select().eq('studyId', study.id).execute());
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async =>
       SupabaseQuery.extractSupabaseList<StudySubject>(
-          await client.from(tableName).select().eq('userId', userId).execute());
+          await env.client.from(tableName).select().eq('userId', userId).execute());
 }

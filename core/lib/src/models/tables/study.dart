@@ -2,7 +2,7 @@ import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../env/env.dart';
+import '../../env/env.dart' as env;
 import '../../util/supabase_object.dart';
 import '../models.dart';
 
@@ -45,6 +45,6 @@ class Study extends SupabaseObjectFunctions<Study> {
       /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  static Future<List<Study>> publishedStudies() async =>
-      SupabaseQuery.extractSupabaseList<Study>(await client.from(tableName).select().eq('published', true).execute());
+  static Future<List<Study>> publishedStudies() async => SupabaseQuery.extractSupabaseList<Study>(
+      await env.client.from(tableName).select().eq('published', true).execute());
 }
