@@ -66,16 +66,16 @@ class _AboutDesignerState extends State<AboutDesigner> {
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                         initialValue: _draftStudy.description),
                     FormBuilderDropdown(
-                      onChanged: _saveFormChanges,
-                      name: 'visibility',
-                      icon: Icon(Icons.visibility),
-                      hint: Text('Study visibility'),
-                      items: StudyVisibility.values
-                          .map((visibility) => DropdownMenuItem<StudyVisibility>(
-                              value: visibility,
-                              child: Text(visibility.toString().replaceFirst('StudyVisibility.', ''))))
-                          .toList(),
-                    ),
+                        onChanged: _saveFormChanges,
+                        name: 'visibility',
+                        icon: Icon(Icons.visibility),
+                        decoration: InputDecoration(labelText: 'Study visibility'),
+                        items: StudyVisibility.values
+                            .map((visibility) => DropdownMenuItem<StudyVisibility>(
+                                value: visibility,
+                                child: Text(visibility.toString().replaceFirst('StudyVisibility.', ''))))
+                            .toList(),
+                        initialValue: _draftStudy.visibility),
                     Row(children: [
                       Expanded(
                         child: TextButton(
