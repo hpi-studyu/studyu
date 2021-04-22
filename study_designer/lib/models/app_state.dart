@@ -42,7 +42,7 @@ class AppState extends ChangeNotifier {
   }
 
   void createStudy({DesignerPage page = DesignerPage.about}) {
-    draftStudy = Study.withId();
+    draftStudy = Study.withId(env.client.auth.user().id);
     _selectedStudyId = null;
     _selectedDesignerPage = page;
     notifyListeners();
