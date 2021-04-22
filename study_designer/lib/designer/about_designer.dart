@@ -65,6 +65,17 @@ class _AboutDesignerState extends State<AboutDesigner> {
                         name: 'description',
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
                         initialValue: _draftStudy.description),
+                    FormBuilderDropdown(
+                      onChanged: _saveFormChanges,
+                      name: 'visibility',
+                      icon: Icon(Icons.visibility),
+                      hint: Text('Study visibility'),
+                      items: StudyVisibility.values
+                          .map((visibility) => DropdownMenuItem<StudyVisibility>(
+                              value: visibility,
+                              child: Text(visibility.toString().replaceFirst('StudyVisibility.', ''))))
+                          .toList(),
+                    ),
                     Row(children: [
                       Expanded(
                         child: TextButton(
@@ -137,6 +148,7 @@ class _AboutDesignerState extends State<AboutDesigner> {
         _draftStudy
           ..title = _editFormKey.currentState.value['title'] as String
           ..description = _editFormKey.currentState.value['description'] as String
+          ..visibility = _editFormKey.currentState.value['visibility'] as StudyVisibility
           ..contact.organization = _editFormKey.currentState.value['organization'] as String
           ..contact.institutionalReviewBoard = _editFormKey.currentState.value['institutionalReviewBoard'] as String
           ..contact.institutionalReviewBoardNumber =
