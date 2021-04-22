@@ -92,6 +92,9 @@ class LoginPage extends StatelessWidget {
                           password: null,
                           provider: Provider.gitlab,
                           options: ProviderOptions(
+                              //  This is not redundant
+                              // ignore: avoid_redundant_argument_values
+                              redirectTo: env.authRedirectToUrl,
                               scopes: 'api read_user read_api read_repository write_repository profile email'),
                         );
                         launch(res.url);
