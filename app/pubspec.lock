@@ -213,11 +213,13 @@ packages:
     source: hosted
     version: "0.14.1"
   gotrue:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: gotrue
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "5237817232ed28ecb8918f1b56860e1029c55886"
+      url: "https://github.com/supabase/gotrue-dart.git"
+    source: git
     version: "0.0.1-dev.9"
   grizzly_distuv:
     dependency: "direct main"
@@ -365,7 +367,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   pdf:
     dependency: "direct main"
     description:

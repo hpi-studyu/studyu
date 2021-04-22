@@ -277,9 +277,9 @@ packages:
     dependency: "direct overridden"
     description:
       path: "."
-      ref: all-fixes
-      resolved-ref: "72345a6a5a04c51920241561527d18391c6a1d15"
-      url: "https://github.com/nstrelow/gotrue-dart.git"
+      ref: HEAD
+      resolved-ref: "5237817232ed28ecb8918f1b56860e1029c55886"
+      url: "https://github.com/supabase/gotrue-dart.git"
     source: git
     version: "0.0.1-dev.9"
   html:
@@ -414,7 +414,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   pedantic:
     dependency: transitive
     description:
