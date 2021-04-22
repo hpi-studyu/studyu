@@ -14,14 +14,16 @@ SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) {
     resultType: json['resultType'] as String,
     result: Result.fromJson(json['result'] as Map<String, dynamic>),
   )
-    ..id = json['id'] as String?
+    ..id = json['id'] as String
     ..completedAt = json['completedAt'] == null
         ? null
         : DateTime.parse(json['completedAt'] as String);
 }
 
 Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -29,7 +31,6 @@ Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
   writeNotNull('completedAt', instance.completedAt?.toIso8601String());
   val['subjectId'] = instance.subjectId;
   val['interventionId'] = instance.interventionId;

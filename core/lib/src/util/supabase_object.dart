@@ -5,7 +5,7 @@ import '../env/env.dart' as env;
 import '../models/tables/study.dart';
 
 abstract class SupabaseObject {
-  String? id;
+  late String id;
 
   Map<String, dynamic> toJson();
 }

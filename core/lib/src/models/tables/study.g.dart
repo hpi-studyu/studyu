@@ -8,7 +8,8 @@ part of 'study.dart';
 
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
-    json['id'] as String?,
+    json['id'] as String,
+    json['userId'] as String,
   )
     ..title = json['title'] as String?
     ..description = json['description'] as String?
@@ -43,7 +44,9 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$StudyToJson(Study instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -51,7 +54,6 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['contact'] = instance.contact.toJson();

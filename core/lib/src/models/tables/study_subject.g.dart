@@ -7,8 +7,9 @@ part of 'study_subject.dart';
 // **************************************************************************
 
 StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) {
-  return StudySubject()
-    ..id = json['id'] as String?
+  return StudySubject(
+    json['id'] as String,
+  )
     ..studyId = json['studyId'] as String
     ..userId = json['userId'] as String
     ..startedAt = json['startedAt'] == null
@@ -21,7 +22,11 @@ StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
-  final val = <String, dynamic>{};
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'studyId': instance.studyId,
+    'userId': instance.userId,
+  };
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -29,9 +34,6 @@ Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
     }
   }
 
-  writeNotNull('id', instance.id);
-  val['studyId'] = instance.studyId;
-  val['userId'] = instance.userId;
   writeNotNull('startedAt', instance.startedAt?.toIso8601String());
   val['selectedInterventionIds'] = instance.selectedInterventionIds;
   return val;

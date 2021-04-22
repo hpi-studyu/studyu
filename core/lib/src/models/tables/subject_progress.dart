@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../util/supabase_object.dart';
 import '../results/result.dart';
@@ -10,7 +11,7 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   static const String tableName = 'subject_progress';
 
   @override
-  String? id;
+  String id;
   DateTime? completedAt;
   String subjectId;
   String interventionId;
@@ -23,7 +24,8 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
       required this.interventionId,
       required this.taskId,
       required this.resultType,
-      required this.result});
+      required this.result})
+      : id = Uuid().v4();
 
   factory SubjectProgress.fromJson(Map<String, dynamic> json) => _$SubjectProgressFromJson(json);
 

@@ -12,7 +12,7 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   static const String tableName = 'app_config';
 
   @override
-  String? id;
+  String id;
 
   Contact contact;
   Map<String, String> app_privacy;
@@ -22,6 +22,7 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   Map<String, String> imprint;
 
   AppConfig(
+      this.id,
       {required this.contact,
       required this.app_privacy,
       required this.app_terms,
@@ -29,23 +30,10 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
       required this.designer_terms,
       required this.imprint});
 
-  factory AppConfig.fromJson(Map<String, dynamic> json) => AppConfig(
-      contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
-      app_privacy: Map<String, String>.from(json['app_privacy'] as Map),
-      app_terms: Map<String, String>.from(json['app_terms'] as Map),
-      designer_privacy: Map<String, String>.from(json['designer_privacy'] as Map),
-      designer_terms: Map<String, String>.from(json['designer_terms'] as Map),
-      imprint: Map<String, String>.from(json['imprint'] as Map));
+  factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'contact': contact.toJson(),
-        'app_privacy': app_privacy,
-        'app_terms': app_terms,
-        'designer_privacy': designer_privacy,
-        'designer_terms': designer_terms,
-        'imprint': imprint,
-      };
+  Map<String, dynamic> toJson() => _$AppConfigToJson(this);
 
   static Future<AppConfig> getAppConfig() async => SupabaseQuery.getById<AppConfig>('prod');
 

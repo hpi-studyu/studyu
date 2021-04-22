@@ -14,7 +14,7 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   static const String baselineID = '__baseline';
   @override
-  String? id;
+  String id;
   String? title;
   String? description;
   late Contact contact = Contact();
