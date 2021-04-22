@@ -73,9 +73,11 @@ class _TermsScreenState extends State<TermsScreen> {
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: userCanContinue()
-            ? () {
-                UserQueries.generateUserId();
-                Navigator.pushNamed(context, Routes.studySelection);
+            ? () async {
+                final success = await UserQueries.anonymousSignUp();
+                if (success) {
+                  Navigator.pushNamed(context, Routes.studySelection);
+                }
               }
             : null,
       ),

@@ -17,17 +17,18 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
-  void didChangeDependencies() {
+  Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
+    await UserQueries.recoverSession();
     initStudy();
   }
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
-    final selectedStudyObjectId = await UserQueries.loadActiveStudyObjectId();
+    final selectedStudyObjectId = await UserQueries.getActiveStudyObjectId();
     print('Selected study: $selectedStudyObjectId');
     if (selectedStudyObjectId == null) {
-      if (await UserQueries.isUserIdPresent()) {
+      if (UserQueries.isUserLoggedIn()) {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }
