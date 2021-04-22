@@ -21,8 +21,7 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   Map<String, String> designer_terms;
   Map<String, String> imprint;
 
-  AppConfig(
-      this.id,
+  AppConfig(this.id,
       {required this.contact,
       required this.app_privacy,
       required this.app_terms,

@@ -60,7 +60,8 @@ class SupabaseQuery {
           await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute());
 
   static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
-      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).insert(batchJson, upsert: true).execute());
+      SupabaseQuery.extractSupabaseList<T>(
+          await env.client.from(tableName(T)).insert(batchJson, upsert: true).execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
     catchPostgrestError(response.error);
