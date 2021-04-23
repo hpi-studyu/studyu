@@ -14,7 +14,7 @@ class EligibilityQuestionsDesigner extends StatefulWidget {
 }
 
 class _EligibilityQuestionsDesignerState extends State<EligibilityQuestionsDesigner> {
-  Questionnaire questionnaire;
+  StudyUQuestionnaire questionnaire;
 
   void _addQuestion() {
     setState(() {

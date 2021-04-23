@@ -1,13 +1,13 @@
 import 'question.dart';
 
 // TODO: We might want to make this @JsonSerializable() as well, but it does not support list types
-class Questionnaire {
+class StudyUQuestionnaire {
   late List<Question> questions = [];
 
-  Questionnaire();
+  StudyUQuestionnaire();
 
-  factory Questionnaire.fromJson(List<dynamic> data) =>
-      Questionnaire()..questions = data.map((entry) => Question.fromJson(entry as Map<String, dynamic>)).toList();
+  factory StudyUQuestionnaire.fromJson(List<dynamic> data) =>
+      StudyUQuestionnaire()..questions = data.map((entry) => Question.fromJson(entry as Map<String, dynamic>)).toList();
 
   List<dynamic> toJson() => questions.map((question) => question.toJson()).toList();
 }

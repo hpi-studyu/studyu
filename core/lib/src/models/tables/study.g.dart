@@ -18,7 +18,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
     ..iconName = json['iconName'] as String
     ..published = json['published'] as bool
     ..questionnaire =
-        Questionnaire.fromJson(json['questionnaire'] as List<dynamic>)
+        StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
     ..eligibilityCriteria = (json['eligibilityCriteria'] as List<dynamic>)
         .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
         .toList()
@@ -40,7 +40,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
         .toList()
     ..fhirQuestionnaire = json['fhirQuestionnaire'] == null
         ? null
-        : fhir.Questionnaire.fromJson(
+        : Questionnaire.fromJson(
             json['fhirQuestionnaire'] as Map<String, dynamic>);
 }
 

@@ -15,7 +15,7 @@ part 'questionnaire_task.g.dart';
 class QuestionnaireTask extends Observation {
   static const String taskType = 'questionnaire';
 
-  Questionnaire questions = Questionnaire();
+  StudyUQuestionnaire questions = StudyUQuestionnaire();
 
   QuestionnaireTask() : super(taskType);
 

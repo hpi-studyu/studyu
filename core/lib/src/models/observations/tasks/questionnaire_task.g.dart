@@ -14,7 +14,8 @@ QuestionnaireTask _$QuestionnaireTaskFromJson(Map<String, dynamic> json) {
     ..schedule = (json['schedule'] as List<dynamic>)
         .map((e) => Schedule.fromJson(e as Map<String, dynamic>))
         .toList()
-    ..questions = Questionnaire.fromJson(json['questions'] as List<dynamic>);
+    ..questions =
+        StudyUQuestionnaire.fromJson(json['questions'] as List<dynamic>);
 }
 
 Map<String, dynamic> _$QuestionnaireTaskToJson(QuestionnaireTask instance) {

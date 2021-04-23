@@ -4,7 +4,7 @@ import 'package:studyou_core/core.dart';
 import '../../widgets/question/question_editor.dart';
 
 class QuestionnaireEditor extends StatefulWidget {
-  final Questionnaire questionnaire;
+  final StudyUQuestionnaire questionnaire;
   final List<String> questionTypes;
 
   const QuestionnaireEditor({@required this.questionnaire, @required this.questionTypes, Key key}) : super(key: key);

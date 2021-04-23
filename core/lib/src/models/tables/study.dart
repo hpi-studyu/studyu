@@ -1,4 +1,4 @@
-import 'package:fhir/r4.dart' as fhir;
+import 'package:fhir/r4.dart' show Questionnaire;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,7 +26,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   late Contact contact = Contact();
   late String iconName = 'accountHeart';
   late bool published = false;
-  late Questionnaire questionnaire = Questionnaire();
+  late StudyUQuestionnaire questionnaire = StudyUQuestionnaire();
   late List<EligibilityCriterion> eligibilityCriteria = [];
   late List<ConsentItem> consent = [];
   late List<Intervention> interventions = [];
@@ -35,7 +35,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   late ReportSpecification reportSpecification = ReportSpecification();
   late List<StudyResult> results = [];
 
-  fhir.Questionnaire? fhirQuestionnaire;
+  Questionnaire? fhirQuestionnaire;
 
   Study(this.id, this.userId);
 
