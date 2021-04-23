@@ -37,7 +37,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final userStudy = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId,
-        selectedColumns: ['*', 'study(*), subject_progress(*)']);
+        selectedColumns: ['*', 'study(*)', 'subject_progress(*)']);
     if (userStudy != null) {
       model.activeSubject = userStudy;
       if (!kIsWeb) {

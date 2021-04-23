@@ -10,10 +10,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
-import 'package:studyou_core/env.dart' as env;
 import 'package:studyu_designer/util/repo_manager.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'models/app_state.dart';
@@ -188,7 +186,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: RetryFutureBuilder<List<Study>>(
-            tryFunction: () => SupabaseQuery.getAll<Study>(),
+            tryFunction: context.watch<AppState>().researcherDashboardQuery,
             successBuilder: (BuildContext context, List<Study> studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
@@ -298,16 +296,21 @@ class StudyCard extends StatelessWidget {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
-                    tooltip: 'Create analysis git project',
-                    onPressed: () => generateRepo(study.id),
-                  ),
-                  IconButton(
-                    icon: Icon(MdiIcons.databaseRefresh, color: Colors.green),
-                    tooltip: 'Create analysis git project',
-                    onPressed: () => updateRepo(study.id, '26128103'),
-                  ),
+                  if (study.repo == null)
+                    IconButton(
+                      icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
+                      tooltip: 'Create analysis git project',
+                      onPressed: () async {
+                        await generateRepo(study.id);
+                        context.read<AppState>().reloadStudies();
+                      },
+                    )
+                  else
+                    IconButton(
+                      icon: Icon(MdiIcons.databaseRefresh, color: Colors.green),
+                      tooltip: 'Create analysis git project',
+                      onPressed: () => updateRepo(study.id, study.repo.projectId),
+                    ),
                   IconButton(
                     icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
                     tooltip: AppLocalizations.of(context).export_csv,

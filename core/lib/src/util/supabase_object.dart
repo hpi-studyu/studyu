@@ -1,11 +1,15 @@
 import 'package:postgrest/postgrest.dart';
 
-import '../../core.dart';
 import '../env/env.dart' as env;
+import '../models/tables/app_config.dart';
+import '../models/tables/repo.dart';
 import '../models/tables/study.dart';
+import '../models/tables/study_subject.dart';
+import '../models/tables/subject_progress.dart';
 
 abstract class SupabaseObject {
   Map<String, dynamic> get primaryKeys;
+
   Map<String, dynamic> toJson();
 }
 
@@ -19,6 +23,8 @@ String tableName(Type cls) {
       return SubjectProgress.tableName;
     case AppConfig:
       return AppConfig.tableName;
+    case Repo:
+      return Repo.tableName;
     default:
       print('$cls is not a supported Supabase type');
       throw TypeError();
@@ -36,6 +42,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return SubjectProgress.fromJson(json) as T;
       case AppConfig:
         return AppConfig.fromJson(json) as T;
+      case Repo:
+        return Repo.fromJson(json) as T;
       default:
         print('$T is not a supported Supabase type');
         throw TypeError();

@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../env/env.dart' as env;
 import '../../util/supabase_object.dart';
 import '../models.dart';
+import 'repo.dart';
 
 part 'study.g.dart';
 
@@ -37,18 +38,28 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   Questionnaire? fhirQuestionnaire;
 
+  @JsonKey(ignore: true)
+  Repo? repo;
+
   Study(this.id, this.userId);
 
   Study.withId(this.userId) : id = Uuid().v4();
 
-  factory Study.fromJson(Map<String, dynamic> json) => _$StudyFromJson(json);
+  factory Study.fromJson(Map<String, dynamic> json) {
+    final study = _$StudyFromJson(json);
+    if ((json['repo'] as List).isNotEmpty) {
+      study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+    }
+    return study;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
-      /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
+  static Future<List<Study>> getResearcherDashboardStudies() async =>
+      SupabaseQuery.getAll<Study>(selectedColumns: ['*', 'repo(*)']
+          /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedStudies() async => SupabaseQuery.extractSupabaseList<Study>(

@@ -23,7 +23,7 @@ class AppState extends ChangeNotifier {
   bool skippedLogin = false;
   String authError;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
-  Future<List<Study>> Function() _researcherDashboardQuery = Study.getResearcherDashboardStudies;
+  Future<List<Study>> Function() researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
 
   AppState();
 
@@ -43,9 +43,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Study>> Function() get researcherDashboardQuery => _researcherDashboardQuery;
-
-  void reloadResearcherDashboard() => _researcherDashboardQuery = Study.getResearcherDashboardStudies;
+  void reloadResearcherDashboard() => researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
 
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
 
