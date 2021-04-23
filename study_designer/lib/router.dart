@@ -89,12 +89,12 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
     return Navigator(
       key: navigatorKey,
       pages: [
-        if (!appState.loggedIn)
+        if (!appState.loggedIn && !appState.skippedLogin)
           MaterialPage(
             key: ValueKey('LoginPage'),
             child: LoginPage(),
           ),
-        if (appState.loggedIn)
+        if (appState.loggedIn || appState.skippedLogin)
           MaterialPage(
             key: ValueKey('Dashboard'),
             child: Dashboard(),

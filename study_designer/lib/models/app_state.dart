@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyou_core/env.dart' as env;
 import 'package:supabase/supabase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum DesignerPage {
   about,
@@ -19,6 +20,8 @@ enum DesignerPage {
 class AppState extends ChangeNotifier {
   String _selectedStudyId;
   Study draftStudy;
+  bool skippedLogin = false;
+  String authError;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
   Future<List<Study>> Function() _researcherDashboardQuery = Study.getResearcherDashboardStudies;
 
@@ -88,5 +91,45 @@ class AppState extends ChangeNotifier {
   void reloadStudies() {
     reloadResearcherDashboard();
     notifyListeners();
+  }
+
+  Future<void> signIn(String email, String password) async {
+    final res = await env.client.auth.signIn(email: email, password: password);
+    if(res.error != null) {
+      authError = res.error.message;
+      notifyListeners();
+    } else {
+      authError = null;
+    }
+  }
+
+  Future<void> signUp(String email, String password) async {
+    final res = await env.client.auth.signUp(email, password);
+    if(res.error != null) {
+      authError = res.error.message;
+      notifyListeners();
+    } else {
+      authError = null;
+    }
+  }
+
+  Future<void> signInWithProvider(Provider provider, String scopes) async {
+    final res = await env.client.auth.signIn(
+      email: null,
+      password: null,
+      provider: provider,
+      options: ProviderOptions(
+          //  This is not redundant
+          // ignore: avoid_redundant_argument_values
+          redirectTo: env.authRedirectToUrl,
+          scopes: scopes),
+    );
+    if (res.error != null) {
+      authError = res.error.message;
+      notifyListeners();
+    } else {
+      authError = null;
+      launch(res.url);
+    }
   }
 }
