@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_designer/util/repo_manager.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -298,15 +299,14 @@ class StudyCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(MdiIcons.chartLine, color: Colors.green),
-                    tooltip: 'Create analysis project',
-                    onPressed: () async {
-                      final res = await http.get(Uri.parse(env.projectGeneratorUrl), headers: {
-                        'X-Session': json.encode(env.client.auth.session().toJson()),
-                        'X-Study-Id': study.id,
-                      });
-                      print(res.body);
-                    },
+                    icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
+                    tooltip: 'Create analysis git project',
+                    onPressed: () => generateRepo(study.id),
+                  ),
+                  IconButton(
+                    icon: Icon(MdiIcons.databaseRefresh, color: Colors.green),
+                    tooltip: 'Create analysis git project',
+                    onPressed: () => updateRepo(study.id, '26128103'),
                   ),
                   IconButton(
                     icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
