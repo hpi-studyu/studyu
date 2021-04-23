@@ -64,7 +64,7 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
-                      flex: 4,
+                      flex: 6,
                       child: OutlinedButton.icon(
                           icon: Icon(Icons.login),
                           onPressed: () {
@@ -80,7 +80,7 @@ class LoginPage extends StatelessWidget {
                     //SizedBox(width: 64),
                     Spacer(),
                     Flexible(
-                      flex: 4,
+                      flex: 6,
                       child: OutlinedButton.icon(
                           icon: Icon(MdiIcons.accountPlus),
                           onPressed: () {

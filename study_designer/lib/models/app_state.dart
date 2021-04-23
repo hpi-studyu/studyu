@@ -38,6 +38,11 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void goToLoginScreen() {
+    skippedLogin = false;
+    notifyListeners();
+  }
+
   Future<List<Study>> Function() get researcherDashboardQuery => _researcherDashboardQuery;
 
   void reloadResearcherDashboard() => _researcherDashboardQuery = Study.getResearcherDashboardStudies;
@@ -132,6 +137,14 @@ class AppState extends ChangeNotifier {
       notifyListeners();
     } else {
       launch(res.url);
+    }
+  }
+
+  Future<void> signOut() async {
+    final res = await env.client.auth.signOut();
+    if (res.error != null) {
+      authError = res.error.message;
+      notifyListeners();
     }
   }
 }

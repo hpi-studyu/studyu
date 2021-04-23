@@ -171,10 +171,16 @@ class _DashboardState extends State<Dashboard> {
               child: _buildLanguageDropdown(),
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () => env.client.auth.signOut(),
-          ),
+          if (context.watch<AppState>().loggedIn)
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () => context.read<AppState>().signOut(),
+            )
+          else
+            IconButton(
+              icon: Icon(Icons.login),
+              onPressed: () => context.read<AppState>().goToLoginScreen(),
+            ),
         ],
       ),
       body: Center(
@@ -223,13 +229,15 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<AppState>().createStudy();
-        },
-        tooltip: 'Add',
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: context.watch<AppState>().loggedIn
+          ? FloatingActionButton(
+              onPressed: () {
+                context.read<AppState>().createStudy();
+              },
+              tooltip: 'Add',
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
@@ -287,33 +295,33 @@ class StudyCard extends StatelessWidget {
                 },
               )
             : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(MdiIcons.chartLine, color: Colors.green),
-                  tooltip: 'Create analysis project',
-                  onPressed: () async {
-                    final res = await http.get(Uri.parse(env.projectGeneratorUrl), headers: {
-                      'X-Session': json.encode(env.client.auth.session().toJson()),
-                      'X-Study-Id': study.id,
-                    });
-                    print(res.body);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
-                  tooltip: AppLocalizations.of(context).export_csv,
-                  onPressed: () async {
-                    final dl = ResultDownloader(study: study);
-                    final results = await dl.loadAllResults();
-                    for (final entry in results.entries) {
-                      downloadFile(
-                          ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
-                    }
-                  },
-                )
-              ],
-            ),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(MdiIcons.chartLine, color: Colors.green),
+                    tooltip: 'Create analysis project',
+                    onPressed: () async {
+                      final res = await http.get(Uri.parse(env.projectGeneratorUrl), headers: {
+                        'X-Session': json.encode(env.client.auth.session().toJson()),
+                        'X-Study-Id': study.id,
+                      });
+                      print(res.body);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
+                    tooltip: AppLocalizations.of(context).export_csv,
+                    onPressed: () async {
+                      final dl = ResultDownloader(study: study);
+                      final results = await dl.loadAllResults();
+                      for (final entry in results.entries) {
+                        downloadFile(
+                            ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+                      }
+                    },
+                  )
+                ],
+              ),
         onTap: () => context.read<AppState>().openStudy(study.id));
   }
 }
