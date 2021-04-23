@@ -60,6 +60,8 @@ class AppState extends ChangeNotifier {
     env.client.auth.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
+          skippedLogin = false;
+          authError = null;
           break;
         case AuthChangeEvent.signedOut:
           break;
@@ -100,21 +102,17 @@ class AppState extends ChangeNotifier {
 
   Future<void> signIn(String email, String password) async {
     final res = await env.client.auth.signIn(email: email, password: password);
-    if(res.error != null) {
+    if (res.error != null) {
       authError = res.error.message;
       notifyListeners();
-    } else {
-      authError = null;
     }
   }
 
   Future<void> signUp(String email, String password) async {
     final res = await env.client.auth.signUp(email, password);
-    if(res.error != null) {
+    if (res.error != null) {
       authError = res.error.message;
       notifyListeners();
-    } else {
-      authError = null;
     }
   }
 
@@ -133,7 +131,6 @@ class AppState extends ChangeNotifier {
       authError = res.error.message;
       notifyListeners();
     } else {
-      authError = null;
       launch(res.url);
     }
   }
