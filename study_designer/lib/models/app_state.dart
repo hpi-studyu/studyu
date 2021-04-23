@@ -33,6 +33,11 @@ class AppState extends ChangeNotifier {
 
   bool get loggedIn => env.client.auth.session() != null;
 
+  void skipLogin() {
+    skippedLogin = true;
+    notifyListeners();
+  }
+
   Future<List<Study>> Function() get researcherDashboardQuery => _researcherDashboardQuery;
 
   void reloadResearcherDashboard() => _researcherDashboardQuery = Study.getResearcherDashboardStudies;

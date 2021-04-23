@@ -112,7 +112,12 @@ class LoginPage extends StatelessWidget {
                           Provider.gitlab, 'api read_user read_api read_repository write_repository profile email'),
                     ),
                   ],
-                )
+                ),
+                SizedBox(height: 32),
+                OutlinedButton(
+                  onPressed: () => appState.skipLogin(),
+                  child: Text('Skip login'),
+                ),
               ],
             ),
           ),
