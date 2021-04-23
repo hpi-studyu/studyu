@@ -16,13 +16,13 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Locale _selectedValue;
-  StudySubject activeStudy;
+  StudySubject subject;
 
   @override
   void initState() {
     super.initState();
     _selectedValue = context.read<AppLanguage>().appLocal;
-    activeStudy = context.read<AppState>().activeStudy;
+    subject = context.read<AppState>().activeSubject;
   }
 
   Widget getDropdownRow(BuildContext context) {
@@ -74,7 +74,7 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
             getDropdownRow(context),
             SizedBox(height: 24),
-            Text('${AppLocalizations.of(context).study_current} ${activeStudy.study.title}',
+            Text('${AppLocalizations.of(context).study_current} ${subject.study.title}',
                 style: theme.textTheme.headline6),
             SizedBox(height: 8),
             ElevatedButton.icon(
@@ -82,7 +82,7 @@ class _SettingsState extends State<Settings> {
               label: Text(AppLocalizations.of(context).opt_out),
               style: ElevatedButton.styleFrom(primary: Colors.orange[800]),
               onPressed: () {
-                showDialog(context: context, builder: (_) => OptOutAlertDialog(activeStudy: activeStudy));
+                showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
               },
             ),
             SizedBox(height: 24),
@@ -102,9 +102,9 @@ class _SettingsState extends State<Settings> {
 }
 
 class OptOutAlertDialog extends StatelessWidget {
-  final StudySubject activeStudy;
+  final StudySubject subject;
 
-  const OptOutAlertDialog({@required this.activeStudy}) : super();
+  const OptOutAlertDialog({@required this.subject}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class OptOutAlertDialog extends StatelessWidget {
         text: TextSpan(style: TextStyle(color: Colors.black), children: [
           TextSpan(text: 'The progress of your current study '),
           TextSpan(
-              text: activeStudy.study.title,
+              text: subject.study.title,
               style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
           TextSpan(text: ' will be deleted and cannot be recovered. Previously completed studies will not be deleted.'),
         ]),
@@ -126,7 +126,7 @@ class OptOutAlertDialog extends StatelessWidget {
           label: Text('Opt-out'),
           style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
           onPressed: () async {
-            activeStudy.delete();
+            subject.delete();
             UserQueries.deleteActiveStudyReference();
             Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           },

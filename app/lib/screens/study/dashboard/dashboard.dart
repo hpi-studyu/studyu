@@ -25,14 +25,14 @@ class OverflowMenuItem {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  StudySubject study;
+  StudySubject subject;
   Multimap<ScheduleTime, Task> scheduleToday;
 
   @override
   void initState() {
     super.initState();
-    study = context.read<AppState>().activeStudy;
-    scheduleToday = study.scheduleFor(DateTime.now());
+    subject = context.read<AppState>().activeSubject;
+    scheduleToday = subject.scheduleFor(DateTime.now());
   }
 
   @override
@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             tooltip: 'Current report',
             icon: Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(reportStudy: study)),
+            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject)),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) => Navigator.pushNamed(context, value.routeName),
@@ -73,18 +73,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: study.completedStudy
+      body: subject.completedStudy
           ? StudyFinishedPlaceholder()
           : TaskOverview(
-              study: study,
+          subject: subject,
               scheduleToday: scheduleToday,
-              interventionIcon: study.getInterventionForDate(DateTime.now())?.icon),
-      bottomSheet: kDebugMode && !study.completedStudy
+              interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon),
+      bottomSheet: kDebugMode && !subject.completedStudy
           ? TextButton(
               onPressed: () async {
-                await study.setStartDateBackBy(days: 1);
+                await subject.setStartDateBackBy(days: 1);
                 setState(() {
-                  scheduleToday = study.scheduleFor(DateTime.now());
+                  scheduleToday = subject.scheduleFor(DateTime.now());
                 });
               },
               child: Text('next day'),

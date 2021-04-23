@@ -16,7 +16,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
 
   Future<void> _addQuestionnaireResponseFhir(fhir.QuestionnaireResponse response, BuildContext context) async {
     final model = context.read<AppState>();
-    final activeStudy = model.activeStudy;
+    final activeStudy = model.activeSubject;
     try {
       await activeStudy.addResult<fhir.QuestionnaireResponse>(taskId: task.id, result: response);
       Navigator.pop(context, true);
@@ -31,7 +31,7 @@ class QuestionnaireTaskWidget extends StatelessWidget {
 
   Future<void> _addQuestionnaireResponseStudyU(QuestionnaireState qs, BuildContext context) async {
     final model = context.read<AppState>();
-    final activeStudy = model.activeStudy;
+    final activeStudy = model.activeSubject;
     try {
       await activeStudy.addResult<QuestionnaireState>(taskId: task.id, result: qs);
       Navigator.pop(context, true);
@@ -46,10 +46,10 @@ class QuestionnaireTaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.read<AppState>().activeStudy.study.fhirQuestionnaire;
+    final fhirQuestionnaire = context.read<AppState>().activeSubject.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
-            context.read<AppState>().activeStudy.study.fhirQuestionnaire,
+            context.read<AppState>().activeSubject.study.fhirQuestionnaire,
             onComplete: (qs) => _addQuestionnaireResponseFhir(qs, context),
           )
         : QuestionnaireWidget(

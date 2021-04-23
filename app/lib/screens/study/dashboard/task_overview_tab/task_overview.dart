@@ -10,11 +10,11 @@ import 'progress_row.dart';
 import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
-  final StudySubject study;
+  final StudySubject subject;
   final Multimap<ScheduleTime, Task> scheduleToday;
   final String interventionIcon;
 
-  const TaskOverview({@required this.study, @required this.scheduleToday, Key key, this.interventionIcon})
+  const TaskOverview({@required this.subject, @required this.scheduleToday, Key key, this.interventionIcon})
       : super(key: key);
   @override
   _TaskOverviewState createState() => _TaskOverviewState();
@@ -22,7 +22,7 @@ class TaskOverview extends StatefulWidget {
 
 class _TaskOverviewState extends State<TaskOverview> {
   void _navigateToReportIfStudyCompleted(BuildContext context) {
-    if (widget.study.completedStudy) {
+    if (widget.subject.completedStudy) {
       // Workaround to reload dashboard
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     }
@@ -60,14 +60,14 @@ class _TaskOverviewState extends State<TaskOverview> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        ProgressRow(study: widget.study),
+        ProgressRow(subject: widget.subject),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: 8),
               Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
               SizedBox(height: 8),
-              InterventionCardTitle(intervention: widget.study.getInterventionForDate(DateTime.now())),
+              InterventionCardTitle(intervention: widget.subject.getInterventionForDate(DateTime.now())),
               SizedBox(height: 8),
               Text(AppLocalizations.of(context).today_tasks, style: theme.textTheme.headline6)
             ])),

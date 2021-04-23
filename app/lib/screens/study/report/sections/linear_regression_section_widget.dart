@@ -11,16 +11,16 @@ import '../util/plot_utilities.dart';
 class LinearRegressionSectionWidget extends ReportSectionWidget {
   final LinearRegressionSection section;
 
-  const LinearRegressionSectionWidget(StudySubject instance, this.section) : super(instance);
+  const LinearRegressionSectionWidget(StudySubject subject, this.section) : super(subject);
 
   @override
   Widget build(BuildContext context) {
-    final interventionOrder = PlotUtilities.getInterventionPositions(instance.selectedInterventions);
-    final values = section.resultProperty.retrieveFromResults(instance);
+    final interventionOrder = PlotUtilities.getInterventionPositions(subject.selectedInterventions);
+    final values = section.resultProperty.retrieveFromResults(subject);
     final samples = values.entries.map((e) {
-      final intervention = instance.getInterventionForDate(e.key).id;
+      final intervention = subject.getInterventionForDate(e.key).id;
       return MapEntry([
-        instance.getDayOfStudyFor(e.key), //time
+        subject.getDayOfStudyFor(e.key), //time
         if (interventionOrder[intervention] == 1) 1 else 0, //A
         if (interventionOrder[intervention] == 2) 1 else 0, //B
       ], e.value);
@@ -42,12 +42,12 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
   }
 
   charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) =>
-      charts.NumericExtents(instance.study.schedule.includeBaseline ? 0 : 1, 2);
+      charts.NumericExtents(subject.study.schedule.includeBaseline ? 0 : 1, 2);
 
   Widget _buildDiagram(BuildContext context, LinearRegressionResult<num> coefficients,
       LinearRegressionResult<Range<num>> confidenceIntervals) {
-    final numberOfPhases = instance.interventionOrder.length;
-    final phaseDuration = instance.study.schedule.phaseDuration;
+    final numberOfPhases = subject.interventionOrder.length;
+    final phaseDuration = subject.study.schedule.phaseDuration;
     return charts.NumericComboChart(
       _getChartData(coefficients, confidenceIntervals),
       animate: true,
@@ -69,22 +69,22 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
   List<charts.Series<_ResultDatum, num>> _getChartData(
       LinearRegressionResult<num> coefficients, LinearRegressionResult<Range<num>> confidenceIntervals) {
-    final colorPalette = PlotUtilities.getInterventionPalette(instance.selectedInterventions);
-    final interventionNames = PlotUtilities.getInterventionNames(instance.selectedInterventions);
-    final interventionOrder = PlotUtilities.getInterventionPositions(instance.selectedInterventions);
+    final colorPalette = PlotUtilities.getInterventionPalette(subject.selectedInterventions);
+    final interventionNames = PlotUtilities.getInterventionNames(subject.selectedInterventions);
+    final interventionOrder = PlotUtilities.getInterventionPositions(subject.selectedInterventions);
 
     final intercept = coefficients.intercept;
     final factorA = coefficients.variables[1];
     final factorB = coefficients.variables[2];
-    final interventionA = PlotUtilities.getInterventionA(instance.selectedInterventions);
-    final interventionB = PlotUtilities.getInterventionB(instance.selectedInterventions);
+    final interventionA = PlotUtilities.getInterventionA(subject.selectedInterventions);
+    final interventionB = PlotUtilities.getInterventionB(subject.selectedInterventions);
 
     final ciIntercept = confidenceIntervals.intercept;
     final ciA = confidenceIntervals.variables[1];
     final ciB = confidenceIntervals.variables[2];
 
     return {
-      if (instance.study.schedule.includeBaseline)
+      if (subject.study.schedule.includeBaseline)
         Study.baselineID: _ResultDatum(interventionOrder[Study.baselineID], intercept, ciIntercept),
       interventionA: _ResultDatum(
           interventionOrder[interventionA], intercept + factorA, Range(intercept + ciA.min, intercept + ciA.max)),
@@ -107,7 +107,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
 
   Widget _buildResultDescription(
       BuildContext context, LinearRegressionResult<num> coefficients, LinearRegressionResult<num> pValues) {
-    final interventionNames = PlotUtilities.getInterventionNames(instance.selectedInterventions);
+    final interventionNames = PlotUtilities.getInterventionNames(subject.selectedInterventions);
 
     var factorA = coefficients.variables[1];
     var factorB = coefficients.variables[2];
@@ -116,8 +116,8 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       factorB = -factorB;
     }
 
-    final interventionA = PlotUtilities.getInterventionA(instance.selectedInterventions);
-    final interventionB = PlotUtilities.getInterventionB(instance.selectedInterventions);
+    final interventionA = PlotUtilities.getInterventionA(subject.selectedInterventions);
+    final interventionB = PlotUtilities.getInterventionB(subject.selectedInterventions);
 
     final pIntercept = pValues.intercept;
     final pA = pValues.variables[1];
@@ -127,7 +127,7 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     //TODO: Talk to a statistics guy about this evaluation logic and model design
     if (pA > section.alpha || pB > section.alpha || pIntercept > section.alpha) {
       text = AppLocalizations.of(context).report_outcome_inconclusive;
-    } else if (instance.study.schedule.includeBaseline && factorA < 0 && factorB < 0) {
+    } else if (subject.study.schedule.includeBaseline && factorA < 0 && factorB < 0) {
       text = AppLocalizations.of(context).report_outcome_neither;
     } else if (factorA > factorB) {
       //TODO: This if else might be problematic if a baseline is present and A and B are an improvement over it

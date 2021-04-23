@@ -18,7 +18,7 @@ class JourneyOverviewScreen extends StatefulWidget {
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
-  StudySubject study;
+  StudySubject subject;
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
@@ -35,7 +35,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppState>().activeStudy;
+    subject = context.read<AppState>().activeSubject;
   }
 
   @override
@@ -52,7 +52,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
             child: Column(
               children: [
                 //StudyTile.fromUserStudy(study: study),
-                Timeline(study: study),
+                Timeline(subject: subject),
               ],
             ),
           ),
@@ -67,14 +67,14 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 }
 
 class Timeline extends StatelessWidget {
-  final StudySubject study;
+  final StudySubject subject;
 
-  const Timeline({@required this.study, Key key}) : super(key: key);
+  const Timeline({@required this.subject, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final interventionsInOrder = study.getInterventionsInOrder();
+    final interventionsInOrder = subject.getInterventionsInOrder();
     final now = DateTime.now();
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -86,7 +86,7 @@ class Timeline extends StatelessWidget {
             title: intervention.name,
             iconName: intervention.icon,
             color: isBaseline(intervention) ? Colors.grey : theme.accentColor,
-            date: now.add(Duration(days: index * study.study.schedule.phaseDuration)),
+            date: now.add(Duration(days: index * subject.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
         }).toList(),
@@ -95,7 +95,7 @@ class Timeline extends StatelessWidget {
             iconName: 'flagCheckered',
             color: Colors.green,
             isLast: true,
-            date: study.endDate(now))
+            date: subject.endDate(now))
       ],
     );
   }

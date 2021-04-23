@@ -29,5 +29,5 @@ abstract class StudyResult {
 
   List<String> getHeaders(Study studySpec);
 
-  List<dynamic> getValues(StudySubject instance);
+  List<dynamic> getValues(StudySubject subject);
 }

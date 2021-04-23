@@ -20,7 +20,7 @@ class ConsentScreen extends StatefulWidget {
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {
-  StudySubject study;
+  StudySubject subject;
   List<bool> boxLogic;
   List<ConsentItem> consentList;
 
@@ -33,8 +33,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppState>().activeStudy;
-    consentList = study.study.consent;
+    subject = context.read<AppState>().activeSubject;
+    consentList = subject.study.consent;
     boxLogic = List.filled(consentList.length, false);
   }
 
@@ -63,7 +63,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () async => savePDF(context, '${study.study.title}_consent', await generatePdfContent()),
+            onPressed: () async => savePDF(context, '${subject.study.title}_consent', await generatePdfContent()),
           ),
         ],
       ),

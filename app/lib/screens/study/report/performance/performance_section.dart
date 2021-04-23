@@ -8,7 +8,7 @@ import 'package:studyou_core/core.dart';
 import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {
-  const PerformanceSection(StudySubject instance, {GestureTapCallback onTap}) : super(instance, onTap: onTap);
+  const PerformanceSection(StudySubject subject, {GestureTapCallback onTap}) : super(subject, onTap: onTap);
 
   // TODO move to model
   double get minimumRatio => 0.1;
@@ -17,12 +17,12 @@ class PerformanceSection extends GenericSection {
 
   @override
   Widget buildContent(BuildContext context) {
-    final interventions = study.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
+    final interventions = subject.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
     final interventionProgress = interventions.map((intervention) {
       final countableInterventions = getCountableObservationAmount(intervention);
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
     }).toList();
-    return interventions.length != 2 || study.study.reportSpecification?.primary == null
+    return interventions.length != 2 || subject.study.reportSpecification?.primary == null
         ? Center(
             child: Text('ERROR!'),
           )
@@ -79,20 +79,20 @@ class PerformanceSection extends GenericSection {
     }
 
     var countable = 0;
-    study.getResultsByDate(interventionId: intervention.id).values.forEach((progress) {
+    subject.getResultsByDate(interventionId: intervention.id).values.forEach((progress) {
       if (progress
               .where((result) => intervention.tasks.any((interventionTask) => interventionTask.id == result.taskId))
               .length ==
           interventionsPerDay) {
         countable += progress
-            .where((result) => study.study.observations.any((observation) => observation.id == result.taskId))
+            .where((result) => subject.study.observations.any((observation) => observation.id == result.taskId))
             .length;
       }
     });
     return countable;
-    /*final primaryOutcome = instance.reportSpecification.outcomes[0];
+    /*final primaryOutcome = subject.reportSpecification.outcomes[0];
     final results = <List<num>>[];
-    instance.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
+    subject.getResultsByInterventionId(taskId: primaryOutcome.taskId).forEach((key, value) {
       final data = value
           .whereType<Result<QuestionnaireState>>()
           .map((result) => result.result.answers[primaryOutcome.questionId].response)

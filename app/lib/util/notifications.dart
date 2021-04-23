@@ -40,30 +40,30 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
   final platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
-  final study = appState.activeStudy;
+  final subject = appState.activeSubject;
 
-  if (study != null) {
+  if (subject != null) {
     final interventionTaskLists =
-        study.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
+        subject.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
     var interventionTasks = [];
     if (interventionTaskLists.isNotEmpty) {
       interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
     }
     final tasks = [
-      ...study.study.observations,
+      ...subject.study.observations,
       ...interventionTasks,
     ];
     if (tasks.isEmpty) return;
     var id = 0;
     for (final index in List.generate(3, (index) => index)) {
       final date = DateTime.now().add(Duration(days: index));
-      for (final observation in study.study.observations) {
+      for (final observation in subject.study.observations) {
         (await appState.notificationsPlugin)
             .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
         id += observation.schedule.length;
       }
-      for (final intervention in study.selectedInterventions ?? <Intervention>[]) {
-        if (intervention.id == null || intervention.id != study.getInterventionForDate(date)?.id) {
+      for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {
+        if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
           if (intervention.tasks.isNotEmpty) {
             id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
           }

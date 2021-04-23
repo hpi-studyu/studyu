@@ -10,7 +10,7 @@ import '../util/plot_utilities.dart';
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
 
-  const AverageSectionWidget(StudySubject instance, this.section) : super(instance);
+  const AverageSectionWidget(StudySubject subject, this.section) : super(subject);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) {
     if (section.aggregate == TemporalAggregation.intervention) {
-      return charts.NumericExtents(instance.study.schedule.includeBaseline ? 0 : 1, 2);
+      return charts.NumericExtents(subject.study.schedule.includeBaseline ? 0 : 1, 2);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return charts.NumericExtents(0, numberOfPhases - 1);
     } else {
@@ -57,8 +57,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Widget getDiagram(BuildContext context) {
-    final numberOfPhases = instance.interventionOrder.length;
-    final phaseDuration = instance.study.schedule.phaseDuration;
+    final numberOfPhases = subject.interventionOrder.length;
+    final phaseDuration = subject.study.schedule.phaseDuration;
     return charts.NumericComboChart(
       getBarData(),
       animate: true,
@@ -81,12 +81,12 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Iterable<_DiagramDatum> getAggregatedData() {
-    final values = section.resultProperty.retrieveFromResults(instance);
+    final values = section.resultProperty.retrieveFromResults(subject);
     final data = values.entries.map((e) => _DiagramDatum(
-          instance.getDayOfStudyFor(e.key),
+          subject.getDayOfStudyFor(e.key),
           e.value,
           e.key,
-          instance.getInterventionForDate(e.key).id,
+          subject.getInterventionForDate(e.key).id,
         ));
 
     if (section.aggregate == TemporalAggregation.day) {
@@ -101,7 +101,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           .map((e) => e.value);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return data
-          .groupBy((e) => instance.getInterventionIndexForDate(e.timestamp))
+          .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp))
           .aggregateWithKey((data, phase) => _DiagramDatum(
                 phase,
                 FoldAggregators.mean()(data.map((e) => e.value)),
@@ -110,7 +110,7 @@ class AverageSectionWidget extends ReportSectionWidget {
               ))
           .map((e) => e.value);
     } else {
-      final order = PlotUtilities.getInterventionPositions(instance.selectedInterventions);
+      final order = PlotUtilities.getInterventionPositions(subject.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey((data, intervention) => _DiagramDatum(
@@ -124,8 +124,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   List<charts.Series<_DiagramDatum, num>> getBarData() {
-    final colorPalette = PlotUtilities.getInterventionPalette(instance.selectedInterventions);
-    final interventionNames = PlotUtilities.getInterventionNames(instance.selectedInterventions);
+    final colorPalette = PlotUtilities.getInterventionPalette(subject.selectedInterventions);
+    final interventionNames = PlotUtilities.getInterventionNames(subject.selectedInterventions);
 
     return getAggregatedData()
         .groupBy((datum) => datum.intervention)

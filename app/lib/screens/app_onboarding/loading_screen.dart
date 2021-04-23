@@ -39,7 +39,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final userStudy = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId,
         selectedColumns: ['*', 'study(*), subject_progress(*)']);
     if (userStudy != null) {
-      model.activeStudy = userStudy;
+      model.activeSubject = userStudy;
       if (!kIsWeb) {
         // Notifications not supported on web
         scheduleStudyNotifications(context);

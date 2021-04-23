@@ -17,17 +17,17 @@ class KickoffScreen extends StatefulWidget {
 }
 
 class _KickoffScreen extends State<KickoffScreen> {
-  StudySubject study;
+  StudySubject subject;
   bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
-    study.userId = env.client.auth.user().id;
+    subject.userId = env.client.auth.user().id;
 
     // TODO: Add retry saving
     try {
-      study = await study.save();
-      context.read<AppState>().activeStudy = study;
-      await UserQueries.storeActiveUserStudyId(study.id);
+      subject = await subject.save();
+      context.read<AppState>().activeSubject = subject;
+      await UserQueries.storeActiveUserStudyId(subject.id);
       if (!kIsWeb) {
         scheduleStudyNotifications(context);
       }
@@ -40,7 +40,7 @@ class _KickoffScreen extends State<KickoffScreen> {
   @override
   void initState() {
     super.initState();
-    study = context.read<AppState>().activeStudy;
+    subject = context.read<AppState>().activeSubject;
     _storeUserStudy(context);
   }
 
@@ -63,8 +63,8 @@ class _KickoffScreen extends State<KickoffScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(study.study.title),
-        leading: Icon(MdiIcons.fromString(study.study.iconName)),
+        title: Text(subject.study.title),
+        leading: Icon(MdiIcons.fromString(subject.study.iconName)),
       ),
       body: Builder(builder: (_context) {
         return Center(

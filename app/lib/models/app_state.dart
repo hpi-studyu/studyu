@@ -7,7 +7,7 @@ import 'package:studyu/screens/study/tasks/task_screen.dart';
 class AppState {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
-  StudySubject activeStudy;
+  StudySubject activeSubject;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   /// Context used for FlutterLocalNotificationsPlugin

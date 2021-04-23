@@ -10,12 +10,12 @@ import 'performance/performance_section.dart';
 import 'report_section_container.dart';
 
 class ReportDetailsScreen extends StatelessWidget {
-  final StudySubject reportStudy;
+  final StudySubject subject;
 
-  static MaterialPageRoute routeFor({@required StudySubject reportStudy}) => MaterialPageRoute(
-      builder: (_) => ReportDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.reportDetails));
+  static MaterialPageRoute routeFor({@required StudySubject subject}) => MaterialPageRoute(
+      builder: (_) => ReportDetailsScreen(subject), settings: RouteSettings(name: Routes.reportDetails));
 
-  const ReportDetailsScreen(this.reportStudy, {Key key}) : super(key: key);
+  const ReportDetailsScreen(this.subject, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +36,19 @@ class ReportDetailsScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GeneralDetailsSection(reportStudy),
-            DisclaimerSection(reportStudy),
+            GeneralDetailsSection(subject),
+            DisclaimerSection(subject),
             PerformanceSection(
-              reportStudy,
-              onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(reportStudy: reportStudy)),
+              subject,
+              onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(subject: subject)),
             ),
             ReportSectionContainer(
-              reportStudy.study.reportSpecification.primary,
-              instance: reportStudy,
+              subject.study.reportSpecification.primary,
+              subject: subject,
               primary: true,
             ),
-            ...reportStudy.study.reportSpecification.secondary
-                .map((section) => ReportSectionContainer(section, instance: reportStudy))
+            ...subject.study.reportSpecification.secondary
+                .map((section) => ReportSectionContainer(section, subject: subject))
           ],
         ),
       ),

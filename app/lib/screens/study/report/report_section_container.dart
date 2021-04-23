@@ -5,7 +5,7 @@ import 'package:studyou_core/core.dart';
 import 'report_section_widget.dart';
 import 'sections/report_section_widgets.dart';
 
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject instance);
+typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject subject);
 
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
@@ -15,13 +15,13 @@ class ReportSectionContainer extends StatelessWidget {
   };
 
   final ReportSection section;
-  final StudySubject instance;
+  final StudySubject subject;
   final bool primary;
   final GestureTapCallback onTap;
 
-  const ReportSectionContainer(this.section, {@required this.instance, this.onTap, this.primary = false});
+  const ReportSectionContainer(this.section, {@required this.subject, this.onTap, this.primary = false});
 
-  ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType](section, instance);
+  ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType](section, subject);
 
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(

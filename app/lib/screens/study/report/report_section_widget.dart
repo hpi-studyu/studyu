@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
 
 abstract class ReportSectionWidget extends StatelessWidget {
-  final StudySubject instance;
+  final StudySubject subject;
 
-  const ReportSectionWidget(this.instance);
+  const ReportSectionWidget(this.subject);
 }

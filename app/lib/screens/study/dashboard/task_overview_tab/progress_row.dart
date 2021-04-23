@@ -8,9 +8,9 @@ import '../../../../util/intervention.dart';
 import '../../../../widgets/intervention_card.dart';
 
 class ProgressRow extends StatefulWidget {
-  final StudySubject study;
+  final StudySubject subject;
 
-  const ProgressRow({Key key, this.study}) : super(key: key);
+  const ProgressRow({Key key, this.subject}) : super(key: key);
   @override
   _ProgressRowState createState() => _ProgressRowState();
 }
@@ -20,7 +20,7 @@ class _ProgressRowState extends State<ProgressRow> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final currentPhase = widget.study.getInterventionIndexForDate(DateTime.now());
+    final currentPhase = widget.subject.getInterventionIndexForDate(DateTime.now());
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -41,14 +41,14 @@ class _ProgressRowState extends State<ProgressRow> {
                           color: currentPhase > index ? theme.primaryColor : theme.disabledColor,
                         ),
                       ),
-                  widget.study.getInterventionsInOrder().asMap().entries.map((entry) {
+                  widget.subject.getInterventionsInOrder().asMap().entries.map((entry) {
                     return InterventionSegment(
                       intervention: entry.value,
                       isCurrent: currentPhase == entry.key,
                       isFuture: currentPhase < entry.key,
-                      phaseDuration: widget.study.study.schedule.phaseDuration,
-                      percentCompleted: widget.study.percentCompletedForPhase(entry.key),
-                      percentMissed: widget.study.percentMissedForPhase(entry.key, DateTime.now()),
+                      phaseDuration: widget.subject.study.schedule.phaseDuration,
+                      percentCompleted: widget.subject.percentCompletedForPhase(entry.key),
+                      percentMissed: widget.subject.percentMissedForPhase(entry.key, DateTime.now()),
                     );
                   })),
               SizedBox(width: 8),

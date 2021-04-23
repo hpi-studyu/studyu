@@ -7,17 +7,17 @@ import '../../../../util/intervention.dart';
 import '../../../../widgets/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
-  final StudySubject reportStudy;
+  final StudySubject reportSubject;
 
-  static MaterialPageRoute routeFor({@required StudySubject reportStudy}) => MaterialPageRoute(
-      builder: (_) => PerformanceDetailsScreen(reportStudy), settings: RouteSettings(name: Routes.performanceDetails));
+  static MaterialPageRoute routeFor({@required StudySubject subject}) => MaterialPageRoute(
+      builder: (_) => PerformanceDetailsScreen(subject), settings: RouteSettings(name: Routes.performanceDetails));
 
-  const PerformanceDetailsScreen(this.reportStudy, {Key key}) : super(key: key);
+  const PerformanceDetailsScreen(this.reportSubject, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final interventions = reportStudy.selectedInterventions.where((intervention) => !isBaseline(intervention)).toList();
+    final interventions = reportSubject.selectedInterventions.where((intervention) => !isBaseline(intervention)).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +47,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: interventions.length,
                   itemBuilder: (context, index) =>
-                      InterventionPerformanceBar(study: reportStudy, intervention: interventions[index]),
+                      InterventionPerformanceBar(subject: reportSubject, intervention: interventions[index]),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -59,9 +59,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: reportStudy.study.observations.length,
+                  itemCount: reportSubject.study.observations.length,
                   itemBuilder: (context, index) =>
-                      ObservationPerformanceBar(study: reportStudy, observation: reportStudy.study.observations[index]),
+                      ObservationPerformanceBar(subject: reportSubject, observation: reportSubject.study.observations[index]),
                 ),
               ],
             ),
@@ -74,9 +74,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
 
 class InterventionPerformanceBar extends StatelessWidget {
   final Intervention intervention;
-  final StudySubject study;
+  final StudySubject subject;
 
-  const InterventionPerformanceBar({@required this.intervention, @required this.study, Key key}) : super(key: key);
+  const InterventionPerformanceBar({@required this.intervention, @required this.subject, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class InterventionPerformanceBar extends StatelessWidget {
             SizedBox(height: 8),
             ...intervention.tasks
                 .map((task) => PerformanceBar(
-                    task: task, completed: study.completedTasksFor(task), total: study.totalTaskCountFor(task)))
+                    task: task, completed: subject.completedTasksFor(task), total: subject.totalTaskCountFor(task)))
                 .toList()
           ],
         ),
@@ -100,9 +100,9 @@ class InterventionPerformanceBar extends StatelessWidget {
 
 class ObservationPerformanceBar extends StatelessWidget {
   final Observation observation;
-  final StudySubject study;
+  final StudySubject subject;
 
-  const ObservationPerformanceBar({@required this.observation, @required this.study, Key key}) : super(key: key);
+  const ObservationPerformanceBar({@required this.observation, @required this.subject, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +111,8 @@ class ObservationPerformanceBar extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: PerformanceBar(
             task: observation,
-            completed: study.completedTasksFor(observation),
-            total: study.totalTaskCountFor(observation)),
+            completed: subject.completedTasksFor(observation),
+            total: subject.totalTaskCountFor(observation)),
       ),
     );
   }

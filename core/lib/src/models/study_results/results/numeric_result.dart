@@ -30,11 +30,11 @@ class NumericResult extends StudyResult {
   }
 
   @override
-  List getValues(StudySubject instance) {
+  List getValues(StudySubject subject) {
     final resultSet = resultProperty
-        .retrieveFromResults(instance)
-        .map<int, num>((key, value) => MapEntry(instance.getDayOfStudyFor(key), value));
-    final numberOfDays = instance.study.schedule.getNumberOfPhases() * instance.study.schedule.phaseDuration;
+        .retrieveFromResults(subject)
+        .map<int, num>((key, value) => MapEntry(subject.getDayOfStudyFor(key), value));
+    final numberOfDays = subject.study.schedule.getNumberOfPhases() * subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfDays).map((day) => resultSet[day]).toList();
   }
 }

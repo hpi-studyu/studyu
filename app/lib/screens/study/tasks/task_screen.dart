@@ -25,7 +25,7 @@ class _TaskScreenState extends State<TaskScreen> {
     if (widget.task != null) {
       task = widget.task;
     } else if (widget.taskId != null) {
-      final study = context.read<AppState>().activeStudy;
+      final study = context.read<AppState>().activeSubject;
       final tasks = <Task>[
         ...study.study.observations.where((observation) => observation.id == widget.taskId).toList(),
         ...study.selectedInterventions
