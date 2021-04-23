@@ -127,7 +127,7 @@ class _DashboardState extends State<Dashboard> {
                     final wasUploaded = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Paster Study JSON here'),
+                        title: Text('Paste Study JSON here'),
                         actions: [
                           TextButton.icon(
                             label: Text('Cancel'),
@@ -187,34 +187,36 @@ class _DashboardState extends State<Dashboard> {
               final publishedStudies = studies.where((s) => s.published).toList();
               return ListView(
                 children: [
-                  ExpansionTile(
-                    title: Row(children: [
-                      Icon(Icons.edit, color: theme.accentColor),
-                      SizedBox(width: 8),
-                      Text(AppLocalizations.of(context).draft_studies)
-                    ]),
-                    initiallyExpanded: true,
-                    children: ListTile.divideTiles(
-                        context: context,
-                        tiles: draftStudies.map((study) => StudyCard(
-                              study: study,
-                              reload: context.read<AppState>().reloadStudies,
-                            ))).toList(),
-                  ),
-                  ExpansionTile(
-                    title: Row(children: [
-                      Icon(Icons.lock, color: theme.accentColor),
-                      SizedBox(width: 8),
-                      Text(AppLocalizations.of(context).published_studies)
-                    ]),
-                    initiallyExpanded: true,
-                    children: ListTile.divideTiles(
-                        context: context,
-                        tiles: publishedStudies.map((study) => StudyCard(
-                              study: study,
-                              reload: context.read<AppState>().reloadStudies,
-                            ))).toList(),
-                  )
+                  if (draftStudies.isNotEmpty)
+                    ExpansionTile(
+                      title: Row(children: [
+                        Icon(Icons.edit, color: theme.accentColor),
+                        SizedBox(width: 8),
+                        Text(AppLocalizations.of(context).draft_studies)
+                      ]),
+                      initiallyExpanded: true,
+                      children: ListTile.divideTiles(
+                          context: context,
+                          tiles: draftStudies.map((study) => StudyCard(
+                                study: study,
+                                reload: context.read<AppState>().reloadStudies,
+                              ))).toList(),
+                    ),
+                  if (publishedStudies.isNotEmpty)
+                    ExpansionTile(
+                      title: Row(children: [
+                        Icon(Icons.lock, color: theme.accentColor),
+                        SizedBox(width: 8),
+                        Text(AppLocalizations.of(context).published_studies)
+                      ]),
+                      initiallyExpanded: true,
+                      children: ListTile.divideTiles(
+                          context: context,
+                          tiles: publishedStudies.map((study) => StudyCard(
+                                study: study,
+                                reload: context.read<AppState>().reloadStudies,
+                              ))).toList(),
+                    )
                 ],
               );
             },
