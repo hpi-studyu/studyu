@@ -286,36 +286,34 @@ class StudyCard extends StatelessWidget {
                   }
                 },
               )
-            : Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(MdiIcons.chartLine, color: Colors.green),
-                      tooltip: 'Create analysis project',
-                      onPressed: () async {
-                        final res = await http.get(Uri.parse(env.projectGeneratorUrl), headers: {
-                          'X-Session': json.encode(env.client.auth.session().toJson()),
-                          'X-Study-Id': study.id,
-                        });
-                        print(res.body);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
-                      tooltip: AppLocalizations.of(context).export_csv,
-                      onPressed: () async {
-                        final dl = ResultDownloader(study: study);
-                        final results = await dl.loadAllResults();
-                        for (final entry in results.entries) {
-                          downloadFile(
-                              ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
-                        }
-                      },
-                    )
-                  ],
+            : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(MdiIcons.chartLine, color: Colors.green),
+                  tooltip: 'Create analysis project',
+                  onPressed: () async {
+                    final res = await http.get(Uri.parse(env.projectGeneratorUrl), headers: {
+                      'X-Session': json.encode(env.client.auth.session().toJson()),
+                      'X-Study-Id': study.id,
+                    });
+                    print(res.body);
+                  },
                 ),
-              ),
+                IconButton(
+                  icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
+                  tooltip: AppLocalizations.of(context).export_csv,
+                  onPressed: () async {
+                    final dl = ResultDownloader(study: study);
+                    final results = await dl.loadAllResults();
+                    for (final entry in results.entries) {
+                      downloadFile(
+                          ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+                    }
+                  },
+                )
+              ],
+            ),
         onTap: () => context.read<AppState>().openStudy(study.id));
   }
 }
