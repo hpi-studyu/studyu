@@ -24,12 +24,12 @@ dependencies:
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
   path_provider: ^2.0.1
-  postgrest: ^0.0.8
+  postgrest: ^0.1.0
   pretty_json: ^2.0.0
   provider: ^5.0.0
   studyou_core:
     path: ../core
-  supabase: ^0.0.1-dev.11
+  supabase: ^0.0.1-dev.13
   universal_html: ^2.0.8
   url_launcher: ^6.0.3
   uuid: ^3.0.4
@@ -40,9 +40,6 @@ dev_dependencies:
   lint: ^1.5.3
 
 dependency_overrides:
-  gotrue:
-    git:
-      url: https://github.com/supabase/gotrue-dart.git
   image: ^3.0.2
   vin_decoder: ^0.2.0-nullsafety
 

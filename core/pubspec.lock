@@ -241,14 +241,12 @@ packages:
     source: hosted
     version: "2.0.1"
   gotrue:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "5237817232ed28ecb8918f1b56860e1029c55886"
-      url: "https://github.com/supabase/gotrue-dart.git"
-    source: git
-    version: "0.0.1-dev.9"
+      name: gotrue
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1-dev.10"
   graphs:
     dependency: transitive
     description:
@@ -409,7 +407,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.8"
+    version: "0.1.0"
   process:
     dependency: transitive
     description:
@@ -554,7 +552,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.11"
+    version: "0.0.1-dev.13"
   term_glyph:
     dependency: transitive
     description:

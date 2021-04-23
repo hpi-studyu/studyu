@@ -12,10 +12,10 @@ dependencies:
   fhir: 0.4.6
   flutter_dotenv: ^4.0.0-nullsafety.0
   json_annotation: ^4.0.1
-  postgrest: ^0.0.8
+  postgrest: ^0.1.0
   quiver: ^3.0.1
   shared_preferences: ^2.0.5
-  supabase: ^0.0.1-dev.11
+  supabase: ^0.0.1-dev.13
   uuid: ^3.0.4
 
 dev_dependencies:
@@ -24,8 +24,3 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^4.1.1
   lint: ^1.5.3
-
-dependency_overrides:
-  gotrue:
-    git:
-      url: https://github.com/supabase/gotrue-dart.git
