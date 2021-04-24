@@ -5,7 +5,7 @@ import '../../util/supabase_object.dart';
 
 part 'repo.g.dart';
 
-enum Provider { gitlab }
+enum GitProvider { gitlab }
 
 @JsonSerializable()
 class Repo extends SupabaseObjectFunctions<Repo> {
@@ -17,7 +17,7 @@ class Repo extends SupabaseObjectFunctions<Repo> {
   String projectId;
   String userId;
   String studyId;
-  Provider provider;
+  GitProvider provider;
 
   Repo(this.projectId, this.userId, this.studyId, this.provider);
 
