@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import '../../../models/app_state.dart';
 import 'report_details.dart';
@@ -18,7 +19,8 @@ class ReportHistoryScreen extends StatelessWidget {
         ),
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
-        tryFunction: () => StudySubject.getStudyHistory(env.client.auth.user().id),
+        tryFunction: () =>
+            StudySubject.getStudyHistory(env.client.auth.user().id),
         successBuilder: (BuildContext context, List<StudySubject> pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,
@@ -46,7 +48,8 @@ class ReportHistoryItem extends StatelessWidget {
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
-          Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject));
+          Navigator.push(
+              context, ReportDetailsScreen.routeFor(subject: subject));
         },
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -54,10 +57,13 @@ class ReportHistoryItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Icon(MdiIcons.fromString(subject.study.iconName) ?? MdiIcons.accountHeart,
+                Icon(
+                    MdiIcons.fromString(subject.study.iconName) ??
+                        MdiIcons.accountHeart,
                     color: isActiveStudy ? Colors.white : Colors.black),
                 Text(subject.study.title,
-                    style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black)),
+                    style: theme.textTheme.headline5.copyWith(
+                        color: isActiveStudy ? Colors.white : Colors.black)),
               ],
             ),
           ),

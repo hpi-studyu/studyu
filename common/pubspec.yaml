@@ -1,0 +1,17 @@
+name: studyu_flutter_common
+description: StudYou Models and common functions for app and study designer
+version: 3.0.0
+
+publish_to: 'none'
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  flutter_dotenv: ^4.0.0-nullsafety.0
+  shared_preferences: ^2.0.5
+  studyou_core:
+    path: ../core
+
+dev_dependencies:
+  lint: ^1.5.3

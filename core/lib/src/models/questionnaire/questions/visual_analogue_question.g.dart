@@ -21,10 +21,8 @@ VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
     ..maximum = (json['maximum'] as num).toDouble()
     ..initial = (json['initial'] as num).toDouble()
     ..step = (json['step'] as num).toDouble()
-    ..minimumColor =
-        VisualAnalogueQuestion.parseColor(json['minimumColor'] as String)
-    ..maximumColor =
-        VisualAnalogueQuestion.parseColor(json['maximumColor'] as String)
+    ..minimumColor = json['minimumColor'] as int
+    ..maximumColor = json['maximumColor'] as int
     ..minimumAnnotation = json['minimumAnnotation'] as String
     ..maximumAnnotation = json['maximumAnnotation'] as String;
 }
@@ -49,10 +47,8 @@ Map<String, dynamic> _$VisualAnalogueQuestionToJson(
   val['maximum'] = instance.maximum;
   val['initial'] = instance.initial;
   val['step'] = instance.step;
-  writeNotNull('minimumColor',
-      VisualAnalogueQuestion.colorToJson(instance.minimumColor));
-  writeNotNull('maximumColor',
-      VisualAnalogueQuestion.colorToJson(instance.maximumColor));
+  val['minimumColor'] = instance.minimumColor;
+  val['maximumColor'] = instance.maximumColor;
   val['minimumAnnotation'] = instance.minimumAnnotation;
   val['maximumAnnotation'] = instance.maximumAnnotation;
   return val;

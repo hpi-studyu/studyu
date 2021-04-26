@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 typedef CustomErrorWidgetBuilder = Widget Function(BuildContext context, dynamic error, void Function() reload);
 
@@ -91,6 +92,8 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             if (snapshot.hasError) {
+              if (kDebugMode) throw snapshot.error!;
+
               if (widget.errorWidgetBuilder != null) {
                 return widget.errorWidgetBuilder!(context, snapshot.error, reload);
               }

@@ -32,7 +32,7 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
               name: 'minimumColor',
               showCursor: true,
               decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_color),
-              initialValue: widget.question.minimumColor),
+              initialValue: Color(widget.question.minimumColor)),
           FormBuilderTextField(
               onChanged: _saveFormChanges,
               name: 'maximumAnnotation',
@@ -43,7 +43,7 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
               name: 'maximumColor',
               showCursor: true,
               decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_color),
-              initialValue: widget.question.maximumColor)
+              initialValue: Color(widget.question.maximumColor))
         ]));
   }
 
@@ -52,9 +52,9 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.question.minimumAnnotation = _editFormKey.currentState.value['minimumAnnotation'] as String;
-        widget.question.minimumColor = _editFormKey.currentState.value['minimumColor'] as Color;
+        widget.question.minimumColor = (_editFormKey.currentState.value['minimumColor'] as Color).value;
         widget.question.maximumAnnotation = _editFormKey.currentState.value['maximumAnnotation'] as String;
-        widget.question.maximumColor = _editFormKey.currentState.value['maximumColor'] as Color;
+        widget.question.maximumColor =( _editFormKey.currentState.value['maximumColor'] as Color).value;
       });
     }
   }

@@ -7,6 +7,11 @@ import '../../routes.dart';
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print(Color(0xffff0000).value);
+    print(Color(0xffffffff).value);
+    print(Color(0xffff0b0b).value);
+    print(Color(0xffff9b34).value);
+    print(Color(0xff0444ff).value);
     return Scaffold(
       body: SafeArea(
         child: Center(

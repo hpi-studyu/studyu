@@ -47,7 +47,8 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
-    if ((json['repo'] as List).isNotEmpty) {
+    final List? repo = json['repo'] as List?;
+    if (repo != null && repo.isNotEmpty) {
       study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
     }
     return study;

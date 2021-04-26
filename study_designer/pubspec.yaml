@@ -29,6 +29,8 @@ dependencies:
   provider: ^5.0.0
   studyou_core:
     path: ../core
+  studyu_flutter_common:
+    path: ../common
   supabase: ^0.0.1-dev.13
   universal_html: ^2.0.8
   url_launcher: ^6.0.3

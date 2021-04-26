@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  dotenv:
+    dependency: transitive
+    description:
+      name: dotenv
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0-nullsafety.0"
   dropdown_search:
     dependency: transitive
     description:
@@ -448,6 +455,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  pointer_interceptor:
+    dependency: transitive
+    description:
+      name: pointer_interceptor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   pointycastle:
     dependency: transitive
     description:
@@ -597,6 +611,13 @@ packages:
     dependency: "direct main"
     description:
       path: "../core"
+      relative: true
+    source: path
+    version: "3.0.0"
+  studyu_flutter_common:
+    dependency: "direct main"
+    description:
+      path: "../common"
       relative: true
     source: path
     version: "3.0.0"

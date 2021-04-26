@@ -46,7 +46,10 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [widget.question.minimumColor, widget.question.maximumColor],
+                  colors: [
+                    Color(widget.question.minimumColor),
+                    Color(widget.question.maximumColor)
+                  ],
                 ),
               ),
               constraints: BoxConstraints.expand(height: 4),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await env.loadEnv();
+  await loadEnv();
 
   runApp(MyApp());
 }

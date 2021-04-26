@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyu_designer/util/repo_manager.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
