@@ -46,6 +46,7 @@ Future<void> generateRepo(String studyId) async {
       .writeAsString(prettyJson(subjects));
 
   // Read all files in generated and make commit
+  print('Collecting files into Gitlab commit...');
   final commitActions = allFilesInDir(generatedProjectPath).map((file) {
     final unixFilePath = p.Context(style: p.Style.posix)
         .joinAll(p.split(p.relative(file.path, from: generatedProjectPath)));
@@ -54,6 +55,7 @@ Future<void> generateRepo(String studyId) async {
         filePath: unixFilePath, content: file.readAsStringSync());
   }).toList();
 
+  print('Committing to Gitlab...');
   await gl.makeCommit(
       projectId: projectId,
       message:
@@ -73,6 +75,7 @@ Future<void> generateRepo(String studyId) async {
     print('Uploading html to notebook-widgets/$studyId/$htmlFileName');
     await uploadNotebookToSupabase(htmlFileName, studyId);
   }
+  print('Finished generating project');
 }
 
 Iterable<File> allFilesInDir(String dirPath, {String? fileExtension}) {
