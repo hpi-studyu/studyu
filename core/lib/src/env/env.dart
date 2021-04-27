@@ -1,6 +1,4 @@
 import 'package:supabase/supabase.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
-
 
 // load env from envs/.env or from the filename specified in the ENV runtime-variable
 String envFilePath() {
@@ -12,11 +10,6 @@ final dotEnv = <String, String>{};
 
 void loadEnv(Map<String, String> env) {
   dotEnv.addAll(env);
-}
-
-Future<void> loadEnvDart() async {
-  load();
-  loadEnv(env);
 }
 
 const designerDeepLink = 'https://studyu-designer.codemagic.app';

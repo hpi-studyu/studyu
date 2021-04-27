@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  dotenv: ^3.0.0-nullsafety.0
   fhir: 0.4.6
   json_annotation: ^4.0.1
   postgrest: ^0.1.0
