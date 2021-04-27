@@ -9,21 +9,32 @@ part of 'contact.dart';
 Contact _$ContactFromJson(Map<String, dynamic> json) {
   return Contact()
     ..organization = json['organization'] as String
-    ..institutionalReviewBoard = json['institutionalReviewBoard'] as String
+    ..institutionalReviewBoard = json['institutionalReviewBoard'] as String?
     ..institutionalReviewBoardNumber =
-        json['institutionalReviewBoardNumber'] as String
+        json['institutionalReviewBoardNumber'] as String?
     ..researchers = json['researchers'] as String
     ..email = json['email'] as String
     ..website = json['website'] as String
     ..phone = json['phone'] as String;
 }
 
-Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
-      'organization': instance.organization,
-      'institutionalReviewBoard': instance.institutionalReviewBoard,
-      'institutionalReviewBoardNumber': instance.institutionalReviewBoardNumber,
-      'researchers': instance.researchers,
-      'email': instance.email,
-      'website': instance.website,
-      'phone': instance.phone,
-    };
+Map<String, dynamic> _$ContactToJson(Contact instance) {
+  final val = <String, dynamic>{
+    'organization': instance.organization,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('institutionalReviewBoard', instance.institutionalReviewBoard);
+  writeNotNull('institutionalReviewBoardNumber',
+      instance.institutionalReviewBoardNumber);
+  val['researchers'] = instance.researchers;
+  val['email'] = instance.email;
+  val['website'] = instance.website;
+  val['phone'] = instance.phone;
+  return val;
+}
