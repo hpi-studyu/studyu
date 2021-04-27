@@ -24,6 +24,7 @@ class CliService {
 
   static Future<void> generateCopierProject(
       String projectPath, String studyTitle) async {
+    File(projectPath).deleteSync(recursive: true);
     await runProcess(copierBin, [
       copierTemplate,
       projectPath,

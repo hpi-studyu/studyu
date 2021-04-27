@@ -75,7 +75,10 @@ Future<void> generateRepo(String studyId) async {
     print('Uploading html to notebook-widgets/$studyId/$htmlFileName');
     await uploadNotebookToSupabase(htmlFileName, studyId);
   }
+  print('Deleting generated files...');
+  File(generatedProjectPath).deleteSync(recursive: true);
   print('Finished generating project');
+
 }
 
 Iterable<File> allFilesInDir(String dirPath, {String? fileExtension}) {
