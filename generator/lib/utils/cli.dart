@@ -27,6 +27,7 @@ class CliService {
     await runProcess(copierBin, [
       copierTemplate,
       projectPath,
+      '--force',
       '--data',
       'study_title=$studyTitle',
     ]);
@@ -40,7 +41,7 @@ class CliService {
       filePath,
       '--no-prompt',
       '--template',
-      'template/',
+      'nbconvert-template/',
     ]);
   }
 }
