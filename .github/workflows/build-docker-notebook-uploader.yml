@@ -23,4 +23,4 @@ jobs:
           file: generator/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           repository: hpi-studyu/studyu/notebook-uploader
-          tags: $GITHUB_SHA
+          tags: ${{ github.sha }}
