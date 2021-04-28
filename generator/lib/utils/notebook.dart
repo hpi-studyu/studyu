@@ -18,6 +18,7 @@ Future<void> _uploadToSupabaseStorage(String filePath, File file, String bucketI
 
   if (res.hasError) {
     print(res.error!.message);
+    exit(1);
   } else {
     print(res.data);
   }

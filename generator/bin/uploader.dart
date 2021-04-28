@@ -13,7 +13,7 @@ void loadEnv() {
   env.loadEnv(Platform.environment);
 }
 
-void main(List<String> arguments) {
+Future<void> main(List<String> arguments) async {
   // load environment
   loadEnv();
 
@@ -25,13 +25,15 @@ void main(List<String> arguments) {
   argResults = parser.parse(arguments);
   final htmlFilePath = argResults.rest;
 
-  generateNotebookHtml(argResults[supabaseToken] as String, argResults[studyId] as String, htmlFilePath.first);
+  await generateNotebookHtml(argResults[supabaseToken] as String, argResults[studyId] as String, htmlFilePath.first);
+  exit(0);
 }
 
 Future<void> generateNotebookHtml(String token, String studyId, String htmlFilePath) async {
   final res = await env.client.auth.recoverSession(token);
   if (res.error != null) {
     print('Could not authenticate: ${res.error!.message}');
+    exit(1);
   }
 
   await uploadNotebookToSupabase(htmlFilePath, studyId);

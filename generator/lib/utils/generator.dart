@@ -34,12 +34,9 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
     File('gitlabkey.pub').deleteSync();
     File('gitlabkey').deleteSync();
   } catch (e) {}
-
   await CliService.generateSshKey();
   final public = File('gitlabkey.pub').readAsStringSync();
   final private = File('gitlabkey').readAsStringSync();
-  print(public);
-  print(private);
 
   print('Adding deploy key...');
   await gl.addDeployKey(projectId: projectId, title: 'update_key', key: public, canPush: true);
