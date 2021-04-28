@@ -4,11 +4,11 @@ import 'package:dotenv/dotenv.dart' as dot_env show env;
 import 'package:generator/utils/gitlab.dart';
 import 'package:path/path.dart' as p;
 import 'package:pretty_json/pretty_json.dart';
-import 'package:studyou_core/core.dart';
-import 'package:studyou_core/env.dart' as env;
 
 import 'cli.dart';
-import 'notebook_uploader.dart';
+import 'database.dart';
+import 'file.dart';
+import 'notebook.dart';
 
 Future<void> generateRepo(String studyId) async {
   print('Generating repo...');
@@ -16,13 +16,8 @@ Future<void> generateRepo(String studyId) async {
 
   // Fetch study schema and subjects data
   print('Fetching study data...');
-  final study = await SupabaseQuery.getById<Study>(studyId);
-  final subjects = SupabaseQuery.extractSupabaseList<StudySubject>(await env
-      .client
-      .from(StudySubject.tableName)
-      .select('*,study(*),subject_progress(*)')
-      .eq('studyId', studyId)
-      .execute());
+  final study = await fetchStudySchema(studyId);
+  final subjects = await fetchSubjects(studyId);
 
   print('Creating gitlab repo ${study.title}');
   // Create Gitlab project
@@ -59,32 +54,30 @@ Future<void> generateRepo(String studyId) async {
   await gl.makeCommit(
       projectId: projectId,
       message:
-      'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
+          'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
       actions: commitActions);
 
   // Generate Notebook html from files nbconvert CLI
   print('Generating html for all notebooks');
-  print(allFilesInDir(generatedProjectPath, fileExtension: '.ipynb').length);
-
-  for (final File notebookFile
-  in allFilesInDir(generatedProjectPath, fileExtension: '.ipynb')) {
-    print('Generating html for ${notebookFile.path}');
-    await CliService.generateNotebookHtml(notebookFile.path);
-
-    final htmlFileName = p.setExtension(notebookFile.path, '.html');
-    print('Uploading html to notebook-widgets/$studyId/$htmlFileName');
-    await uploadNotebookToSupabase(htmlFileName, studyId);
-  }
+  await convertAndUploadNotebooks(generatedProjectPath, studyId);
   print('Deleting generated files...');
   File(generatedProjectPath).deleteSync(recursive: true);
   print('Finished generating project');
-
 }
 
-Iterable<File> allFilesInDir(String dirPath, {String? fileExtension}) {
-  final allFiles =
-  Directory(dirPath).listSync(recursive: true).whereType<File>();
-  return fileExtension != null
-      ? allFiles.where((file) => p.extension(file.path) == fileExtension)
-      : allFiles;
+Future<void> updateRepo(String projectId, String studyId) async {
+  // Setup CI for updating htmls
+  // Generat ssh key
+  // Add ssh private key as env var
+  // Add public key to deploy keys (with write)
+  // Add supabase secret as well
+
+  final study = await fetchStudySchema(studyId);
+  final subjects = await fetchSubjects(studyId);
+  // Make git commit
+
+  // Fetch git project
+  // install python dependencies
+  // Generate notebook htmls
+  // Upload notebook htmls
 }
