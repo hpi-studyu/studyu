@@ -8,13 +8,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  asn1lib:
-    dependency: transitive
-    description:
-      name: asn1lib
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   async:
     dependency: transitive
     description:
@@ -155,13 +148,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.0"
-  pointycastle:
-    dependency: "direct main"
-    description:
-      name: pointycastle
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1"
   postgrest:
     dependency: transitive
     description:
@@ -211,13 +197,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
-  ssh_key:
-    dependency: "direct main"
-    description:
-      name: ssh_key
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
   stack_trace:
     dependency: transitive
     description:
@@ -274,13 +253,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  tuple:
-    dependency: transitive
-    description:
-      name: tuple
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:

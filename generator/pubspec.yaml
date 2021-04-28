@@ -12,10 +12,8 @@ dependencies:
   dotenv: ^3.0.0-nullsafety.0
   http: ^0.13.1
   path: ^1.8.0
-  pointycastle: ^3.0.1
   pretty_json: ^2.0.0
   shelf: ^1.1.0
-  ssh_key: ^0.7.0
   studyou_core:
     path: ../core
   supabase: ^0.0.1-dev.14
