@@ -21,8 +21,7 @@ Future<void> generateRepo(String studyId) async {
 
   print('Creating gitlab repo ${study.title}');
   // Create Gitlab project
-  final gl = GitlabClient(
-      '65724655cb9247403d40d161c66c0958cda32253f9a0f82b60db5292c84c503b');
+  final gl = GitlabClient('65724655cb9247403d40d161c66c0958cda32253f9a0f82b60db5292c84c503b');
   final projectId = await gl.createProject(study.title!);
   if (projectId == null) {
     print('Could not fetch projectId');
@@ -35,26 +34,22 @@ Future<void> generateRepo(String studyId) async {
 
   // Save study schema and subjects data
   print('Saving study schema and subjects as json...');
-  await File(p.join(generatedProjectPath, 'data', 'study.schema.json'))
-      .writeAsString(prettyJson(study.toJson()));
-  await File(p.join(generatedProjectPath, 'data', 'subjects.json'))
-      .writeAsString(prettyJson(subjects));
+  await File(p.join(generatedProjectPath, 'data', 'study.schema.json')).writeAsString(prettyJson(study.toJson()));
+  await File(p.join(generatedProjectPath, 'data', 'subjects.json')).writeAsString(prettyJson(subjects));
 
   // Read all files in generated and make commit
   print('Collecting files into Gitlab commit...');
   final commitActions = allFilesInDir(generatedProjectPath).map((file) {
-    final unixFilePath = p.Context(style: p.Style.posix)
-        .joinAll(p.split(p.relative(file.path, from: generatedProjectPath)));
+    final unixFilePath =
+        p.Context(style: p.Style.posix).joinAll(p.split(p.relative(file.path, from: generatedProjectPath)));
 
-    return gl.commitAction(
-        filePath: unixFilePath, content: file.readAsStringSync());
+    return gl.commitAction(filePath: unixFilePath, content: file.readAsStringSync());
   }).toList();
 
   print('Committing to Gitlab...');
   await gl.makeCommit(
       projectId: projectId,
-      message:
-          'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
+      message: 'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
       actions: commitActions);
 
   // Generate Notebook html from files nbconvert CLI

@@ -6,10 +6,7 @@ class GitlabClient {
   late final String token;
   final String baseUrl;
 
-  late Map<String, String> headers = {
-    'Authorization': 'Bearer $token',
-    'Content-Type': 'application/json'
-  };
+  late Map<String, String> headers = {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
 
   GitlabClient(this.token, {this.baseUrl = 'https://gitlab.com/api/v4'});
 
@@ -17,24 +14,20 @@ class GitlabClient {
     String body,
     String resourcePath,
   ) async =>
-      http.post(Uri.parse('$baseUrl/$resourcePath'),
-          headers: headers, body: body);
+      http.post(Uri.parse('$baseUrl/$resourcePath'), headers: headers, body: body);
 
   Future<int?> createProject(String name) async {
-    final response = await _httpPostRequest(
-        jsonEncode({'name': name, 'visibility': 'public'}), 'projects');
+    final response = await _httpPostRequest(jsonEncode({'name': name, 'visibility': 'public'}), 'projects');
 
     if (httpSuccess(response.statusCode)) {
       final json = jsonDecode(response.body);
       return json['id'] as int;
     } else {
-      print(
-          'Creating project failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
+      print('Creating project failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
   }
 
-  static bool httpSuccess(int statusCode) =>
-      statusCode ~/ 200 == 1 && statusCode % 200 < 100;
+  static bool httpSuccess(int statusCode) => statusCode ~/ 200 == 1 && statusCode % 200 < 100;
 
   Future<Map<String, dynamic>?> makeCommit({
     required int projectId,
@@ -42,19 +35,13 @@ class GitlabClient {
     required List<Map<String, String>> actions,
     String branch = 'master',
   }) async {
-    final body = {
-      'branch': branch,
-      'commit_message': message,
-      'actions': actions
-    };
-    final response = await _httpPostRequest(jsonEncode(body),
-        'projects/${projectId.toString()}/repository/commits');
+    final body = {'branch': branch, 'commit_message': message, 'actions': actions};
+    final response = await _httpPostRequest(jsonEncode(body), 'projects/${projectId.toString()}/repository/commits');
 
     if (httpSuccess(response.statusCode)) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
-      print(
-          'Making commit failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
+      print('Making commit failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
   }
 

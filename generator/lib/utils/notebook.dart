@@ -10,12 +10,10 @@ Future<void> uploadNotebookToSupabase(String filePath, String studyId) async {
   final file = File(filePath);
   final fileName = p.basename(file.path);
 
-  await _uploadToSupabaseStorage(
-      '$studyId/$fileName', file, 'notebook-widgets');
+  await _uploadToSupabaseStorage('$studyId/$fileName', file, 'notebook-widgets');
 }
 
-Future<void> _uploadToSupabaseStorage(
-    String filePath, File file, String bucketId) async {
+Future<void> _uploadToSupabaseStorage(String filePath, File file, String bucketId) async {
   final res = await env.client.storage.from(bucketId).upload(filePath, file);
 
   if (res.hasError) {
@@ -25,10 +23,8 @@ Future<void> _uploadToSupabaseStorage(
   }
 }
 
-Future<void> convertAndUploadNotebooks(
-    String projectPath, String studyId) async {
-  for (final File notebookFile
-      in allFilesInDir(projectPath, fileExtension: '.ipynb')) {
+Future<void> convertAndUploadNotebooks(String projectPath, String studyId) async {
+  for (final File notebookFile in allFilesInDir(projectPath, fileExtension: '.ipynb')) {
     print('Generating html for ${notebookFile.path}');
     await CliService.generateNotebookHtml(notebookFile.path);
 

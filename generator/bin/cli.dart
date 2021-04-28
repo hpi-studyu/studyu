@@ -17,8 +17,7 @@ void main(List<String> arguments) {
 
   argResults = parser.parse(arguments);
 
-  convertAndUploadNotebooks(
-      argResults[supabaseToken] as String, argResults[studyId] as String);
+  convertAndUploadNotebooks(argResults[supabaseToken] as String, argResults[studyId] as String);
 }
 
 Future<void> convertAndUploadNotebooks(String token, String studyId) async {

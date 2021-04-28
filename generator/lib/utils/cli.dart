@@ -6,8 +6,7 @@ const copierTemplate = 'gh:hpi-studyu/copier-studyu';
 const nbConvertBin = 'conda run jupyter nbconvert';
 
 class CliService {
-  static Future<bool> runProcess(
-      String executable, List<String> arguments) async {
+  static Future<bool> runProcess(String executable, List<String> arguments) async {
     final result = await Process.run(
       executable,
       arguments,
@@ -22,8 +21,7 @@ class CliService {
     }
   }
 
-  static Future<void> generateCopierProject(
-      String projectPath, String studyTitle) async {
+  static Future<void> generateCopierProject(String projectPath, String studyTitle) async {
     File(projectPath).deleteSync(recursive: true);
     await runProcess(copierBin, [
       copierTemplate,
