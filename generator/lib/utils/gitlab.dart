@@ -16,12 +16,18 @@ class GitlabClient {
   ) async =>
       http.post(Uri.parse('$baseUrl/$resourcePath'), headers: headers, body: body);
 
-  Future<int?> createProject(String name) async {
+  Future<http.Response> _httpPutRequest(
+    String body,
+    String resourcePath,
+  ) async =>
+      http.put(Uri.parse('$baseUrl/$resourcePath'), headers: headers, body: body);
+
+  Future<String?> createProject(String name) async {
     final response = await _httpPostRequest(jsonEncode({'name': name, 'visibility': 'public'}), 'projects');
 
     if (httpSuccess(response.statusCode)) {
       final json = jsonDecode(response.body);
-      return json['id'] as int;
+      return (json['id'] as int).toString();
     } else {
       print('Creating project failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
@@ -30,18 +36,48 @@ class GitlabClient {
   static bool httpSuccess(int statusCode) => statusCode ~/ 200 == 1 && statusCode % 200 < 100;
 
   Future<Map<String, dynamic>?> makeCommit({
-    required int projectId,
+    required String projectId,
     required String message,
     required List<Map<String, String>> actions,
     String branch = 'master',
   }) async {
     final body = {'branch': branch, 'commit_message': message, 'actions': actions};
-    final response = await _httpPostRequest(jsonEncode(body), 'projects/${projectId.toString()}/repository/commits');
+    final response = await _httpPostRequest(jsonEncode(body), 'projects/$projectId/repository/commits');
 
     if (httpSuccess(response.statusCode)) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
       print('Making commit failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<Map<String, dynamic>?> createProjectVariable({
+    required String projectId,
+    required String key,
+    required String value,
+  }) async {
+    final body = {'key': key, 'value': value};
+    final response = await _httpPostRequest(jsonEncode(body), 'projects/$projectId/variables');
+
+    if (httpSuccess(response.statusCode)) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      print('Creating variable failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<Map<String, dynamic>?> updateProjectVariable({
+    required String projectId,
+    required String key,
+    required String value,
+  }) async {
+    final body = {'value': value};
+    final response = await _httpPutRequest(jsonEncode(body), 'projects/$projectId/variables/$key');
+
+    if (httpSuccess(response.statusCode)) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      print('Updating variable failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
   }
 

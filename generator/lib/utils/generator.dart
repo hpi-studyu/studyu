@@ -4,13 +4,15 @@ import 'package:dotenv/dotenv.dart' as dot_env show env;
 import 'package:generator/utils/gitlab.dart';
 import 'package:path/path.dart' as p;
 import 'package:pretty_json/pretty_json.dart';
+import 'package:studyou_core/core.dart';
+import 'package:studyou_core/env.dart' as env;
 
 import 'cli.dart';
 import 'database.dart';
 import 'file.dart';
-import 'notebook.dart';
 
-Future<void> generateRepo(String studyId) async {
+Future<void> generateRepo(GitlabClient gl, String studyId) async {
+  print(env.client.auth.session()!.persistSessionString);
   print('Generating repo...');
   final generatedProjectPath = dot_env.env['PROJECT_PATH'] ?? 'generated';
 
@@ -21,12 +23,18 @@ Future<void> generateRepo(String studyId) async {
 
   print('Creating gitlab repo ${study.title}');
   // Create Gitlab project
-  final gl = GitlabClient('65724655cb9247403d40d161c66c0958cda32253f9a0f82b60db5292c84c503b');
   final projectId = await gl.createProject(study.title!);
   if (projectId == null) {
     print('Could not fetch projectId');
     return;
   }
+
+  // Generate ssh key
+
+  print('Creating project variables for session and studyId');
+  await gl.createProjectVariable(
+      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString);
+  await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId);
 
   // Generate files from nbconvert-template copier CLI
   print('Generating project files with copier...');
@@ -52,27 +60,35 @@ Future<void> generateRepo(String studyId) async {
       message: 'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
       actions: commitActions);
 
+  print('Add repo entry to database...');
+  try {
+    await Repo(projectId, env.client.auth.user()!.id, studyId, GitProvider.gitlab).save();
+  } catch (e) {
+    print(e);
+  }
+
   // Generate Notebook html from files nbconvert CLI
   print('Generating html for all notebooks');
-  await convertAndUploadNotebooks(generatedProjectPath, studyId);
+  //await convertAndUploadNotebooks(generatedProjectPath, studyId);
   print('Deleting generated files...');
   File(generatedProjectPath).deleteSync(recursive: true);
   print('Finished generating project');
 }
 
-Future<void> updateRepo(String projectId, String studyId) async {
-  // Setup CI for updating htmls
-  // Generat ssh key
-  // Add ssh private key as env var
-  // Add public key to deploy keys (with write)
-  // Add supabase secret as well
+Future<void> updateRepo(GitlabClient gl, String projectId, String studyId) async {
+  // Update sessionToken project var
+  print('Updating project session variable...');
+  gl.updateProjectVariable(
+      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString);
 
+  print('Fetching study schema and subjects');
   final study = await fetchStudySchema(studyId);
   final subjects = await fetchSubjects(studyId);
-  // Make git commit
 
-  // Fetch git project
-  // install python dependencies
-  // Generate notebook htmls
-  // Upload notebook htmls
+  print('Committing to Gitlab...');
+  await gl.makeCommit(projectId: projectId, message: 'Updating data and triggering CI notebook html refresh', actions: [
+    gl.commitAction(filePath: 'data/study.schema.json', content: prettyJson(study.toJson()), action: 'update'),
+    gl.commitAction(filePath: 'data/subjects.json', content: prettyJson(subjects), action: 'update'),
+  ]);
+  // Make git commit
 }

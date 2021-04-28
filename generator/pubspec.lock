@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  storage_client:
+    dependency: transitive
+    description:
+      name: storage_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1-dev.1"
   stream_channel:
     dependency: transitive
     description:
@@ -238,7 +245,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.13"
+    version: "0.0.1-dev.14"
   term_glyph:
     dependency: transitive
     description:

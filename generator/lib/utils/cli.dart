@@ -3,7 +3,7 @@ import 'dart:io';
 const copierBin = 'copier';
 const copierTemplate = 'gh:hpi-studyu/copier-studyu';
 
-const nbConvertBin = 'conda run jupyter nbconvert';
+const nbConvertBin = 'jupyter nbconvert';
 
 class CliService {
   static Future<bool> runProcess(String executable, List<String> arguments) async {
@@ -22,7 +22,9 @@ class CliService {
   }
 
   static Future<void> generateCopierProject(String projectPath, String studyTitle) async {
-    File(projectPath).deleteSync(recursive: true);
+    try {
+      File(projectPath).deleteSync(recursive: true);
+    } catch (e) {}
     await runProcess(copierBin, [
       copierTemplate,
       projectPath,

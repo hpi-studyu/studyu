@@ -1,38 +1,38 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:generator/utils/notebook.dart';
 import 'package:studyou_core/env.dart' as env;
 
-const lineNumber = 'line-number';
 const supabaseToken = 'token';
 const studyId = 'study-id';
 
 late final ArgResults argResults;
 
+void loadEnv() {
+  env.loadEnv(Platform.environment);
+}
+
 void main(List<String> arguments) {
+  // load environment
+  loadEnv();
+
   exitCode = 0; // presume success
   final parser = ArgParser()
     ..addOption(supabaseToken, abbr: 't', mandatory: true)
     ..addOption(studyId, abbr: 's', mandatory: true);
 
   argResults = parser.parse(arguments);
+  final htmlFilePath = argResults.rest;
 
-  convertAndUploadNotebooks(argResults[supabaseToken] as String, argResults[studyId] as String);
+  generateNotebookHtml(argResults[supabaseToken] as String, argResults[studyId] as String, htmlFilePath.first);
 }
 
-Future<void> convertAndUploadNotebooks(String token, String studyId) async {
+Future<void> generateNotebookHtml(String token, String studyId, String htmlFilePath) async {
   final res = await env.client.auth.recoverSession(token);
   if (res.error != null) {
     print('Could not authenticate: ${res.error!.message}');
   }
 
-  await convertAndUploadNotebooks('.', studyId);
-}
-
-Future _handleError(String path) async {
-  if (await FileSystemEntity.isDirectory(path)) {
-    stderr.writeln('error: $path is a directory');
-  } else {
-    exitCode = 2;
-  }
+  await uploadNotebookToSupabase(htmlFilePath, studyId);
 }

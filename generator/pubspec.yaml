@@ -16,7 +16,7 @@ dependencies:
   shelf: ^1.1.0
   studyou_core:
     path: ../core
-  supabase: ^0.0.1-dev.13
+  supabase: ^0.0.1-dev.14
 
 dev_dependencies:
   lint: ^1.5.3
