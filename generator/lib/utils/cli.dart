@@ -1,10 +1,5 @@
 import 'dart:io';
 
-const copierBin = 'copier';
-const copierTemplate = 'gh:hpi-studyu/copier-studyu';
-
-const nbConvertBin = 'jupyter nbconvert';
-
 class CliService {
   static Future<bool> runProcess(String executable, List<String> arguments) async {
     final result = await Process.run(
@@ -22,6 +17,8 @@ class CliService {
   }
 
   static Future<void> generateCopierProject(String projectPath, String studyTitle) async {
+    const copierBin = 'copier';
+    const copierTemplate = 'gh:hpi-studyu/copier-studyu';
     try {
       File(projectPath).deleteSync(recursive: true);
     } catch (e) {}
@@ -35,6 +32,7 @@ class CliService {
   }
 
   static Future<void> generateNotebookHtml(String filePath) async {
+    const nbConvertBin = 'jupyter nbconvert';
     await runProcess(nbConvertBin, [
       '--execute',
       '--to',
@@ -43,6 +41,18 @@ class CliService {
       '--no-prompt',
       '--template',
       'nbconvert-template/',
+    ]);
+  }
+
+  static Future<void> generateSshKey({String filePath = 'gitlabkey'}) async {
+    // ssh-keygen -b 2048 -t rsa -f gitlabkey -q -N ""
+    const sshkeygenBin = 'ssh-keygen';
+    await runProcess(sshkeygenBin, [
+      '-f',
+      filePath,
+      '-q',
+      '-N',
+      '',
     ]);
   }
 }

@@ -12,7 +12,6 @@ import 'database.dart';
 import 'file.dart';
 
 Future<void> generateRepo(GitlabClient gl, String studyId) async {
-  print(env.client.auth.session()!.persistSessionString);
   print('Generating repo...');
   final generatedProjectPath = dot_env.env['PROJECT_PATH'] ?? 'generated';
 
@@ -30,11 +29,26 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   }
 
   // Generate ssh key
+  print('Generating RSA key pair...');
+  try {
+    File('gitlabkey.pub').deleteSync();
+    File('gitlabkey').deleteSync();
+  } catch (e) {}
 
-  print('Creating project variables for session and studyId');
+  await CliService.generateSshKey();
+  final public = File('gitlabkey.pub').readAsStringSync();
+  final private = File('gitlabkey').readAsStringSync();
+  print(public);
+  print(private);
+
+  print('Adding deploy key...');
+  await gl.addDeployKey(projectId: projectId, title: 'update_key', key: public, canPush: true);
+
+  print('Creating project variables for session, studyId and key');
   await gl.createProjectVariable(
       projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString);
   await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId);
+  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private);
 
   // Generate files from nbconvert-template copier CLI
   print('Generating project files with copier...');

@@ -35,6 +35,23 @@ class GitlabClient {
 
   static bool httpSuccess(int statusCode) => statusCode ~/ 200 == 1 && statusCode % 200 < 100;
 
+  Future<Map<String, dynamic>?> addDeployKey({
+    required String projectId,
+    required String title,
+    required String key,
+    bool canPush = false,
+  }) async {
+    final body = {'title': title, 'key': key, 'can_push': canPush};
+    final response = await _httpPostRequest(jsonEncode(body), 'projects/$projectId/deploy_keys');
+
+    if (httpSuccess(response.statusCode)) {
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    } else {
+      print(response.body);
+      print('Adding deploy key $title failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
+    }
+  }
+
   Future<Map<String, dynamic>?> makeCommit({
     required String projectId,
     required String message,
@@ -47,6 +64,7 @@ class GitlabClient {
     if (httpSuccess(response.statusCode)) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
+      print(response.body);
       print('Making commit failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
   }
@@ -62,7 +80,8 @@ class GitlabClient {
     if (httpSuccess(response.statusCode)) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
-      print('Creating variable failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
+      print(response.body);
+      print('Creating variable $key failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
   }
 
@@ -77,6 +96,7 @@ class GitlabClient {
     if (httpSuccess(response.statusCode)) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
+      print(response.body);
       print('Updating variable failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
   }
