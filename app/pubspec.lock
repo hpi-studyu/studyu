@@ -99,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  dotenv:
-    dependency: transitive
-    description:
-      name: dotenv
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0-nullsafety.0"
   ext_storage:
     dependency: "direct main"
     description:
@@ -168,7 +161,7 @@ packages:
       name: flutter_dotenv
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0-nullsafety.0"
+    version: "4.0.0-nullsafety.1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -182,7 +175,7 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0+1"
+    version: "5.0.0+3"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
@@ -239,7 +232,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.1"
+    version: "0.13.2"
   http_parser:
     dependency: transitive
     description:
@@ -386,7 +379,7 @@ packages:
       name: pdf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
+    version: "3.3.0"
   pedantic:
     dependency: transitive
     description:
@@ -539,6 +532,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  storage_client:
+    dependency: transitive
+    description:
+      name: storage_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1-dev.1"
   stream_channel:
     dependency: transitive
     description:
@@ -573,7 +573,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.13"
+    version: "0.0.1-dev.14"
   term_glyph:
     dependency: transitive
     description:

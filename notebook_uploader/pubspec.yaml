@@ -1,5 +1,5 @@
-name: generator
-description: A web server to generate/update Gitlab repos
+name: notebook_uploader
+description: A cli tool to upload html of jupyter notebooks to supabase
 version: 1.0.0
 
 publish_to: none
@@ -9,10 +9,7 @@ environment:
 
 dependencies:
   args: ^2.0.0
-  dotenv: ^3.0.0-nullsafety.0
   path: ^1.8.0
-  pretty_json: ^2.0.0
-  shelf: ^1.1.0
   studyou_core:
     path: ../core
   supabase: ^0.0.1-dev.14

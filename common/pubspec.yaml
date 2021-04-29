@@ -8,10 +8,13 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  flutter_dotenv: ^4.0.0-nullsafety.0
+  flutter:
+    sdk: flutter
+  flutter_dotenv: ^4.0.0-nullsafety.1
   shared_preferences: ^2.0.5
   studyou_core:
     path: ../core
 
 dev_dependencies:
   lint: ^1.5.3
+
