@@ -12,12 +12,10 @@ class VisualAnalogueQuestionWidget extends QuestionWidget {
   VisualAnalogueQuestionWidget({@required this.question, this.onDone});
 
   @override
-  State<VisualAnalogueQuestionWidget> createState() =>
-      _VisualAnalogueQuestionWidgetState();
+  State<VisualAnalogueQuestionWidget> createState() => _VisualAnalogueQuestionWidgetState();
 }
 
-class _VisualAnalogueQuestionWidgetState
-    extends State<VisualAnalogueQuestionWidget> {
+class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWidget> {
   double value;
 
   @override
@@ -48,10 +46,7 @@ class _VisualAnalogueQuestionWidgetState
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    Color(widget.question.minimumColor),
-                    Color(widget.question.maximumColor)
-                  ],
+                  colors: [Color(widget.question.minimumColor), Color(widget.question.maximumColor)],
                 ),
               ),
               constraints: BoxConstraints.expand(height: 4),
@@ -63,12 +58,10 @@ class _VisualAnalogueQuestionWidgetState
           onChanged: changed,
           min: widget.question.minimum,
           max: widget.question.maximum,
-          divisions: (widget.question.maximum - widget.question.minimum) ~/
-              widget.question.step,
+          divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
         ElevatedButton(
-          onPressed: () =>
-              widget.onDone(widget.question.constructAnswer(value)),
+          onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
           child: Text(AppLocalizations.of(context).done),
         )
       ],

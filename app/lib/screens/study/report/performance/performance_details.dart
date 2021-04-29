@@ -17,7 +17,8 @@ class PerformanceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final interventions = reportSubject.selectedInterventions.where((intervention) => !isBaseline(intervention)).toList();
+    final interventions =
+        reportSubject.selectedInterventions.where((intervention) => !isBaseline(intervention)).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -60,8 +61,8 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: reportSubject.study.observations.length,
-                  itemBuilder: (context, index) =>
-                      ObservationPerformanceBar(subject: reportSubject, observation: reportSubject.study.observations[index]),
+                  itemBuilder: (context, index) => ObservationPerformanceBar(
+                      subject: reportSubject, observation: reportSubject.study.observations[index]),
                 ),
               ],
             ),

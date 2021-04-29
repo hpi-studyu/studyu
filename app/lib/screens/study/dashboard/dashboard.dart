@@ -76,7 +76,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: subject.completedStudy
           ? StudyFinishedPlaceholder()
           : TaskOverview(
-          subject: subject,
+              subject: subject,
               scheduleToday: scheduleToday,
               interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon),
       bottomSheet: kDebugMode && !subject.completedStudy
