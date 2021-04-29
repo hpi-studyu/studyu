@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'core/**'
-      - 'generator/**'
+      - 'notebook_uploader/**'
       - '.github/**'
     branches:
       - master
