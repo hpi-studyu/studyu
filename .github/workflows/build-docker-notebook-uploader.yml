@@ -28,6 +28,6 @@ jobs:
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
         with:
-          file: generator/Dockerfile
+          file: notebook_uploader/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/hpi-studyu/notebook-uploader:${{ github.sha }},ghcr.io/hpi-studyu/notebook-uploader:latest
