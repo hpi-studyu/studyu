@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyou_core/env.dart' as env;
@@ -127,7 +128,7 @@ class AppState extends ChangeNotifier {
       options: ProviderOptions(
           //  This is not redundant
           // ignore: avoid_redundant_argument_values
-          redirectTo: env.authRedirectToUrl,
+          redirectTo: env.authRedirectToUrl(isWeb: kIsWeb),
           scopes: scopes),
     );
     if (res.error != null) {

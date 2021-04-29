@@ -7,6 +7,7 @@ import 'package:supabase/supabase.dart' show Provider;
 
 class LoginPage extends StatelessWidget {
   final _emailController = TextEditingController();
+
   final _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -77,7 +78,6 @@ class LoginPage extends StatelessWidget {
                             child: Text('Login', style: TextStyle(fontSize: 20)),
                           )),
                     ),
-                    //SizedBox(width: 64),
                     Spacer(),
                     Flexible(
                       flex: 6,
