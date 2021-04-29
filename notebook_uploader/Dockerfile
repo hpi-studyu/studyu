@@ -13,7 +13,7 @@ RUN dart compile exe bin/uploader.dart
 
 FROM python:latest
 
-RUN pip install jupyter nbconvert
+RUN pip install jupyter nbconvert pipreqsnb
 
 COPY --from=builder /app/bin/uploader.exe /usr/local/bin/uploader
 
