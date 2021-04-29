@@ -78,9 +78,6 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
     print(e);
   }
 
-  // Generate Notebook html from files nbconvert CLI
-  print('Generating html for all notebooks');
-  //await convertAndUploadNotebooks(generatedProjectPath, studyId);
   print('Deleting generated files...');
   File(generatedProjectPath).deleteSync(recursive: true);
   print('Finished generating project');
