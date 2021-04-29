@@ -25,11 +25,11 @@ Future<void> main(List<String> arguments) async {
   argResults = parser.parse(arguments);
   final htmlFilePath = argResults.rest;
 
-  await generateNotebookHtml(argResults[supabaseToken] as String, argResults[studyId] as String, htmlFilePath.first);
+  await uploadNotebook(argResults[supabaseToken] as String, argResults[studyId] as String, htmlFilePath.first);
   exit(0);
 }
 
-Future<void> generateNotebookHtml(String token, String studyId, String htmlFilePath) async {
+Future<void> uploadNotebook(String token, String studyId, String htmlFilePath) async {
   final res = await env.client.auth.recoverSession(token);
   if (res.error != null) {
     print('Could not authenticate: ${res.error!.message}');

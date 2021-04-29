@@ -14,13 +14,22 @@ Future<void> uploadNotebookToSupabase(String filePath, String studyId) async {
 }
 
 Future<void> _uploadToSupabaseStorage(String filePath, File file, String bucketId) async {
-  final res = await env.client.storage.from(bucketId).upload(filePath, file);
+  final res = await env.client.storage.from(bucketId).update(filePath, file);
+  print(res.data);
 
   if (res.hasError) {
-    print(res.error!.message);
-    exit(1);
-  } else {
-    print(res.data);
+    if (res.error!.statusCode == '404') {
+      print('Notebook does not exist. Use upload instead of update');
+      final res = await env.client.storage.from(bucketId).upload(filePath, file);
+      print(res.data);
+      if (res.hasError) {
+        print(res.error!.message);
+        exit(1);
+      }
+    } else {
+      print(res.error!.message);
+      exit(1);
+    }
   }
 }
 
