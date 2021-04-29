@@ -20,3 +20,5 @@ COPY --from=builder /app/bin/uploader.exe /usr/local/bin/uploader
 ADD notebook_uploader/nbconvert-template /nbconvert-template
 
 ADD notebook_uploader/generate-notebook-htmls.sh /generate-notebook-htmls.sh
+
+RUN chmod +x /generate-notebook-htmls.sh
