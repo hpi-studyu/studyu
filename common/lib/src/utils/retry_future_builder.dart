@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/material.dart';
 
 typedef CustomErrorWidgetBuilder = Widget Function(BuildContext context, dynamic error, void Function() reload);
 
@@ -92,6 +92,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             if (snapshot.hasError) {
+              // ignore: only_throw_errors
               if (kDebugMode) throw snapshot.error!;
 
               if (widget.errorWidgetBuilder != null) {

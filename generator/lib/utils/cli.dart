@@ -21,7 +21,9 @@ class CliService {
     const copierTemplate = 'gh:hpi-studyu/copier-studyu';
     try {
       File(projectPath).deleteSync(recursive: true);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
     await runProcess(copierBin, [
       copierTemplate,
       projectPath,

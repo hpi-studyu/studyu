@@ -33,7 +33,9 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   try {
     File('gitlabkey.pub').deleteSync();
     File('gitlabkey').deleteSync();
-  } catch (e) {}
+  } catch (e) {
+    print(e);
+  }
   await CliService.generateSshKey();
   final public = File('gitlabkey.pub').readAsStringSync();
   final private = File('gitlabkey').readAsStringSync();
