@@ -18,17 +18,30 @@ enum DesignerPage {
   save,
 }
 
+enum AppPage {
+  dashboard,
+  designer,
+  analytics,
+}
+
 class AppState extends ChangeNotifier {
   String _selectedStudyId;
+  String _selectedNotebook;
   Study draftStudy;
   bool skippedLogin = false;
   String authError;
+  String html = '<html><body>LOADING</body></html>';
   DesignerPage _selectedDesignerPage = DesignerPage.about;
+  AppPage appPage = AppPage.dashboard;
+
+  // ignore: prefer_function_declarations_over_variables
   Future<List<Study>> Function() researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
 
   AppState();
 
   String get selectedStudyId => _selectedStudyId;
+
+  String get selectedNotebook => _selectedNotebook;
 
   bool get isDesigner => draftStudy != null;
 
@@ -46,6 +59,11 @@ class AppState extends ChangeNotifier {
 
   void reloadResearcherDashboard() => researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
 
+  void reloadStudies() {
+    reloadResearcherDashboard();
+    notifyListeners();
+  }
+
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
 
   set selectedDesignerPage(DesignerPage page) {
@@ -54,9 +72,48 @@ class AppState extends ChangeNotifier {
   }
 
   void createStudy({DesignerPage page = DesignerPage.about}) {
+    appPage = AppPage.designer;
     draftStudy = Study.withId(env.client.auth.user().id);
     _selectedStudyId = null;
     _selectedDesignerPage = page;
+    notifyListeners();
+  }
+
+  Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
+    appPage = AppPage.designer;
+    draftStudy = await SupabaseQuery.getById<Study>(studyId);
+    _selectedStudyId = studyId;
+    _selectedDesignerPage = page;
+    notifyListeners();
+  }
+
+  Future<void> openNewStudy(Study study) async {
+    appPage = AppPage.designer;
+    draftStudy = study;
+    _selectedStudyId = study.id;
+    notifyListeners();
+  }
+
+  void goToDashboard() {
+    appPage = AppPage.dashboard;
+    _selectedStudyId = null;
+    _selectedNotebook = null;
+    draftStudy = null;
+    _selectedDesignerPage = DesignerPage.about;
+    reloadResearcherDashboard();
+    notifyListeners();
+  }
+
+  void goBackToAnalytics() {
+    appPage = AppPage.analytics;
+    _selectedNotebook = null;
+    notifyListeners();
+  }
+
+  void openAnalytics(String studyId, {String notebook}) {
+    appPage = AppPage.analytics;
+    _selectedStudyId = studyId;
+    _selectedNotebook = notebook;
     notifyListeners();
   }
 
@@ -76,32 +133,6 @@ class AppState extends ChangeNotifier {
       }
       notifyListeners();
     });
-  }
-
-  Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
-    draftStudy = await SupabaseQuery.getById<Study>(studyId);
-    _selectedStudyId = studyId;
-    _selectedDesignerPage = page;
-    notifyListeners();
-  }
-
-  Future<void> openNewStudy(Study study) async {
-    draftStudy = study;
-    _selectedStudyId = study.id;
-    notifyListeners();
-  }
-
-  void closeDesigner() {
-    _selectedStudyId = null;
-    draftStudy = null;
-    _selectedDesignerPage = DesignerPage.about;
-    reloadResearcherDashboard();
-    notifyListeners();
-  }
-
-  void reloadStudies() {
-    reloadResearcherDashboard();
-    notifyListeners();
   }
 
   Future<void> signIn(String email, String password) async {

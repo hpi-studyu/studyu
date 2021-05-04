@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_designer/analytics/jupyter_analytics_board.dart';
+import 'package:studyu_designer/analytics/notebook_overview.dart';
 import 'package:studyu_designer/widgets/login_page.dart';
 
 import 'dashboard.dart';
@@ -20,22 +22,35 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
       env.client.auth.getSessionFromUrl(uri);
     }
 
-    if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == DesignerPath.basePath) {
-      // Parses only with id /designer/:id and not /designer/
-      if (uri.pathSegments.length == 2 && uri.pathSegments[1].isNotEmpty) {
-        final page = enumFromString<DesignerPage>(DesignerPage.values, uri.pathSegments[1]);
-        if (page != null) {
-          return DesignerPath(page: page);
+    if (uri.pathSegments.isNotEmpty) {
+      if (uri.pathSegments.first == DesignerPath.basePath) {
+        // Parses only with id /designer/:id and not /designer/
+        if (uri.pathSegments.length == 2 && uri.pathSegments[1].isNotEmpty) {
+          final page = enumFromString<DesignerPage>(DesignerPage.values, uri.pathSegments[1]);
+          if (page != null) {
+            return DesignerPath(page: page);
+          }
+          return DesignerPath(studyId: uri.pathSegments[1]);
         }
-        return DesignerPath(studyId: uri.pathSegments[1]);
+        // /designer/:id/:page
+        if (uri.pathSegments.length == 3 && uri.pathSegments[1].isNotEmpty && uri.pathSegments[2].isNotEmpty) {
+          return DesignerPath(
+              studyId: uri.pathSegments[1],
+              page: enumFromString<DesignerPage>(DesignerPage.values, uri.pathSegments[2]));
+        }
+        return DesignerPath();
       }
-      // /designer/:id/:page
-      if (uri.pathSegments.length == 3 && uri.pathSegments[1].isNotEmpty && uri.pathSegments[2].isNotEmpty) {
-        return DesignerPath(
-            studyId: uri.pathSegments[1], page: enumFromString<DesignerPage>(DesignerPage.values, uri.pathSegments[2]));
+
+      if (uri.pathSegments.first == AnalyticsPath.basePath) {
+        if (uri.pathSegments.length == 2 && uri.pathSegments[1].isNotEmpty) {
+          return AnalyticsPath(studyId: uri.pathSegments[1]);
+        }
+        if (uri.pathSegments.length == 3 && uri.pathSegments[2].isNotEmpty) {
+          return AnalyticsPath(studyId: uri.pathSegments[1], notebook: uri.pathSegments[2]);
+        }
       }
-      return DesignerPath();
     }
+
     return HomePath();
   }
 
@@ -53,6 +68,13 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
         designerLocation += '/${configuration.page.toString().split('.')[1]}';
       }
       return RouteInformation(location: designerLocation);
+    }
+    if (configuration is AnalyticsPath) {
+      var analyticsLocation = '/${AnalyticsPath.basePath}/${configuration.studyId}';
+      if (configuration.notebook != null) {
+        analyticsLocation += '/${configuration.notebook}';
+      }
+      return RouteInformation(location: analyticsLocation);
     }
     return null;
   }
@@ -75,6 +97,8 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
   RoutePath get currentConfiguration {
     if (appState.isDesigner) {
       return DesignerPath(studyId: appState.selectedStudyId, page: appState.selectedDesignerPage);
+    } else if (appState.appPage == AppPage.analytics) {
+      return AnalyticsPath(studyId: appState.selectedStudyId, notebook: appState.selectedNotebook);
     }
     return HomePath();
   }
@@ -96,8 +120,18 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
           ),
         if (appState.isDesigner && appState.loggedIn)
           MaterialPage(
-            key: ValueKey('Designer'),
+            key: ValueKey('Designer ${appState.selectedStudyId}'),
             child: Designer(studyId: appState.selectedStudyId),
+          ),
+        if (appState.appPage == AppPage.analytics)
+          MaterialPage(
+            key: ValueKey('Analytics ${appState.selectedStudyId}'),
+            child: NotebookOverview(studyId: appState.selectedStudyId),
+          ),
+        if (appState.appPage == AppPage.analytics && appState.selectedNotebook != null)
+          MaterialPage(
+            key: ValueKey('Analytics ${appState.selectedStudyId} ${appState.selectedNotebook}'),
+            child: JupyterAnalysisBoard(studyId: appState.selectedStudyId, notebook: appState.selectedNotebook),
           ),
       ],
       onPopPage: (route, result) {
@@ -105,10 +139,12 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
           return false;
         }
 
-        if (appState.isDesigner) {
+        if (appState.isDesigner || (appState.appPage == AppPage.analytics && appState.selectedNotebook == null)) {
           appState
-            ..closeDesigner()
+            ..goToDashboard()
             ..reloadStudies();
+        } else if (appState.selectedNotebook != null) {
+          appState.goBackToAnalytics();
         }
         notifyListeners();
         return true;
@@ -119,13 +155,15 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
   @override
   Future<void> setNewRoutePath(RoutePath path) async {
     if (path is HomePath) {
-      appState.closeDesigner();
+      appState.goToDashboard();
     } else if (path is DesignerPath) {
       if (path.studyId != null) {
         appState.openStudy(path.studyId, page: path.page);
       } else {
         appState.createStudy(page: path.page);
       }
+    } else if (path is AnalyticsPath) {
+      appState.openAnalytics(path.studyId, notebook: path.notebook);
     }
   }
 }
@@ -140,4 +178,12 @@ class DesignerPath implements RoutePath {
   final String studyId;
 
   DesignerPath({this.studyId, this.page = DesignerPage.about});
+}
+
+class AnalyticsPath implements RoutePath {
+  static const String basePath = 'analytics';
+  final String studyId;
+  final String notebook;
+
+  AnalyticsPath({@required this.studyId, this.notebook});
 }

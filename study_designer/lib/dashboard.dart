@@ -297,6 +297,13 @@ class StudyCard extends StatelessWidget {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  IconButton(
+                    icon: Icon(MdiIcons.notebook, color: Colors.blue),
+                    tooltip: 'Show analytics',
+                    onPressed: () async {
+                      context.read<AppState>().openAnalytics(study.id);
+                    },
+                  ),
                   if (study.repo == null)
                     IconButton(
                       icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
@@ -326,7 +333,7 @@ class StudyCard extends StatelessWidget {
                   )
                 ],
               ),
-        onTap: () => context.read<AppState>().openStudy(study.id));
+        onTap: () => context.read<AppState>().loggedIn ? context.read<AppState>().openStudy(study.id) : null);
   }
 }
 
