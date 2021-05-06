@@ -17,7 +17,7 @@ class JupyterAnalysisBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notebook'),
+        title: Text(notebook.replaceAll(RegExp(r'\.\w*$'), '')),
       ),
       body: RetryFutureBuilder<String>(
         tryFunction: () => downloadFromStorage('$studyId/$notebook'),

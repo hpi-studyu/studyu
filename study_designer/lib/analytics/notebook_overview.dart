@@ -35,7 +35,7 @@ class NotebookOverview extends StatelessWidget {
                 children: notebooks
                     .map((notebookFile) => ListTile(
                           title: Center(
-                              child: Text(notebookFile.name,
+                              child: Text(notebookFile.name.replaceAll(RegExp(r'\.\w*$'), ''),
                                   style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
                           onTap: () => context.read<AppState>().openAnalytics(studyId, notebook: notebookFile.name),
                         ))
