@@ -5,6 +5,7 @@ import '../models/tables/app_config.dart';
 import '../models/tables/repo.dart';
 import '../models/tables/study.dart';
 import '../models/tables/study_subject.dart';
+import '../models/tables/study_token.dart';
 import '../models/tables/subject_progress.dart';
 
 abstract class SupabaseObject {
@@ -25,6 +26,8 @@ String tableName(Type cls) {
       return AppConfig.tableName;
     case Repo:
       return Repo.tableName;
+    case StudyToken:
+      return StudyToken.tableName;
     default:
       print('$cls is not a supported Supabase type');
       throw TypeError();
@@ -44,6 +47,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return AppConfig.fromJson(json) as T;
       case Repo:
         return Repo.fromJson(json) as T;
+      case StudyToken:
+        return StudyToken.fromJson(json) as T;
       default:
         print('$T is not a supported Supabase type');
         throw TypeError();
