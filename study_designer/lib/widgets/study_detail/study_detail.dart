@@ -12,10 +12,29 @@ import '../../analytics/notebook_overview.dart';
 import '../../models/app_state.dart';
 import '../../util/repo_manager.dart';
 
-class StudyDetails extends StatelessWidget {
+class StudyDetails extends StatefulWidget {
   final String studyId;
 
   const StudyDetails(this.studyId, {Key key}) : super(key: key);
+
+  @override
+  _StudyDetailsState createState() => _StudyDetailsState();
+}
+
+class _StudyDetailsState extends State<StudyDetails> {
+  Future<Study> Function() getStudy;
+
+  @override
+  void initState() {
+    super.initState();
+    getStudy = () => SupabaseQuery.getById<Study>(widget.studyId, selectedColumns: ['*', 'repo(*)']);
+  }
+
+  void reloadPage() {
+    setState(() {
+      getStudy = () => SupabaseQuery.getById<Study>(widget.studyId, selectedColumns: ['*', 'repo(*)']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +46,13 @@ class StudyDetails extends StatelessWidget {
       body: Padding(
           padding: const EdgeInsets.all(16),
           child: RetryFutureBuilder<Study>(
-            tryFunction: () => SupabaseQuery.getById<Study>(studyId, selectedColumns: ['*', 'repo(*)']),
+            tryFunction: getStudy,
             successBuilder: (context, study) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Header(study: study),
+                Header(study: study, reload: reloadPage),
                 SizedBox(height: 32),
-                Text('Gitlab Analysis Project', style: theme.textTheme.headline6),
-                SizedBox(height: 8),
-                AnalysisProjectOverview(study: study),
                 Text('Notebooks', style: theme.textTheme.headline6),
                 SizedBox(height: 8),
                 NotebookOverview(studyId: study.id),
@@ -47,10 +63,18 @@ class StudyDetails extends StatelessWidget {
   }
 }
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
   final Study study;
+  final Function() reload;
 
-  const Header({@required this.study, Key key}) : super(key: key);
+  const Header({@required this.study, this.reload, Key key}) : super(key: key);
+
+  @override
+  _HeaderState createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,90 +83,79 @@ class Header extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(MdiIcons.fromString(study.iconName), color: theme.accentColor),
+            Icon(MdiIcons.fromString(widget.study.iconName), color: theme.accentColor),
             SizedBox(width: 8),
-            Text(study.title, style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),
+            Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),
           ],
         ),
         Spacer(),
         ButtonBar(
           children: [
             TextButton.icon(
-                onPressed: () => context.read<AppState>().openDesigner(study.id),
+                onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
                 icon: Icon(Icons.edit),
                 label: Text('Edit')),
             TextButton.icon(
                 onPressed: () async {
-                  final dl = ResultDownloader(study: study);
+                  final dl = ResultDownloader(study: widget.study);
                   final results = await dl.loadAllResults();
                   for (final entry in results.entries) {
-                    downloadFile(ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
+                    downloadFile(
+                        ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
                   }
                 },
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class AnalysisProjectOverview extends StatefulWidget {
-  final Study study;
-
-  const AnalysisProjectOverview({@required this.study, Key key}) : super(key: key);
-
-  @override
-  _AnalysisProjectOverviewState createState() => _AnalysisProjectOverviewState();
-}
-
-class _AnalysisProjectOverviewState extends State<AnalysisProjectOverview> {
-  bool _creatingRepo = false;
-
-  @override
-  Widget build(BuildContext context) {
-    if (_creatingRepo) return CircularProgressIndicator();
-
-    final repo = widget.study.repo;
-
-    if (repo == null) {
-      return TextButton.icon(
-        icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
-        label: Text('Create analysis project'),
-        onPressed: () async {
-          setState(() {
-            _creatingRepo = true;
-          });
-          await generateRepo(widget.study.id);
-          context.read<AppState>().reloadStudies();
-          setState(() {
-            _creatingRepo = false;
-          });
-        },
-      );
-    }
-
-    return Row(
-      children: [
-        SelectableText(repo.projectId),
-        Spacer(),
-        ButtonBar(
-          children: [
-            TextButton.icon(
-                onPressed: () {
-                  launch('https://gitlab.com/projects/${repo.projectId}');
+            if (widget.study.repo == null)
+              TextButton.icon(
+                icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
+                label: Text('Create analysis project'),
+                onPressed: () async {
+                  setState(() {
+                    _loading = true;
+                  });
+                  try {
+                    await generateRepo(widget.study.id);
+                    widget.reload();
+                  } catch (e) {
+                    print(e);
+                  } finally {
+                    setState(() {
+                      _loading = false;
+                    });
+                  }
                 },
-                icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
-                label: Text('Open Gitlab project')),
-            TextButton.icon(
-              icon: Icon(MdiIcons.databaseRefresh, color: Colors.green),
-              label: Text('Update data of git project and notebooks'),
-              onPressed: () => updateRepo(widget.study.id, repo.projectId),
-            ),
+              )
+            else ...[
+              TextButton.icon(
+                  onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
+                  icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
+                  label: Text('Open Gitlab project')),
+              TextButton.icon(
+                icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
+                label: Text('Update data of git project and notebooks'),
+                onPressed: () async {
+                  setState(() {
+                    _loading = true;
+                  });
+                  try {
+                    await updateRepo(widget.study.id, widget.study.repo.projectId);
+                    widget.reload();
+                  } catch (e) {
+                    print(e);
+                  } finally {
+                    setState(() {
+                      _loading = false;
+                    });
+                  }
+                },
+              ),
+            ]
           ],
         ),
       ],
     );
   }
 }
+
+const buttonProgressIndicator = SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 3));
