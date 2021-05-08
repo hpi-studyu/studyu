@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:csv/csv.dart';
-import 'package:ext_storage/ext_storage.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode, kReleaseMode;
+import 'package:flutter/foundation.dart' show kDebugMode, kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
-import 'package:studyu_designer/util/repo_manager.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'models/app_state.dart';
@@ -248,30 +243,6 @@ class StudyCard extends StatelessWidget {
 
   const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
 
-  Future<void> downloadFile(String contentString, String filename) async {
-    if (kIsWeb) {
-      final bytes = utf8.encode(contentString);
-      final blob = html.Blob([bytes]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.document.createElement('a') as html.AnchorElement
-        ..href = url
-        ..style.display = 'none'
-        ..download = filename;
-      html.document.body.children.add(anchor);
-
-      anchor.click();
-
-      html.document.body.children.remove(anchor);
-      html.Url.revokeObjectUrl(url);
-    } else {
-      final dirPath = Platform.isIOS
-          ? (await getApplicationDocumentsDirectory()).path
-          : await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOCUMENTS);
-
-      File('$dirPath/$filename').writeAsString(contentString);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final icon =
@@ -298,28 +269,6 @@ class StudyCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: Icon(MdiIcons.notebook, color: Colors.blue),
-                    tooltip: 'Show analytics',
-                    onPressed: () async {
-                      context.read<AppState>().openAnalytics(study.id);
-                    },
-                  ),
-                  if (study.repo == null)
-                    IconButton(
-                      icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
-                      tooltip: 'Create analysis git project',
-                      onPressed: () async {
-                        await generateRepo(study.id);
-                        context.read<AppState>().reloadStudies();
-                      },
-                    )
-                  else
-                    IconButton(
-                      icon: Icon(MdiIcons.databaseRefresh, color: Colors.green),
-                      tooltip: 'Create analysis git project',
-                      onPressed: () => updateRepo(study.id, study.repo.projectId),
-                    ),
-                  IconButton(
                     icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
                     tooltip: AppLocalizations.of(context).export_csv,
                     onPressed: () async {
@@ -333,7 +282,7 @@ class StudyCard extends StatelessWidget {
                   )
                 ],
               ),
-        onTap: () => context.read<AppState>().loggedIn ? context.read<AppState>().openStudy(study.id) : null);
+        onTap: () => context.read<AppState>().openDetails(study.id));
   }
 }
 

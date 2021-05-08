@@ -18,12 +18,6 @@ enum DesignerPage {
   save,
 }
 
-enum AppPage {
-  dashboard,
-  designer,
-  analytics,
-}
-
 class AppState extends ChangeNotifier {
   String _selectedStudyId;
   String _selectedNotebook;
@@ -32,7 +26,6 @@ class AppState extends ChangeNotifier {
   String authError;
   String html = '<html><body>LOADING</body></html>';
   DesignerPage _selectedDesignerPage = DesignerPage.about;
-  AppPage appPage = AppPage.dashboard;
 
   // ignore: prefer_function_declarations_over_variables
   Future<List<Study>> Function() researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
@@ -43,9 +36,15 @@ class AppState extends ChangeNotifier {
 
   String get selectedNotebook => _selectedNotebook;
 
+  bool get isDetails => _selectedStudyId != null && _selectedNotebook == null && draftStudy == null;
+
   bool get isDesigner => draftStudy != null;
 
+  bool get isNotebook => _selectedNotebook != null;
+
   bool get loggedIn => env.client.auth.session() != null;
+
+  bool get showLoginPage => !loggedIn && !skippedLogin;
 
   void skipLogin() {
     skippedLogin = true;
@@ -72,15 +71,13 @@ class AppState extends ChangeNotifier {
   }
 
   void createStudy({DesignerPage page = DesignerPage.about}) {
-    appPage = AppPage.designer;
     draftStudy = Study.withId(env.client.auth.user().id);
     _selectedStudyId = null;
     _selectedDesignerPage = page;
     notifyListeners();
   }
 
-  Future<void> openStudy(String studyId, {DesignerPage page = DesignerPage.about}) async {
-    appPage = AppPage.designer;
+  Future<void> openDesigner(String studyId, {DesignerPage page = DesignerPage.about}) async {
     draftStudy = await SupabaseQuery.getById<Study>(studyId);
     _selectedStudyId = studyId;
     _selectedDesignerPage = page;
@@ -88,14 +85,12 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> openNewStudy(Study study) async {
-    appPage = AppPage.designer;
     draftStudy = study;
     _selectedStudyId = study.id;
     notifyListeners();
   }
 
   void goToDashboard() {
-    appPage = AppPage.dashboard;
     _selectedStudyId = null;
     _selectedNotebook = null;
     draftStudy = null;
@@ -104,14 +99,18 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void goBackToAnalytics() {
-    appPage = AppPage.analytics;
+  void goBackToDetails() {
     _selectedNotebook = null;
+    draftStudy = null;
     notifyListeners();
   }
 
-  void openAnalytics(String studyId, {String notebook}) {
-    appPage = AppPage.analytics;
+  Future<void> openDetails(String studyId) async {
+    _selectedStudyId = studyId;
+    notifyListeners();
+  }
+
+  Future<void> openNotebook(String studyId, String notebook) async {
     _selectedStudyId = studyId;
     _selectedNotebook = notebook;
     notifyListeners();
@@ -139,6 +138,7 @@ class AppState extends ChangeNotifier {
     final res = await env.client.auth.signIn(email: email, password: password);
     if (res.error != null) {
       authError = res.error.message;
+      reloadResearcherDashboard();
       notifyListeners();
     }
   }
@@ -147,6 +147,7 @@ class AppState extends ChangeNotifier {
     final res = await env.client.auth.signUp(email, password);
     if (res.error != null) {
       authError = res.error.message;
+      reloadResearcherDashboard();
       notifyListeners();
     }
   }
@@ -164,6 +165,7 @@ class AppState extends ChangeNotifier {
     );
     if (res.error != null) {
       authError = res.error.message;
+      reloadResearcherDashboard();
       notifyListeners();
     } else {
       launch(res.url);
@@ -174,6 +176,7 @@ class AppState extends ChangeNotifier {
     final res = await env.client.auth.signOut();
     if (res.error != null) {
       authError = res.error.message;
+      reloadResearcherDashboard();
       notifyListeners();
     }
   }

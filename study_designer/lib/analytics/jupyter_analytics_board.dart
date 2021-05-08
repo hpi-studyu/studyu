@@ -3,11 +3,11 @@ import 'package:studyu_designer/util/storage_helper.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:webviewx/webviewx.dart';
 
-class JupyterAnalysisBoard extends StatelessWidget {
+class NotebookViewer extends StatelessWidget {
   final String studyId;
   final String notebook;
 
-  const JupyterAnalysisBoard({
+  const NotebookViewer({
     @required this.studyId,
     @required this.notebook,
     Key key,
