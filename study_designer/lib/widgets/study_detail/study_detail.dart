@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
 import 'package:studyu_designer/util/result_downloader.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../analytics/notebook_overview.dart';
 import '../../models/app_state.dart';
@@ -122,12 +123,14 @@ class _AnalysisProjectOverviewState extends State<AnalysisProjectOverview> {
 
     return Row(
       children: [
-        Text(widget.study.repo?.projectId),
+        SelectableText(widget.study.repo?.projectId),
         Spacer(),
         ButtonBar(
           children: [
             TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  launch('https://gitlab.com/projects/${widget.study.repo?.projectId}');
+                },
                 icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
                 label: Text('Open Gitlab project')),
             TextButton.icon(
