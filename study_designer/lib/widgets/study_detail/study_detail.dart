@@ -104,7 +104,9 @@ class _AnalysisProjectOverviewState extends State<AnalysisProjectOverview> {
   Widget build(BuildContext context) {
     if (_creatingRepo) return CircularProgressIndicator();
 
-    if (widget.study.repo == null) {
+    final repo = widget.study.repo;
+
+    if (repo == null) {
       return TextButton.icon(
         icon: Icon(MdiIcons.git, color: Color(0xfff1502f)),
         label: Text('Create analysis project'),
@@ -123,20 +125,20 @@ class _AnalysisProjectOverviewState extends State<AnalysisProjectOverview> {
 
     return Row(
       children: [
-        SelectableText(widget.study.repo?.projectId),
+        SelectableText(repo.projectId),
         Spacer(),
         ButtonBar(
           children: [
             TextButton.icon(
                 onPressed: () {
-                  launch('https://gitlab.com/projects/${widget.study.repo?.projectId}');
+                  launch('https://gitlab.com/projects/${repo.projectId}');
                 },
                 icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
                 label: Text('Open Gitlab project')),
             TextButton.icon(
               icon: Icon(MdiIcons.databaseRefresh, color: Colors.green),
               label: Text('Update data of git project and notebooks'),
-              onPressed: () => updateRepo(widget.study.id, widget.study.repo.projectId),
+              onPressed: () => updateRepo(widget.study.id, repo.projectId),
             ),
           ],
         ),
