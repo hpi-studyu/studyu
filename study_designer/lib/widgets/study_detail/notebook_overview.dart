@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart';
 
-import '../models/app_state.dart';
-import '../util/storage_helper.dart';
+import '../../models/app_state.dart';
+import '../../util/storage_helper.dart';
 
 class NotebookOverview extends StatelessWidget {
   final String studyId;

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:studyou_core/env.dart' as env;
 import 'package:uuid/uuid.dart';
 
-import 'analytics/jupyter_analytics_board.dart';
 import 'dashboard.dart';
 import 'designer.dart';
 import 'models/app_state.dart';
 import 'widgets/login_page.dart';
-import 'widgets/study_detail/study_detail.dart';
+import 'widgets/study_detail/jupyter_analytics_board.dart';
+import 'widgets/study_detail/study_details.dart';
 
 /// Transforms String to Enum value. Dart does not have support for this (yet)
 T enumFromString<T>(Iterable<T> values, String value) {

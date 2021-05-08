@@ -8,9 +8,9 @@ import 'package:studyu_designer/util/result_downloader.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../analytics/notebook_overview.dart';
 import '../../models/app_state.dart';
 import '../../util/repo_manager.dart';
+import 'notebook_overview.dart';
 
 class StudyDetails extends StatefulWidget {
   final String studyId;
