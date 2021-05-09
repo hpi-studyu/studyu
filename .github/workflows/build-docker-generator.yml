@@ -30,9 +30,27 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.RUN_SA_KEY }}
+          project_id: ${{ secrets.RUN_PROJECT }}
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
         with:
           file: generator/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/hpi-studyu/generator:${{ github.sha }},ghcr.io/hpi-studyu/generator:latest
+          tags: ghcr.io/hpi-studyu/generator:${{ github.sha }},ghcr.io/hpi-studyu/generator:latest,gcr.io/${{ secrets.RUN_PROJECT }}/${{ env.SERVICE_NAME }}:latest
+      - name: Deploy
+        run: |
+          gcloud run deploy "$SERVICE_NAME" \
+          --region "$RUN_REGION" \
+          --image gcr.io/${{ secrets.RUN_PROJECT }}/$SERVICE_NAME \
+          --platform managed \
+          --allow-unauthenticated \
+          --project ${{ secrets.RUN_PROJECT }}
