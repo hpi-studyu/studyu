@@ -3,7 +3,7 @@ FROM google/dart as builder
 WORKDIR /app
 
 RUN mkdir /core
-ADD ../core /core/
+ADD core /core/
 ADD generator/pubspec.* /app/
 RUN pub get
 ADD generator/. /app

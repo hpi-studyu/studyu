@@ -3,7 +3,7 @@ FROM google/dart as builder
 WORKDIR /app
 
 RUN mkdir /core
-ADD ../core /core/
+ADD core /core/
 ADD notebook_uploader/pubspec.* /app/
 RUN pub get
 ADD notebook_uploader/. /app
