@@ -1,11 +1,5 @@
 import 'package:supabase/supabase.dart';
 
-// load env from envs/.env or from the filename specified in the ENV runtime-variable
-String envFilePath() {
-  const env = String.fromEnvironment('ENV');
-  return env.isNotEmpty ? 'envs/$env' : 'envs/.env';
-}
-
 final dotEnv = <String, String>{};
 
 void loadEnv(Map<String, String> env) {

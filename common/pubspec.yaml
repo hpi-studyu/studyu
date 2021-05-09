@@ -18,3 +18,9 @@ dependencies:
 dev_dependencies:
   lint: ^1.5.3
 
+flutter:
+  generate: true
+
+  assets:
+    - packages/studyu_flutter_common/envs/.env
+    - packages/studyu_flutter_common/envs/.env.local
