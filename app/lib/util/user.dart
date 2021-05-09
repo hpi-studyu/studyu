@@ -21,12 +21,18 @@ class UserQueries {
 
   static Future<bool> recoverSession() async {
     final prefs = await SharedPreferences.getInstance();
-    final res = await env.client.auth.recoverSession(prefs.getString(sessionKey));
+    var res = await env.client.auth.recoverSession(prefs.getString(sessionKey));
+
+    if (res.error != null) {
+      print(res.error.message);
+      res = await env.client.auth.signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
+    }
 
     if (res.error == null && env.client.auth.session() != null) {
-      storeSession(env.client.auth.session().persistSessionString);
+      await storeSession(env.client.auth.session().persistSessionString);
       return true;
     }
+    print(res.error);
     return false;
   }
 
