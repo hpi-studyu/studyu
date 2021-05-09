@@ -35,7 +35,7 @@ jobs:
         with:
           file: generator/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/hpi-studyu/generator:${{ github.sha }},ghcr.io/hpi-studyu/generator:latest,gcr.io/${{ secrets.RUN_PROJECT }}/${{ env.SERVICE_NAME }}:latest
+          tags: ghcr.io/hpi-studyu/generator:${{ github.sha }},ghcr.io/hpi-studyu/generator:latest
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@master
         with:
@@ -46,6 +46,10 @@ jobs:
       - name: Configure Docker
         run: |
           gcloud auth configure-docker
+
+      - name: Build
+        run: |
+          docker build -t gcr.io/${{ secrets.RUN_PROJECT }}/${{ env.SERVICE_NAME }}:latest -f generator/Dockerfile .
 
       - name: Push
         run: |
