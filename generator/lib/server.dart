@@ -9,7 +9,7 @@ import 'package:studyou_core/env.dart' as env;
 import 'utils/gitlab.dart';
 
 // For Google Cloud Run, set _hostname to '0.0.0.0'.
-const _hostname = 'localhost';
+const _hostname = '0.0.0.0';
 
 Future<HttpServer> startServer(List<String> args) async {
   final parser = ArgParser()..addOption('port', abbr: 'p');
