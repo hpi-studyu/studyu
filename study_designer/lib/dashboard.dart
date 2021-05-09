@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:csv/csv.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'models/app_state.dart';
 import 'util/localization.dart';
-import 'util/result_downloader.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -265,23 +263,7 @@ class StudyCard extends StatelessWidget {
                   }
                 },
               )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(MdiIcons.tableArrowDown, color: Colors.purple),
-                    tooltip: AppLocalizations.of(context).export_csv,
-                    onPressed: () async {
-                      final dl = ResultDownloader(study: study);
-                      final results = await dl.loadAllResults();
-                      for (final entry in results.entries) {
-                        downloadFile(
-                            ListToCsvConverter().convert(entry.value), '${study.id}.${entry.key.filename}.csv');
-                      }
-                    },
-                  )
-                ],
-              ),
+            : null,
         onTap: () => context.read<AppState>().openDetails(study.id));
   }
 }
