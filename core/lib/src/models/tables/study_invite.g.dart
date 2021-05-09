@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'study_token.dart';
+part of 'study_invite.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudyToken _$StudyTokenFromJson(Map<String, dynamic> json) {
-  return StudyToken(
-    json['token'] as String,
+StudyInvite _$StudyInviteFromJson(Map<String, dynamic> json) {
+  return StudyInvite(
+    json['code'] as String,
     json['studyId'] as String,
   );
 }
 
-Map<String, dynamic> _$StudyTokenToJson(StudyToken instance) =>
+Map<String, dynamic> _$StudyInviteToJson(StudyInvite instance) =>
     <String, dynamic>{
-      'token': instance.token,
+      'code': instance.code,
       'studyId': instance.studyId,
     };
