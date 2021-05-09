@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: Publish Notebook Uploader Docker image
 on:
   workflow_dispatch:
   push:

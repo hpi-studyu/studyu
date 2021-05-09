@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: Publish Generator Docker image and deploy to Google Cloud Run
 on:
   workflow_dispatch:
   push:
