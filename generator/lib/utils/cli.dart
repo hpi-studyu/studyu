@@ -33,19 +33,6 @@ class CliService {
     ]);
   }
 
-  static Future<void> generateNotebookHtml(String filePath) async {
-    const nbConvertBin = 'jupyter nbconvert';
-    await runProcess(nbConvertBin, [
-      '--execute',
-      '--to',
-      'html',
-      filePath,
-      '--no-prompt',
-      '--template',
-      'nbconvert-template/',
-    ]);
-  }
-
   static Future<void> generateSshKey({String filePath = 'gitlabkey'}) async {
     // ssh-keygen -b 2048 -t rsa -f gitlabkey -q -N ""
     const sshkeygenBin = 'ssh-keygen';
