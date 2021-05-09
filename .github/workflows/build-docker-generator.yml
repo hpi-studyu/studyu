@@ -40,7 +40,7 @@ jobs:
       - name: Configure Docker
         run: |
           gcloud auth configure-docker
-      - name: Push to GitHub Packages
+      - name: Push to GitHub and Google Registry
         uses: docker/build-push-action@v2
         with:
           file: generator/Dockerfile
