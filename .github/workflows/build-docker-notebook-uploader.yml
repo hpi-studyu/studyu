@@ -5,7 +5,7 @@ on:
     paths:
       - 'core/**'
       - 'notebook_uploader/**'
-      - '.github/**'
+      - '.github/workflows/build-docker-notebook-uploader.yml'
     branches:
       - master
       - dev
