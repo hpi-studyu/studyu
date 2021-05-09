@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_ID: ${{ secrets.RUN_PROJECT }}
   RUN_REGION: europe-west1
   SERVICE_NAME: studyu-designer
 
