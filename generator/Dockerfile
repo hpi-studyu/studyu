@@ -19,4 +19,4 @@ COPY --from=builder /app/bin/main.exe /usr/local/bin/generator
 
 ADD generator/.env .env
 
-CMD ["/usr/local/bin/generator", "--port", "80"]
+CMD ["/usr/local/bin/generator"]
