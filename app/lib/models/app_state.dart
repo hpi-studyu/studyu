@@ -8,6 +8,7 @@ class AppState {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
   StudySubject activeSubject;
+  String inviteCode;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   /// Context used for FlutterLocalNotificationsPlugin

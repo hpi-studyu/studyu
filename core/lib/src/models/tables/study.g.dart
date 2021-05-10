@@ -105,4 +105,5 @@ const _$StudyVisibilityEnumMap = {
   StudyVisibility.public: 'public',
   StudyVisibility.private: 'private',
   StudyVisibility.organization: 'organization',
+  StudyVisibility.invite: 'invite',
 };

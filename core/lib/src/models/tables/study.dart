@@ -9,7 +9,7 @@ import 'repo.dart';
 
 part 'study.g.dart';
 
-enum StudyVisibility { public, private, organization }
+enum StudyVisibility { public, private, organization, invite }
 
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study> {
@@ -63,6 +63,6 @@ class Study extends SupabaseObjectFunctions<Study> {
           /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  static Future<List<Study>> publishedStudies() async => SupabaseQuery.extractSupabaseList<Study>(
-      await env.client.from(tableName).select().eq('published', true).execute());
+  static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
+      await env.client.from(tableName).select().eq('published', true).eq('visibility', 'public').execute());
 }

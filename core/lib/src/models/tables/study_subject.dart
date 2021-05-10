@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
 import 'package:uuid/uuid.dart';
-import 'package:fhir/r4.dart' as fhir;
 
 import '../../env/env.dart' as env;
 import '../../util/extensions.dart';
@@ -26,6 +26,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   late String userId;
   DateTime? startedAt;
   late List<String> selectedInterventionIds;
+  String? inviteCode;
 
   @JsonKey(ignore: true)
   late Study study;
@@ -44,7 +45,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
 
-  StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds)
+  StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds, this.inviteCode)
       : id = Uuid().v4(),
         studyId = study.id;
 
