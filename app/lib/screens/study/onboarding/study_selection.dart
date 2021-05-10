@@ -66,7 +66,6 @@ class StudySelectionScreen extends StatelessWidget {
                   tryFunction: () async => Study.publishedPublicStudies(),
                   successBuilder: (BuildContext context, List<Study> studies) {
                     return ListView.builder(
-                        shrinkWrap: true,
                         itemCount: studies.length,
                         itemBuilder: (context, index) {
                           return Hero(
