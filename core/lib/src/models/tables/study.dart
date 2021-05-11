@@ -5,7 +5,6 @@ import 'package:uuid/uuid.dart';
 import '../../env/env.dart' as env;
 import '../../util/supabase_object.dart';
 import '../models.dart';
-import 'repo.dart';
 
 part 'study.g.dart';
 
@@ -41,6 +40,9 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(ignore: true)
   Repo? repo;
 
+  @JsonKey(ignore: true)
+  List<StudyInvite>? invites;
+
   Study(this.id, this.userId);
 
   Study.withId(this.userId) : id = Uuid().v4();
@@ -50,6 +52,10 @@ class Study extends SupabaseObjectFunctions<Study> {
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
       study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+    }
+    final List? invites = json['study_invite'] as List?;
+    if (invites != null) {
+      study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
     }
     return study;
   }
