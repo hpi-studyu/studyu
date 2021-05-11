@@ -104,8 +104,7 @@ class InviteCodeDialog extends StatefulWidget {
 
 class _InviteCodeDialogState extends State<InviteCodeDialog> {
   final _controller = TextEditingController();
-  String errorMessage = 'hello';
-  final _formKey = GlobalKey<FormState>();
+  String errorMessage;
 
   @override
   void dispose() {
@@ -114,45 +113,42 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => Form(
-        key: _formKey,
-        child: AlertDialog(
-          title: Text('Private study invite code'),
-          content: TextFormField(
-            controller: _controller,
-            validator: (_) => errorMessage,
-            autovalidateMode: AutovalidateMode.always,
-            decoration: InputDecoration(labelText: 'Invite code'),
-          ),
-          actions: [
-            OutlinedButton.icon(
-              icon: Icon(Icons.arrow_forward),
-              label: Text('Next'),
-              onPressed: () async {
-                final res =
-                    await env.client.rpc('get_study_from_invite', params: {'invite_code': _controller.text}).execute();
-                print(res.data);
-                if (res.error != null) {
-                  print(res.error.message);
-                  setState(() {
-                    errorMessage = res.error.message;
-                  });
-                } else if (res.data == null) {
-                  setState(() {
-                    errorMessage = 'Not a valid invite code';
-                  });
-                } else {
-                  setState(() {
-                    errorMessage = null;
-                  });
-                  final study = await SupabaseQuery.getById<Study>(res.data as String);
-                  Navigator.pop(context);
-                  context.read<AppState>().inviteCode = _controller.text;
-                  navigateToStudyOverview(context, study);
-                }
-              },
-            )
-          ],
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text('Private study invite code'),
+        content: TextFormField(
+          controller: _controller,
+          validator: (_) => errorMessage,
+          autovalidateMode: AutovalidateMode.always,
+          decoration: InputDecoration(labelText: 'Invite code'),
         ),
+        actions: [
+          OutlinedButton.icon(
+            icon: Icon(Icons.arrow_forward),
+            label: Text('Next'),
+            onPressed: () async {
+              final res =
+                  await env.client.rpc('get_study_from_invite', params: {'invite_code': _controller.text}).execute();
+              print(res.data);
+              if (res.error != null) {
+                print(res.error.message);
+                setState(() {
+                  errorMessage = res.error.message;
+                });
+              } else if (res.data == null) {
+                setState(() {
+                  errorMessage = 'Not a valid invite code';
+                });
+              } else {
+                setState(() {
+                  errorMessage = null;
+                });
+                final study = await SupabaseQuery.getById<Study>(res.data as String);
+                Navigator.pop(context);
+                context.read<AppState>().inviteCode = _controller.text;
+                navigateToStudyOverview(context, study);
+              }
+            },
+          )
+        ],
       );
 }
