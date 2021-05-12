@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:studyou_core/core.dart';
 import 'package:supabase/supabase.dart';
 import 'package:universal_html/html.dart' as html;
@@ -57,10 +56,8 @@ Future<void> downloadFile(String contentString, String filename) async {
     html.document.body.children.remove(anchor);
     html.Url.revokeObjectUrl(url);
   } else {
-    final dirPath = Platform.isIOS
-        ? (await getApplicationDocumentsDirectory()).path
-        : await ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DOCUMENTS);
-
-    File('$dirPath/$filename').writeAsString(contentString);
+    final params = SaveFileDialogParams(data: Uint8List.fromList(contentString.codeUnits), fileName: filename);
+    final filePath = await FlutterFileDialog.saveFile(params: params);
+    print('$filename was saved under $filePath.');
   }
 }

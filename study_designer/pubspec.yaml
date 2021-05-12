@@ -13,9 +13,9 @@ dependencies:
   csv: ^5.0.0
   cupertino_icons: ^1.0.3
   email_validator: ^2.0.1
-  ext_storage: ^1.0.3
   flutter:
     sdk: flutter
+  flutter_file_dialog: ^2.1.0
   flutter_form_builder: ^5.0.0
   flutter_iconpicker: ^3.0.0
   flutter_json_widget: ^1.0.2
@@ -24,14 +24,14 @@ dependencies:
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
   path_provider: ^2.0.1
-  postgrest: ^0.1.0
+  postgrest: ^0.1.1
   pretty_json: ^2.0.0
   provider: ^5.0.0
   studyou_core:
     path: ../core
   studyu_flutter_common:
     path: ../common
-  supabase: ^0.0.1-dev.14
+  supabase: ^0.0.1-dev.15
   universal_html: ^2.0.8
   url_launcher: ^6.0.3
   uuid: ^3.0.4

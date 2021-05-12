@@ -13,12 +13,12 @@ dependencies:
   charts_flutter: ^0.10.0
   chewie: ^1.0.0
   cupertino_icons: ^1.0.3
-  ext_storage: ^1.0.3
   extended_math:
     git:
       url: https://github.com/nstrelow/extended_math.git
   flutter:
     sdk: flutter
+  flutter_file_dialog: ^2.1.0
   flutter_local_notifications: ^5.0.0
   flutter_localizations:
     sdk: flutter
@@ -30,7 +30,7 @@ dependencies:
   path_provider: ^2.0.1
   pdf: ^3.3.0
   pimp_my_button: ^1.0.0
-  postgrest: ^0.1.0
+  postgrest: ^0.1.1
   provider: ^5.0.0
   quiver: ^3.0.1
   rainbow_color: ^2.0.1
@@ -39,7 +39,7 @@ dependencies:
     path: ../core
   studyu_flutter_common:
     path: ../common
-  supabase: ^0.0.1-dev.14
+  supabase: ^0.0.1-dev.15
   timeline_tile: ^2.0.0
   url_launcher: ^6.0.3
   uuid: ^3.0.4

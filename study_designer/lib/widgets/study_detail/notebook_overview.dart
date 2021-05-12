@@ -25,18 +25,18 @@ class NotebookOverview extends StatelessWidget {
         }
 
         return Center(
-          child: ListView(
+          child: ListView.separated(
             shrinkWrap: true,
-            children: notebooks
-                .map((notebookFile) => ListTile(
-                      leading: Icon(MdiIcons.languagePython, color: theme.accentColor),
-                      trailing: Icon(Icons.arrow_forward),
-                      title: Center(
-                          child: Text(notebookFile.name.replaceAll(RegExp(r'\.\w*$'), ''),
-                              style: theme.textTheme.subtitle1.copyWith(color: theme.accentColor))),
-                      onTap: () => context.read<AppState>().openNotebook(studyId, notebookFile.name),
-                    ))
-                .toList(),
+            separatorBuilder: (context, index) => Divider(),
+            itemCount: notebooks.length,
+            itemBuilder: (context, index) => ListTile(
+              leading: Icon(MdiIcons.languagePython, color: theme.accentColor),
+              trailing: Icon(Icons.arrow_forward),
+              title: Center(
+                  child: Text(notebooks[index].name.replaceAll(RegExp(r'\.\w*$'), ''),
+                      style: theme.textTheme.subtitle1.copyWith(color: theme.accentColor))),
+              onTap: () => context.read<AppState>().openNotebook(studyId, notebooks[index].name),
+            ),
           ),
         );
       },

@@ -12,7 +12,7 @@ dependencies:
   path: ^1.8.0
   studyou_core:
     path: ../core
-  supabase: ^0.0.1-dev.14
+  supabase: ^0.0.1-dev.15
 
 dev_dependencies:
   lint: ^1.5.3

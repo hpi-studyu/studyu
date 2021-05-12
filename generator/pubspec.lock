@@ -42,7 +42,7 @@ packages:
       name: dotenv
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0-nullsafety.0"
+    version: "3.0.0"
   fhir:
     dependency: transitive
     description:
@@ -154,7 +154,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.1"
   pretty_json:
     dependency: "direct main"
     description:
@@ -245,7 +245,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.14"
+    version: "0.0.1-dev.15"
   term_glyph:
     dependency: transitive
     description:

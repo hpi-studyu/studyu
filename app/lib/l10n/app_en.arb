@@ -110,9 +110,7 @@
   "imprint_read": "Read Imprint",
 
   "save_pdf": "Save as PDF",
-  "save_finished": "Saved",
-  "save_finished_description": "The file has been saved to \"Downloads\".",
-  "save_finished_description_ios": "The file was saved under \"Files\" > On my iPhone > \"StudyU\".",
+  "was_saved_to": "The file was saved to ",
   "save_not_supported": "Error",
   "save_not_supported_description": "Downloading files is currently not supported in the web version.",
 

@@ -21,7 +21,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.1"
   barcode:
     dependency: transitive
     description:
@@ -99,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  ext_storage:
-    dependency: "direct main"
-    description:
-      name: ext_storage
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   extended_math:
     dependency: "direct main"
     description:
@@ -162,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0-nullsafety.1"
+  flutter_file_dialog:
+    dependency: "direct main"
+    description:
+      name: flutter_file_dialog
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -421,7 +421,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.1"
   process:
     dependency: transitive
     description:
@@ -573,7 +573,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.14"
+    version: "0.0.1-dev.15"
   term_glyph:
     dependency: transitive
     description:
