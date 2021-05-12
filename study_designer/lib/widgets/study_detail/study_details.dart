@@ -27,12 +27,13 @@ class _StudyDetailsState extends State<StudyDetails> {
   @override
   void initState() {
     super.initState();
-    getStudy = () => SupabaseQuery.getById<Study>(widget.studyId, selectedColumns: ['*', 'repo(*)']);
+    reloadPage();
   }
 
   void reloadPage() {
     setState(() {
-      getStudy = () => SupabaseQuery.getById<Study>(widget.studyId, selectedColumns: ['*', 'repo(*)']);
+      getStudy = () => SupabaseQuery.getById<Study>(widget.studyId,
+          selectedColumns: ['*', 'repo(*)', 'study_invite!study_invite_studyId_fkey(*)']);
     });
   }
 
@@ -78,6 +79,7 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.read<AppState>();
     final theme = Theme.of(context);
     return Row(
       children: [
@@ -91,10 +93,11 @@ class _HeaderState extends State<Header> {
         Spacer(),
         ButtonBar(
           children: [
-            TextButton.icon(
-                onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
-                icon: Icon(Icons.edit),
-                label: Text('Edit')),
+            if (appState.loggedIn)
+              TextButton.icon(
+                  onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
+                  icon: Icon(Icons.edit),
+                  label: Text('Edit')),
             TextButton.icon(
                 onPressed: () async {
                   final dl = ResultDownloader(study: widget.study);
@@ -106,6 +109,14 @@ class _HeaderState extends State<Header> {
                 },
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
+            if (appState.loggedIn)
+              TextButton.icon(
+                  onPressed: () async {
+                    await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
+                    widget.reload();
+                  },
+                  icon: Icon(MdiIcons.ticketAccount),
+                  label: Text('Invite codes (${widget.study.invites.length})')),
             if (widget.study.repo == null)
               TextButton.icon(
                 icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
@@ -159,3 +170,116 @@ class _HeaderState extends State<Header> {
 }
 
 const buttonProgressIndicator = SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 3));
+
+class InvitesDialog extends StatefulWidget {
+  final Study study;
+
+  const InvitesDialog({Key key, @required this.study}) : super(key: key);
+
+  @override
+  _InvitesDialogState createState() => _InvitesDialogState();
+}
+
+class _InvitesDialogState extends State<InvitesDialog> {
+  TextEditingController _controller;
+  FocusNode _codeInputFocusNode;
+  List<StudyInvite> _invites;
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _invites = widget.study.invites;
+    _controller = TextEditingController();
+    _codeInputFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _codeInputFocusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> addNewInviteCode(String code) async {
+    if (_formKey.currentState.validate()) {
+      final invite = await StudyInvite(code, widget.study.id).save();
+      setState(() {
+        _invites.add(invite);
+      });
+      _controller.clear();
+      _codeInputFocusNode.requestFocus();
+    }
+  }
+
+  Future<void> deleteInviteCode(StudyInvite invite) async {
+    await invite.delete();
+    setState(() {
+      _invites.remove(invite);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        scrollable: true,
+        title: Text('Invite Codes'),
+        content: SizedBox(
+          height: 500,
+          width: 500,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: ListView.separated(
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: _invites.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                          title: SelectableText(_invites[index].code),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => deleteInviteCode(_invites[index]),
+                          ));
+                    }),
+              ),
+              Form(
+                key: _formKey,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        autofocus: true,
+                        focusNode: _codeInputFocusNode,
+                        controller: _controller,
+                        decoration: InputDecoration(labelText: 'New invite code'),
+                        validator: (value) {
+                          if (value == null || value.length < 5) {
+                            return 'Code should at least contain 5 characters';
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (value) => addNewInviteCode(value),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    IconButton(
+                      icon: Icon(Icons.add, color: Colors.green),
+                      onPressed: () => addNewInviteCode(_controller.text),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          OutlinedButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          )
+        ],
+      );
+}
