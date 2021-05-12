@@ -24,7 +24,6 @@ class AppState extends ChangeNotifier {
   Study draftStudy;
   bool skippedLogin = false;
   String authError;
-  String html = '<html><body>LOADING</body></html>';
   DesignerPage _selectedDesignerPage = DesignerPage.about;
 
   // ignore: prefer_function_declarations_over_variables
@@ -45,6 +44,10 @@ class AppState extends ChangeNotifier {
   bool get loggedIn => env.client.auth.session() != null;
 
   bool get showLoginPage => !loggedIn && !skippedLogin;
+
+  bool get loggedInViaGitlab => loggedIn && env.client.auth.user().appMetadata['provider'] == 'gitlab';
+
+  bool isStudyOwner(Study study) => study.userId == env.client.auth.user().id;
 
   void skipLogin() {
     skippedLogin = true;
@@ -122,6 +125,7 @@ class AppState extends ChangeNotifier {
         case AuthChangeEvent.signedIn:
           skippedLogin = false;
           authError = null;
+          print(env.client.auth.user().appMetadata['provider']);
           break;
         case AuthChangeEvent.signedOut:
           break;

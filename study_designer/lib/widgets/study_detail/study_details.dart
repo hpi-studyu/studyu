@@ -77,10 +77,63 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   bool _loading = false;
 
+  List<Widget> gitActions() {
+    if (widget.study.repo == null) {
+      return [
+        TextButton.icon(
+          icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
+          label: Text('Create analysis project'),
+          onPressed: () async {
+            setState(() {
+              _loading = true;
+            });
+            try {
+              await generateRepo(widget.study.id);
+              widget.reload();
+            } catch (e) {
+              print(e);
+            } finally {
+              setState(() {
+                _loading = false;
+              });
+            }
+          },
+        )
+      ];
+    } else {
+      return [
+        TextButton.icon(
+            onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
+            icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
+            label: Text('Open Gitlab project')),
+        TextButton.icon(
+          icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
+          label: Text('Update data of git project and notebooks'),
+          onPressed: () async {
+            setState(() {
+              _loading = true;
+            });
+            try {
+              await updateRepo(widget.study.id, widget.study.repo.projectId);
+              widget.reload();
+            } catch (e) {
+              print(e);
+            } finally {
+              setState(() {
+                _loading = false;
+              });
+            }
+          },
+        ),
+      ];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = context.read<AppState>();
     final theme = Theme.of(context);
+
     return Row(
       children: [
         Row(
@@ -92,8 +145,9 @@ class _HeaderState extends State<Header> {
         ),
         Spacer(),
         ButtonBar(
+          buttonPadding: EdgeInsets.symmetric(horizontal: 16),
           children: [
-            if (appState.loggedIn)
+            if (appState.loggedIn && appState.isStudyOwner(widget.study))
               TextButton.icon(
                   onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
                   icon: Icon(Icons.edit),
@@ -109,7 +163,9 @@ class _HeaderState extends State<Header> {
                 },
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
-            if (appState.loggedIn)
+            if (appState.loggedIn &&
+                appState.isStudyOwner(widget.study) &&
+                widget.study.visibility == StudyVisibility.invite)
               TextButton.icon(
                   onPressed: () async {
                     await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
@@ -117,51 +173,7 @@ class _HeaderState extends State<Header> {
                   },
                   icon: Icon(MdiIcons.ticketAccount),
                   label: Text('Invite codes (${widget.study.invites.length})')),
-            if (widget.study.repo == null)
-              TextButton.icon(
-                icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
-                label: Text('Create analysis project'),
-                onPressed: () async {
-                  setState(() {
-                    _loading = true;
-                  });
-                  try {
-                    await generateRepo(widget.study.id);
-                    widget.reload();
-                  } catch (e) {
-                    print(e);
-                  } finally {
-                    setState(() {
-                      _loading = false;
-                    });
-                  }
-                },
-              )
-            else ...[
-              TextButton.icon(
-                  onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
-                  icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
-                  label: Text('Open Gitlab project')),
-              TextButton.icon(
-                icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
-                label: Text('Update data of git project and notebooks'),
-                onPressed: () async {
-                  setState(() {
-                    _loading = true;
-                  });
-                  try {
-                    await updateRepo(widget.study.id, widget.study.repo.projectId);
-                    widget.reload();
-                  } catch (e) {
-                    print(e);
-                  } finally {
-                    setState(() {
-                      _loading = false;
-                    });
-                  }
-                },
-              ),
-            ]
+            if (appState.loggedInViaGitlab) ...gitActions()
           ],
         ),
       ],
