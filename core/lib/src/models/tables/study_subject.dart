@@ -228,7 +228,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   @override
   Future<StudySubject> save() async {
-    final response = await env.client.from(tableName).insert(toJson(), upsert: true).execute();
+    final response = await env.client.from(tableName).upsert(toJson()).execute();
 
     SupabaseQuery.catchPostgrestError(response.error);
     final json = List<Map<String, dynamic>>.from(response.data as List).single;

@@ -59,7 +59,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
       await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().execute());
 
   Future<T> save() async =>
-      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).insert(toJson(), upsert: true).execute())
+      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(toJson()).execute())
           .single;
 }
 
@@ -73,7 +73,7 @@ class SupabaseQuery {
 
   static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
       SupabaseQuery.extractSupabaseList<T>(
-          await env.client.from(tableName(T)).insert(batchJson, upsert: true).execute());
+          await env.client.from(tableName(T)).upsert(batchJson).execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
     catchPostgrestError(response.error);
