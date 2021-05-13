@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
@@ -77,56 +80,66 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   bool _loading = false;
 
-  List<Widget> gitActions() {
+  Widget gitOwnerActions() {
     if (widget.study.repo == null) {
-      return [
-        TextButton.icon(
-          icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
-          label: Text('Create analysis project'),
-          onPressed: () async {
+      return TextButton.icon(
+        icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
+        label: Text('Create analysis project'),
+        onPressed: () async {
+          setState(() {
+            _loading = true;
+          });
+          try {
+            await generateRepo(widget.study.id);
+            widget.reload();
+          } catch (e) {
+            print(e);
+          } finally {
             setState(() {
-              _loading = true;
+              _loading = false;
             });
-            try {
-              await generateRepo(widget.study.id);
-              widget.reload();
-            } catch (e) {
-              print(e);
-            } finally {
-              setState(() {
-                _loading = false;
-              });
-            }
-          },
-        )
-      ];
+          }
+        },
+      );
     } else {
-      return [
-        TextButton.icon(
-            onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
-            icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
-            label: Text('Open Gitlab project')),
-        TextButton.icon(
-          icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
-          label: Text('Update data of git project and notebooks'),
-          onPressed: () async {
+      return TextButton.icon(
+        icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
+        label: Text('Update data of git project and notebooks'),
+        onPressed: () async {
+          setState(() {
+            _loading = true;
+          });
+          try {
+            await updateRepo(widget.study.id, widget.study.repo.projectId);
+            widget.reload();
+          } catch (e) {
+            print(e);
+          } finally {
             setState(() {
-              _loading = true;
+              _loading = false;
             });
-            try {
-              await updateRepo(widget.study.id, widget.study.repo.projectId);
-              widget.reload();
-            } catch (e) {
-              print(e);
-            } finally {
-              setState(() {
-                _loading = false;
-              });
-            }
-          },
-        ),
-      ];
+          }
+        },
+      );
     }
+  }
+
+  List<Widget> gitPublicActions() {
+    return [
+      TextButton.icon(
+          onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
+          icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
+          label: Text('Open Gitlab project')),
+      TextButton.icon(
+          onPressed: () async {
+            final res = await http.get(Uri.parse('https://gitlab.com/api/v4/projects/${widget.study.repo.projectId}'));
+            final encodedRepoUrl =
+                Uri.encodeComponent((jsonDecode(res.body) as Map<String, dynamic>)['http_url_to_repo'] as String);
+            await launch('https://mybinder.org/v2/git/$encodedRepoUrl/HEAD?urlpath=lab');
+          },
+          icon: Image.asset('images/binder.png', height: 24, width: 24),
+          label: Text('Launch on Binder')),
+    ];
   }
 
   @override
@@ -173,7 +186,8 @@ class _HeaderState extends State<Header> {
                   },
                   icon: Icon(MdiIcons.ticketAccount),
                   label: Text('Invite codes (${widget.study.invites.length})')),
-            if (appState.loggedInViaGitlab) ...gitActions()
+            if (widget.study.repo != null) ...gitPublicActions(),
+            if (appState.loggedInViaGitlab) gitOwnerActions()
           ],
         ),
       ],
