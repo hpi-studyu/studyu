@@ -43,10 +43,6 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.5.3
 
-dependency_overrides:
-  image: ^3.0.2
-  vin_decoder: ^0.2.0-nullsafety
-
 flutter:
   generate: true
   uses-material-design: true
