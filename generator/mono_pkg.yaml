@@ -1,0 +1,22 @@
+# This key is required. It specifies the Dart SDKs your tests will run under
+# You can provide one or more value.
+# See https://docs.travis-ci.com/user/languages/dart#choosing-dart-versions-to-test-against
+# for valid values
+dart:
+  - beta
+
+stages:
+  # Register two jobs to run under the `analyze` stage.
+  - analyze:
+    - dartanalyzer
+    - dartfmt: -l 120 .
+  # Example cron stage which will only run for scheduled jobs (here we run
+  # multiple OS configs for extra validation as an example).
+  #
+  # See the `mono_repo.yaml` example above for where this stage is specially
+  # configured.
+#  - cron:
+#      - test:
+#        os:
+#          - linux
+#          - windows

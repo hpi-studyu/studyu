@@ -1,0 +1,132 @@
+# Created with package:mono_repo v4.0.0
+name: Dart Lint CI
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
+      - monorepo-ci
+  pull_request:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash
+env:
+  PUB_ENVIRONMENT: bot.github
+  FOO: BAR
+
+jobs:
+  job_001:
+    name: mono_repo self validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.5
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;dart:stable"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: stable
+      - id: checkout
+        uses: actions/checkout@v2.3.4
+      - name: mono_repo self validate
+        run: pub global activate mono_repo 4.0.0
+      - name: mono_repo self validate
+        run: pub global run mono_repo generate --validate
+  job_002:
+    name: "analyze; PKGS: core, generator, notebook_uploader; `dartanalyzer .`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.5
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;dart:beta;packages:core-generator-notebook_uploader;commands:dartanalyzer"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;dart:beta;packages:core-generator-notebook_uploader
+            os:ubuntu-latest;pub-cache-hosted;dart:beta
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: beta
+      - id: checkout
+        uses: actions/checkout@v2.3.4
+      - id: core_pub_upgrade
+        name: "core; pub upgrade --no-precompile"
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: core
+        run: pub upgrade --no-precompile
+      - name: core; dartanalyzer .
+        if: "always() && steps.core_pub_upgrade.conclusion == 'success'"
+        working-directory: core
+        run: dartanalyzer .
+      - id: generator_pub_upgrade
+        name: "generator; pub upgrade --no-precompile"
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: generator
+        run: pub upgrade --no-precompile
+      - name: generator; dartanalyzer .
+        if: "always() && steps.generator_pub_upgrade.conclusion == 'success'"
+        working-directory: generator
+        run: dartanalyzer .
+      - id: notebook_uploader_pub_upgrade
+        name: "notebook_uploader; pub upgrade --no-precompile"
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: notebook_uploader
+        run: pub upgrade --no-precompile
+      - name: notebook_uploader; dartanalyzer .
+        if: "always() && steps.notebook_uploader_pub_upgrade.conclusion == 'success'"
+        working-directory: notebook_uploader
+        run: dartanalyzer .
+  job_003:
+    name: "analyze; PKGS: core, generator, notebook_uploader; `dartfmt -l 120 .`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.5
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;dart:beta;packages:core-generator-notebook_uploader;commands:dartfmt"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;dart:beta;packages:core-generator-notebook_uploader
+            os:ubuntu-latest;pub-cache-hosted;dart:beta
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: beta
+      - id: checkout
+        uses: actions/checkout@v2.3.4
+      - id: core_pub_upgrade
+        name: "core; pub upgrade --no-precompile"
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: core
+        run: pub upgrade --no-precompile
+      - name: "core; dartfmt -l 120 ."
+        if: "always() && steps.core_pub_upgrade.conclusion == 'success'"
+        working-directory: core
+        run: dartfmt -l 120 .
+      - id: generator_pub_upgrade
+        name: "generator; pub upgrade --no-precompile"
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: generator
+        run: pub upgrade --no-precompile
+      - name: "generator; dartfmt -l 120 ."
+        if: "always() && steps.generator_pub_upgrade.conclusion == 'success'"
+        working-directory: generator
+        run: dartfmt -l 120 .
+      - id: notebook_uploader_pub_upgrade
+        name: "notebook_uploader; pub upgrade --no-precompile"
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: notebook_uploader
+        run: pub upgrade --no-precompile
+      - name: "notebook_uploader; dartfmt -l 120 ."
+        if: "always() && steps.notebook_uploader_pub_upgrade.conclusion == 'success'"
+        working-directory: notebook_uploader
+        run: dartfmt -l 120 .
