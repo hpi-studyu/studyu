@@ -30,6 +30,7 @@ extension on Color {
   }
 }
 
+// ignore: constant_identifier_names
 enum ColorPickerType { ColorPicker, MaterialPicker, BlockPicker }
 
 /// Creates a field for `Color` input selection
@@ -50,7 +51,7 @@ class FormBuilderColorPickerField extends FormBuilderField<Color> {
 
   final bool obscureText;
   final bool autocorrect;
-  final bool maxLengthEnforced;
+  final MaxLengthEnforcement maxLengthEnforcement;
 
   final int maxLines;
   final bool expands;
@@ -95,7 +96,7 @@ class FormBuilderColorPickerField extends FormBuilderField<Color> {
     this.autofocus = false,
     this.obscureText = false,
     this.autocorrect = true,
-    this.maxLengthEnforced = true,
+    this.maxLengthEnforcement = MaxLengthEnforcement.enforced,
     this.maxLines = 1,
     this.expands = false,
     this.showCursor,
@@ -108,7 +109,7 @@ class FormBuilderColorPickerField extends FormBuilderField<Color> {
     this.cursorRadius,
     this.cursorColor,
     this.keyboardAppearance,
-    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.scrollPadding = const EdgeInsets.all(20),
     this.enableInteractiveSelection = true,
     this.buildCounter,
   }) : super(
@@ -167,7 +168,7 @@ class FormBuilderColorPickerField extends FormBuilderField<Color> {
               inputFormatters: inputFormatters,
               keyboardAppearance: keyboardAppearance,
               maxLength: maxLength,
-              maxLengthEnforced: maxLengthEnforced,
+              maxLengthEnforcement: maxLengthEnforcement,
               maxLines: maxLines,
               minLines: minLines,
               onEditingComplete: onEditingComplete,
@@ -224,12 +225,12 @@ class _FormBuilderColorPickerFieldState extends FormBuilderFieldState<FormBuilde
             ),
             actions: <Widget>[
               TextButton(
-                child: Text(materialLocalizations.cancelButtonLabel),
                 onPressed: () => Navigator.pop(context, false),
+                child: Text(materialLocalizations.cancelButtonLabel),
               ),
               TextButton(
-                child: Text(materialLocalizations.okButtonLabel),
                 onPressed: () => Navigator.pop(context, true),
+                child: Text(materialLocalizations.okButtonLabel),
               ),
             ],
           );
@@ -247,12 +248,8 @@ class _FormBuilderColorPickerFieldState extends FormBuilderFieldState<FormBuilde
         return ColorPicker(
           pickerColor: value ?? Colors.transparent,
           onColorChanged: _colorChanged,
-          // enableLabel: true,
-          colorPickerWidth: 300,
           displayThumbColor: true,
-          enableAlpha: true,
           paletteType: PaletteType.hsl,
-          pickerAreaHeightPercent: 1.0,
         );
       case ColorPickerType.MaterialPicker:
         return MaterialPicker(
@@ -269,10 +266,12 @@ class _FormBuilderColorPickerFieldState extends FormBuilderFieldState<FormBuilde
           layoutBuilder: ,*/
         );
       default:
+        // ignore: only_throw_errors
         throw 'Unknown ColorPickerType';
     }
   }
 
+  // ignore: use_setters_to_change_properties
   void _colorChanged(Color color) {
     _selectedColor = color;
   }
