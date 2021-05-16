@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
-import 'package:studyou_core/env.dart' as env;
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -21,8 +20,6 @@ class _KickoffScreen extends State<KickoffScreen> {
   bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
-    subject.userId = env.client.auth.user().id;
-
     // TODO: Add retry saving
     try {
       subject = await subject.save();
@@ -31,9 +28,11 @@ class _KickoffScreen extends State<KickoffScreen> {
       if (!kIsWeb) {
         scheduleStudyNotifications(context);
       }
-    } finally {
+
       setState(() => ready = true);
       Navigator.pushNamed(context, Routes.dashboard);
+    } catch (e) {
+      print('Failed creating subject: $e');
     }
   }
 
@@ -79,6 +78,8 @@ class _KickoffScreen extends State<KickoffScreen> {
                     _getStatusText(context),
                     style: Theme.of(context).textTheme.headline6,
                   ),
+                  SizedBox(height: 16),
+                  OutlinedButton(onPressed: () => _storeUserStudy(context), child: Text('Start Study')),
                 ],
               ),
             ),

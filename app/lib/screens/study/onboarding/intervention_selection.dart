@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
+import 'package:studyou_core/env.dart' as env;
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -77,8 +78,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   Future<void> onFinished() async {
     final model = context.read<AppState>();
-    // TODO: Provide userId here already
-    model.activeSubject = StudySubject.fromStudy(model.selectedStudy, null, selectedInterventionIds, model.inviteCode);
+    model.activeSubject = StudySubject.fromStudy(
+        model.selectedStudy, env.client.auth.user().id, selectedInterventionIds, model.inviteCode);
     Navigator.pushNamed(context, Routes.journey);
   }
 
