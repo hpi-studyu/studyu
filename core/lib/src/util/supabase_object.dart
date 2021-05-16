@@ -74,21 +74,22 @@ class SupabaseQuery {
       SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
-    catchPostgrestError(response.error);
+    catchPostgrestError(response);
     return List<T>.from(List<Map<String, dynamic>>.from(response.data as List)
         .map((json) => SupabaseObjectFunctions.fromJson<T>(json)));
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(PostgrestResponse response) {
-    catchPostgrestError(response.error);
+    catchPostgrestError(response);
     return SupabaseObjectFunctions.fromJson<T>(response.data as Map<String, dynamic>);
   }
 
-  static void catchPostgrestError(PostgrestError? error) {
-    if (error != null) {
-      print('Error: ${error.message}');
+  static void catchPostgrestError(PostgrestResponse response) {
+    if (response.error != null) {
+      print('Data: ${response.data}');
+      print('Error: ${response.error!.message}');
       // ignore: only_throw_errors
-      throw error.message;
+      throw response.error!.message;
     }
   }
 }

@@ -230,7 +230,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Future<StudySubject> save() async {
     final response = await env.client.from(tableName).upsert(toJson()).execute();
 
-    SupabaseQuery.catchPostgrestError(response.error);
+    SupabaseQuery.catchPostgrestError(response);
     final json = List<Map<String, dynamic>>.from(response.data as List).single;
     json['study'] = study.toJson();
     json['subject_progress'] = progress.map((p) => p.toJson()).toList();
@@ -238,14 +238,14 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> deleteProgress() async => SupabaseQuery.catchPostgrestError(
-      (await env.client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute()).error);
+      await env.client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute());
 
   @override
   Future<StudySubject> delete() async {
     await deleteProgress();
     final response = await env.client.from(tableName).delete().eq('id', id).single().execute();
 
-    SupabaseQuery.catchPostgrestError(response.error);
+    SupabaseQuery.catchPostgrestError(response);
     final json = response.data as Map<String, dynamic>;
     json['study'] = study.toJson();
     return StudySubject.fromJson(json);
