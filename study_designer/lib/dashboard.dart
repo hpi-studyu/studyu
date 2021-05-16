@@ -104,6 +104,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appState = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
         title: Text('StudyU Designer'),
@@ -165,15 +166,15 @@ class _DashboardState extends State<Dashboard> {
               child: _buildLanguageDropdown(),
             ),
           ),
-          if (context.watch<AppState>().loggedIn)
+          if (appState.loggedIn)
             IconButton(
               icon: Icon(Icons.logout),
-              onPressed: () => context.read<AppState>().signOut(),
+              onPressed: () => appState.signOut(),
             )
           else
             IconButton(
               icon: Icon(Icons.login),
-              onPressed: () => context.read<AppState>().goToLoginScreen(),
+              onPressed: () => appState.goToLoginScreen(),
             ),
         ],
       ),
@@ -181,7 +182,7 @@ class _DashboardState extends State<Dashboard> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: RetryFutureBuilder<List<Study>>(
-            tryFunction: context.watch<AppState>().researcherDashboardQuery,
+            tryFunction: appState.researcherDashboardQuery,
             successBuilder: (BuildContext context, List<Study> studies) {
               final draftStudies = studies.where((s) => !s.published).toList();
               final publishedStudies = studies.where((s) => s.published).toList();
@@ -223,13 +224,13 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-      floatingActionButton: context.watch<AppState>().loggedIn
-          ? FloatingActionButton(
+      floatingActionButton: appState.loggedIn
+          ? FloatingActionButton.extended(
               onPressed: () {
-                context.read<AppState>().createStudy();
+                appState.createStudy();
               },
-              tooltip: 'Add',
-              child: Icon(Icons.add),
+              label: Text('Create study'),
+              icon: Icon(Icons.add),
             )
           : null,
     );
