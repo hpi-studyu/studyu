@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:studyu_designer/models/app_state.dart';
+import 'package:studyu_designer/theme.dart';
 import 'package:supabase/supabase.dart' show Provider;
 
 class LoginPage extends StatelessWidget {
@@ -107,7 +108,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(width: 16),
                     IconButton(
-                      icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
+                      icon: Icon(MdiIcons.gitlab, color: gitlabColor),
                       onPressed: () => appState.signInWithProvider(
                           Provider.gitlab, 'api read_user read_api read_repository write_repository profile email'),
                     ),

@@ -12,6 +12,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/app_state.dart';
+import '../../theme.dart';
 import '../../util/repo_manager.dart';
 import 'notebook_overview.dart';
 
@@ -84,7 +85,7 @@ class _HeaderState extends State<Header> {
     if (widget.study.repo == null) {
       return TextButton.icon(
         icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
-        label: Text('Create analysis project'),
+        label: Text('Create analysis project', style: TextStyle(color: Color(0xfff1502f))),
         onPressed: () async {
           setState(() {
             _loading = true;
@@ -104,7 +105,7 @@ class _HeaderState extends State<Header> {
     } else {
       return TextButton.icon(
         icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
-        label: Text('Update data of git project and notebooks'),
+        label: Text('Update data of git project and notebooks', style: TextStyle(color: Colors.green)),
         onPressed: () async {
           setState(() {
             _loading = true;
@@ -128,8 +129,8 @@ class _HeaderState extends State<Header> {
     return [
       TextButton.icon(
           onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
-          icon: Icon(MdiIcons.gitlab, color: const Color(0xfffc6d26)),
-          label: Text('Open Gitlab project')),
+          icon: Icon(MdiIcons.gitlab, color: gitlabColor),
+          label: Text('Open Gitlab project', style: TextStyle(color: gitlabColor))),
       TextButton.icon(
           onPressed: () async {
             final res = await http.get(Uri.parse('https://gitlab.com/api/v4/projects/${widget.study.repo.projectId}'));
@@ -189,8 +190,9 @@ class _HeaderState extends State<Header> {
             if (widget.study.repo != null) ...gitPublicActions(),
             if (appState.loggedInViaGitlab) gitOwnerActions(),
             if (widget.study.isOwner(appState.userId))
-              IconButton(
+              TextButton.icon(
                 icon: Icon(Icons.delete, color: Colors.red),
+                label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
                 onPressed: () async {
                   final isDeleted =
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: widget.study));

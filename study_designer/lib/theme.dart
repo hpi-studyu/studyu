@@ -9,3 +9,5 @@ ThemeData get theme => ThemeData(
       accentColor: accentColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );
+
+const gitlabColor = Color(0xfffc6d26);
