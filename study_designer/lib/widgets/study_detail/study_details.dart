@@ -187,12 +187,47 @@ class _HeaderState extends State<Header> {
                   icon: Icon(MdiIcons.ticketAccount),
                   label: Text('Invite codes (${widget.study.invites.length})')),
             if (widget.study.repo != null) ...gitPublicActions(),
-            if (appState.loggedInViaGitlab) gitOwnerActions()
+            if (appState.loggedInViaGitlab) gitOwnerActions(),
+            if (appState.isStudyOwner(widget.study))
+              IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  final isDeleted =
+                      await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: widget.study));
+                  if (isDeleted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${widget.study.title} ${AppLocalizations.of(context).deleted}')));
+                    Navigator.pop(context);
+                  }
+                },
+              ),
           ],
         ),
       ],
     );
   }
+}
+
+class DeleteAlertDialog extends StatelessWidget {
+  final Study study;
+
+  const DeleteAlertDialog({@required this.study, Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text(AppLocalizations.of(context).delete_draft_study),
+        actions: [
+          ElevatedButton.icon(
+            onPressed: () async {
+              await study.delete();
+              Navigator.pop(context, true);
+            },
+            icon: Icon(Icons.delete),
+            label: Text(AppLocalizations.of(context).delete),
+            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
+          )
+        ],
+      );
 }
 
 const buttonProgressIndicator = SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 3));
