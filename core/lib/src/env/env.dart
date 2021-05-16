@@ -9,7 +9,7 @@ void loadEnv(Map<String, String> env) {
 const designerDeepLink = 'https://studyu-designer.codemagic.app';
 
 // GoTrue redirectTo strips /#/ from URL, therefore we need to use the default set in supabase
-String? authRedirectToUrl({bool isWeb = false}) => isWeb ? null : designerDeepLink;
+String? authRedirectToUrl({bool isWeb = false}) => isWeb ? Uri.base.toString() : designerDeepLink;
 
 final projectGeneratorUrl = dotEnv['PROJECT_GENERATOR_URL']!;
 final _supabaseUrl = dotEnv['SUPABASE_URL']!;

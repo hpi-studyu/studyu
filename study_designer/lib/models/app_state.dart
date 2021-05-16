@@ -125,7 +125,6 @@ class AppState extends ChangeNotifier {
         case AuthChangeEvent.signedIn:
           skippedLogin = false;
           authError = null;
-          print(env.client.auth.user().appMetadata['provider']);
           break;
         case AuthChangeEvent.signedOut:
           break;
@@ -162,10 +161,9 @@ class AppState extends ChangeNotifier {
       password: null,
       provider: provider,
       options: ProviderOptions(
-          //  This is not redundant
-          // ignore: avoid_redundant_argument_values
-          redirectTo: env.authRedirectToUrl(isWeb: kIsWeb),
-          scopes: scopes),
+        redirectTo: env.authRedirectToUrl(isWeb: kIsWeb),
+        scopes: scopes,
+      ),
     );
     if (res.error != null) {
       authError = res.error.message;
