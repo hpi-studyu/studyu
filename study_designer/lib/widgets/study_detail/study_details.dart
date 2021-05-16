@@ -282,8 +282,8 @@ class _InvitesDialogState extends State<InvitesDialog> {
                         controller: _controller,
                         decoration: InputDecoration(labelText: 'New invite code'),
                         validator: (value) {
-                          if (value == null || value.length < 5) {
-                            return 'Code should at least contain 5 characters';
+                          if (value == null || value.length < 4) {
+                            return 'Code should at least contain 4 characters';
                           }
                           return null;
                         },
