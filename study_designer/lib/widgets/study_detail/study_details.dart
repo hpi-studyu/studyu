@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../models/app_state.dart';
 import '../../theme.dart';
 import '../../util/repo_manager.dart';
+import '../icon_labels.dart';
 import 'notebook_overview.dart';
 
 class StudyDetails extends StatefulWidget {
@@ -148,63 +149,129 @@ class _HeaderState extends State<Header> {
     final appState = context.read<AppState>();
     final theme = Theme.of(context);
 
-    return Row(
+    return Column(
       children: [
         Row(
           children: [
-            Icon(MdiIcons.fromString(widget.study.iconName), color: theme.accentColor),
-            SizedBox(width: 8),
-            Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),
+            Row(
+              children: [
+                Icon(MdiIcons.fromString(widget.study.iconName), color: theme.accentColor),
+                SizedBox(width: 8),
+                Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),
+                SizedBox(width: 16),
+                if (widget.study.isOwner(appState.userId))
+                  if (widget.study.published) publishedIcon() else draftIcon()
+                else if (widget.study.participation == Participation.open)
+                  openParticipationIcon()
+                else
+                  inviteParticipationIcon(),
+              ],
+            ),
+            Spacer(),
+            ButtonBar(
+              buttonPadding: EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                if (appState.loggedIn && widget.study.isOwner(appState.userId))
+                  TextButton.icon(
+                      onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
+                      icon: Icon(Icons.edit),
+                      label: Text('Edit')),
+                TextButton.icon(
+                    onPressed: () async {
+                      final dl = ResultDownloader(study: widget.study);
+                      final results = await dl.loadAllResults();
+                      for (final entry in results.entries) {
+                        downloadFile(
+                            ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
+                      }
+                    },
+                    icon: Icon(MdiIcons.tableArrowDown),
+                    label: Text(AppLocalizations.of(context).export_csv)),
+                if (appState.loggedIn &&
+                    widget.study.isOwner(appState.userId) &&
+                    widget.study.participation == Participation.invite)
+                  TextButton.icon(
+                      onPressed: () async {
+                        await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
+                        widget.reload();
+                      },
+                      icon: Icon(MdiIcons.ticketAccount),
+                      label: Text('Invite codes (${widget.study.invites.length})')),
+                if (widget.study.repo != null) ...gitPublicActions(),
+                if (appState.loggedInViaGitlab) gitOwnerActions(),
+                if (widget.study.isOwner(appState.userId))
+                  TextButton.icon(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
+                    onPressed: () async {
+                      final isDeleted = await showDialog<bool>(
+                          context: context, builder: (_) => DeleteAlertDialog(study: widget.study));
+                      if (isDeleted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('${widget.study.title} ${AppLocalizations.of(context).deleted}')));
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+              ],
+            ),
           ],
         ),
-        Spacer(),
-        ButtonBar(
-          buttonPadding: EdgeInsets.symmetric(horizontal: 16),
-          children: [
-            if (appState.loggedIn && widget.study.isOwner(appState.userId))
-              TextButton.icon(
-                  onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
-                  icon: Icon(Icons.edit),
-                  label: Text('Edit')),
-            TextButton.icon(
-                onPressed: () async {
-                  final dl = ResultDownloader(study: widget.study);
-                  final results = await dl.loadAllResults();
-                  for (final entry in results.entries) {
-                    downloadFile(
-                        ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
-                  }
-                },
-                icon: Icon(MdiIcons.tableArrowDown),
-                label: Text(AppLocalizations.of(context).export_csv)),
-            if (appState.loggedIn &&
-                widget.study.isOwner(appState.userId) &&
-                widget.study.participation == Participation.invite)
-              TextButton.icon(
-                  onPressed: () async {
-                    await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
-                    widget.reload();
-                  },
-                  icon: Icon(MdiIcons.ticketAccount),
-                  label: Text('Invite codes (${widget.study.invites.length})')),
-            if (widget.study.repo != null) ...gitPublicActions(),
-            if (appState.loggedInViaGitlab) gitOwnerActions(),
-            if (widget.study.isOwner(appState.userId))
-              TextButton.icon(
-                icon: Icon(Icons.delete, color: Colors.red),
-                label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
-                onPressed: () async {
-                  final isDeleted =
-                      await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: widget.study));
-                  if (isDeleted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${widget.study.title} ${AppLocalizations.of(context).deleted}')));
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-          ],
-        ),
+        SizedBox(height: 16),
+        if (widget.study.isOwner(appState.userId))
+          Align(
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Spacer(flex: 5),
+                Expanded(
+                  //width: 180,
+                  child: DropdownButtonFormField<Participation>(
+                    decoration: const InputDecoration(helperText: 'Participation'),
+                    value: widget.study.participation,
+                    onChanged: (value) async {
+                      widget.study.participation = value;
+                      await widget.study.save();
+                      widget.reload();
+                    },
+                    items: [
+                      DropdownMenuItem(
+                        value: Participation.open,
+                        child: openParticipationIcon(),
+                      ),
+                      DropdownMenuItem(
+                        value: Participation.invite,
+                        child: inviteParticipationIcon(),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: DropdownButtonFormField<ResultSharing>(
+                    decoration: const InputDecoration(helperText: 'Result sharing'),
+                    value: widget.study.resultSharing,
+                    onChanged: (value) async {
+                      widget.study.resultSharing = value;
+                      await widget.study.save();
+                      widget.reload();
+                    },
+                    items: [
+                      DropdownMenuItem(
+                        value: ResultSharing.public,
+                        child: publicResultsIcon(),
+                      ),
+                      DropdownMenuItem(
+                        value: ResultSharing.private,
+                        child: privateResultsIcon(),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
       ],
     );
   }
