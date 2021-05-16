@@ -137,7 +137,7 @@ class _HeaderState extends State<Header> {
                 Uri.encodeComponent((jsonDecode(res.body) as Map<String, dynamic>)['http_url_to_repo'] as String);
             await launch('https://mybinder.org/v2/git/$encodedRepoUrl/HEAD?urlpath=lab');
           },
-          icon: Image.asset('images/binder.png', height: 24, width: 24),
+          icon: Image.asset('assets/images/binder.png', height: 24, width: 24),
           label: Text('Launch on Binder')),
     ];
   }
