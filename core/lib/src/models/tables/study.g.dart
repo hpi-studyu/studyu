@@ -13,7 +13,10 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
   )
     ..title = json['title'] as String?
     ..description = json['description'] as String?
-    ..visibility = _$enumDecode(_$StudyVisibilityEnumMap, json['visibility'])
+    ..participation =
+        _$enumDecode(_$ParticipationEnumMap, json['participation'])
+    ..resultSharing =
+        _$enumDecode(_$ResultSharingEnumMap, json['result_sharing'])
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
     ..iconName = json['iconName'] as String
     ..published = json['published'] as bool
@@ -58,7 +61,8 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['userId'] = instance.userId;
-  val['visibility'] = _$StudyVisibilityEnumMap[instance.visibility];
+  val['participation'] = _$ParticipationEnumMap[instance.participation];
+  val['result_sharing'] = _$ResultSharingEnumMap[instance.resultSharing];
   val['contact'] = instance.contact.toJson();
   val['iconName'] = instance.iconName;
   val['published'] = instance.published;
@@ -101,9 +105,13 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
-const _$StudyVisibilityEnumMap = {
-  StudyVisibility.public: 'public',
-  StudyVisibility.private: 'private',
-  StudyVisibility.organization: 'organization',
-  StudyVisibility.invite: 'invite',
+const _$ParticipationEnumMap = {
+  Participation.open: 'open',
+  Participation.invite: 'invite',
+};
+
+const _$ResultSharingEnumMap = {
+  ResultSharing.public: 'public',
+  ResultSharing.private: 'private',
+  ResultSharing.organization: 'organization',
 };

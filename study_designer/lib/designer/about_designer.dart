@@ -67,15 +67,25 @@ class _AboutDesignerState extends State<AboutDesigner> {
                         initialValue: _draftStudy.description),
                     FormBuilderDropdown(
                         onChanged: _saveFormChanges,
-                        name: 'visibility',
+                        name: 'result_sharing',
                         icon: Icon(Icons.visibility),
-                        decoration: InputDecoration(labelText: 'Study visibility'),
-                        items: StudyVisibility.values
-                            .map((visibility) => DropdownMenuItem<StudyVisibility>(
-                                value: visibility,
-                                child: Text(visibility.toString().replaceFirst('StudyVisibility.', ''))))
+                        decoration: InputDecoration(labelText: 'Study result sharing'),
+                        items: ResultSharing.values
+                            .map((sharing) => DropdownMenuItem<ResultSharing>(
+                                value: sharing, child: Text(sharing.toString().replaceFirst('ResultSharing.', ''))))
                             .toList(),
-                        initialValue: _draftStudy.visibility),
+                        initialValue: _draftStudy.resultSharing),
+                    FormBuilderDropdown(
+                        onChanged: _saveFormChanges,
+                        name: 'participation',
+                        icon: Icon(Icons.visibility),
+                        decoration: InputDecoration(labelText: 'Study participation'),
+                        items: Participation.values
+                            .map((participation) => DropdownMenuItem<Participation>(
+                                value: participation,
+                                child: Text(participation.toString().replaceFirst('Participation.', ''))))
+                            .toList(),
+                        initialValue: _draftStudy.resultSharing),
                     Row(children: [
                       Expanded(
                         child: TextButton(
@@ -148,7 +158,8 @@ class _AboutDesignerState extends State<AboutDesigner> {
         _draftStudy
           ..title = _editFormKey.currentState.value['title'] as String
           ..description = _editFormKey.currentState.value['description'] as String
-          ..visibility = _editFormKey.currentState.value['visibility'] as StudyVisibility
+          ..resultSharing = _editFormKey.currentState.value['result_sharing'] as ResultSharing
+          ..participation = _editFormKey.currentState.value['participation'] as Participation
           ..contact.organization = _editFormKey.currentState.value['organization'] as String
           ..contact.institutionalReviewBoard = _editFormKey.currentState.value['institutionalReviewBoard'] as String
           ..contact.institutionalReviewBoardNumber =

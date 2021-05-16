@@ -178,7 +178,7 @@ class _HeaderState extends State<Header> {
                 label: Text(AppLocalizations.of(context).export_csv)),
             if (appState.loggedIn &&
                 appState.isStudyOwner(widget.study) &&
-                widget.study.visibility == StudyVisibility.invite)
+                widget.study.participation == Participation.invite)
               TextButton.icon(
                   onPressed: () async {
                     await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
