@@ -271,8 +271,10 @@ class StudyCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
+            SizedBox(width: 8),
             if (owner)
               if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
+            SizedBox(width: 8),
             if (owner)
               if (study.published) publishedIcon() else draftIcon(),
           ],

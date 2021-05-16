@@ -26,13 +26,13 @@ class IconLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width ?? 140,
-      child: TextButton.icon(
-        onPressed: null,
-        icon: Icon(iconData, color: color),
-        label: Text(label, style: TextStyle(color: color)),
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(iconData, color: color),
+        SizedBox(width: 8),
+        Text(label, style: TextStyle(color: color)),
+      ],
     );
   }
 }
