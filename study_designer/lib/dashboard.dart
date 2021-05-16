@@ -184,38 +184,41 @@ class _DashboardState extends State<Dashboard> {
           child: RetryFutureBuilder<List<Study>>(
             tryFunction: appState.researcherDashboardQuery,
             successBuilder: (BuildContext context, List<Study> studies) {
-              final draftStudies = studies.where((s) => !s.published).toList();
-              final publishedStudies = studies.where((s) => s.published).toList();
+              final myStudies = studies.where((s) => s.isOwner(appState.userId));
+              final publicStudies =
+                  studies.where((s) => !s.isOwner(appState.userId) && s.resultSharing == ResultSharing.public).toList();
               return ListView(
                 children: [
-                  if (draftStudies.isNotEmpty)
+                  if (myStudies.isNotEmpty)
                     ExpansionTile(
                       title: Row(children: [
-                        Icon(Icons.edit, color: theme.accentColor),
+                        Icon(MdiIcons.accountLock, color: theme.accentColor),
                         SizedBox(width: 8),
-                        Text(AppLocalizations.of(context).draft_studies)
+                        Text('My Studies')
                       ]),
                       initiallyExpanded: true,
                       children: ListTile.divideTiles(
                           context: context,
-                          tiles: draftStudies.map((study) => StudyCard(
+                          tiles: myStudies.map((study) => StudyCard(
                                 study: study,
-                                reload: context.read<AppState>().reloadStudies,
+                                owner: study.isOwner(appState.userId),
+                                reload: appState.reloadStudies,
                               ))).toList(),
                     ),
-                  if (publishedStudies.isNotEmpty)
+                  if (publicStudies.isNotEmpty)
                     ExpansionTile(
                       title: Row(children: [
-                        Icon(Icons.lock, color: theme.accentColor),
+                        Icon(MdiIcons.earth, color: theme.accentColor),
                         SizedBox(width: 8),
-                        Text(AppLocalizations.of(context).published_studies)
+                        Text('Public studies')
                       ]),
                       initiallyExpanded: true,
                       children: ListTile.divideTiles(
                           context: context,
-                          tiles: publishedStudies.map((study) => StudyCard(
+                          tiles: publicStudies.map((study) => StudyCard(
                                 study: study,
-                                reload: context.read<AppState>().reloadStudies,
+                                owner: study.isOwner(appState.userId),
+                                reload: appState.reloadStudies,
                               ))).toList(),
                     )
                 ],
@@ -240,8 +243,9 @@ class _DashboardState extends State<Dashboard> {
 class StudyCard extends StatelessWidget {
   final Study study;
   final void Function() reload;
+  final bool owner;
 
-  const StudyCard({@required this.study, @required this.reload, Key key}) : super(key: key);
+  const StudyCard({@required this.study, @required this.owner, @required this.reload, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -256,8 +260,10 @@ class StudyCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
-            if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
-            if (study.published) publishedIcon() else draftIcon(),
+            if (owner)
+              if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
+            if (owner)
+              if (study.published) publishedIcon() else draftIcon(),
           ],
         ),
         onTap: () => context.read<AppState>().openDetails(study.id));

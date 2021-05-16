@@ -160,7 +160,7 @@ class _HeaderState extends State<Header> {
         ButtonBar(
           buttonPadding: EdgeInsets.symmetric(horizontal: 16),
           children: [
-            if (appState.loggedIn && appState.isStudyOwner(widget.study))
+            if (appState.loggedIn && widget.study.isOwner(appState.userId))
               TextButton.icon(
                   onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
                   icon: Icon(Icons.edit),
@@ -177,7 +177,7 @@ class _HeaderState extends State<Header> {
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
             if (appState.loggedIn &&
-                appState.isStudyOwner(widget.study) &&
+                widget.study.isOwner(appState.userId) &&
                 widget.study.participation == Participation.invite)
               TextButton.icon(
                   onPressed: () async {
@@ -188,7 +188,7 @@ class _HeaderState extends State<Header> {
                   label: Text('Invite codes (${widget.study.invites.length})')),
             if (widget.study.repo != null) ...gitPublicActions(),
             if (appState.loggedInViaGitlab) gitOwnerActions(),
-            if (appState.isStudyOwner(widget.study))
+            if (widget.study.isOwner(appState.userId))
               IconButton(
                 icon: Icon(Icons.delete, color: Colors.red),
                 onPressed: () async {

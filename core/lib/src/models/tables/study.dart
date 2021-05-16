@@ -74,4 +74,6 @@ class Study extends SupabaseObjectFunctions<Study> {
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
       await env.client.from(tableName).select().eq('participation', 'open').execute());
+
+  bool isOwner(String userId) => this.userId == userId;
 }
