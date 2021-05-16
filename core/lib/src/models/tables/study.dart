@@ -23,7 +23,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   String? title;
   String? description;
   String userId;
-  Participation participation = Participation.open;
+  Participation participation = Participation.invite;
   @JsonKey(name: 'result_sharing')
   ResultSharing resultSharing = ResultSharing.private;
   late Contact contact = Contact();
