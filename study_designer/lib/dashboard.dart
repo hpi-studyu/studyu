@@ -184,9 +184,10 @@ class _DashboardState extends State<Dashboard> {
           child: RetryFutureBuilder<List<Study>>(
             tryFunction: appState.researcherDashboardQuery,
             successBuilder: (BuildContext context, List<Study> studies) {
+              studies.sort(_sortStudies);
               final myStudies = studies.where((s) => s.isOwner(appState.userId));
               final publicStudies =
-                  studies.where((s) => !s.isOwner(appState.userId) && s.resultSharing == ResultSharing.public).toList();
+                  studies.where((s) => !s.isOwner(appState.userId) && s.resultSharing == ResultSharing.public);
               return ListView(
                 children: [
                   if (myStudies.isNotEmpty)
@@ -237,6 +238,16 @@ class _DashboardState extends State<Dashboard> {
             )
           : null,
     );
+  }
+
+  int _sortStudies(Study s1, Study s2) {
+    if (s1.published == s2.published) {
+      if (s1.resultSharing == s2.resultSharing) {
+        return s1.participation.toString().compareTo(s2.participation.toString());
+      }
+      return s1.resultSharing.toString().compareTo(s2.resultSharing.toString());
+    }
+    return s1.published.toString().compareTo(s2.published.toString());
   }
 }
 
