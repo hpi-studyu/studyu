@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'models/app_state.dart';
 import 'util/localization.dart';
+import 'widgets/icon_labels.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -250,42 +251,14 @@ class StudyCard extends StatelessWidget {
         title: Text(study.title),
         subtitle: Text(study.description),
         leading: Icon(icon),
-        trailing: !study.published
-            ? IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: () async {
-                  final isDeleted =
-                      await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: study));
-                  if (isDeleted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).deleted}')));
-                    if (reload != null) reload();
-                  }
-                },
-              )
-            : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
+            if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
+            if (study.published) publishedIcon() else draftIcon(),
+          ],
+        ),
         onTap: () => context.read<AppState>().openDetails(study.id));
   }
-}
-
-class DeleteAlertDialog extends StatelessWidget {
-  final Study study;
-
-  const DeleteAlertDialog({@required this.study, Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).delete_draft_study),
-        actions: [
-          ElevatedButton.icon(
-            onPressed: () async {
-              await study.delete();
-              Navigator.pop(context, true);
-            },
-            icon: Icon(Icons.delete),
-            label: Text(AppLocalizations.of(context).delete),
-            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
-          )
-        ],
-      );
 }
