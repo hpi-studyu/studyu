@@ -104,7 +104,7 @@ class InviteCodeDialog extends StatefulWidget {
 
 class _InviteCodeDialogState extends State<InviteCodeDialog> {
   final _controller = TextEditingController();
-  String errorMessage;
+  String _errorMessage;
 
   @override
   void dispose() {
@@ -117,7 +117,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         title: Text('Private study invite code'),
         content: TextFormField(
           controller: _controller,
-          validator: (_) => errorMessage,
+          validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
           decoration: InputDecoration(labelText: 'Invite code'),
         ),
@@ -132,15 +132,15 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               if (res.error != null) {
                 print(res.error.message);
                 setState(() {
-                  errorMessage = res.error.message;
+                  _errorMessage = res.error.message;
                 });
               } else if (res.data == null) {
                 setState(() {
-                  errorMessage = 'Not a valid invite code';
+                  _errorMessage = 'Not a valid invite code';
                 });
               } else {
                 setState(() {
-                  errorMessage = null;
+                  _errorMessage = null;
                 });
                 final study = await SupabaseQuery.getById<Study>(res.data as String);
                 Navigator.pop(context);
