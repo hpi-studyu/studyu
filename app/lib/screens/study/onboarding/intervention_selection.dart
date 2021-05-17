@@ -77,9 +77,9 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   }
 
   Future<void> onFinished() async {
-    final model = context.read<AppState>();
-    model.activeSubject = StudySubject.fromStudy(
-        model.selectedStudy, env.client.auth.user().id, selectedInterventionIds, model.inviteCode);
+    final appState = context.read<AppState>();
+    appState.activeSubject = StudySubject.fromStudy(
+        appState.selectedStudy, env.client.auth.user().id, selectedInterventionIds, appState.inviteCode);
     Navigator.pushNamed(context, Routes.journey);
   }
 
