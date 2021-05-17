@@ -14,8 +14,9 @@ class StudyInvite extends SupabaseObjectFunctions<StudyInvite> {
 
   String code;
   String studyId;
+  List<String>? preselectedInterventionIds;
 
-  StudyInvite(this.code, this.studyId);
+  StudyInvite(this.code, this.studyId, {this.preselectedInterventionIds});
 
   factory StudyInvite.fromJson(Map<String, dynamic> json) => _$StudyInviteFromJson(json);
 
