@@ -14,8 +14,10 @@ AverageSection _$AverageSectionFromJson(Map<String, dynamic> json) {
     ..description = json['description'] as String?
     ..aggregate =
         _$enumDecodeNullable(_$TemporalAggregationEnumMap, json['aggregate'])
-    ..resultProperty =
-        DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>);
+    ..resultProperty = json['resultProperty'] == null
+        ? null
+        : DataReference.fromJson(
+            json['resultProperty'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) {
@@ -33,7 +35,7 @@ Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) {
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('aggregate', _$TemporalAggregationEnumMap[instance.aggregate]);
-  val['resultProperty'] = instance.resultProperty.toJson();
+  writeNotNull('resultProperty', instance.resultProperty?.toJson());
   return val;
 }
 

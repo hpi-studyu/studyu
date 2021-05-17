@@ -13,8 +13,9 @@ LinearRegressionSection _$LinearRegressionSectionFromJson(
     ..id = json['id'] as String
     ..title = json['title'] as String?
     ..description = json['description'] as String?
-    ..resultProperty =
-        DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
+    ..resultProperty = json['resultProperty'] == null
+        ? null
+        : DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
     ..alpha = (json['alpha'] as num).toDouble()
     ..improvement = _$enumDecodeNullable(
         _$ImprovementDirectionEnumMap, json['improvement']);
@@ -35,7 +36,7 @@ Map<String, dynamic> _$LinearRegressionSectionToJson(
 
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
-  val['resultProperty'] = instance.resultProperty.toJson();
+  writeNotNull('resultProperty', instance.resultProperty?.toJson());
   val['alpha'] = instance.alpha;
   writeNotNull(
       'improvement', _$ImprovementDirectionEnumMap[instance.improvement]);
