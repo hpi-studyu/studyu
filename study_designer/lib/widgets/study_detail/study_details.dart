@@ -188,16 +188,16 @@ class _HeaderState extends State<Header> {
                     },
                     icon: Icon(MdiIcons.tableArrowDown),
                     label: Text(AppLocalizations.of(context).export_csv)),
-                if (appState.loggedIn &&
-                    widget.study.isOwner(appState.userId) &&
-                    widget.study.participation == Participation.invite)
-                  TextButton.icon(
-                      onPressed: () async {
-                        await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
-                        widget.reload();
-                      },
-                      icon: Icon(MdiIcons.ticketAccount),
-                      label: Text('Invite codes (${widget.study.invites.length})')),
+                // if (appState.loggedIn &&
+                //     widget.study.isOwner(appState.userId) &&
+                //     widget.study.participation == Participation.invite)
+                TextButton.icon(
+                    onPressed: () async {
+                      await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
+                      widget.reload();
+                    },
+                    icon: Icon(MdiIcons.ticketAccount),
+                    label: Text('Invite codes (${widget.study.invites.length})')),
                 if (widget.study.repo != null) ...gitPublicActions(),
                 if (appState.loggedInViaGitlab) gitOwnerActions(),
                 if (widget.study.isOwner(appState.userId))

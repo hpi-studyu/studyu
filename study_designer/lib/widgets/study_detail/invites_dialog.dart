@@ -1,5 +1,9 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/core.dart';
+
+import '../../theme.dart';
 
 class InvitesDialog extends StatefulWidget {
   final Study study;
@@ -11,11 +15,14 @@ class InvitesDialog extends StatefulWidget {
 }
 
 class _InvitesDialogState extends State<InvitesDialog> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController _controller;
   FocusNode _codeInputFocusNode;
-  List<StudyInvite> _invites;
 
-  final _formKey = GlobalKey<FormState>();
+  List<StudyInvite> _invites;
+  bool _preselectInterventions = false;
+  Intervention _interventionA;
+  Intervention _interventionB;
 
   @override
   void initState() {
@@ -23,6 +30,11 @@ class _InvitesDialogState extends State<InvitesDialog> {
     _invites = widget.study.invites;
     _controller = TextEditingController();
     _codeInputFocusNode = FocusNode();
+
+    _interventionA = widget.study.interventions.first;
+    _interventionB = widget.study.interventions.last;
+
+    _preselectInterventions = _invites.any((invite) => invite.preselectedInterventionIds != null);
   }
 
   @override
@@ -34,7 +46,14 @@ class _InvitesDialogState extends State<InvitesDialog> {
 
   Future<void> addNewInviteCode(String code) async {
     if (_formKey.currentState.validate()) {
-      final invite = await StudyInvite(code, widget.study.id).save();
+      StudyInvite invite;
+      if (_preselectInterventions) {
+        invite =
+            await StudyInvite(code, widget.study.id, preselectedInterventionIds: [_interventionA.id, _interventionB.id])
+                .save();
+      } else {
+        invite = await StudyInvite(code, widget.study.id).save();
+      }
       setState(() {
         _invites.add(invite);
       });
@@ -50,13 +69,61 @@ class _InvitesDialogState extends State<InvitesDialog> {
     });
   }
 
+  Widget _buildSelectedInterventions(List<String> selectedInterventionIds) {
+    final a = getIntervention(selectedInterventionIds[0]);
+    final b = getIntervention(selectedInterventionIds[1]);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Spacer(),
+        Icon(MdiIcons.fromString(a.icon), color: theme.accentColor),
+        SizedBox(width: 8),
+        Text(a.name, overflow: TextOverflow.ellipsis),
+        Spacer(),
+        Icon(MdiIcons.fromString(b.icon), color: theme.accentColor),
+        SizedBox(width: 8),
+        Text(b.name, overflow: TextOverflow.ellipsis),
+        Spacer(),
+      ],
+    );
+  }
+
+  Widget _buildIntervention(Intervention intervention) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
+        SizedBox(width: 8),
+        Expanded(child: Text(intervention.name, overflow: TextOverflow.ellipsis)),
+      ],
+    );
+  }
+
+  Intervention getIntervention(String id) {
+    return widget.study.interventions.firstWhere((i) => i.id == id);
+  }
+
   @override
   Widget build(BuildContext context) => AlertDialog(
         scrollable: true,
-        title: Text('Invite Codes'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Invite codes (${_invites.length})'),
+            Spacer(),
+            Text('Preselect interventions', style: Theme.of(context).textTheme.bodyText2),
+            Switch(
+              value: _preselectInterventions,
+              onChanged: (value) => setState(() {
+                _preselectInterventions = value;
+              }),
+            ),
+          ],
+        ),
         content: SizedBox(
-          height: 500,
-          width: 500,
+          height: 600,
+          width: 800,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -66,11 +133,17 @@ class _InvitesDialogState extends State<InvitesDialog> {
                     separatorBuilder: (context, index) => Divider(),
                     itemCount: _invites.length,
                     itemBuilder: (BuildContext context, int index) {
+                      final invite = _invites[index];
                       return ListTile(
-                          title: SelectableText(_invites[index].code),
+                          leading: SelectableText(invite.code),
+                          title: invite.preselectedInterventionIds != null
+                              ? Expanded(
+                                  child: _buildSelectedInterventions(invite.preselectedInterventionIds),
+                                )
+                              : null,
                           trailing: IconButton(
                             icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => deleteInviteCode(_invites[index]),
+                            onPressed: () => deleteInviteCode(invite),
                           ));
                     }),
               ),
@@ -81,7 +154,8 @@ class _InvitesDialogState extends State<InvitesDialog> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        autofocus: true,
+                        // Only enable autoFocus on web. Very annoying on mobile!
+                        autofocus: kIsWeb,
                         focusNode: _codeInputFocusNode,
                         controller: _controller,
                         decoration: InputDecoration(labelText: 'New invite code'),
@@ -95,6 +169,46 @@ class _InvitesDialogState extends State<InvitesDialog> {
                       ),
                     ),
                     SizedBox(width: 16),
+                    if (_preselectInterventions) ...[
+                      Expanded(
+                        child: DropdownButtonFormField<Intervention>(
+                          validator: (value) {
+                            if (value == _interventionB) return 'Same as Intervention B';
+                            return null;
+                          },
+                          isExpanded: true,
+                          decoration: InputDecoration(helperText: 'Intervention A'),
+                          value: _interventionA,
+                          onChanged: (value) => setState(() => _interventionA = value),
+                          items: widget.study.interventions
+                              .map((i) => DropdownMenuItem<Intervention>(
+                                    value: i,
+                                    child: _buildIntervention(i),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: DropdownButtonFormField<Intervention>(
+                          validator: (value) {
+                            if (value == _interventionA) return 'Same as Intervention A';
+                            return null;
+                          },
+                          isExpanded: true,
+                          decoration: InputDecoration(helperText: 'Intervention B'),
+                          value: _interventionB,
+                          onChanged: (value) => setState(() => _interventionB = value),
+                          items: widget.study.interventions
+                              .map((i) => DropdownMenuItem<Intervention>(
+                                    value: i,
+                                    child: _buildIntervention(i),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                    ],
                     IconButton(
                       icon: Icon(Icons.add, color: Colors.green),
                       onPressed: () => addNewInviteCode(_controller.text),
