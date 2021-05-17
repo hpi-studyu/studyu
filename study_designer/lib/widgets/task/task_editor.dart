@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/core.dart';
 
+import '../util/helper.dart';
 import 'questionnaire_task_editor_section.dart';
 import 'task_schedule_editor_section.dart';
 
@@ -78,6 +79,7 @@ class _TaskEditorState extends State<TaskEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.task.title = _editFormKey.currentState.value['title'] as String;
+        widget.task.id = (_editFormKey.currentState.value['title'] as String).toId();
 //        task.hour = int.parse(_editFormKey.currentState.value['hour']);
 //        task.minute = int.parse(_editFormKey.currentState.value['minute']);
       });

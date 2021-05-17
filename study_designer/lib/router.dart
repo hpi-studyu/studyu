@@ -6,7 +6,7 @@ import 'dashboard.dart';
 import 'designer.dart';
 import 'models/app_state.dart';
 import 'widgets/login_page.dart';
-import 'widgets/study_detail/jupyter_analytics_board.dart';
+import 'widgets/study_detail/notebook_viewer.dart';
 import 'widgets/study_detail/study_details.dart';
 
 /// Transforms String to Enum value. Dart does not have support for this (yet)

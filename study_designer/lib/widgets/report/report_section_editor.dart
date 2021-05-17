@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyou_core/core.dart';
 
+import '../util/helper.dart';
 import 'average_section_editor_section.dart';
 import 'linear_regression_section_editor_section.dart';
 
@@ -121,6 +122,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.section.title = _editFormKey.currentState.value['title'] as String;
+        widget.section.id = (_editFormKey.currentState.value['title'] as String).toId();
         widget.section.description = _editFormKey.currentState.value['description'] as String;
       });
     }

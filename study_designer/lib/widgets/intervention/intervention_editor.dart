@@ -7,6 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:studyou_core/core.dart';
 
 import '../task/task_editor.dart';
+import '../util/helper.dart';
 
 class InterventionEditor extends StatefulWidget {
   final Intervention intervention;
@@ -116,6 +117,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.intervention.name = _editFormKey.currentState.value['name'] as String;
+        widget.intervention.id = (_editFormKey.currentState.value['name'] as String).toId();
         widget.intervention.description = _editFormKey.currentState.value['description'] as String;
       });
     }
