@@ -3,8 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyou_core/core.dart';
 
-import '../util/intervention.dart';
-
 class InterventionCard extends StatelessWidget {
   final Intervention intervention;
   final bool selected;
@@ -81,7 +79,7 @@ class InterventionCardTitle extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   final description =
-                      isBaseline(intervention) ? AppLocalizations.of(context).baseline : intervention.description;
+                      intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
                   return AlertDialog(
                     title: ListTile(
                         leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
@@ -107,7 +105,7 @@ class InterventionCardDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final description = isBaseline(intervention) ? AppLocalizations.of(context).baseline : intervention.description;
+    final description = intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
     if (description == null) return Container();
 
     return Padding(

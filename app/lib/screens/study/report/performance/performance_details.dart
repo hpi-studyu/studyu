@@ -3,7 +3,6 @@ import 'package:studyou_core/core.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../routes.dart';
-import '../../../../util/intervention.dart';
 import '../../../../widgets/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
@@ -18,7 +17,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final interventions =
-        reportSubject.selectedInterventions.where((intervention) => !isBaseline(intervention)).toList();
+        reportSubject.selectedInterventions.where((intervention) => !intervention.isBaseline()).toList();
 
     return Scaffold(
       appBar: AppBar(

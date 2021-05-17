@@ -8,7 +8,6 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
-import '../../../util/intervention.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
@@ -85,7 +84,7 @@ class Timeline extends StatelessWidget {
           return InterventionTile(
             title: intervention.name,
             iconName: intervention.icon,
-            color: isBaseline(intervention) ? Colors.grey : theme.accentColor,
+            color: intervention.isBaseline() ? Colors.grey : theme.accentColor,
             date: now.add(Duration(days: index * subject.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );

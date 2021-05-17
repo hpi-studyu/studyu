@@ -21,4 +21,6 @@ class Intervention {
   factory Intervention.fromJson(Map<String, dynamic> data) => _$InterventionFromJson(data);
 
   Map<String, dynamic> toJson() => _$InterventionToJson(this);
+
+  bool isBaseline() => name == 'Baseline';
 }
