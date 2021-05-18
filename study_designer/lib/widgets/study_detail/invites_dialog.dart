@@ -112,7 +112,8 @@ class _InvitesDialogState extends State<InvitesDialog> {
           children: [
             Text('Invite codes (${_invites.length})'),
             Spacer(),
-            Text('Preselect interventions', style: Theme.of(context).textTheme.bodyText2),
+            Text('Preselect interventions (Order: ${widget.study.schedule.nameOfSequence})',
+                style: Theme.of(context).textTheme.bodyText2),
             Switch(
               value: _preselectInterventions,
               onChanged: (value) => setState(() {

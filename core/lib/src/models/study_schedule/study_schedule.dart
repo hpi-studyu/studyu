@@ -54,6 +54,17 @@ class StudySchedule {
     if (cycle > 0) phase.shuffle();
     return phase;
   }
+
+  String get nameOfSequence {
+    switch (sequence) {
+      case PhaseSequence.alternating:
+        return 'ABAB';
+      case PhaseSequence.counterBalanced:
+        return 'ABBA';
+      case PhaseSequence.randomized:
+        return 'Random';
+    }
+  }
 }
 
 enum PhaseSequence { alternating, counterBalanced, randomized }
