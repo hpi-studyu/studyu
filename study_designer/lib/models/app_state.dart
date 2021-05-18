@@ -133,6 +133,7 @@ class AppState extends ChangeNotifier {
         case AuthChangeEvent.passwordRecovery:
           break;
       }
+      reloadResearcherDashboard();
       notifyListeners();
     });
   }
@@ -141,7 +142,6 @@ class AppState extends ChangeNotifier {
     final res = await env.client.auth.signIn(email: email, password: password);
     if (res.error != null) {
       authError = res.error.message;
-      reloadResearcherDashboard();
       notifyListeners();
     }
   }
@@ -150,7 +150,6 @@ class AppState extends ChangeNotifier {
     final res = await env.client.auth.signUp(email, password);
     if (res.error != null) {
       authError = res.error.message;
-      reloadResearcherDashboard();
       notifyListeners();
     }
   }
@@ -167,7 +166,6 @@ class AppState extends ChangeNotifier {
     );
     if (res.error != null) {
       authError = res.error.message;
-      reloadResearcherDashboard();
       notifyListeners();
     } else {
       launch(res.url);
@@ -178,7 +176,6 @@ class AppState extends ChangeNotifier {
     final res = await env.client.auth.signOut();
     if (res.error != null) {
       authError = res.error.message;
-      reloadResearcherDashboard();
       notifyListeners();
     }
   }
