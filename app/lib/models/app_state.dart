@@ -9,6 +9,7 @@ class AppState {
   List<Intervention> selectedInterventions;
   StudySubject activeSubject;
   String inviteCode;
+  List<String> preselectedInterventionIds;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   /// Context used for FlutterLocalNotificationsPlugin

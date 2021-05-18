@@ -126,8 +126,10 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             icon: Icon(Icons.arrow_forward),
             label: Text('Next'),
             onPressed: () async {
-              final res =
-                  await env.client.rpc('get_study_from_invite', params: {'invite_code': _controller.text}).execute();
+              final res = await env.client
+                  .rpc('get_study_from_invite', params: {'invite_code': _controller.text})
+                  .single()
+                  .execute();
               print(res.data);
               if (res.error != null) {
                 print(res.error.message);
@@ -142,8 +144,12 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 setState(() {
                   _errorMessage = null;
                 });
-                final study = await SupabaseQuery.getById<Study>(res.data as String);
+                final result = res.data as Map<String, dynamic>;
+                final studyId = result['studyId'] as String;
+                final preselectedIds = List<String>.from(result['preselectedInterventionIds'] as List);
+                final study = await SupabaseQuery.getById<Study>(studyId);
                 Navigator.pop(context);
+                context.read<AppState>().preselectedInterventionIds = preselectedIds;
                 context.read<AppState>().inviteCode = _controller.text;
                 navigateToStudyOverview(context, study);
               }
