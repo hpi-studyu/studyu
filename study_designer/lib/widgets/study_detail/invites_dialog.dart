@@ -137,9 +137,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
                       return ListTile(
                           leading: SelectableText(invite.code),
                           title: invite.preselectedInterventionIds != null
-                              ? Expanded(
-                                  child: _buildSelectedInterventions(invite.preselectedInterventionIds),
-                                )
+                              ? _buildSelectedInterventions(invite.preselectedInterventionIds)
                               : null,
                           trailing: IconButton(
                             icon: Icon(Icons.delete, color: Colors.red),
