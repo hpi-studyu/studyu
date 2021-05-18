@@ -4,7 +4,7 @@ part 'study_schedule.g.dart';
 
 @JsonSerializable()
 class StudySchedule {
-  static const int numberOfPhases = 2;
+  static const int numberOfInterventions = 2;
 
   int numberOfCycles = 2;
   int phaseDuration = 7;
@@ -16,7 +16,7 @@ class StudySchedule {
   factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
 
-  int getNumberOfPhases() => numberOfCycles * numberOfPhases + (includeBaseline ? 1 : 0);
+  int getNumberOfPhases() => numberOfCycles * numberOfInterventions + (includeBaseline ? 1 : 0);
 
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles);
@@ -25,7 +25,7 @@ class StudySchedule {
     return phases;
   }
 
-  int _nextIntervention(int index) => (index + 1) % numberOfPhases;
+  int _nextIntervention(int index) => (index + 1) % numberOfInterventions;
 
   List<int> _generateCycle(int first, int cycle) {
     switch (sequence) {

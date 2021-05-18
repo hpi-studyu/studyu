@@ -95,8 +95,8 @@ class StudyDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final baselineLength = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
-    final studyLength =
-        baselineLength + study.schedule.phaseDuration * study.schedule.numberOfCycles * StudySchedule.numberOfPhases;
+    final studyLength = baselineLength +
+        study.schedule.phaseDuration * study.schedule.numberOfCycles * StudySchedule.numberOfInterventions;
     return Column(
       children: [
         ListTile(
