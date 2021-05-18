@@ -59,7 +59,8 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
                   items: PhaseSequence.values
                       .map((sequence) => DropdownMenuItem(
                           value: sequence,
-                          child: Text(sequence.toString().substring(sequence.toString().indexOf('.') + 1))))
+                          child: Text(
+                              '${sequence.toString().substring(sequence.toString().indexOf('.') + 1)} (${_draftStudy.schedule.nameOfSequence})')))
                       .toList(),
                 ),
               ],
