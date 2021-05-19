@@ -43,9 +43,6 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.5.3
 
-dependency_overrides:
-  webview_flutter: 2.0.4
-
 flutter:
   generate: true
   uses-material-design: true
