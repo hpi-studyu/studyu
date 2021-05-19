@@ -13,7 +13,11 @@ RUN dart compile exe bin/uploader.dart
 
 FROM python:latest
 
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential r-base r-cran-devtools libv8-dev
+
 RUN pip install jupyter nbconvert pipreqsnb
+
+RUN Rscript -e "devtools::install_github('thogaertner/cinof1')"
 
 COPY --from=builder /app/bin/uploader.exe /usr/local/bin/uploader
 
