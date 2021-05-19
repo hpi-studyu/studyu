@@ -13,7 +13,7 @@ RUN dart compile exe bin/uploader.dart
 
 FROM python:latest
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential r-base r-cran-devtools libv8-dev
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential r-base r-base-dev r-cran-devtools r-cran-geepack r-cran-psych r-cran-ggplot2 r-cran-caret r-cran-doparallel libv8-dev
 
 RUN pip install jupyter nbconvert pipreqsnb
 
