@@ -19,6 +19,10 @@ RUN pip install jupyter nbconvert pipreqsnb
 
 RUN Rscript -e "devtools::install_github('thogaertner/cinof1')"
 
+# Install R Kernel
+RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"
+RUN Rscript -e "IRkernel::installspec()"
+
 COPY --from=builder /app/bin/uploader.exe /usr/local/bin/uploader
 
 ADD notebook_uploader/nbconvert-template /nbconvert-template
