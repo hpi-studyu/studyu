@@ -18,7 +18,7 @@ dependencies:
   flutter_colorpicker: ^0.4.0
   flutter_file_dialog: ^2.1.0
   flutter_form_builder: ^6.0.1
-  flutter_iconpicker: ^3.0.0
+  flutter_iconpicker: ^3.0.1
   flutter_json_widget: ^1.0.2
   flutter_localizations:
     sdk: flutter
@@ -34,7 +34,7 @@ dependencies:
     path: ../common
   supabase: ^0.0.1-dev.16
   universal_html: ^2.0.8
-  url_launcher: ^6.0.3
+  url_launcher: ^6.0.4
   uuid: ^3.0.4
   webviewx: 0.0.4
 
