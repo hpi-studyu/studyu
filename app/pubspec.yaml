@@ -19,7 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^2.1.0
-  flutter_local_notifications: ^5.0.0
+  flutter_local_notifications: ^6.0.0
   flutter_localizations:
     sdk: flutter
   flutter_native_timezone: ^1.0.10
