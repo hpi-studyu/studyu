@@ -11,7 +11,7 @@ environment:
 dependencies:
   charts_common: ^0.10.0
   charts_flutter: ^0.10.0
-  chewie: ^1.0.0
+  chewie: ^1.1.0
   cupertino_icons: ^1.0.3
   extended_math:
     git:
@@ -22,19 +22,19 @@ dependencies:
   flutter_local_notifications: ^6.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_native_timezone: ^1.0.10
+  flutter_native_timezone: ^1.1.0
   grizzly_distuv: ^1.0.0
   intersperse: ^2.0.0
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
-  path_provider: ^2.0.1
+  path_provider: ^2.0.2
   pdf: ^3.3.0
   pimp_my_button: ^1.0.0
   postgrest: ^0.1.1
   provider: ^5.0.0
   quiver: ^3.0.1
   rainbow_color: ^2.0.1
-  shared_preferences: ^2.0.5
+  shared_preferences: ^2.0.6
   studyou_core:
     path: ../core
   studyu_flutter_common:
@@ -43,7 +43,7 @@ dependencies:
   timeline_tile: ^2.0.0
   url_launcher: ^6.0.4
   uuid: ^3.0.4
-  video_player: ^2.1.1
+  video_player: ^2.1.4
 
 dev_dependencies:
   flutter_launcher_icons: ^0.9.0
