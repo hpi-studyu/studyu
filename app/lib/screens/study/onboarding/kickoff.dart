@@ -20,7 +20,6 @@ class _KickoffScreen extends State<KickoffScreen> {
   bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
-    // TODO: Add retry saving
     try {
       subject = await subject.save();
       context.read<AppState>().activeSubject = subject;

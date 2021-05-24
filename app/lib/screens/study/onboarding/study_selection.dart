@@ -12,7 +12,10 @@ import '../../../routes.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/study_tile.dart';
 
-Future<void> navigateToStudyOverview(BuildContext context, Study study) async {
+Future<void> navigateToStudyOverview(BuildContext context, Study study,
+    {String inviteCode, List<String> preselectedIds}) async {
+  context.read<AppState>().preselectedInterventionIds = preselectedIds;
+  context.read<AppState>().inviteCode = inviteCode;
   context.read<AppState>().selectedStudy = study;
   Navigator.pushNamed(context, Routes.studyOverview);
 }
@@ -149,9 +152,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 final preselectedIds = List<String>.from(result['preselectedInterventionIds'] as List);
                 final study = await SupabaseQuery.getById<Study>(studyId);
                 Navigator.pop(context);
-                context.read<AppState>().preselectedInterventionIds = preselectedIds;
-                context.read<AppState>().inviteCode = _controller.text;
-                navigateToStudyOverview(context, study);
+                await navigateToStudyOverview(context, study,
+                    inviteCode: _controller.text, preselectedIds: preselectedIds);
               }
             },
           )
