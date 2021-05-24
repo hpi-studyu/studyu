@@ -34,25 +34,22 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Column(children: [
-            Row(
-              children: [
-                Expanded(child: Text(widget.question.minimumAnnotation)),
-                FittedBox(child: Text(widget.question.maximumAnnotation)),
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(widget.question.minimumColor), Color(widget.question.maximumColor)],
-                ),
+        Column(children: [
+          Row(
+            children: [
+              Expanded(child: Text(widget.question.minimumAnnotation)),
+              FittedBox(child: Text(widget.question.maximumAnnotation)),
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(widget.question.minimumColor), Color(widget.question.maximumColor)],
               ),
-              constraints: BoxConstraints.expand(height: 4),
             ),
-          ]),
-        ),
+            constraints: BoxConstraints.expand(height: 4),
+          ),
+        ]),
         Slider(
           value: value,
           onChanged: changed,
@@ -60,9 +57,12 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
           max: widget.question.maximum,
           divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
-        ElevatedButton(
-          onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
-          child: Text(AppLocalizations.of(context).done),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
+            child: Text(AppLocalizations.of(context).done),
+          ),
         )
       ],
     );

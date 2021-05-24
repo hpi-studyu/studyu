@@ -72,9 +72,12 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           max: widget.question.maximum,
           divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
-        ElevatedButton(
-          onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
-          child: Text(AppLocalizations.of(context).done),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
+            child: Text(AppLocalizations.of(context).done),
+          ),
         )
       ],
     );

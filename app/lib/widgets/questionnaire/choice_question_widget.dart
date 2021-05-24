@@ -56,9 +56,11 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         .toList();
 
     if (widget.question.multiple) {
-      choiceWidgets.add(ElevatedButton(
+      choiceWidgets.add(OutlinedButton(
         onPressed: confirm,
-        style: ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).accentColor),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white)),
         child: Text(AppLocalizations.of(context).confirm),
       ));
     }

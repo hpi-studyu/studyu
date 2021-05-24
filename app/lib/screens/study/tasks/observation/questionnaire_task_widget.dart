@@ -53,28 +53,30 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               response = qs;
             }),
           );
-    return Column(
-      children: [
-        Expanded(
-          child: questionnaireWidget,
-        ),
-        if (response != null)
-          ElevatedButton.icon(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-              onPressed: () {
-                switch (response.runtimeType) {
-                  case QuestionnaireState:
-                    _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
-                    break;
-                  case fhir.QuestionnaireResponse:
-                    _addQuestionnaireResult<fhir.QuestionnaireResponse>(
-                        response as fhir.QuestionnaireResponse, context);
-                    break;
-                }
-              },
-              icon: Icon(Icons.check),
-              label: Text('Complete'))
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          Expanded(
+            child: questionnaireWidget,
+          ),
+          if (response != null)
+            ElevatedButton.icon(
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                onPressed: () {
+                  switch (response.runtimeType) {
+                    case QuestionnaireState:
+                      _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
+                      break;
+                    case fhir.QuestionnaireResponse:
+                      _addQuestionnaireResult<fhir.QuestionnaireResponse>(
+                          response as fhir.QuestionnaireResponse, context);
+                      break;
+                  }
+                },
+                icon: Icon(Icons.check),
+                label: Text('Complete'))
+        ],
+      ),
     );
   }
 }
