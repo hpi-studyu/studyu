@@ -51,6 +51,20 @@ class _TaskEditorState extends State<TaskEditor> {
                         name: 'title',
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
                         initialValue: widget.task.title),
+                    FormBuilderTextField(
+                        onChanged: (value) {
+                          saveFormChanges();
+                        },
+                        name: 'header',
+                        decoration: InputDecoration(labelText: 'Header'),
+                        initialValue: widget.task.header),
+                    FormBuilderTextField(
+                        onChanged: (value) {
+                          saveFormChanges();
+                        },
+                        name: 'footer',
+                        decoration: InputDecoration(labelText: 'Footer'),
+                        initialValue: widget.task.footer),
                   ],
                 ),
               ),
@@ -80,6 +94,8 @@ class _TaskEditorState extends State<TaskEditor> {
       setState(() {
         widget.task.title = _editFormKey.currentState.value['title'] as String;
         widget.task.id = (_editFormKey.currentState.value['title'] as String).toId();
+        widget.task.header = _editFormKey.currentState.value['header'] as String;
+        widget.task.footer = _editFormKey.currentState.value['footer'] as String;
 //        task.hour = int.parse(_editFormKey.currentState.value['hour']);
 //        task.minute = int.parse(_editFormKey.currentState.value['minute']);
       });
