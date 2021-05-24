@@ -9,37 +9,28 @@ import '../../../../models/app_state.dart';
 import '../../../../widgets/fhir_questionnaire/questionnaire_widget.dart';
 import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
-class QuestionnaireTaskWidget extends StatelessWidget {
+class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
 
   const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
 
-  Future<void> _addQuestionnaireResponseFhir(fhir.QuestionnaireResponse response, BuildContext context) async {
-    final model = context.read<AppState>();
-    final activeStudy = model.activeSubject;
-    try {
-      await activeStudy.addResult<fhir.QuestionnaireResponse>(taskId: task.id, result: response);
-      Navigator.pop(context, true);
-    } on PostgrestError {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).could_not_save_results),
-        duration: Duration(seconds: 10),
-        action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResponseFhir(response, context)),
-      ));
-    }
-  }
+  @override
+  _QuestionnaireTaskWidgetState createState() => _QuestionnaireTaskWidgetState();
+}
 
-  Future<void> _addQuestionnaireResponseStudyU(QuestionnaireState qs, BuildContext context) async {
-    final model = context.read<AppState>();
-    final activeStudy = model.activeSubject;
+class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
+  dynamic response;
+
+  Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
+    final activeStudy = context.read<AppState>().activeSubject;
     try {
-      await activeStudy.addResult<QuestionnaireState>(taskId: task.id, result: qs);
+      await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context).could_not_save_results),
         duration: Duration(seconds: 10),
-        action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResponseStudyU(qs, context)),
+        action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResult(response, context)),
       ));
     }
   }
@@ -50,14 +41,40 @@ class QuestionnaireTaskWidget extends StatelessWidget {
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
             context.read<AppState>().activeSubject.study.fhirQuestionnaire,
-            onComplete: (qs) => _addQuestionnaireResponseFhir(qs, context),
+            onComplete: (response) => setState(() {
+              response = response;
+            }),
           )
         : QuestionnaireWidget(
-            task.questions.questions,
-            onComplete: (qs) => _addQuestionnaireResponseStudyU(qs, context),
+            widget.task.questions.questions,
+            header: widget.task.header,
+            footer: widget.task.footer,
+            onComplete: (qs) => setState(() {
+              response = qs;
+            }),
           );
-    return Expanded(
-      child: questionnaireWidget,
+    return Column(
+      children: [
+        Expanded(
+          child: questionnaireWidget,
+        ),
+        if (response != null)
+          ElevatedButton.icon(
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+              onPressed: () {
+                switch (response.runtimeType) {
+                  case QuestionnaireState:
+                    _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
+                    break;
+                  case fhir.QuestionnaireResponse:
+                    _addQuestionnaireResult<fhir.QuestionnaireResponse>(
+                        response as fhir.QuestionnaireResponse, context);
+                    break;
+                }
+              },
+              icon: Icon(Icons.check),
+              label: Text('Complete'))
+      ],
     );
   }
 }
