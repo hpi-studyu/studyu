@@ -9,12 +9,15 @@ typedef ContinuationPredicate = bool Function(QuestionnaireState);
 
 class QuestionnaireWidget extends StatefulWidget {
   final String title;
+  final String header;
+  final String footer;
   final List<Question> questions;
   final StateHandler onChange;
   final StateHandler onComplete;
   final ContinuationPredicate shouldContinue;
 
-  const QuestionnaireWidget(this.questions, {this.title, this.onComplete, this.onChange, this.shouldContinue, Key key})
+  const QuestionnaireWidget(this.questions,
+      {this.title, this.header, this.footer, this.onComplete, this.onChange, this.shouldContinue, Key key})
       : super(key: key);
 
   @override
@@ -71,18 +74,19 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       _insertQuestion(widget.questions[_nextQuestionIndex]);
       _listKey.currentState.insertItem(shownQuestions.length - 1, duration: Duration(milliseconds: 300));
       _nextQuestionIndex++;
-
-      // Scroll to bottom
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
-      });
     } else {
+      _listKey.currentState.insertItem(shownQuestions.length, duration: Duration(milliseconds: 300));
       _finishQuestionnaire();
     }
+
+    // Scroll to bottom
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   @override
@@ -96,10 +100,39 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     return AnimatedList(
       key: _listKey,
       controller: _scrollController,
-      initialItemCount: shownQuestions.length,
+      initialItemCount: shownQuestions.length + 1,
       itemBuilder: (context, index, animation) {
+        if (index == 0) {
+          return widget.header != null && widget.header.isNotEmpty ? TextBox(widget.header) : Container();
+        }
+        index -= 1;
+        if (index == shownQuestions.length) {
+          return widget.footer != null && widget.header.isNotEmpty ? TextBox(widget.footer) : Container();
+        }
         return shownQuestions[index];
       },
+    );
+  }
+}
+
+class TextBox extends StatelessWidget {
+  final String text;
+
+  const TextBox(this.text, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(text),
+          ],
+        ),
+      ),
     );
   }
 }
