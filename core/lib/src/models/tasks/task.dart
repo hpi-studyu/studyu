@@ -10,6 +10,9 @@ abstract class Task {
   late String id;
   String? title;
 
+  String? header;
+  String? footer;
+
   List<Schedule> schedule = [];
 
   Task(this.type);
