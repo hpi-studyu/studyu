@@ -191,36 +191,40 @@ class _DashboardState extends State<Dashboard> {
               return ListView(
                 children: [
                   if (myStudies.isNotEmpty)
-                    ExpansionTile(
-                      title: Row(children: [
-                        Icon(MdiIcons.accountLock, color: theme.accentColor),
-                        SizedBox(width: 8),
-                        Text('My Studies')
-                      ]),
-                      initiallyExpanded: true,
-                      children: ListTile.divideTiles(
-                          context: context,
-                          tiles: myStudies.map((study) => StudyCard(
-                                study: study,
-                                owner: study.isOwner(appState.userId),
-                                reload: appState.reloadStudies,
-                              ))).toList(),
+                    Card(
+                      child: ExpansionTile(
+                        title: Row(children: [
+                          Icon(MdiIcons.accountLock, color: theme.accentColor),
+                          SizedBox(width: 8),
+                          Text('My Studies')
+                        ]),
+                        initiallyExpanded: true,
+                        children: ListTile.divideTiles(
+                            context: context,
+                            tiles: myStudies.map((study) => StudyCard(
+                                  study: study,
+                                  owner: study.isOwner(appState.userId),
+                                  reload: appState.reloadStudies,
+                                ))).toList(),
+                      ),
                     ),
                   if (publicStudies.isNotEmpty)
-                    ExpansionTile(
-                      title: Row(children: [
-                        Icon(MdiIcons.earth, color: theme.accentColor),
-                        SizedBox(width: 8),
-                        Text('Public studies')
-                      ]),
-                      initiallyExpanded: true,
-                      children: ListTile.divideTiles(
-                          context: context,
-                          tiles: publicStudies.map((study) => StudyCard(
-                                study: study,
-                                owner: study.isOwner(appState.userId),
-                                reload: appState.reloadStudies,
-                              ))).toList(),
+                    Card(
+                      child: ExpansionTile(
+                        title: Row(children: [
+                          Icon(MdiIcons.earth, color: theme.accentColor),
+                          SizedBox(width: 8),
+                          Text('Public studies')
+                        ]),
+                        initiallyExpanded: true,
+                        children: ListTile.divideTiles(
+                            context: context,
+                            tiles: publicStudies.map((study) => StudyCard(
+                                  study: study,
+                                  owner: study.isOwner(appState.userId),
+                                  reload: appState.reloadStudies,
+                                ))).toList(),
+                      ),
                     )
                 ],
               );
@@ -270,11 +274,18 @@ class StudyCard extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            IconLabel(label: study.participantCount.toString(), iconData: MdiIcons.accountGroup, color: Colors.red),
+            SizedBox(width: 16),
+            IconLabel(label: study.completedCount.toString(), iconData: MdiIcons.flagCheckered, color: Colors.black),
+            SizedBox(width: 16),
+            IconLabel(label: study.activeSubjectCount.toString(), iconData: MdiIcons.run, color: Colors.green),
+            VerticalDivider(),
             if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
-            SizedBox(width: 8),
-            if (owner)
+            SizedBox(width: 16),
+            if (owner) ...[
               if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
-            SizedBox(width: 8),
+              SizedBox(width: 16),
+            ],
             if (owner)
               if (study.published) publishedIcon() else draftIcon(),
           ],
