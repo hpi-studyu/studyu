@@ -106,7 +106,6 @@ class _InvitesDialogState extends State<InvitesDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        scrollable: true,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
