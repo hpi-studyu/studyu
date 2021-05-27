@@ -31,7 +31,7 @@ class _TaskBoxState extends State<TaskBox> {
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: _navigateToTaskScreen,
+        onTap: completed ? () {} : _navigateToTaskScreen,
         child: Row(
           children: [
             Expanded(
@@ -42,7 +42,7 @@ class _TaskBoxState extends State<TaskBox> {
             ),
             RoundCheckbox(
               value: completed, //_isCompleted,
-              onChanged: (value) => _navigateToTaskScreen(),
+              onChanged: (value) => completed ? () {} : _navigateToTaskScreen(),
             )
           ],
         ),
