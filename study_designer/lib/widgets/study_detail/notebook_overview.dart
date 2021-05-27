@@ -14,7 +14,6 @@ class NotebookOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return RetryFutureBuilder<List<FileObject>>(
       tryFunction: () => getStudyNotebooks(studyId),
       successBuilder: (_, notebooks) {
@@ -24,21 +23,25 @@ class NotebookOverview extends StatelessWidget {
           );
         }
 
-        return Center(
-          child: ListView.separated(
-            shrinkWrap: true,
-            separatorBuilder: (context, index) => Divider(),
-            itemCount: notebooks.length,
-            itemBuilder: (context, index) => ListTile(
-              leading: Icon(MdiIcons.languagePython, color: theme.accentColor),
-              trailing: Icon(Icons.arrow_forward),
-              title: Center(
-                  child: Text(notebooks[index].name.replaceAll(RegExp(r'\.\w*$'), ''),
-                      style: theme.textTheme.subtitle1.copyWith(color: theme.accentColor))),
-              onTap: () => context.read<AppState>().openNotebook(studyId, notebooks[index].name),
+        return Card(
+            child: ExpansionTile(
+          leading: Image.asset('assets/images/logomark-orangebody-greyplanets.png', height: 30, width: 30),
+          title: Text('Notebooks', style: TextStyle(fontSize: 20)),
+          initiallyExpanded: true,
+          children: [
+            ListView.separated(
+              shrinkWrap: true,
+              separatorBuilder: (context, index) => Divider(),
+              itemCount: notebooks.length,
+              itemBuilder: (context, index) => ListTile(
+                leading: Icon(MdiIcons.notebook),
+                trailing: Icon(Icons.arrow_forward),
+                title: Center(child: Text(notebooks[index].name.replaceAll(RegExp(r'\.\w*$'), ''))),
+                onTap: () => context.read<AppState>().openNotebook(studyId, notebooks[index].name),
+              ),
             ),
-          ),
-        );
+          ],
+        ));
       },
     );
   }
