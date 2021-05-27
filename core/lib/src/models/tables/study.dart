@@ -41,6 +41,13 @@ class Study extends SupabaseObjectFunctions<Study> {
   Questionnaire? fhirQuestionnaire;
 
   @JsonKey(ignore: true)
+  int participantCount = 0;
+  @JsonKey(ignore: true)
+  int completedCount = 0;
+  @JsonKey(ignore: true)
+  int activeSubjectCount = 0;
+
+  @JsonKey(ignore: true)
   Repo? repo;
 
   @JsonKey(ignore: true)
@@ -60,6 +67,10 @@ class Study extends SupabaseObjectFunctions<Study> {
     if (invites != null) {
       study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
     }
+    study
+      ..participantCount = json['study_participant_count'] as int
+      ..completedCount = json['study_completed_count'] as int
+      ..activeSubjectCount = json['active_subject_count'] as int;
     return study;
   }
 
@@ -67,9 +78,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
-      SupabaseQuery.getAll<Study>(selectedColumns: ['*', 'repo(*)']
-          /*selectedColumns: ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']*/);
+  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
+      selectedColumns: ['*', 'repo(*)', 'study_participant_count', 'study_completed_count', 'active_subject_count']);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
