@@ -20,8 +20,10 @@ class IconLabel extends StatelessWidget {
   final IconData iconData;
   final Color color;
   final double width;
+  final double fontSize;
 
-  const IconLabel({@required this.label, @required this.iconData, @required this.color, this.width, Key key})
+  const IconLabel(
+      {@required this.label, @required this.iconData, @required this.color, this.fontSize, this.width, Key key})
       : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class IconLabel extends StatelessWidget {
       children: [
         Icon(iconData, color: color),
         SizedBox(width: 8),
-        Text(label, style: TextStyle(color: color)),
+        Text(label, style: TextStyle(color: color, fontSize: fontSize)),
       ],
     );
   }
