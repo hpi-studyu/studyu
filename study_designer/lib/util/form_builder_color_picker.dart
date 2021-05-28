@@ -140,9 +140,7 @@ class FormBuilderColorPickerField extends FormBuilderField<Color> {
                           decoration: BoxDecoration(
                             color: state.value,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
+                            border: Border.all(),
                           ),
                         );
                       },
