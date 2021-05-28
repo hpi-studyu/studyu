@@ -31,15 +31,15 @@ class _StudyDetailsState extends State<StudyDetails> {
             'repo(*)',
             'study_invite!study_invite_studyId_fkey(*)',
             'study_participant_count',
-            'study_completed_count',
-            'active_subject_count'
+            'study_ended_count',
+            'active_subject_count',
+            'study_missed_days'
           ]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Study Overview'),
@@ -48,17 +48,21 @@ class _StudyDetailsState extends State<StudyDetails> {
           padding: const EdgeInsets.all(16),
           child: RetryFutureBuilder<Study>(
             tryFunction: getStudy,
-            successBuilder: (context, study) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Header(study: study, reload: reloadPage),
-                SizedBox(height: 8),
-                Stats(study: study, reload: reloadPage),
-                SizedBox(height: 8),
-                NotebookOverview(studyId: study.id),
-              ],
-            ),
+            successBuilder: (context, study) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Header(study: study, reload: reloadPage),
+                    SizedBox(height: 8),
+                    Stats(study: study, reload: reloadPage),
+                    SizedBox(height: 8),
+                    NotebookOverview(studyId: study.id),
+                  ],
+                ),
+              );
+            },
           )),
     );
   }

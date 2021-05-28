@@ -276,9 +276,11 @@ class StudyCard extends StatelessWidget {
           children: [
             IconLabel(label: study.participantCount.toString(), iconData: MdiIcons.accountGroup, color: Colors.red),
             SizedBox(width: 16),
-            IconLabel(label: study.completedCount.toString(), iconData: MdiIcons.flagCheckered, color: Colors.black),
+            IconLabel(label: study.endedCount.toString(), iconData: MdiIcons.flagCheckered, color: Colors.black),
             SizedBox(width: 16),
             IconLabel(label: study.activeSubjectCount.toString(), iconData: MdiIcons.run, color: Colors.green),
+            SizedBox(width: 16),
+            IconLabel(label: study.totalMissedDays.toString(), iconData: MdiIcons.calendarRemove, color: Colors.orange),
             VerticalDivider(),
             if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
             SizedBox(width: 16),
