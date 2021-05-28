@@ -43,9 +43,11 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(ignore: true)
   int participantCount = 0;
   @JsonKey(ignore: true)
-  int completedCount = 0;
+  int endedCount = 0;
   @JsonKey(ignore: true)
   int activeSubjectCount = 0;
+  @JsonKey(ignore: true)
+  List<int> missedDays = [];
 
   @JsonKey(ignore: true)
   Repo? repo;
@@ -69,8 +71,9 @@ class Study extends SupabaseObjectFunctions<Study> {
     }
     study
       ..participantCount = json['study_participant_count'] as int
-      ..completedCount = json['study_completed_count'] as int
-      ..activeSubjectCount = json['active_subject_count'] as int;
+      ..endedCount = json['study_ended_count'] as int
+      ..activeSubjectCount = json['active_subject_count'] as int
+      ..missedDays = json['study_missed_days'] != null ? List<int>.from(json['study_missed_days'] as List) : [];
     return study;
   }
 
@@ -78,12 +81,22 @@ class Study extends SupabaseObjectFunctions<Study> {
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
-      selectedColumns: ['*', 'repo(*)', 'study_participant_count', 'study_completed_count', 'active_subject_count']);
+  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(selectedColumns: [
+        '*',
+        'repo(*)',
+        'study_participant_count',
+        'study_ended_count',
+        'active_subject_count',
+        'study_missed_days'
+      ]);
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
       await env.client.from(tableName).select().eq('participation', 'open').execute());
 
   bool isOwner(String userId) => this.userId == userId;
+
+  int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
+
+  double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
 }

@@ -18,6 +18,8 @@ class StudySchedule {
 
   int getNumberOfPhases() => numberOfCycles * numberOfInterventions + (includeBaseline ? 1 : 0);
 
+  int get length => getNumberOfPhases() * phaseDuration;
+
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles);
     final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
