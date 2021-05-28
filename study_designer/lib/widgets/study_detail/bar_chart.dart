@@ -50,8 +50,8 @@ class BarChartView extends StatelessWidget {
           ),
         ),
         axisTitleData: FlAxisTitleData(
-          bottomTitle:
-              AxisTitle(titleText: 'Missed days', showTitle: true, textStyle: TextStyle(color: Color(0xff7589a2))),
+          bottomTitle: AxisTitle(
+              titleText: 'Amount of missed days', showTitle: true, textStyle: TextStyle(color: Color(0xff7589a2))),
           leftTitle:
               AxisTitle(titleText: 'Number of participants', showTitle: true, textStyle: TextStyle(color: color)),
         ),
