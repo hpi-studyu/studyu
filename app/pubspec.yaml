@@ -11,7 +11,7 @@ environment:
 dependencies:
   charts_common: ^0.10.0
   charts_flutter: ^0.10.0
-  chewie: ^1.1.0
+  chewie: ^1.2.0
   cupertino_icons: ^1.0.3
   extended_math:
     git:

@@ -70,7 +70,7 @@ packages:
       name: chewie
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   clock:
     dependency: transitive
     description:
@@ -154,7 +154,7 @@ packages:
       name: flutter_dotenv
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0-nullsafety.1"
+    version: "5.0.0"
   flutter_file_dialog:
     dependency: "direct main"
     description:
