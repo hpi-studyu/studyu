@@ -1,4 +1,4 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart' as dot_env;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:studyou_core/env.dart' as env;
 
 const envsAssetPath = 'packages/studyu_flutter_common/envs';
@@ -10,6 +10,6 @@ String envFilePath() {
 }
 
 Future<void> loadEnv() async {
-  await dot_env.load(fileName: envFilePath());
-  env.loadEnv(dot_env.env);
+  await dotenv.load(fileName: envFilePath());
+  env.loadEnv(dotenv.env);
 }
