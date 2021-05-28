@@ -165,10 +165,12 @@ class _HeaderState extends State<Header> {
 
     return Card(
       child: ListTile(
-        contentPadding: EdgeInsets.fromLTRB(16, 0, 8, 0),
+        contentPadding: EdgeInsets.fromLTRB(0, 0, 8, 0),
         leading: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            BackButton(),
+            SizedBox(width: 8),
             Icon(MdiIcons.fromString(widget.study.iconName), color: theme.accentColor),
             SizedBox(width: 8),
             Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),

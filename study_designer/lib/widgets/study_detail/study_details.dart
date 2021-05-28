@@ -41,29 +41,28 @@ class _StudyDetailsState extends State<StudyDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Study Overview'),
+      body: SafeArea(
+        child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: RetryFutureBuilder<Study>(
+              tryFunction: getStudy,
+              successBuilder: (context, study) {
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Header(study: study, reload: reloadPage),
+                      SizedBox(height: 8),
+                      Stats(study: study, reload: reloadPage),
+                      SizedBox(height: 8),
+                      NotebookOverview(studyId: study.id),
+                    ],
+                  ),
+                );
+              },
+            )),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: RetryFutureBuilder<Study>(
-            tryFunction: getStudy,
-            successBuilder: (context, study) {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Header(study: study, reload: reloadPage),
-                    SizedBox(height: 8),
-                    Stats(study: study, reload: reloadPage),
-                    SizedBox(height: 8),
-                    NotebookOverview(studyId: study.id),
-                  ],
-                ),
-              );
-            },
-          )),
     );
   }
 }
