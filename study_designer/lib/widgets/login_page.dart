@@ -34,13 +34,13 @@ class LoginPage extends StatelessWidget {
                 Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
                 Form(
                   key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: SizedBox(
                     width: 500,
                     child: Column(
                       children: [
                         TextFormField(
                           controller: _emailController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (email) => EmailValidator.validate(email) ? null : 'Please enter a valid email',
                           decoration: InputDecoration(
                             labelText: 'Email',
@@ -51,6 +51,7 @@ class LoginPage extends StatelessWidget {
                         SizedBox(height: 16),
                         TextFormField(
                           controller: _passwordController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           validator: (value) => value.length >= 8 ? null : 'Password needs at least 8 characters',
                           decoration: InputDecoration(
