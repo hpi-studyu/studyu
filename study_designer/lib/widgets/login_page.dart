@@ -13,6 +13,12 @@ class LoginPage extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
 
+  void _login(AppState appState) {
+    if (_formKey.currentState.validate()) {
+      appState.signIn(_emailController.text, _passwordController.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
@@ -52,6 +58,7 @@ class LoginPage extends StatelessWidget {
                             icon: Icon(Icons.lock),
                             border: OutlineInputBorder(),
                           ),
+                          onFieldSubmitted: (value) => _login(appState),
                         ),
                       ],
                     ),
@@ -69,11 +76,7 @@ class LoginPage extends StatelessWidget {
                       flex: 6,
                       child: OutlinedButton.icon(
                           icon: Icon(Icons.login),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              appState.signIn(_emailController.text, _passwordController.text);
-                            }
-                          },
+                          onPressed: () => _login(appState),
                           label: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                             child: Text('Login', style: TextStyle(fontSize: 20)),
