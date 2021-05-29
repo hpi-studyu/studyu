@@ -18,6 +18,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _controller;
   FocusNode _codeInputFocusNode;
+  String _codeErrorText;
 
   List<StudyInvite> _invites;
   bool _preselectInterventions = false;
@@ -47,18 +48,21 @@ class _InvitesDialogState extends State<InvitesDialog> {
   Future<void> addNewInviteCode(String code) async {
     if (_formKey.currentState.validate()) {
       StudyInvite invite;
-      if (_preselectInterventions) {
-        invite =
-            await StudyInvite(code, widget.study.id, preselectedInterventionIds: [_interventionA.id, _interventionB.id])
-                .save();
-      } else {
-        invite = await StudyInvite(code, widget.study.id).save();
+      invite = StudyInvite(code, widget.study.id,
+          preselectedInterventionIds: _preselectInterventions ? [_interventionA.id, _interventionB.id] : null);
+      try {
+        await invite.save();
+        setState(() {
+          _invites.add(invite);
+          _codeErrorText = null;
+        });
+        _controller.clear();
+        _codeInputFocusNode.requestFocus();
+      } catch (e) {
+        setState(() {
+          _codeErrorText = 'An error occurred. Try a different code.';
+        });
       }
-      setState(() {
-        _invites.add(invite);
-      });
-      _controller.clear();
-      _codeInputFocusNode.requestFocus();
     }
   }
 
@@ -156,10 +160,15 @@ class _InvitesDialogState extends State<InvitesDialog> {
                         autofocus: kIsWeb,
                         focusNode: _codeInputFocusNode,
                         controller: _controller,
-                        decoration: InputDecoration(labelText: 'New invite code'),
+                        decoration: InputDecoration(
+                          labelText: 'New invite code',
+                          errorText: _codeErrorText,
+                        ),
                         validator: (value) {
                           if (value == null || value.length < 4) {
                             return 'Code should at least contain 4 characters';
+                          } else if (_invites.map((e) => e.code).contains(value)) {
+                            return 'Code is already defined';
                           }
                           return null;
                         },
