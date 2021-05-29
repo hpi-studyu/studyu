@@ -48,6 +48,7 @@ class AppState extends ChangeNotifier {
   bool get loggedInViaGitlab => loggedIn && env.client.auth.user().appMetadata['provider'] == 'gitlab';
 
   String get userId => env.client.auth.user()?.id;
+  String get email => env.client.auth.user()?.email;
 
   void skipLogin() {
     skippedLogin = true;

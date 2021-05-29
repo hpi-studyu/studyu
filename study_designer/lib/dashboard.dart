@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
+import 'package:studyu_designer/theme.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -103,7 +104,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final appState = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
@@ -186,46 +186,30 @@ class _DashboardState extends State<Dashboard> {
             successBuilder: (BuildContext context, List<Study> studies) {
               studies.sort(_sortStudies);
               final myStudies = studies.where((s) => s.isOwner(appState.userId));
-              final publicStudies =
-                  studies.where((s) => !s.isOwner(appState.userId) && s.resultSharing == ResultSharing.public);
+              final sharedStudies = studies.where((s) => s.isEditor(appState.email));
+              final publicStudies = studies.where((s) =>
+                  !s.canEdit(userId: appState.userId, email: appState.email) &&
+                  s.resultSharing == ResultSharing.public);
               return ListView(
                 children: [
                   if (myStudies.isNotEmpty)
-                    Card(
-                      child: ExpansionTile(
-                        title: Row(children: [
-                          Icon(MdiIcons.accountLock, color: theme.accentColor),
-                          SizedBox(width: 8),
-                          Text('My Studies')
-                        ]),
-                        initiallyExpanded: true,
-                        children: ListTile.divideTiles(
-                            context: context,
-                            tiles: myStudies.map((study) => StudyCard(
-                                  study: study,
-                                  owner: study.isOwner(appState.userId),
-                                  reload: appState.reloadStudies,
-                                ))).toList(),
-                      ),
+                    StudyList(
+                      title: 'My Studies',
+                      iconData: MdiIcons.accountLock,
+                      studies: myStudies,
+                    ),
+                  if (sharedStudies.isNotEmpty)
+                    StudyList(
+                      title: 'Shared Studies',
+                      iconData: MdiIcons.accountSupervisor,
+                      studies: sharedStudies,
                     ),
                   if (publicStudies.isNotEmpty)
-                    Card(
-                      child: ExpansionTile(
-                        title: Row(children: [
-                          Icon(MdiIcons.earth, color: theme.accentColor),
-                          SizedBox(width: 8),
-                          Text('Public studies')
-                        ]),
-                        initiallyExpanded: true,
-                        children: ListTile.divideTiles(
-                            context: context,
-                            tiles: publicStudies.map((study) => StudyCard(
-                                  study: study,
-                                  owner: study.isOwner(appState.userId),
-                                  reload: appState.reloadStudies,
-                                ))).toList(),
-                      ),
-                    )
+                    StudyList(
+                      title: 'Public studies',
+                      iconData: MdiIcons.earth,
+                      studies: publicStudies,
+                    ),
                 ],
               );
             },
@@ -252,6 +236,38 @@ class _DashboardState extends State<Dashboard> {
       return s1.resultSharing.toString().compareTo(s2.resultSharing.toString());
     }
     return s1.published.toString().compareTo(s2.published.toString());
+  }
+}
+
+class StudyList extends StatelessWidget {
+  final Iterable<Study> studies;
+  final String title;
+  final IconData iconData;
+
+  const StudyList({Key key, @required this.studies, @required this.title, @required this.iconData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
+    return Card(
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            Icon(iconData, color: theme.accentColor),
+            SizedBox(width: 8),
+            Text(title),
+          ],
+        ),
+        initiallyExpanded: true,
+        children: ListTile.divideTiles(
+            context: context,
+            tiles: studies.map((study) => StudyCard(
+                  study: study,
+                  owner: study.canEdit(userId: appState.userId, email: appState.email),
+                  reload: appState.reloadStudies,
+                ))).toList(),
+      ),
+    );
   }
 }
 
