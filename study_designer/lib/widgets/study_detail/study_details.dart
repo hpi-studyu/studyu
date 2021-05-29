@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studyou_core/core.dart';
+import 'package:studyu_designer/models/app_state.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'header.dart';
@@ -40,14 +42,15 @@ class _StudyDetailsState extends State<StudyDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: RetryFutureBuilder<Study>(
-              tryFunction: getStudy,
-              successBuilder: (context, study) {
-                return SingleChildScrollView(
+    final appState = context.watch<AppState>();
+    return RetryFutureBuilder<Study>(
+      tryFunction: getStudy,
+      successBuilder: (context, study) {
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -59,10 +62,17 @@ class _StudyDetailsState extends State<StudyDetails> {
                       NotebookOverview(studyId: study.id),
                     ],
                   ),
-                );
-              },
-            )),
-      ),
+                )),
+          ),
+          floatingActionButton: study.canEdit(appState.user)
+              ? FloatingActionButton.extended(
+                  onPressed: () => appState.openDesigner(study.id),
+                  label: Text('Edit study'),
+                  icon: Icon(Icons.edit),
+                )
+              : null,
+        );
+      },
     );
   }
 }

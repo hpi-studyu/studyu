@@ -178,16 +178,11 @@ class _HeaderState extends State<Header> {
           ],
         ),
         title: IntrinsicHeight(
-          child: _buildAccessHeader(isOwner: widget.study.canEdit(userId: appState.userId, email: appState.email)),
+          child: _buildAccessHeader(isOwner: widget.study.canEdit(appState.user)),
         ),
         trailing: ButtonBar(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (appState.loggedIn && widget.study.canEdit(userId: appState.userId, email: appState.email))
-              TextButton.icon(
-                  onPressed: () => context.read<AppState>().openDesigner(widget.study.id),
-                  icon: Icon(Icons.edit),
-                  label: Text('Edit')),
             TextButton.icon(
                 onPressed: () async {
                   final dl = ResultDownloader(study: widget.study);
@@ -199,9 +194,7 @@ class _HeaderState extends State<Header> {
                 },
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
-            if (appState.loggedIn &&
-                widget.study.canEdit(userId: appState.userId, email: appState.email) &&
-                widget.study.participation == Participation.invite)
+            if (widget.study.canEdit(appState.user) && widget.study.participation == Participation.invite)
               TextButton.icon(
                   onPressed: () async {
                     await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
@@ -210,8 +203,8 @@ class _HeaderState extends State<Header> {
                   icon: Icon(MdiIcons.ticketAccount),
                   label: Text('Invite codes (${widget.study.invites.length})')),
             if (widget.study.repo != null) ...gitPublicActions(),
-            if (appState.loggedInViaGitlab && widget.study.isOwner(appState.userId)) gitOwnerActions(),
-            if (widget.study.canEdit(userId: appState.userId, email: appState.email))
+            if (appState.loggedInViaGitlab && widget.study.isOwner(appState.user)) gitOwnerActions(),
+            if (widget.study.canEdit(appState.user))
               TextButton.icon(
                 icon: Icon(Icons.delete, color: Colors.red),
                 label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),

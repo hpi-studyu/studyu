@@ -185,11 +185,10 @@ class _DashboardState extends State<Dashboard> {
             tryFunction: appState.researcherDashboardQuery,
             successBuilder: (BuildContext context, List<Study> studies) {
               studies.sort(_sortStudies);
-              final myStudies = studies.where((s) => s.isOwner(appState.userId));
-              final sharedStudies = studies.where((s) => s.isEditor(appState.email));
-              final publicStudies = studies.where((s) =>
-                  !s.canEdit(userId: appState.userId, email: appState.email) &&
-                  s.resultSharing == ResultSharing.public);
+              final myStudies = studies.where((s) => s.isOwner(appState.user));
+              final sharedStudies = studies.where((s) => s.isEditor(appState.user));
+              final publicStudies =
+                  studies.where((s) => !s.canEdit(appState.user) && s.resultSharing == ResultSharing.public);
               return ListView(
                 children: [
                   if (myStudies.isNotEmpty)
@@ -263,7 +262,7 @@ class StudyList extends StatelessWidget {
             context: context,
             tiles: studies.map((study) => StudyCard(
                   study: study,
-                  owner: study.canEdit(userId: appState.userId, email: appState.email),
+                  owner: study.canEdit(appState.user),
                   reload: appState.reloadStudies,
                 ))).toList(),
       ),

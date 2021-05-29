@@ -1,5 +1,6 @@
 import 'package:fhir/r4.dart' show Questionnaire;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:supabase/supabase.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../env/env.dart' as env;
@@ -96,10 +97,9 @@ class Study extends SupabaseObjectFunctions<Study> {
   static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
       await env.client.from(tableName).select().eq('participation', 'open').execute());
 
-  bool isOwner(String userId) => this.userId == userId;
-  bool isEditor(String email) => editorEmails.contains(email);
-  bool canEdit({String? userId, String? email}) =>
-      (userId != null && isOwner(userId)) || (email != null && isEditor(email));
+  bool isOwner(User? user) => user != null && userId == user.id;
+  bool isEditor(User? user) => user != null && editorEmails.contains(user.email);
+  bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
   int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
