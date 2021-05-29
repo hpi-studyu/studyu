@@ -41,6 +41,9 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
     ..results = (json['results'] as List<dynamic>)
         .map((e) => StudyResult.fromJson(e as Map<String, dynamic>))
         .toList()
+    ..editorEmails = (json['editor_emails'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList()
     ..fhirQuestionnaire = json['fhirQuestionnaire'] == null
         ? null
         : Questionnaire.fromJson(
@@ -75,6 +78,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   val['schedule'] = instance.schedule.toJson();
   val['reportSpecification'] = instance.reportSpecification.toJson();
   val['results'] = instance.results.map((e) => e.toJson()).toList();
+  val['editor_emails'] = instance.editorEmails;
   writeNotNull('fhirQuestionnaire', instance.fhirQuestionnaire?.toJson());
   return val;
 }
