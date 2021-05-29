@@ -10,6 +10,7 @@ import 'package:studyou_core/core.dart';
 import 'package:studyu_designer/models/app_state.dart';
 import 'package:studyu_designer/util/repo_manager.dart';
 import 'package:studyu_designer/util/result_downloader.dart';
+import 'package:studyu_designer/widgets/study_detail/collaborators_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme.dart';
@@ -194,6 +195,14 @@ class _HeaderState extends State<Header> {
                 },
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
+            if (widget.study.isOwner(appState.user))
+              TextButton.icon(
+                  onPressed: () async {
+                    await showDialog(context: context, builder: (_) => AddCollaboratorDialog(study: widget.study));
+                    widget.reload();
+                  },
+                  icon: Icon(MdiIcons.accountPlus),
+                  label: Text('Add collaborator')),
             if (widget.study.canEdit(appState.user) && widget.study.participation == Participation.invite)
               TextButton.icon(
                   onPressed: () async {

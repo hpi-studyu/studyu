@@ -38,8 +38,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   late StudySchedule schedule = StudySchedule();
   late ReportSpecification reportSpecification = ReportSpecification();
   late List<StudyResult> results = [];
-  @JsonKey(name: 'editor_emails')
-  late List<String> editorEmails = [];
+  @JsonKey(name: 'collaborator_emails')
+  late List<String> collaboratorEmails = [];
 
   Questionnaire? fhirQuestionnaire;
 
@@ -98,7 +98,7 @@ class Study extends SupabaseObjectFunctions<Study> {
       await env.client.from(tableName).select().eq('participation', 'open').execute());
 
   bool isOwner(User? user) => user != null && userId == user.id;
-  bool isEditor(User? user) => user != null && editorEmails.contains(user.email);
+  bool isEditor(User? user) => user != null && collaboratorEmails.contains(user.email);
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
   int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
