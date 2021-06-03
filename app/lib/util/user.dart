@@ -21,18 +21,24 @@ class UserQueries {
 
   static Future<bool> recoverSession() async {
     final prefs = await SharedPreferences.getInstance();
-    var res = await env.client.auth.recoverSession(prefs.getString(sessionKey));
-
-    if (res.error != null) {
+    if (prefs.containsKey(sessionKey)) {
+      final res = await env.client.auth.recoverSession(prefs.getString(sessionKey));
+      if (res.error == null && env.client.auth.session() != null) {
+        await storeSession(env.client.auth.session().persistSessionString);
+        return true;
+      }
       print(res.error.message);
-      res = await env.client.auth.signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
     }
 
-    if (res.error == null && env.client.auth.session() != null) {
-      await storeSession(env.client.auth.session().persistSessionString);
-      return true;
+    // Continue trying with user and pw next
+    if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
+      final res = await env.client.auth.signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
+      if (res.error == null && env.client.auth.session() != null) {
+        await storeSession(env.client.auth.session().persistSessionString);
+        return true;
+      }
+      print(res.error.message);
     }
-    print(res.error);
     return false;
   }
 
