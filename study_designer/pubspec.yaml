@@ -26,16 +26,16 @@ dependencies:
     sdk: flutter
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
-  postgrest: ^0.1.1
+  postgrest: ^0.1.2
   pretty_json: ^2.0.0
   provider: ^5.0.0
   studyou_core:
     path: ../core
   studyu_flutter_common:
     path: ../common
-  supabase: ^0.0.1-dev.16
+  supabase: ^0.0.1-dev.17
   universal_html: ^2.0.8
-  url_launcher: ^6.0.5
+  url_launcher: ^6.0.6
   uuid: ^3.0.4
   webviewx: 0.0.4
 
