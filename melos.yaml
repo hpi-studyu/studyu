@@ -10,53 +10,58 @@ packages:
 
 scripts:
   tuneup: melos exec -- pub global run tuneup check
+
   analyze:
     run: |
       melos exec -c 6 -- \
-        dart analyze . --fatal-infos
+        "flutter analyze --fatal-infos ."
     description: |
       Run `dart analyze` in all packages.
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
   format:
     run: |
       melos exec -c 6 -- \
-        dart format --line-length 120 . --set-exit-if-changed
+        "dart format -l 120 ."
     description: Format all code
+
+  format:ci:
+    run: |
+      melos exec -c 6 -- \
+        "find . -name "*.dart" ! -name "*.g.dart" ! -path '*/generated/*' ! -path './proto/*' | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
+    description: Format all code without generated files
+
   test:
     run: |
       melos exec -c 6 --fail-fast -- \
-        flutter test --no-pub
+        "flutter test"
     description: Run `flutter test` for a specific package.
     select-package:
-      dir-exists:
-        - test
+      dir-exists: test
 
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        flutter build apk --no-pub
+        "flutter build apk"
     description: Build app for Android.
     select-package:
-      dir-exists:
-        - android
+      dir-exists: android
 
   build:ios:
     run: |
       melos exec -c 2 --fail-fast -- \
-        flutter build ios --no-codesign --no-pub
+        "flutter build ios --no-codesign"
     description: Build app for iOS.
     select-package:
-      dir-exists:
-        - ios
+      dir-exists: ios
 
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
-        flutter build web --no-pub
-    description: Build app for iOS.
+        "flutter build web"
+    description: Build app for Web.
     select-package:
-      dir-exists:
-        - ios
+      dir-exists: web
 
 # Clean things very deeply, can be used to establish "pristine checkout" status
 clean:deep: >
