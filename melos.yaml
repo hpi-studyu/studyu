@@ -1,0 +1,22 @@
+name: studyu-packages
+
+packages:
+  - 'app/*'
+  - 'common/*'
+  - 'core/*'
+  - 'generator/*'
+  - 'notebook_uploader/*'
+  - 'study_designer/*'
+
+scripts:
+  tuneup: melos exec -- pub global run tuneup check
+  analyze:
+    run: |
+      melos exec -c 6 -- \
+        dart analyze . --fatal-infos
+    description: |
+      Run `dart analyze` in all packages.
+       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+dev_dependencies:
+  lint: ^1.5.3

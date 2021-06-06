@@ -275,13 +275,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  lint:
-    dependency: "direct dev"
-    description:
-      name: lint
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.3"
   logging:
     dependency: transitive
     description:
@@ -402,7 +395,7 @@ packages:
     source: hosted
     version: "2.0.0"
   postgrest:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: postgrest
       url: "https://pub.dartlang.org"
