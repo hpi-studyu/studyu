@@ -133,7 +133,6 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   .rpc('get_study_from_invite', params: {'invite_code': _controller.text})
                   .single()
                   .execute();
-              print(res.data);
               if (res.error != null) {
                 print(res.error.message);
                 setState(() {
