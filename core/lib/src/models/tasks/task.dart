@@ -1,4 +1,4 @@
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 import 'package:uuid/uuid.dart';
 
 import '../tasks/schedule.dart';

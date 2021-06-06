@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 
 class AddCollaboratorDialog extends StatefulWidget {
   final Study study;

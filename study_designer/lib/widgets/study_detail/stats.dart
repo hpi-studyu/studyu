@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 
 import '../icon_labels.dart';
 import 'bar_chart.dart';

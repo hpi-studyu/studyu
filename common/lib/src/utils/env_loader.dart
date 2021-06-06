@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 
 const envsAssetPath = 'packages/studyu_flutter_common/envs';
 

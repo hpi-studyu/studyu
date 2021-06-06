@@ -1,4 +1,4 @@
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 import 'package:supabase/supabase.dart';
 
 Future<List<FileObject>> getStudyNotebooks(String studyId) async {

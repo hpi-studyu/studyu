@@ -4,7 +4,7 @@ import 'package:args/args.dart';
 import 'package:generator/utils/generator.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 
 import 'utils/gitlab.dart';
 

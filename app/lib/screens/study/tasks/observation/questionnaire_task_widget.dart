@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:postgrest/postgrest.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
 import '../../../../widgets/fhir_questionnaire/questionnaire_widget.dart';

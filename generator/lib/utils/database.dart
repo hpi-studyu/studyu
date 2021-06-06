@@ -1,5 +1,5 @@
-import 'package:studyou_core/core.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
 
 Future<Study> fetchStudySchema(String studyId) async => SupabaseQuery.getById<Study>(studyId);
 

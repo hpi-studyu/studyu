@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer/models/app_state.dart';
 import 'package:studyu_designer/util/repo_manager.dart';
 import 'package:studyu_designer/util/result_downloader.dart';

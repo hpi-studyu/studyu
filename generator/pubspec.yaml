@@ -13,7 +13,7 @@ dependencies:
   path: ^1.8.0
   pretty_json: ^2.0.0
   shelf: ^1.1.4
-  studyou_core:
+  studyu_core:
     path: ../core
   supabase: ^0.0.1-dev.17
 

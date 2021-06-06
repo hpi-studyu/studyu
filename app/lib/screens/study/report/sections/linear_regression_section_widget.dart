@@ -2,7 +2,7 @@ import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 
 import '../report_section_widget.dart';
 import '../util/linear_regression.dart';

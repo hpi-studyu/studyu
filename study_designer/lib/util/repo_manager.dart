@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 
 Future<void> generateRepo(String studyId) async {
   await http.get(Uri.parse('${env.projectGeneratorUrl}/generate'), headers: {

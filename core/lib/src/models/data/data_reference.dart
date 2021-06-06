@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 
 import '../tables/study_subject.dart';
 import '../tasks/task.dart';

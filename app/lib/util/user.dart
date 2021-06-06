@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 import 'package:uuid/uuid.dart';
 
 class UserQueries {

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:studyou_core/core.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
 import 'package:supabase/supabase.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 import 'package:universal_html/html.dart' as html;
 
 class ResultDownloader {

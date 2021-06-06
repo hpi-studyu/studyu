@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 
 Future<void> uploadNotebookToSupabase(String filePath, String studyId) async {
   final file = File(filePath);

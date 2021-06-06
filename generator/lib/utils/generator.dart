@@ -4,8 +4,8 @@ import 'package:dotenv/dotenv.dart' as dot_env show env;
 import 'package:generator/utils/gitlab.dart';
 import 'package:path/path.dart' as p;
 import 'package:pretty_json/pretty_json.dart';
-import 'package:studyou_core/core.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
 
 import 'cli.dart';
 import 'database.dart';

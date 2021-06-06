@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 
 import '../../widgets/question/question_editor.dart';
 

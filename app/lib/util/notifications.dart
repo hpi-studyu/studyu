@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:studyou_core/core.dart';
+import 'package:studyu_core/core.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../models/app_state.dart';

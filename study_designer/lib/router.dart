@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyou_core/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 import 'package:uuid/uuid.dart';
 
 import 'dashboard.dart';
