@@ -1,5 +1,0 @@
-include:
-  local: flutter-project.yml
-
-variables:
-  FLUTTER_PROJECT_ROOT: app
