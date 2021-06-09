@@ -31,6 +31,18 @@ scripts:
         "find . -name "*.dart" ! -name "*.g.dart" ! -path '*/generated/*' ! -path './proto/*' | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
     description: Format all code without generated files
 
+  outdated:
+    run: |
+      melos exec -c 6 --fail-fast -- \
+        "flutter pub outdated"
+    description: Check all outdated dependencies
+
+  upgrade:
+    run: |
+      melos exec -c 6 --fail-fast -- \
+        "flutter pub upgrade"
+    description: Check all outdated dependencies
+
   test:
     run: |
       melos exec -c 6 --fail-fast -- \
@@ -50,7 +62,7 @@ scripts:
   build:ios:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build ios --no-codesign"
+        "flutter build ipa --no-codesign"
     description: Build app for iOS.
     select-package:
       dir-exists: ios
@@ -58,7 +70,7 @@ scripts:
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web"
+        "flutter build web --pwa-strategy none --web-renderer auto"
     description: Build app for Web.
     select-package:
       dir-exists: web
