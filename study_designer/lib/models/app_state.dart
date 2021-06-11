@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -125,8 +126,10 @@ class AppState extends ChangeNotifier {
         case AuthChangeEvent.signedIn:
           skippedLogin = false;
           authError = null;
+          UserQueries.storeSession(session.persistSessionString);
           break;
         case AuthChangeEvent.signedOut:
+          UserQueries.deleteLocalData();
           break;
         case AuthChangeEvent.userUpdated:
           break;
