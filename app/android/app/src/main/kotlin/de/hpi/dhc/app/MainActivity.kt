@@ -1,4 +1,4 @@
-package de.hpi.dhc.nof1
+package health.studyu.app
 
 import io.flutter.embedding.android.FlutterActivity
 
