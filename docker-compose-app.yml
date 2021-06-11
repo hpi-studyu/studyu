@@ -1,14 +1,11 @@
 version: '3'
 services:
   app:
-    environment:
-      - FLUTTER_PARSE_APP_ID=nof1-local
-      - FLUTTER_PARSE_SERVER_URL=http://localhost:1337/parse
-      - FLUTTER_PARSE_CLIENT_KEY=nof1-local
-      - FLUTTER_PARSE_DEBUG=true
     build:
       context: .
       args:
         FLUTTER_APP_FOLDER: app
     ports:
       - 8081:80
+    env_file:
+      - common/lib/envs/.env

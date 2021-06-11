@@ -13,7 +13,7 @@ import 'file.dart';
 
 Future<void> generateRepo(GitlabClient gl, String studyId) async {
   print('Generating repo...');
-  final generatedProjectPath = dot_env.env['PROJECT_PATH'] ?? 'generated';
+  final generatedProjectPath = dot_env.env['STUDYU_PROJECT_PATH'] ?? 'generated';
 
   // Fetch study schema and subjects data
   print('Fetching study data...');

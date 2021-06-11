@@ -75,6 +75,22 @@ scripts:
     select-package:
       dir-exists: web
 
+  build:web:app:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build web --pwa-strategy none --web-renderer auto"
+    description: Build app for Web.
+    select-package:
+      scope: studyu
+
+  build:web:study_designer:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build web --pwa-strategy none --web-renderer auto"
+    description: Build app for Web.
+    select-package:
+      scope: studyu_designer
+
 # Clean things very deeply, can be used to establish "pristine checkout" status
 clean:deep: >
   git clean -x -d -f -q
