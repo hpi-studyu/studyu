@@ -19,25 +19,33 @@ class UserQueries {
     prefs.setString(sessionKey, session);
   }
 
-  static Future<bool> recoverSession() async {
+  static Future<bool> recoverParticipantSession() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(sessionKey)) {
-      final res = await env.client.auth.recoverSession(prefs.getString(sessionKey));
-      if (res.error == null && env.client.auth.session() != null) {
-        await storeSession(env.client.auth.session().persistSessionString);
-        return true;
-      }
-      print(res.error.message);
+    if (await recoverSession()) {
+      return true;
     }
 
     // Continue trying with user and pw next
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       final res = await env.client.auth.signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
       if (res.error == null && env.client.auth.session() != null) {
-        await storeSession(env.client.auth.session().persistSessionString);
+        await storeSession(env.client.auth.session()!.persistSessionString);
         return true;
       }
-      print(res.error.message);
+      print(res.error!.message);
+    }
+    return false;
+  }
+
+  static Future<bool> recoverSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(sessionKey)) {
+      final res = await env.client.auth.recoverSession(prefs.getString(sessionKey)!);
+      if (res.error == null && env.client.auth.session() != null) {
+        await storeSession(env.client.auth.session()!.persistSessionString);
+        return true;
+      }
+      print(res.error!.message);
     }
     return false;
   }
@@ -49,29 +57,28 @@ class UserQueries {
     final res = await env.client.auth.signUp(fakeUserEmail, fakeUserPassword);
 
     if (res.error == null && env.client.auth.session() != null) {
-      storeSession(env.client.auth.session().persistSessionString);
+      storeSession(env.client.auth.session()!.persistSessionString);
       storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
       return true;
     }
     return false;
   }
 
-  static Future<String> getFakeUserEmail() async {
+  static Future<String?> getFakeUserEmail() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(userEmailKey);
   }
 
-  static Future<String> getFakeUserPassword() async {
+  static Future<String?> getFakeUserPassword() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(userPasswordKey);
   }
 
-  /// Generated after user accepts terms & conditions and is signed up with fake anonymous account
   static bool isUserLoggedIn() {
-    return env.client.auth.user() != null && env.client.auth.user().id != null;
+    return env.client.auth.session() != null;
   }
 
-  static Future<String> getActiveStudyObjectId() async {
+  static Future<String?> getActiveStudyObjectId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(selectedStudyObjectIdKey);
   }
