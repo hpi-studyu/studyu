@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -9,12 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer/models/app_state.dart';
 import 'package:studyu_designer/util/repo_manager.dart';
-import 'package:studyu_designer/util/result_downloader.dart';
 import 'package:studyu_designer/widgets/study_detail/collaborators_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme.dart';
 import '../icon_labels.dart';
+import 'export_dialog.dart';
 import 'invites_dialog.dart';
 
 class Header extends StatefulWidget {
@@ -184,14 +183,20 @@ class _HeaderState extends State<Header> {
         trailing: ButtonBar(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // TextButton.icon(
+            //     onPressed: () async {
+            //       final dl = ResultDownloader(study: widget.study);
+            //       final results = await dl.loadAllResults();
+            //       for (final entry in results.entries) {
+            //         downloadFile(
+            //             ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
+            //       }
+            //     },
+            //     icon: Icon(MdiIcons.tableArrowDown),
+            //     label: Text(AppLocalizations.of(context).export_csv)),
             TextButton.icon(
                 onPressed: () async {
-                  final dl = ResultDownloader(study: widget.study);
-                  final results = await dl.loadAllResults();
-                  for (final entry in results.entries) {
-                    downloadFile(
-                        ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
-                  }
+                  await showDialog(context: context, builder: (_) => ExportDialog(study: widget.study));
                 },
                 icon: Icon(MdiIcons.tableArrowDown),
                 label: Text(AppLocalizations.of(context).export_csv)),
