@@ -20,12 +20,11 @@ class UserQueries {
   }
 
   static Future<bool> recoverParticipantSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (await recoverSession()) {
-      return true;
-    }
+    return await recoverSession() || await signInParticipant();
+  }
 
-    // Continue trying with user and pw next
+  static Future<bool> signInParticipant() async {
+    final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       final res = await env.client.auth.signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
       if (res.error == null && env.client.auth.session() != null) {
