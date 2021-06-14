@@ -87,6 +87,7 @@ class SupabaseQuery {
   static void catchPostgrestError(PostgrestResponse response) {
     if (response.error != null) {
       print('Data: ${response.data}');
+      print('Status: ${response.status}');
       print('Error: ${response.error!.message}');
       // ignore: only_throw_errors
       throw response.error!.message;
