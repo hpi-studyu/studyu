@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:notebook_uploader/utils/notebook.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_notebook_uploader/utils/notebook.dart';
 
 const supabaseToken = 'token';
 const studyId = 'study-id';

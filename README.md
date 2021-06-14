@@ -78,7 +78,7 @@ docker-compose -f docker-compose-full.yml up --build
 
 Above command starts the app or designer using the `development` environment. This currently points to our hosted Heroku instance (will be shut down on Nov 10th).
 We use .env (environment) files, to specify the parse App ID, server URL and debug mode.
-We have multiple configurations stored under `envs/` in both app and study_designer.
+We have multiple configurations stored under `envs/` in both app and designer.
 By default `.env` (see below) is used, which contains the instance running on Heroku.
 We can specify the other files by using e.g. `--dart-define=ENV=.env.local`.
 This can also be added to the run configuration in Android Studio or VS Code.

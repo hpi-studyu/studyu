@@ -35,7 +35,7 @@
 ### Bug Fixes
 
 * add sizedbox at bottom of designer lists to make sure the add button doesn't block the user from seeing the element he is editing ([67fceda](https://github.com/hpi-studyu/studyu/commit/67fcedab1f3354e1fa4f3654ce92ec2c9e034323))
-* Cleanup of study_designer gen i10n ([5811fbb](https://github.com/hpi-studyu/studyu/commit/5811fbbb6d8dca1497d3a9826f3f12f844f5fb7c))
+* Cleanup of designer gen i10n ([5811fbb](https://github.com/hpi-studyu/studyu/commit/5811fbbb6d8dca1497d3a9826f3f12f844f5fb7c))
 * Correct tranlsation ([3609e0d](https://github.com/hpi-studyu/studyu/commit/3609e0d9b0648c62797020664e4e0d062c69ccb1))
 * Disable notifications on web ([ff7b2d4](https://github.com/hpi-studyu/studyu/commit/ff7b2d4c0e7499d5b16efb90a90a88ede5920103))
 * Do not call notifications for web ([df370dd](https://github.com/hpi-studyu/studyu/commit/df370ddeb740458fc363e2930fb71203c04d0daa))

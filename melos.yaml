@@ -2,11 +2,11 @@ name: studyu-packages
 
 packages:
   - 'app/*'
-  - 'common/*'
+  - 'designer/*'
   - 'core/*'
-  - 'generator/*'
+  - 'flutter_common/*'
+  - 'repo_generator/*'
   - 'notebook_uploader/*'
-  - 'study_designer/*'
 
 scripts:
   tuneup: melos exec -- pub global run tuneup check
@@ -83,7 +83,7 @@ scripts:
     select-package:
       scope: studyu
 
-  build:web:study_designer:
+  build:web:designer:
     run: |
       melos exec -c 1 --fail-fast -- \
         "flutter build web --pwa-strategy none --web-renderer auto"

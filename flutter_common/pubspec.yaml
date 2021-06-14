@@ -1,6 +1,6 @@
 name: studyu_flutter_common
-description: StudYou Models and common functions for app and study designer
-version: 3.0.0
+description: StudYou common flutter components and functions for app and designer
+version: 1.0.0
 
 publish_to: 'none'
 

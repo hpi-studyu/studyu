@@ -1,4 +1,4 @@
-name: studyu
+name: studyu_app
 description: An app to facilitate N-of-1 trials
 
 publish_to: 'none'
@@ -37,7 +37,7 @@ dependencies:
   studyu_core:
     path: ../core
   studyu_flutter_common:
-    path: ../common
+    path: ../flutter_common
   supabase: ^0.0.1-dev.17
   timeline_tile: ^2.0.0
   url_launcher: ^6.0.6

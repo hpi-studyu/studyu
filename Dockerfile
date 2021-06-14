@@ -1,7 +1,7 @@
 # Based on https://github.com/cirruslabs/docker-images-flutter/blob/master/sdk/Dockerfile
 FROM cirrusci/android-sdk:30 as builder
 
-# E.g. app or study_designer
+# E.g. app or designer
 ARG FLUTTER_APP_FOLDER
 
 # SETUP FLUTTER

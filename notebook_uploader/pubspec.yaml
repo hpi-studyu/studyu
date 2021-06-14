@@ -1,4 +1,4 @@
-name: notebook_uploader
+name: studyu_notebook_uploader
 description: A cli tool to upload html of jupyter notebooks to supabase
 version: 1.0.0
 

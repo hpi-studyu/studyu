@@ -1,6 +1,6 @@
 name: studyu_core
-description: StudYou Models and common functions for app and study designer
-version: 3.0.0
+description: StudyU Models and common functions for app and designer
+version: 2.0.0
 
 publish_to: 'none'
 
