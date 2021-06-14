@@ -35,18 +35,32 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
-
-    final userStudy = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId,
-        selectedColumns: ['*', 'study(*)', 'subject_progress(*)']);
-    if (userStudy != null) {
-      model.activeSubject = userStudy;
-      if (!kIsWeb) {
-        // Notifications not supported on web
-        scheduleStudyNotifications(context);
+    StudySubject subject;
+    try {
+      subject = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId, selectedColumns: [
+        '*',
+        'study!study_subject_studyId_fkey(*)',
+        'subject_progress(*)',
+      ]);
+    } catch (e) {
+      // Try signing in again. Needed if JWT is expired
+      await UserQueries.signInParticipant();
+      subject = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId, selectedColumns: [
+        '*',
+        'study!study_subject_studyId_fkey(*)',
+        'subject_progress(*)',
+      ]);
+    } finally {
+      if (subject != null) {
+        model.activeSubject = subject;
+        if (!kIsWeb) {
+          // Notifications not supported on web
+          scheduleStudyNotifications(context);
+        }
+        Navigator.pushReplacementNamed(context, Routes.dashboard);
+      } else {
+        Navigator.pushReplacementNamed(context, Routes.welcome);
       }
-      Navigator.pushReplacementNamed(context, Routes.dashboard);
-    } else {
-      Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
 
