@@ -1,3 +1,10 @@
+## 1.5.1
+
+ - **FIX**: Hide report section until study is finished.
+ - **FIX**: Retry fetching subjects if JWT is expired.
+ - **CI**: Add gradle files for codemagic.
+ - **CHORE**: Upgrade studyu packages.
+
 ## 1.5.0
 
  - **TEST**: Fix tests.
