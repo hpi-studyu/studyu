@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'core/**'
-      - 'generator/**'
+      - 'repo_generator/**'
       - '.github/workflows/build-docker-generator.yml'
     branches:
       - master
