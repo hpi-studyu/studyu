@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
@@ -42,13 +43,15 @@ class ReportDetailsScreen extends StatelessWidget {
               subject,
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(subject: subject)),
             ),
-            ReportSectionContainer(
-              subject.study.reportSpecification.primary,
-              subject: subject,
-              primary: true,
-            ),
-            ...subject.study.reportSpecification.secondary
-                .map((section) => ReportSectionContainer(section, subject: subject))
+            if (subject.completedStudy || kDebugMode)
+              ReportSectionContainer(
+                subject.study.reportSpecification.primary,
+                subject: subject,
+                primary: true,
+              ),
+            if (subject.completedStudy || kDebugMode)
+              ...subject.study.reportSpecification.secondary
+                  .map((section) => ReportSectionContainer(section, subject: subject))
           ],
         ),
       ),
