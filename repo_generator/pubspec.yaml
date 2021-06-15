@@ -15,7 +15,7 @@ dependencies:
   shelf: ^1.1.4
   studyu_core:
     path: ../core
-  supabase: ^0.0.1-dev.17
+  supabase: ^0.0.1-dev.20
 
 dev_dependencies:
     shelf_hotreload: ^0.0.2

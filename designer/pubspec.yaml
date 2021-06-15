@@ -17,7 +17,7 @@ dependencies:
   fl_chart: ^0.36.1
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^0.4.0
+  flutter_colorpicker: 0.4.0
   flutter_file_dialog: ^2.1.0
   flutter_form_builder: ^6.0.1
   flutter_iconpicker: ^3.0.1
@@ -33,7 +33,7 @@ dependencies:
     path: ../core
   studyu_flutter_common:
     path: ../flutter_common
-  supabase: ^0.0.1-dev.17
+  supabase: ^0.0.1-dev.20
   universal_html: ^2.0.8
   url_launcher: ^6.0.6
   uuid: ^3.0.4

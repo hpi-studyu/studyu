@@ -142,7 +142,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.1"
+    version: "6.1.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -218,7 +218,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.4"
   grizzly_distuv:
     dependency: "direct main"
     description:
@@ -275,6 +275,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  jwt_decode:
+    dependency: transitive
+    description:
+      name: jwt_decode
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   logging:
     dependency: transitive
     description:
@@ -517,7 +524,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.2"
+    version: "0.0.1-dev.3"
   stream_channel:
     dependency: transitive
     description:
@@ -552,7 +559,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.17"
+    version: "0.0.1-dev.20"
   term_glyph:
     dependency: transitive
     description:
