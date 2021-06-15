@@ -163,7 +163,11 @@ class ConsentCard extends StatelessWidget {
                 children: [
                   Icon(MdiIcons.fromString(consent.iconName), color: theme.primaryColor),
                   SizedBox(width: 8),
-                  Text(consent.title),
+                  Expanded(child: Text(consent.title)),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  )
                 ],
               ),
               content: Text(consent.description),
