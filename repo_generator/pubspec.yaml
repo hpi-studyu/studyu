@@ -1,6 +1,6 @@
 name: studyu_repo_generator
 description: A web server to generate/update Gitlab repos
-version: 1.0.1
+version: 1.0.2
 
 publish_to: none
 

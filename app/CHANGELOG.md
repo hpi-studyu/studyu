@@ -1,3 +1,9 @@
+## 1.5.2
+
+ - **FIX**: Upgrade supabase -> Fix jwt expired.
+ - **FIX**: Add close button to consent item.
+ - **CHORE**: Upgrade studyu packages.
+
 ## 1.5.1
 
  - **FIX**: Hide report section until study is finished.

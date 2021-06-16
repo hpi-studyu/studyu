@@ -1,3 +1,8 @@
+## 1.1.1
+
+ - **FIX**: Upgrade supabase -> Fix jwt expired.
+ - **CHORE**: Upgrade studyu packages.
+
 ## 1.1.0
 
  - **REFACTOR**: Rename studyou_core -> studyu_core.

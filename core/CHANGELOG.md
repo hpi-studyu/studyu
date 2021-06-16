@@ -1,3 +1,8 @@
+## 3.0.1
+
+ - **FIX**: Upgrade supabase -> Fix jwt expired.
+ - **CHORE**: Add status error logging.
+
 ## 3.0.0
 
 > Note: This release has breaking changes.
