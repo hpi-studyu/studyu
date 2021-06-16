@@ -51,3 +51,6 @@ app.*.map.json
 
 # geneerated git project files
 generated/
+
+# Firebase
+.firebase

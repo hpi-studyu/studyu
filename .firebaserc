@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "studyu-e37af"
+  },
+  "targets": {
+    "studyu-e37af": {
+      "hosting": {
+        "app": [
+          "studyu-app"
+        ],
+        "designer": [
+          "studyu-designer"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "hosting": [
+    {
+      "target": "app",
+      "public": "app/build/web",
+      "ignore": [
+        "firebase.json",
+        "**/node_modules/**"
+      ],
+      "headers": [
+        {
+          "source": "*.supabase.co/**",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "target": "designer",
+      "public": "designer/build/web",
+      "ignore": [
+        "firebase.json",
+        "**/node_modules/**"
+      ],
+      "headers": [
+        {
+          "source": "*",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+          "headers": [
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
