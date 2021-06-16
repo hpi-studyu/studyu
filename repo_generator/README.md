@@ -1,1 +1,2 @@
-A web server built using [Shelf](https://pub.dev/packages/shelf).
+# studyu_repo_generator
+A web server to generate/update Gitlab repos
