@@ -9,13 +9,13 @@ RUN pub get
 ADD repo_generator/. /app
 RUN pub get --offline
 
-RUN dart compile exe bin/main.dart
+RUN dart compile exe bin/repo_generator.dart
 
 FROM python:latest
 
 RUN pip install git+https://github.com/copier-org/copier.git@1f24b5a02e33960cd7d71c998e475b253efd62ae
 
-COPY --from=builder /app/bin/main.exe /usr/local/bin/repo_generator
+COPY --from=builder /app/bin/repo_generator.exe /usr/local/bin/repo_generator
 
 ADD repo_generator/.env .env
 

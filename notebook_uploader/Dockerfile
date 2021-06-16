@@ -9,7 +9,7 @@ RUN pub get
 ADD notebook_uploader/. /app
 RUN pub get --offline
 
-RUN dart compile exe bin/uploader.dart
+RUN dart compile exe bin/notebook_uploader.dart
 
 FROM python:latest
 
@@ -23,7 +23,7 @@ RUN Rscript -e "devtools::install_github('thogaertner/cinof1')"
 RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"
 RUN Rscript -e "IRkernel::installspec()"
 
-COPY --from=builder /app/bin/uploader.exe /usr/local/bin/uploader
+COPY --from=builder /app/bin/notebook_uploader.exe /usr/local/bin/uploader
 
 ADD notebook_uploader/nbconvert-template /nbconvert-template
 
