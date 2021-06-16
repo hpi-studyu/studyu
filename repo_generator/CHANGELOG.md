@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - **FEAT**: Make repo_generator executable.
+
 ## 1.0.4
 
  - **REFACTOR**: Rename bin main->repo_generator.
