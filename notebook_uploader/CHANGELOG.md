@@ -1,3 +1,9 @@
+## 1.2.0
+
+ - **FEAT**: Make notebook_uploader executable.
+ - **CHORE**: Upgrade studyu_packages.
+ - **CHORE**: Add pub.dev release needed files.
+
 ## 1.1.1
 
  - **FIX**: Upgrade supabase -> Fix jwt expired.
