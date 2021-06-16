@@ -54,7 +54,7 @@ scripts:
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk"
+        "flutter build apk --release --no-tree-shake-icons"
     description: Build app for Android.
     select-package:
       dir-exists: android
@@ -62,7 +62,7 @@ scripts:
   build:ios:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build ipa --no-codesign"
+        "flutter build ipa --release --no-codesign --no-tree-shake-icons"
     description: Build app for iOS.
     select-package:
       dir-exists: ios
@@ -70,7 +70,7 @@ scripts:
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --pwa-strategy none --web-renderer auto"
+        "flutter build web --release --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
       dir-exists: web
@@ -78,7 +78,7 @@ scripts:
   build:web:app:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --pwa-strategy none --web-renderer auto"
+        "flutter build web --release --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
       scope: studyu
@@ -86,7 +86,7 @@ scripts:
   build:web:designer:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --pwa-strategy none --web-renderer auto"
+        "flutter build web --release --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
       scope: studyu_designer
