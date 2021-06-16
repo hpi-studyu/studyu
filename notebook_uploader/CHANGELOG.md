@@ -1,3 +1,8 @@
+## 1.2.1
+
+ - **FIX**: Naming of dart binary.
+ - **CHORE**: Remove studyu_core path source.
+
 ## 1.2.0
 
  - **FEAT**: Make notebook_uploader executable.

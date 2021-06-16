@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - **FIX**: Naming of dart binary.
+
 ## 1.1.0
 
  - **FEAT**: Make repo_generator executable.
