@@ -16,3 +16,6 @@ dependencies:
 
 dev_dependencies:
     shelf_hotreload: ^0.0.2
+
+executables:
+  notebook_uploader:
