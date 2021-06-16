@@ -10,6 +10,7 @@ environment:
 dependencies:
   args: ^2.1.1
   dotenv: ^3.0.0
+  http: ^0.13.3
   path: ^1.8.0
   pretty_json: ^2.0.0
   shelf: ^1.1.4
