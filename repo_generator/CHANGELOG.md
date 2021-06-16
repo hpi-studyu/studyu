@@ -1,3 +1,7 @@
+## 1.0.4
+
+ - **REFACTOR**: Rename bin main->repo_generator.
+
 ## 1.0.3
 
  - **FIX**: Add missing http dependency.
