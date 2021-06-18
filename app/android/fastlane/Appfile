@@ -1,0 +1,2 @@
+json_key_file("play_creds.json")
+package_name("health.studyu.app")
