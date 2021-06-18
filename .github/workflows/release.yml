@@ -31,12 +31,6 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
-      - name: Build StudyU app bundle
-        run: flutter build appbundle --no-tree-shake-icons
-        working-directory: ./app
-      - name: Build StudyU app apk
-        run: flutter build apk --no-tree-shake-icons
-        working-directory: ./app
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -45,16 +39,9 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           release_name: ${{ env.TAG }}
-      - name: Upload App Bundle Asset
-        id: upload-release-asset-bundle
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app/build/app/outputs/bundle/release/app.aab
-          asset_name: studyu-${{ env.TAG }}.aab
-          asset_content_type: application/zip
+      - name: Build StudyU app apk
+        run: flutter build apk --no-tree-shake-icons
+        working-directory: ./app
       - name: Upload APK Asset
         id: upload-release-asset-apk
         uses: actions/upload-release-asset@v1
