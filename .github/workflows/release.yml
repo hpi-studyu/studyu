@@ -24,6 +24,7 @@ jobs:
           echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
           gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
           echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
+          ls -lash app/android
       - uses: actions/setup-java@v1
         with:
           java-version: '11.x'
