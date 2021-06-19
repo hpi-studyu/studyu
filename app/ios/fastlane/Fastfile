@@ -60,14 +60,10 @@ platform :ios do
     #   readonly: true
     # )
     get_certificates(
-      team_id: "PG566C9XUK",
       keychain_path: "~/Library/Keychains/#{keychain_name}-db",
       keychain_password: keychain_password 
     )
-    get_provisioning_profile(
-      team_id: "PG566C9XUK",
-      force: true
-    )
+    get_provisioning_profile
     build_app(
       export_method: "app-store",
     )
