@@ -5,11 +5,23 @@ on:
     branches:
       - master
       - dev
-    paths-ignore:
-      - "**.md"
+    paths:
+      - "app/**"
+      - "core/**"
+      - "designer/**"
+      - "flutter_common/**"
+      - "notebook_uploader/**"
+      - "repo_generator/**"
+      - ".github/workflows/all_packages.yml"
   pull_request:
-    paths-ignore:
-      - "**.md"
+    paths:
+      - "app/**"
+      - "core/**"
+      - "designer/**"
+      - "flutter_common/**"
+      - "notebook_uploader/**"
+      - "repo_generator/**"
+      - ".github/workflows/all_packages.yml"
   workflow_dispatch:
 
 jobs:
