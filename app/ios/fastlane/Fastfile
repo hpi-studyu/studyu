@@ -33,10 +33,10 @@ platform :ios do
     #   readonly: true
     # )
     # cert
-    # sigh(
-    #   team_id: ENV['FASTLANE_APP_IOS_TEAM_ID'],
-    #   force: true
-    # )
+    sigh(
+      team_id: "PG566C9XUK",
+      force: true
+    )
     build_app(
       export_method: "app-store",
     )

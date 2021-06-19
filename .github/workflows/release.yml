@@ -1,87 +1,88 @@
 name: Release
 
 on:
+  push:
   create:
     tags:
       - 'studyu_app-v*'
   workflow_dispatch:
 
 jobs:
-  github-release:
-    name: Create Github Release
-    runs-on: ubuntu-latest
+  # github-release:
+  #   name: Create Github Release
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Decrypt files
-        id: decrypt_files
-        run: |
-          echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '11.x'
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: beta
-      - name: Build StudyU app apk
-        run: flutter build apk --no-tree-shake-icons --build-number ${{ github.run_id }}
-        working-directory: ./app
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-      - name: Upload APK Asset
-        id: upload-release-asset-apk
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app/build/app/outputs/apk/release/app-release.apk
-          asset_name: studyu-${{ env.TAG }}.apk
-          asset_content_type: application/zip
+  #   steps:
+  #     - name: Get the tag name
+  #       run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Decrypt files
+  #       id: decrypt_files
+  #       run: |
+  #         echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
+  #         gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
+  #         echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
+  #     - uses: actions/setup-java@v1
+  #       with:
+  #         java-version: '11.x'
+  #     - uses: subosito/flutter-action@v1
+  #       with:
+  #         channel: beta
+  #     - name: Build StudyU app apk
+  #       run: flutter build apk --no-tree-shake-icons --build-number ${{ github.run_id }}
+  #       working-directory: ./app
+  #     - name: Create Release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: ${{ env.TAG }}
+  #         release_name: ${{ env.TAG }}
+  #     - name: Upload APK Asset
+  #       id: upload-release-asset-apk
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ steps.create_release.outputs.upload_url }}
+  #         asset_path: ./app/build/app/outputs/apk/release/app-release.apk
+  #         asset_name: studyu-${{ env.TAG }}.apk
+  #         asset_content_type: application/zip
 
-  play-store-release:
-    name: Create Play Store Release
-    runs-on: ubuntu-latest
+  # play-store-release:
+  #   name: Create Play Store Release
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Decrypt files
-        id: decrypt_files
-        run: |
-          echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '11.x'
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: beta
-      - name: Build StudyU app bundle
-        run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_id }}
-        working-directory: ./app
-      - name: Upload app bundle
-        run: cd app/android && fastlane internal
-        env:
-          PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
+  #   steps:
+  #     - name: Get the tag name
+  #       run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Decrypt files
+  #       id: decrypt_files
+  #       run: |
+  #         echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
+  #         gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
+  #         echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
+  #     - uses: actions/setup-java@v1
+  #       with:
+  #         java-version: '11.x'
+  #     - uses: subosito/flutter-action@v1
+  #       with:
+  #         channel: beta
+  #     - name: Build StudyU app bundle
+  #       run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_id }}
+  #       working-directory: ./app
+  #     - name: Upload app bundle
+  #       run: cd app/android && fastlane internal
+  #       env:
+  #         PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
   app-store-release:
     name: Create App Store Release
