@@ -1,2 +1,3 @@
-json_key_data ENV['PLAY_CREDS_JSON']
+# json_key_file "play_creds.json"
+json_key_data_raw ENV['PLAY_CREDS_JSON']
 package_name "health.studyu.app"
