@@ -57,6 +57,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Upload app bundle
+        run: cd app/android && bundle exec fastlane upload_to_play_store
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Checkout code
@@ -78,11 +80,4 @@ jobs:
       # - name: Build StudyU app bundle
       #   run: flutter build appbundle --no-tree-shake-icons
       #   working-directory: ./app
-      - name: Set up Ruby
-        id: set_up_ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3
-          bundler-cache: true
-      - name: Upload app bundle
-        run: cd app/android && bundle exec fastlane upload_to_play_store
+
