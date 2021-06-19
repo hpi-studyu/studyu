@@ -80,9 +80,10 @@ jobs:
         working-directory: ./app
       - name: Set up Ruby
         id: set_up_ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3'
+          ruby-version: 3
+          bundler-cache: true
       - name: Setup fastlane
         id: set_up_fastlane
         run: |
