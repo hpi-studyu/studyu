@@ -32,7 +32,7 @@ platform :ios do
     #   app_identifier: ["health.studyu.app"],
     #   readonly: true
     # )
-    # cert
+    cert
     sigh(
       team_id: "PG566C9XUK",
       force: true
