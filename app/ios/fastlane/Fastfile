@@ -32,8 +32,10 @@ platform :ios do
     #   app_identifier: ["health.studyu.app"],
     #   readonly: true
     # )
-    cert
-    sigh(
+    get_certificates(
+      team_id: "PG566C9XUK"
+    )
+    get_provisioning_profile(
       team_id: "PG566C9XUK",
       force: true
     )
