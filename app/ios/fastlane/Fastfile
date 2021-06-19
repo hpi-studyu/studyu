@@ -15,8 +15,35 @@
 
 default_platform(:ios)
 
+TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
+TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
+
+def delete_temp_keychain(name)
+  delete_keychain(
+    name: name
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+end
+
+def create_temp_keychain(name, password)
+  create_keychain(
+    name: name,
+    password: password,
+    unlock: false,
+    timeout: false
+  )
+end
+
+def ensure_temp_keychain(name, password)
+  delete_temp_keychain(name)
+  create_temp_keychain(name, password)
+end
+
 platform :ios do
   lane :upload_testflight do
+    keychain_name = TEMP_KEYCHAIN_USER
+    keychain_password = TEMP_KEYCHAIN_PASSWORD
+    ensure_temp_keychain(keychain_name, keychain_password)
+
     app_store_connect_api_key(
       key_id: ENV['FASTLANE_APP_IOS_KEY_ID'],
       issuer_id: ENV['FASTLANE_APP_IOS_ISSUER_ID'],
@@ -33,7 +60,9 @@ platform :ios do
     #   readonly: true
     # )
     get_certificates(
-      team_id: "PG566C9XUK"
+      team_id: "PG566C9XUK",
+      keychain_path: "~/Library/Keychains/#{keychain_name}-db",
+      keychain_password: keychain_password 
     )
     get_provisioning_profile(
       team_id: "PG566C9XUK",
@@ -43,5 +72,7 @@ platform :ios do
       export_method: "app-store",
     )
     pilot
+
+    delete_temp_keychain(keychain_name)
   end
 end
