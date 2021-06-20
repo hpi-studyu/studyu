@@ -1,0 +1,4 @@
+storage_mode "git"
+type "appstore"
+app_identifier "health.studyu.app"
+team_id "PG566C9XUK"
