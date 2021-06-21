@@ -32,7 +32,7 @@ jobs:
   #       with:
   #         channel: beta
   #     - name: Build StudyU app apk
-  #       run: flutter build apk --no-tree-shake-icons --build-number ${{ github.run_id }}
+  #       run: flutter build apk --no-tree-shake-icons --build-number ${{ github.run_number }}
   #       working-directory: ./app
   #     - name: Create Release
   #       id: create_release
@@ -77,7 +77,7 @@ jobs:
   #       with:
   #         channel: beta
   #     - name: Build StudyU app bundle
-  #       run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_id }}
+  #       run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
   #       working-directory: ./app
   #     - name: Upload app bundle
   #       run: cd app/android && fastlane internal
@@ -97,7 +97,7 @@ jobs:
         with:
           channel: beta
       - name: Build StudyU ios without codesign
-        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_id }}
+        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Upload app bundle
         run: cd app/ios && fastlane upload_testflight
