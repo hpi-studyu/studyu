@@ -1,3 +1,11 @@
+## 3.1.0
+
+ - **FIX**: Fetch Subject with Study and Progress.
+ - **FEAT**: Indicate days left in current intervention.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Add pub.dev release needed files.
+
 ## 3.0.1
 
  - **FIX**: Upgrade supabase -> Fix jwt expired.
