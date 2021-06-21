@@ -258,10 +258,17 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   static Future<List<StudySubject>> getUserStudiesFor(Study study) async =>
-      SupabaseQuery.extractSupabaseList<StudySubject>(
-          await env.client.from(tableName).select().eq('studyId', study.id).execute());
+      SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
+          .from(tableName)
+          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
+          .eq('studyId', study.id)
+          .execute());
 
-  static Future<List<StudySubject>> getStudyHistory(String userId) async =>
-      SupabaseQuery.extractSupabaseList<StudySubject>(
-          await env.client.from(tableName).select().eq('userId', userId).execute());
+  static Future<List<StudySubject>> getStudyHistory(String userId) async {
+    return SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
+        .from(tableName)
+        .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
+        .eq('userId', userId)
+        .execute());
+  }
 }
