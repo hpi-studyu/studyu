@@ -54,3 +54,6 @@ generated/
 
 # Firebase
 .firebase
+
+# Ruby bundler files for fastlane
+.bundle
