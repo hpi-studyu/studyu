@@ -51,6 +51,14 @@ scripts:
     select-package:
       dir-exists: test
 
+  generate:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Generate files with build_runner
+    select-package:
+      scope: studyu_core
+
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
@@ -81,7 +89,7 @@ scripts:
         "flutter build web --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
-      scope: studyu
+      scope: studyu_app
 
   build:web:designer:
     run: |
