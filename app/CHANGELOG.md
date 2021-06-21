@@ -1,3 +1,25 @@
+## 1.6.0
+
+ - **FEAT**: Indicate days left in current intervention.
+ - **CI**: Fix Fastlane iOS using temp keychain.
+ - **CI**: Set match provisioning profile.
+ - **CI**: Use fastlane match.
+ - **CI**: Remove unneeded parameters.
+ - **CI**: Add fastlane ios keychain creation.
+ - **CI**: Add team to get_certs.
+ - **CI**: ios fastlane add get certificats.
+ - **CI**: Add fastlane get provisioning profiles step.
+ - **CI**: Add ios fastlane setup.
+ - **CI**: Correctly set fastlane play credentials.
+ - **CI**: Set jsonkey data.
+ - **CI**: Fix Gemfile.lock for Windows.
+ - **CI**: Add fastlane for android app.
+ - **CI**: Remove codemagic CI signing.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade studyu_packages.
+ - **CHORE**: Add pub.dev release needed files.
+
 ## 1.5.2
 
  - **FIX**: Upgrade supabase -> Fix jwt expired.
