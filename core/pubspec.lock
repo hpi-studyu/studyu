@@ -210,7 +210,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   graphs:
     dependency: transitive
     description:
@@ -371,7 +371,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.9"
+    version: "0.1.0"
   shelf:
     dependency: transitive
     description:
@@ -469,7 +469,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.20"
+    version: "0.0.1-dev.22"
   term_glyph:
     dependency: transitive
     description:

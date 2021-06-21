@@ -218,7 +218,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   grizzly_distuv:
     dependency: "direct main"
     description:
@@ -365,7 +365,7 @@ packages:
       name: pdf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.0"
+    version: "3.4.2"
   pedantic:
     dependency: transitive
     description:
@@ -456,7 +456,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.9"
+    version: "0.1.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -559,7 +559,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.20"
+    version: "0.0.1-dev.22"
   term_glyph:
     dependency: transitive
     description:
@@ -727,7 +727,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.5"
+    version: "2.2.2"
   xdg_directories:
     dependency: transitive
     description:

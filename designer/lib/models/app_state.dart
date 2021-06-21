@@ -162,7 +162,7 @@ class AppState extends ChangeNotifier {
       email: null,
       password: null,
       provider: provider,
-      options: ProviderOptions(
+      options: AuthOptions(
         redirectTo: env.authRedirectToUrl(isWeb: kIsWeb),
         scopes: scopes,
       ),
