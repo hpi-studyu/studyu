@@ -153,6 +153,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return completedCount;
   }
 
+  int daysLeftForPhase(int index) {
+    final start = startOfPhase(index);
+    final startDate = DateTime(start.year, start.month, start.day);
+    return study.schedule.phaseDuration - DateTime.now().differenceInDays(startDate).inDays;
+  }
+
   double percentCompletedForPhase(int index) {
     return completedForPhase(index) / study.schedule.phaseDuration;
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:quiver/collection.dart';
+import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../routes.dart';
 import '../../../../widgets/intervention_card.dart';
@@ -60,12 +61,21 @@ class _TaskOverviewState extends State<TaskOverview> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        SizedBox(height: 8),
         ProgressRow(subject: widget.subject),
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: 8),
-              Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
+                  Spacer(),
+                  Text(
+                      '${widget.subject.daysLeftForPhase(widget.subject.getInterventionIndexForDate(DateTime.now()))} days left',
+                      style: TextStyle(color: primaryColor))
+                ],
+              ),
               SizedBox(height: 8),
               InterventionCardTitle(intervention: widget.subject.getInterventionForDate(DateTime.now())),
               SizedBox(height: 8),
