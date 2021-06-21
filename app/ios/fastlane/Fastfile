@@ -1,22 +1,31 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
+def delete_temp_keychain(name)
+  delete_keychain(
+    name: name
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+end
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+def create_temp_keychain(name, password)
+  create_keychain(
+    name: name,
+    password: password,
+    unlock: false,
+    timeout: false
+  )
+end
+
+def ensure_temp_keychain(name, password)
+  delete_temp_keychain(name)
+  create_temp_keychain(name, password)
+end
 
 default_platform(:ios)
 
 platform :ios do
   lane :upload_testflight do
+    keychain_name = ENV["TEMP_KEYCHAIN_USER"]
+    keychain_password = ENV["TEMP_KEYCHAIN_PASSWORD"]
+    ensure_temp_keychain(keychain_name, keychain_password)
+
     app_store_connect_api_key(
       key_id: ENV['FASTLANE_APP_IOS_KEY_ID'],
       issuer_id: ENV['FASTLANE_APP_IOS_ISSUER_ID'],
@@ -24,11 +33,16 @@ platform :ios do
     )
     match(
       git_url: ENV['FASTLANE_APP_IOS_MATCH_GIT_URL'],
-      git_private_key: ENV['FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY']
+      git_private_key: ENV['FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY'],
+      readonly: true,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password 
     )
     build_app(
       export_method: "app-store",
     )
     pilot
+
+    delete_temp_keychain(keychain_name)
   end
 end
