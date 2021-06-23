@@ -37,7 +37,7 @@ dependencies:
     path: ../flutter_common
   supabase: ^0.0.1-dev.22
   universal_html: ^2.0.8
-  url_launcher: ^6.0.6
+  url_launcher: ^6.0.7
   uuid: ^3.0.4
   webviewx: ^0.1.0
 
