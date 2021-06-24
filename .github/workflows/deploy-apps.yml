@@ -1,0 +1,66 @@
+name: Deploy app
+
+on:
+  create:
+    tags:
+      - 'studyu_app-v*'
+  workflow_dispatch:
+
+jobs:
+  play-store-release:
+    name: Create Play Store Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get the tag name
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Decrypt files
+        id: decrypt_files
+        run: |
+          echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
+          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
+          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '11.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: beta
+      - name: Build StudyU app bundle
+        run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
+        working-directory: ./app
+      - name: Upload app bundle
+        run: cd app/android && fastlane internal
+        env:
+          PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
+
+  app-store-release:
+    name: Create App Store Release
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: beta
+      - name: Build StudyU ios without codesign
+        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
+        working-directory: ./app
+      - name: Upload app bundle
+        run: cd app/ios && fastlane upload_testflight
+        env:
+          FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
+          FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}
+          FASTLANE_APP_IOS_KEY_CONTENT: ${{ secrets.FASTLANE_APP_IOS_KEY_CONTENT }}
+          FASTLANE_APP_IOS_MATCH_GIT_URL: ${{ secrets.FASTLANE_APP_IOS_MATCH_GIT_URL }}
+          FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY: ${{ secrets.FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
+          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
