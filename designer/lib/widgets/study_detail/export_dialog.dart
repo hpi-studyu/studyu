@@ -1,3 +1,4 @@
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pretty_json/pretty_json.dart';
@@ -27,6 +28,14 @@ class _ExportDialogState extends State<ExportDialog> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> downloadFormattedResults() async {
+    final dl = ResultDownloader(study: widget.study);
+    final results = await dl.loadAllResults();
+    for (final entry in results.entries) {
+      downloadFile(ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
+    }
   }
 
   @override
@@ -114,7 +123,7 @@ class _ExportDialogState extends State<ExportDialog> {
                     onPressed: () async {
                       final res = await env.client
                           .from(StudySubject.tableName)
-                          .select(['*', 'subject_progress(*)'].join(','))
+                          .select('*,subject_progress(*)')
                           .eq('studyId', widget.study.id)
                           .execute();
                       if (res.error != null) {
@@ -149,6 +158,12 @@ class _ExportDialogState extends State<ExportDialog> {
                   ),
                 ],
               ),
+            SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () => downloadFormattedResults(),
+              icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
+              label: Text('Formatted CSV files as defined in Results', style: TextStyle(color: Colors.green)),
+            ),
           ],
         ),
         actions: [

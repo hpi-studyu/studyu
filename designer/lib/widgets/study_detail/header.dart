@@ -183,23 +183,12 @@ class _HeaderState extends State<Header> {
         trailing: ButtonBar(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // TextButton.icon(
-            //     onPressed: () async {
-            //       final dl = ResultDownloader(study: widget.study);
-            //       final results = await dl.loadAllResults();
-            //       for (final entry in results.entries) {
-            //         downloadFile(
-            //             ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
-            //       }
-            //     },
-            //     icon: Icon(MdiIcons.tableArrowDown),
-            //     label: Text(AppLocalizations.of(context).export_csv)),
             TextButton.icon(
                 onPressed: () async {
                   await showDialog(context: context, builder: (_) => ExportDialog(study: widget.study));
                 },
-                icon: Icon(MdiIcons.tableArrowDown),
-                label: Text(AppLocalizations.of(context).export_csv)),
+                icon: Icon(MdiIcons.databaseExport),
+                label: Text('Export Data')),
             if (widget.study.isOwner(appState.user))
               TextButton.icon(
                   onPressed: () async {
