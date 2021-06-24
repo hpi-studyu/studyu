@@ -1,3 +1,5 @@
+update_fastlane
+
 def delete_temp_keychain(name)
   delete_keychain(
     name: name

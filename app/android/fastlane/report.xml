@@ -5,17 +5,17 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: update_fastlane" time="0.0383911">
+      <testcase classname="fastlane.lanes" name="0: update_fastlane" time="2.7552723">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.0002515">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.0028267">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: upload_to_play_store" time="22.1187877">
+      <testcase classname="fastlane.lanes" name="2: upload_to_play_store" time="94.5902065">
         
       </testcase>
     
