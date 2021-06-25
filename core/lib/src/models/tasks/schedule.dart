@@ -37,7 +37,7 @@ class StudyUTimeOfDay {
   int hour = 0;
   int minute = 0;
 
-  StudyUTimeOfDay({required this.hour, required this.minute}) : super();
+  StudyUTimeOfDay({this.hour = 0, this.minute = 0}) : super();
 
   StudyUTimeOfDay.fromJson(String value) {
     final elements = value.split(':').map(int.parse);
