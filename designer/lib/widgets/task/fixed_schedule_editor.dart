@@ -3,52 +3,52 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
-class FixedScheduleEditor extends StatefulWidget {
-  final FixedSchedule schedule;
+class ReminderEditor extends StatefulWidget {
+  final StudyUTimeOfDay reminder;
   final void Function() remove;
 
-  const FixedScheduleEditor({@required this.schedule, @required this.remove, Key key}) : super(key: key);
+  const ReminderEditor({@required this.reminder, @required this.remove, Key key}) : super(key: key);
 
   @override
-  _FixedScheduleEditorState createState() => _FixedScheduleEditorState();
+  _ReminderEditorState createState() => _ReminderEditorState();
 }
 
-class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
+class _ReminderEditorState extends State<ReminderEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
+    final time = widget.reminder;
     return FormBuilder(
         key: _editFormKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         // readonly: true,
-        child: Column(children: <Widget>[
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
-                child: FormBuilderTextField(
-                    onChanged: (value) {
-                      saveFormChanges();
-                    },
-                    name: 'hour',
-                    decoration: InputDecoration(labelText: AppLocalizations.of(context).hour),
-                    initialValue: widget.schedule.time.hour.toString()),
-              ),
-              Expanded(
-                child: FormBuilderTextField(
-                    onChanged: (value) {
-                      saveFormChanges();
-                    },
-                    name: 'minute',
-                    decoration: InputDecoration(labelText: AppLocalizations.of(context).minute),
-                    initialValue: widget.schedule.time.minute.toString()),
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: widget.remove,
-                  child: Text(AppLocalizations.of(context).delete),
+                child: FormBuilderDateTimePicker(
+                  name: 'time',
+                  inputType: InputType.time,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: 'Reminder time',
+                  ),
+                  alwaysUse24HourFormat: true,
+                  initialValue: DateTime(0, 0, 0, time.hour, time.minute),
+                  onChanged: (value) {
+                    saveFormChanges();
+                  },
                 ),
-              )
+              ),
+              SizedBox(width: 8),
+              TextButton.icon(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: widget.remove,
+                label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
+              ),
+              Spacer(flex: 4),
             ],
           )
         ]));
@@ -57,9 +57,11 @@ class _FixedScheduleEditorState extends State<FixedScheduleEditor> {
   void saveFormChanges() {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
+      final time = _editFormKey.currentState.value['time'] as DateTime;
+      if (time == null) return;
       setState(() {
-        widget.schedule.time.hour = int.parse(_editFormKey.currentState.value['hour'] as String);
-        widget.schedule.time.minute = int.parse(_editFormKey.currentState.value['minute'] as String);
+        widget.reminder.hour = time.hour;
+        widget.reminder.minute = time.minute;
       });
     }
   }

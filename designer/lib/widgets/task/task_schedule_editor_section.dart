@@ -13,35 +13,49 @@ class TaskScheduleEditorSection extends StatefulWidget {
 }
 
 class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
-  void _add() {
-    final time = ScheduleTime(hour: 0, minute: 0);
-    final schedule = FixedSchedule()..time = time;
+  bool _lockingTimesEnabled = true;
+
+  void _addReminder() {
+    final reminder = StudyUTimeOfDay(hour: 0, minute: 0);
     setState(() {
-      widget.task.schedule.add(schedule);
+      widget.task.schedule.reminders.add(reminder);
     });
   }
 
-  void _remove(int index) {
+  void _removeReminder(int index) {
     setState(() {
-      widget.task.schedule.removeAt(index);
+      widget.task.schedule.reminders.removeAt(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Divider(),
-      Text('Schedule'),
-      ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: widget.task.schedule.length,
-        itemBuilder: (buildContext, index) {
-          return FixedScheduleEditor(
-              key: UniqueKey(), schedule: widget.task.schedule[index] as FixedSchedule, remove: () => _remove(index));
-        },
-      ),
-      Row(children: [Spacer(), IconButton(icon: Icon(Icons.add), onPressed: _add), Spacer()])
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Scheduling',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        Text('Remind participant at'),
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: widget.task.schedule.reminders.length,
+          itemBuilder: (buildContext, index) {
+            return ReminderEditor(
+                key: UniqueKey(),
+                reminder: widget.task.schedule.reminders[index],
+                remove: () => _removeReminder(index));
+          },
+        ),
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(primary: Colors.green),
+          icon: Icon(Icons.add),
+          onPressed: _addReminder,
+          label: Text('Add reminder time'),
+        ),
+      ],
+    );
   }
 }

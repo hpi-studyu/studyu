@@ -69,6 +69,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 ),
               ),
               if (taskBody != null) taskBody,
+              Divider(),
               TaskScheduleEditorSection(
                 task: widget.task,
               )
