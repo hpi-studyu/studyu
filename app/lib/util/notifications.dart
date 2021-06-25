@@ -10,23 +10,18 @@ extension Reminders on FlutterLocalNotificationsPlugin {
   Future<void> scheduleReminderForDate(
       int initialId, Task task, DateTime date, NotificationDetails notificationDetails) async {
     var id = initialId;
-    for (final taskSchedule in task.schedule) {
-      switch (taskSchedule.type) {
-        case FixedSchedule.scheduleType:
-          final FixedSchedule fixedSchedule = taskSchedule as FixedSchedule;
-          if (date.isSameDate(DateTime.now()) &&
-              !ScheduleTime(hour: date.hour, minute: date.minute).earlierThan(fixedSchedule.time)) {
-            break;
-          }
-
-          final reminderTime = tz.TZDateTime(
-              tz.local, date.year, date.month, date.day, fixedSchedule.time.hour, fixedSchedule.time.minute);
-          // TODO add body
-          zonedSchedule(id, task.title, '', reminderTime, notificationDetails,
-              payload: task.id,
-              uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
-              androidAllowWhileIdle: true);
+    for (final reminder in task.schedule.reminders) {
+      if (date.isSameDate(DateTime.now()) &&
+          !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)) {
+        break;
       }
+
+      final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
+      // TODO add body
+      zonedSchedule(id, task.title, '', reminderTime, notificationDetails,
+          payload: task.id,
+          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
+          androidAllowWhileIdle: true);
       id++;
     }
   }
@@ -58,20 +53,20 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
     for (final index in List.generate(3, (index) => index)) {
       final date = DateTime.now().add(Duration(days: index));
       for (final observation in subject.study.observations) {
-        (await appState.notificationsPlugin)
-            .scheduleReminderForDate(id - observation.schedule.length, observation, date, platformChannelSpecifics);
-        id += observation.schedule.length;
+        (await appState.notificationsPlugin).scheduleReminderForDate(
+            id - observation.schedule.reminders.length, observation, date, platformChannelSpecifics);
+        id += observation.schedule.reminders.length;
       }
       for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {
         if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
           if (intervention.tasks.isNotEmpty) {
-            id += intervention.tasks.map((task) => task.schedule.length).reduce((a, b) => a + b);
+            id += intervention.tasks.map((task) => task.schedule.reminders.length).reduce((a, b) => a + b);
           }
           continue;
         }
         for (final task in intervention.tasks) {
           (await appState.notificationsPlugin).scheduleReminderForDate(id, task, date, platformChannelSpecifics);
-          id += task.schedule.length;
+          id += task.schedule.reminders.length;
         }
       }
     }

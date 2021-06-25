@@ -12,7 +12,7 @@ import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
   final StudySubject subject;
-  final Multimap<ScheduleTime, Task> scheduleToday;
+  final Multimap<CompletionPeriod, Task> scheduleToday;
   final String interventionIcon;
 
   const TaskOverview({@required this.subject, @required this.scheduleToday, Key key, this.interventionIcon})

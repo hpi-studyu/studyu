@@ -76,7 +76,7 @@ class PerformanceSection extends GenericSection {
   int getCountableObservationAmount(Intervention intervention) {
     var interventionsPerDay = 0;
     for (final interventionTask in intervention.tasks) {
-      interventionsPerDay += interventionTask.schedule.length;
+      interventionsPerDay += interventionTask.schedule.completionPeriods.length;
     }
 
     var countable = 0;

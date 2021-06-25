@@ -123,18 +123,10 @@ class _TaskList extends StatelessWidget {
 
   const _TaskList({@required this.tasks, Key key}) : super(key: key);
 
-  String scheduleString(List<Schedule> schedules) {
-    return schedules.map((schedule) {
-      switch (schedule.runtimeType) {
-        case FixedSchedule:
-          final FixedSchedule fixedSchedule = schedule as FixedSchedule;
-          return fixedSchedule.time.toString();
-
-        default:
-          print('Schedule not supported!');
-          return '';
-      }
-    }).join(',');
+  String scheduleString(List<CompletionPeriod> schedules) {
+    return schedules
+        .map((completionPeriod) => '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}')
+        .join(',');
   }
 
   @override
@@ -168,7 +160,7 @@ class _TaskList extends StatelessWidget {
                           Icon(Icons.access_time, size: 16, color: theme.textTheme.caption.color),
                           SizedBox(width: 4),
                           Text(
-                            scheduleString(task.schedule),
+                            scheduleString(task.schedule.completionPeriods),
                             style:
                                 theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
                           ),
