@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyu_core/core.dart';
 
-import '../../widgets/task/fixed_schedule_editor.dart';
+import '../../widgets/task/reminder_editor.dart';
 
 class TaskScheduleEditorSection extends StatefulWidget {
   final Task task;
