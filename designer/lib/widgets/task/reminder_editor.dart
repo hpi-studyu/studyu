@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
 
 class ReminderEditor extends StatefulWidget {
@@ -27,6 +28,8 @@ class _ReminderEditorState extends State<ReminderEditor> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Icon(MdiIcons.bell, color: Theme.of(context).accentColor),
+              SizedBox(width: 8),
               Expanded(
                 child: FormBuilderDateTimePicker(
                   name: 'time',

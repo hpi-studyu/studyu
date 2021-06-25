@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/task/complation_period_editor.dart';
 
 import '../../widgets/task/reminder_editor.dart';
 
@@ -14,8 +14,6 @@ class TaskScheduleEditorSection extends StatefulWidget {
 }
 
 class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
-  bool _lockingTimesEnabled = true;
-
   void _addReminder() {
     final reminder = StudyUTimeOfDay(hour: 0, minute: 0);
     setState(() {
@@ -29,8 +27,24 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
     });
   }
 
+  void _addCompletionPeriod() {
+    final completionPeriod = CompletionPeriod()
+      ..unlockTime = StudyUTimeOfDay()
+      ..lockTime = StudyUTimeOfDay();
+    setState(() {
+      widget.task.schedule.completionPeriods.add(completionPeriod);
+    });
+  }
+
+  void _removeCompletionPeriod(int index) {
+    setState(() {
+      widget.task.schedule.completionPeriods.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,11 +52,34 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
           'Scheduling',
           style: Theme.of(context).textTheme.headline6,
         ),
-        Text('Remind participant at'),
-        ListView.builder(
+        SizedBox(height: 16),
+        Text('Participants can complete one task from', style: theme.textTheme.bodyText1),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: widget.task.schedule.completionPeriods.length,
+          separatorBuilder: (context, index) => SizedBox(height: 8),
+          itemBuilder: (buildContext, index) {
+            return CompletionPeriodEditor(
+                key: UniqueKey(),
+                completionPeriod: widget.task.schedule.completionPeriods[index],
+                remove: () => _removeCompletionPeriod(index));
+          },
+        ),
+        SizedBox(height: 8),
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(primary: Colors.green),
+          icon: Icon(Icons.add),
+          onPressed: _addCompletionPeriod,
+          label: Text('Add completion period'),
+        ),
+        SizedBox(height: 32),
+        Text('Remind participant at', style: theme.textTheme.bodyText1),
+        ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: widget.task.schedule.reminders.length,
+          separatorBuilder: (context, index) => SizedBox(height: 8),
           itemBuilder: (buildContext, index) {
             return ReminderEditor(
                 key: UniqueKey(),
@@ -50,6 +87,7 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
                 remove: () => _removeReminder(index));
           },
         ),
+        SizedBox(height: 8),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(primary: Colors.green),
           icon: Icon(Icons.add),
