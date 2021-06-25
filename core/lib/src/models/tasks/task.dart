@@ -13,7 +13,7 @@ abstract class Task {
   String? header;
   String? footer;
 
-  List<Schedule> schedule = [];
+  Schedule schedule = Schedule();
 
   Task(this.type);
 

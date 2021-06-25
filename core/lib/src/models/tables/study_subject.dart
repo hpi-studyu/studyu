@@ -198,31 +198,27 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       daysCount = 2 * daysCount + (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
     }
 
-    return daysCount * task.schedule.length;
+    return daysCount * task.schedule.completionPeriods.length;
   }
 
-  Multimap<ScheduleTime, Task> scheduleFor(DateTime dateTime) {
+  Multimap<CompletionPeriod, Task> scheduleFor(DateTime dateTime) {
     final activeIntervention = getInterventionForDate(dateTime);
 
-    final Multimap<ScheduleTime?, Task> taskSchedule = Multimap<ScheduleTime, Task>();
+    final Multimap<CompletionPeriod, Task> taskSchedule = Multimap<CompletionPeriod, Task>();
 
-    if (activeIntervention == null) return taskSchedule as Multimap<ScheduleTime, Task>;
+    if (activeIntervention == null) return taskSchedule;
 
     for (final task in activeIntervention.tasks) {
-      for (final schedule in task.schedule) {
-        if (schedule is FixedSchedule) {
-          taskSchedule.add(schedule.time, task);
-        }
+      for (final completionPeriod in task.schedule.completionPeriods) {
+        taskSchedule.add(completionPeriod, task);
       }
     }
     for (final observation in study.observations) {
-      for (final schedule in observation.schedule) {
-        if (schedule is FixedSchedule) {
-          taskSchedule.add(schedule.time, observation);
-        }
+      for (final completionPeriod in observation.schedule.completionPeriods) {
+        taskSchedule.add(completionPeriod, observation);
       }
     }
-    return taskSchedule as Multimap<ScheduleTime, Task>;
+    return taskSchedule;
   }
 
   Future<void> setStartDateBackBy({required int days}) async {
