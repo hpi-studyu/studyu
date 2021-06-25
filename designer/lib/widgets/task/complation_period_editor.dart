@@ -20,7 +20,7 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
   Widget build(BuildContext context) {
     return FormBuilder(
         key: _editFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: AutovalidateMode.always,
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
           Row(
             children: [
@@ -48,7 +48,9 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   initialValue:
                       DateTime(0, 0, 0, widget.completionPeriod.lockTime.hour, widget.completionPeriod.lockTime.minute),
                   name: 'lock',
-                  validator: (value) {
+                  validator: (lockTime) {
+                    final unlockTime = _editFormKey.currentState.value['unlock'] as DateTime;
+                    if (lockTime.isBefore(unlockTime)) return 'Is before unlock time';
                     return null;
                   },
                   inputType: InputType.time,
