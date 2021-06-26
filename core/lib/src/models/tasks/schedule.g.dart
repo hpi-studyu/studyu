@@ -23,9 +23,10 @@ Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
     };
 
 CompletionPeriod _$CompletionPeriodFromJson(Map<String, dynamic> json) {
-  return CompletionPeriod()
-    ..unlockTime = StudyUTimeOfDay.fromJson(json['unlockTime'] as String)
-    ..lockTime = StudyUTimeOfDay.fromJson(json['lockTime'] as String);
+  return CompletionPeriod(
+    unlockTime: StudyUTimeOfDay.fromJson(json['unlockTime'] as String),
+    lockTime: StudyUTimeOfDay.fromJson(json['lockTime'] as String),
+  );
 }
 
 Map<String, dynamic> _$CompletionPeriodToJson(CompletionPeriod instance) =>

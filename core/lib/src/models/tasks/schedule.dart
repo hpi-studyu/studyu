@@ -6,7 +6,12 @@ typedef ScheduleParser = Schedule Function(Map<String, dynamic> data);
 
 @JsonSerializable()
 class Schedule {
-  List<CompletionPeriod> completionPeriods = [];
+  List<CompletionPeriod> completionPeriods = [
+    CompletionPeriod(
+      unlockTime: StudyUTimeOfDay(hour: 8),
+      lockTime: StudyUTimeOfDay(hour: 20),
+    )
+  ];
   List<StudyUTimeOfDay> reminders = [];
 
   Schedule();
@@ -23,14 +28,17 @@ class Schedule {
 
 @JsonSerializable()
 class CompletionPeriod {
-  StudyUTimeOfDay unlockTime = StudyUTimeOfDay(hour: 8, minute: 0);
-  StudyUTimeOfDay lockTime = StudyUTimeOfDay(hour: 12, minute: 0);
+  final StudyUTimeOfDay unlockTime;
+  final StudyUTimeOfDay lockTime;
 
-  CompletionPeriod();
+  CompletionPeriod({required this.unlockTime, required this.lockTime});
 
   factory CompletionPeriod.fromJson(Map<String, dynamic> json) => _$CompletionPeriodFromJson(json);
 
   Map<String, dynamic> toJson() => _$CompletionPeriodToJson(this);
+
+  @override
+  String toString() => '${unlockTime.toString()} - ${lockTime.toString()}';
 }
 
 class StudyUTimeOfDay {
