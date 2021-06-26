@@ -15,9 +15,8 @@ class TaskScheduleEditorSection extends StatefulWidget {
 
 class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
   void _addReminder() {
-    final reminder = StudyUTimeOfDay(hour: 0, minute: 0);
     setState(() {
-      widget.task.schedule.reminders.add(reminder);
+      widget.task.schedule.reminders.add(StudyUTimeOfDay());
     });
   }
 
@@ -28,9 +27,8 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
   }
 
   void _addCompletionPeriod() {
-    final completionPeriod = CompletionPeriod()
-      ..unlockTime = StudyUTimeOfDay()
-      ..lockTime = StudyUTimeOfDay();
+    final completionPeriod =
+        CompletionPeriod(unlockTime: StudyUTimeOfDay(hour: 8), lockTime: StudyUTimeOfDay(hour: 20));
     setState(() {
       widget.task.schedule.completionPeriods.add(completionPeriod);
     });
@@ -63,6 +61,7 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
             return CompletionPeriodEditor(
                 key: UniqueKey(),
                 completionPeriod: widget.task.schedule.completionPeriods[index],
+                isFirst: index == 0,
                 remove: () => _removeCompletionPeriod(index));
           },
         ),

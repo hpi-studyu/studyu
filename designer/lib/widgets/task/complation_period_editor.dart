@@ -5,9 +5,12 @@ import 'package:studyu_core/core.dart';
 
 class CompletionPeriodEditor extends StatefulWidget {
   final CompletionPeriod completionPeriod;
+  final bool isFirst;
   final void Function() remove;
 
-  const CompletionPeriodEditor({@required this.completionPeriod, @required this.remove, Key key}) : super(key: key);
+  const CompletionPeriodEditor(
+      {@required this.completionPeriod, @required this.isFirst, @required this.remove, Key key})
+      : super(key: key);
 
   @override
   _CompletionPeriodEditorState createState() => _CompletionPeriodEditorState();
@@ -62,11 +65,12 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   onChanged: (value) => saveFormChanges(),
                 ),
               ),
-              TextButton.icon(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: widget.remove,
-                label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
-              ),
+              if (!widget.isFirst)
+                TextButton.icon(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: widget.remove,
+                  label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
+                ),
               Spacer(flex: 3),
             ],
           ),
