@@ -39,6 +39,10 @@ class CompletionPeriod {
 
   @override
   String toString() => '${unlockTime.toString()} - ${lockTime.toString()}';
+
+  bool contains(StudyUTimeOfDay time) {
+    return unlockTime.earlierThan(time) && time.earlierThan(lockTime);
+  }
 }
 
 class StudyUTimeOfDay {
@@ -59,6 +63,6 @@ class StudyUTimeOfDay {
   String toString() => '$hour:${minute.toString().padLeft(2, '0')}';
 
   bool earlierThan(StudyUTimeOfDay time) {
-    return hour < time.hour || hour == time.hour && minute < time.minute;
+    return hour < time.hour || hour == time.hour && minute <= time.minute;
   }
 }
