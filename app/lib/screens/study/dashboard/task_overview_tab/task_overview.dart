@@ -33,25 +33,33 @@ class _TaskOverviewState extends State<TaskOverview> {
     final theme = Theme.of(context);
 
     return widget.scheduleToday.keys
-        .expand((time) => [
-              Padding(
-                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: Row(
-                  children: [
-                    Icon(Icons.access_time, color: theme.primaryColor),
-                    SizedBox(width: 8),
-                    Text(time.toString(),
-                        style: theme.textTheme.subtitle2.copyWith(fontSize: 16, color: theme.primaryColor)),
-                  ],
+        .expand(
+          (completionPeriod) => [
+            Padding(
+              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, color: theme.primaryColor),
+                  SizedBox(width: 8),
+                  Text(completionPeriod.toString(),
+                      style: theme.textTheme.subtitle2.copyWith(fontSize: 16, color: theme.primaryColor)),
+                ],
+              ),
+            ),
+            ...widget.scheduleToday[completionPeriod].map(
+              (task) => TaskBox(
+                task: task,
+                completionPeriod: completionPeriod,
+                onCompleted: () => _navigateToReportIfStudyCompleted(context),
+                icon: Icon(
+                  task is Observation
+                      ? MdiIcons.orderBoolAscendingVariant
+                      : MdiIcons.fromString(widget.interventionIcon),
                 ),
               ),
-              ...widget.scheduleToday[time].map((task) => TaskBox(
-                  task: task,
-                  onCompleted: () => _navigateToReportIfStudyCompleted(context),
-                  icon: Icon(task is Observation
-                      ? MdiIcons.orderBoolAscendingVariant
-                      : MdiIcons.fromString(widget.interventionIcon))))
-            ])
+            )
+          ],
+        )
         .toList();
   }
 
