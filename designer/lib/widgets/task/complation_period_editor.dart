@@ -71,7 +71,7 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   onPressed: widget.remove,
                   label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
                 ),
-              Spacer(flex: 3),
+              Spacer(flex: widget.isFirst ? 4 : 3),
             ],
           ),
         ]));
