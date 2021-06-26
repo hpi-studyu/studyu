@@ -81,11 +81,11 @@ class _InvitesDialogState extends State<InvitesDialog> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Spacer(),
-        Icon(MdiIcons.fromString(a.icon), color: theme.accentColor),
+        Icon(MdiIcons.fromString(a.icon), color: theme.colorScheme.secondary),
         SizedBox(width: 8),
         Text(a.name, overflow: TextOverflow.ellipsis),
         Spacer(),
-        Icon(MdiIcons.fromString(b.icon), color: theme.accentColor),
+        Icon(MdiIcons.fromString(b.icon), color: theme.colorScheme.secondary),
         SizedBox(width: 8),
         Text(b.name, overflow: TextOverflow.ellipsis),
         Spacer(),
@@ -97,7 +97,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
+        Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
         SizedBox(width: 8),
         Expanded(child: Text(intervention.name, overflow: TextOverflow.ellipsis)),
       ],

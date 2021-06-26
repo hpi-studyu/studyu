@@ -154,7 +154,7 @@ class ConsentCard extends StatelessWidget {
         ),
       ),
       child: InkWell(
-        splashColor: theme.accentColor.withAlpha(100),
+        splashColor: theme.colorScheme.secondary.withAlpha(100),
         onTap: () {
           showDialog(
             context: context,

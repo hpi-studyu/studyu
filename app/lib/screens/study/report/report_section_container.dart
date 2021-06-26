@@ -26,7 +26,7 @@ class ReportSectionContainer extends StatelessWidget {
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
           AppLocalizations.of(context).report_primary_result.toUpperCase(),
-          style: theme.textTheme.overline.copyWith(color: theme.accentColor),
+          style: theme.textTheme.overline.copyWith(color: theme.colorScheme.secondary),
         ),
         SizedBox(height: 4),
       ];

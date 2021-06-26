@@ -6,7 +6,7 @@ const accentColor = Colors.deepOrange;
 ThemeData get theme => ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
-      accentColor: accentColor,
+      colorScheme: ThemeData().colorScheme.copyWith(secondary: accentColor),
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );
 

@@ -171,9 +171,9 @@ class _HeaderState extends State<Header> {
           children: [
             BackButton(),
             SizedBox(width: 8),
-            Icon(MdiIcons.fromString(widget.study.iconName), color: theme.accentColor),
+            Icon(MdiIcons.fromString(widget.study.iconName), color: theme.colorScheme.secondary),
             SizedBox(width: 8),
-            Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),
+            Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary)),
             // VerticalDivider(indent: 8, endIndent: 8),
           ],
         ),

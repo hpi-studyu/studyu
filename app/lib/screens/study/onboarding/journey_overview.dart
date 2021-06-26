@@ -84,7 +84,7 @@ class Timeline extends StatelessWidget {
           return InterventionTile(
             title: intervention.name,
             iconName: intervention.icon,
-            color: intervention.isBaseline() ? Colors.grey : theme.accentColor,
+            color: intervention.isBaseline() ? Colors.grey : theme.colorScheme.secondary,
             date: now.add(Duration(days: index * subject.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
@@ -153,7 +153,7 @@ class IconIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Theme.of(context).accentColor),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Theme.of(context).colorScheme.secondary),
       child: Center(
         child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
       ),

@@ -252,7 +252,7 @@ class StudyList extends StatelessWidget {
       child: ExpansionTile(
         title: Row(
           children: [
-            Icon(iconData, color: theme.accentColor),
+            Icon(iconData, color: theme.colorScheme.secondary),
             SizedBox(width: 8),
             Text(title),
           ],

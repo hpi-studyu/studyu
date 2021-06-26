@@ -30,10 +30,10 @@ class NotebookViewer extends StatelessWidget {
                   title: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(MdiIcons.notebook, color: theme.accentColor),
+                      Icon(MdiIcons.notebook, color: theme.colorScheme.secondary),
                       SizedBox(width: 8),
                       Text(notebook.replaceAll(RegExp(r'\.\w*$'), ''),
-                          style: theme.textTheme.headline6.copyWith(color: theme.accentColor)),
+                          style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary)),
                       // VerticalDivider(indent: 8, endIndent: 8),
                     ],
                   ),

@@ -61,7 +61,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
     if (widget.question.repeats?.value ?? false) {
       choiceWidgets.add(ElevatedButton(
         onPressed: confirm,
-        style: ElevatedButton.styleFrom(primary: Theme.of(context).accentColor),
+        style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
         child: Text(AppLocalizations.of(context).confirm),
       ));
     }

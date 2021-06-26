@@ -59,7 +59,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       choiceWidgets.add(OutlinedButton(
         onPressed: confirm,
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).accentColor),
+            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white)),
         child: Text(AppLocalizations.of(context).confirm),
       ));

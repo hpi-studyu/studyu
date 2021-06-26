@@ -28,7 +28,7 @@ class _ReminderEditorState extends State<ReminderEditor> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(MdiIcons.bell, color: Theme.of(context).accentColor),
+              Icon(MdiIcons.bell, color: Theme.of(context).colorScheme.secondary),
               SizedBox(width: 8),
               Expanded(
                 child: FormBuilderDateTimePicker(

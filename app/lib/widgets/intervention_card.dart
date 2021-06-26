@@ -61,7 +61,7 @@ class InterventionCardTitle extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       onTap: onTap,
-      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
+      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
       trailing: showCheckbox
           ? Checkbox(
               value: selected,
@@ -82,7 +82,7 @@ class InterventionCardTitle extends StatelessWidget {
                       intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
                   return AlertDialog(
                     title: ListTile(
-                        leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.accentColor),
+                        leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
                         dense: true,
                         title: Text(intervention.name, style: theme.textTheme.headline6)),
                     content: Text(description ?? ''),

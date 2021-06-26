@@ -18,12 +18,12 @@ class RoundCheckbox extends StatelessWidget {
           ? Icon(
               MdiIcons.checkboxMarkedCircleOutline,
               size: 30,
-              color: theme.accentColor,
+              color: theme.colorScheme.secondary,
             )
           : Icon(
               MdiIcons.checkboxBlankCircleOutline,
               size: 30,
-              color: theme.accentColor,
+              color: theme.colorScheme.secondary,
             ),
     );
   }

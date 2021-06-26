@@ -113,7 +113,7 @@ class StudyDetailsView extends StatelessWidget {
         ContactWidget(
           contact: study.contact,
           title: 'Study Publisher',
-          color: theme.accentColor,
+          color: theme.colorScheme.secondary,
         ),
       ],
     );

@@ -51,7 +51,7 @@ class _ContactScreenState extends State<ContactScreen> {
             contact: studyContact,
             title: AppLocalizations.of(context).study_support,
             subtitle: AppLocalizations.of(context).study_support_text,
-            color: theme.accentColor,
+            color: theme.colorScheme.secondary,
           ),
         ],
       ),

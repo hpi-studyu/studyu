@@ -27,7 +27,7 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
           Row(
             children: [
-              Icon(Icons.timelapse, color: Theme.of(context).accentColor),
+              Icon(Icons.timelapse, color: Theme.of(context).colorScheme.secondary),
               SizedBox(width: 8),
               Expanded(
                 child: FormBuilderDateTimePicker(

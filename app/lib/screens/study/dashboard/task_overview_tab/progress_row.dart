@@ -107,10 +107,10 @@ class InterventionSegment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = isFuture ? Colors.grey : (isCurrent ? theme.accentColor : theme.primaryColor);
+    final color = isFuture ? Colors.grey : (isCurrent ? theme.colorScheme.secondary : theme.primaryColor);
 
     final emptyColor = Color.alphaBlend(theme.dividerColor, Colors.white);
-    final activeColor = Color.alphaBlend(theme.accentColor, Colors.white);
+    final activeColor = Color.alphaBlend(theme.colorScheme.secondary, Colors.white);
     final completedColor = Color.alphaBlend(theme.primaryColor, Colors.white);
 
     return Expanded(
