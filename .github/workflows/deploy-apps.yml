@@ -1,7 +1,7 @@
-name: Deploy app
+name: Deploy apps
 
 on:
-  create:
+  push:
     tags:
       - 'studyu_app-v*'
   workflow_dispatch:
