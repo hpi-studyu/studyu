@@ -545,14 +545,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.1.0"
+    version: "3.2.0"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5"
   supabase:
     dependency: "direct main"
     description:

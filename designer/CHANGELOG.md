@@ -1,3 +1,18 @@
+## 1.1.0
+
+ - **REFACTOR**: Rename file.
+ - **FIX**: Align delete button.
+ - **FIX**: Adapt designer to new task schedule model.
+ - **FIX**: Move export csv into dialog.
+ - **FEAT**: Don't show delete button on first period.
+ - **FEAT**: Add error if lock time before unlock time.
+ - **FEAT**: Add task completion periods setting.
+ - **CHORE**: Adapt to flutter 2.3 release.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.0.4
 
  - Update a dependency to the latest release.
