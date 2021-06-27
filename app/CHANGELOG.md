@@ -1,3 +1,13 @@
+## 1.7.0
+
+ - **FIX**: Adapt app to new task schedule model.
+ - **FEAT**: Lock task outside of completion period.
+ - **CI**: Upgrade fastlane.
+ - **CHORE**: Adapt to flutter 2.3 release.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.6.0
 
  - **FEAT**: Indicate days left in current intervention.

@@ -1,3 +1,14 @@
+## 3.2.0
+
+ - **REFACTOR**: Add default constructor for TimeOfDay.
+ - **FIX**: Add default times.
+ - **FEAT**: Add contains to CompletionPeriod.
+ - **FEAT**: Spilt reminderTime and unlock/locking times.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 3.1.0
 
  - **FIX**: Fetch Subject with Study and Progress.
