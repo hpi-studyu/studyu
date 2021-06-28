@@ -1,3 +1,11 @@
+## 1.8.0
+
+ - **FEAT**: Add Version, Licenses info dialog.
+ - **CI**: fastlane iOS: Readd timeout to create_keychain.
+ - **CI**: iOS fastlane: Remove possibly failing params.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.7.0
 
  - **FIX**: Adapt app to new task schedule model.
