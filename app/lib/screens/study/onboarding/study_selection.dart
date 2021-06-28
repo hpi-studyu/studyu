@@ -148,11 +148,16 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 });
                 final result = res.data as Map<String, dynamic>;
                 final studyId = result['studyId'] as String;
-                final preselectedIds = List<String>.from(result['preselectedInterventionIds'] as List);
                 final study = await SupabaseQuery.getById<Study>(studyId);
                 Navigator.pop(context);
-                await navigateToStudyOverview(context, study,
-                    inviteCode: _controller.text, preselectedIds: preselectedIds);
+
+                if (result.containsKey('preselectedInterventionIds') && result['preselectedInterventionIds'] != null) {
+                  final preselectedIds = List<String>.from(result['preselectedInterventionIds'] as List);
+                  await navigateToStudyOverview(context, study,
+                      inviteCode: _controller.text, preselectedIds: preselectedIds);
+                } else {
+                  await navigateToStudyOverview(context, study, inviteCode: _controller.text);
+                }
               }
             },
           )
