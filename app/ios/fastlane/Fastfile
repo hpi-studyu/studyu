@@ -9,7 +9,8 @@ end
 def create_temp_keychain(name, password)
   create_keychain(
     name: name,
-    password: password
+    password: password,
+    timeout: 3600
   )
 end
 
