@@ -1,3 +1,9 @@
+## 3.3.0
+
+ - **FEAT**: Add app url env var.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 3.2.0
 
  - **REFACTOR**: Add default constructor for TimeOfDay.

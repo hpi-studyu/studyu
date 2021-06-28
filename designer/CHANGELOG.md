@@ -1,3 +1,11 @@
+## 1.2.0
+
+ - **REFACTOR**: Remove unneded Theme widgets.
+ - **FEAT**: Move save/publish buttons to ActionBar.
+ - **FEAT**: Research can test draft studies.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.1.0
 
  - **REFACTOR**: Rename file.

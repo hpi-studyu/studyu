@@ -1,3 +1,10 @@
+## 1.1.0
+
+ - **FEAT**: Restore from session string.
+ - **FEAT**: Add app url env var.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.0.5
 
  - Update a dependency to the latest release.
