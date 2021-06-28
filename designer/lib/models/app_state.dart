@@ -16,7 +16,6 @@ enum DesignerPage {
   report,
   results,
   consent,
-  save,
 }
 
 class AppState extends ChangeNotifier {

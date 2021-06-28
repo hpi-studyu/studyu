@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_designer/util/save.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './designer/eligibility_designer.dart';
@@ -16,7 +17,6 @@ import 'designer/interventions_designer.dart';
 import 'designer/observation_designer.dart';
 import 'designer/questionnaire_designer.dart';
 import 'designer/report_designer.dart';
-import 'designer/save.dart';
 import 'designer/schedule_designer.dart';
 import 'models/app_state.dart';
 import 'router.dart';
@@ -61,7 +61,31 @@ class _DesignerState extends State<Designer> {
             ? AppLocalizations.of(context).view_published_study
             : AppLocalizations.of(context).create_new_study),
         actions: [
-          if (!study.published)
+          if (study == null || !study.published || kDebugMode) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: TextButton.icon(
+                icon: Icon(Icons.publish),
+                label: Text(AppLocalizations.of(context).publish_study),
+                style: TextButton.styleFrom(primary: Colors.white),
+                onPressed: () async {
+                  final newStudy = await publishStudy(context, study);
+                  if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: TextButton.icon(
+                icon: Icon(Icons.save),
+                label: Text(AppLocalizations.of(context).save_draft),
+                style: TextButton.styleFrom(primary: Colors.white),
+                onPressed: () async {
+                  final newStudy = await saveDraft(context, study);
+                  if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextButton.icon(
@@ -72,6 +96,7 @@ class _DesignerState extends State<Designer> {
                     launch('${env.appUrl}${Uri.encodeComponent(env.client.auth.session().persistSessionString)}'),
               ),
             ),
+          ],
           if (kDebugMode)
             Builder(
                 builder: (context) => IconButton(
@@ -142,12 +167,6 @@ class _DesignerState extends State<Designer> {
                           selectedIcon: Icon(Icons.warning),
                           label: Text(AppLocalizations.of(context).consent),
                         ),
-                        if (study == null || !study.published || kDebugMode)
-                          NavigationRailDestination(
-                            icon: Icon(Icons.publish),
-                            selectedIcon: Icon(Icons.publish),
-                            label: Text(AppLocalizations.of(context).save),
-                          )
                       ],
                     ),
                   ),
@@ -191,8 +210,6 @@ class DesignerRouterDelegate extends RouterDelegate<RoutePath>
         return ResultsDesigner();
       case DesignerPage.consent:
         return ConsentDesigner();
-      case DesignerPage.save:
-        return Save();
       default:
         return Container();
     }

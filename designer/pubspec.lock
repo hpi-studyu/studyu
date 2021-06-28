@@ -174,13 +174,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  flutter_json_widget:
-    dependency: "direct main"
-    description:
-      name: flutter_json_widget
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
