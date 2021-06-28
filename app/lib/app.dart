@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'models/app_state.dart';
 import 'routes.dart';
@@ -33,17 +32,12 @@ class _MyAppState extends State<MyApp> {
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
   }
 
-  static const supabaseUrl = 'https://urrbcqpjcgokldetihiw.supabase.co';
-  static const supabaseAnonKey =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYxNzUzMDYwMSwiZXhwIjoxOTMzMTA2NjAxfQ.T-QhpPisubwjOn3P1Gj3DV-2Mb_ztzvLwiVYWrGFvVA';
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
         Provider<AppState>(create: (context) => AppState(context)),
-        Provider<SupabaseClient>(create: (_) => SupabaseClient(supabaseUrl, supabaseAnonKey)),
       ],
       child: Consumer<AppLanguage>(builder: (context, model, child) {
         return MaterialApp(
