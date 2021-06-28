@@ -19,7 +19,13 @@ class UserQueries {
     prefs.setString(sessionKey, session);
   }
 
-  static Future<bool> recoverParticipantSession() async {
+  static Future<bool> recoverParticipantSession({String? sessionString}) async {
+    if (sessionString != null) {
+      final res = await env.client.auth.recoverSession(sessionString);
+      if (res.error == null && env.client.auth.session() != null) {
+        return true;
+      }
+    }
     return await recoverSession() || await signInParticipant();
   }
 
