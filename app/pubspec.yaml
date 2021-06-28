@@ -29,6 +29,7 @@ dependencies:
   intersperse: ^2.0.0
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
+  package_info_plus: ^1.0.3
   pdf: ^3.4.2
   pimp_my_button: ^1.0.0
   postgrest: ^0.1.3

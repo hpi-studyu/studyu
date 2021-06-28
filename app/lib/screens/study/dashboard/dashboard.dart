@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/collection.dart';
 import 'package:studyu_core/core.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -20,8 +23,9 @@ class OverflowMenuItem {
   final String name;
   final IconData icon;
   final String routeName;
+  final Function() onTap;
 
-  OverflowMenuItem(this.name, this.icon, this.routeName);
+  OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
@@ -56,14 +60,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject)),
           ),
           PopupMenuButton<OverflowMenuItem>(
-            onSelected: (value) => Navigator.pushNamed(context, value.routeName),
+            onSelected: (value) {
+              if (value.routeName != null) {
+                Navigator.pushNamed(context, value.routeName);
+              } else if (value.onTap != null) {
+                value.onTap();
+              }
+            },
             itemBuilder: (context) {
-              return {
-                OverflowMenuItem(AppLocalizations.of(context).report_history, MdiIcons.history, Routes.reportHistory),
-                OverflowMenuItem(AppLocalizations.of(context).faq, MdiIcons.frequentlyAskedQuestions, Routes.faq),
-                OverflowMenuItem(AppLocalizations.of(context).about, MdiIcons.informationOutline, Routes.about),
-                OverflowMenuItem(AppLocalizations.of(context).settings, Icons.settings, Routes.appSettings),
-              }.map((choice) {
+              return [
+                OverflowMenuItem(AppLocalizations.of(context).report_history, MdiIcons.history,
+                    routeName: Routes.reportHistory),
+                OverflowMenuItem(AppLocalizations.of(context).faq, MdiIcons.frequentlyAskedQuestions,
+                    routeName: Routes.faq),
+                OverflowMenuItem(AppLocalizations.of(context).settings, Icons.settings, routeName: Routes.appSettings),
+                OverflowMenuItem(AppLocalizations.of(context).what_is_studyu, MdiIcons.helpCircleOutline,
+                    routeName: Routes.about),
+                OverflowMenuItem(AppLocalizations.of(context).about, MdiIcons.informationOutline, onTap: () async {
+                  final iconAuthors = ['Kiranshastry'];
+                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                  showAboutDialog(
+                      context: context,
+                      applicationIcon: Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                      applicationVersion: packageInfo.version,
+                      children: [
+                        RichText(
+                          text: TextSpan(style: TextStyle(color: Colors.black), children: [
+                            TextSpan(text: 'Icons from '),
+                            TextSpan(
+                                style: TextStyle(color: Colors.blue),
+                                text: 'www.flaticon.com',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    launch('https://www.flaticon.com/');
+                                  }),
+                            TextSpan(text: ' made by'),
+                          ]),
+                        ),
+                        SizedBox(height: 8),
+                        Column(
+                          children: iconAuthors
+                              .map((author) => InkWell(
+                                    onTap: () {
+                                      launch(
+                                          'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}');
+                                    },
+                                    child: Text(
+                                      author,
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                  ))
+                              .toList(),
+                        )
+                      ]);
+                })
+              ].map((choice) {
                 return PopupMenuItem<OverflowMenuItem>(
                   value: choice,
                   child: Row(children: [Icon(choice.icon, color: Colors.black), SizedBox(width: 8), Text(choice.name)]),
