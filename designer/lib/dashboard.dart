@@ -93,6 +93,8 @@ class _DashboardState extends State<Dashboard> {
     return DropdownButton<Locale>(
       value: _selectedLocal,
       items: dropDownItems,
+      style: TextStyle(color: Colors.white),
+      iconEnabledColor: Colors.white,
       onChanged: (value) {
         setState(() {
           _selectedLocal = value;
@@ -111,8 +113,8 @@ class _DashboardState extends State<Dashboard> {
         actions: [
           if (kDebugMode)
             Builder(builder: (context) {
-              return Theme(
-                data: ThemeData.dark(),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: TextButton.icon(
                   label: Text('Upload'),
                   icon: Icon(MdiIcons.upload),
@@ -160,8 +162,8 @@ class _DashboardState extends State<Dashboard> {
                 ),
               );
             }),
-          Theme(
-            data: ThemeData.dark(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: DropdownButtonHideUnderline(
               child: _buildLanguageDropdown(),
             ),
