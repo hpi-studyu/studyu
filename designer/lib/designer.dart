@@ -2,8 +2,11 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_core/env.dart' as env;
+import 'package:url_launcher/url_launcher.dart';
 
 import './designer/eligibility_designer.dart';
 import './designer/results_designer.dart';
@@ -58,6 +61,17 @@ class _DesignerState extends State<Designer> {
             ? AppLocalizations.of(context).view_published_study
             : AppLocalizations.of(context).create_new_study),
         actions: [
+          if (!study.published)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: TextButton.icon(
+                icon: Icon(MdiIcons.testTube),
+                label: Text('Try draft study'),
+                style: TextButton.styleFrom(primary: Colors.white),
+                onPressed: () =>
+                    launch('${env.appUrl}${Uri.encodeComponent(env.client.auth.session().persistSessionString)}'),
+              ),
+            ),
           if (kDebugMode)
             Builder(
                 builder: (context) => IconButton(

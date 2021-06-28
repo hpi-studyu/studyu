@@ -11,6 +11,10 @@ import '../../routes.dart';
 import '../../util/notifications.dart';
 
 class LoadingScreen extends StatefulWidget {
+  final String sessionString;
+
+  const LoadingScreen({Key key, this.sessionString}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
 }
@@ -19,7 +23,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
-    await UserQueries.recoverParticipantSession();
+    await UserQueries.recoverParticipantSession(sessionString: widget.sessionString);
     initStudy();
   }
 
