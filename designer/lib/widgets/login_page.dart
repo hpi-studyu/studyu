@@ -107,11 +107,6 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(MdiIcons.github),
-                      onPressed: () => appState.signInWithProvider(Provider.github, 'repo gist'),
-                    ),
-                    SizedBox(width: 16),
-                    IconButton(
                       icon: Icon(MdiIcons.gitlab, color: gitlabColor),
                       onPressed: () => appState.signInWithProvider(
                           Provider.gitlab, 'api read_user read_api read_repository write_repository profile email'),
