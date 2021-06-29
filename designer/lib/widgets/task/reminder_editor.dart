@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/buttons.dart';
 
 class ReminderEditor extends StatefulWidget {
   final StudyUTimeOfDay reminder;
@@ -46,11 +46,7 @@ class _ReminderEditorState extends State<ReminderEditor> {
                 ),
               ),
               SizedBox(width: 8),
-              TextButton.icon(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: widget.remove,
-                label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
-              ),
+              DeleteButton(onPressed: widget.remove),
               Spacer(flex: 4),
             ],
           )

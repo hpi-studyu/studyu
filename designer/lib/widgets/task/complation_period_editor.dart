@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+
+import '../buttons.dart';
 
 class CompletionPeriodEditor extends StatefulWidget {
   final CompletionPeriod completionPeriod;
@@ -65,12 +66,7 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   onChanged: (value) => saveFormChanges(),
                 ),
               ),
-              if (!widget.isFirst)
-                TextButton.icon(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: widget.remove,
-                  label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
-                ),
+              if (!widget.isFirst) DeleteButton(onPressed: widget.remove),
               Spacer(flex: widget.isFirst ? 4 : 3),
             ],
           ),

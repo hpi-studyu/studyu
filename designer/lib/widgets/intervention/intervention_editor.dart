@@ -5,6 +5,7 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/buttons.dart';
 
 import '../task/task_editor.dart';
 import '../util/helper.dart';
@@ -53,8 +54,9 @@ class _InterventionEditorState extends State<InterventionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                title: Text(AppLocalizations.of(context).intervention),
-                trailing: TextButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+              title: Text(AppLocalizations.of(context).intervention),
+              trailing: DeleteButton(onPressed: widget.remove),
+            ),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [

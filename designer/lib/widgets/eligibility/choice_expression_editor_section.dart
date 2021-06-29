@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/buttons.dart';
 
 class ChoiceExpressionEditorSection extends StatefulWidget {
   final ChoiceExpression expression;
@@ -44,10 +45,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
               Expanded(
                 child: ButtonBar(
                   children: <Widget>[
-                    TextButton(
-                      onPressed: () => _removeChoice(index),
-                      child: Text(AppLocalizations.of(context).delete),
-                    ),
+                    DeleteButton(onPressed: () => _removeChoice(index)),
                   ],
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../widgets/study_result/numeric_result_editor_section.dart';
+import '../buttons.dart';
 
 class StudyResultEditor extends StatefulWidget {
   final StudyResult result;
@@ -29,25 +30,23 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
       child: Column(
         children: [
           ListTile(
-              title: Row(
-                children: [
-                  DropdownButton<String>(
-                    value: widget.result.type,
-                    onChanged: widget.changeResultType,
-                    items: StudyResult.studyResultTypes.keys.map<DropdownMenuItem<String>>((value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
-                      );
-                    }).toList(),
-                  ),
-                  Text(AppLocalizations.of(context).result)
-                ],
-              ),
-              trailing: TextButton(
-                onPressed: widget.remove,
-                child: Text(AppLocalizations.of(context).delete),
-              )),
+            title: Row(
+              children: [
+                DropdownButton<String>(
+                  value: widget.result.type,
+                  onChanged: widget.changeResultType,
+                  items: StudyResult.studyResultTypes.keys.map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
+                    );
+                  }).toList(),
+                ),
+                Text(AppLocalizations.of(context).result)
+              ],
+            ),
+            trailing: DeleteButton(onPressed: widget.remove),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(

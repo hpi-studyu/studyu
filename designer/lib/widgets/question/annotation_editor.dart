@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/buttons.dart';
 
 class AnnotationEditor extends StatefulWidget {
   final Annotation annotation;
@@ -25,10 +26,7 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
         child: Column(children: <Widget>[
           ButtonBar(
             children: <Widget>[
-              TextButton(
-                onPressed: widget.remove,
-                child: Text(AppLocalizations.of(context).delete),
-              ),
+              DeleteButton(onPressed: widget.remove),
             ],
           ),
           FormBuilderTextField(

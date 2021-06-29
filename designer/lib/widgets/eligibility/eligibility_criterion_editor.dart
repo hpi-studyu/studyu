@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/buttons.dart';
 
 import './expression_editor.dart';
 
@@ -27,13 +28,11 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
         margin: EdgeInsets.all(10),
         child: Column(children: [
           ListTile(
-              title: Row(
-                children: [Text(AppLocalizations.of(context).eligibility_criterion)],
-              ),
-              trailing: TextButton(
-                onPressed: widget.remove,
-                child: Text(AppLocalizations.of(context).delete),
-              )),
+            title: Row(
+              children: [Text(AppLocalizations.of(context).eligibility_criterion)],
+            ),
+            trailing: DeleteButton(onPressed: widget.remove),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(children: [

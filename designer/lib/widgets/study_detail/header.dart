@@ -12,6 +12,7 @@ import 'package:studyu_designer/widgets/study_detail/collaborators_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme.dart';
+import '../buttons.dart';
 import '../icon_labels.dart';
 import 'export_dialog.dart';
 import 'invites_dialog.dart';
@@ -208,9 +209,7 @@ class _HeaderState extends State<Header> {
             if (widget.study.repo != null) ...gitPublicActions(),
             if (appState.loggedInViaGitlab && widget.study.isOwner(appState.user)) gitOwnerActions(),
             if (widget.study.canEdit(appState.user))
-              TextButton.icon(
-                icon: Icon(Icons.delete, color: Colors.red),
-                label: Text(AppLocalizations.of(context).delete, style: TextStyle(color: Colors.red)),
+              DeleteButton(
                 onPressed: () async {
                   final isDeleted =
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: widget.study));
@@ -246,7 +245,7 @@ class DeleteAlertDialog extends StatelessWidget {
             },
             icon: Icon(Icons.delete),
             label: Text(AppLocalizations.of(context).delete),
-            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
+            style: ElevatedButton.styleFrom(primary: Colors.red),
           )
         ],
       );

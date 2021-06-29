@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/buttons.dart';
 
 import '../util/helper.dart';
 import 'questionnaire_task_editor_section.dart';
@@ -28,13 +29,13 @@ class _TaskEditorState extends State<TaskEditor> {
         margin: EdgeInsets.all(10),
         child: Column(children: [
           ListTile(
-              title: Row(
-                children: [Text('${widget.task.type[0].toUpperCase()}${widget.task.type.substring(1)}'), Text(' Task')],
-              ),
-              trailing: TextButton(
-                onPressed: widget.remove,
-                child: Text(AppLocalizations.of(context).delete),
-              )),
+            title: Row(
+              children: [Text('${widget.task.type[0].toUpperCase()}${widget.task.type.substring(1)}'), Text(' Task')],
+            ),
+            trailing: DeleteButton(
+              onPressed: widget.remove,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(children: [

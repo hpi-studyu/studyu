@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
+import '../buttons.dart';
 import '../util/helper.dart';
 import 'average_section_editor_section.dart';
 import 'linear_regression_section_editor_section.dart';
@@ -49,24 +50,25 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
           margin: EdgeInsets.all(10),
           child: Column(children: [
             ListTile(
-                leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary}]') : null,
-                title: Row(
-                  children: [
-                    DropdownButton<String>(
-                      value: widget.section.type,
-                      onChanged: _changeSectionType,
-                      items: [AverageSection.sectionType, LinearRegressionSection.sectionType]
-                          .map<DropdownMenuItem<String>>((value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
-                        );
-                      }).toList(),
-                    ),
-                    Text(AppLocalizations.of(context).section)
-                  ],
-                ),
-                trailing: TextButton(onPressed: widget.remove, child: Text(AppLocalizations.of(context).delete))),
+              leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary}]') : null,
+              title: Row(
+                children: [
+                  DropdownButton<String>(
+                    value: widget.section.type,
+                    onChanged: _changeSectionType,
+                    items: [AverageSection.sectionType, LinearRegressionSection.sectionType]
+                        .map<DropdownMenuItem<String>>((value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
+                      );
+                    }).toList(),
+                  ),
+                  Text(AppLocalizations.of(context).section)
+                ],
+              ),
+              trailing: DeleteButton(onPressed: widget.remove),
+            ),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Column(children: [

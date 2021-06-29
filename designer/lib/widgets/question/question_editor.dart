@@ -5,6 +5,7 @@ import 'package:studyu_core/core.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
 import '../../widgets/question/slider_question_editor_section.dart';
+import '../buttons.dart';
 
 class QuestionEditor extends StatefulWidget {
   final Question question;
@@ -36,25 +37,23 @@ class _QuestionEditorState extends State<QuestionEditor> {
       child: Column(
         children: [
           ListTile(
-              title: Row(
-                children: [
-                  DropdownButton<String>(
-                    value: widget.question.type,
-                    onChanged: widget.changeQuestionType,
-                    items: widget.questionTypes.map<DropdownMenuItem<String>>((value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
-                      );
-                    }).toList(),
-                  ),
-                  Text(AppLocalizations.of(context).question)
-                ],
-              ),
-              trailing: TextButton(
-                onPressed: widget.remove,
-                child: Text(AppLocalizations.of(context).delete),
-              )),
+            title: Row(
+              children: [
+                DropdownButton<String>(
+                  value: widget.question.type,
+                  onChanged: widget.changeQuestionType,
+                  items: widget.questionTypes.map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
+                    );
+                  }).toList(),
+                ),
+                Text(AppLocalizations.of(context).question)
+              ],
+            ),
+            trailing: DeleteButton(onPressed: widget.remove),
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
