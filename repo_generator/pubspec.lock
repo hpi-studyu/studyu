@@ -175,7 +175,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.1"
   shelf:
     dependency: "direct main"
     description:
@@ -238,14 +238,14 @@ packages:
       name: studyu_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.3.0"
   supabase:
     dependency: "direct main"
     description:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.22"
+    version: "0.0.1-dev.23"
   term_glyph:
     dependency: transitive
     description:

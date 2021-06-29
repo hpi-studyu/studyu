@@ -13,7 +13,7 @@ dependencies:
   json_annotation: ^4.0.1
   postgrest: ^0.1.3
   quiver: ^3.0.1
-  supabase: ^0.0.1-dev.22
+  supabase: ^0.0.1-dev.23
   uuid: ^3.0.4
 
 dev_dependencies:
