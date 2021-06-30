@@ -1,3 +1,7 @@
+## 1.9.1
+
+ - Update a dependency to the latest release.
+
 ## 1.9.0
 
  - **FIX**: Fail on joining by invite w/o preselectedIds.

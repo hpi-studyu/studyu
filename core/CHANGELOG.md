@@ -1,3 +1,10 @@
+## 3.3.1
+
+ - **FIX**: Do not require stats to be fetched.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 3.3.0
 
  - **FEAT**: Add app url env var.

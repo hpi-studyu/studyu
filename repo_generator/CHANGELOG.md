@@ -1,3 +1,14 @@
+## 1.1.2
+
+ - **FIX**: No need to convert json to Subject.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Adapt to flutter 2.3 release.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+
 ## 1.1.1
 
  - **FIX**: Naming of dart binary.
