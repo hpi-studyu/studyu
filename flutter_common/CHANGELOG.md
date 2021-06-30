@@ -1,3 +1,10 @@
+## 1.1.1
+
+ - **FIX**: Escape hashtag in dotenv file.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.1.0
 
  - **FEAT**: Restore from session string.

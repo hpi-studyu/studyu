@@ -1,3 +1,11 @@
+## 1.3.0
+
+ - **REFACTOR**: Use DeleteButton with red theme.
+ - **FEAT**: Remove github login provider.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.2.0
 
  - **REFACTOR**: Remove unneded Theme widgets.
