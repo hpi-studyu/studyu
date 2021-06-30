@@ -20,7 +20,10 @@ class UserQueries {
   }
 
   static Future<bool> recoverParticipantSession({String? sessionString}) async {
-    if (sessionString != null) {
+    if (sessionString != null && sessionString.isNotEmpty) {
+      await env.client.auth.signOut();
+      await deleteActiveStudyReference();
+      await deleteLocalData();
       final res = await env.client.auth.recoverSession(sessionString);
       if (res.error == null && env.client.auth.session() != null) {
         return true;
