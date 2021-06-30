@@ -53,10 +53,20 @@ Future<shelf.Response> serverHandler(shelf.Request request) async {
     return shelf.Response(400, body: 'Bad Request. x-study-id header is missing.');
   }
 
+  print('Recovering Supabase session...');
   final res = await env.client.auth.recoverSession(session);
+  print('Recovered Supabase session.');
   if (res.error != null) {
     print(res.error?.message);
     return shelf.Response.forbidden('Could not authenticate with X-Session. Error: ${res.error!.message}');
+  }
+
+  if (env.client.auth.session() == null) {
+    return shelf.Response(500, body: 'Server Error. Session could not be established.');
+  }
+
+  if (env.client.auth.session()!.providerToken == null) {
+    return shelf.Response(500, body: 'Server Error. GitLab token is not set.');
   }
 
   final gl = GitlabClient(env.client.auth.session()!.providerToken!);
