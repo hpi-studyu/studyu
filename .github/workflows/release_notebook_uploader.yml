@@ -1,0 +1,40 @@
+name: Notebook Uploader Github Release
+
+on:
+  create:
+    tags:
+      - 'studyu_notebook_uploader-v*'
+  workflow_dispatch:
+
+jobs:
+  github-release:
+    name: Create Github Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get the tag name
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Compile Binary
+        run: dart compile exe bin/notebook_uploader.dart -o notebook_uploader.exe
+        working-directory: ./notebook_uploader
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG }}
+          release_name: ${{ env.TAG }}
+      - name: Upload Binary Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./notebook_uploader/bin/notebook_uploader.exe
+          asset_name: notebook_uploader.exe
+          asset_content_type: application/octet-stream
