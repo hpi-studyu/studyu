@@ -4,6 +4,9 @@ on:
   create:
     tags:
       - 'studyu_notebook_uploader-v*'
+  push:
+    tags:
+      - 'studyu_notebook_uploader-v*'
   workflow_dispatch:
 
 jobs:
