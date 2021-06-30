@@ -3,9 +3,9 @@ import 'package:studyu_core/env.dart' as env;
 
 Future<Study> fetchStudySchema(String studyId) async => SupabaseQuery.getById<Study>(studyId);
 
-Future<List<StudySubject>> fetchSubjects(String studyId) async =>
-    SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
-        .from(StudySubject.tableName)
-        .select('*,study(*),subject_progress(*)')
-        .eq('studyId', studyId)
-        .execute());
+Future<List<dynamic>> fetchSubjects(String studyId) async {
+  final res =
+      await env.client.from(StudySubject.tableName).select('*,subject_progress(*)').eq('studyId', studyId).execute();
+  SupabaseQuery.catchPostgrestError(res);
+  return res.data;
+}
