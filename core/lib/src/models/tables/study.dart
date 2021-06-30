@@ -50,7 +50,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(ignore: true)
   int activeSubjectCount = 0;
   @JsonKey(ignore: true)
-  late List<int> missedDays = [];
+  List<int> missedDays = [];
 
   @JsonKey(ignore: true)
   Repo? repo;
@@ -72,11 +72,22 @@ class Study extends SupabaseObjectFunctions<Study> {
     if (invites != null) {
       study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
     }
-    study
-      ..participantCount = json['study_participant_count'] as int
-      ..endedCount = json['study_ended_count'] as int
-      ..activeSubjectCount = json['active_subject_count'] as int
-      ..missedDays = json['study_missed_days'] != null ? List<int>.from(json['study_missed_days'] as List) : [];
+    final int? participantCount = json['study_participant_count'] as int?;
+    if (participantCount != null) {
+      study.participantCount = participantCount;
+    }
+    final int? endedCount = json['study_ended_count'] as int?;
+    if (endedCount != null) {
+      study.endedCount = endedCount;
+    }
+    final int? activeSubjectCount = json['active_subject_count'] as int?;
+    if (activeSubjectCount != null) {
+      study.activeSubjectCount = activeSubjectCount;
+    }
+    final List? missedDays = json['study_missed_days'] as List?;
+    if (missedDays != null) {
+      study.missedDays = List<int>.from(json['study_missed_days'] as List);
+    }
     return study;
   }
 
