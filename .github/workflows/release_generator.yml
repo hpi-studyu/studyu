@@ -23,6 +23,9 @@ jobs:
           fetch-depth: 0
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
+      - name: Get packages
+        run: pub get
+        working-directory: ./repo_generator
       - name: Compile Binary
         run: dart compile exe bin/repo_generator.dart -o repo_generator_server.exe
         working-directory: ./repo_generator
