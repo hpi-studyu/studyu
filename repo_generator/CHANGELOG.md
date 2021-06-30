@@ -1,3 +1,9 @@
+## 1.1.3
+
+ - **FIX**: Add more error responses and logging.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.1.2
 
  - **FIX**: No need to convert json to Subject.
