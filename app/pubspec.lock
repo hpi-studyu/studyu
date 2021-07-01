@@ -601,7 +601,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.23"
+    version: "0.0.1-dev.24"
   term_glyph:
     dependency: transitive
     description:
@@ -650,7 +650,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.7"
+    version: "6.0.8"
   url_launcher_linux:
     dependency: transitive
     description:
