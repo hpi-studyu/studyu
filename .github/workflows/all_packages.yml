@@ -104,13 +104,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_E37AF }}'
           channelId: live
           projectId: studyu-e37af
-      - name: Archive App Production Web Build
-        uses: actions/upload-artifact@master
-        with:
-          name: app-web-build
-          path: app/build/web
-      - name: Archive Designer Production Web Build
-        uses: actions/upload-artifact@master
-        with:
-          name: designer-web-build
-          path: designer/build/web
