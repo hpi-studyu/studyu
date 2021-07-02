@@ -80,13 +80,11 @@ class _AboutDesignerState extends State<AboutDesigner> {
                     FormBuilderTextField(
                         onChanged: _saveFormChanges,
                         name: 'organization',
-                        maxLength: 40,
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).organization),
                         initialValue: _draftStudy.contact.organization),
                     FormBuilderTextField(
                         onChanged: _saveFormChanges,
                         name: 'institutionalReviewBoard',
-                        maxLength: 40,
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).irb),
                         initialValue: _draftStudy.contact.institutionalReviewBoard),
                     FormBuilderTextField(
@@ -98,20 +96,17 @@ class _AboutDesignerState extends State<AboutDesigner> {
                     FormBuilderTextField(
                         onChanged: _saveFormChanges,
                         name: 'researchers',
-                        maxLength: 40,
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
                         initialValue: _draftStudy.contact.researchers),
                     FormBuilderTextField(
                         onChanged: _saveFormChanges,
                         name: 'website',
-                        maxLength: 40,
                         validator: FormBuilderValidators.url(context),
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
                         initialValue: _draftStudy.contact.website),
                     FormBuilderTextField(
                         onChanged: _saveFormChanges,
                         name: 'email',
-                        maxLength: 40,
                         validator: FormBuilderValidators.email(context),
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
                         initialValue: _draftStudy.contact.email),
