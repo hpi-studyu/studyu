@@ -198,7 +198,7 @@ class _HeaderState extends State<Header> {
                   },
                   icon: Icon(MdiIcons.accountPlus),
                   label: Text('Add collaborator')),
-            if (widget.study.canEdit(appState.user) && widget.study.participation == Participation.invite)
+            if (widget.study.canEdit(appState.user))
               TextButton.icon(
                   onPressed: () async {
                     await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
