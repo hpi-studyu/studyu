@@ -23,24 +23,29 @@ class Study extends SupabaseObjectFunctions<Study> {
   String id;
   String? title;
   String? description;
+  @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;
   @JsonKey(name: 'result_sharing')
   ResultSharing resultSharing = ResultSharing.private;
   late Contact contact = Contact();
+  @JsonKey(name: 'icon_name')
   late String iconName = 'accountHeart';
   late bool published = false;
   late StudyUQuestionnaire questionnaire = StudyUQuestionnaire();
+  @JsonKey(name: 'eligibility_criteria')
   late List<EligibilityCriterion> eligibilityCriteria = [];
   late List<ConsentItem> consent = [];
   late List<Intervention> interventions = [];
   late List<Observation> observations = [];
   late StudySchedule schedule = StudySchedule();
+  @JsonKey(name: 'report_specification')
   late ReportSpecification reportSpecification = ReportSpecification();
   late List<StudyResult> results = [];
   @JsonKey(name: 'collaborator_emails')
   late List<String> collaboratorEmails = [];
 
+  @JsonKey(name: 'fhir_questionnaire')
   Questionnaire? fhirQuestionnaire;
 
   @JsonKey(ignore: true)

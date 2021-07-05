@@ -1,4 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../core.dart';
@@ -16,18 +15,22 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
 
   String id;
   Contact contact;
-  Map<String, String> app_privacy;
-  Map<String, String> app_terms;
-  Map<String, String> designer_privacy;
-  Map<String, String> designer_terms;
+  @JsonKey(name: 'app_privacy')
+  Map<String, String> appPrivacy;
+  @JsonKey(name: 'app_terms')
+  Map<String, String> appTerms;
+  @JsonKey(name: 'designer_privacy')
+  Map<String, String> designerPrivacy;
+  @JsonKey(name: 'designer_terms')
+  Map<String, String> designerTerms;
   Map<String, String> imprint;
 
   AppConfig(this.id,
       {required this.contact,
-      required this.app_privacy,
-      required this.app_terms,
-      required this.designer_privacy,
-      required this.designer_terms,
+      required this.appPrivacy,
+      required this.appTerms,
+      required this.designerPrivacy,
+      required this.designerTerms,
       required this.imprint});
 
   factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);

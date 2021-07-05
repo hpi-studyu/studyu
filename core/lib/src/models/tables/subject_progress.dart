@@ -12,10 +12,15 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   @override
   Map<String, dynamic> get primaryKeys => {'completedAt': completedAt, 'subjectId': subjectId};
 
+  @JsonKey(name: 'completed_at')
   DateTime? completedAt;
+  @JsonKey(name: 'subject_id')
   String subjectId;
+  @JsonKey(name: 'intervention_id')
   String interventionId;
+  @JsonKey(name: 'task_id')
   String taskId;
+  @JsonKey(name: 'result_type')
   String resultType;
   Result result;
 

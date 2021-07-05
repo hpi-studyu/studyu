@@ -13,7 +13,9 @@ class StudyInvite extends SupabaseObjectFunctions<StudyInvite> {
   Map<String, dynamic> get primaryKeys => {'code': code};
 
   String code;
+  @JsonKey(name: 'study_id')
   String studyId;
+  @JsonKey(name: 'preselected_intervention_ids')
   List<String>? preselectedInterventionIds;
 
   StudyInvite(this.code, this.studyId, {this.preselectedInterventionIds});

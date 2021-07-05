@@ -9,9 +9,9 @@ part of 'study_invite.dart';
 StudyInvite _$StudyInviteFromJson(Map<String, dynamic> json) {
   return StudyInvite(
     json['code'] as String,
-    json['studyId'] as String,
+    json['study_id'] as String,
     preselectedInterventionIds:
-        (json['preselectedInterventionIds'] as List<dynamic>?)
+        (json['preselected_intervention_ids'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
   );
@@ -20,7 +20,7 @@ StudyInvite _$StudyInviteFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$StudyInviteToJson(StudyInvite instance) {
   final val = <String, dynamic>{
     'code': instance.code,
-    'studyId': instance.studyId,
+    'study_id': instance.studyId,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -30,6 +30,6 @@ Map<String, dynamic> _$StudyInviteToJson(StudyInvite instance) {
   }
 
   writeNotNull(
-      'preselectedInterventionIds', instance.preselectedInterventionIds);
+      'preselected_intervention_ids', instance.preselectedInterventionIds);
   return val;
 }

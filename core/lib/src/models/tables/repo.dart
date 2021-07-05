@@ -14,8 +14,11 @@ class Repo extends SupabaseObjectFunctions<Repo> {
   @override
   Map<String, dynamic> get primaryKeys => {'projectId': projectId};
 
+  @JsonKey(name: 'project_id')
   String projectId;
+  @JsonKey(name: 'user_id')
   String userId;
+  @JsonKey(name: 'study_id')
   String studyId;
   GitProvider provider;
 

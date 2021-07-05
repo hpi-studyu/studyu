@@ -9,23 +9,23 @@ part of 'study_subject.dart';
 StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) {
   return StudySubject(
     json['id'] as String,
-    json['studyId'] as String,
-    json['userId'] as String,
-    (json['selectedInterventionIds'] as List<dynamic>)
+    json['study_id'] as String,
+    json['user_id'] as String,
+    (json['selected_intervention_ids'] as List<dynamic>)
         .map((e) => e as String)
         .toList(),
   )
-    ..startedAt = json['startedAt'] == null
+    ..startedAt = json['started_at'] == null
         ? null
-        : DateTime.parse(json['startedAt'] as String)
-    ..inviteCode = json['inviteCode'] as String?;
+        : DateTime.parse(json['started_at'] as String)
+    ..inviteCode = json['invite_code'] as String?;
 }
 
 Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
   final val = <String, dynamic>{
     'id': instance.id,
-    'studyId': instance.studyId,
-    'userId': instance.userId,
+    'study_id': instance.studyId,
+    'user_id': instance.userId,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -34,8 +34,8 @@ Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
     }
   }
 
-  writeNotNull('startedAt', instance.startedAt?.toIso8601String());
-  val['selectedInterventionIds'] = instance.selectedInterventionIds;
-  writeNotNull('inviteCode', instance.inviteCode);
+  writeNotNull('started_at', instance.startedAt?.toIso8601String());
+  val['selected_intervention_ids'] = instance.selectedInterventionIds;
+  writeNotNull('invite_code', instance.inviteCode);
   return val;
 }

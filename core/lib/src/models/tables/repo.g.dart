@@ -8,17 +8,17 @@ part of 'repo.dart';
 
 Repo _$RepoFromJson(Map<String, dynamic> json) {
   return Repo(
-    json['projectId'] as String,
-    json['userId'] as String,
-    json['studyId'] as String,
+    json['project_id'] as String,
+    json['user_id'] as String,
+    json['study_id'] as String,
     _$enumDecode(_$GitProviderEnumMap, json['provider']),
   );
 }
 
 Map<String, dynamic> _$RepoToJson(Repo instance) => <String, dynamic>{
-      'projectId': instance.projectId,
-      'userId': instance.userId,
-      'studyId': instance.studyId,
+      'project_id': instance.projectId,
+      'user_id': instance.userId,
+      'study_id': instance.studyId,
       'provider': _$GitProviderEnumMap[instance.provider],
     };
 

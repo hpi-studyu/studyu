@@ -20,12 +20,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Map<String, dynamic> get primaryKeys => {'id': id};
 
-  // Needs late to use the fromJson initializer
   String id;
+  @JsonKey(name: 'study_id')
   String studyId;
+  @JsonKey(name: 'user_id')
   String userId;
+  @JsonKey(name: 'started_at')
   DateTime? startedAt;
+  @JsonKey(name: 'selected_intervention_ids')
   List<String> selectedInterventionIds;
+  @JsonKey(name: 'invite_code')
   String? inviteCode;
 
   @JsonKey(ignore: true)

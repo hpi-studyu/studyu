@@ -9,7 +9,7 @@ part of 'study.dart';
 Study _$StudyFromJson(Map<String, dynamic> json) {
   return Study(
     json['id'] as String,
-    json['userId'] as String,
+    json['user_id'] as String,
   )
     ..title = json['title'] as String?
     ..description = json['description'] as String?
@@ -18,11 +18,11 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
     ..resultSharing =
         _$enumDecode(_$ResultSharingEnumMap, json['result_sharing'])
     ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
-    ..iconName = json['iconName'] as String
+    ..iconName = json['icon_name'] as String
     ..published = json['published'] as bool
     ..questionnaire =
         StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
-    ..eligibilityCriteria = (json['eligibilityCriteria'] as List<dynamic>)
+    ..eligibilityCriteria = (json['eligibility_criteria'] as List<dynamic>)
         .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
         .toList()
     ..consent = (json['consent'] as List<dynamic>)
@@ -37,17 +37,17 @@ Study _$StudyFromJson(Map<String, dynamic> json) {
     ..schedule =
         StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
     ..reportSpecification = ReportSpecification.fromJson(
-        json['reportSpecification'] as Map<String, dynamic>)
+        json['report_specification'] as Map<String, dynamic>)
     ..results = (json['results'] as List<dynamic>)
         .map((e) => StudyResult.fromJson(e as Map<String, dynamic>))
         .toList()
     ..collaboratorEmails = (json['collaborator_emails'] as List<dynamic>)
         .map((e) => e as String)
         .toList()
-    ..fhirQuestionnaire = json['fhirQuestionnaire'] == null
+    ..fhirQuestionnaire = json['fhir_questionnaire'] == null
         ? null
         : Questionnaire.fromJson(
-            json['fhirQuestionnaire'] as Map<String, dynamic>);
+            json['fhir_questionnaire'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$StudyToJson(Study instance) {
@@ -63,23 +63,23 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
-  val['userId'] = instance.userId;
+  val['user_id'] = instance.userId;
   val['participation'] = _$ParticipationEnumMap[instance.participation];
   val['result_sharing'] = _$ResultSharingEnumMap[instance.resultSharing];
   val['contact'] = instance.contact.toJson();
-  val['iconName'] = instance.iconName;
+  val['icon_name'] = instance.iconName;
   val['published'] = instance.published;
   val['questionnaire'] = instance.questionnaire.toJson();
-  val['eligibilityCriteria'] =
+  val['eligibility_criteria'] =
       instance.eligibilityCriteria.map((e) => e.toJson()).toList();
   val['consent'] = instance.consent.map((e) => e.toJson()).toList();
   val['interventions'] = instance.interventions.map((e) => e.toJson()).toList();
   val['observations'] = instance.observations.map((e) => e.toJson()).toList();
   val['schedule'] = instance.schedule.toJson();
-  val['reportSpecification'] = instance.reportSpecification.toJson();
+  val['report_specification'] = instance.reportSpecification.toJson();
   val['results'] = instance.results.map((e) => e.toJson()).toList();
   val['collaborator_emails'] = instance.collaboratorEmails;
-  writeNotNull('fhirQuestionnaire', instance.fhirQuestionnaire?.toJson());
+  writeNotNull('fhir_questionnaire', instance.fhirQuestionnaire?.toJson());
   return val;
 }
 

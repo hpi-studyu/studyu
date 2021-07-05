@@ -59,12 +59,12 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(height: 20),
                       OutlinedButton.icon(
                         icon: Icon(MdiIcons.fileDocumentEdit),
-                        onPressed: () => launch(appConfig.designer_terms[appLocale.toString()]),
+                        onPressed: () => launch(appConfig.designerTerms[appLocale.toString()]),
                         label: Text(AppLocalizations.of(context).terms_read),
                       ),
                       OutlinedButton.icon(
                         icon: Icon(MdiIcons.shieldLock),
-                        onPressed: () => launch(appConfig.designer_privacy[appLocale.toString()]),
+                        onPressed: () => launch(appConfig.designerPrivacy[appLocale.toString()]),
                         label: Text(AppLocalizations.of(context).privacy_read),
                       ),
                     ],

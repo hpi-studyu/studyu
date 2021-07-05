@@ -8,14 +8,14 @@ part of 'subject_progress.dart';
 
 SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) {
   return SubjectProgress(
-    subjectId: json['subjectId'] as String,
-    interventionId: json['interventionId'] as String,
-    taskId: json['taskId'] as String,
-    resultType: json['resultType'] as String,
+    subjectId: json['subject_id'] as String,
+    interventionId: json['intervention_id'] as String,
+    taskId: json['task_id'] as String,
+    resultType: json['result_type'] as String,
     result: Result.fromJson(json['result'] as Map<String, dynamic>),
-  )..completedAt = json['completedAt'] == null
+  )..completedAt = json['completed_at'] == null
       ? null
-      : DateTime.parse(json['completedAt'] as String);
+      : DateTime.parse(json['completed_at'] as String);
 }
 
 Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) {
@@ -27,11 +27,11 @@ Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) {
     }
   }
 
-  writeNotNull('completedAt', instance.completedAt?.toIso8601String());
-  val['subjectId'] = instance.subjectId;
-  val['interventionId'] = instance.interventionId;
-  val['taskId'] = instance.taskId;
-  val['resultType'] = instance.resultType;
+  writeNotNull('completed_at', instance.completedAt?.toIso8601String());
+  val['subject_id'] = instance.subjectId;
+  val['intervention_id'] = instance.interventionId;
+  val['task_id'] = instance.taskId;
+  val['result_type'] = instance.resultType;
   val['result'] = instance.result.toJson();
   return val;
 }
