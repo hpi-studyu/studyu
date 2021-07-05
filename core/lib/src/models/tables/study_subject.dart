@@ -22,10 +22,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   // Needs late to use the fromJson initializer
   String id;
-  late String studyId;
-  late String userId;
+  String studyId;
+  String userId;
   DateTime? startedAt;
-  late List<String> selectedInterventionIds;
+  List<String> selectedInterventionIds;
   String? inviteCode;
 
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @JsonKey(ignore: true)
   late List<SubjectProgress> progress = [];
 
-  StudySubject(this.id);
+  StudySubject(this.id, this.studyId, this.userId, this.selectedInterventionIds);
 
   factory StudySubject.fromJson(Map<String, dynamic> json) => _$StudySubjectFromJson(json)
     ..study = Study.fromJson(json['study'] as Map<String, dynamic>)

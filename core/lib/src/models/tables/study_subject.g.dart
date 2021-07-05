@@ -9,16 +9,15 @@ part of 'study_subject.dart';
 StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) {
   return StudySubject(
     json['id'] as String,
+    json['studyId'] as String,
+    json['userId'] as String,
+    (json['selectedInterventionIds'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList(),
   )
-    ..studyId = json['studyId'] as String
-    ..userId = json['userId'] as String
     ..startedAt = json['startedAt'] == null
         ? null
         : DateTime.parse(json['startedAt'] as String)
-    ..selectedInterventionIds =
-        (json['selectedInterventionIds'] as List<dynamic>)
-            .map((e) => e as String)
-            .toList()
     ..inviteCode = json['inviteCode'] as String?;
 }
 
