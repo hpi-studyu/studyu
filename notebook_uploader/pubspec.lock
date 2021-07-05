@@ -63,7 +63,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
   hotreloader:
     dependency: transitive
     description:
@@ -119,7 +119,7 @@ packages:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.6.0"
   mime:
     dependency: transitive
     description:
@@ -161,7 +161,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   shelf_hotreload:
     dependency: "direct dev"
     description:
@@ -224,7 +224,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.24"
+    version: "0.0.1-dev.26"
   term_glyph:
     dependency: transitive
     description:

@@ -94,7 +94,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
   http:
     dependency: transitive
     description:
@@ -227,7 +227,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -323,7 +323,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1-dev.24"
+    version: "0.0.1-dev.26"
   term_glyph:
     dependency: transitive
     description:
@@ -372,7 +372,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.4"
+    version: "2.2.5"
   xdg_directories:
     dependency: transitive
     description:
