@@ -1,3 +1,9 @@
+## 1.1.4
+
+ - **FIX**: Point to new staging supabase.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+
 ## 1.1.3
 
  - **FIX**: Add more error responses and logging.

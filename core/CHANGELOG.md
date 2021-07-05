@@ -1,3 +1,12 @@
+## 3.3.2
+
+ - **REFACTOR**: Table columns now have underscores.
+ - **REFACTOR**: No need to use late init here.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 3.3.1
 
  - **FIX**: Do not require stats to be fetched.

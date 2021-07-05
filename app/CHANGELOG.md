@@ -1,3 +1,11 @@
+## 1.9.2
+
+ - **REFACTOR**: Table columns now have underscores.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.9.1
 
  - Update a dependency to the latest release.

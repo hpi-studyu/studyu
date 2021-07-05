@@ -587,14 +587,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.3.1"
+    version: "3.3.2"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.1.1"
+    version: "1.2.0"
   supabase:
     dependency: "direct main"
     description:

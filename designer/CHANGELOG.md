@@ -1,3 +1,13 @@
+## 1.3.1
+
+ - **REFACTOR**: Table columns now have underscores.
+ - **FIX**: Allow invite codes also when open.
+ - **FIX**: Allow more than 40 charcs for about fields.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.3.0
 
  - **REFACTOR**: Use DeleteButton with red theme.
