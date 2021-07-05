@@ -1,3 +1,12 @@
+## 1.2.0
+
+ - **FIX**: Point to new staging supabase.
+ - **FEAT**: Try draft: Log out, before singing in.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.1.1
 
  - **FIX**: Escape hashtag in dotenv file.
