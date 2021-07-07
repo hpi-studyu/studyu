@@ -304,11 +304,11 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- Name: study_subject user_study_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
+-- Name: study_subject study_subject_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
 --
 
 ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT user_study_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT study_subject_pkey PRIMARY KEY (id);
 
 -- ======================== FOREIGN KEY CONTRAINTS ======================================================
 
@@ -374,15 +374,6 @@ ALTER TABLE ONLY public.study_subject
 
 ALTER TABLE ONLY public.study
     ADD CONSTRAINT "study_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
-
-
---
--- Name: study_subject user_study_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "user_study_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
-
 
 
 -- ======================== STUDY FUNCTIONS =====================================
