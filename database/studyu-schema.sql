@@ -451,7 +451,7 @@ ALTER FUNCTION public.handle_new_user() OWNER TO supabase_admin;
 -- Name: has_study_ended(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
-CREATE FUNCTION public.has_study_ended(subject_id uuid) RETURNS boolean
+CREATE FUNCTION public.has_study_ended(psubject_id uuid) RETURNS boolean
     LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 BEGIN
@@ -460,12 +460,12 @@ BEGIN
             study_length(study) < (DATE(now()) - DATE(started_at)) AS completed
         FROM study, study_subject
         WHERE study.id = study_subject.study_id
-        AND study_subject.id = subject_id);
+        AND study_subject.id = psubject_id);
 END;
 $$;
 
 
-ALTER FUNCTION public.has_study_ended(subject_id uuid) OWNER TO supabase_admin;
+ALTER FUNCTION public.has_study_ended(psubject_id uuid) OWNER TO supabase_admin;
 
 --
 -- Name: has_study_ended(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
@@ -491,24 +491,24 @@ ALTER FUNCTION public.has_study_ended(subject public.study_subject) OWNER TO sup
 -- Name: is_active_subject(uuid, integer); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
-CREATE FUNCTION public.is_active_subject(subject_id uuid, days_active integer) RETURNS boolean
+CREATE FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) RETURNS boolean
     LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 BEGIN
   RETURN (
     SELECT
-      (DATE(now()) - last_completed_task (subject_id)) <= days_active);
+      (DATE(now()) - last_completed_task (psubject_id)) <= days_active);
 END;
 $$;
 
 
-ALTER FUNCTION public.is_active_subject(subject_id uuid, days_active integer) OWNER TO supabase_admin;
+ALTER FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) OWNER TO supabase_admin;
 
 --
 -- Name: last_completed_task(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
-CREATE FUNCTION public.last_completed_task(subject_id uuid) RETURNS date
+CREATE FUNCTION public.last_completed_task(psubject_id uuid) RETURNS date
     LANGUAGE plpgsql SECURITY DEFINER
     AS $$
 BEGIN
@@ -518,7 +518,7 @@ BEGIN
         FROM
             subject_progress
         WHERE
-            subject_id = subject_id
+            subject_id = psubject_id
         ORDER BY
             completed_at DESC
         LIMIT 1);
@@ -526,7 +526,7 @@ END;
 $$;
 
 
-ALTER FUNCTION public.last_completed_task(subject_id uuid) OWNER TO supabase_admin;
+ALTER FUNCTION public.last_completed_task(psubject_id uuid) OWNER TO supabase_admin;
 
 --
 -- Name: study_active_days(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
