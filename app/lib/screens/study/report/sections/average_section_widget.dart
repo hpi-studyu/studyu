@@ -25,7 +25,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   bool get needsSeperators => section.aggregate == TemporalAggregation.day;
   bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
 
-  charts.RangeAnnotation generateSeperators(int numberOfPhases, int phaseDuration) => charts.RangeAnnotation(
+  charts.RangeAnnotation<num> generateSeperators(int numberOfPhases, int phaseDuration) => charts.RangeAnnotation<num>(
         Iterable<int>.generate(numberOfPhases + 1)
             .map((i) => PlotUtilities.createSeparator(i * phaseDuration - 0.5))
             .toList(),

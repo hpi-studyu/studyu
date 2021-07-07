@@ -15,7 +15,7 @@ dependencies:
   pretty_json: ^2.0.0
   shelf: ^1.1.4
   studyu_core:
-  supabase: ^0.0.1-dev.26
+  supabase: ^0.0.1-dev.27
 
 dev_dependencies:
     shelf_hotreload: ^0.0.2
