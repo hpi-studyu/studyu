@@ -8,8 +8,12 @@ We have 3 different Flutter packages all contained in this monorepo.
 
 ## App Test Instances
 
-- StudyU App [Instance](https://studyu.codemagic.app/#/welcome)
-- StudyU Study Designer [Instance](https://studyu-designer.codemagic.app/#/)
+- StudyU App [Instance](https://studyu-app-v1.web.app/)
+- StudyU Study Designer [Instance](https://studyu-designer-v1.web.app/)
+
+## App Stores
+
+- [Google Play Store](https://play.google.com/store/apps/details?id=health.studyu.app)
 
 ## Publications
 
