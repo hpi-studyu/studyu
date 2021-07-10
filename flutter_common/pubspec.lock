@@ -316,7 +316,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.3.2"
+    version: "3.4.0"
   supabase:
     dependency: transitive
     description:

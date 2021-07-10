@@ -1,3 +1,11 @@
+## 3.4.0
+
+ - **FEAT**: Add method to check if elgibility is defined.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 3.3.2
 
  - **REFACTOR**: Table columns now have underscores.
