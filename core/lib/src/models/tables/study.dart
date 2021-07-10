@@ -117,6 +117,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   bool isEditor(User? user) => user != null && collaboratorEmails.contains(user.email);
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
+  bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
+
   int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
