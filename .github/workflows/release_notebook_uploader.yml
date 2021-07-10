@@ -1,9 +1,6 @@
 name: Notebook Uploader Github Release
 
 on:
-  create:
-    tags:
-      - 'studyu_notebook_uploader-v*'
   push:
     tags:
       - 'studyu_notebook_uploader-v*'

@@ -1,9 +1,6 @@
 name: Generator Github Release
 
 on:
-  create:
-    tags:
-      - 'studyu_repo_generator-v*'
   push:
     tags:
       - 'studyu_repo_generator-v*'

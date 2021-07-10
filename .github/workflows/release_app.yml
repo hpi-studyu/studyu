@@ -1,9 +1,6 @@
 name: Github Release
 
 on:
-  create:
-    tags:
-      - 'studyu_app-v*'
   push:
     tags:
       - 'studyu_app-v*'
