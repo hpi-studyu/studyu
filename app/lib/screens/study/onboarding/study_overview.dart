@@ -27,26 +27,29 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     study = context.read<AppState>().selectedStudy;
   }
 
+  Future<void> navigateToJourney(BuildContext context) async {
+    final appState = context.read<AppState>();
+    if (appState.preselectedInterventionIds != null) {
+      appState.activeSubject = StudySubject.fromStudy(
+          appState.selectedStudy, env.client.auth.user().id, appState.preselectedInterventionIds, appState.inviteCode);
+      Navigator.pushNamed(context, Routes.journey);
+    } else if (study.interventions.length <= 2) {
+      // No need to select interventions if there are only 2 or less
+      appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, env.client.auth.user().id,
+          study.interventions.map((i) => i.id).toList(), appState.inviteCode);
+      Navigator.pushNamed(context, Routes.journey);
+    } else {
+      Navigator.pushNamed(context, Routes.interventionSelection);
+    }
+  }
+
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppState>().selectedStudy;
     final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: study));
     if (result == null) return;
 
-    final appState = context.read<AppState>();
-
     if (result.eligible != null && result.eligible) {
-      if (appState.preselectedInterventionIds != null) {
-        appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, env.client.auth.user().id,
-            appState.preselectedInterventionIds, appState.inviteCode);
-        Navigator.pushNamed(context, Routes.journey);
-      } else if (study.interventions.length <= 2) {
-        // No need to select interventions if there are only 2 or less
-        appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, env.client.auth.user().id,
-            study.interventions.map((i) => i.id).toList(), appState.inviteCode);
-        Navigator.pushNamed(context, Routes.journey);
-      } else {
-        Navigator.pushNamed(context, Routes.interventionSelection);
-      }
+      navigateToJourney(context);
     } else if (result.answers != null) {
       Navigator.pop(context);
     }
@@ -78,7 +81,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: () => navigateToEligibilityCheck(context),
+        onNext: context.watch<AppState>().selectedStudy.hasEligibilityCheck
+            ? () => navigateToEligibilityCheck(context)
+            : () => navigateToJourney(context),
       ),
     );
   }
