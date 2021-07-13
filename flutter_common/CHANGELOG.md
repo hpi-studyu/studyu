@@ -1,3 +1,9 @@
+## 1.2.3
+
+ - **FIX**: Upgrade studyu_core.
+ - **FIX**: Upgrade studyu deps.
+ - **CHORE**: Prepare for pub.dev release.
+
 ## 1.2.2
 
  - Update a dependency to the latest release.
