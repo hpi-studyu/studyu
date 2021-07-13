@@ -1,3 +1,7 @@
+## 1.2.4
+
+ - **FIX**: Key cannot be masked due to format.
+
 ## 1.2.3
 
  - **FIX**: Upgrade studyu_core.
