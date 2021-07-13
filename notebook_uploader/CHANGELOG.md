@@ -1,3 +1,7 @@
+## 1.2.3
+
+ - **FIX**: Upgrade studyu deps.
+
 ## 1.2.2
 
  - **REFACTOR**: Use upsert instead of fetching files first.

@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - **FIX**: Upgrade studyu deps.
+
 ## 1.2.0
 
  - **FEAT**: Create supabase env vars for repository.
