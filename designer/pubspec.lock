@@ -480,7 +480,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.4.1"
+    version: "3.4.2"
   studyu_flutter_common:
     dependency: "direct main"
     description:
