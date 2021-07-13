@@ -47,7 +47,8 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   await gl.createProjectVariable(
       projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString, masked: true);
   await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId, masked: true);
-  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private, masked: true);
+  // Key cannot be masked due to format
+  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private, masked: false);
 
   print('Creating project environment variables for supabase');
   await gl.createProjectVariable(
