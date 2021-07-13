@@ -34,7 +34,7 @@ dependencies:
     path: ../core
   studyu_flutter_common:
     path: ../flutter_common
-  supabase: ^0.0.1-dev.27
+  supabase: ^0.0.1
   universal_html: ^2.0.8
   url_launcher: ^6.0.9
   uuid: ^3.0.4
