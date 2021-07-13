@@ -1,3 +1,7 @@
+## 1.2.4
+
+ - **FIX**: Upgrade studyu_core.
+
 ## 1.2.3
 
  - **FIX**: Upgrade studyu deps.
