@@ -44,8 +44,9 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   await gl.addDeployKey(projectId: projectId, title: 'update_key', key: public, canPush: true);
 
   print('Creating project variables for session, studyId and key');
+  // session cannot be masked due to format
   await gl.createProjectVariable(
-      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString, masked: true);
+      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString, masked: false);
   await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId, masked: true);
   // Key cannot be masked due to format
   await gl.createProjectVariable(projectId: projectId, key: 'key', value: private, masked: false);
