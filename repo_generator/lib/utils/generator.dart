@@ -45,9 +45,15 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
 
   print('Creating project variables for session, studyId and key');
   await gl.createProjectVariable(
-      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString);
-  await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId);
-  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private);
+      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString, masked: true);
+  await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId, masked: true);
+  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private, masked: true);
+
+  print('Creating project environment variables for supabase');
+  await gl.createProjectVariable(
+      projectId: projectId, key: 'STUDYU_SUPABASE_URL', value: env.supabaseUrl, masked: true);
+  await gl.createProjectVariable(
+      projectId: projectId, key: 'STUDYU_SUPABASE_PUBLIC_ANON_KEY', value: env.supabaseAnonKey, masked: true);
 
   // Generate files from nbconvert-template copier CLI
   print('Generating project files with copier...');
