@@ -244,7 +244,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> deleteProgress() async => SupabaseQuery.catchPostgrestError(
-      await env.client.from(SubjectProgress.tableName).delete().eq('subjectId', id).execute());
+      await env.client.from(SubjectProgress.tableName).delete().eq('subject_id', id).execute());
 
   @override
   Future<StudySubject> delete() async {
@@ -261,14 +261,14 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
           .from(tableName)
           .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-          .eq('studyId', study.id)
+          .eq('study_id', study.id)
           .execute());
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async {
     return SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
         .from(tableName)
         .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-        .eq('userId', userId)
+        .eq('user_id', userId)
         .execute());
   }
 }

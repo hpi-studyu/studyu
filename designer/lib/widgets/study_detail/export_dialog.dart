@@ -124,7 +124,7 @@ class _ExportDialogState extends State<ExportDialog> {
                       final res = await env.client
                           .from(StudySubject.tableName)
                           .select('*,subject_progress(*)')
-                          .eq('studyId', widget.study.id)
+                          .eq('study_id', widget.study.id)
                           .execute();
                       if (res.error != null) {
                         print(res.error.message);
@@ -140,7 +140,7 @@ class _ExportDialogState extends State<ExportDialog> {
                       final res = await env.client
                           .from('study_progress')
                           .select()
-                          .eq('studyId', widget.study.id)
+                          .eq('study_id', widget.study.id)
                           .csv()
                           .execute();
                       if (res.error != null) {

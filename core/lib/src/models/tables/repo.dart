@@ -12,7 +12,7 @@ class Repo extends SupabaseObjectFunctions<Repo> {
   static const String tableName = 'repo';
 
   @override
-  Map<String, dynamic> get primaryKeys => {'projectId': projectId};
+  Map<String, dynamic> get primaryKeys => {'project_id': projectId};
 
   @JsonKey(name: 'project_id')
   String projectId;

@@ -5,7 +5,7 @@ Future<Study> fetchStudySchema(String studyId) async => SupabaseQuery.getById<St
 
 Future<List<dynamic>> fetchSubjects(String studyId) async {
   final res =
-      await env.client.from(StudySubject.tableName).select('*,subject_progress(*)').eq('studyId', studyId).execute();
+      await env.client.from(StudySubject.tableName).select('*,subject_progress(*)').eq('study_id', studyId).execute();
   SupabaseQuery.catchPostgrestError(res);
   return res.data;
 }
