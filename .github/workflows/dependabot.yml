@@ -16,6 +16,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
+      - run: flutter config --no-analytics
       - run: flutter doctor
       - name: Update
         uses: IchordeDionysos/dependabot-pub-runner@main
