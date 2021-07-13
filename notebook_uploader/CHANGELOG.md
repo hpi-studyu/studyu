@@ -1,3 +1,19 @@
+## 1.2.2
+
+ - **REFACTOR**: Use upsert instead of fetching files first.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Adapt to flutter 2.3 release.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+
 ## 1.2.1
 
  - **FIX**: Naming of dart binary.

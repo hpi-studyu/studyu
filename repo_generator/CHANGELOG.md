@@ -1,3 +1,13 @@
+## 1.2.0
+
+ - **FEAT**: Create supabase env vars for repository.
+ - **FEAT**: Add masked property to creating env var.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 1.1.4
 
  - **FIX**: Point to new staging supabase.

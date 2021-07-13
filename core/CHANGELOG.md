@@ -1,3 +1,10 @@
+## 3.4.1
+
+ - **REFACTOR**: Make supabase vars public.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
 ## 3.4.0
 
  - **FEAT**: Add method to check if elgibility is defined.

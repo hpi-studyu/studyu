@@ -1,3 +1,7 @@
+## 1.9.4
+
+ - Update a dependency to the latest release.
+
 ## 1.9.3
 
  - **FIX**: Skip eligibilty screen if not defined.
