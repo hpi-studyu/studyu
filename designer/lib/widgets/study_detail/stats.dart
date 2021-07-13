@@ -57,7 +57,7 @@ class Stats extends StatelessWidget {
                   '${study.totalMissedDays} total days missed by participants (${(study.percentageMissedDays * 100).toStringAsFixed(2)}%)',
               iconData: MdiIcons.calendarRemove,
               color: Colors.orange),
-          SizedBox(height: 8),
+          SizedBox(height: 36),
           SizedBox(
             height: MediaQuery.of(context).size.height / 3,
             child: BarChartView(_missedDaysHistogramData(study), color: Colors.orange),
