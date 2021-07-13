@@ -13,6 +13,6 @@ String? authRedirectToUrl({bool isWeb = false}) => isWeb ? Uri.base.toString() :
 
 final projectGeneratorUrl = dotEnv['STUDYU_PROJECT_GENERATOR_URL']!;
 final appUrl = dotEnv['STUDYU_APP_URL']!;
-final _supabaseUrl = dotEnv['STUDYU_SUPABASE_URL']!;
-final _supabaseAnonKey = dotEnv['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!;
-final client = SupabaseClient(_supabaseUrl, _supabaseAnonKey);
+final supabaseUrl = dotEnv['STUDYU_SUPABASE_URL']!;
+final supabaseAnonKey = dotEnv['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!;
+final client = SupabaseClient(supabaseUrl, supabaseAnonKey);
