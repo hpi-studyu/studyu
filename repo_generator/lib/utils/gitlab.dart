@@ -73,8 +73,9 @@ class GitlabClient {
     required String projectId,
     required String key,
     required String value,
+    bool masked = false,
   }) async {
-    final body = {'key': key, 'value': value};
+    final body = {'key': key, 'value': value, 'masked': masked};
     final response = await _httpPostRequest(jsonEncode(body), 'projects/$projectId/variables');
 
     if (httpSuccess(response.statusCode)) {
