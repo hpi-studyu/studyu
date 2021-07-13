@@ -1,3 +1,7 @@
+## 1.2.2
+
+ - **FIX**: Correct column snail case naming.
+
 ## 1.2.1
 
  - **FIX**: Upgrade studyu deps.

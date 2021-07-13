@@ -1,3 +1,7 @@
+## 3.4.2
+
+ - **FIX**: Correct column snail case naming.
+
 ## 3.4.1
 
  - **REFACTOR**: Make supabase vars public.
