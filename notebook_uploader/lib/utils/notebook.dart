@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:studyu_core/env.dart' as env;
+import 'package:supabase/supabase.dart';
 
 Future<void> uploadNotebookToSupabase(String filePath, String studyId) async {
   final file = File(filePath);
@@ -11,21 +12,14 @@ Future<void> uploadNotebookToSupabase(String filePath, String studyId) async {
 }
 
 Future<void> _uploadToSupabaseStorage(String studyId, String fileName, File file, String bucketId) async {
-  final listFilesResponse = await env.client.storage.from(bucketId).list(path: studyId);
-  print(listFilesResponse.data);
-  if (listFilesResponse.hasError) {
-    print(listFilesResponse.error!.message);
-    exit(1);
-  }
+  final uploadResponse = await env.client.storage
+      .from(bucketId)
+      .upload('$studyId/$fileName', file, fileOptions: FileOptions(cacheControl: '3600', upsert: true));
 
-  final filePresent = listFilesResponse.data!.any((file) => file.name == fileName);
-  final updateResponse = filePresent
-      ? await env.client.storage.from(bucketId).update('$studyId/$fileName', file)
-      : await env.client.storage.from(bucketId).upload('$studyId/$fileName', file);
-  if (updateResponse.hasError) {
-    print(updateResponse.error!.message);
+  if (uploadResponse.hasError) {
+    print(uploadResponse.error!.message);
     exit(1);
   } else {
-    print(updateResponse.data);
+    print(uploadResponse.data);
   }
 }
