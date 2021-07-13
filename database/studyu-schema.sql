@@ -660,7 +660,8 @@ CREATE FUNCTION public.subject_total_active_days(subject public.study_subject) R
     COUNT(DISTINCT DATE(completed_at))::int
 FROM
     subject_progress
-WHERE subject_id = subject.id;
+WHERE subject_id = subject.id
+AND DATE(completed_at) < DATE(now());
 $$;
 
 
