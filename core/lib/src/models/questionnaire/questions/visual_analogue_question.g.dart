@@ -7,25 +7,24 @@ part of 'visual_analogue_question.dart';
 // **************************************************************************
 
 VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
-    Map<String, dynamic> json) {
-  return VisualAnalogueQuestion()
-    ..type = json['type'] as String
-    ..id = json['id'] as String
-    ..prompt = json['prompt'] as String?
-    ..rationale = json['rationale'] as String?
-    ..conditional = json['conditional'] == null
-        ? null
-        : QuestionConditional.fromJson(
-            json['conditional'] as Map<String, dynamic>)
-    ..minimum = (json['minimum'] as num).toDouble()
-    ..maximum = (json['maximum'] as num).toDouble()
-    ..initial = (json['initial'] as num).toDouble()
-    ..step = (json['step'] as num).toDouble()
-    ..minimumColor = json['minimumColor'] as int
-    ..maximumColor = json['maximumColor'] as int
-    ..minimumAnnotation = json['minimumAnnotation'] as String
-    ..maximumAnnotation = json['maximumAnnotation'] as String;
-}
+        Map<String, dynamic> json) =>
+    VisualAnalogueQuestion()
+      ..type = json['type'] as String
+      ..id = json['id'] as String
+      ..prompt = json['prompt'] as String?
+      ..rationale = json['rationale'] as String?
+      ..conditional = json['conditional'] == null
+          ? null
+          : QuestionConditional.fromJson(
+              json['conditional'] as Map<String, dynamic>)
+      ..minimum = (json['minimum'] as num).toDouble()
+      ..maximum = (json['maximum'] as num).toDouble()
+      ..initial = (json['initial'] as num).toDouble()
+      ..step = (json['step'] as num).toDouble()
+      ..minimumColor = json['minimumColor'] as int
+      ..maximumColor = json['maximumColor'] as int
+      ..minimumAnnotation = json['minimumAnnotation'] as String
+      ..maximumAnnotation = json['maximumAnnotation'] as String;
 
 Map<String, dynamic> _$VisualAnalogueQuestionToJson(
     VisualAnalogueQuestion instance) {

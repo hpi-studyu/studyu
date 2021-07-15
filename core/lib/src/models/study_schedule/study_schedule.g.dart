@@ -6,13 +6,12 @@ part of 'study_schedule.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) {
-  return StudySchedule()
-    ..numberOfCycles = json['numberOfCycles'] as int
-    ..phaseDuration = json['phaseDuration'] as int
-    ..includeBaseline = json['includeBaseline'] as bool
-    ..sequence = _$enumDecode(_$PhaseSequenceEnumMap, json['sequence']);
-}
+StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) =>
+    StudySchedule()
+      ..numberOfCycles = json['numberOfCycles'] as int
+      ..phaseDuration = json['phaseDuration'] as int
+      ..includeBaseline = json['includeBaseline'] as bool
+      ..sequence = _$enumDecode(_$PhaseSequenceEnumMap, json['sequence']);
 
 Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
     <String, dynamic>{

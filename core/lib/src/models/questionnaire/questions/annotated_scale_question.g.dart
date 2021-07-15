@@ -7,24 +7,23 @@ part of 'annotated_scale_question.dart';
 // **************************************************************************
 
 AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
-    Map<String, dynamic> json) {
-  return AnnotatedScaleQuestion()
-    ..type = json['type'] as String
-    ..id = json['id'] as String
-    ..prompt = json['prompt'] as String?
-    ..rationale = json['rationale'] as String?
-    ..conditional = json['conditional'] == null
-        ? null
-        : QuestionConditional.fromJson(
-            json['conditional'] as Map<String, dynamic>)
-    ..minimum = (json['minimum'] as num).toDouble()
-    ..maximum = (json['maximum'] as num).toDouble()
-    ..initial = (json['initial'] as num).toDouble()
-    ..step = (json['step'] as num).toDouble()
-    ..annotations = (json['annotations'] as List<dynamic>)
-        .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+        Map<String, dynamic> json) =>
+    AnnotatedScaleQuestion()
+      ..type = json['type'] as String
+      ..id = json['id'] as String
+      ..prompt = json['prompt'] as String?
+      ..rationale = json['rationale'] as String?
+      ..conditional = json['conditional'] == null
+          ? null
+          : QuestionConditional.fromJson(
+              json['conditional'] as Map<String, dynamic>)
+      ..minimum = (json['minimum'] as num).toDouble()
+      ..maximum = (json['maximum'] as num).toDouble()
+      ..initial = (json['initial'] as num).toDouble()
+      ..step = (json['step'] as num).toDouble()
+      ..annotations = (json['annotations'] as List<dynamic>)
+          .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
     AnnotatedScaleQuestion instance) {
@@ -50,11 +49,9 @@ Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
   return val;
 }
 
-Annotation _$AnnotationFromJson(Map<String, dynamic> json) {
-  return Annotation()
-    ..value = json['value'] as int
-    ..annotation = json['annotation'] as String;
-}
+Annotation _$AnnotationFromJson(Map<String, dynamic> json) => Annotation()
+  ..value = json['value'] as int
+  ..annotation = json['annotation'] as String;
 
 Map<String, dynamic> _$AnnotationToJson(Annotation instance) =>
     <String, dynamic>{

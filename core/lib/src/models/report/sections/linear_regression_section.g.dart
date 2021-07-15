@@ -7,19 +7,19 @@ part of 'linear_regression_section.dart';
 // **************************************************************************
 
 LinearRegressionSection _$LinearRegressionSectionFromJson(
-    Map<String, dynamic> json) {
-  return LinearRegressionSection()
-    ..type = json['type'] as String
-    ..id = json['id'] as String
-    ..title = json['title'] as String?
-    ..description = json['description'] as String?
-    ..resultProperty = json['resultProperty'] == null
-        ? null
-        : DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
-    ..alpha = (json['alpha'] as num).toDouble()
-    ..improvement = _$enumDecodeNullable(
-        _$ImprovementDirectionEnumMap, json['improvement']);
-}
+        Map<String, dynamic> json) =>
+    LinearRegressionSection()
+      ..type = json['type'] as String
+      ..id = json['id'] as String
+      ..title = json['title'] as String?
+      ..description = json['description'] as String?
+      ..resultProperty = json['resultProperty'] == null
+          ? null
+          : DataReference.fromJson(
+              json['resultProperty'] as Map<String, dynamic>)
+      ..alpha = (json['alpha'] as num).toDouble()
+      ..improvement = _$enumDecodeNullable(
+          _$ImprovementDirectionEnumMap, json['improvement']);
 
 Map<String, dynamic> _$LinearRegressionSectionToJson(
     LinearRegressionSection instance) {

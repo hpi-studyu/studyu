@@ -6,14 +6,12 @@ part of 'repo.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Repo _$RepoFromJson(Map<String, dynamic> json) {
-  return Repo(
-    json['project_id'] as String,
-    json['user_id'] as String,
-    json['study_id'] as String,
-    _$enumDecode(_$GitProviderEnumMap, json['provider']),
-  );
-}
+Repo _$RepoFromJson(Map<String, dynamic> json) => Repo(
+      json['project_id'] as String,
+      json['user_id'] as String,
+      json['study_id'] as String,
+      _$enumDecode(_$GitProviderEnumMap, json['provider']),
+    );
 
 Map<String, dynamic> _$RepoToJson(Repo instance) => <String, dynamic>{
       'project_id': instance.projectId,

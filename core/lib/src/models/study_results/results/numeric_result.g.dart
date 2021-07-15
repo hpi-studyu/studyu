@@ -6,14 +6,13 @@ part of 'numeric_result.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NumericResult _$NumericResultFromJson(Map<String, dynamic> json) {
-  return NumericResult()
-    ..type = json['type'] as String
-    ..id = json['id'] as String
-    ..filename = json['filename'] as String
-    ..resultProperty =
-        DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>);
-}
+NumericResult _$NumericResultFromJson(Map<String, dynamic> json) =>
+    NumericResult()
+      ..type = json['type'] as String
+      ..id = json['id'] as String
+      ..filename = json['filename'] as String
+      ..resultProperty = DataReference.fromJson(
+          json['resultProperty'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$NumericResultToJson(NumericResult instance) =>
     <String, dynamic>{

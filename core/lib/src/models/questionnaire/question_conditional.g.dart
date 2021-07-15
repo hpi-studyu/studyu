@@ -7,11 +7,10 @@ part of 'question_conditional.dart';
 // **************************************************************************
 
 QuestionConditional<V> _$QuestionConditionalFromJson<V>(
-    Map<String, dynamic> json) {
-  return QuestionConditional<V>()
-    ..condition =
-        Expression.fromJson(json['condition'] as Map<String, dynamic>);
-}
+        Map<String, dynamic> json) =>
+    QuestionConditional<V>()
+      ..condition =
+          Expression.fromJson(json['condition'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$QuestionConditionalToJson<V>(
         QuestionConditional<V> instance) =>

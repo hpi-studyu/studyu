@@ -6,17 +6,15 @@ part of 'contact.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Contact _$ContactFromJson(Map<String, dynamic> json) {
-  return Contact()
-    ..organization = json['organization'] as String
-    ..institutionalReviewBoard = json['institutionalReviewBoard'] as String?
-    ..institutionalReviewBoardNumber =
-        json['institutionalReviewBoardNumber'] as String?
-    ..researchers = json['researchers'] as String
-    ..email = json['email'] as String
-    ..website = json['website'] as String
-    ..phone = json['phone'] as String;
-}
+Contact _$ContactFromJson(Map<String, dynamic> json) => Contact()
+  ..organization = json['organization'] as String
+  ..institutionalReviewBoard = json['institutionalReviewBoard'] as String?
+  ..institutionalReviewBoardNumber =
+      json['institutionalReviewBoardNumber'] as String?
+  ..researchers = json['researchers'] as String
+  ..email = json['email'] as String
+  ..website = json['website'] as String
+  ..phone = json['phone'] as String;
 
 Map<String, dynamic> _$ContactToJson(Contact instance) {
   final val = <String, dynamic>{

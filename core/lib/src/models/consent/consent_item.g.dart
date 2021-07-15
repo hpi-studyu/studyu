@@ -6,14 +6,12 @@ part of 'consent_item.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ConsentItem _$ConsentItemFromJson(Map<String, dynamic> json) {
-  return ConsentItem(
-    json['id'] as String,
-  )
-    ..title = json['title'] as String?
-    ..description = json['description'] as String?
-    ..iconName = json['iconName'] as String;
-}
+ConsentItem _$ConsentItemFromJson(Map<String, dynamic> json) => ConsentItem(
+      json['id'] as String,
+    )
+      ..title = json['title'] as String?
+      ..description = json['description'] as String?
+      ..iconName = json['iconName'] as String;
 
 Map<String, dynamic> _$ConsentItemToJson(ConsentItem instance) {
   final val = <String, dynamic>{

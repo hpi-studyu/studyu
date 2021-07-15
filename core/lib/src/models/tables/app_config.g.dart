@@ -6,17 +6,16 @@ part of 'app_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AppConfig _$AppConfigFromJson(Map<String, dynamic> json) {
-  return AppConfig(
-    json['id'] as String,
-    contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
-    appPrivacy: Map<String, String>.from(json['app_privacy'] as Map),
-    appTerms: Map<String, String>.from(json['app_terms'] as Map),
-    designerPrivacy: Map<String, String>.from(json['designer_privacy'] as Map),
-    designerTerms: Map<String, String>.from(json['designer_terms'] as Map),
-    imprint: Map<String, String>.from(json['imprint'] as Map),
-  );
-}
+AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => AppConfig(
+      json['id'] as String,
+      contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
+      appPrivacy: Map<String, String>.from(json['app_privacy'] as Map),
+      appTerms: Map<String, String>.from(json['app_terms'] as Map),
+      designerPrivacy:
+          Map<String, String>.from(json['designer_privacy'] as Map),
+      designerTerms: Map<String, String>.from(json['designer_terms'] as Map),
+      imprint: Map<String, String>.from(json['imprint'] as Map),
+    );
 
 Map<String, dynamic> _$AppConfigToJson(AppConfig instance) => <String, dynamic>{
       'id': instance.id,
