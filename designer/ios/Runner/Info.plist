@@ -58,7 +58,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>studyu-designer.codemagic.app</string>
+      <string>designer.studyu.health</string>
       <key>CFBundleURLSchemes</key>
       <array>
       <string>customscheme</string>

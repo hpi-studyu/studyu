@@ -6,7 +6,7 @@ void loadEnv(Map<String, String> env) {
   dotEnv.addAll(env);
 }
 
-const designerDeepLink = 'https://studyu-designer.codemagic.app';
+const designerDeepLink = 'https://designer.studyu.health';
 
 // GoTrue redirectTo strips /#/ from URL, therefore we need to use the default set in supabase
 String? authRedirectToUrl({bool isWeb = false}) => isWeb ? Uri.base.toString() : designerDeepLink;
