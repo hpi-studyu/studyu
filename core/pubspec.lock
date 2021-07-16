@@ -210,7 +210,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.6"
+    version: "0.0.7"
   graphs:
     dependency: transitive
     description:
@@ -448,7 +448,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   stream_channel:
     dependency: transitive
     description:
@@ -476,7 +476,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   term_glyph:
     dependency: transitive
     description:
@@ -539,7 +539,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.0"
+    version: "7.1.1"
   watcher:
     dependency: transitive
     description:
