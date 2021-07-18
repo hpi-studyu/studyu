@@ -92,6 +92,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  csv:
+    dependency: transitive
+    description:
+      name: csv
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.0"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -587,7 +594,7 @@ packages:
       name: studyu_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.2"
+    version: "3.5.0"
   studyu_flutter_common:
     dependency: "direct main"
     description:
