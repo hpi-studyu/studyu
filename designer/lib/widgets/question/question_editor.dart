@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/util/helper.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
 import '../../widgets/question/slider_question_editor_section.dart';
@@ -106,6 +107,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.question.prompt = _editFormKey.currentState.value['prompt'] as String;
+        widget.question.id = (_editFormKey.currentState.value['prompt'] as String).toId();
         widget.question.rationale = _editFormKey.currentState.value['rationale'] as String;
       });
     }

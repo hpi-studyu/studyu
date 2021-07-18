@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer/widgets/buttons.dart';
+import 'package:studyu_designer/widgets/util/helper.dart';
 
 class ConsentItemEditor extends StatefulWidget {
   final ConsentItem consentItem;
@@ -91,6 +92,7 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.consentItem.title = _editFormKey.currentState.value['title'] as String;
+        widget.consentItem.id = (_editFormKey.currentState.value['title'] as String).toId();
         widget.consentItem.description = _editFormKey.currentState.value['description'] as String;
       });
     }

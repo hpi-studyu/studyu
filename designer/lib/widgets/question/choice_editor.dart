@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer/widgets/util/helper.dart';
 
 import '../buttons.dart';
 
@@ -45,6 +46,7 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
     if (_editFormKey.currentState.validate()) {
       setState(() {
         widget.choice.text = _editFormKey.currentState.value['text'] as String;
+        widget.choice.id = (_editFormKey.currentState.value['text'] as String).toId();
       });
     }
   }
