@@ -1,3 +1,12 @@
+## 3.5.0
+
+ - **FIX**: Update deeplinks for designer.
+ - **FEAT**: Add fetchResultsCSVTable.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps; Generate json_serializable.
+ - **CHORE**: Use pub.dev hosted version of core and common.
+
 ## 3.4.2
 
  - **FIX**: Correct column snail case naming.
