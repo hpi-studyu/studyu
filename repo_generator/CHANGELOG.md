@@ -1,3 +1,7 @@
+## 1.3.1
+
+ - **FIX**: Use correct .csv file extension.
+
 ## 1.3.0
 
  - **FIX**: Upgrade StudyU deps.
