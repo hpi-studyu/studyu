@@ -221,7 +221,7 @@ CREATE VIEW public.study_progress AS
     subject_progress.intervention_id,
     subject_progress.task_id,
     subject_progress.result_type,
-    subject_progress.result,
+    subject_progress.result -> 'result' as result,
     subject_progress.subject_id,
     study_subject.user_id,
     study_subject.study_id,
