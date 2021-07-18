@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   collection: ^1.15.0
+  csv: ^5.0.0
   fhir: ^0.4.7
   json_annotation: ^4.1.0
   postgrest: ^0.1.4

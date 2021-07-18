@@ -1,3 +1,4 @@
+import 'package:csv/csv.dart';
 import 'package:fhir/r4.dart' show Questionnaire;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:supabase/supabase.dart';
@@ -114,7 +115,9 @@ class Study extends SupabaseObjectFunctions<Study> {
       await env.client.from(tableName).select().eq('participation', 'open').execute());
 
   bool isOwner(User? user) => user != null && userId == user.id;
+
   bool isEditor(User? user) => user != null && collaboratorEmails.contains(user.email);
+
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
   bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
@@ -122,4 +125,30 @@ class Study extends SupabaseObjectFunctions<Study> {
   int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
+
+  static Future<String> fetchResultsCSVTable(String studyId) async {
+    final res = await env.client.from('study_progress').select().eq('study_id', studyId).execute();
+    SupabaseQuery.catchPostgrestError(res);
+
+    final jsonList = List<Map<String, dynamic>>.from(res.data as List);
+    final tableHeadersSet = jsonList[0].keys.toSet();
+    final flattenedQuestions = jsonList.map((progress) {
+      if (progress['result_type'] == 'QuestionnaireState') {
+        List<Map<String, dynamic>>.from(progress['result'] as List).forEach((result) {
+          progress[result['question']] = result['response'];
+          tableHeadersSet.add(result['question']);
+        });
+        // progress.remove('result');
+      }
+      return progress;
+    }).toList(growable: false);
+    final tableHeaders = tableHeadersSet.toList();
+    // Convert to List and fill empty cells with empty string
+    final resultsTable = [
+      tableHeaders,
+      ...flattenedQuestions
+          .map((progress) => tableHeaders.map((header) => progress[header] ?? '').toList(growable: false))
+    ];
+    return ListToCsvConverter().convert(resultsTable);
+  }
 }
