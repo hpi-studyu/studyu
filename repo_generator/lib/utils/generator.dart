@@ -64,7 +64,7 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   // Save study schema and subjects data
   print('Saving study schema and subjects as json...');
   await File(p.join(generatedProjectPath, 'data', 'study.schema.json')).writeAsString(prettyJson(study.toJson()));
-  await File(p.join(generatedProjectPath, 'data', 'subjects.json')).writeAsString(prettyJson(subjects));
+  await File(p.join(generatedProjectPath, 'data', 'subjects.csv')).writeAsString(subjects);
 
   // Read all files in generated and make commit
   print('Collecting files into Gitlab commit...');
@@ -106,7 +106,7 @@ Future<void> updateRepo(GitlabClient gl, String projectId, String studyId) async
   print('Committing to Gitlab...');
   await gl.makeCommit(projectId: projectId, message: 'Updating data and triggering CI notebook html refresh', actions: [
     gl.commitAction(filePath: 'data/study.schema.json', content: prettyJson(study.toJson()), action: 'update'),
-    gl.commitAction(filePath: 'data/subjects.json', content: prettyJson(subjects), action: 'update'),
+    gl.commitAction(filePath: 'data/subjects.csv', content: subjects, action: 'update'),
   ]);
   // Make git commit
 }
