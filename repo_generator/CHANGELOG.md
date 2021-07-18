@@ -1,3 +1,11 @@
+## 1.3.0
+
+ - **FIX**: Upgrade StudyU deps.
+ - **FEAT**: Export participant results as flattened CSV.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps; Generate json_serializable.
+
 ## 1.2.5
 
  - **FIX**: Session can not be masked due to format.

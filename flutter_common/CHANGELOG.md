@@ -1,3 +1,10 @@
+## 1.2.4
+
+ - **FIX**: Upgrade StudyU deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps; Generate json_serializable.
+
 ## 1.2.3
 
  - **FIX**: Upgrade studyu_core.
