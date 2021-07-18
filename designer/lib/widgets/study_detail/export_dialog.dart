@@ -136,18 +136,8 @@ class _ExportDialogState extends State<ExportDialog> {
                   ),
                   SizedBox(width: 8),
                   OutlinedButton.icon(
-                    onPressed: () async {
-                      final res = await env.client
-                          .from('study_progress')
-                          .select()
-                          .eq('study_id', widget.study.id)
-                          .csv()
-                          .execute();
-                      if (res.error != null) {
-                        print(res.error.message);
-                      }
-                      await downloadFile(res.data, 'participant_data.csv');
-                    },
+                    onPressed: () async =>
+                        downloadFile(await Study.fetchResultsCSVTable(widget.study.id), 'participant_data.csv'),
                     icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
                     label: Column(
                       children: [
