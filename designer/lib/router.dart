@@ -125,7 +125,7 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
             key: ValueKey('Details ${appState.selectedStudyId}'),
             child: StudyDetails(appState.selectedStudyId),
           ),
-        if (appState.draftStudy != null && appState.loggedIn)
+        if (appState.draftStudy != null)
           MaterialPage(
             key: ValueKey('Designer ${appState.selectedStudyId}'),
             child: Designer(studyId: appState.selectedStudyId),

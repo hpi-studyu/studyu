@@ -61,7 +61,7 @@ class _DesignerState extends State<Designer> {
             ? AppLocalizations.of(context).view_published_study
             : AppLocalizations.of(context).create_new_study),
         actions: [
-          if (study == null || !study.published || kDebugMode) ...[
+          if (appState.loggedIn && (study == null || !study.published || kDebugMode)) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextButton.icon(

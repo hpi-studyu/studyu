@@ -64,13 +64,11 @@ class _StudyDetailsState extends State<StudyDetails> {
                   ),
                 )),
           ),
-          floatingActionButton: study.canEdit(appState.user)
-              ? FloatingActionButton.extended(
-                  onPressed: () => appState.openDesigner(study.id),
-                  label: Text('Edit study'),
-                  icon: Icon(Icons.edit),
-                )
-              : null,
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () => appState.openDesigner(study.id),
+            label: Text(study.canEdit(appState.user) ? 'Edit study' : 'View study'),
+            icon: Icon(Icons.edit),
+          ),
         );
       },
     );
