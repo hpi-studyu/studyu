@@ -11,6 +11,8 @@ Repo _$RepoFromJson(Map<String, dynamic> json) => Repo(
       json['user_id'] as String,
       json['study_id'] as String,
       _$enumDecode(_$GitProviderEnumMap, json['provider']),
+      json['web_url'] as String,
+      json['git_url'] as String,
     );
 
 Map<String, dynamic> _$RepoToJson(Repo instance) => <String, dynamic>{
@@ -18,6 +20,8 @@ Map<String, dynamic> _$RepoToJson(Repo instance) => <String, dynamic>{
       'user_id': instance.userId,
       'study_id': instance.studyId,
       'provider': _$GitProviderEnumMap[instance.provider],
+      'web_url': instance.webUrl,
+      'git_url': instance.gitUrl,
     };
 
 K _$enumDecode<K, V>(

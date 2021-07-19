@@ -21,8 +21,12 @@ class Repo extends SupabaseObjectFunctions<Repo> {
   @JsonKey(name: 'study_id')
   String studyId;
   GitProvider provider;
+  @JsonKey(name: 'web_url')
+  String webUrl;
+  @JsonKey(name: 'git_url')
+  String gitUrl;
 
-  Repo(this.projectId, this.userId, this.studyId, this.provider);
+  Repo(this.projectId, this.userId, this.studyId, this.provider, this.webUrl, this.gitUrl);
 
   factory Repo.fromJson(Map<String, dynamic> json) => _$RepoFromJson(json);
 
