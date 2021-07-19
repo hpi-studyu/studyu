@@ -131,6 +131,7 @@ class Study extends SupabaseObjectFunctions<Study> {
     SupabaseQuery.catchPostgrestError(res);
 
     final jsonList = List<Map<String, dynamic>>.from(res.data as List);
+    if (jsonList.isEmpty) return '';
     final tableHeadersSet = jsonList[0].keys.toSet();
     final flattenedQuestions = jsonList.map((progress) {
       if (progress['result_type'] == 'QuestionnaireState') {
