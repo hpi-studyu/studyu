@@ -22,12 +22,12 @@ class GitlabClient {
   ) async =>
       http.put(Uri.parse('$baseUrl/$resourcePath'), headers: headers, body: body);
 
-  Future<String?> createProject(String name) async {
+  Future<Map<String, dynamic>?> createProject(String name) async {
     final response = await _httpPostRequest(jsonEncode({'name': name, 'visibility': 'public'}), 'projects');
 
     if (httpSuccess(response.statusCode)) {
       final json = jsonDecode(response.body);
-      return (json['id'] as int).toString();
+      return json;
     } else {
       print('Creating project failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }

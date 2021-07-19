@@ -22,11 +22,12 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
 
   print('Creating gitlab repo ${study.title}');
   // Create Gitlab project
-  final projectId = await gl.createProject(study.title!);
-  if (projectId == null) {
-    print('Could not fetch projectId');
+  final projectProperties = await gl.createProject(study.title!);
+  if (projectProperties == null) {
+    print('Could not create project');
     return;
   }
+  final projectId = (projectProperties['id'] as int).toString();
 
   // Generate ssh key
   print('Generating RSA key pair...');
@@ -66,7 +67,8 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
         .where((q) => q.type == AnnotatedScaleQuestion.questionType || q.type == VisualAnalogueQuestion.questionType)
         .map((q) => q.id);
   }).toList(growable: false);
-  await CliService.generateCopierProject(generatedProjectPath, study.title!, scaleQuestionIds);
+  await CliService.generateCopierProject(
+      generatedProjectPath, study.title!, scaleQuestionIds, Uri.encodeComponent(projectProperties['http_url_to_repo']));
 
   // Save study schema and subjects data
   print('Saving study schema and subjects as json...');
@@ -90,7 +92,9 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
 
   print('Add repo entry to database...');
   try {
-    await Repo(projectId, env.client.auth.user()!.id, studyId, GitProvider.gitlab).save();
+    await Repo(projectId, env.client.auth.user()!.id, studyId, GitProvider.gitlab, projectProperties['web_url'],
+            projectProperties['http_url_to_repo'])
+        .save();
   } catch (e) {
     print(e);
   }
