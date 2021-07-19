@@ -1,3 +1,8 @@
+## 3.6.0
+
+ - **FIX**: Return empty CSV if no results yet.
+ - **FEAT**: Add gitUrl and webUrl.
+
 ## 3.5.0
 
  - **FIX**: Update deeplinks for designer.

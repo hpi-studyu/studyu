@@ -1,3 +1,8 @@
+## 1.4.0
+
+ - **FEAT**: Extract git project properties.
+ - **FEAT**: Fill copier template with questionIds.
+
 ## 1.3.1
 
  - **FIX**: Use correct .csv file extension.

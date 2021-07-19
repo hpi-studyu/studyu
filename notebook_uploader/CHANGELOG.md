@@ -1,3 +1,7 @@
+## 1.3.0
+
+ - **FEAT**: Setup default env using micromamba.
+
 ## 1.2.5
 
  - **FIX**: Upgrade StudyU deps.
