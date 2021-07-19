@@ -11,22 +11,18 @@ RUN pub get --offline
 
 RUN dart compile exe bin/notebook_uploader.dart
 
-FROM python:latest
+FROM mambaorg/micromamba:0.15.2
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential r-base r-base-dev r-cran-devtools r-cran-roxygen2 r-cran-geepack r-cran-psych r-cran-ggplot2 r-cran-caret r-cran-doparallel libv8-dev
+ADD notebook_uploader/env.yml /tmp/env.yml
+RUN micromamba install -y -n base -f /tmp/env.yml && \
+    micromamba clean --all --yes
 
-RUN pip install jupyter nbconvert pipreqsnb
-
+# Install https://github.com/thogaertner/cinof1
 RUN Rscript -e "devtools::install_github('thogaertner/cinof1')"
-
-# Install R Kernel
-RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"
-RUN Rscript -e "IRkernel::installspec()"
 
 COPY --from=builder /app/bin/notebook_uploader.exe /usr/local/bin/uploader
 
 ADD notebook_uploader/nbconvert-template /nbconvert-template
-
-ADD notebook_uploader/generate-notebook-htmls.sh /generate-notebook-htmls.sh
+ADD --chown=micromamba:micromamba notebook_uploader/generate-notebook-htmls.sh /generate-notebook-htmls.sh
 
 RUN chmod +x /generate-notebook-htmls.sh
