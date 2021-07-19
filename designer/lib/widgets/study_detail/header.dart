@@ -77,7 +77,7 @@ class _HeaderState extends State<Header> {
   List<Widget> gitPublicActions() {
     return [
       TextButton.icon(
-          onPressed: () => launch('https://gitlab.com/projects/${widget.study.repo.projectId}'),
+          onPressed: () => launch(widget.study.repo.webUrl),
           icon: Icon(MdiIcons.gitlab, color: gitlabColor),
           label: Text('Open Gitlab project', style: TextStyle(color: gitlabColor))),
       TextButton.icon(
