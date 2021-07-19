@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 class CliService {
@@ -16,7 +17,7 @@ class CliService {
     }
   }
 
-  static Future<void> generateCopierProject(String projectPath, String studyTitle) async {
+  static Future<void> generateCopierProject(String projectPath, String studyTitle, List<String> outcomes) async {
     const copierBin = 'copier';
     const copierTemplate = 'gh:hpi-studyu/copier-studyu';
     try {
@@ -30,6 +31,8 @@ class CliService {
       '--force',
       '--data',
       'study_title=$studyTitle',
+      '--data',
+      'outcomes=${jsonEncode(outcomes)}'
     ]);
   }
 

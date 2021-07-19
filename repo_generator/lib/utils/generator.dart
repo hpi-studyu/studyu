@@ -59,7 +59,14 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
 
   // Generate files from nbconvert-template copier CLI
   print('Generating project files with copier...');
-  await CliService.generateCopierProject(generatedProjectPath, study.title!);
+  final scaleQuestionIds = study.observations.expand((observation) {
+    return (observation as QuestionnaireTask)
+        .questions
+        .questions
+        .where((q) => q.type == AnnotatedScaleQuestion.questionType || q.type == VisualAnalogueQuestion.questionType)
+        .map((q) => q.id);
+  }).toList(growable: false);
+  await CliService.generateCopierProject(generatedProjectPath, study.title!, scaleQuestionIds);
 
   // Save study schema and subjects data
   print('Saving study schema and subjects as json...');
