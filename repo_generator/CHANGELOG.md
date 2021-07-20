@@ -1,3 +1,10 @@
+## 1.4.0
+
+ - **FEAT**: Extract git project properties.
+ - **FEAT**: Fill copier template with questionIds.
+ - **CHORE**: Upgrade studyu_core.
+ - **CHORE**: Upgrade deps.
+
 ## 1.3.1
 
  - **FIX**: Use correct .csv file extension.
