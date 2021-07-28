@@ -11,7 +11,9 @@ class UserQueries {
 
   static Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs..setString(userEmailKey, email)..setString(userPasswordKey, password);
+    prefs
+      ..setString(userEmailKey, email)
+      ..setString(userPasswordKey, password);
   }
 
   static Future<void> storeSession(String session) async {
