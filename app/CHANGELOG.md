@@ -1,3 +1,27 @@
+## 1.9.5
+
+ - **FIX**: Update flutter_common to fix signUp.
+ - **FIX**: Use favicon.ico instead of .png.
+ - **FIX**: Android 12 support.
+ - **FIX**: Upgrade StudyU deps.
+ - **FIX**: Upgrade studyu_core.
+ - **FIX**: Correct column snail case naming.
+ - **FIX**: Upgrade studyu deps.
+ - **CHORE**: Add web page settings.
+ - **CHORE**: Regen gitignore and metadata.
+ - **CHORE**: Cleanup.
+ - **CHORE**: Update web files and set icon.
+ - **CHORE**: Regenerate android files.
+ - **CHORE**: Upgrade gradle and android sdk to 31.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade studyu_core.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps; Generate json_serializable.
+ - **CHORE**: Use pub.dev hosted version of core and common.
+ - **CHORE**: Upgrade bundle fastlane.
+
 ## 1.9.4
 
  - Update a dependency to the latest release.

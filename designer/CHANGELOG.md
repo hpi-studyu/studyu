@@ -1,3 +1,35 @@
+## 1.4.0
+
+ - **REFACTOR**: Use webUrl instead of projectId.
+ - **FIX**: Update flutter_common to fix signUp.
+ - **FIX**: Supabase signup not logging user in.
+ - **FIX**: Use favicon.ico instead of .png.
+ - **FIX**: Upgrade StudyU deps.
+ - **FIX**: Meaningful IDs for questions, consent, choices.
+ - **FIX**: Update deeplinks for designer.
+ - **FIX**: Fix overlay of chart and text.
+ - **FIX**: Upgrade studyu_core.
+ - **FIX**: Correct column snail case naming.
+ - **FIX**: Upgrade studyu deps.
+ - **FEAT**: Allow viewing of public study model.
+ - **FEAT**: Flatten CSV export of participant answers.
+ - **CHORE**: Add web page settings.
+ - **CHORE**: Regen gitignore and metadata.
+ - **CHORE**: Regenerate ios.
+ - **CHORE**: Regenerate windows.
+ - **CHORE**: Add icon for android and ios.
+ - **CHORE**: Regenerate android files.
+ - **CHORE**: Regenerate web files and set icons.
+ - **CHORE**: Upgrade gradle and android sdk to 31.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Add new lints.
+ - **CHORE**: Upgrade studyu_core.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade deps; Generate json_serializable.
+ - **CHORE**: Use pub.dev hosted version of core and common.
+
 ## 1.3.3
 
  - Update a dependency to the latest release.
