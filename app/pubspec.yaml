@@ -21,7 +21,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^2.1.0
-  flutter_local_notifications: 7.0.0-dev.3
+  flutter_local_notifications: 7.0.0-dev.2
   flutter_localizations:
     sdk: flutter
   flutter_native_timezone: ^2.0.0
@@ -49,6 +49,9 @@ dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  flutter_local_notifications_platform_interface: 4.0.0
 
 flutter_icons:
   image_path: 'assets/images/icon.png'
