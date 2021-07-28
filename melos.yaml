@@ -78,7 +78,7 @@ scripts:
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
+        "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
       dir-exists: web
@@ -86,7 +86,7 @@ scripts:
   build:web:app:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
+        "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
       scope: studyu_app
@@ -94,7 +94,7 @@ scripts:
   build:web:designer:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --pwa-strategy none --web-renderer auto --no-tree-shake-icons"
+        "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
     select-package:
       scope: studyu_designer
