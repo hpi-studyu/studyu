@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(study_designer LANGUAGES CXX)
+project(designer LANGUAGES CXX)
 
-set(BINARY_NAME "study_designer")
+set(BINARY_NAME "designer")
 
 cmake_policy(SET CMP0063 NEW)
 
