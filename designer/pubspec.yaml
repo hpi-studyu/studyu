@@ -39,8 +39,14 @@ dependencies:
   webviewx: ^0.1.0
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.9.1
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  image_path: 'assets/images/icon.png'
+  android: true
+  ios: true
 
 flutter:
   generate: true
