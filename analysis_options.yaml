@@ -7,6 +7,8 @@ analyzer:
 # All lints: https://dart-lang.github.io/linter/lints/
 linter:
   rules:
+    avoid_multiple_declarations_per_line: true
+    use_named_constants: true
     # STYLE
     prefer_single_quotes: true
     cascade_invocations: true # May have issues: https://github.com/dart-lang/linter/issues/1589

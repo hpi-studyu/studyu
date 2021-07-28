@@ -30,7 +30,7 @@ class BarChartView extends StatelessWidget {
           enabled: true,
           touchTooltipData: BarTouchTooltipData(
             tooltipBgColor: Colors.transparent,
-            tooltipPadding: const EdgeInsets.all(0),
+            tooltipPadding: EdgeInsets.zero,
             tooltipMargin: 8,
             getTooltipItem: (
               BarChartGroupData group,
