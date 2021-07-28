@@ -1,3 +1,10 @@
+## 1.2.5
+
+ - **FIX**: Supabase signup not logging user in.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade studyu_core.
+ - **CHORE**: Upgrade deps.
+
 ## 1.2.4
 
  - **FIX**: Upgrade StudyU deps.
