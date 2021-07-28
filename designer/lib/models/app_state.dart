@@ -154,6 +154,7 @@ class AppState extends ChangeNotifier {
       authError = res.error.message;
       notifyListeners();
     }
+    await signIn(email, password);
   }
 
   Future<void> signInWithProvider(Provider provider, String scopes) async {

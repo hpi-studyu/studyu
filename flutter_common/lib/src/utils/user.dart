@@ -66,10 +66,9 @@ class UserQueries {
     final fakeUserPassword = Uuid().v4();
     final res = await env.client.auth.signUp(fakeUserEmail, fakeUserPassword);
 
-    if (res.error == null && env.client.auth.session() != null) {
-      storeSession(env.client.auth.session()!.persistSessionString);
-      storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
-      return true;
+    if (res.error == null) {
+      await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
+      return await signInParticipant();
     }
     return false;
   }
