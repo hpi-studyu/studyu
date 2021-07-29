@@ -1,3 +1,7 @@
+## 1.2.6
+
+ - **FIX**: Do not ignore .env files.
+
 ## 1.2.5
 
  - **FIX**: Supabase signup not logging user in.
