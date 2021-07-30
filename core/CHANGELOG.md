@@ -1,3 +1,7 @@
+## 3.7.1
+
+ - **FIX**: Make appUrl and projectGeneratorUrl nullable.
+
 ## 3.7.0
 
  - **FEAT**: Add ability to initialize with existing.
