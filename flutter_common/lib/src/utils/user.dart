@@ -1,13 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyu_core/env.dart' as env;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class UserQueries {
   static const fakeStudyUEmailDomain = 'fake-studyu-email-domain.com';
-  static const selectedStudyObjectIdKey = 'selected_study_object_id';
+  static const selectedSubjectIdKey = 'selected_study_object_id';
   static const userEmailKey = 'user_email';
   static const userPasswordKey = 'user_password';
-  static const sessionKey = 'session';
 
   static Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
@@ -16,43 +15,12 @@ class UserQueries {
       ..setString(userPasswordKey, password);
   }
 
-  static Future<void> storeSession(String session) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(sessionKey, session);
-  }
-
-  static Future<bool> recoverParticipantSession({String? sessionString}) async {
-    if (sessionString != null && sessionString.isNotEmpty) {
-      await env.client.auth.signOut();
-      await deleteActiveStudyReference();
-      await deleteLocalData();
-      final res = await env.client.auth.recoverSession(sessionString);
-      if (res.error == null && env.client.auth.session() != null) {
-        return true;
-      }
-    }
-    return await recoverSession() || await signInParticipant();
-  }
-
   static Future<bool> signInParticipant() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
-      final res = await env.client.auth.signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
-      if (res.error == null && env.client.auth.session() != null) {
-        await storeSession(env.client.auth.session()!.persistSessionString);
-        return true;
-      }
-      print(res.error!.message);
-    }
-    return false;
-  }
-
-  static Future<bool> recoverSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(sessionKey)) {
-      final res = await env.client.auth.recoverSession(prefs.getString(sessionKey)!);
-      if (res.error == null && env.client.auth.session() != null) {
-        await storeSession(env.client.auth.session()!.persistSessionString);
+      final res = await Supabase.instance.client.auth
+          .signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
+      if (res.error == null && Supabase.instance.client.auth.session() != null) {
         return true;
       }
       print(res.error!.message);
@@ -64,7 +32,7 @@ class UserQueries {
   static Future<bool> anonymousSignUp() async {
     final fakeUserEmail = '${Uuid().v4()}@$fakeStudyUEmailDomain';
     final fakeUserPassword = Uuid().v4();
-    final res = await env.client.auth.signUp(fakeUserEmail, fakeUserPassword);
+    final res = await Supabase.instance.client.auth.signUp(fakeUserEmail, fakeUserPassword);
 
     if (res.error == null) {
       await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
@@ -84,29 +52,28 @@ class UserQueries {
   }
 
   static bool isUserLoggedIn() {
-    return env.client.auth.session() != null;
+    return Supabase.instance.client.auth.session() != null;
   }
 
-  static Future<String?> getActiveStudyObjectId() async {
+  static Future<String?> getActiveSubjectId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(selectedStudyObjectIdKey);
+    return prefs.getString(selectedSubjectIdKey);
   }
 
-  static Future<void> storeActiveUserStudyId(String studyObjectId) async {
+  static Future<void> storeActiveSubjectId(String studyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(selectedStudyObjectIdKey, studyObjectId);
+    prefs.setString(selectedSubjectIdKey, studyObjectId);
   }
 
   static Future<void> deleteActiveStudyReference() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(selectedStudyObjectIdKey);
+    await prefs.remove(selectedSubjectIdKey);
   }
 
   static Future<void> deleteLocalData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(userEmailKey);
     await prefs.remove(userPasswordKey);
-    await prefs.remove(sessionKey);
-    await prefs.remove(selectedStudyObjectIdKey);
+    await prefs.remove(selectedSubjectIdKey);
   }
 }
