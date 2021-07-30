@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer/util/result_downloader.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../theme.dart';
 
@@ -60,7 +60,7 @@ class _ExportDialogState extends State<ExportDialog> {
                 Spacer(),
                 OutlinedButton.icon(
                   onPressed: () async {
-                    final res = await env.client
+                    final res = await Supabase.instance.client
                         .from(Study.tableName)
                         .select([
                           '*',
@@ -91,7 +91,7 @@ class _ExportDialogState extends State<ExportDialog> {
                 if (!_includeParticipantData)
                   OutlinedButton.icon(
                     onPressed: () async {
-                      final res = await env.client
+                      final res = await Supabase.instance.client
                           .from(Study.tableName)
                           .select([
                             '*',
@@ -121,7 +121,7 @@ class _ExportDialogState extends State<ExportDialog> {
                   Spacer(),
                   OutlinedButton.icon(
                     onPressed: () async {
-                      final res = await env.client
+                      final res = await Supabase.instance.client
                           .from(StudySubject.tableName)
                           .select('*,subject_progress(*)')
                           .eq('study_id', widget.study.id)

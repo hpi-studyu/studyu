@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -30,12 +30,12 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
     if (appState.preselectedInterventionIds != null) {
-      appState.activeSubject = StudySubject.fromStudy(
-          appState.selectedStudy, env.client.auth.user().id, appState.preselectedInterventionIds, appState.inviteCode);
+      appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, Supabase.instance.client.auth.user().id,
+          appState.preselectedInterventionIds, appState.inviteCode);
       Navigator.pushNamed(context, Routes.journey);
     } else if (study.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
-      appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, env.client.auth.user().id,
+      appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, Supabase.instance.client.auth.user().id,
           study.interventions.map((i) => i.id).toList(), appState.inviteCode);
       Navigator.pushNamed(context, Routes.journey);
     } else {

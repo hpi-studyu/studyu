@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/app_state.dart';
 import 'report_details.dart';
@@ -19,7 +19,7 @@ class ReportHistoryScreen extends StatelessWidget {
         ),
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
-        tryFunction: () => StudySubject.getStudyHistory(env.client.auth.user().id),
+        tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.user().id),
         successBuilder: (BuildContext context, List<StudySubject> pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,

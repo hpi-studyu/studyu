@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^0.5.0
-  flutter_file_dialog: ^2.1.0
+  flutter_file_dialog: ^2.1.1
   flutter_form_builder: ^6.0.1
   flutter_iconpicker: ^3.0.1
   flutter_localizations:
@@ -33,6 +33,7 @@ dependencies:
   studyu_core:
   studyu_flutter_common:
   supabase: ^0.0.7
+  supabase_flutter: ^0.0.7
   universal_html: ^2.0.8
   url_launcher: ^6.0.9
   uuid: ^3.0.4

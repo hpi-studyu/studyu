@@ -1,17 +1,30 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:gotrue/src/session.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:studyu_designer/models/app_state.dart';
 import 'package:studyu_designer/theme.dart';
 import 'package:supabase/supabase.dart' show Provider;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends SupabaseAuthState<LoginPage> {
   final _emailController = TextEditingController();
 
   final _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    recoverSupabaseSession();
+  }
 
   void _login(AppState appState) {
     if (_formKey.currentState.validate()) {
@@ -127,4 +140,16 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void onAuthenticated(Session session) {}
+
+  @override
+  void onErrorAuthenticating(String message) {}
+
+  @override
+  void onPasswordRecovery(Session session) {}
+
+  @override
+  void onUnauthenticated() {}
 }

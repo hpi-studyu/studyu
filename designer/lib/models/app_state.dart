@@ -1,10 +1,8 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase/supabase.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum DesignerPage {
   about,
@@ -41,13 +39,13 @@ class AppState extends ChangeNotifier {
 
   bool get isNotebook => _selectedNotebook != null;
 
-  bool get loggedIn => env.client.auth.session() != null;
+  bool get loggedIn => Supabase.instance.client.auth.session() != null;
 
   bool get showLoginPage => !loggedIn && !skippedLogin;
 
-  bool get loggedInViaGitlab => loggedIn && env.client.auth.user().appMetadata['provider'] == 'gitlab';
+  bool get loggedInViaGitlab => loggedIn && Supabase.instance.client.auth.user().appMetadata['provider'] == 'gitlab';
 
-  User get user => env.client.auth.user();
+  User get user => Supabase.instance.client.auth.user();
 
   void skipLogin() {
     skippedLogin = true;
@@ -74,7 +72,7 @@ class AppState extends ChangeNotifier {
   }
 
   void createStudy({DesignerPage page = DesignerPage.about}) {
-    draftStudy = Study.withId(env.client.auth.user().id);
+    draftStudy = Study.withId(Supabase.instance.client.auth.user().id);
     _selectedStudyId = null;
     _selectedDesignerPage = page;
     notifyListeners();
@@ -120,15 +118,13 @@ class AppState extends ChangeNotifier {
   }
 
   void registerAuthListener() {
-    env.client.auth.onAuthStateChange((event, session) {
+    Supabase.instance.client.auth.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
           skippedLogin = false;
           authError = null;
-          UserQueries.storeSession(session.persistSessionString);
           break;
         case AuthChangeEvent.signedOut:
-          UserQueries.deleteLocalData();
           break;
         case AuthChangeEvent.userUpdated:
           break;
@@ -141,7 +137,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> signIn(String email, String password) async {
-    final res = await env.client.auth.signIn(email: email, password: password);
+    final res = await Supabase.instance.client.auth.signIn(email: email, password: password);
     if (res.error != null) {
       authError = res.error.message;
       notifyListeners();
@@ -149,7 +145,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> signUp(String email, String password) async {
-    final res = await env.client.auth.signUp(email, password);
+    final res = await Supabase.instance.client.auth.signUp(email, password);
     if (res.error != null) {
       authError = res.error.message;
       notifyListeners();
@@ -158,25 +154,12 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> signInWithProvider(Provider provider, String scopes) async {
-    final res = await env.client.auth.signIn(
-      email: null,
-      password: null,
-      provider: provider,
-      options: AuthOptions(
-        redirectTo: env.authRedirectToUrl(isWeb: kIsWeb),
-        scopes: scopes,
-      ),
-    );
-    if (res.error != null) {
-      authError = res.error.message;
-      notifyListeners();
-    } else {
-      launch(res.url);
-    }
+    await Supabase.instance.client.auth
+        .signInWithProvider(provider, options: AuthOptions(scopes: scopes, redirectTo: authRedirectToUrl));
   }
 
   Future<void> signOut() async {
-    final res = await env.client.auth.signOut();
+    final res = await Supabase.instance.client.auth.signOut();
     if (res.error != null) {
       authError = res.error.message;
       notifyListeners();

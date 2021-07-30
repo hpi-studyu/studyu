@@ -7,6 +7,7 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer/util/save.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import './designer/eligibility_designer.dart';
@@ -92,8 +93,8 @@ class _DesignerState extends State<Designer> {
                 icon: Icon(MdiIcons.testTube),
                 label: Text('Try draft study'),
                 style: TextButton.styleFrom(primary: Colors.white),
-                onPressed: () =>
-                    launch('${env.appUrl}${Uri.encodeComponent(env.client.auth.session().persistSessionString)}'),
+                onPressed: () => launch(
+                    '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}'),
               ),
             ),
           ],

@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart' as env;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -79,7 +79,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Future<void> onFinished() async {
     final appState = context.read<AppState>();
     appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy, env.client.auth.user().id, selectedInterventionIds, appState.inviteCode);
+        appState.selectedStudy, Supabase.instance.client.auth.user().id, selectedInterventionIds, appState.inviteCode);
     Navigator.pushNamed(context, Routes.journey);
   }
 

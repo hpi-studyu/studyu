@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_core/env.dart' as env;
 import 'package:uuid/uuid.dart';
 
 import 'dashboard.dart';
@@ -23,10 +22,6 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
   Future<RoutePath> parseRouteInformation(RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location);
 
-    if (uri.fragment != null) {
-      await env.client.auth.getSessionFromUrl(uri);
-    }
-
     if (uri.pathSegments.isNotEmpty) {
       if (uri.pathSegments.first == DesignerPath.newPath) {
         return DesignerPath();
@@ -34,10 +29,6 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
 
       if (Uuid.isValidUUID(fromString: uri.pathSegments.first)) {
         final studyId = uri.pathSegments.first;
-
-        // if (uri.pathSegments.length == 2 && uri.pathSegments[1] == DesignerPath.basePath) {
-        //   return DesignerPath(studyId: studyId);
-        // }
 
         if (uri.pathSegments.length >= 2 && uri.pathSegments[1].isNotEmpty) {
           switch (uri.pathSegments[1]) {

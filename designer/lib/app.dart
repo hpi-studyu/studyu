@@ -24,7 +24,6 @@ class _MyAppState extends State<MyApp> {
     _appState = AppState();
     _rootRouterDelegate = RootRouterDelegate(_appState);
     _rootRouteInformationParser = RootRouteInformationParser();
-    UserQueries.recoverSession();
   }
 
   @override
