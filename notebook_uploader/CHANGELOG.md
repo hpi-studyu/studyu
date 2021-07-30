@@ -1,3 +1,8 @@
+## 1.3.1
+
+ - **FIX**: Upgrade core dep.
+ - **CHORE**: Upgrade deps.
+
 ## 1.3.0
 
  - **FEAT**: Setup default env using micromamba.

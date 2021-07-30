@@ -1,3 +1,7 @@
+## 1.10.0
+
+ - **FEAT**: Use supabase_flutter for auth and instance.
+
 ## 1.9.5
 
  - **FIX**: Update flutter_common to fix signUp.

@@ -1,3 +1,8 @@
+## 1.5.0
+
+ - **FIX**: Set correct name for Android app.
+ - **FEAT**: Use supabase_flutter for auth and instance.
+
 ## 1.4.0
 
  - **REFACTOR**: Use webUrl instead of projectId.

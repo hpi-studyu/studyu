@@ -1,3 +1,8 @@
+## 1.4.1
+
+ - **FIX**: Upgrade core dep.
+ - **CHORE**: Upgrade deps.
+
 ## 1.4.0
 
  - **FEAT**: Extract git project properties.
