@@ -1,3 +1,8 @@
+## 3.7.0
+
+ - **FEAT**: Add ability to initialize with existing.
+ - **CHORE**: Upgrade deps.
+
 ## 3.6.0
 
  - **FIX**: Return empty CSV if no results yet.
