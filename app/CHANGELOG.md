@@ -1,3 +1,7 @@
+## 1.10.2
+
+ - **FIX**: Upgrade flutter_common.
+
 ## 1.10.1
 
  - **FIX**: Upgrade core.
