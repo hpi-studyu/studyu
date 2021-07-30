@@ -1,3 +1,7 @@
+## 1.3.1
+
+ - **FIX**: Fix authRedirectUrl.
+
 ## 1.3.0
 
  - **FEAT**: Use supabase_flutter for session storing.
