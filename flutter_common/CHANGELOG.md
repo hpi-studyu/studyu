@@ -1,3 +1,7 @@
+## 1.3.0
+
+ - **FEAT**: Use supabase_flutter for session storing.
+
 ## 1.2.6
 
  - **FIX**: Do not ignore .env files.
