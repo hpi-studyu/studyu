@@ -1,3 +1,7 @@
+## 1.5.1
+
+ - **FIX**: Upgrade core.
+
 ## 1.5.0
 
  - **FIX**: Set correct name for Android app.

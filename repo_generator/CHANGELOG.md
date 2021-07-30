@@ -1,3 +1,7 @@
+## 1.4.2
+
+ - **FIX**: Upgrade core.
+
 ## 1.4.1
 
  - **FIX**: Upgrade core dep.

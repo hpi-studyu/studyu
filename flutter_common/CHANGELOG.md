@@ -1,3 +1,7 @@
+## 1.3.2
+
+ - **FIX**: Upgrade core.
+
 ## 1.3.1
 
  - **FIX**: Fix authRedirectUrl.

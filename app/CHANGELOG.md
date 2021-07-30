@@ -1,3 +1,7 @@
+## 1.10.1
+
+ - **FIX**: Upgrade core.
+
 ## 1.10.0
 
  - **FEAT**: Use supabase_flutter for auth and instance.
