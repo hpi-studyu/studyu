@@ -515,7 +515,7 @@ packages:
       name: studyu_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.7.0"
+    version: "3.7.1"
   studyu_flutter_common:
     dependency: "direct main"
     description:
