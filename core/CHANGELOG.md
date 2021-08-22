@@ -1,3 +1,7 @@
+## 3.7.2
+
+ - **FIX**: Upgrade deps.
+
 ## 3.7.1
 
  - **FIX**: Make appUrl and projectGeneratorUrl nullable.
