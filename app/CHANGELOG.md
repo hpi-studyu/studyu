@@ -1,3 +1,9 @@
+## 1.10.6
+
+ - **FIX**: Adapt to flutter deprecations.
+ - **FIX**: Flutter beta deprecations.
+ - **CHORE**: publish packages.
+
 ## 1.10.4
 
  - **FIX**: Upgrade studyu deps.
