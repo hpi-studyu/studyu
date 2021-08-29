@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_core/core.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_core/core.dart';
 
 class DataReferenceEditor<T> extends StatefulWidget {
   final DataReference<T> reference;

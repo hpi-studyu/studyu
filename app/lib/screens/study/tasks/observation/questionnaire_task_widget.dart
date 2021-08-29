@@ -1,9 +1,9 @@
 import 'package:fhir/r4.dart' as fhir;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:postgrest/postgrest.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
+import 'package:supabase/supabase.dart';
 
 import '../../../../models/app_state.dart';
 import '../../../../widgets/fhir_questionnaire/questionnaire_widget.dart';

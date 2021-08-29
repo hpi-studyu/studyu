@@ -1,4 +1,4 @@
-import 'package:postgrest/postgrest.dart';
+import 'package:supabase/supabase.dart';
 
 import '../env/env.dart' as env;
 import '../models/tables/app_config.dart';
