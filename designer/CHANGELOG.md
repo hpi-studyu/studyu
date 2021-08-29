@@ -1,3 +1,7 @@
+## 1.5.5
+
+ - **FIX**: Flutter beta deprecations.
+
 ## 1.5.4
 
  - **FIX**: Upgrade studyu deps.
