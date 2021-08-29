@@ -1,3 +1,7 @@
+## 1.10.7
+
+ - **FIX**: Add more german translation.
+
 ## 1.10.6
 
  - **FIX**: Adapt to flutter deprecations.
