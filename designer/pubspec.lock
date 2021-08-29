@@ -184,9 +184,11 @@ packages:
   flutter_iconpicker:
     dependency: "direct main"
     description:
-      name: flutter_iconpicker
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "027213dd12cb8cb00644cf2257eb3f230c440c60"
+      url: "https://github.com/nstrelow/FlutterIconPicker"
+    source: git
     version: "3.0.2"
   flutter_launcher_icons:
     dependency: "direct dev"

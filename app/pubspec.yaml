@@ -51,6 +51,10 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
+  charts_flutter:
+    git:
+      url: https://github.com/google/charts
+      path: charts_flutter
   provider: ^6.0.0
 
 flutter_icons:
