@@ -5,7 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 publish_to: 'none'
 
-version: '1.10.4'
+version: '1.10.5'
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -51,6 +51,10 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
+  charts_flutter:
+    git:
+      url: https://github.com/google/charts
+      path: charts_flutter
   provider: ^6.0.0
 
 flutter_icons:

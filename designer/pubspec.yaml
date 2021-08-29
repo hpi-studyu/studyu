@@ -5,7 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 publish_to: 'none'
 
-version: 1.5.4
+version: 1.5.5
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -22,7 +22,7 @@ dependencies:
   flutter_colorpicker: ^0.5.0
   flutter_file_dialog: ^2.1.1
   flutter_form_builder: ^6.0.1
-  flutter_iconpicker: ^3.0.1
+  flutter_iconpicker: ^3.0.2
   flutter_localizations:
     sdk: flutter
   intl: 0.17.0
@@ -42,6 +42,12 @@ dev_dependencies:
   flutter_launcher_icons: ^0.9.2
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  flutter_iconpicker:
+    git:
+      url: https://github.com/nstrelow/FlutterIconPicker
+  provider: ^6.0.0
 
 flutter_icons:
   image_path: 'assets/images/icon.png'
