@@ -1,3 +1,7 @@
+## 1.5.4
+
+ - **FIX**: Upgrade studyu deps.
+
 ## 1.5.3
 
  - **REFACTOR**: Import symbols from supabase package.
