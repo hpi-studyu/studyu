@@ -29,8 +29,14 @@
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
+  "intervention_phase_duration": "Intervention phase duration",
+  "days": "days",
+  "study_length": "Study length",
+  "study_publisher": "Study Publisher",
+
   "tasks_daily": "Tasks:",
   "baseline": "The baseline is a phase within a study in which the initial state is measured to allow later comparisons. During the baseline phase you should behave as usual, no study-specific interventions are carried out yet.",
+  "days_left": "days left",
 
   "today_tasks": "Today's tasks",
   "intervention_current": "Current intervention",
@@ -83,6 +89,8 @@
   "faq_full": "Frequently Asked Questions",
   "faq": "FAQ",
 
+  "start_study": "Start Study",
+
   "could_not_save_results": "Could not save results",
 
   "language": "Language",
@@ -108,6 +116,11 @@
   "privacy_content": "The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the imprint.",
   "privacy_agree": "I have read and agree to the privacy policy",
   "imprint_read": "Read Imprint",
+
+  "invite_code_button": "Use invite code",
+  "private_study_invite_code": "Private study invite code",
+  "invite_code": "Invite code",
+  "invalid_invite_code": "Not a valid invite code",
 
   "save_pdf": "Save as PDF",
   "was_saved_to": "The file was saved to ",

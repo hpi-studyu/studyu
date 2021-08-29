@@ -80,7 +80,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                   Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
                   Spacer(),
                   Text(
-                      '${widget.subject.daysLeftForPhase(widget.subject.getInterventionIndexForDate(DateTime.now()))} days left',
+                      '${widget.subject.daysLeftForPhase(widget.subject.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context).days_left}',
                       style: TextStyle(color: primaryColor))
                 ],
               ),

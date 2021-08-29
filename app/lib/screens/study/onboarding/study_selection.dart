@@ -89,7 +89,7 @@ class StudySelectionScreen extends StatelessWidget {
                     onPressed: () async {
                       await showDialog(context: context, builder: (_) => InviteCodeDialog());
                     },
-                    label: Text('I have an invite code')),
+                    label: Text(AppLocalizations.of(context).invite_code_button)),
               ),
             ],
           ),
@@ -117,17 +117,17 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Private study invite code'),
+        title: Text(AppLocalizations.of(context).private_study_invite_code),
         content: TextFormField(
           controller: _controller,
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(labelText: 'Invite code'),
+          decoration: InputDecoration(labelText: AppLocalizations.of(context).invite_code),
         ),
         actions: [
           OutlinedButton.icon(
             icon: Icon(Icons.arrow_forward),
-            label: Text('Next'),
+            label: Text(AppLocalizations.of(context).next),
             onPressed: () async {
               final res = await Supabase.instance.client
                   .rpc('get_study_from_invite', params: {'invite_code': _controller.text})
@@ -140,7 +140,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 });
               } else if (res.data == null) {
                 setState(() {
-                  _errorMessage = 'Not a valid invite code';
+                  _errorMessage = AppLocalizations.of(context).invalid_invite_code;
                 });
               } else {
                 setState(() {

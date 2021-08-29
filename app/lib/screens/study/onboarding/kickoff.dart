@@ -78,7 +78,8 @@ class _KickoffScreen extends State<KickoffScreen> {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(height: 16),
-                  OutlinedButton(onPressed: () => _storeUserStudy(context), child: Text('Start Study')),
+                  OutlinedButton(
+                      onPressed: () => _storeUserStudy(context), child: Text(AppLocalizations.of(context).start_study)),
                 ],
               ),
             ),

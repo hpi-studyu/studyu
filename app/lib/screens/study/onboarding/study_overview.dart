@@ -105,19 +105,19 @@ class StudyDetailsView extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          title: Text('Intervention phase duration'),
-          subtitle: Text('${study.schedule.phaseDuration} days'),
+          title: Text(AppLocalizations.of(context).intervention_phase_duration),
+          subtitle: Text('${study.schedule.phaseDuration} ${AppLocalizations.of(context).days}'),
           leading: Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
         ),
         ListTile(
-          title: Text('Minimum study length'),
-          subtitle: Text('$studyLength days'),
+          title: Text(AppLocalizations.of(context).study_length),
+          subtitle: Text('$studyLength ${AppLocalizations.of(context).days}'),
           leading: Icon(MdiIcons.calendar, color: theme.primaryColor, size: iconSize),
         ),
         SizedBox(height: 16),
         ContactWidget(
           contact: study.contact,
-          title: 'Study Publisher',
+          title: AppLocalizations.of(context).study_publisher,
           color: theme.colorScheme.secondary,
         ),
       ],

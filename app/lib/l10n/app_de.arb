@@ -30,8 +30,14 @@
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
 
+  "intervention_phase_duration": "Länge der Interventionphasen",
+  "days": "Tage",
+  "study_length": "Studienlänge",
+  "study_publisher": "Studienherausgeber",
+
   "tasks_daily": "Aufgaben:",
   "baseline": "Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.",
+  "days_left": "Tage übrig",
 
   "today_tasks": "Aufgaben heute",
   "intervention_current": "Aktuelle Maßnahme",
@@ -85,6 +91,8 @@
   "faq": "FAQ",
   "faq_full": "Häufig Gestellte Fragen",
 
+  "start_study": "Starte Studie",
+
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 
   "language": "Sprache",
@@ -110,6 +118,11 @@
   "privacy_content": "Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.",
   "privacy_agree": "Ich habe die Datenschutzbestimmung gelesen und bin damit einverstanden",
   "imprint_read": "Impressum lesen",
+
+  "invite_code_button": "Einladungscode verwenden",
+  "private_study_invite_code": "Privater Studien Einladungscode",
+  "invite_code": "Einladungscode",
+  "invalid_invite_code": "Dies ist kein valider Einladungscode",
 
   "save_pdf": "Als PDF speichern",
   "was_saved_to": "Die Datei wurde gespeichert unter ",
