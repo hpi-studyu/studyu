@@ -14,16 +14,16 @@ String envFilePath() {
 const designerDeepLink = 'https://designer.studyu.health';
 
 // GoTrue redirectTo strips /#/ from URL, there fore we need to use the default set in supabase
-String? authRedirectToUrl = kIsWeb ? Uri.base.toString() : designerDeepLink;
+String? authRedirectToUrl = kIsWeb ? null : designerDeepLink;
 
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
   final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL'];
   final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY'];
-  Supabase.initialize(
+  await Supabase.initialize(
       url: supabaseUrl,
       anonKey: supabaseAnonKey,
-      authCallbackUrlHostname: kIsWeb ? Uri.base.toString() : 'designer.studyu.health', // optional
+      authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
       debug: true // optional
       );
   env.loadEnv(dotenv.env, supabaseClient: Supabase.instance.client);
