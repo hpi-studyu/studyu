@@ -108,4 +108,4 @@ postclean: >
   melos exec -c 6 -- "flutter clean"
 
 dev_dependencies:
-  lint: ^1.5.3
+  lint: ^1.7.2
