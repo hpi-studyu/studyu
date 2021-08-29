@@ -16,7 +16,7 @@ dependencies:
   csv: ^5.0.0
   cupertino_icons: ^1.0.3
   email_validator: ^2.0.1
-  fl_chart: ^0.36.4
+  fl_chart: ^0.40.0
   flutter:
     sdk: flutter
   flutter_colorpicker: ^0.5.0
@@ -27,13 +27,12 @@ dependencies:
     sdk: flutter
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.5955-rc.1
-  postgrest: ^0.1.5
   pretty_json: ^2.0.0
   provider: ^6.0.0
   studyu_core:
   studyu_flutter_common:
-  supabase: ^0.2.2
-  supabase_flutter: ^0.2.2
+  supabase: ^0.2.4
+  supabase_flutter: ^0.2.4
   universal_html: ^2.0.8
   url_launcher: ^6.0.9
   uuid: ^3.0.4

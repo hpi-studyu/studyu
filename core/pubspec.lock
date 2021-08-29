@@ -345,12 +345,12 @@ packages:
     source: hosted
     version: "1.5.0"
   postgrest:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.6"
   pub_semver:
     dependency: transitive
     description:
@@ -378,7 +378,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.8"
+    version: "0.1.9"
   shelf:
     dependency: transitive
     description:
@@ -483,7 +483,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.4"
   term_glyph:
     dependency: transitive
     description:

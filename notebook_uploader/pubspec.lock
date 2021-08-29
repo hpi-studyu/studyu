@@ -14,7 +14,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.1"
+    version: "2.8.2"
   charcode:
     dependency: transitive
     description:
@@ -70,7 +70,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.7"
+    version: "0.1.0"
   hotreloader:
     dependency: transitive
     description:
@@ -119,7 +119,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10"
+    version: "0.12.11"
   meta:
     dependency: transitive
     description:
@@ -154,7 +154,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.1.6"
   quiver:
     dependency: transitive
     description:
@@ -168,7 +168,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.7"
+    version: "0.1.9"
   shelf_hotreload:
     dependency: "direct dev"
     description:
@@ -196,7 +196,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   stream_channel:
     dependency: transitive
     description:
@@ -224,14 +224,14 @@ packages:
       name: studyu_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.7.1"
+    version: "3.7.2"
   supabase:
     dependency: "direct main"
     description:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.7"
+    version: "0.2.4"
   term_glyph:
     dependency: transitive
     description:
