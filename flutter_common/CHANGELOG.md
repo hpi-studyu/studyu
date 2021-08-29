@@ -1,3 +1,8 @@
+## 1.3.4
+
+ - **FIX**: Supabase init and redirectUrl.
+ - **CHORE**: Upgrade deps.
+
 ## 1.3.3
 
  - Update a dependency to the latest release.

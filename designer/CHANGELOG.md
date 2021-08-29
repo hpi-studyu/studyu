@@ -1,3 +1,12 @@
+## 1.5.3
+
+ - **REFACTOR**: Import symbols from supabase package.
+ - **FIX**: Changes in lints and APIs.
+ - **CHORE**: Update windows files.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade gradle and kotlin.
+ - **CHORE**: publish packages.
+
 ## 1.5.2
 
  - **FIX**: Upgrade flutter_common.

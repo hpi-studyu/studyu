@@ -1,3 +1,11 @@
+## 1.10.3
+
+ - **REFACTOR**: Import symbols from supabase package.
+ - **FIX**: Fix try out study.
+ - **CHORE**: Upgrade deps.
+ - **CHORE**: Upgrade gradle and kotlin.
+ - **CHORE**: publish packages.
+
 ## 1.10.2
 
  - **FIX**: Upgrade flutter_common.

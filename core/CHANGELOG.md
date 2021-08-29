@@ -1,3 +1,9 @@
+## 3.7.3
+
+ - **REFACTOR**: Import symbols from supabase package.
+ - **FIX**: Use this.toJson.
+ - **CHORE**: Upgrade deps.
+
 ## 3.7.2
 
  - **FIX**: Upgrade deps.
