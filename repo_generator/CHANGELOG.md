@@ -1,3 +1,8 @@
+## 1.4.4
+
+ - **FIX**: Upgrade studyu core.
+ - **CHORE**: Upgrade deps.
+
 ## 1.4.3
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 1.3.5
+
+ - **FIX**: Upgrade studyu core.
+
 ## 1.3.4
 
  - **FIX**: Supabase init and redirectUrl.
