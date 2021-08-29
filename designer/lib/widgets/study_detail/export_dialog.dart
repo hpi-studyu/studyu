@@ -81,7 +81,7 @@ class _ExportDialogState extends State<ExportDialog> {
                   },
                   icon: Icon(MdiIcons.fileDownload, color: Color(0xff323330)),
                   label: Column(
-                    children: [
+                    children: const [
                       Text('JSON', style: TextStyle(color: Color(0xff323330))),
                       Text('Recommended', style: TextStyle(color: accentColor, fontSize: 10))
                     ],
@@ -106,7 +106,7 @@ class _ExportDialogState extends State<ExportDialog> {
                       if (res.error != null) {
                         print(res.error.message);
                       }
-                      await downloadFile(res.data, 'study_model.csv');
+                      await downloadFile(res.data as String, 'study_model.csv');
                     },
                     icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
                     label: Text('CSV', style: TextStyle(color: Colors.green)),
@@ -140,7 +140,7 @@ class _ExportDialogState extends State<ExportDialog> {
                         downloadFile(await Study.fetchResultsCSVTable(widget.study.id), 'participant_data.csv'),
                     icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
                     label: Column(
-                      children: [
+                      children: const [
                         Text('CSV', style: TextStyle(color: Colors.green)),
                         Text('Recommended', style: TextStyle(color: accentColor, fontSize: 10))
                       ],

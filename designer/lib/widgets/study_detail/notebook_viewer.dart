@@ -45,7 +45,7 @@ class NotebookViewer extends StatelessWidget {
                 tryFunction: () => downloadFromStorage('$studyId/$notebook'),
                 successBuilder: (context, notebookHtml) => WebViewX(
                   initialContent: notebookHtml,
-                  initialSourceType: SourceType.HTML,
+                  initialSourceType: SourceType.html,
                 ),
               ),
             ),
