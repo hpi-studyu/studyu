@@ -2,12 +2,6 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../models.dart';
-import '../../questionnaire/question.dart';
-import '../../questionnaire/questionnaire.dart';
-import '../../questionnaire/questionnaire_state.dart';
-import '../../results/result.dart';
-import '../../tasks/schedule.dart';
-import '../observation.dart';
 
 part 'questionnaire_task.g.dart';
 

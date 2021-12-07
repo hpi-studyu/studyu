@@ -1,8 +1,6 @@
 // By Danvick Miller taken from https://github.com/danvick/flutter_form_builder/blob/6c2575773acd2fa6b658b70c736fe56c08626625/lib/src/fields/form_builder_color_picker.dart
 import 'dart:async';
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
