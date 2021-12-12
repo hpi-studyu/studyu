@@ -19,12 +19,13 @@ dependencies:
   fl_chart: ^0.40.6
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.0.3
   flutter_file_dialog: ^2.3.0
-  flutter_form_builder: ^6.2.0 # 7.0.0 split up packages
+  flutter_form_builder: ^7.0.0
   flutter_iconpicker: ^3.0.4
   flutter_localizations:
     sdk: flutter
+  form_builder_extra_fields: ^7.0.0
+  form_builder_validators: ^7.2.0
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.6595
   pretty_json: ^2.0.0

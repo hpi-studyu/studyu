@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../util/form_builder_color_picker.dart';
 
 class VisualAnalogueQuestionEditorSection extends StatefulWidget {
   final VisualAnalogueQuestion question;
