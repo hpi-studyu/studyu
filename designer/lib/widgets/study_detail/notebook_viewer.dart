@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer/util/storage_helper.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+
 import 'package:webviewx/webviewx.dart';
 
 class NotebookViewer extends StatelessWidget {
@@ -42,10 +43,14 @@ class NotebookViewer extends StatelessWidget {
             ),
             Expanded(
               child: RetryFutureBuilder<String>(
-                tryFunction: () => downloadFromStorage('$studyId/$notebook'),
-                successBuilder: (context, notebookHtml) => WebViewX(
-                  initialContent: notebookHtml,
-                  initialSourceType: SourceType.html,
+                tryFunction: () => downloadFromStorage('${studyId}/${notebook}'),
+                successBuilder: (context, notebookHtml) => LayoutBuilder(
+                  builder: (context, constraints) => WebViewX(
+                    height: constraints.maxHeight,
+                    width: constraints.maxWidth,
+                    initialContent: notebookHtml,
+                    initialSourceType: SourceType.html,
+                  ),
                 ),
               ),
             ),

@@ -5,16 +5,16 @@ homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
   args: ^2.1.1
   path: ^1.8.0
   studyu_core:
-  supabase: ^0.2.4
+  supabase: ^0.2.10
 
 dev_dependencies:
-    shelf_hotreload: ^0.0.2
+    shelf_hotreload: ^1.0.0
 
 executables:
   notebook_uploader:

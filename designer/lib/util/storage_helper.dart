@@ -1,4 +1,3 @@
-import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<List<FileObject>> getStudyNotebooks(String studyId) async {

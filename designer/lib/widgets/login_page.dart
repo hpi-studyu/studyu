@@ -4,7 +4,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart' as provider;
 import 'package:studyu_designer/models/app_state.dart';
 import 'package:studyu_designer/theme.dart';
-import 'package:supabase/supabase.dart' show Provider, Session;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {

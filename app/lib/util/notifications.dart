@@ -29,8 +29,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 
 Future<void> scheduleStudyNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
-  final androidPlatformChannelSpecifics =
-      AndroidNotificationDetails('0', 'StudyU main', 'The main StudyU notification channel.');
+  final androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU main');
   final iOSPlatformChannelSpecifics = IOSNotificationDetails();
   final platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
