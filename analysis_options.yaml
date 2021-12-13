@@ -9,20 +9,16 @@ linter:
   rules:
     # STYLE
     prefer_single_quotes: true
-    cascade_invocations: true # May have issues: https://github.com/dart-lang/linter/issues/1589
-    only_throw_errors: true
+    cascade_invocations: true # May has issues: https://github.com/dart-lang/linter/issues/1589
     prefer_foreach: true
     prefer_int_literals: true
-    use_is_even_rather_than_modulo: true
     use_raw_strings: true
 
     # FLUTTER WEB IMPORTANT
     avoid_double_and_int_checks: true
 
     # DISABLE
+    # We have prints for better debugging. Maybe not the best option.
     avoid_print: false
-    prefer_const_constructors: false
-    # New rules to fix
+    # Highlights localization imports and others which are annoying to fix
     depend_on_referenced_packages: false
-    require_trailing_commas: false
-    use_build_context_synchronously: false
