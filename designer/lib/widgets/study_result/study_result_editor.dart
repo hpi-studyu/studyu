@@ -26,7 +26,7 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
     final questionBody = _buildResultBody();
 
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
@@ -52,18 +52,22 @@ class _StudyResultEditorState extends State<StudyResultEditor> {
             child: Column(
               children: [
                 FormBuilder(
-                    key: _editFormKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    // readonly: true,
-                    child: Column(children: <Widget>[
+                  key: _editFormKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // readonly: true,
+                  child: Column(
+                    children: <Widget>[
                       FormBuilderTextField(
-                          onChanged: (value) {
-                            _saveFormChanges();
-                          },
-                          name: 'filename',
-                          decoration: InputDecoration(labelText: AppLocalizations.of(context).filename),
-                          initialValue: widget.result.filename),
-                    ])),
+                        onChanged: (value) {
+                          _saveFormChanges();
+                        },
+                        name: 'filename',
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).filename),
+                        initialValue: widget.result.filename,
+                      ),
+                    ],
+                  ),
+                ),
                 if (questionBody != null) questionBody
               ],
             ),

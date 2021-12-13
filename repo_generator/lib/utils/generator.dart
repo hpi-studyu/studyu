@@ -47,16 +47,28 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   print('Creating project variables for session, studyId and key');
   // session cannot be masked due to format
   await gl.createProjectVariable(
-      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString, masked: false);
+    projectId: projectId,
+    key: 'session',
+    value: env.client.auth.session()!.persistSessionString,
+    masked: false,
+  );
   await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId, masked: true);
   // Key cannot be masked due to format
   await gl.createProjectVariable(projectId: projectId, key: 'key', value: private, masked: false);
 
   print('Creating project environment variables for supabase');
   await gl.createProjectVariable(
-      projectId: projectId, key: 'STUDYU_SUPABASE_URL', value: env.supabaseUrl, masked: true);
+    projectId: projectId,
+    key: 'STUDYU_SUPABASE_URL',
+    value: env.supabaseUrl,
+    masked: true,
+  );
   await gl.createProjectVariable(
-      projectId: projectId, key: 'STUDYU_SUPABASE_PUBLIC_ANON_KEY', value: env.supabaseAnonKey, masked: true);
+    projectId: projectId,
+    key: 'STUDYU_SUPABASE_PUBLIC_ANON_KEY',
+    value: env.supabaseAnonKey,
+    masked: true,
+  );
 
   // Generate files from nbconvert-template copier CLI
   print('Generating project files with copier...');
@@ -68,7 +80,11 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
         .map((q) => q.id);
   }).toList(growable: false);
   await CliService.generateCopierProject(
-      generatedProjectPath, study.title!, scaleQuestionIds, Uri.encodeComponent(projectProperties['http_url_to_repo']));
+    generatedProjectPath,
+    study.title!,
+    scaleQuestionIds,
+    Uri.encodeComponent(projectProperties['http_url_to_repo']),
+  );
 
   // Save study schema and subjects data
   print('Saving study schema and subjects as json...');
@@ -86,15 +102,21 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
 
   print('Committing to Gitlab...');
   await gl.makeCommit(
-      projectId: projectId,
-      message: 'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
-      actions: commitActions);
+    projectId: projectId,
+    message: 'Generated project from copier-studyu\n\nhttps://github.com/hpi-studyu/copier-studyu',
+    actions: commitActions,
+  );
 
   print('Add repo entry to database...');
   try {
-    await Repo(projectId, env.client.auth.user()!.id, studyId, GitProvider.gitlab, projectProperties['web_url'],
-            projectProperties['http_url_to_repo'])
-        .save();
+    await Repo(
+      projectId,
+      env.client.auth.user()!.id,
+      studyId,
+      GitProvider.gitlab,
+      projectProperties['web_url'],
+      projectProperties['http_url_to_repo'],
+    ).save();
   } catch (e) {
     print(e);
   }
@@ -108,16 +130,23 @@ Future<void> updateRepo(GitlabClient gl, String projectId, String studyId) async
   // Update sessionToken project var
   print('Updating project session variable...');
   gl.updateProjectVariable(
-      projectId: projectId, key: 'session', value: env.client.auth.session()!.persistSessionString);
+    projectId: projectId,
+    key: 'session',
+    value: env.client.auth.session()!.persistSessionString,
+  );
 
   print('Fetching study schema and subjects');
   final study = await fetchStudySchema(studyId);
   final subjects = await fetchSubjects(studyId);
 
   print('Committing to Gitlab...');
-  await gl.makeCommit(projectId: projectId, message: 'Updating data and triggering CI notebook html refresh', actions: [
-    gl.commitAction(filePath: 'data/study.schema.json', content: prettyJson(study.toJson()), action: 'update'),
-    gl.commitAction(filePath: 'data/subjects.csv', content: subjects, action: 'update'),
-  ]);
+  await gl.makeCommit(
+    projectId: projectId,
+    message: 'Updating data and triggering CI notebook html refresh',
+    actions: [
+      gl.commitAction(filePath: 'data/study.schema.json', content: prettyJson(study.toJson()), action: 'update'),
+      gl.commitAction(filePath: 'data/subjects.csv', content: subjects, action: 'update'),
+    ],
+  );
   // Make git commit
 }

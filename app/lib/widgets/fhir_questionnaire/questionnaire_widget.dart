@@ -15,9 +15,14 @@ class FhirQuestionnaireWidget extends StatefulWidget {
   final StateHandler onComplete;
   final ContinuationPredicate shouldContinue;
 
-  const FhirQuestionnaireWidget(this.questionnaire,
-      {this.title, this.onComplete, this.onChange, this.shouldContinue, Key key})
-      : super(key: key);
+  const FhirQuestionnaireWidget(
+    this.questionnaire, {
+    this.title,
+    this.onComplete,
+    this.onChange,
+    this.shouldContinue,
+    Key key,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FhirQuestionnaireWidgetState();
@@ -43,21 +48,24 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
         final end = shownQuestions.length - 1;
         final lastQuestion = shownQuestions.removeLast();
         _listKey.currentState.removeItem(
-            end,
-            (context, animation) => SizeTransition(
-                  sizeFactor: animation,
-                  child: lastQuestion,
-                ));
+          end,
+          (context, animation) => SizeTransition(
+            sizeFactor: animation,
+            child: lastQuestion,
+          ),
+        );
       }
     }
   }
 
   void _insertQuestion(fhir.QuestionnaireItem question) {
-    shownQuestions.add(QuestionContainer(
-      question: question,
-      onDone: _onQuestionDone,
-      index: shownQuestions.length,
-    ));
+    shownQuestions.add(
+      QuestionContainer(
+        question: question,
+        onDone: _onQuestionDone,
+        index: shownQuestions.length,
+      ),
+    );
   }
 
   void _onQuestionDone(fhir.QuestionnaireResponseItem newResponseItem, int index) {
@@ -78,11 +86,11 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
         return; // Checks if answer is wrong => not eligible ==> VALIDATION OF ANSWERS GIVEN!
       }
       _insertQuestion(nextQuestion);
-      _listKey.currentState.insertItem(shownQuestions.length - 1, duration: Duration(milliseconds: 300));
+      _listKey.currentState.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
 
       // Scroll to bottom
       Timer(
-        Duration(milliseconds: 300),
+        const Duration(milliseconds: 300),
         () {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,

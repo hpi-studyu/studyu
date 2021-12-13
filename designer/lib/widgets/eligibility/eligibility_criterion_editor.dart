@@ -11,9 +11,12 @@ class EligibilityCriterionEditor extends StatefulWidget {
   final List<Question> questions;
   final void Function() remove;
 
-  const EligibilityCriterionEditor(
-      {@required this.eligibilityCriterion, @required this.questions, @required this.remove, Key key})
-      : super(key: key);
+  const EligibilityCriterionEditor({
+    @required this.eligibilityCriterion,
+    @required this.questions,
+    @required this.remove,
+    Key key,
+  }) : super(key: key);
 
   @override
   _EligibilityCriterionEditorState createState() => _EligibilityCriterionEditorState();
@@ -25,8 +28,9 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: EdgeInsets.all(10),
-        child: Column(children: [
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        children: [
           ListTile(
             title: Row(
               children: [Text(AppLocalizations.of(context).eligibility_criterion)],
@@ -35,34 +39,40 @@ class _EligibilityCriterionEditorState extends State<EligibilityCriterionEditor>
           ),
           Padding(
             padding: const EdgeInsets.all(8),
-            child: Column(children: [
-              FormBuilder(
-                key: _editFormKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                // readonly: true,
-                child: Column(
-                  children: <Widget>[
-                    FormBuilderTextField(
+            child: Column(
+              children: [
+                FormBuilder(
+                  key: _editFormKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // readonly: true,
+                  child: Column(
+                    children: <Widget>[
+                      FormBuilderTextField(
                         onChanged: (value) {
                           saveFormChanges();
                         },
                         name: 'reason',
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).reason),
-                        initialValue: widget.eligibilityCriterion.reason),
-                  ],
+                        initialValue: widget.eligibilityCriterion.reason,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ExpressionEditor(
+                ExpressionEditor(
                   expression: widget.eligibilityCriterion.condition,
                   questions: widget.questions,
                   updateExpression: (newExpression) {
                     setState(() {
                       widget.eligibilityCriterion.condition = newExpression;
                     });
-                  })
-            ]),
+                  },
+                )
+              ],
+            ),
           )
-        ]));
+        ],
+      ),
+    );
   }
 
   void saveFormChanges() {

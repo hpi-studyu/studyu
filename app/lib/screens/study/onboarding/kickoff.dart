@@ -43,12 +43,12 @@ class _KickoffScreen extends State<KickoffScreen> {
   }
 
   Widget _constructStatusIcon(BuildContext context) => !ready
-      ? SizedBox(
+      ? const SizedBox(
           height: 64,
           width: 64,
           child: CircularProgressIndicator(),
         )
-      : Icon(
+      : const Icon(
           MdiIcons.checkboxMarkedCircle,
           color: Colors.green,
           size: 64,
@@ -64,28 +64,32 @@ class _KickoffScreen extends State<KickoffScreen> {
         title: Text(subject.study.title),
         leading: Icon(MdiIcons.fromString(subject.study.iconName)),
       ),
-      body: Builder(builder: (_context) {
-        return Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  _constructStatusIcon(context),
-                  SizedBox(height: 32),
-                  Text(
-                    _getStatusText(context),
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  SizedBox(height: 16),
-                  OutlinedButton(
-                      onPressed: () => _storeUserStudy(context), child: Text(AppLocalizations.of(context).start_study)),
-                ],
+      body: Builder(
+        builder: (_context) {
+          return Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _constructStatusIcon(context),
+                    const SizedBox(height: 32),
+                    Text(
+                      _getStatusText(context),
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    const SizedBox(height: 16),
+                    OutlinedButton(
+                      onPressed: () => _storeUserStudy(context),
+                      child: Text(AppLocalizations.of(context).start_study),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

@@ -66,7 +66,7 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   Study(this.id, this.userId);
 
-  Study.withId(this.userId) : id = Uuid().v4();
+  Study.withId(this.userId) : id = const Uuid().v4();
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
@@ -101,18 +101,21 @@ class Study extends SupabaseObjectFunctions<Study> {
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(selectedColumns: [
-        '*',
-        'repo(*)',
-        'study_participant_count',
-        'study_ended_count',
-        'active_subject_count',
-        'study_missed_days'
-      ]);
+  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
+        selectedColumns: [
+          '*',
+          'repo(*)',
+          'study_participant_count',
+          'study_ended_count',
+          'active_subject_count',
+          'study_missed_days'
+        ],
+      );
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
-      await env.client.from(tableName).select().eq('participation', 'open').execute());
+        await env.client.from(tableName).select().eq('participation', 'open').execute(),
+      );
 
   bool isOwner(User? user) => user != null && userId == user.id;
 
@@ -150,6 +153,6 @@ class Study extends SupabaseObjectFunctions<Study> {
       ...flattenedQuestions
           .map((progress) => tableHeaders.map((header) => progress[header] ?? '').toList(growable: false))
     ];
-    return ListToCsvConverter().convert(resultsTable);
+    return const ListToCsvConverter().convert(resultsTable);
   }
 }

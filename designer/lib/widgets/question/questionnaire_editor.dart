@@ -60,11 +60,12 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
             .entries
             .map(
               (entry) => QuestionEditor(
-                  key: UniqueKey(),
-                  remove: () => _removeQuestion(entry.key),
-                  changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
-                  question: entry.value,
-                  questionTypes: widget.questionTypes),
+                key: UniqueKey(),
+                remove: () => _removeQuestion(entry.key),
+                changeQuestionType: (newType) => _changeQuestionType(entry.key, newType),
+                question: entry.value,
+                questionTypes: widget.questionTypes,
+              ),
             )
             .toList(),
       ],

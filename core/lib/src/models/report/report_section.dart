@@ -18,7 +18,7 @@ abstract class ReportSection {
 
   ReportSection(this.type);
 
-  ReportSection.withId(this.type) : id = Uuid().v4();
+  ReportSection.withId(this.type) : id = const Uuid().v4();
 
   factory ReportSection.fromJson(Map<String, dynamic> data) => sectionTypes[data[keyType]]!(data);
   Map<String, dynamic> toJson();

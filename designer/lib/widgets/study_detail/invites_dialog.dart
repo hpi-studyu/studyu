@@ -49,7 +49,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
     if (_formKey.currentState.validate()) {
       StudyInvite invite;
       invite = StudyInvite(code, widget.study.id,
-          preselectedInterventionIds: _preselectInterventions ? [_interventionA.id, _interventionB.id] : null);
+          preselectedInterventionIds: _preselectInterventions ? [_interventionA.id, _interventionB.id] : null,);
       try {
         await invite.save();
         setState(() {
@@ -80,15 +80,15 @@ class _InvitesDialogState extends State<InvitesDialog> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Spacer(),
+        const Spacer(),
         Icon(MdiIcons.fromString(a.icon), color: theme.colorScheme.secondary),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Text(a.name, overflow: TextOverflow.ellipsis),
-        Spacer(),
+        const Spacer(),
         Icon(MdiIcons.fromString(b.icon), color: theme.colorScheme.secondary),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Text(b.name, overflow: TextOverflow.ellipsis),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }
@@ -98,7 +98,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(child: Text(intervention.name, overflow: TextOverflow.ellipsis)),
       ],
     );
@@ -114,9 +114,9 @@ class _InvitesDialogState extends State<InvitesDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Invite codes (${_invites.length})'),
-            Spacer(),
+            const Spacer(),
             Text('Preselect interventions (Order: ${widget.study.schedule.nameOfSequence})',
-                style: Theme.of(context).textTheme.bodyText2),
+                style: Theme.of(context).textTheme.bodyText2,),
             Switch(
               value: _preselectInterventions,
               onChanged: (value) => setState(() {
@@ -134,7 +134,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
               Expanded(
                 child: ListView.separated(
                     shrinkWrap: true,
-                    separatorBuilder: (context, index) => Divider(),
+                    separatorBuilder: (context, index) => const Divider(),
                     itemCount: _invites.length,
                     itemBuilder: (BuildContext context, int index) {
                       final invite = _invites[index];
@@ -144,10 +144,10 @@ class _InvitesDialogState extends State<InvitesDialog> {
                               ? _buildSelectedInterventions(invite.preselectedInterventionIds)
                               : null,
                           trailing: IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () => deleteInviteCode(invite),
-                          ));
-                    }),
+                          ),);
+                    },),
               ),
               Form(
                 key: _formKey,
@@ -175,7 +175,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
                         onFieldSubmitted: (value) => addNewInviteCode(value),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     if (_preselectInterventions) ...[
                       Expanded(
                         child: DropdownButtonFormField<Intervention>(
@@ -184,18 +184,18 @@ class _InvitesDialogState extends State<InvitesDialog> {
                             return null;
                           },
                           isExpanded: true,
-                          decoration: InputDecoration(helperText: 'Intervention A'),
+                          decoration: const InputDecoration(helperText: 'Intervention A'),
                           value: _interventionA,
                           onChanged: (value) => setState(() => _interventionA = value),
                           items: widget.study.interventions
                               .map((i) => DropdownMenuItem<Intervention>(
                                     value: i,
                                     child: _buildIntervention(i),
-                                  ))
+                                  ),)
                               .toList(),
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: DropdownButtonFormField<Intervention>(
                           validator: (value) {
@@ -203,21 +203,21 @@ class _InvitesDialogState extends State<InvitesDialog> {
                             return null;
                           },
                           isExpanded: true,
-                          decoration: InputDecoration(helperText: 'Intervention B'),
+                          decoration: const InputDecoration(helperText: 'Intervention B'),
                           value: _interventionB,
                           onChanged: (value) => setState(() => _interventionB = value),
                           items: widget.study.interventions
                               .map((i) => DropdownMenuItem<Intervention>(
                                     value: i,
                                     child: _buildIntervention(i),
-                                  ))
+                                  ),)
                               .toList(),
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                     ],
                     IconButton(
-                      icon: Icon(Icons.add, color: Colors.green),
+                      icon: const Icon(Icons.add, color: Colors.green),
                       onPressed: () => addNewInviteCode(_controller.text),
                     ),
                   ],
@@ -229,7 +229,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
         actions: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: const Text('Close'),
           )
         ],
       );

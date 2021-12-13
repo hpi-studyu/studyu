@@ -59,9 +59,9 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
       children: [
         Row(
           children: [
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             ..._generateAnnotations(context),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
           ],
         ),
         Slider(

@@ -17,12 +17,13 @@ class _NotExpressionEditorState extends State<NotExpressionEditor> {
   @override
   Widget build(BuildContext context) {
     return ExpressionEditor(
-        expression: widget.expression.expression,
-        questions: widget.questions,
-        updateExpression: (newExpression) {
-          setState(() {
-            widget.expression.expression = newExpression;
-          });
+      expression: widget.expression.expression,
+      questions: widget.questions,
+      updateExpression: (newExpression) {
+        setState(() {
+          widget.expression.expression = newExpression;
         });
+      },
+    );
   }
 }

@@ -20,30 +20,35 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-        key: _editFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        // readonly: true,
-        child: Column(children: <Widget>[
+      key: _editFormKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      // readonly: true,
+      child: Column(
+        children: <Widget>[
           ButtonBar(
             children: <Widget>[
               DeleteButton(onPressed: widget.remove),
             ],
           ),
           FormBuilderTextField(
-              onChanged: (value) {
-                saveFormChanges();
-              },
-              name: 'value',
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).value),
-              initialValue: widget.annotation.value.toString()),
+            onChanged: (value) {
+              saveFormChanges();
+            },
+            name: 'value',
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).value),
+            initialValue: widget.annotation.value.toString(),
+          ),
           FormBuilderTextField(
-              onChanged: (value) {
-                saveFormChanges();
-              },
-              name: 'annotation',
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).annotation),
-              initialValue: widget.annotation.annotation),
-        ]));
+            onChanged: (value) {
+              saveFormChanges();
+            },
+            name: 'annotation',
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).annotation),
+            initialValue: widget.annotation.annotation,
+          ),
+        ],
+      ),
+    );
   }
 
   void saveFormChanges() {

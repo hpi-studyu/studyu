@@ -47,29 +47,34 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     final choiceWidgets = widget.question.choices
-        .map<Widget>((choice) => SelectableButton(
-              selected: selected.contains(choice),
-              onTap: () => tapped(choice),
-              child: Text(choice.text),
-            ))
+        .map<Widget>(
+          (choice) => SelectableButton(
+            selected: selected.contains(choice),
+            onTap: () => tapped(choice),
+            child: Text(choice.text),
+          ),
+        )
         .toList();
 
     if (widget.question.multiple) {
-      choiceWidgets.add(OutlinedButton(
-        onPressed: confirm,
-        style: ButtonStyle(
+      choiceWidgets.add(
+        OutlinedButton(
+          onPressed: confirm,
+          style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white)),
-        child: Text(AppLocalizations.of(context).confirm),
-      ));
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          ),
+          child: Text(AppLocalizations.of(context).confirm),
+        ),
+      );
     }
 
     return ListView.separated(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: choiceWidgets.length,
       itemBuilder: (context, index) => choiceWidgets[index],
-      separatorBuilder: (context, index) => SizedBox(height: 8),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
   }
 }

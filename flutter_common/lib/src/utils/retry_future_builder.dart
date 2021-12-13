@@ -115,21 +115,22 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Center(
-          child: Column(
-        children: [
-          const Text('Something went wrong:'),
-          const SizedBox(height: 16),
-          Text(error.toString()),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: reload,
-            icon: const Icon(Icons.sync),
-            label: const Text('Retry'),
-            style: ElevatedButton.styleFrom(primary: theme.colorScheme.secondary),
-          ),
-          ...widget.extraWidgets
-        ],
-      )),
+        child: Column(
+          children: [
+            const Text('Something went wrong:'),
+            const SizedBox(height: 16),
+            Text(error.toString()),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: reload,
+              icon: const Icon(Icons.sync),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(primary: theme.colorScheme.secondary),
+            ),
+            ...widget.extraWidgets
+          ],
+        ),
+      ),
     );
   }
 }

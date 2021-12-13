@@ -21,21 +21,23 @@ class _ReminderEditorState extends State<ReminderEditor> {
   Widget build(BuildContext context) {
     final time = widget.reminder;
     return FormBuilder(
-        key: _editFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        // readonly: true,
-        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      key: _editFormKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      // readonly: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(MdiIcons.bell, color: Theme.of(context).colorScheme.secondary),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: FormBuilderDateTimePicker(
                   name: 'time',
                   inputType: InputType.time,
                   textAlign: TextAlign.center,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Reminder time',
                   ),
                   alwaysUse24HourFormat: true,
@@ -45,12 +47,14 @@ class _ReminderEditorState extends State<ReminderEditor> {
                   },
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               DeleteButton(onPressed: widget.remove),
-              Spacer(flex: 4),
+              const Spacer(flex: 4),
             ],
           )
-        ]));
+        ],
+      ),
+    );
   }
 
   void saveFormChanges() {

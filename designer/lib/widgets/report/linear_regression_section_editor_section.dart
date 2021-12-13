@@ -28,39 +28,49 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
       ...study.observations,
     ];
 
-    return Column(children: [
-      Row(children: [
-        Text('Improvement Direction:'),
-        SizedBox(width: 10),
-        DropdownButton<ImprovementDirection>(
-          value: widget.section.improvement,
-          onChanged: _changeImprovement,
-          items: ImprovementDirection.values
-              .map((aggregation) => DropdownMenuItem(
-                  value: aggregation,
-                  child: Text(aggregation.toString().substring(aggregation.toString().indexOf('.') + 1))))
-              .toList(),
-        )
-      ]),
-      FormBuilder(
-        key: _editFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        // readonly: true,
-        child: Column(children: <Widget>[
-          FormBuilderTextField(
-            onChanged: _changeAlpha,
-            name: AppLocalizations.of(context).alpha,
-            decoration: InputDecoration(labelText: AppLocalizations.of(context).alpha_confidence),
-            initialValue: widget.section.alpha.toString(),
-            validator: FormBuilderValidators.numeric(context),
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Text('Improvement Direction:'),
+            const SizedBox(width: 10),
+            DropdownButton<ImprovementDirection>(
+              value: widget.section.improvement,
+              onChanged: _changeImprovement,
+              items: ImprovementDirection.values
+                  .map(
+                    (aggregation) => DropdownMenuItem(
+                      value: aggregation,
+                      child: Text(aggregation.toString().substring(aggregation.toString().indexOf('.') + 1)),
+                    ),
+                  )
+                  .toList(),
+            )
+          ],
+        ),
+        FormBuilder(
+          key: _editFormKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // readonly: true,
+          child: Column(
+            children: <Widget>[
+              FormBuilderTextField(
+                onChanged: _changeAlpha,
+                name: AppLocalizations.of(context).alpha,
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).alpha_confidence),
+                initialValue: widget.section.alpha.toString(),
+                validator: FormBuilderValidators.numeric(context),
+              ),
+            ],
           ),
-        ]),
-      ),
-      DataReferenceEditor<num>(
+        ),
+        DataReferenceEditor<num>(
           reference: widget.section.resultProperty,
           availableTaks: tasks,
-          updateReference: (reference) => setState(() => widget.section.resultProperty = reference)),
-    ]);
+          updateReference: (reference) => setState(() => widget.section.resultProperty = reference),
+        ),
+      ],
+    );
   }
 
   void _changeImprovement(ImprovementDirection value) {

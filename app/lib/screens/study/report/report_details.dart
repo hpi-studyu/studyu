@@ -14,7 +14,9 @@ class ReportDetailsScreen extends StatelessWidget {
   final StudySubject subject;
 
   static MaterialPageRoute routeFor({@required StudySubject subject}) => MaterialPageRoute(
-      builder: (_) => ReportDetailsScreen(subject), settings: RouteSettings(name: Routes.reportDetails));
+        builder: (_) => ReportDetailsScreen(subject),
+        settings: const RouteSettings(name: Routes.reportDetails),
+      );
 
   const ReportDetailsScreen(this.subject, {Key key}) : super(key: key);
 

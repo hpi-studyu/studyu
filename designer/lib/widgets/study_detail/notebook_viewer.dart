@@ -26,15 +26,17 @@ class NotebookViewer extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
               child: Card(
                 child: ListTile(
-                  contentPadding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                  leading: BackButton(),
+                  contentPadding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                  leading: const BackButton(),
                   title: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(MdiIcons.notebook, color: theme.colorScheme.secondary),
-                      SizedBox(width: 8),
-                      Text(notebook.replaceAll(RegExp(r'\.\w*$'), ''),
-                          style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary)),
+                      const SizedBox(width: 8),
+                      Text(
+                        notebook.replaceAll(RegExp(r'\.\w*$'), ''),
+                        style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary),
+                      ),
                       // VerticalDivider(indent: 8, endIndent: 8),
                     ],
                   ),

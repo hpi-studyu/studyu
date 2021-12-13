@@ -50,48 +50,50 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
           'Scheduling',
           style: Theme.of(context).textTheme.headline6,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Text('Participants can complete one task from', style: theme.textTheme.bodyText1),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: widget.task.schedule.completionPeriods.length,
-          separatorBuilder: (context, index) => SizedBox(height: 8),
+          separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (buildContext, index) {
             return CompletionPeriodEditor(
-                key: UniqueKey(),
-                completionPeriod: widget.task.schedule.completionPeriods[index],
-                isFirst: index == 0,
-                remove: () => _removeCompletionPeriod(index));
+              key: UniqueKey(),
+              completionPeriod: widget.task.schedule.completionPeriods[index],
+              isFirst: index == 0,
+              remove: () => _removeCompletionPeriod(index),
+            );
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(primary: Colors.green),
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: _addCompletionPeriod,
-          label: Text('Add completion period'),
+          label: const Text('Add completion period'),
         ),
-        SizedBox(height: 32),
+        const SizedBox(height: 32),
         Text('Remind participant at', style: theme.textTheme.bodyText1),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: widget.task.schedule.reminders.length,
-          separatorBuilder: (context, index) => SizedBox(height: 8),
+          separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (buildContext, index) {
             return ReminderEditor(
-                key: UniqueKey(),
-                reminder: widget.task.schedule.reminders[index],
-                remove: () => _removeReminder(index));
+              key: UniqueKey(),
+              reminder: widget.task.schedule.reminders[index],
+              remove: () => _removeReminder(index),
+            );
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(primary: Colors.green),
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: _addReminder,
-          label: Text('Add reminder time'),
+          label: const Text('Add reminder time'),
         ),
       ],
     );

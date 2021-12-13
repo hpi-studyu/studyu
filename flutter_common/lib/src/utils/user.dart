@@ -30,8 +30,8 @@ class UserQueries {
 
   // Using a fake user email to enable anonymous users, while working with row-level security on postgres
   static Future<bool> anonymousSignUp() async {
-    final fakeUserEmail = '${Uuid().v4()}@$fakeStudyUEmailDomain';
-    final fakeUserPassword = Uuid().v4();
+    final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
+    final fakeUserPassword = const Uuid().v4();
     final res = await Supabase.instance.client.auth.signUp(fakeUserEmail, fakeUserPassword);
 
     if (res.error == null) {

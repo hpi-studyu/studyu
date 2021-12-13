@@ -58,15 +58,17 @@ class _DesignerState extends State<Designer> {
     final study = appState.draftStudy;
     return Scaffold(
       appBar: AppBar(
-        title: Text(study != null
-            ? AppLocalizations.of(context).view_published_study
-            : AppLocalizations.of(context).create_new_study),
+        title: Text(
+          study != null
+              ? AppLocalizations.of(context).view_published_study
+              : AppLocalizations.of(context).create_new_study,
+        ),
         actions: [
           if (appState.loggedIn && (study == null || !study.published || kDebugMode)) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextButton.icon(
-                icon: Icon(Icons.publish),
+                icon: const Icon(Icons.publish),
                 label: Text(AppLocalizations.of(context).publish_study),
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () async {
@@ -78,7 +80,7 @@ class _DesignerState extends State<Designer> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextButton.icon(
-                icon: Icon(Icons.save),
+                icon: const Icon(Icons.save),
                 label: Text(AppLocalizations.of(context).save_draft),
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () async {
@@ -90,96 +92,102 @@ class _DesignerState extends State<Designer> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextButton.icon(
-                icon: Icon(MdiIcons.testTube),
-                label: Text('Try draft study'),
+                icon: const Icon(MdiIcons.testTube),
+                label: const Text('Try draft study'),
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () => launch(
-                    '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}'),
+                  '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}',
+                ),
               ),
             ),
           ],
           if (kDebugMode)
             Builder(
-                builder: (context) => IconButton(
-                      icon: Icon(Icons.copy),
-                      onPressed: () async {
-                        await FlutterClipboard.copy(prettyJson(study.toJson()));
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
-                      },
-                    )),
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.copy),
+                onPressed: () async {
+                  await FlutterClipboard.copy(prettyJson(study.toJson()));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
+                },
+              ),
+            ),
         ],
       ),
-      body: Row(children: [
-        LayoutBuilder(
+      body: Row(
+        children: [
+          LayoutBuilder(
             builder: (context, constraint) => SingleChildScrollView(
-                    child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraint.maxHeight),
-                  child: IntrinsicHeight(
-                    child: NavigationRail(
-                      selectedIndex: appState.selectedDesignerPage.index,
-                      onDestinationSelected: (int index) {
-                        appState.selectedDesignerPage = DesignerPage.values[index];
-                      },
-                      labelType: NavigationRailLabelType.all,
-                      destinations: [
-                        NavigationRailDestination(
-                          icon: Icon(Icons.info_outline),
-                          selectedIcon: Icon(Icons.info_outline),
-                          label: Text(AppLocalizations.of(context).about),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.accessibility_new),
-                          selectedIcon: Icon(Icons.accessibility_new),
-                          label: Text(AppLocalizations.of(context).interventions),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.question_answer),
-                          selectedIcon: Icon(Icons.question_answer),
-                          label: Text(AppLocalizations.of(context).eligibility_questions),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.verified_user),
-                          selectedIcon: Icon(Icons.verified_user),
-                          label: Text(AppLocalizations.of(context).eligibility_criteria),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.zoom_in),
-                          selectedIcon: Icon(Icons.zoom_in),
-                          label: Text(AppLocalizations.of(context).observations),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.schedule),
-                          selectedIcon: Icon(Icons.schedule),
-                          label: Text(AppLocalizations.of(context).schedule),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.content_paste),
-                          selectedIcon: Icon(Icons.content_paste),
-                          label: Text(AppLocalizations.of(context).report),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.assignment_turned_in),
-                          selectedIcon: Icon(Icons.assignment_turned_in),
-                          label: Text(AppLocalizations.of(context).results),
-                        ),
-                        NavigationRailDestination(
-                          icon: Icon(Icons.warning),
-                          selectedIcon: Icon(Icons.warning),
-                          label: Text(AppLocalizations.of(context).consent),
-                        ),
-                      ],
-                    ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                child: IntrinsicHeight(
+                  child: NavigationRail(
+                    selectedIndex: appState.selectedDesignerPage.index,
+                    onDestinationSelected: (int index) {
+                      appState.selectedDesignerPage = DesignerPage.values[index];
+                    },
+                    labelType: NavigationRailLabelType.all,
+                    destinations: [
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.info_outline),
+                        selectedIcon: const Icon(Icons.info_outline),
+                        label: Text(AppLocalizations.of(context).about),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.accessibility_new),
+                        selectedIcon: const Icon(Icons.accessibility_new),
+                        label: Text(AppLocalizations.of(context).interventions),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.question_answer),
+                        selectedIcon: const Icon(Icons.question_answer),
+                        label: Text(AppLocalizations.of(context).eligibility_questions),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.verified_user),
+                        selectedIcon: const Icon(Icons.verified_user),
+                        label: Text(AppLocalizations.of(context).eligibility_criteria),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.zoom_in),
+                        selectedIcon: const Icon(Icons.zoom_in),
+                        label: Text(AppLocalizations.of(context).observations),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.schedule),
+                        selectedIcon: const Icon(Icons.schedule),
+                        label: Text(AppLocalizations.of(context).schedule),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.content_paste),
+                        selectedIcon: const Icon(Icons.content_paste),
+                        label: Text(AppLocalizations.of(context).report),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.assignment_turned_in),
+                        selectedIcon: const Icon(Icons.assignment_turned_in),
+                        label: Text(AppLocalizations.of(context).results),
+                      ),
+                      NavigationRailDestination(
+                        icon: const Icon(Icons.warning),
+                        selectedIcon: const Icon(Icons.warning),
+                        label: Text(AppLocalizations.of(context).consent),
+                      ),
+                    ],
                   ),
-                ))),
-        VerticalDivider(thickness: 1, width: 1),
-        Expanded(
-          child: Router(
-            routerDelegate: _designerRouterDelegate,
-            backButtonDispatcher: _backButtonDispatcher,
+                ),
+              ),
+            ),
           ),
-        ),
-      ]),
+          const VerticalDivider(thickness: 1, width: 1),
+          Expanded(
+            child: Router(
+              routerDelegate: _designerRouterDelegate,
+              backButtonDispatcher: _backButtonDispatcher,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

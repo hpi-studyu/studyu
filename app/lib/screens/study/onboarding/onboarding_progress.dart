@@ -17,22 +17,25 @@ class OnboardingProgress extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-            child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(value: _getProgressForStage(0)),
-        )),
-        SizedBox(width: 4),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(value: _getProgressForStage(0)),
+          ),
+        ),
+        const SizedBox(width: 4),
         Expanded(
-            child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(value: _getProgressForStage(1)),
-        )),
-        SizedBox(width: 4),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(value: _getProgressForStage(1)),
+          ),
+        ),
+        const SizedBox(width: 4),
         Expanded(
-            child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(value: _getProgressForStage(2)),
-        )),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(value: _getProgressForStage(2)),
+          ),
+        ),
       ],
     );
   }

@@ -19,7 +19,7 @@ abstract class StudyResult {
 
   StudyResult(this.type);
 
-  StudyResult.withId(this.type) : id = Uuid().v4();
+  StudyResult.withId(this.type) : id = const Uuid().v4();
 
   factory StudyResult.fromJson(Map<String, dynamic> data) {
     return studyResultTypes[data[keyType]]!(data);

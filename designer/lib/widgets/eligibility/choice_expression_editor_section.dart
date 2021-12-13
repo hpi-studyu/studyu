@@ -40,16 +40,18 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
           shrinkWrap: true,
           itemCount: widget.expression.choices.length,
           itemBuilder: (buildContext, index) {
-            return Row(children: [
-              Expanded(child: Text(selectedChoices[index].text)),
-              Expanded(
-                child: ButtonBar(
-                  children: <Widget>[
-                    DeleteButton(onPressed: () => _removeChoice(index)),
-                  ],
+            return Row(
+              children: [
+                Expanded(child: Text(selectedChoices[index].text)),
+                Expanded(
+                  child: ButtonBar(
+                    children: <Widget>[
+                      DeleteButton(onPressed: () => _removeChoice(index)),
+                    ],
+                  ),
                 ),
-              ),
-            ]);
+              ],
+            );
           },
         ),
         if (addButton != null) addButton
@@ -59,10 +61,11 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
 
   Widget _buildAddButton() {
     if (selectedChoices.length < widget.targetQuestion.choices.length) {
-      return Row(children: [
-        Text(AppLocalizations.of(context).add_choice),
-        SizedBox(width: 10),
-        DropdownButton<Choice>(
+      return Row(
+        children: [
+          Text(AppLocalizations.of(context).add_choice),
+          const SizedBox(width: 10),
+          DropdownButton<Choice>(
             onChanged: (choice) {
               setState(() {
                 widget.expression.choices.add(choice.id);
@@ -73,8 +76,10 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
                 .where((choice) => !selectedChoices.contains(choice))
                 .toList()
                 .map((choice) => DropdownMenuItem(value: choice, child: Text(choice.text)))
-                .toList())
-      ]);
+                .toList(),
+          )
+        ],
+      );
     } else {
       return null;
     }

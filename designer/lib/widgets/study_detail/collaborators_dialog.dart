@@ -62,7 +62,7 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Collaborator emails'),
+        title: const Text('Collaborator emails'),
         content: SizedBox(
           height: 600,
           width: 800,
@@ -72,18 +72,18 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
               Expanded(
                 child: ListView.separated(
                     shrinkWrap: true,
-                    separatorBuilder: (context, index) => Divider(),
+                    separatorBuilder: (context, index) => const Divider(),
                     itemCount: widget.study.collaboratorEmails.length,
                     itemBuilder: (BuildContext context, int index) {
                       final email = widget.study.collaboratorEmails[index];
                       return ListTile(
-                          leading: Icon(Icons.mail),
+                          leading: const Icon(Icons.mail),
                           title: SelectableText(email),
                           trailing: IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () => _removeCollaborator(email),
-                          ));
-                    }),
+                          ),);
+                    },),
               ),
               Form(
                 key: _formKey,
@@ -111,9 +111,9 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
                         onFieldSubmitted: (value) => _addNewCollaborator(value),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     IconButton(
-                      icon: Icon(MdiIcons.accountPlus, color: Colors.green),
+                      icon: const Icon(MdiIcons.accountPlus, color: Colors.green),
                       onPressed: () => _addNewCollaborator(_controller.text),
                     ),
                   ],
@@ -125,7 +125,7 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
         actions: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: const Text('Close'),
           )
         ],
       );

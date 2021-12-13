@@ -28,7 +28,7 @@ class ReportSectionContainer extends StatelessWidget {
           AppLocalizations.of(context).report_primary_result.toUpperCase(),
           style: theme.textTheme.overline.copyWith(color: theme.colorScheme.secondary),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
       ];
 
   @override
@@ -38,7 +38,7 @@ class ReportSectionContainer extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -47,12 +47,12 @@ class ReportSectionContainer extends StatelessWidget {
                 section.title,
                 style: theme.textTheme.headline5,
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 section.description,
                 style: theme.textTheme.bodyText2,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildContents(context),
             ],
           ),

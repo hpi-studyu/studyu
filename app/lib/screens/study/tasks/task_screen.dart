@@ -68,14 +68,15 @@ class _TaskScreenState extends State<TaskScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(widget.task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
-            SizedBox(height: 20),
-            _buildTask(),
-          ],
-        )),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(widget.task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
+              const SizedBox(height: 20),
+              _buildTask(),
+            ],
+          ),
+        ),
       ),
     );
   }

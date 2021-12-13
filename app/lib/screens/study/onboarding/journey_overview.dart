@@ -24,10 +24,12 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.kickoff);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).user_did_not_give_consent),
-        duration: Duration(seconds: 30),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).user_did_not_give_consent),
+          duration: const Duration(seconds: 30),
+        ),
+      );
     }
   }
 
@@ -42,7 +44,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).your_journey),
-        leading: Icon(MdiIcons.mapMarkerPath),
+        leading: const Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -59,7 +61,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: () => getConsentAndNavigateToDashboard(context),
-        progress: OnboardingProgress(stage: 2, progress: 0.5),
+        progress: const OnboardingProgress(stage: 2, progress: 0.5),
       ),
     );
   }
@@ -90,11 +92,12 @@ class Timeline extends StatelessWidget {
           );
         }).toList(),
         InterventionTile(
-            title: AppLocalizations.of(context).journey_results_available,
-            iconName: 'flagCheckered',
-            color: Colors.green,
-            isLast: true,
-            date: subject.endDate(now))
+          title: AppLocalizations.of(context).journey_results_available,
+          iconName: 'flagCheckered',
+          color: Colors.green,
+          isLast: true,
+          date: subject.endDate(now),
+        )
       ],
     );
   }
@@ -108,15 +111,15 @@ class InterventionTile extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
 
-  const InterventionTile(
-      {@required this.title,
-      @required this.iconName,
-      @required this.date,
-      this.color,
-      this.isFirst = false,
-      this.isLast = false,
-      Key key})
-      : super(key: key);
+  const InterventionTile({
+    @required this.title,
+    @required this.iconName,
+    @required this.date,
+    this.color,
+    this.isFirst = false,
+    this.isLast = false,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +141,7 @@ class InterventionTile extends StatelessWidget {
         child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
       ),
       startChild: TimelineChild(
-        child: Text(DateFormat('dd-MM-yyyy').format(date), style: TextStyle(fontWeight: FontWeight.bold)),
+        child: Text(DateFormat('dd-MM-yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }

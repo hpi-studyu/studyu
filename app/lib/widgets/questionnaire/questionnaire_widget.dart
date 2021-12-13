@@ -16,9 +16,16 @@ class QuestionnaireWidget extends StatefulWidget {
   final StateHandler onComplete;
   final ContinuationPredicate shouldContinue;
 
-  const QuestionnaireWidget(this.questions,
-      {this.title, this.header, this.footer, this.onComplete, this.onChange, this.shouldContinue, Key key})
-      : super(key: key);
+  const QuestionnaireWidget(
+    this.questions, {
+    this.title,
+    this.header,
+    this.footer,
+    this.onComplete,
+    this.onChange,
+    this.shouldContinue,
+    Key key,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireWidgetState();
@@ -42,22 +49,25 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         final end = shownQuestions.length - 1;
         final lastQuestion = shownQuestions.removeLast();
         _listKey.currentState.removeItem(
-            end,
-            (context, animation) => SizeTransition(
-                  sizeFactor: animation,
-                  child: lastQuestion,
-                ));
+          end,
+          (context, animation) => SizeTransition(
+            sizeFactor: animation,
+            child: lastQuestion,
+          ),
+        );
       }
     }
   }
 
   void _insertQuestion(Question question) {
-    shownQuestions.add(QuestionContainer(
-      key: UniqueKey(),
-      question: question,
-      onDone: _onQuestionDone,
-      index: shownQuestions.length,
-    ));
+    shownQuestions.add(
+      QuestionContainer(
+        key: UniqueKey(),
+        question: question,
+        onDone: _onQuestionDone,
+        index: shownQuestions.length,
+      ),
+    );
   }
 
   void _onQuestionDone(Answer answer, int index) {
@@ -72,10 +82,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         return;
       }
       _insertQuestion(widget.questions[_nextQuestionIndex]);
-      _listKey.currentState.insertItem(shownQuestions.length - 1, duration: Duration(milliseconds: 300));
+      _listKey.currentState.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
       _nextQuestionIndex++;
     } else {
-      _listKey.currentState.insertItem(shownQuestions.length, duration: Duration(milliseconds: 300));
+      _listKey.currentState.insertItem(shownQuestions.length, duration: const Duration(milliseconds: 300));
       _finishQuestionnaire();
     }
 

@@ -26,9 +26,11 @@ class _AboutDesignerState extends State<AboutDesigner> {
   }
 
   Future<void> _pickIcon() async {
-    final icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.custom,
-        customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)});
+    final icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackMode: IconPack.custom,
+      customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)},
+    );
 
     final iconName = iconMap.keys.firstWhere((k) => iconMap[k] == icon.codePoint, orElse: () => null);
     setState(() {
@@ -56,66 +58,77 @@ class _AboutDesignerState extends State<AboutDesigner> {
                 child: Column(
                   children: <Widget>[
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'title',
-                        maxLength: 40,
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
-                        initialValue: _draftStudy.title),
+                      onChanged: _saveFormChanges,
+                      name: 'title',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
+                      initialValue: _draftStudy.title,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'description',
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
-                        initialValue: _draftStudy.description),
-                    Row(children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: _pickIcon,
-                          child: Text(AppLocalizations.of(context).choose_icon),
+                      onChanged: _saveFormChanges,
+                      name: 'description',
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
+                      initialValue: _draftStudy.description,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: _pickIcon,
+                            child: Text(AppLocalizations.of(context).choose_icon),
+                          ),
                         ),
-                      ),
-                      if (MdiIcons.fromString(_draftStudy.iconName) != null)
-                        Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
-                    ]),
-                    SizedBox(height: 32),
+                        if (MdiIcons.fromString(_draftStudy.iconName) != null)
+                          Expanded(child: Icon(MdiIcons.fromString(_draftStudy.iconName)))
+                      ],
+                    ),
+                    const SizedBox(height: 32),
                     Text(AppLocalizations.of(context).contact_details, style: theme.textTheme.headline6),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'organization',
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).organization),
-                        initialValue: _draftStudy.contact.organization),
+                      onChanged: _saveFormChanges,
+                      name: 'organization',
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).organization),
+                      initialValue: _draftStudy.contact.organization,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'institutionalReviewBoard',
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).irb),
-                        initialValue: _draftStudy.contact.institutionalReviewBoard),
+                      onChanged: _saveFormChanges,
+                      name: 'institutionalReviewBoard',
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).irb),
+                      initialValue: _draftStudy.contact.institutionalReviewBoard,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'institutionalReviewBoardNumber',
-                        maxLength: 40,
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).irb_number),
-                        initialValue: _draftStudy.contact.institutionalReviewBoardNumber),
+                      onChanged: _saveFormChanges,
+                      name: 'institutionalReviewBoardNumber',
+                      maxLength: 40,
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).irb_number),
+                      initialValue: _draftStudy.contact.institutionalReviewBoardNumber,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'researchers',
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
-                        initialValue: _draftStudy.contact.researchers),
+                      onChanged: _saveFormChanges,
+                      name: 'researchers',
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).researchers),
+                      initialValue: _draftStudy.contact.researchers,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'website',
-                        validator: FormBuilderValidators.url(context),
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
-                        initialValue: _draftStudy.contact.website),
+                      onChanged: _saveFormChanges,
+                      name: 'website',
+                      validator: FormBuilderValidators.url(context),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
+                      initialValue: _draftStudy.contact.website,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'email',
-                        validator: FormBuilderValidators.email(context),
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
-                        initialValue: _draftStudy.contact.email),
+                      onChanged: _saveFormChanges,
+                      name: 'email',
+                      validator: FormBuilderValidators.email(context),
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
+                      initialValue: _draftStudy.contact.email,
+                    ),
                     FormBuilderTextField(
-                        onChanged: _saveFormChanges,
-                        name: 'phone',
-                        decoration: InputDecoration(labelText: AppLocalizations.of(context).phone),
-                        initialValue: _draftStudy.contact.phone),
+                      onChanged: _saveFormChanges,
+                      name: 'phone',
+                      decoration: InputDecoration(labelText: AppLocalizations.of(context).phone),
+                      initialValue: _draftStudy.contact.phone,
+                    ),
                   ],
                 ),
               ),

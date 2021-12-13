@@ -49,14 +49,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context).contact,
-            icon: Icon(MdiIcons.faceAgent),
+            icon: const Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: 'Current report',
-            icon: Icon(MdiIcons.chartBar),
+            icon: const Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject)),
           ),
           PopupMenuButton<OverflowMenuItem>(
@@ -69,55 +69,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             itemBuilder: (context) {
               return [
-                OverflowMenuItem(AppLocalizations.of(context).report_history, MdiIcons.history,
-                    routeName: Routes.reportHistory),
-                OverflowMenuItem(AppLocalizations.of(context).faq, MdiIcons.frequentlyAskedQuestions,
-                    routeName: Routes.faq),
+                OverflowMenuItem(
+                  AppLocalizations.of(context).report_history,
+                  MdiIcons.history,
+                  routeName: Routes.reportHistory,
+                ),
+                OverflowMenuItem(
+                  AppLocalizations.of(context).faq,
+                  MdiIcons.frequentlyAskedQuestions,
+                  routeName: Routes.faq,
+                ),
                 OverflowMenuItem(AppLocalizations.of(context).settings, Icons.settings, routeName: Routes.appSettings),
-                OverflowMenuItem(AppLocalizations.of(context).what_is_studyu, MdiIcons.helpCircleOutline,
-                    routeName: Routes.about),
-                OverflowMenuItem(AppLocalizations.of(context).about, MdiIcons.informationOutline, onTap: () async {
-                  final iconAuthors = ['Kiranshastry'];
-                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                  showAboutDialog(
+                OverflowMenuItem(
+                  AppLocalizations.of(context).what_is_studyu,
+                  MdiIcons.helpCircleOutline,
+                  routeName: Routes.about,
+                ),
+                OverflowMenuItem(
+                  AppLocalizations.of(context).about,
+                  MdiIcons.informationOutline,
+                  onTap: () async {
+                    final iconAuthors = ['Kiranshastry'];
+                    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                    showAboutDialog(
                       context: context,
-                      applicationIcon: Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                      applicationIcon: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
                       applicationVersion: packageInfo.version,
                       children: [
                         RichText(
-                          text: TextSpan(style: TextStyle(color: Colors.black), children: [
-                            TextSpan(text: 'Icons from '),
-                            TextSpan(
-                                style: TextStyle(color: Colors.blue),
+                          text: TextSpan(
+                            style: const TextStyle(color: Colors.black),
+                            children: [
+                              const TextSpan(text: 'Icons from '),
+                              TextSpan(
+                                style: const TextStyle(color: Colors.blue),
                                 text: 'www.flaticon.com',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     launch('https://www.flaticon.com/');
-                                  }),
-                            TextSpan(text: ' made by'),
-                          ]),
+                                  },
+                              ),
+                              const TextSpan(text: ' made by'),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Column(
                           children: iconAuthors
-                              .map((author) => InkWell(
-                                    onTap: () {
-                                      launch(
-                                          'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}');
-                                    },
-                                    child: Text(
-                                      author,
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ))
+                              .map(
+                                (author) => InkWell(
+                                  onTap: () {
+                                    launch(
+                                      'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
+                                    );
+                                  },
+                                  child: Text(
+                                    author,
+                                    style: const TextStyle(color: Colors.blue),
+                                  ),
+                                ),
+                              )
                               .toList(),
                         )
-                      ]);
-                })
+                      ],
+                    );
+                  },
+                )
               ].map((choice) {
                 return PopupMenuItem<OverflowMenuItem>(
                   value: choice,
-                  child: Row(children: [Icon(choice.icon, color: Colors.black), SizedBox(width: 8), Text(choice.name)]),
+                  child: Row(
+                    children: [Icon(choice.icon, color: Colors.black), const SizedBox(width: 8), Text(choice.name)],
+                  ),
                 );
               }).toList();
             },
@@ -129,7 +152,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           : TaskOverview(
               subject: subject,
               scheduleToday: scheduleToday,
-              interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon),
+              interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon,
+            ),
       bottomSheet: kDebugMode && !subject.completedStudy
           ? TextButton(
               onPressed: () async {
@@ -138,7 +162,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   scheduleToday = subject.scheduleFor(DateTime.now());
                 });
               },
-              child: Text('next day'),
+              child: const Text('next day'),
             )
           : null,
     );
@@ -151,28 +175,33 @@ class StudyFinishedPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const fontSize = 30.0;
-    final textStyle = TextStyle(fontSize: fontSize);
+    final textStyle = const TextStyle(fontSize: fontSize);
     final theme = Theme.of(context);
     return Center(
-        child: Padding(
-      padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(AppLocalizations.of(context).completed_study,
-              style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold)),
-          space,
-          OutlinedButton.icon(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              AppLocalizations.of(context).completed_study,
+              style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
+            ),
+            space,
+            OutlinedButton.icon(
               onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
-              icon: Icon(MdiIcons.history, size: fontSize),
-              label: Text(AppLocalizations.of(context).report_history, style: textStyle)),
-          space,
-          OutlinedButton.icon(
+              icon: const Icon(MdiIcons.history, size: fontSize),
+              label: Text(AppLocalizations.of(context).report_history, style: textStyle),
+            ),
+            space,
+            OutlinedButton.icon(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
-              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
-              label: Text(AppLocalizations.of(context).study_selection, style: textStyle)),
-        ],
+              icon: const Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
+              label: Text(AppLocalizations.of(context).study_selection, style: textStyle),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

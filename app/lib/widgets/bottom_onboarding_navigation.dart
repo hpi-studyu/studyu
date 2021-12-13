@@ -11,17 +11,17 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final Icon backIcon;
   final Widget progress;
 
-  const BottomOnboardingNavigation(
-      {Key key,
-      this.onNext,
-      this.onBack,
-      this.backLabel,
-      this.nextLabel,
-      this.hideNext = false,
-      this.nextIcon,
-      this.backIcon,
-      this.progress})
-      : super(key: key);
+  const BottomOnboardingNavigation({
+    Key key,
+    this.onNext,
+    this.onBack,
+    this.backLabel,
+    this.nextLabel,
+    this.hideNext = false,
+    this.nextIcon,
+    this.backIcon,
+    this.progress,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +34,17 @@ class BottomOnboardingNavigation extends StatelessWidget {
               onPressed: onBack ?? () => Navigator.pop(context),
               child: Row(
                 children: [
-                  backIcon ?? Icon(Icons.navigate_before),
+                  backIcon ?? const Icon(Icons.navigate_before),
                   Text(backLabel ?? AppLocalizations.of(context).back),
                 ],
               ),
             ),
-            if (progress != null) ...[SizedBox(width: 8), Expanded(child: progress), SizedBox(width: 8)] else Spacer(),
+            if (progress != null) ...[
+              const SizedBox(width: 8),
+              Expanded(child: progress),
+              const SizedBox(width: 8)
+            ] else
+              const Spacer(),
             Visibility(
               visible: !hideNext,
               maintainSize: true,
@@ -50,7 +55,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(nextLabel ?? AppLocalizations.of(context).next),
-                    nextIcon ?? Icon(Icons.navigate_next),
+                    nextIcon ?? const Icon(Icons.navigate_next),
                   ],
                 ),
               ),

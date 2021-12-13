@@ -28,9 +28,12 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
   void tapped({bool choice}) {
     setState(() {
       selected = choice;
-      widget.onDone(fhir.QuestionnaireResponseItem(
+      widget.onDone(
+        fhir.QuestionnaireResponseItem(
           linkId: widget.question.linkId,
-          answer: [fhir.QuestionnaireResponseAnswer(valueBoolean: fhir.Boolean(choice))]));
+          answer: [fhir.QuestionnaireResponseAnswer(valueBoolean: fhir.Boolean(choice))],
+        ),
+      );
     });
   }
 
@@ -44,7 +47,7 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
           onTap: () => tapped(choice: true),
           child: Text(AppLocalizations.of(context).yes),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),

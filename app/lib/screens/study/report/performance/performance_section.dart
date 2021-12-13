@@ -24,7 +24,7 @@ class PerformanceSection extends GenericSection {
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
     }).toList();
     return interventions.length != 2 || subject.study.reportSpecification?.primary == null
-        ? Center(
+        ? const Center(
             child: Text('ERROR!'),
           )
         : Column(
@@ -37,28 +37,29 @@ class PerformanceSection extends GenericSection {
                 ),
               ),
               ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: interventions.length * 2,
-                  itemBuilder: (context, index) {
-                    final i = (index / 2).floor();
-                    if (index.isEven) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          interventions[i].name,
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: PerformanceBar(
-                          progress: interventionProgress[i],
-                          minimum: minimumRatio,
-                        ),
-                      );
-                    }
-                  }),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: interventions.length * 2,
+                itemBuilder: (context, index) {
+                  final i = (index / 2).floor();
+                  if (index.isEven) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        interventions[i].name,
+                      ),
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: PerformanceBar(
+                        progress: interventionProgress[i],
+                        minimum: minimumRatio,
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           );
   }
@@ -204,7 +205,7 @@ class PerformanceBar extends StatelessWidget {
                     Spacer(
                       flex: spacing,
                     ),
-                  Text('min'),
+                  const Text('min'),
                   if (spacing < 1000)
                     Spacer(
                       flex: 1000 - spacing,

@@ -20,21 +20,25 @@ class CheckmarkTaskWidget extends StatelessWidget {
       await animation;
       Navigator.pop(context, true);
     } on PostgrestError {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).could_not_save_results),
-        duration: Duration(seconds: 10),
-        action: SnackBarAction(label: 'retry', onPressed: () => _handleCompletion(context, animation)),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).could_not_save_results),
+          duration: const Duration(seconds: 10),
+          action: SnackBarAction(label: 'retry', onPressed: () => _handleCompletion(context, animation)),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return PimpedButton(
-        particle: DemoParticle(),
-        pimpedWidgetBuilder: (context, controller) => ElevatedButton.icon(
-            onPressed: () => _handleCompletion(context, controller.forward(from: 0)),
-            icon: Icon(Icons.check, size: 32),
-            label: Text(AppLocalizations.of(context).completed, style: TextStyle(fontSize: 24))));
+      particle: DemoParticle(),
+      pimpedWidgetBuilder: (context, controller) => ElevatedButton.icon(
+        onPressed: () => _handleCompletion(context, controller.forward(from: 0)),
+        icon: const Icon(Icons.check, size: 32),
+        label: Text(AppLocalizations.of(context).completed, style: const TextStyle(fontSize: 24)),
+      ),
+    );
   }
 }

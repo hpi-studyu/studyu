@@ -16,258 +16,329 @@ class AboutScreen extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.food, size: 80, color: Colors.black),
-                ),
-                Expanded(
-                  child: Icon(MdiIcons.equal, size: 80, color: Colors.black),
-                ),
-                Expanded(
-                  child: Icon(MdiIcons.sleepOff, size: 80, color: Colors.black),
-                ),
-              ]),
-              SizedBox(height: 100),
-              Text(AppLocalizations.of(context).description_part1,
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.food, size: 80, color: Colors.black),
                     ),
-                  ),
-                ),
-              ),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.help, size: 80, color: Colors.orange),
-                ),
-              ]),
-              SizedBox(height: 100),
-              Text(AppLocalizations.of(context).description_part2,
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+                    Expanded(
+                      child: Icon(MdiIcons.equal, size: 80, color: Colors.black),
                     ),
-                  ),
-                ),
-              ),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.accountQuestion, size: 80, color: Colors.blue),
-                ),
-              ]),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part3,
-                  textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+                    Expanded(
+                      child: Icon(MdiIcons.sleepOff, size: 80, color: Colors.black),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.exclamationThick, size: 80, color: Colors.blue),
-                )
-              ]),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part4,
-                  textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
-                    ),
-                  ),
-                ),
-              ),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.alphaNBoxOutline, size: 80, color: Colors.blue),
-                ),
-                Expanded(
-                    child: Text(
-                  'of',
+                const SizedBox(height: 100),
+                Text(
+                  AppLocalizations.of(context).description_part1,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30),
-                )),
-                Expanded(
-                  child: Icon(MdiIcons.numeric1BoxOutline, size: 80, color: Colors.blue),
+                  style: const TextStyle(fontSize: 18),
                 ),
-              ]),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part5,
-                  textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.notebookOutline, size: 80, color: Colors.blue),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.help, size: 80, color: Colors.orange),
+                    ),
+                  ],
                 ),
-              ]),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part6,
-                  textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+                const SizedBox(height: 100),
+                Text(
+                  AppLocalizations.of(context).description_part2,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.alignVerticalBottom, size: 80, color: Colors.blue),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.accountQuestion, size: 80, color: Colors.blue),
+                    ),
+                  ],
                 ),
-              ]),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part7,
-                  textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part3,
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              SizedBox(height: 50),
-              Row(children: const [
-                Expanded(
-                  child: Icon(MdiIcons.progressCheck, size: 80, color: Colors.blue),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.exclamationThick, size: 80, color: Colors.blue),
+                    )
+                  ],
                 ),
-              ]),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part8,
-                  textAlign: TextAlign.justify, style: TextStyle(fontSize: 18)),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.blue,
-                      size: 60,
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part4,
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
-            child:
-                Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
-              SizedBox(height: 50),
-              Text(AppLocalizations.of(context).description_part9,
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
-              SizedBox(height: 40),
-              OutlinedButton.icon(
-                icon: Icon(MdiIcons.rocket),
-                onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                label: Text(AppLocalizations.of(context).get_started, style: TextStyle(fontSize: 20)),
-              ),
-            ]),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.alphaNBoxOutline, size: 80, color: Colors.blue),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'of',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ),
+                    Expanded(
+                      child: Icon(MdiIcons.numeric1BoxOutline, size: 80, color: Colors.blue),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part5,
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.notebookOutline, size: 80, color: Colors.blue),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part6,
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.alignVerticalBottom, size: 80, color: Colors.blue),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part7,
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Icon(MdiIcons.progressCheck, size: 80, color: Colors.blue),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part8,
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.blue,
+                        size: 60,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
+                const SizedBox(height: 50),
+                Text(
+                  AppLocalizations.of(context).description_part9,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(height: 40),
+                OutlinedButton.icon(
+                  icon: const Icon(MdiIcons.rocket),
+                  onPressed: () => Navigator.pushNamed(context, Routes.terms),
+                  label: Text(AppLocalizations.of(context).get_started, style: const TextStyle(fontSize: 20)),
+                ),
+              ],
+            ),
           ),
         ],
       ),

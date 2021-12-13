@@ -14,9 +14,13 @@ class ReportSectionEditor extends StatefulWidget {
   final void Function() remove;
   final void Function(ReportSection) updateSection;
 
-  const ReportSectionEditor(
-      {@required this.section, @required this.isPrimary, @required this.remove, @required this.updateSection, Key key})
-      : super(key: key);
+  const ReportSectionEditor({
+    @required this.section,
+    @required this.isPrimary,
+    @required this.remove,
+    @required this.updateSection,
+    Key key,
+  }) : super(key: key);
 
   @override
   _ReportSectionEditorState createState() => _ReportSectionEditorState();
@@ -47,58 +51,65 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
     return Column(
       children: [
         Card(
-          margin: EdgeInsets.all(10),
-          child: Column(children: [
-            ListTile(
-              leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary}]') : null,
-              title: Row(
-                children: [
-                  DropdownButton<String>(
-                    value: widget.section.type,
-                    onChanged: _changeSectionType,
-                    items: [AverageSection.sectionType, LinearRegressionSection.sectionType]
-                        .map<DropdownMenuItem<String>>((value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
-                      );
-                    }).toList(),
-                  ),
-                  Text(AppLocalizations.of(context).section)
-                ],
+          margin: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              ListTile(
+                leading: widget.isPrimary ? Text('[${AppLocalizations.of(context).primary}]') : null,
+                title: Row(
+                  children: [
+                    DropdownButton<String>(
+                      value: widget.section.type,
+                      onChanged: _changeSectionType,
+                      items: [AverageSection.sectionType, LinearRegressionSection.sectionType]
+                          .map<DropdownMenuItem<String>>((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text('${value[0].toUpperCase()}${value.substring(1)}'),
+                        );
+                      }).toList(),
+                    ),
+                    Text(AppLocalizations.of(context).section)
+                  ],
+                ),
+                trailing: DeleteButton(onPressed: widget.remove),
               ),
-              trailing: DeleteButton(onPressed: widget.remove),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(children: [
-                FormBuilder(
-                    key: _editFormKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    // readonly: true,
-                    child: Column(
-                      children: <Widget>[
-                        FormBuilderTextField(
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    FormBuilder(
+                      key: _editFormKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // readonly: true,
+                      child: Column(
+                        children: <Widget>[
+                          FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'title',
                             maxLength: 40,
                             decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
-                            initialValue: widget.section.title),
-                        FormBuilderTextField(
+                            initialValue: widget.section.title,
+                          ),
+                          FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'description',
                             decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
-                            initialValue: widget.section.description),
-                      ],
-                    )),
-                if (sectionBody != null) sectionBody
-              ]),
-            ),
-          ]),
+                            initialValue: widget.section.description,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (sectionBody != null) sectionBody
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

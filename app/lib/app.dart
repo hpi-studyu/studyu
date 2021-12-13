@@ -39,18 +39,20 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
         Provider<AppState>(create: (context) => AppState(context)),
       ],
-      child: Consumer<AppLanguage>(builder: (context, model, child) {
-        return MaterialApp(
-          title: 'StudyU',
-          theme: theme,
-          initialRoute: Routes.loading,
-          onGenerateRoute: Routes.generateRoute,
-          onUnknownRoute: Routes.unknownRoute,
-          locale: model.appLocal,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-        );
-      }),
+      child: Consumer<AppLanguage>(
+        builder: (context, model, child) {
+          return MaterialApp(
+            title: 'StudyU',
+            theme: theme,
+            initialRoute: Routes.loading,
+            onGenerateRoute: Routes.generateRoute,
+            onUnknownRoute: Routes.unknownRoute,
+            locale: model.appLocal,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+          );
+        },
+      ),
     );
   }
 }

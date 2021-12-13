@@ -33,13 +33,16 @@ class _EligibilityQuestionsDesignerState extends State<EligibilityQuestionsDesig
       child: Stack(
         children: [
           Center(
-              child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: SingleChildScrollView(
-                    child: QuestionnaireEditor(
-                        questionnaire: questionnaire,
-                        questionTypes: [BooleanQuestion.questionType, ChoiceQuestion.questionType]),
-                  ))),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: QuestionnaireEditor(
+                  questionnaire: questionnaire,
+                  questionTypes: [BooleanQuestion.questionType, ChoiceQuestion.questionType],
+                ),
+              ),
+            ),
+          ),
           DesignerAddButton(label: Text(AppLocalizations.of(context).add_question), add: _addQuestion),
         ],
       ),

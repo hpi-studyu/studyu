@@ -26,7 +26,7 @@ abstract class Question<V> {
 
   Question(this.type);
 
-  Question.withId(this.type) : id = Uuid().v4();
+  Question.withId(this.type) : id = const Uuid().v4();
 
   factory Question.fromJson(Map<String, dynamic> data) {
     return questionTypes[data[keyType]]!(data) as Question<V>;

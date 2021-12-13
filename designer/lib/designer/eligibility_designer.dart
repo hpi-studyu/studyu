@@ -42,17 +42,25 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
           ? Stack(
               children: [
                 Center(
-                    child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: SingleChildScrollView(
-                            child: Column(children: <Widget>[
-                          ..._eligibility.asMap().entries.map((entry) => EligibilityCriterionEditor(
-                              key: UniqueKey(),
-                              eligibilityCriterion: entry.value,
-                              questions: _questions,
-                              remove: () => _removeEligibilityCriterion(entry.key))),
-                          SizedBox(height: 200)
-                        ])))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          ..._eligibility.asMap().entries.map(
+                                (entry) => EligibilityCriterionEditor(
+                                  key: UniqueKey(),
+                                  eligibilityCriterion: entry.value,
+                                  questions: _questions,
+                                  remove: () => _removeEligibilityCriterion(entry.key),
+                                ),
+                              ),
+                          const SizedBox(height: 200)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 DesignerAddButton(label: Text(AppLocalizations.of(context).add_criterion), add: _addCriterion),
               ],
             )

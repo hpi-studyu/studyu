@@ -21,10 +21,10 @@ Future<void> loadEnv() async {
   final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL'];
   final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY'];
   await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey: supabaseAnonKey,
-      authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
-      debug: true // optional
-      );
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
+    authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
+    debug: true, // optional
+  );
   env.loadEnv(dotenv.env, supabaseClient: Supabase.instance.client);
 }

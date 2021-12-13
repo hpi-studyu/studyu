@@ -29,21 +29,25 @@ class _SettingsState extends State<Settings> {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
     for (final locale in AppLocalizations.supportedLocales) {
-      dropDownItems.add(DropdownMenuItem(
-        value: locale,
-        child: Text(localeName(context, locale.languageCode)),
-      ));
+      dropDownItems.add(
+        DropdownMenuItem(
+          value: locale,
+          child: Text(localeName(context, locale.languageCode)),
+        ),
+      );
     }
 
-    dropDownItems.add(DropdownMenuItem(
-      child: Text('System'),
-    ));
+    dropDownItems.add(
+      const DropdownMenuItem(
+        child: Text('System'),
+      ),
+    );
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text('${AppLocalizations.of(context).language}:'),
-        SizedBox(
+        const SizedBox(
           width: 5,
         ),
         DropdownButton<Locale>(
@@ -73,21 +77,23 @@ class _SettingsState extends State<Settings> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             getDropdownRow(context),
-            SizedBox(height: 24),
-            Text('${AppLocalizations.of(context).study_current} ${subject.study.title}',
-                style: theme.textTheme.headline6),
-            SizedBox(height: 8),
+            const SizedBox(height: 24),
+            Text(
+              '${AppLocalizations.of(context).study_current} ${subject.study.title}',
+              style: theme.textTheme.headline6,
+            ),
+            const SizedBox(height: 8),
             ElevatedButton.icon(
-              icon: Icon(MdiIcons.exitToApp),
+              icon: const Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context).opt_out),
               style: ElevatedButton.styleFrom(primary: Colors.orange[800]),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
               },
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             ElevatedButton.icon(
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context).delete_data),
               style: ElevatedButton.styleFrom(primary: Colors.red),
               onPressed: () {
@@ -110,20 +116,26 @@ class OptOutAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text('Opt-out of study?'),
+      title: const Text('Opt-out of study?'),
       content: RichText(
-        text: TextSpan(style: TextStyle(color: Colors.black), children: [
-          TextSpan(text: 'The progress of your current study '),
-          TextSpan(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black),
+          children: [
+            const TextSpan(text: 'The progress of your current study '),
+            TextSpan(
               text: subject.study.title,
-              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
-          TextSpan(text: ' will be deleted and cannot be recovered. Previously completed studies will not be deleted.'),
-        ]),
+              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const TextSpan(
+              text: ' will be deleted and cannot be recovered. Previously completed studies will not be deleted.',
+            ),
+          ],
+        ),
       ),
       actions: [
         ElevatedButton.icon(
-          icon: Icon(MdiIcons.exitToApp),
-          label: Text('Opt-out'),
+          icon: const Icon(MdiIcons.exitToApp),
+          label: const Text('Opt-out'),
           style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
           onPressed: () async {
             subject.delete();
@@ -139,13 +151,14 @@ class OptOutAlertDialog extends StatelessWidget {
 class DeleteAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Delete all local data?'),
-        content: Text(
-            'You will not be able to restore your data. Your anonymized data may still be used for research purposes.'),
+        title: const Text('Delete all local data?'),
+        content: const Text(
+          'You will not be able to restore your data. Your anonymized data may still be used for research purposes.',
+        ),
         actions: [
           ElevatedButton.icon(
-            icon: Icon(Icons.delete),
-            label: Text('Delete all local data'),
+            icon: const Icon(Icons.delete),
+            label: const Text('Delete all local data'),
             style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
             onPressed: () async {
               UserQueries.deleteLocalData();

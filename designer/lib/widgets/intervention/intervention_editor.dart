@@ -24,9 +24,11 @@ class _InterventionEditorState extends State<InterventionEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   Future<void> _pickIcon() async {
-    final icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.custom,
-        customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)});
+    final icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackMode: IconPack.custom,
+      customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)},
+    );
 
     final iconName = iconMap.keys.firstWhere((k) => iconMap[k] == icon.codePoint, orElse: () => null);
     setState(() {
@@ -51,64 +53,78 @@ class _InterventionEditorState extends State<InterventionEditor> {
     return Column(
       children: [
         Card(
-          margin: EdgeInsets.all(10),
-          child: Column(children: [
-            ListTile(
-              title: Text(AppLocalizations.of(context).intervention),
-              trailing: DeleteButton(onPressed: widget.remove),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(children: [
-                FormBuilder(
-                    key: _editFormKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    // readonly: true,
-                    child: Column(
-                      children: <Widget>[
-                        FormBuilderTextField(
+          margin: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(AppLocalizations.of(context).intervention),
+                trailing: DeleteButton(onPressed: widget.remove),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    FormBuilder(
+                      key: _editFormKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // readonly: true,
+                      child: Column(
+                        children: <Widget>[
+                          FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'name',
                             maxLength: 40,
                             decoration: InputDecoration(labelText: AppLocalizations.of(context).name),
-                            initialValue: widget.intervention.name),
-                        Row(children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: _pickIcon,
-                              child: Text(AppLocalizations.of(context).choose_icon),
-                            ),
+                            initialValue: widget.intervention.name,
                           ),
-                          if (MdiIcons.fromString(widget.intervention.icon) != null)
-                            Expanded(child: Icon(MdiIcons.fromString(widget.intervention.icon)))
-                        ]),
-                        FormBuilderTextField(
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: _pickIcon,
+                                  child: Text(AppLocalizations.of(context).choose_icon),
+                                ),
+                              ),
+                              if (MdiIcons.fromString(widget.intervention.icon) != null)
+                                Expanded(child: Icon(MdiIcons.fromString(widget.intervention.icon)))
+                            ],
+                          ),
+                          FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'description',
                             decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
-                            initialValue: widget.intervention.description),
-                      ],
-                    )),
-                ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: widget.intervention.tasks.length,
-                    itemBuilder: (buildContext, index) {
-                      return TaskEditor(
-                          key: UniqueKey(), task: widget.intervention.tasks[index], remove: () => _removeTask(index));
-                    }),
-                ElevatedButton.icon(
-                    onPressed: _addCheckMarkTask,
-                    icon: Icon(Icons.add),
-                    style: ElevatedButton.styleFrom(primary: Colors.green),
-                    label: Text(AppLocalizations.of(context).add_task)),
-              ]),
-            ),
-          ]),
+                            initialValue: widget.intervention.description,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: widget.intervention.tasks.length,
+                      itemBuilder: (buildContext, index) {
+                        return TaskEditor(
+                          key: UniqueKey(),
+                          task: widget.intervention.tasks[index],
+                          remove: () => _removeTask(index),
+                        );
+                      },
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: _addCheckMarkTask,
+                      icon: const Icon(Icons.add),
+                      style: ElevatedButton.styleFrom(primary: Colors.green),
+                      label: Text(AppLocalizations.of(context).add_task),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

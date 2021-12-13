@@ -33,20 +33,21 @@ class _ContactScreenState extends State<ContactScreen> {
         children: <Widget>[
           Container(
             alignment: Alignment.topCenter,
-            child: Image(
+            child: const Image(
               image: AssetImage('assets/images/icon_wide.png'),
               height: 80,
             ),
           ),
           RetryFutureBuilder<Contact>(
-              tryFunction: AppConfig.getAppContact,
-              successBuilder: (BuildContext context, Contact appSupportContact) => ContactWidget(
-                    contact: appSupportContact,
-                    title: AppLocalizations.of(context).app_support,
-                    subtitle: AppLocalizations.of(context).app_support_text,
-                    color: theme.primaryColor,
-                  )),
-          SizedBox(height: 20),
+            tryFunction: AppConfig.getAppContact,
+            successBuilder: (BuildContext context, Contact appSupportContact) => ContactWidget(
+              contact: appSupportContact,
+              title: AppLocalizations.of(context).app_support,
+              subtitle: AppLocalizations.of(context).app_support_text,
+              color: theme.primaryColor,
+            ),
+          ),
+          const SizedBox(height: 20),
           ContactWidget(
             contact: studyContact,
             title: AppLocalizations.of(context).study_support,
@@ -141,9 +142,14 @@ class ContactItem extends StatelessWidget {
   final ContactItemType type;
   final Color iconColor;
 
-  const ContactItem(
-      {@required this.itemName, @required this.itemValue, @required this.iconData, this.type, this.iconColor, Key key})
-      : super(key: key);
+  const ContactItem({
+    @required this.itemName,
+    @required this.itemValue,
+    @required this.iconData,
+    this.type,
+    this.iconColor,
+    Key key,
+  }) : super(key: key);
 
   void launchContact() {
     {

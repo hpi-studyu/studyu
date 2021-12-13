@@ -28,14 +28,14 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
 
   Widget _buildInterventionSelectionExplanation(ThemeData theme) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Column(
         children: [
           Text(
             AppLocalizations.of(context).please_select_interventions,
             style: theme.textTheme.subtitle1,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).please_select_interventions_description,
             style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
@@ -52,15 +52,17 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     }
 
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: interventions.length,
       itemBuilder: (_context, index) => Card(
-        child: InterventionCard(interventions[index],
-            showCheckbox: true,
-            showDescription: false,
-            selected: selectedInterventionIds.any((interventionId) => interventionId == interventions[index].id),
-            onTap: () => onSelect(interventions[index].id)),
+        child: InterventionCard(
+          interventions[index],
+          showCheckbox: true,
+          showDescription: false,
+          selected: selectedInterventionIds.any((interventionId) => interventionId == interventions[index].id),
+          onTap: () => onSelect(interventions[index].id),
+        ),
       ),
     );
   }
@@ -79,7 +81,11 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Future<void> onFinished() async {
     final appState = context.read<AppState>();
     appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy, Supabase.instance.client.auth.user().id, selectedInterventionIds, appState.inviteCode);
+      appState.selectedStudy,
+      Supabase.instance.client.auth.user().id,
+      selectedInterventionIds,
+      appState.inviteCode,
+    );
     Navigator.pushNamed(context, Routes.journey);
   }
 
@@ -89,7 +95,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).intervention_selection_title),
-        leading: Icon(MdiIcons.formatListChecks),
+        leading: const Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -100,7 +106,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
               children: [
                 _buildInterventionSelectionExplanation(theme),
                 _buildInterventionSelectionList(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
             ),
           ),

@@ -10,7 +10,8 @@ Future<Study> publishStudy(BuildContext context, Study study) async {
     final savedStudy = await study.save();
     if (savedStudy != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).was_saved_and_published}')));
+        SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).was_saved_and_published}')),
+      );
       return savedStudy;
     } else {
       ScaffoldMessenger.of(context)
@@ -44,19 +45,24 @@ class PublishAlertDialog extends StatelessWidget {
     return AlertDialog(
       title: Text(AppLocalizations.of(context).lock_and_publish),
       content: RichText(
-        text: TextSpan(style: TextStyle(color: Colors.black), children: [
-          TextSpan(text: 'The study '),
-          TextSpan(
-              text: studyTitle, style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
-          TextSpan(text: AppLocalizations.of(context).really_want_to_publish),
-        ]),
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black),
+          children: [
+            const TextSpan(text: 'The study '),
+            TextSpan(
+              text: studyTitle,
+              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            TextSpan(text: AppLocalizations.of(context).really_want_to_publish),
+          ],
+        ),
       ),
       actions: [
         ElevatedButton.icon(
           onPressed: () async {
             Navigator.pop(context, true);
           },
-          icon: Icon(Icons.publish),
+          icon: const Icon(Icons.publish),
           style: ElevatedButton.styleFrom(primary: Colors.green, elevation: 0),
           label: Text('${AppLocalizations.of(context).publish} $studyTitle'),
         )

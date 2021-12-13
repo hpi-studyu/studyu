@@ -14,7 +14,7 @@ abstract class GenericSection extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: buildContent(context),
           ),
         ),

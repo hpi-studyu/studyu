@@ -12,8 +12,12 @@ import '../../../routes.dart';
 import '../../../widgets/bottom_onboarding_navigation.dart';
 import '../../../widgets/study_tile.dart';
 
-Future<void> navigateToStudyOverview(BuildContext context, Study study,
-    {String inviteCode, List<String> preselectedIds}) async {
+Future<void> navigateToStudyOverview(
+  BuildContext context,
+  Study study, {
+  String inviteCode,
+  List<String> preselectedIds,
+}) async {
   context.read<AppState>().preselectedInterventionIds = preselectedIds;
   context.read<AppState>().inviteCode = inviteCode;
   context.read<AppState>().selectedStudy = study;
@@ -30,36 +34,38 @@ class StudySelectionScreen extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     Text(
                       AppLocalizations.of(context).study_selection_description,
                       style: theme.textTheme.headline5,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     RichText(
-                      text: TextSpan(children: [
-                        TextSpan(
-                          text: AppLocalizations.of(context).study_selection_single,
-                          style: theme.textTheme.subtitle2,
-                        ),
-                        TextSpan(
-                          text: ' ',
-                          style: theme.textTheme.subtitle2,
-                        ),
-                        TextSpan(
-                          text: AppLocalizations.of(context).study_selection_single_why,
-                          style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    content: Text(AppLocalizations.of(context).study_selection_single_reason),
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: AppLocalizations.of(context).study_selection_single,
+                            style: theme.textTheme.subtitle2,
+                          ),
+                          TextSpan(
+                            text: ' ',
+                            style: theme.textTheme.subtitle2,
+                          ),
+                          TextSpan(
+                            text: AppLocalizations.of(context).study_selection_single_why,
+                            style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      content: Text(AppLocalizations.of(context).study_selection_single_reason),
+                                    ),
                                   ),
-                                ),
-                        )
-                      ]),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -69,33 +75,37 @@ class StudySelectionScreen extends StatelessWidget {
                   tryFunction: () async => Study.publishedPublicStudies(),
                   successBuilder: (BuildContext context, List<Study> studies) {
                     return ListView.builder(
-                        itemCount: studies.length,
-                        itemBuilder: (context, index) {
-                          return Hero(
-                              tag: 'study_tile_${studies[index].id}',
-                              child: Material(
-                                  child: StudyTile.fromStudy(
-                                study: studies[index],
-                                onTap: () => navigateToStudyOverview(context, studies[index]),
-                              )));
-                        });
+                      itemCount: studies.length,
+                      itemBuilder: (context, index) {
+                        return Hero(
+                          tag: 'study_tile_${studies[index].id}',
+                          child: Material(
+                            child: StudyTile.fromStudy(
+                              study: studies[index],
+                              onTap: () => navigateToStudyOverview(context, studies[index]),
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
-                    icon: Icon(MdiIcons.key),
-                    onPressed: () async {
-                      await showDialog(context: context, builder: (_) => InviteCodeDialog());
-                    },
-                    label: Text(AppLocalizations.of(context).invite_code_button)),
+                  icon: const Icon(MdiIcons.key),
+                  onPressed: () async {
+                    await showDialog(context: context, builder: (_) => InviteCodeDialog());
+                  },
+                  label: Text(AppLocalizations.of(context).invite_code_button),
+                ),
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(hideNext: true),
+      bottomNavigationBar: const BottomOnboardingNavigation(hideNext: true),
     );
   }
 }
@@ -126,7 +136,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         ),
         actions: [
           OutlinedButton.icon(
-            icon: Icon(Icons.arrow_forward),
+            icon: const Icon(Icons.arrow_forward),
             label: Text(AppLocalizations.of(context).next),
             onPressed: () async {
               final res = await Supabase.instance.client
@@ -154,8 +164,12 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 if (result.containsKey('preselected_intervention_ids') &&
                     result['preselected_intervention_ids'] != null) {
                   final preselectedIds = List<String>.from(result['preselected_intervention_ids'] as List);
-                  await navigateToStudyOverview(context, study,
-                      inviteCode: _controller.text, preselectedIds: preselectedIds);
+                  await navigateToStudyOverview(
+                    context,
+                    study,
+                    inviteCode: _controller.text,
+                    preselectedIds: preselectedIds,
+                  );
                 } else {
                   await navigateToStudyOverview(context, study, inviteCode: _controller.text);
                 }

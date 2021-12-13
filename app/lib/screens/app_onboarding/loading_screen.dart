@@ -46,19 +46,25 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     }
     StudySubject subject;
     try {
-      subject = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId, selectedColumns: [
-        '*',
-        'study!study_subject_studyId_fkey(*)',
-        'subject_progress(*)',
-      ]);
+      subject = await SupabaseQuery.getById<StudySubject>(
+        selectedStudyObjectId,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+      );
     } catch (e) {
       // Try signing in again. Needed if JWT is expired
       await UserQueries.signInParticipant();
-      subject = await SupabaseQuery.getById<StudySubject>(selectedStudyObjectId, selectedColumns: [
-        '*',
-        'study!study_subject_studyId_fkey(*)',
-        'subject_progress(*)',
-      ]);
+      subject = await SupabaseQuery.getById<StudySubject>(
+        selectedStudyObjectId,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+      );
     } finally {
       if (subject != null) {
         model.activeSubject = subject;
@@ -85,7 +91,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
                 '${AppLocalizations.of(context).loading}...',
                 style: Theme.of(context).textTheme.headline4,
               ),
-              CircularProgressIndicator(),
+              const CircularProgressIndicator(),
             ],
           ),
         ),

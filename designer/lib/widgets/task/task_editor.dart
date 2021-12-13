@@ -26,11 +26,15 @@ class _TaskEditorState extends State<TaskEditor> {
     final taskBody = buildTaskBody();
 
     return Card(
-        margin: EdgeInsets.all(10),
-        child: Column(children: [
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        children: [
           ListTile(
             title: Row(
-              children: [Text('${widget.task.type[0].toUpperCase()}${widget.task.type.substring(1)}'), Text(' Task')],
+              children: [
+                Text('${widget.task.type[0].toUpperCase()}${widget.task.type.substring(1)}'),
+                const Text(' Task')
+              ],
             ),
             trailing: DeleteButton(
               onPressed: widget.remove,
@@ -38,45 +42,52 @@ class _TaskEditorState extends State<TaskEditor> {
           ),
           Padding(
             padding: const EdgeInsets.all(8),
-            child: Column(children: [
-              FormBuilder(
-                key: _editFormKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                // readonly: true,
-                child: Column(
-                  children: <Widget>[
-                    FormBuilderTextField(
+            child: Column(
+              children: [
+                FormBuilder(
+                  key: _editFormKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // readonly: true,
+                  child: Column(
+                    children: <Widget>[
+                      FormBuilderTextField(
                         onChanged: (value) {
                           saveFormChanges();
                         },
                         name: 'title',
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
-                        initialValue: widget.task.title),
-                    FormBuilderTextField(
+                        initialValue: widget.task.title,
+                      ),
+                      FormBuilderTextField(
                         onChanged: (value) {
                           saveFormChanges();
                         },
                         name: 'header',
-                        decoration: InputDecoration(labelText: 'Header'),
-                        initialValue: widget.task.header),
-                    FormBuilderTextField(
+                        decoration: const InputDecoration(labelText: 'Header'),
+                        initialValue: widget.task.header,
+                      ),
+                      FormBuilderTextField(
                         onChanged: (value) {
                           saveFormChanges();
                         },
                         name: 'footer',
-                        decoration: InputDecoration(labelText: 'Footer'),
-                        initialValue: widget.task.footer),
-                  ],
+                        decoration: const InputDecoration(labelText: 'Footer'),
+                        initialValue: widget.task.footer,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (taskBody != null) taskBody,
-              Divider(),
-              TaskScheduleEditorSection(
-                task: widget.task,
-              )
-            ]),
+                if (taskBody != null) taskBody,
+                const Divider(),
+                TaskScheduleEditorSection(
+                  task: widget.task,
+                )
+              ],
+            ),
           )
-        ]));
+        ],
+      ),
+    );
   }
 
   Widget buildTaskBody() {

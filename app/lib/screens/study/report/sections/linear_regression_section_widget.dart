@@ -19,11 +19,14 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
     final values = section.resultProperty.retrieveFromResults(subject);
     final samples = values.entries.map((e) {
       final intervention = subject.getInterventionForDate(e.key).id;
-      return MapEntry([
-        subject.getDayOfStudyFor(e.key), //time
-        if (interventionOrder[intervention] == 1) 1 else 0, //A
-        if (interventionOrder[intervention] == 2) 1 else 0, //B
-      ], e.value);
+      return MapEntry(
+        [
+          subject.getDayOfStudyFor(e.key), //time
+          if (interventionOrder[intervention] == 1) 1 else 0, //A
+          if (interventionOrder[intervention] == 2) 1 else 0, //B
+        ],
+        e.value,
+      );
     });
 
     final regression = LinearRegression(samples);
@@ -44,8 +47,11 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
   charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) =>
       charts.NumericExtents(subject.study.schedule.includeBaseline ? 0 : 1, 2);
 
-  Widget _buildDiagram(BuildContext context, LinearRegressionResult<num> coefficients,
-      LinearRegressionResult<Range<num>> confidenceIntervals) {
+  Widget _buildDiagram(
+    BuildContext context,
+    LinearRegressionResult<num> coefficients,
+    LinearRegressionResult<Range<num>> confidenceIntervals,
+  ) {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
     return charts.NumericComboChart(
@@ -54,11 +60,12 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       behaviors: [
         charts.SeriesLegend(desiredMaxColumns: 2),
         charts.RangeAnnotation(
-            [PlotUtilities.createSeparator(coefficients.intercept, axis: charts.RangeAnnotationAxisType.measure)]),
+          [PlotUtilities.createSeparator(coefficients.intercept, axis: charts.RangeAnnotationAxisType.measure)],
+        ),
       ],
       domainAxis: charts.NumericAxisSpec(
         viewport: getExtents(numberOfPhases, phaseDuration),
-        tickProviderSpec: charts.StaticNumericTickProviderSpec(const []),
+        tickProviderSpec: const charts.StaticNumericTickProviderSpec([]),
       ),
       defaultRenderer: charts.BarRendererConfig<num>(
         groupingType: charts.BarGroupingType.stacked,
@@ -68,7 +75,9 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
   }
 
   List<charts.Series<_ResultDatum, num>> _getChartData(
-      LinearRegressionResult<num> coefficients, LinearRegressionResult<Range<num>> confidenceIntervals) {
+    LinearRegressionResult<num> coefficients,
+    LinearRegressionResult<Range<num>> confidenceIntervals,
+  ) {
     final colorPalette = PlotUtilities.getInterventionPalette(subject.selectedInterventions);
     final interventionNames = PlotUtilities.getInterventionNames(subject.selectedInterventions);
     final interventionOrder = PlotUtilities.getInterventionPositions(subject.selectedInterventions);
@@ -87,26 +96,37 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       if (subject.study.schedule.includeBaseline)
         Study.baselineID: _ResultDatum(interventionOrder[Study.baselineID], intercept, ciIntercept),
       interventionA: _ResultDatum(
-          interventionOrder[interventionA], intercept + factorA, Range(intercept + ciA.min, intercept + ciA.max)),
+        interventionOrder[interventionA],
+        intercept + factorA,
+        Range(intercept + ciA.min, intercept + ciA.max),
+      ),
       interventionB: _ResultDatum(
-          interventionOrder[interventionB], intercept + factorB, Range(intercept + ciB.min, intercept + ciB.max)),
+        interventionOrder[interventionB],
+        intercept + factorB,
+        Range(intercept + ciB.min, intercept + ciB.max),
+      ),
     }
         .entries
-        .map((entry) => charts.Series<_ResultDatum, num>(
-              id: entry.key,
-              displayName: interventionNames[entry.key],
-              seriesColor: colorPalette[entry.key],
-              domainFn: (datum, _) => datum.pos,
-              measureFn: (datum, _) => datum.value,
-              measureLowerBoundFn: (datum, _) => datum.confidenceInterval.min,
-              measureUpperBoundFn: (datum, _) => datum.confidenceInterval.max,
-              data: [entry.value],
-            ))
+        .map(
+          (entry) => charts.Series<_ResultDatum, num>(
+            id: entry.key,
+            displayName: interventionNames[entry.key],
+            seriesColor: colorPalette[entry.key],
+            domainFn: (datum, _) => datum.pos,
+            measureFn: (datum, _) => datum.value,
+            measureLowerBoundFn: (datum, _) => datum.confidenceInterval.min,
+            measureUpperBoundFn: (datum, _) => datum.confidenceInterval.max,
+            data: [entry.value],
+          ),
+        )
         .toList();
   }
 
   Widget _buildResultDescription(
-      BuildContext context, LinearRegressionResult<num> coefficients, LinearRegressionResult<num> pValues) {
+    BuildContext context,
+    LinearRegressionResult<num> coefficients,
+    LinearRegressionResult<num> pValues,
+  ) {
     final interventionNames = PlotUtilities.getInterventionNames(subject.selectedInterventions);
 
     var factorA = coefficients.variables[1];

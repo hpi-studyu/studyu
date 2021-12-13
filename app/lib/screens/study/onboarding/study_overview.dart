@@ -30,13 +30,21 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Future<void> navigateToJourney(BuildContext context) async {
     final appState = context.read<AppState>();
     if (appState.preselectedInterventionIds != null) {
-      appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, Supabase.instance.client.auth.user().id,
-          appState.preselectedInterventionIds, appState.inviteCode);
+      appState.activeSubject = StudySubject.fromStudy(
+        appState.selectedStudy,
+        Supabase.instance.client.auth.user().id,
+        appState.preselectedInterventionIds,
+        appState.inviteCode,
+      );
       Navigator.pushNamed(context, Routes.journey);
     } else if (study.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
-      appState.activeSubject = StudySubject.fromStudy(appState.selectedStudy, Supabase.instance.client.auth.user().id,
-          study.interventions.map((i) => i.id).toList(), appState.inviteCode);
+      appState.activeSubject = StudySubject.fromStudy(
+        appState.selectedStudy,
+        Supabase.instance.client.auth.user().id,
+        study.interventions.map((i) => i.id).toList(),
+        appState.inviteCode,
+      );
       Navigator.pushNamed(context, Routes.journey);
     } else {
       Navigator.pushNamed(context, Routes.interventionSelection);
@@ -59,7 +67,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(MdiIcons.textLong),
+        leading: const Icon(MdiIcons.textLong),
         title: Text(AppLocalizations.of(context).study_overview_title),
       ),
       body: SingleChildScrollView(
@@ -69,7 +77,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               tag: 'study_tile_${study.id}',
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             RetryFutureBuilder<Study>(
               tryFunction: () => SupabaseQuery.getById<Study>(study.id),
               successBuilder: (BuildContext context, Study study) {
@@ -114,7 +122,7 @@ class StudyDetailsView extends StatelessWidget {
           subtitle: Text('$studyLength ${AppLocalizations.of(context).days}'),
           leading: Icon(MdiIcons.calendar, color: theme.primaryColor, size: iconSize),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         ContactWidget(
           contact: study.contact,
           title: AppLocalizations.of(context).study_publisher,

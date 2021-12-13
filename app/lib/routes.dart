@@ -38,22 +38,24 @@ class Routes {
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
-        builder: (_) => Scaffold(
-              body: SafeArea(
-                child: Center(
-                    child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text('No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻'),
-                )),
-              ),
-            ));
+      builder: (_) => Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text('No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻'),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       // init Parse on our initial route
       case loading:
-        return MaterialPageRoute(builder: (_) => LoadingScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const LoadingScreen(), settings: settings);
       case dashboard:
         return MaterialPageRoute(builder: (_) => DashboardScreen(), settings: settings);
       case welcome:

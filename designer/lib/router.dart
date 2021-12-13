@@ -54,7 +54,7 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
   @override
   RouteInformation restoreRouteInformation(RoutePath configuration) {
     if (configuration is HomePath) {
-      return RouteInformation(location: '/');
+      return const RouteInformation(location: '/');
     }
     if (configuration is DetailsPath) {
       var location = '/${configuration.studyId}';
@@ -110,7 +110,7 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(key: ValueKey('Dashboard'), child: Dashboard()),
+        MaterialPage(key: const ValueKey('Dashboard'), child: Dashboard()),
         if (appState.selectedStudyId != null)
           MaterialPage(
             key: ValueKey('Details ${appState.selectedStudyId}'),
@@ -128,7 +128,7 @@ class RootRouterDelegate extends RouterDelegate<RoutePath>
           ),
         if (appState.showLoginPage)
           MaterialPage(
-            key: ValueKey('LoginPage'),
+            key: const ValueKey('LoginPage'),
             child: LoginPage(),
           ),
       ],

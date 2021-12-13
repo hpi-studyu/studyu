@@ -22,9 +22,11 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
   final GlobalKey<FormBuilderState> _editFormKey = GlobalKey<FormBuilderState>();
 
   Future<void> _pickIcon() async {
-    final icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.custom,
-        customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)});
+    final icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackMode: IconPack.custom,
+      customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)},
+    );
 
     final iconName = iconMap.keys.firstWhere((k) => iconMap[k] == icon.codePoint, orElse: () => null);
     setState(() {
@@ -37,51 +39,60 @@ class _ConsentItemEditorState extends State<ConsentItemEditor> {
     return Column(
       children: [
         Card(
-          margin: EdgeInsets.all(10),
-          child: Column(children: [
-            ListTile(
-              title: Text(AppLocalizations.of(context).consent_item),
-              trailing: DeleteButton(onPressed: widget.remove),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(children: [
-                FormBuilder(
-                    key: _editFormKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    // readonly: true,
-                    child: Column(
-                      children: <Widget>[
-                        FormBuilderTextField(
+          margin: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(AppLocalizations.of(context).consent_item),
+                trailing: DeleteButton(onPressed: widget.remove),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    FormBuilder(
+                      key: _editFormKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // readonly: true,
+                      child: Column(
+                        children: <Widget>[
+                          FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'title',
                             maxLength: 40,
                             decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
-                            initialValue: widget.consentItem.title),
-                        Row(children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: _pickIcon,
-                              child: Text(AppLocalizations.of(context).choose_icon),
-                            ),
+                            initialValue: widget.consentItem.title,
                           ),
-                          if (MdiIcons.fromString(widget.consentItem.iconName) != null)
-                            Expanded(child: Icon(MdiIcons.fromString(widget.consentItem.iconName)))
-                        ]),
-                        FormBuilderTextField(
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: _pickIcon,
+                                  child: Text(AppLocalizations.of(context).choose_icon),
+                                ),
+                              ),
+                              if (MdiIcons.fromString(widget.consentItem.iconName) != null)
+                                Expanded(child: Icon(MdiIcons.fromString(widget.consentItem.iconName)))
+                            ],
+                          ),
+                          FormBuilderTextField(
                             onChanged: (value) {
                               saveFormChanges();
                             },
                             name: 'description',
                             decoration: InputDecoration(labelText: AppLocalizations.of(context).description),
-                            initialValue: widget.consentItem.description),
-                      ],
-                    )),
-              ]),
-            ),
-          ]),
+                            initialValue: widget.consentItem.description,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

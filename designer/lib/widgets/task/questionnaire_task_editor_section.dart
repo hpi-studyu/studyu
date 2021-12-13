@@ -22,13 +22,16 @@ class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      QuestionnaireEditor(questionnaire: widget.task.questions, questionTypes: Question.questionTypes.keys.toList()),
-      ElevatedButton.icon(
+    return Column(
+      children: [
+        QuestionnaireEditor(questionnaire: widget.task.questions, questionTypes: Question.questionTypes.keys.toList()),
+        ElevatedButton.icon(
           onPressed: _addQuestion,
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           style: ElevatedButton.styleFrom(primary: Colors.green),
-          label: Text(AppLocalizations.of(context).add_question))
-    ]);
+          label: Text(AppLocalizations.of(context).add_question),
+        )
+      ],
+    );
   }
 }

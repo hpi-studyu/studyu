@@ -29,24 +29,32 @@ class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQues
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.question.annotations.length,
-        itemBuilder: (buildContext, index) {
-          return AnnotationEditor(
-              key: UniqueKey(), annotation: widget.question.annotations[index], remove: () => _removeAnnotation(index));
-        },
-      ),
-      Row(children: [
-        Spacer(),
-        ElevatedButton.icon(
-            onPressed: _addAnnotation,
-            icon: Icon(Icons.add),
-            style: ElevatedButton.styleFrom(primary: Colors.green),
-            label: Text(AppLocalizations.of(context).add_annotation)),
-        Spacer()
-      ])
-    ]);
+    return Column(
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.question.annotations.length,
+          itemBuilder: (buildContext, index) {
+            return AnnotationEditor(
+              key: UniqueKey(),
+              annotation: widget.question.annotations[index],
+              remove: () => _removeAnnotation(index),
+            );
+          },
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _addAnnotation,
+              icon: const Icon(Icons.add),
+              style: ElevatedButton.styleFrom(primary: Colors.green),
+              label: Text(AppLocalizations.of(context).add_annotation),
+            ),
+            const Spacer()
+          ],
+        )
+      ],
+    );
   }
 }

@@ -19,7 +19,9 @@ class EligibilityScreen extends StatefulWidget {
   final Study study;
 
   static MaterialPageRoute<EligibilityResult> routeFor({@required Study study}) => MaterialPageRoute(
-      builder: (_) => EligibilityScreen(study: study), settings: RouteSettings(name: '/eligibilityCheck'));
+        builder: (_) => EligibilityScreen(study: study),
+        settings: const RouteSettings(name: '/eligibilityCheck'),
+      );
 
   const EligibilityScreen({@required this.study, Key key}) : super(key: key);
 
@@ -70,7 +72,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-        leading: Icon(
+        leading: const Icon(
           MdiIcons.checkboxMarkedCircle,
           color: Colors.green,
           size: 32,
@@ -82,7 +84,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       );
 
   Widget _constructFailBanner() => MaterialBanner(
-        leading: Icon(
+        leading: const Icon(
           MdiIcons.closeCircle,
           color: Colors.red,
           size: 32,
@@ -91,9 +93,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(AppLocalizations.of(context).eligible_no, style: Theme.of(context).textTheme.subtitle1),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(activeResult.firstFailed.reason),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(AppLocalizations.of(context).eligible_mistake),
           ],
         ),
@@ -115,7 +117,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).eligibility_questionnaire_title),
-        leading: Icon(MdiIcons.clipboardList),
+        leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [
@@ -140,7 +142,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: activeResult?.eligible ?? false ? _finish : null,
-        progress: OnboardingProgress(stage: 0, progress: 0.5),
+        progress: const OnboardingProgress(stage: 0, progress: 0.5),
       ),
     );
   }

@@ -34,23 +34,25 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Column(children: [
-            Row(
-              children: [
-                Expanded(child: Text(widget.question.minimumAnnotation)),
-                FittedBox(child: Text(widget.question.maximumAnnotation)),
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(widget.question.minimumColor), Color(widget.question.maximumColor)],
-                ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Text(widget.question.minimumAnnotation)),
+                  FittedBox(child: Text(widget.question.maximumAnnotation)),
+                ],
               ),
-              constraints: BoxConstraints.expand(height: 4),
-            ),
-          ]),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(widget.question.minimumColor), Color(widget.question.maximumColor)],
+                  ),
+                ),
+                constraints: const BoxConstraints.expand(height: 4),
+              ),
+            ],
+          ),
         ),
         Slider(
           value: value,

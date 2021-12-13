@@ -56,7 +56,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   }
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-      await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().execute());
+        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().execute(),
+      );
 
   Future<T> save() async =>
       SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).execute()).single;
@@ -68,15 +69,17 @@ class SupabaseQuery {
 
   static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async =>
       extractSupabaseSingleRow(
-          await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute());
+        await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute(),
+      );
 
   static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
       SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).execute());
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
     catchPostgrestError(response);
-    return List<T>.from(List<Map<String, dynamic>>.from(response.data as List)
-        .map((json) => SupabaseObjectFunctions.fromJson<T>(json)));
+    return List<T>.from(
+      List<Map<String, dynamic>>.from(response.data as List).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
+    );
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(PostgrestResponse response) {

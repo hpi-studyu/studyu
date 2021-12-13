@@ -28,15 +28,18 @@ class _StudyDetailsState extends State<StudyDetails> {
 
   void reloadPage() {
     setState(() {
-      getStudy = () => SupabaseQuery.getById<Study>(widget.studyId, selectedColumns: [
-            '*',
-            'repo(*)',
-            'study_invite!study_invite_studyId_fkey(*)',
-            'study_participant_count',
-            'study_ended_count',
-            'active_subject_count',
-            'study_missed_days'
-          ]);
+      getStudy = () => SupabaseQuery.getById<Study>(
+            widget.studyId,
+            selectedColumns: [
+              '*',
+              'repo(*)',
+              'study_invite!study_invite_studyId_fkey(*)',
+              'study_participant_count',
+              'study_ended_count',
+              'active_subject_count',
+              'study_missed_days'
+            ],
+          );
     });
   }
 
@@ -49,25 +52,26 @@ class _StudyDetailsState extends State<StudyDetails> {
         return Scaffold(
           body: SafeArea(
             child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Header(study: study, reload: reloadPage),
-                      SizedBox(height: 8),
-                      Stats(study: study, reload: reloadPage),
-                      SizedBox(height: 8),
-                      NotebookOverview(studyId: study.id),
-                    ],
-                  ),
-                )),
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Header(study: study, reload: reloadPage),
+                    const SizedBox(height: 8),
+                    Stats(study: study, reload: reloadPage),
+                    const SizedBox(height: 8),
+                    NotebookOverview(studyId: study.id),
+                  ],
+                ),
+              ),
+            ),
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => appState.openDesigner(study.id),
             label: Text(study.canEdit(appState.user) ? 'Edit study' : 'View study'),
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
           ),
         );
       },

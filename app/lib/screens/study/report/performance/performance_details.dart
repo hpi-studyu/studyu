@@ -9,7 +9,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
   final StudySubject reportSubject;
 
   static MaterialPageRoute routeFor({@required StudySubject subject}) => MaterialPageRoute(
-      builder: (_) => PerformanceDetailsScreen(subject), settings: RouteSettings(name: Routes.performanceDetails));
+        builder: (_) => PerformanceDetailsScreen(subject),
+        settings: const RouteSettings(name: Routes.performanceDetails),
+      );
 
   const PerformanceDetailsScreen(this.reportSubject, {Key key}) : super(key: key);
 
@@ -38,12 +40,15 @@ class PerformanceDetailsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(AppLocalizations.of(context).performance_overview_interventions,
-                          style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppLocalizations.of(context).performance_overview_interventions,
+                      style: theme.textTheme.headline6.copyWith(color: theme.primaryColor),
+                    ),
+                  ),
                 ),
                 ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: interventions.length,
                   itemBuilder: (context, index) =>
@@ -52,16 +57,21 @@ class PerformanceDetailsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(AppLocalizations.of(context).performance_overview_observations,
-                          style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppLocalizations.of(context).performance_overview_observations,
+                      style: theme.textTheme.headline6.copyWith(color: theme.primaryColor),
+                    ),
+                  ),
                 ),
                 ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: reportSubject.study.observations.length,
                   itemBuilder: (context, index) => ObservationPerformanceBar(
-                      subject: reportSubject, observation: reportSubject.study.observations[index]),
+                    subject: reportSubject,
+                    observation: reportSubject.study.observations[index],
+                  ),
                 ),
               ],
             ),
@@ -86,10 +96,15 @@ class InterventionPerformanceBar extends StatelessWidget {
         child: Column(
           children: [
             InterventionCard(intervention, showTasks: false, showDescription: false),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ...intervention.tasks
-                .map((task) => PerformanceBar(
-                    task: task, completed: subject.completedTasksFor(task), total: subject.totalTaskCountFor(task)))
+                .map(
+                  (task) => PerformanceBar(
+                    task: task,
+                    completed: subject.completedTasksFor(task),
+                    total: subject.totalTaskCountFor(task),
+                  ),
+                )
                 .toList()
           ],
         ),
@@ -110,9 +125,10 @@ class ObservationPerformanceBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: PerformanceBar(
-            task: observation,
-            completed: subject.completedTasksFor(observation),
-            total: subject.totalTaskCountFor(observation)),
+          task: observation,
+          completed: subject.completedTasksFor(observation),
+          total: subject.totalTaskCountFor(observation),
+        ),
       ),
     );
   }
@@ -137,7 +153,7 @@ class PerformanceBar extends StatelessWidget {
             Text('$completed/$total'),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Stack(
           alignment: Alignment.center,
           children: [
@@ -146,8 +162,11 @@ class PerformanceBar extends StatelessWidget {
               value: completed / total,
             ),
             Center(
-                child: Text('${(completed / total * 100).toStringAsFixed(2).replaceAll('.00', '')} %',
-                    style: TextStyle(fontWeight: FontWeight.bold)))
+              child: Text(
+                '${(completed / total * 100).toStringAsFixed(2).replaceAll('.00', '')} %',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )
           ],
         )
       ],

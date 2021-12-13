@@ -23,11 +23,14 @@ class _NumericResultEditorSectionState extends State<NumericResultEditorSection>
       ...study.observations,
     ];
 
-    return Column(children: [
-      DataReferenceEditor<num>(
+    return Column(
+      children: [
+        DataReferenceEditor<num>(
           reference: widget.result.resultProperty,
           availableTaks: tasks,
-          updateReference: (reference) => setState(() => widget.result.resultProperty = reference))
-    ]);
+          updateReference: (reference) => setState(() => widget.result.resultProperty = reference),
+        )
+      ],
+    );
   }
 }

@@ -24,12 +24,13 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   String resultType;
   Result result;
 
-  SubjectProgress(
-      {required this.subjectId,
-      required this.interventionId,
-      required this.taskId,
-      required this.resultType,
-      required this.result});
+  SubjectProgress({
+    required this.subjectId,
+    required this.interventionId,
+    required this.taskId,
+    required this.resultType,
+    required this.result,
+  });
 
   factory SubjectProgress.fromJson(Map<String, dynamic> json) => _$SubjectProgressFromJson(json);
 

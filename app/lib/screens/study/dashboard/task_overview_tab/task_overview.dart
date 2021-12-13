@@ -40,9 +40,11 @@ class _TaskOverviewState extends State<TaskOverview> {
               child: Row(
                 children: [
                   Icon(Icons.access_time, color: theme.primaryColor),
-                  SizedBox(width: 8),
-                  Text(completionPeriod.toString(),
-                      style: theme.textTheme.subtitle2.copyWith(fontSize: 16, color: theme.primaryColor)),
+                  const SizedBox(width: 8),
+                  Text(
+                    completionPeriod.toString(),
+                    style: theme.textTheme.subtitle2.copyWith(fontSize: 16, color: theme.primaryColor),
+                  ),
                 ],
               ),
             ),
@@ -69,26 +71,31 @@ class _TaskOverviewState extends State<TaskOverview> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         ProgressRow(subject: widget.subject),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
-                  Spacer(),
+                  const Spacer(),
                   Text(
-                      '${widget.subject.daysLeftForPhase(widget.subject.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context).days_left}',
-                      style: TextStyle(color: primaryColor))
+                    '${widget.subject.daysLeftForPhase(widget.subject.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context).days_left}',
+                    style: const TextStyle(color: primaryColor),
+                  )
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               InterventionCardTitle(intervention: widget.subject.getInterventionForDate(DateTime.now())),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(AppLocalizations.of(context).today_tasks, style: theme.textTheme.headline6)
-            ])),
+            ],
+          ),
+        ),
         // Todo: find good way to calculate duration of intervention and display it
         Expanded(
           child: ListView(

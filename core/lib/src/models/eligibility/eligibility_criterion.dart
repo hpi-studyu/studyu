@@ -16,7 +16,7 @@ class EligibilityCriterion {
   EligibilityCriterion(this.id);
 
   EligibilityCriterion.withId()
-      : id = Uuid().v4(),
+      : id = const Uuid().v4(),
         condition = BooleanExpression();
 
   factory EligibilityCriterion.fromJson(Map<String, dynamic> data) => _$EligibilityCriterionFromJson(data);

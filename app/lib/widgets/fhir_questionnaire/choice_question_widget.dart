@@ -42,36 +42,43 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   }
 
   void confirm() {
-    widget.onDone(fhir.QuestionnaireResponseItem(
+    widget.onDone(
+      fhir.QuestionnaireResponseItem(
         linkId: widget.question.linkId,
-        answer: selected.map((answer) => fhir.QuestionnaireResponseAnswer(valueCoding: answer)).toList()));
+        answer: selected.map((answer) => fhir.QuestionnaireResponseAnswer(valueCoding: answer)).toList(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final choiceWidgets = widget.question.answerOption
-        .map<Widget>((choice) => SelectableButton(
-              selected: selected.contains(choice.valueCoding),
-              onTap: () => tapped(choice.valueCoding),
-              child: Text(choice.valueCoding.display),
-            ))
+        .map<Widget>(
+          (choice) => SelectableButton(
+            selected: selected.contains(choice.valueCoding),
+            onTap: () => tapped(choice.valueCoding),
+            child: Text(choice.valueCoding.display),
+          ),
+        )
         .toList();
 
     if (widget.question.repeats?.value ?? false) {
-      choiceWidgets.add(ElevatedButton(
-        onPressed: confirm,
-        style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
-        child: Text(AppLocalizations.of(context).confirm),
-      ));
+      choiceWidgets.add(
+        ElevatedButton(
+          onPressed: confirm,
+          style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
+          child: Text(AppLocalizations.of(context).confirm),
+        ),
+      );
     }
 
     return ListView.separated(
       key: widget.key,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: choiceWidgets.length,
       itemBuilder: (context, index) => choiceWidgets[index],
-      separatorBuilder: (context, index) => SizedBox(height: 8),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
     );
   }
 }

@@ -16,7 +16,7 @@ abstract class Task {
 
   Task(this.type);
 
-  Task.withId(this.type) : id = Uuid().v4();
+  Task.withId(this.type) : id = const Uuid().v4();
 
   Map<String, dynamic> toJson();
 

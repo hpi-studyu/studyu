@@ -24,10 +24,13 @@ class LinearRegression {
 
   LinearRegression(Iterable<MapEntry<List<num>, num>> samples) {
     final numVariables = samples.first.key.length;
-    designMatrix = Matrix(samples.map((sample) {
-      if (sample.key.length != numVariables) throw ArgumentError('Not all samples have the same number of variables.');
-      return [1, ...sample.key];
-    }).toList());
+    designMatrix = Matrix(
+      samples.map((sample) {
+        if (sample.key.length != numVariables)
+          throw ArgumentError('Not all samples have the same number of variables.');
+        return [1, ...sample.key];
+      }).toList(),
+    );
     dependentValues = Vector(samples.map((e) => e.value).toList());
     _coefficientDistribution = StudentT(_getDegreesOfFreedom().toDouble());
   }
@@ -97,8 +100,10 @@ class LinearRegression {
     final radius = _getConfidenceRadius(alpha);
     final lower = (coeffecients - radius).toList();
     final upper = (coeffecients + radius).toList();
-    return LinearRegressionResult(Range(lower.first, upper.first),
-        Iterable<int>.generate(designMatrix.columns - 1).map((e) => Range(lower[e + 1], upper[e + 1])).toList());
+    return LinearRegressionResult(
+      Range(lower.first, upper.first),
+      Iterable<int>.generate(designMatrix.columns - 1).map((e) => Range(lower[e + 1], upper[e + 1])).toList(),
+    );
   }
 
   num _squaredStandardError() => _getResiduals().dot(_getResiduals()) / _getDegreesOfFreedom();

@@ -65,7 +65,7 @@ class QuestionContainer extends StatelessWidget {
               subtitle: questionBody.subtitle,
               rationale: question.rationale,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             questionBody,
           ],
         ),

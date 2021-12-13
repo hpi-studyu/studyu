@@ -15,7 +15,7 @@ class DesignerAddButton extends StatelessWidget {
         child: FloatingActionButton.extended(
           onPressed: add,
           label: label,
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           backgroundColor: Colors.green,
         ),
       ),

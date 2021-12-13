@@ -23,13 +23,15 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   Map<String, String> designerTerms;
   Map<String, String> imprint;
 
-  AppConfig(this.id,
-      {required this.contact,
-      required this.appPrivacy,
-      required this.appTerms,
-      required this.designerPrivacy,
-      required this.designerTerms,
-      required this.imprint});
+  AppConfig(
+    this.id, {
+    required this.contact,
+    required this.appPrivacy,
+    required this.appTerms,
+    required this.designerPrivacy,
+    required this.designerTerms,
+    required this.imprint,
+  });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
 

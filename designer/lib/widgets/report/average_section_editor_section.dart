@@ -24,25 +24,33 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
       ...study.observations,
     ];
 
-    return Column(children: [
-      Row(children: [
-        Text(AppLocalizations.of(context).temporal_aggregation),
-        SizedBox(width: 10),
-        DropdownButton<TemporalAggregation>(
-          value: widget.section.aggregate,
-          onChanged: _changeAggregation,
-          items: TemporalAggregation.values
-              .map((aggregation) => DropdownMenuItem(
-                  value: aggregation,
-                  child: Text(aggregation.toString().substring(aggregation.toString().indexOf('.') + 1))))
-              .toList(),
-        )
-      ]),
-      DataReferenceEditor<num>(
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(AppLocalizations.of(context).temporal_aggregation),
+            const SizedBox(width: 10),
+            DropdownButton<TemporalAggregation>(
+              value: widget.section.aggregate,
+              onChanged: _changeAggregation,
+              items: TemporalAggregation.values
+                  .map(
+                    (aggregation) => DropdownMenuItem(
+                      value: aggregation,
+                      child: Text(aggregation.toString().substring(aggregation.toString().indexOf('.') + 1)),
+                    ),
+                  )
+                  .toList(),
+            )
+          ],
+        ),
+        DataReferenceEditor<num>(
           reference: widget.section.resultProperty,
           availableTaks: tasks,
-          updateReference: (reference) => setState(() => widget.section.resultProperty = reference)),
-    ]);
+          updateReference: (reference) => setState(() => widget.section.resultProperty = reference),
+        ),
+      ],
+    );
   }
 
   void _changeAggregation(TemporalAggregation value) {

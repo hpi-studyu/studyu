@@ -16,48 +16,55 @@ class Stats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ExpansionTile(
-        childrenPadding: EdgeInsets.all(16),
+        childrenPadding: const EdgeInsets.all(16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
-        leading: Icon(MdiIcons.chartLine),
+        leading: const Icon(MdiIcons.chartLine),
         title: IntrinsicHeight(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Statistics', style: TextStyle(fontSize: 20)),
-              Spacer(),
+              const Text('Statistics', style: TextStyle(fontSize: 20)),
+              const Spacer(),
               IconLabel(label: study.participantCount.toString(), iconData: MdiIcons.accountGroup, color: Colors.red),
-              VerticalDivider(),
+              const VerticalDivider(),
               IconLabel(label: study.endedCount.toString(), iconData: MdiIcons.flagCheckered, color: Colors.black),
-              VerticalDivider(),
+              const VerticalDivider(),
               IconLabel(label: study.activeSubjectCount.toString(), iconData: MdiIcons.run, color: Colors.green),
-              VerticalDivider(),
+              const VerticalDivider(),
               IconLabel(
-                  label: study.totalMissedDays.toString(), iconData: MdiIcons.calendarRemove, color: Colors.orange),
+                label: study.totalMissedDays.toString(),
+                iconData: MdiIcons.calendarRemove,
+                color: Colors.orange,
+              ),
             ],
           ),
         ),
         children: [
           IconLabel(
-              label: '${study.participantCount.toString()} total participants',
-              iconData: MdiIcons.accountGroup,
-              color: Colors.red),
-          SizedBox(height: 16),
+            label: '${study.participantCount.toString()} total participants',
+            iconData: MdiIcons.accountGroup,
+            color: Colors.red,
+          ),
+          const SizedBox(height: 16),
           IconLabel(
-              label: '${study.endedCount.toString()} studies have ended.',
-              iconData: MdiIcons.flagCheckered,
-              color: Colors.black),
-          SizedBox(height: 16),
+            label: '${study.endedCount.toString()} studies have ended.',
+            iconData: MdiIcons.flagCheckered,
+            color: Colors.black,
+          ),
+          const SizedBox(height: 16),
           IconLabel(
-              label: '${study.activeSubjectCount.toString()} participants have completed a task in the last 3 days',
-              iconData: MdiIcons.run,
-              color: Colors.green),
-          SizedBox(height: 16),
+            label: '${study.activeSubjectCount.toString()} participants have completed a task in the last 3 days',
+            iconData: MdiIcons.run,
+            color: Colors.green,
+          ),
+          const SizedBox(height: 16),
           IconLabel(
-              label:
-                  '${study.totalMissedDays} total days missed by participants (${(study.percentageMissedDays * 100).toStringAsFixed(2)}%)',
-              iconData: MdiIcons.calendarRemove,
-              color: Colors.orange),
-          SizedBox(height: 36),
+            label:
+                '${study.totalMissedDays} total days missed by participants (${(study.percentageMissedDays * 100).toStringAsFixed(2)}%)',
+            iconData: MdiIcons.calendarRemove,
+            color: Colors.orange,
+          ),
+          const SizedBox(height: 36),
           SizedBox(
             height: MediaQuery.of(context).size.height / 3,
             child: BarChartView(_missedDaysHistogramData(study), color: Colors.orange),
@@ -72,5 +79,7 @@ Map<int, num> _missedDaysHistogramData(Study study) {
   final missedDaysCount =
       study.missedDays.groupFoldBy<int, int>((element) => element, (total, e) => total != null ? total += 1 : 1);
   return List.generate(
-      study.schedule.length + 1, (index) => missedDaysCount.containsKey(index) ? missedDaysCount[index] : 0).asMap();
+    study.schedule.length + 1,
+    (index) => missedDaysCount.containsKey(index) ? missedDaysCount[index] : 0,
+  ).asMap();
 }

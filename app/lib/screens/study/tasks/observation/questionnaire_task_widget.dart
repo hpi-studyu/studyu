@@ -27,11 +27,13 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
       await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
       Navigator.pop(context, true);
     } on PostgrestError {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).could_not_save_results),
-        duration: Duration(seconds: 10),
-        action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResult(response, context)),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).could_not_save_results),
+          duration: const Duration(seconds: 10),
+          action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResult(response, context)),
+        ),
+      );
     }
   }
 
@@ -61,20 +63,23 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           ),
           if (response != null)
             ElevatedButton.icon(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-                onPressed: () {
-                  switch (response.runtimeType) {
-                    case QuestionnaireState:
-                      _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
-                      break;
-                    case fhir.QuestionnaireResponse:
-                      _addQuestionnaireResult<fhir.QuestionnaireResponse>(
-                          response as fhir.QuestionnaireResponse, context);
-                      break;
-                  }
-                },
-                icon: Icon(Icons.check),
-                label: Text('Complete'))
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+              onPressed: () {
+                switch (response.runtimeType) {
+                  case QuestionnaireState:
+                    _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
+                    break;
+                  case fhir.QuestionnaireResponse:
+                    _addQuestionnaireResult<fhir.QuestionnaireResponse>(
+                      response as fhir.QuestionnaireResponse,
+                      context,
+                    );
+                    break;
+                }
+              },
+              icon: const Icon(Icons.check),
+              label: const Text('Complete'),
+            )
         ],
       ),
     );

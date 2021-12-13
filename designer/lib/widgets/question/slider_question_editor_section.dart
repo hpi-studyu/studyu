@@ -24,31 +24,38 @@ class _SliderQuestionEditorSectionState extends State<SliderQuestionEditorSectio
     return Column(
       children: [
         FormBuilder(
-            key: _editFormKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            // readonly: true,
-            child: Column(children: <Widget>[
+          key: _editFormKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          // readonly: true,
+          child: Column(
+            children: <Widget>[
               FormBuilderTextField(
-                  onChanged: _saveFormChanges,
-                  name: 'minimum',
-                  decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum),
-                  initialValue: widget.question.minimum.toString()),
+                onChanged: _saveFormChanges,
+                name: 'minimum',
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum),
+                initialValue: widget.question.minimum.toString(),
+              ),
               FormBuilderTextField(
-                  onChanged: _saveFormChanges,
-                  name: 'maximum',
-                  decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum),
-                  initialValue: widget.question.maximum.toString()),
+                onChanged: _saveFormChanges,
+                name: 'maximum',
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum),
+                initialValue: widget.question.maximum.toString(),
+              ),
               FormBuilderTextField(
-                  onChanged: _saveFormChanges,
-                  name: 'initial',
-                  decoration: InputDecoration(labelText: AppLocalizations.of(context).initial),
-                  initialValue: widget.question.initial.toString()),
+                onChanged: _saveFormChanges,
+                name: 'initial',
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).initial),
+                initialValue: widget.question.initial.toString(),
+              ),
               FormBuilderTextField(
-                  onChanged: _saveFormChanges,
-                  name: 'step',
-                  decoration: InputDecoration(labelText: AppLocalizations.of(context).step),
-                  initialValue: widget.question.step.toString())
-            ])),
+                onChanged: _saveFormChanges,
+                name: 'step',
+                decoration: InputDecoration(labelText: AppLocalizations.of(context).step),
+                initialValue: widget.question.step.toString(),
+              )
+            ],
+          ),
+        ),
         if (questionBody != null) questionBody
       ],
     );

@@ -66,12 +66,18 @@ void main() {
           final result = schedule.generateWith(first);
 
           for (var i = 0; i < 8; i += 2) {
-            expect(result.sublist(i * 2).take(2), result.sublist(i * 2 + 2).take(2).toList().reversed,
-                reason: 'Cycles $i and ${i + 1} are not mirrored');
+            expect(
+              result.sublist(i * 2).take(2),
+              result.sublist(i * 2 + 2).take(2).toList().reversed,
+              reason: 'Cycles $i and ${i + 1} are not mirrored',
+            );
           }
           for (var i = 0; i < 6; i += 2) {
-            expect(result.sublist(i * 2).take(2), isNot(equals(result.sublist(i * 2 + 4).take(2))),
-                reason: 'Cycles $i and ${i + 2} were repeated');
+            expect(
+              result.sublist(i * 2).take(2),
+              isNot(equals(result.sublist(i * 2 + 4).take(2))),
+              reason: 'Cycles $i and ${i + 2} were repeated',
+            );
           }
         }
 

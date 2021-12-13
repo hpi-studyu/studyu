@@ -6,8 +6,10 @@ class QuestionnaireState {
   QuestionnaireState() : answers = {};
 
   QuestionnaireState.fromJson(List<Map<String, dynamic>> json)
-      : answers = Map<String, Answer>.fromIterable(json.map<Answer>(Answer.fromJson),
-            key: (answer) => (answer as Answer).question);
+      : answers = Map<String, Answer>.fromIterable(
+          json.map<Answer>(Answer.fromJson),
+          key: (answer) => (answer as Answer).question,
+        );
   List<Map<String, dynamic>> toJson() => answers.values.map((answer) => answer.toJson()).toList();
 
   bool hasAnswer<T>(String question) {

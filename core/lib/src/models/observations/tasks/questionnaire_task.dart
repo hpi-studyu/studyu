@@ -26,8 +26,10 @@ class QuestionnaireTask extends Observation {
     if (targetQuestion == null) {
       throw ArgumentError("Questionnaire '$id' does not have a question with '$property'.");
     }
-    return Map.fromEntries(sourceResults
-        .map((e) => MapEntry(e.completedAt!, (e.result as Result<QuestionnaireState>).result.getAnswer<T>(property))));
+    return Map.fromEntries(
+      sourceResults
+          .map((e) => MapEntry(e.completedAt!, (e.result as Result<QuestionnaireState>).result.getAnswer<T>(property))),
+    );
   }
 
   @override

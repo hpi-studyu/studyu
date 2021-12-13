@@ -33,17 +33,19 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
         ChangeNotifierProvider<AppState>.value(value: _appState),
       ],
-      child: Consumer<AppLanguage>(builder: (context, model, child) {
-        return MaterialApp.router(
-          title: 'StudyU Designer',
-          theme: theme,
-          routerDelegate: _rootRouterDelegate,
-          routeInformationParser: _rootRouteInformationParser,
-          locale: model.appLocal,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-        );
-      }),
+      child: Consumer<AppLanguage>(
+        builder: (context, model, child) {
+          return MaterialApp.router(
+            title: 'StudyU Designer',
+            theme: theme,
+            routerDelegate: _rootRouterDelegate,
+            routeInformationParser: _rootRouteInformationParser,
+            locale: model.appLocal,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+          );
+        },
+      ),
     );
   }
 }

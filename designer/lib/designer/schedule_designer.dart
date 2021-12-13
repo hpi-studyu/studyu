@@ -37,30 +37,37 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
             child: Column(
               children: <Widget>[
                 FormBuilderTextField(
-                    onChanged: _saveFormChanges,
-                    name: 'numberOfCycles',
-                    decoration: InputDecoration(labelText: AppLocalizations.of(context).number_of_cycles),
-                    initialValue: _draftStudy.schedule.numberOfCycles.toString()),
+                  onChanged: _saveFormChanges,
+                  name: 'numberOfCycles',
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).number_of_cycles),
+                  initialValue: _draftStudy.schedule.numberOfCycles.toString(),
+                ),
                 FormBuilderTextField(
-                    onChanged: _saveFormChanges,
-                    name: 'phaseDuration',
-                    decoration: InputDecoration(labelText: AppLocalizations.of(context).phase_duration),
-                    initialValue: _draftStudy.schedule.phaseDuration.toString()),
+                  onChanged: _saveFormChanges,
+                  name: 'phaseDuration',
+                  decoration: InputDecoration(labelText: AppLocalizations.of(context).phase_duration),
+                  initialValue: _draftStudy.schedule.phaseDuration.toString(),
+                ),
                 FormBuilderSwitch(
-                    onChanged: _saveFormChanges,
-                    title: Text(AppLocalizations.of(context).include_baseline),
-                    name: 'includeBaseline',
-                    initialValue: _draftStudy.schedule.includeBaseline),
+                  onChanged: _saveFormChanges,
+                  title: Text(AppLocalizations.of(context).include_baseline),
+                  name: 'includeBaseline',
+                  initialValue: _draftStudy.schedule.includeBaseline,
+                ),
                 FormBuilderDropdown(
                   onChanged: _saveFormChanges,
                   name: 'sequence',
                   decoration: InputDecoration(labelText: AppLocalizations.of(context).schedule),
                   initialValue: _draftStudy.schedule.sequence,
                   items: PhaseSequence.values
-                      .map((sequence) => DropdownMenuItem(
+                      .map(
+                        (sequence) => DropdownMenuItem(
                           value: sequence,
                           child: Text(
-                              '${sequence.toString().substring(sequence.toString().indexOf('.') + 1)} (${_draftStudy.schedule.nameOfSequence})')))
+                            '${sequence.toString().substring(sequence.toString().indexOf('.') + 1)} (${_draftStudy.schedule.nameOfSequence})',
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ],

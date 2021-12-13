@@ -8,7 +8,8 @@ class BarChartView extends StatelessWidget {
   const BarChartView(this.data, {this.color = Colors.black, Key key}) : super(key: key);
 
   List<BarChartGroupData> _histogramBarChartData(Color color) => data
-      .map((x, y) => MapEntry(
+      .map(
+        (x, y) => MapEntry(
           x,
           BarChartGroupData(
             x: x,
@@ -16,7 +17,9 @@ class BarChartView extends StatelessWidget {
               BarChartRodData(y: y.toDouble(), colors: [color])
             ],
             showingTooltipIndicators: [0],
-          )))
+          ),
+        ),
+      )
       .values
       .toList();
 
@@ -51,7 +54,10 @@ class BarChartView extends StatelessWidget {
         ),
         axisTitleData: FlAxisTitleData(
           bottomTitle: AxisTitle(
-              titleText: 'Amount of missed days', showTitle: true, textStyle: TextStyle(color: Color(0xff7589a2))),
+            titleText: 'Amount of missed days',
+            showTitle: true,
+            textStyle: const TextStyle(color: Color(0xff7589a2)),
+          ),
           leftTitle:
               AxisTitle(titleText: 'Number of participants', showTitle: true, textStyle: TextStyle(color: color)),
         ),

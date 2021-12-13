@@ -29,36 +29,46 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(children: [
-        Text(AppLocalizations.of(context).multiple),
-        SizedBox(width: 10),
-        Switch(
-          value: widget.question.multiple,
-          onChanged: (value) {
-            setState(() {
-              widget.question.multiple = value;
-            });
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(AppLocalizations.of(context).multiple),
+            const SizedBox(width: 10),
+            Switch(
+              value: widget.question.multiple,
+              onChanged: (value) {
+                setState(() {
+                  widget.question.multiple = value;
+                });
+              },
+            )
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.question.choices.length,
+          itemBuilder: (buildContext, index) {
+            return ChoiceEditor(
+              key: UniqueKey(),
+              choice: widget.question.choices[index],
+              remove: () => _removeChoice(index),
+            );
           },
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _addChoice,
+              icon: const Icon(Icons.add),
+              style: ElevatedButton.styleFrom(primary: Colors.green),
+              label: Text(AppLocalizations.of(context).add_choice),
+            ),
+            const Spacer()
+          ],
         )
-      ]),
-      ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.question.choices.length,
-        itemBuilder: (buildContext, index) {
-          return ChoiceEditor(
-              key: UniqueKey(), choice: widget.question.choices[index], remove: () => _removeChoice(index));
-        },
-      ),
-      Row(children: [
-        Spacer(),
-        ElevatedButton.icon(
-            onPressed: _addChoice,
-            icon: Icon(Icons.add),
-            style: ElevatedButton.styleFrom(primary: Colors.green),
-            label: Text(AppLocalizations.of(context).add_choice)),
-        Spacer()
-      ])
-    ]);
+      ],
+    );
   }
 }

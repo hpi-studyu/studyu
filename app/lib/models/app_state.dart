@@ -23,7 +23,7 @@ class AppState {
 
   Future<FlutterLocalNotificationsPlugin> initNotificationsPlugin() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    final initializationSettingsAndroid = const AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     final initializationSettings =
@@ -43,7 +43,7 @@ class AppState {
           CupertinoDialogAction(
             isDefaultAction: true,
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-            child: Text('Ok'),
+            child: const Text('Ok'),
           )
         ],
       ),
@@ -55,10 +55,11 @@ class AppState {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => TaskScreen(
-                  task: null,
-                  taskId: taskId,
-                )),
+          builder: (context) => TaskScreen(
+            task: null,
+            taskId: taskId,
+          ),
+        ),
       );
     }
   }

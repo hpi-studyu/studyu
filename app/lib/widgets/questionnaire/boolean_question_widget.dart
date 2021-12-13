@@ -41,7 +41,7 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
           onTap: () => tapped(choice: true),
           child: Text(AppLocalizations.of(context).yes),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),

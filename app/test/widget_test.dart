@@ -14,7 +14,7 @@ Widget setup(Widget child) {
   return MaterialApp(
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
-    locale: Locale('en'),
+    locale: const Locale('en'),
     home: child,
   );
 }

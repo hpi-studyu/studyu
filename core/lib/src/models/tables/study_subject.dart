@@ -50,7 +50,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
 
   StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds, this.inviteCode)
-      : id = Uuid().v4(),
+      : id = const Uuid().v4(),
         studyId = study.id;
 
   List<String> get interventionOrder => [
@@ -60,13 +60,17 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   List<Intervention> get selectedInterventions {
     final selectedInterventions = selectedInterventionIds
-        .map((selectedInterventionId) =>
-            study.interventions.singleWhere((intervention) => intervention.id == selectedInterventionId))
+        .map(
+          (selectedInterventionId) =>
+              study.interventions.singleWhere((intervention) => intervention.id == selectedInterventionId),
+        )
         .toList();
     if (study.schedule.includeBaseline) {
-      selectedInterventions.add(Intervention(Study.baselineID, 'Baseline')
-        ..tasks = []
-        ..icon = 'rayStart');
+      selectedInterventions.add(
+        Intervention(Study.baselineID, 'Baseline')
+          ..tasks = []
+          ..icon = 'rayStart',
+      );
     }
     return selectedInterventions;
   }
@@ -244,7 +248,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Future<void> deleteProgress() async => SupabaseQuery.catchPostgrestError(
-      await env.client.from(SubjectProgress.tableName).delete().eq('subject_id', id).execute());
+        await env.client.from(SubjectProgress.tableName).delete().eq('subject_id', id).execute(),
+      );
 
   @override
   Future<StudySubject> delete() async {
@@ -258,17 +263,21 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   static Future<List<StudySubject>> getUserStudiesFor(Study study) async =>
-      SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
-          .from(tableName)
-          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-          .eq('study_id', study.id)
-          .execute());
+      SupabaseQuery.extractSupabaseList<StudySubject>(
+        await env.client
+            .from(tableName)
+            .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
+            .eq('study_id', study.id)
+            .execute(),
+      );
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async {
-    return SupabaseQuery.extractSupabaseList<StudySubject>(await env.client
-        .from(tableName)
-        .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-        .eq('user_id', userId)
-        .execute());
+    return SupabaseQuery.extractSupabaseList<StudySubject>(
+      await env.client
+          .from(tableName)
+          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
+          .eq('user_id', userId)
+          .execute(),
+    );
   }
 }

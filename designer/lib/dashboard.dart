@@ -37,41 +37,42 @@ class _DashboardState extends State<Dashboard> {
           termsDialogAlreadyShown = true;
         });
         showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              final appLocale = Localizations.localeOf(context);
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            final appLocale = Localizations.localeOf(context);
 
-              return RetryFutureBuilder<AppConfig>(
-                tryFunction: AppConfig.getAppConfig,
-                successBuilder: (BuildContext context, AppConfig appConfig) => AlertDialog(
-                  title: Text(AppLocalizations.of(context).terms_privacy),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(AppLocalizations.of(context).terms_agree),
-                    )
+            return RetryFutureBuilder<AppConfig>(
+              tryFunction: AppConfig.getAppConfig,
+              successBuilder: (BuildContext context, AppConfig appConfig) => AlertDialog(
+                title: Text(AppLocalizations.of(context).terms_privacy),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(AppLocalizations.of(context).terms_agree),
+                  )
+                ],
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(AppLocalizations.of(context).terms_content),
+                    const SizedBox(height: 20),
+                    OutlinedButton.icon(
+                      icon: const Icon(MdiIcons.fileDocumentEdit),
+                      onPressed: () => launch(appConfig.designerTerms[appLocale.toString()]),
+                      label: Text(AppLocalizations.of(context).terms_read),
+                    ),
+                    OutlinedButton.icon(
+                      icon: const Icon(MdiIcons.shieldLock),
+                      onPressed: () => launch(appConfig.designerPrivacy[appLocale.toString()]),
+                      label: Text(AppLocalizations.of(context).privacy_read),
+                    ),
                   ],
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(AppLocalizations.of(context).terms_content),
-                      SizedBox(height: 20),
-                      OutlinedButton.icon(
-                        icon: Icon(MdiIcons.fileDocumentEdit),
-                        onPressed: () => launch(appConfig.designerTerms[appLocale.toString()]),
-                        label: Text(AppLocalizations.of(context).terms_read),
-                      ),
-                      OutlinedButton.icon(
-                        icon: Icon(MdiIcons.shieldLock),
-                        onPressed: () => launch(appConfig.designerPrivacy[appLocale.toString()]),
-                        label: Text(AppLocalizations.of(context).privacy_read),
-                      ),
-                    ],
-                  ),
                 ),
-              );
-            });
+              ),
+            );
+          },
+        );
       }
     });
   }
@@ -80,20 +81,24 @@ class _DashboardState extends State<Dashboard> {
     final dropDownItems = <DropdownMenuItem<Locale>>[];
 
     for (final locale in AppLocalizations.supportedLocales) {
-      dropDownItems.add(DropdownMenuItem(
-        value: locale,
-        child: Text(localeName(context, locale.languageCode)),
-      ));
+      dropDownItems.add(
+        DropdownMenuItem(
+          value: locale,
+          child: Text(localeName(context, locale.languageCode)),
+        ),
+      );
     }
 
-    dropDownItems.add(const DropdownMenuItem(
-      child: Text('System'),
-    ));
+    dropDownItems.add(
+      const DropdownMenuItem(
+        child: Text('System'),
+      ),
+    );
 
     return DropdownButton<Locale>(
       value: _selectedLocal,
       items: dropDownItems,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       iconEnabledColor: Colors.white,
       onChanged: (value) {
         setState(() {
@@ -109,59 +114,61 @@ class _DashboardState extends State<Dashboard> {
     final appState = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('StudyU Designer'),
+        title: const Text('StudyU Designer'),
         actions: [
           if (kDebugMode)
-            Builder(builder: (context) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: TextButton.icon(
-                  label: Text('Upload'),
-                  icon: Icon(MdiIcons.upload),
-                  style: TextButton.styleFrom(primary: Colors.white),
-                  onPressed: () async {
-                    final controller = TextEditingController();
-                    final wasUploaded = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Paste Study JSON here'),
-                        actions: [
-                          TextButton.icon(
-                            label: Text('Cancel'),
-                            icon: Icon(MdiIcons.close),
-                            onPressed: () {
-                              Navigator.pop(context, false);
-                            },
+            Builder(
+              builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: TextButton.icon(
+                    label: const Text('Upload'),
+                    icon: const Icon(MdiIcons.upload),
+                    style: TextButton.styleFrom(primary: Colors.white),
+                    onPressed: () async {
+                      final controller = TextEditingController();
+                      final wasUploaded = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Paste Study JSON here'),
+                          actions: [
+                            TextButton.icon(
+                              label: const Text('Cancel'),
+                              icon: const Icon(MdiIcons.close),
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                            ),
+                            TextButton.icon(
+                              label: const Text('Upload'),
+                              icon: const Icon(MdiIcons.upload),
+                              onPressed: () {
+                                try {
+                                  final studyJson = json.decode(controller.text) as Map<String, dynamic>;
+                                  Study.fromJson(studyJson).save();
+                                  Navigator.pop(context, true);
+                                } on FormatException {
+                                  controller.text = 'This is not valid JSON! Please paste valid JSON.';
+                                }
+                              },
+                            ),
+                          ],
+                          content: TextField(
+                            controller: controller,
+                            minLines: 100,
+                            maxLines: 10000,
                           ),
-                          TextButton.icon(
-                            label: Text('Upload'),
-                            icon: Icon(MdiIcons.upload),
-                            onPressed: () {
-                              try {
-                                final studyJson = json.decode(controller.text) as Map<String, dynamic>;
-                                Study.fromJson(studyJson).save();
-                                Navigator.pop(context, true);
-                              } on FormatException {
-                                controller.text = 'This is not valid JSON! Please paste valid JSON.';
-                              }
-                            },
-                          ),
-                        ],
-                        content: TextField(
-                          controller: controller,
-                          minLines: 100,
-                          maxLines: 10000,
                         ),
-                      ),
-                    );
-                    if (wasUploaded) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('Successfully imported study JSON 🎉')));
-                    }
-                  },
-                ),
-              );
-            }),
+                      );
+                      if (wasUploaded) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(content: Text('Successfully imported study JSON 🎉')));
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: DropdownButtonHideUnderline(
@@ -170,12 +177,12 @@ class _DashboardState extends State<Dashboard> {
           ),
           if (appState.loggedIn)
             IconButton(
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
               onPressed: () => appState.signOut(),
             )
           else
             IconButton(
-              icon: Icon(Icons.login),
+              icon: const Icon(Icons.login),
               onPressed: () => appState.goToLoginScreen(),
             ),
         ],
@@ -222,8 +229,8 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 appState.createStudy();
               },
-              label: Text('Create study'),
-              icon: Icon(Icons.add),
+              label: const Text('Create study'),
+              icon: const Icon(Icons.add),
             )
           : null,
     );
@@ -255,18 +262,21 @@ class StudyList extends StatelessWidget {
         title: Row(
           children: [
             Icon(iconData, color: theme.colorScheme.secondary),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(title),
           ],
         ),
         initiallyExpanded: true,
         children: ListTile.divideTiles(
-            context: context,
-            tiles: studies.map((study) => StudyCard(
-                  study: study,
-                  owner: study.canEdit(appState.user),
-                  reload: appState.reloadStudies,
-                ))).toList(),
+          context: context,
+          tiles: studies.map(
+            (study) => StudyCard(
+              study: study,
+              owner: study.canEdit(appState.user),
+              reload: appState.reloadStudies,
+            ),
+          ),
+        ).toList(),
       ),
     );
   }
@@ -285,30 +295,31 @@ class StudyCard extends StatelessWidget {
         study.iconName != null && study.iconName.isNotEmpty ? MdiIcons.fromString(study.iconName) : MdiIcons.cropSquare;
 
     return ListTile(
-        title: Text(study.title),
-        subtitle: Text(study.description),
-        leading: Icon(icon),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconLabel(label: study.participantCount.toString(), iconData: MdiIcons.accountGroup, color: Colors.red),
-            SizedBox(width: 16),
-            IconLabel(label: study.endedCount.toString(), iconData: MdiIcons.flagCheckered, color: Colors.black),
-            SizedBox(width: 16),
-            IconLabel(label: study.activeSubjectCount.toString(), iconData: MdiIcons.run, color: Colors.green),
-            SizedBox(width: 16),
-            IconLabel(label: study.totalMissedDays.toString(), iconData: MdiIcons.calendarRemove, color: Colors.orange),
-            VerticalDivider(),
-            if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
-            SizedBox(width: 16),
-            if (owner) ...[
-              if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
-              SizedBox(width: 16),
-            ],
-            if (owner)
-              if (study.published) publishedIcon() else draftIcon(),
+      title: Text(study.title),
+      subtitle: Text(study.description),
+      leading: Icon(icon),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconLabel(label: study.participantCount.toString(), iconData: MdiIcons.accountGroup, color: Colors.red),
+          const SizedBox(width: 16),
+          IconLabel(label: study.endedCount.toString(), iconData: MdiIcons.flagCheckered, color: Colors.black),
+          const SizedBox(width: 16),
+          IconLabel(label: study.activeSubjectCount.toString(), iconData: MdiIcons.run, color: Colors.green),
+          const SizedBox(width: 16),
+          IconLabel(label: study.totalMissedDays.toString(), iconData: MdiIcons.calendarRemove, color: Colors.orange),
+          const VerticalDivider(),
+          if (study.participation == Participation.open) openParticipationIcon() else inviteParticipationIcon(),
+          const SizedBox(width: 16),
+          if (owner) ...[
+            if (study.resultSharing == ResultSharing.public) publicResultsIcon() else privateResultsIcon(),
+            const SizedBox(width: 16),
           ],
-        ),
-        onTap: () => context.read<AppState>().openDetails(study.id));
+          if (owner)
+            if (study.published) publishedIcon() else draftIcon(),
+        ],
+      ),
+      onTap: () => context.read<AppState>().openDetails(study.id),
+    );
   }
 }

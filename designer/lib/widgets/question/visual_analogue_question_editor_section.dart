@@ -19,33 +19,40 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-        key: _editFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        // readonly: true,
-        child: Column(children: <Widget>[
+      key: _editFormKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      // readonly: true,
+      child: Column(
+        children: <Widget>[
           FormBuilderTextField(
-              onChanged: _saveFormChanges,
-              name: 'minimumAnnotation',
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_annotation),
-              initialValue: widget.question.minimumAnnotation),
+            onChanged: _saveFormChanges,
+            name: 'minimumAnnotation',
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_annotation),
+            initialValue: widget.question.minimumAnnotation,
+          ),
           FormBuilderColorPickerField(
-              onChanged: _saveFormChanges,
-              name: 'minimumColor',
-              showCursor: true,
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_color),
-              initialValue: Color(widget.question.minimumColor)),
+            onChanged: _saveFormChanges,
+            name: 'minimumColor',
+            showCursor: true,
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_color),
+            initialValue: Color(widget.question.minimumColor),
+          ),
           FormBuilderTextField(
-              onChanged: _saveFormChanges,
-              name: 'maximumAnnotation',
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_annotation),
-              initialValue: widget.question.maximumAnnotation),
+            onChanged: _saveFormChanges,
+            name: 'maximumAnnotation',
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_annotation),
+            initialValue: widget.question.maximumAnnotation,
+          ),
           FormBuilderColorPickerField(
-              onChanged: _saveFormChanges,
-              name: 'maximumColor',
-              showCursor: true,
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_color),
-              initialValue: Color(widget.question.maximumColor))
-        ]));
+            onChanged: _saveFormChanges,
+            name: 'maximumColor',
+            showCursor: true,
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_color),
+            initialValue: Color(widget.question.maximumColor),
+          )
+        ],
+      ),
+    );
   }
 
   void _saveFormChanges(value) {

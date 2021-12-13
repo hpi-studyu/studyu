@@ -48,12 +48,15 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                       ..._interventions
                           .asMap()
                           .entries
-                          .map((entry) => InterventionEditor(
+                          .map(
+                            (entry) => InterventionEditor(
                               key: UniqueKey(),
                               intervention: entry.value,
-                              remove: () => _removeIntervention(entry.key)))
+                              remove: () => _removeIntervention(entry.key),
+                            ),
+                          )
                           .toList(),
-                      SizedBox(height: 200)
+                      const SizedBox(height: 200)
                     ],
                   ),
                 ),

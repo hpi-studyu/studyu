@@ -34,30 +34,30 @@ class _ExportDialogState extends State<ExportDialog> {
     final dl = ResultDownloader(study: widget.study);
     final results = await dl.loadAllResults();
     for (final entry in results.entries) {
-      downloadFile(ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
+      downloadFile(const ListToCsvConverter().convert(entry.value), '${widget.study.id}.${entry.key.filename}.csv');
     }
   }
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('Export data'),
+        title: const Text('Export data'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
-                Text('Study Model'),
-                SizedBox(width: 32),
+                const Text('Study Model'),
+                const SizedBox(width: 32),
                 Checkbox(
                   value: _includeParticipantData,
                   onChanged: (value) => setState(() => _includeParticipantData = value),
                 ),
                 GestureDetector(
                   onTap: () => setState(() => _includeParticipantData = !_includeParticipantData),
-                  child: Text('Include participant data'),
+                  child: const Text('Include participant data'),
                 ),
-                SizedBox(width: 32),
-                Spacer(),
+                const SizedBox(width: 32),
+                const Spacer(),
                 OutlinedButton.icon(
                   onPressed: () async {
                     final res = await Supabase.instance.client
@@ -69,7 +69,7 @@ class _ExportDialogState extends State<ExportDialog> {
                           'active_subject_count',
                           'study_missed_days',
                           if (_includeParticipantData) 'study_subject(*, subject_progress(*))',
-                        ].join(','))
+                        ].join(','),)
                         .eq('id', widget.study.id)
                         .single()
                         .execute();
@@ -77,9 +77,9 @@ class _ExportDialogState extends State<ExportDialog> {
                       print(res.error.message);
                     }
                     await downloadFile(prettyJson(res.data),
-                        _includeParticipantData ? 'study_model_with_participant_data.json' : 'study_model.json');
+                        _includeParticipantData ? 'study_model_with_participant_data.json' : 'study_model.json',);
                   },
-                  icon: Icon(MdiIcons.fileDownload, color: Color(0xff323330)),
+                  icon: const Icon(MdiIcons.fileDownload, color: Color(0xff323330)),
                   label: Column(
                     children: const [
                       Text('JSON', style: TextStyle(color: Color(0xff323330))),
@@ -87,7 +87,7 @@ class _ExportDialogState extends State<ExportDialog> {
                     ],
                   ),
                 ),
-                if (!_includeParticipantData) SizedBox(width: 8),
+                if (!_includeParticipantData) const SizedBox(width: 8),
                 if (!_includeParticipantData)
                   OutlinedButton.icon(
                     onPressed: () async {
@@ -99,7 +99,7 @@ class _ExportDialogState extends State<ExportDialog> {
                             'study_ended_count',
                             'active_subject_count',
                             'study_missed_days',
-                          ].join(','))
+                          ].join(','),)
                           .eq('id', widget.study.id)
                           .csv()
                           .execute();
@@ -108,17 +108,17 @@ class _ExportDialogState extends State<ExportDialog> {
                       }
                       await downloadFile(res.data as String, 'study_model.csv');
                     },
-                    icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-                    label: Text('CSV', style: TextStyle(color: Colors.green)),
+                    icon: const Icon(MdiIcons.tableArrowDown, color: Colors.green),
+                    label: const Text('CSV', style: TextStyle(color: Colors.green)),
                   ),
               ],
             ),
-            if (!_includeParticipantData) SizedBox(height: 16),
+            if (!_includeParticipantData) const SizedBox(height: 16),
             if (!_includeParticipantData)
               Row(
                 children: [
-                  Text('Participant Data'),
-                  Spacer(),
+                  const Text('Participant Data'),
+                  const Spacer(),
                   OutlinedButton.icon(
                     onPressed: () async {
                       final res = await Supabase.instance.client
@@ -131,14 +131,14 @@ class _ExportDialogState extends State<ExportDialog> {
                       }
                       await downloadFile(prettyJson(res.data), 'participant_data.json');
                     },
-                    icon: Icon(MdiIcons.fileDownload, color: Color(0xff323330)),
-                    label: Text('JSON', style: TextStyle(color: Color(0xff323330))),
+                    icon: const Icon(MdiIcons.fileDownload, color: Color(0xff323330)),
+                    label: const Text('JSON', style: TextStyle(color: Color(0xff323330))),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   OutlinedButton.icon(
                     onPressed: () async =>
                         downloadFile(await Study.fetchResultsCSVTable(widget.study.id), 'participant_data.csv'),
-                    icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
+                    icon: const Icon(MdiIcons.tableArrowDown, color: Colors.green),
                     label: Column(
                       children: const [
                         Text('CSV', style: TextStyle(color: Colors.green)),
@@ -148,18 +148,18 @@ class _ExportDialogState extends State<ExportDialog> {
                   ),
                 ],
               ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             OutlinedButton.icon(
               onPressed: () => downloadFormattedResults(),
-              icon: Icon(MdiIcons.tableArrowDown, color: Colors.green),
-              label: Text('Formatted CSV files as defined in Results', style: TextStyle(color: Colors.green)),
+              icon: const Icon(MdiIcons.tableArrowDown, color: Colors.green),
+              label: const Text('Formatted CSV files as defined in Results', style: TextStyle(color: Colors.green)),
             ),
           ],
         ),
         actions: [
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: const Text('Close'),
           )
         ],
       );

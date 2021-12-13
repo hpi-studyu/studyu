@@ -33,8 +33,8 @@ class _HeaderState extends State<Header> {
   Widget gitOwnerActions() {
     if (widget.study.repo == null) {
       return TextButton.icon(
-        icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.git, color: Color(0xfff1502f)),
-        label: Text('Create analysis project', style: TextStyle(color: Color(0xfff1502f))),
+        icon: _loading ? buttonProgressIndicator : const Icon(MdiIcons.git, color: Color(0xfff1502f)),
+        label: const Text('Create analysis project', style: TextStyle(color: Color(0xfff1502f))),
         onPressed: () async {
           setState(() {
             _loading = true;
@@ -53,8 +53,8 @@ class _HeaderState extends State<Header> {
       );
     } else {
       return TextButton.icon(
-        icon: _loading ? buttonProgressIndicator : Icon(MdiIcons.databaseRefresh, color: Colors.green),
-        label: Text('Update data of git project and notebooks', style: TextStyle(color: Colors.green)),
+        icon: _loading ? buttonProgressIndicator : const Icon(MdiIcons.databaseRefresh, color: Colors.green),
+        label: const Text('Update data of git project and notebooks', style: TextStyle(color: Colors.green)),
         onPressed: () async {
           setState(() {
             _loading = true;
@@ -77,18 +77,20 @@ class _HeaderState extends State<Header> {
   List<Widget> gitPublicActions() {
     return [
       TextButton.icon(
-          onPressed: () => launch(widget.study.repo.webUrl),
-          icon: Icon(MdiIcons.gitlab, color: gitlabColor),
-          label: Text('Open Gitlab project', style: TextStyle(color: gitlabColor))),
+        onPressed: () => launch(widget.study.repo.webUrl),
+        icon: const Icon(MdiIcons.gitlab, color: gitlabColor),
+        label: const Text('Open Gitlab project', style: TextStyle(color: gitlabColor)),
+      ),
       TextButton.icon(
-          onPressed: () async {
-            final res = await http.get(Uri.parse('https://gitlab.com/api/v4/projects/${widget.study.repo.projectId}'));
-            final encodedRepoUrl =
-                Uri.encodeComponent((jsonDecode(res.body) as Map<String, dynamic>)['http_url_to_repo'] as String);
-            await launch('https://mybinder.org/v2/git/$encodedRepoUrl/HEAD?urlpath=lab');
-          },
-          icon: Image.asset('assets/images/binder.png', height: 24, width: 24),
-          label: Text('Launch on Binder')),
+        onPressed: () async {
+          final res = await http.get(Uri.parse('https://gitlab.com/api/v4/projects/${widget.study.repo.projectId}'));
+          final encodedRepoUrl =
+              Uri.encodeComponent((jsonDecode(res.body) as Map<String, dynamic>)['http_url_to_repo'] as String);
+          await launch('https://mybinder.org/v2/git/$encodedRepoUrl/HEAD?urlpath=lab');
+        },
+        icon: Image.asset('assets/images/binder.png', height: 24, width: 24),
+        label: const Text('Launch on Binder'),
+      ),
     ];
   }
 
@@ -117,7 +119,7 @@ class _HeaderState extends State<Header> {
               ),
             ],
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           DropdownButton<ResultSharing>(
             // decoration: const InputDecoration(helperText: 'Result sharing'),
             value: widget.study.resultSharing,
@@ -148,7 +150,7 @@ class _HeaderState extends State<Header> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (widget.study.published) publishedIcon() else draftIcon(),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         if (isOwner)
           _buildAccessSettings()
         else if (widget.study.participation == Participation.open)
@@ -166,14 +168,14 @@ class _HeaderState extends State<Header> {
 
     return Card(
       child: ListTile(
-        contentPadding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+        contentPadding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
         leading: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            BackButton(),
-            SizedBox(width: 8),
+            const BackButton(),
+            const SizedBox(width: 8),
             Icon(MdiIcons.fromString(widget.study.iconName), color: theme.colorScheme.secondary),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary)),
             // VerticalDivider(indent: 8, endIndent: 8),
           ],
@@ -185,27 +187,30 @@ class _HeaderState extends State<Header> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton.icon(
-                onPressed: () async {
-                  await showDialog(context: context, builder: (_) => ExportDialog(study: widget.study));
-                },
-                icon: Icon(MdiIcons.databaseExport),
-                label: Text('Export Data')),
+              onPressed: () async {
+                await showDialog(context: context, builder: (_) => ExportDialog(study: widget.study));
+              },
+              icon: const Icon(MdiIcons.databaseExport),
+              label: const Text('Export Data'),
+            ),
             if (widget.study.isOwner(appState.user))
               TextButton.icon(
-                  onPressed: () async {
-                    await showDialog(context: context, builder: (_) => AddCollaboratorDialog(study: widget.study));
-                    widget.reload();
-                  },
-                  icon: Icon(MdiIcons.accountPlus),
-                  label: Text('Add collaborator')),
+                onPressed: () async {
+                  await showDialog(context: context, builder: (_) => AddCollaboratorDialog(study: widget.study));
+                  widget.reload();
+                },
+                icon: const Icon(MdiIcons.accountPlus),
+                label: const Text('Add collaborator'),
+              ),
             if (widget.study.canEdit(appState.user))
               TextButton.icon(
-                  onPressed: () async {
-                    await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
-                    widget.reload();
-                  },
-                  icon: Icon(MdiIcons.ticketAccount),
-                  label: Text('Invite codes (${widget.study.invites.length})')),
+                onPressed: () async {
+                  await showDialog(context: context, builder: (_) => InvitesDialog(study: widget.study));
+                  widget.reload();
+                },
+                icon: const Icon(MdiIcons.ticketAccount),
+                label: Text('Invite codes (${widget.study.invites.length})'),
+              ),
             if (widget.study.repo != null) ...gitPublicActions(),
             if (appState.loggedInViaGitlab && widget.study.isOwner(appState.user)) gitOwnerActions(),
             if (widget.study.canEdit(appState.user))
@@ -215,7 +220,8 @@ class _HeaderState extends State<Header> {
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: widget.study));
                   if (isDeleted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${widget.study.title} ${AppLocalizations.of(context).deleted}')));
+                      SnackBar(content: Text('${widget.study.title} ${AppLocalizations.of(context).deleted}')),
+                    );
                     Navigator.pop(context);
                   }
                 },
@@ -243,7 +249,7 @@ class DeleteAlertDialog extends StatelessWidget {
               await study.delete();
               Navigator.pop(context, true);
             },
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context).delete),
             style: ElevatedButton.styleFrom(primary: Colors.red),
           )

@@ -11,14 +11,15 @@ class InterventionCard extends StatelessWidget {
   final bool showDescription;
   final Function() onTap;
 
-  const InterventionCard(this.intervention,
-      {this.onTap,
-      this.selected = false,
-      this.showCheckbox = false,
-      this.showTasks = true,
-      this.showDescription = true,
-      Key key})
-      : super(key: key);
+  const InterventionCard(
+    this.intervention, {
+    this.onTap,
+    this.selected = false,
+    this.showCheckbox = false,
+    this.showTasks = true,
+    this.showDescription = true,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class InterventionCardTitle extends StatelessWidget {
           Expanded(child: Text(intervention.name, style: theme.textTheme.headline6)),
           if (showDescriptionButton)
             IconButton(
-              icon: Icon(Icons.info_outline),
+              icon: const Icon(Icons.info_outline),
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
@@ -82,9 +83,10 @@ class InterventionCardTitle extends StatelessWidget {
                       intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
                   return AlertDialog(
                     title: ListTile(
-                        leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
-                        dense: true,
-                        title: Text(intervention.name, style: theme.textTheme.headline6)),
+                      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
+                      dense: true,
+                      title: Text(intervention.name, style: theme.textTheme.headline6),
+                    ),
                     content: Text(description ?? ''),
                   );
                 },
@@ -109,7 +111,7 @@ class InterventionCardDescription extends StatelessWidget {
     if (description == null) return Container();
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         description,
         style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
@@ -135,7 +137,7 @@ class _TaskList extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -143,7 +145,7 @@ class _TaskList extends StatelessWidget {
             ],
           ),
         ),
-        Divider(
+        const Divider(
           height: 4,
         ),
         Column(
@@ -158,7 +160,7 @@ class _TaskList extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.access_time, size: 16, color: theme.textTheme.caption.color),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
                             style:

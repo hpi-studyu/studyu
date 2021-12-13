@@ -43,24 +43,24 @@ class _TermsScreenState extends State<TermsScreen> {
                       acknowledgment: AppLocalizations.of(context).terms_agree,
                       onChange: (val) => setState(() => _acceptedTerms = val),
                       isChecked: _acceptedTerms,
-                      icon: Icon(MdiIcons.fileDocumentEdit),
+                      icon: const Icon(MdiIcons.fileDocumentEdit),
                       pdfUrl: appConfig.appTerms[appLocale.toString()],
                       pdfUrlLabel: AppLocalizations.of(context).terms_read,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     LegalSection(
                       title: AppLocalizations.of(context).privacy,
                       description: AppLocalizations.of(context).privacy_content,
                       acknowledgment: AppLocalizations.of(context).privacy_agree,
                       onChange: (val) => setState(() => _acceptedPrivacy = val),
                       isChecked: _acceptedPrivacy,
-                      icon: Icon(MdiIcons.shieldLock),
+                      icon: const Icon(MdiIcons.shieldLock),
                       pdfUrl: appConfig.appPrivacy[appLocale.toString()],
                       pdfUrlLabel: AppLocalizations.of(context).privacy_read,
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     OutlinedButton.icon(
-                      icon: Icon(MdiIcons.scaleBalance),
+                      icon: const Icon(MdiIcons.scaleBalance),
                       onPressed: () => launch(appConfig.imprint[appLocale.toString()]),
                       label: Text(AppLocalizations.of(context).imprint_read),
                     ),
@@ -95,17 +95,17 @@ class LegalSection extends StatelessWidget {
   final bool isChecked;
   final ValueChanged<bool> onChange;
 
-  const LegalSection(
-      {Key key,
-      this.title,
-      this.description,
-      this.icon,
-      this.pdfUrl,
-      this.pdfUrlLabel,
-      this.acknowledgment,
-      this.isChecked,
-      this.onChange})
-      : super(key: key);
+  const LegalSection({
+    Key key,
+    this.title,
+    this.description,
+    this.icon,
+    this.pdfUrl,
+    this.pdfUrlLabel,
+    this.acknowledgment,
+    this.isChecked,
+    this.onChange,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +113,9 @@ class LegalSection extends StatelessWidget {
     return Column(
       children: [
         Text(title, style: theme.textTheme.headline4.copyWith(color: theme.primaryColor)),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Text(description),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         OutlinedButton.icon(
           icon: icon,
           onPressed: () => launch(pdfUrl),

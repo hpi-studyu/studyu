@@ -12,7 +12,7 @@ class ConsentItem {
 
   ConsentItem(this.id);
 
-  ConsentItem.withId() : id = Uuid().v4();
+  ConsentItem.withId() : id = const Uuid().v4();
 
   factory ConsentItem.fromJson(Map<String, dynamic> json) => _$ConsentItemFromJson(json);
   Map<String, dynamic> toJson() => _$ConsentItemToJson(this);

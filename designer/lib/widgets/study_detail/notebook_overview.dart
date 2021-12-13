@@ -18,30 +18,31 @@ class NotebookOverview extends StatelessWidget {
       tryFunction: () => getStudyNotebooks(studyId),
       successBuilder: (_, notebooks) {
         if (notebooks.isEmpty) {
-          return Center(
+          return const Center(
             child: Text('No analytics available'),
           );
         }
 
         return Card(
-            child: ExpansionTile(
-          leading: Image.asset('assets/images/logomark-orangebody-greyplanets.png', height: 30, width: 30),
-          title: Text('Notebooks', style: TextStyle(fontSize: 20)),
-          initiallyExpanded: true,
-          children: [
-            ListView.separated(
-              shrinkWrap: true,
-              separatorBuilder: (context, index) => Divider(),
-              itemCount: notebooks.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: Icon(MdiIcons.notebook),
-                trailing: Icon(Icons.arrow_forward),
-                title: Center(child: Text(notebooks[index].name.replaceAll(RegExp(r'\.\w*$'), ''))),
-                onTap: () => context.read<AppState>().openNotebook(studyId, notebooks[index].name),
+          child: ExpansionTile(
+            leading: Image.asset('assets/images/logomark-orangebody-greyplanets.png', height: 30, width: 30),
+            title: const Text('Notebooks', style: TextStyle(fontSize: 20)),
+            initiallyExpanded: true,
+            children: [
+              ListView.separated(
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: notebooks.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: const Icon(MdiIcons.notebook),
+                  trailing: const Icon(Icons.arrow_forward),
+                  title: Center(child: Text(notebooks[index].name.replaceAll(RegExp(r'\.\w*$'), ''))),
+                  onTap: () => context.read<AppState>().openNotebook(studyId, notebooks[index].name),
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          ),
+        );
       },
     );
   }

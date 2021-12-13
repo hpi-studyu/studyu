@@ -34,7 +34,7 @@ class Choice {
 
   Choice(this.id);
 
-  Choice.withId() : id = Uuid().v4();
+  Choice.withId() : id = const Uuid().v4();
 
   factory Choice.fromJson(Map<String, dynamic> json) => _$ChoiceFromJson(json);
 

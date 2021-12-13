@@ -7,9 +7,13 @@ class DesignerHelpWrapper extends StatelessWidget {
   final bool studyPublished;
   final Widget child;
 
-  const DesignerHelpWrapper(
-      {Key key, @required this.helpTitle, @required this.helpText, @required this.child, @required this.studyPublished})
-      : super(key: key);
+  const DesignerHelpWrapper({
+    Key key,
+    @required this.helpTitle,
+    @required this.helpText,
+    @required this.child,
+    @required this.studyPublished,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +24,15 @@ class DesignerHelpWrapper extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Text(
               AppLocalizations.of(context).view_mode_warning,
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ),
           ),
-        Row(children: [
-          Spacer(),
-          IconButton(icon: Icon(Icons.help), onPressed: () => _showHelpDialog(context, helpTitle, helpText))
-        ]),
+        Row(
+          children: [
+            const Spacer(),
+            IconButton(icon: const Icon(Icons.help), onPressed: () => _showHelpDialog(context, helpTitle, helpText))
+          ],
+        ),
         Expanded(child: child),
       ],
     );
@@ -51,7 +57,7 @@ class DesignerHelpWrapper extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Ok'),
+              child: const Text('Ok'),
             ),
           ],
         );

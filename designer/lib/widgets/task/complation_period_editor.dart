@@ -9,9 +9,12 @@ class CompletionPeriodEditor extends StatefulWidget {
   final bool isFirst;
   final void Function() remove;
 
-  const CompletionPeriodEditor(
-      {@required this.completionPeriod, @required this.isFirst, @required this.remove, Key key})
-      : super(key: key);
+  const CompletionPeriodEditor({
+    @required this.completionPeriod,
+    @required this.isFirst,
+    @required this.remove,
+    Key key,
+  }) : super(key: key);
 
   @override
   _CompletionPeriodEditorState createState() => _CompletionPeriodEditorState();
@@ -23,30 +26,37 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-        key: _editFormKey,
-        autovalidateMode: AutovalidateMode.always,
-        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      key: _editFormKey,
+      autovalidateMode: AutovalidateMode.always,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
           Row(
             children: [
               Icon(Icons.timelapse, color: Theme.of(context).colorScheme.secondary),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: FormBuilderDateTimePicker(
                   initialValue: DateTime(
-                      0, 0, 0, widget.completionPeriod.unlockTime.hour, widget.completionPeriod.unlockTime.minute),
+                    0,
+                    0,
+                    0,
+                    widget.completionPeriod.unlockTime.hour,
+                    widget.completionPeriod.unlockTime.minute,
+                  ),
                   name: 'unlock',
                   inputType: InputType.time,
                   textAlign: TextAlign.center,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Unlock time',
                   ),
                   alwaysUse24HourFormat: true,
                   onChanged: (value) => saveFormChanges(),
                 ),
               ),
-              SizedBox(width: 8),
-              Text('to'),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
+              const Text('to'),
+              const SizedBox(width: 8),
               Expanded(
                 child: FormBuilderDateTimePicker(
                   initialValue:
@@ -59,7 +69,7 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   },
                   inputType: InputType.time,
                   textAlign: TextAlign.center,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Lock time',
                   ),
                   alwaysUse24HourFormat: true,
@@ -70,7 +80,9 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
               Spacer(flex: widget.isFirst ? 4 : 3),
             ],
           ),
-        ]));
+        ],
+      ),
+    );
   }
 
   void saveFormChanges() {

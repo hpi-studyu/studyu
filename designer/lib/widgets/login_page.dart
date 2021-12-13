@@ -42,7 +42,7 @@ class _LoginPageState extends SupabaseAuthState<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
+                const Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
                 Form(
                   key: _formKey,
                   child: SizedBox(
@@ -53,19 +53,19 @@ class _LoginPageState extends SupabaseAuthState<LoginPage> {
                           controller: _emailController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (email) => EmailValidator.validate(email) ? null : 'Please enter a valid email',
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Email',
                             icon: Icon(Icons.email),
                             border: OutlineInputBorder(),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextFormField(
                           controller: _passwordController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           validator: (value) => value.length >= 8 ? null : 'Password needs at least 8 characters',
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Password',
                             icon: Icon(Icons.lock),
                             border: OutlineInputBorder(),
@@ -77,59 +77,63 @@ class _LoginPageState extends SupabaseAuthState<LoginPage> {
                   ),
                 ),
                 if (appState.authError != null) ...[
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Text(appState.authError, style: theme.textTheme.subtitle1.copyWith(color: Colors.red)),
                 ],
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                       flex: 6,
                       child: OutlinedButton.icon(
-                          icon: Icon(Icons.login),
-                          onPressed: () => _login(appState),
-                          label: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                            child: Text('Login', style: TextStyle(fontSize: 20)),
-                          )),
+                        icon: const Icon(Icons.login),
+                        onPressed: () => _login(appState),
+                        label: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          child: Text('Login', style: TextStyle(fontSize: 20)),
+                        ),
+                      ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Flexible(
                       flex: 6,
                       child: OutlinedButton.icon(
-                          icon: Icon(MdiIcons.accountPlus),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              appState.signUp(_emailController.text, _passwordController.text);
-                            }
-                          },
-                          label: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                            child: Text('Sign Up', style: TextStyle(fontSize: 20)),
-                          )),
+                        icon: const Icon(MdiIcons.accountPlus),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            appState.signUp(_emailController.text, _passwordController.text);
+                          }
+                        },
+                        label: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          child: Text('Sign Up', style: TextStyle(fontSize: 20)),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Text('Login with', style: theme.textTheme.headline5),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     OutlinedButton.icon(
-                      label: Text('GitLab'),
+                      label: const Text('GitLab'),
                       style: OutlinedButton.styleFrom(primary: gitlabColor),
-                      icon: Icon(MdiIcons.gitlab),
+                      icon: const Icon(MdiIcons.gitlab),
                       onPressed: () => appState.signInWithProvider(
-                          Provider.gitlab, 'api read_user read_api read_repository write_repository profile email'),
+                        Provider.gitlab,
+                        'api read_user read_api read_repository write_repository profile email',
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 OutlinedButton(
                   onPressed: () => appState.skipLogin(),
-                  child: Text('Skip login'),
+                  child: const Text('Skip login'),
                 ),
               ],
             ),

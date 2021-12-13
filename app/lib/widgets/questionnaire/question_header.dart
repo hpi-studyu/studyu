@@ -10,7 +10,7 @@ class QuestionHeader extends StatelessWidget {
   List<Widget> _buildSubtitle(BuildContext context) {
     if (subtitle == null) return [];
     return [
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       Text(subtitle, style: Theme.of(context).textTheme.caption),
     ];
   }
@@ -18,14 +18,14 @@ class QuestionHeader extends StatelessWidget {
   List<Widget> _buildRationaleButton(BuildContext context) {
     if (rationale == null) return [];
     return [
-      SizedBox(width: 8),
+      const SizedBox(width: 8),
       IconButton(
-        icon: Icon(Icons.info_outline),
+        icon: const Icon(Icons.info_outline),
         color: Theme.of(context).primaryColor,
         onPressed: () => showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Information'),
+            title: const Text('Information'),
             content: Text(rationale),
           ),
         ),

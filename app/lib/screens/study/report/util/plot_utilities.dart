@@ -37,8 +37,10 @@ class PlotUtilities {
   static Map<String, String> getInterventionNames(List<Intervention> interventions) =>
       {for (var intervention in interventions) intervention.id: intervention.name};
 
-  static charts.LineAnnotationSegment<T> createSeparator<T>(T value,
-          {charts.RangeAnnotationAxisType axis = charts.RangeAnnotationAxisType.domain}) =>
+  static charts.LineAnnotationSegment<T> createSeparator<T>(
+    T value, {
+    charts.RangeAnnotationAxisType axis = charts.RangeAnnotationAxisType.domain,
+  }) =>
       charts.LineAnnotationSegment<T>(
         value,
         axis,
@@ -46,8 +48,10 @@ class PlotUtilities {
         strokeWidthPx: 1,
       );
 
-  static charts.StaticNumericTickProviderSpec createNumericTicks(Iterable<MapEntry<num, String>> ticks,
-          {charts.TextStyleSpec style}) =>
+  static charts.StaticNumericTickProviderSpec createNumericTicks(
+    Iterable<MapEntry<num, String>> ticks, {
+    charts.TextStyleSpec style,
+  }) =>
       charts.StaticNumericTickProviderSpec(
         ticks.map((entry) => charts.TickSpec<num>(entry.key, label: entry.value, style: style)).toList(),
       );

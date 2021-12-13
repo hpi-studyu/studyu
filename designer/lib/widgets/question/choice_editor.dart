@@ -22,23 +22,27 @@ class _ChoiceEditorState extends State<ChoiceEditor> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-        key: _editFormKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        // readonly: true,
-        child: Column(children: <Widget>[
+      key: _editFormKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      // readonly: true,
+      child: Column(
+        children: <Widget>[
           ButtonBar(
             children: <Widget>[
               DeleteButton(onPressed: widget.remove),
             ],
           ),
           FormBuilderTextField(
-              onChanged: (value) {
-                saveFormChanges();
-              },
-              name: 'text',
-              decoration: InputDecoration(labelText: AppLocalizations.of(context).choice),
-              initialValue: widget.choice.text),
-        ]));
+            onChanged: (value) {
+              saveFormChanges();
+            },
+            name: 'text',
+            decoration: InputDecoration(labelText: AppLocalizations.of(context).choice),
+            initialValue: widget.choice.text,
+          ),
+        ],
+      ),
+    );
   }
 
   void saveFormChanges() {

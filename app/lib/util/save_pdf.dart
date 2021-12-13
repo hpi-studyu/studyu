@@ -9,12 +9,13 @@ import 'package:pdf/widgets.dart' as pw;
 Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content) async {
   if (kIsWeb) {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              elevation: 24,
-              title: Text(AppLocalizations.of(context).save_not_supported),
-              content: Text(AppLocalizations.of(context).save_not_supported_description),
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        elevation: 24,
+        title: Text(AppLocalizations.of(context).save_not_supported),
+        content: Text(AppLocalizations.of(context).save_not_supported_description),
+      ),
+    );
     return;
   }
 
@@ -40,9 +41,11 @@ Future<void> savePDF(BuildContext context, String title, List<pw.Widget> content
     final filePath = await FlutterFileDialog.saveFile(params: params);
     print('$pdfFileName was saved under $filePath.');
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('${AppLocalizations.of(context).was_saved_to}${filePath.split(':')[1]}.'),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${AppLocalizations.of(context).was_saved_to}${filePath.split(':')[1]}.'),
+      ),
+    );
   } catch (e) {
     print('Error saving file with FileDialog ${e.toString()}');
   }

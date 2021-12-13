@@ -50,7 +50,7 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
                         task: observation,
                         remove: () => _removeObservation(observation),
                       ),
-                    SizedBox(height: 200)
+                    const SizedBox(height: 200)
                   ],
                 ),
               ),

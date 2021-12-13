@@ -18,7 +18,11 @@ class CliService {
   }
 
   static Future<void> generateCopierProject(
-      String projectPath, String studyTitle, List<String> outcomes, String gitUrl) async {
+    String projectPath,
+    String studyTitle,
+    List<String> outcomes,
+    String gitUrl,
+  ) async {
     const copierBin = 'copier';
     const copierTemplate = 'gh:hpi-studyu/copier-studyu';
     try {

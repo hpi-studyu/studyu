@@ -74,15 +74,17 @@ class _ReportDesignerState extends State<ReportDesigner> {
                     ..._reportSpecification.secondary
                         .asMap()
                         .entries
-                        .map((entry) => ReportSectionEditor(
-                              key: UniqueKey(),
-                              section: entry.value,
-                              isPrimary: false,
-                              remove: () => _removeSection(entry.key),
-                              updateSection: (section) => _replaceSection(entry.key, section),
-                            ))
+                        .map(
+                          (entry) => ReportSectionEditor(
+                            key: UniqueKey(),
+                            section: entry.value,
+                            isPrimary: false,
+                            remove: () => _removeSection(entry.key),
+                            updateSection: (section) => _replaceSection(entry.key, section),
+                          ),
+                        )
                         .toList(),
-                    SizedBox(height: 200)
+                    const SizedBox(height: 200)
                   ],
                 ),
               ),

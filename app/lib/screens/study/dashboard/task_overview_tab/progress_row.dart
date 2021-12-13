@@ -11,6 +11,7 @@ class ProgressRow extends StatefulWidget {
   final StudySubject subject;
 
   const ProgressRow({Key key, this.subject}) : super(key: key);
+
   @override
   _ProgressRowState createState() => _ProgressRowState();
 }
@@ -30,29 +31,30 @@ class _ProgressRowState extends State<ProgressRow> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(MdiIcons.run, size: 30),
-              SizedBox(width: 8),
+              const Icon(MdiIcons.run, size: 30),
+              const SizedBox(width: 8),
               ...intersperseIndexed(
-                  (index) => Expanded(
-                        child: Divider(
-                          indent: 5,
-                          endIndent: 5,
-                          thickness: 3,
-                          color: currentPhase > index ? theme.primaryColor : theme.disabledColor,
-                        ),
-                      ),
-                  widget.subject.getInterventionsInOrder().asMap().entries.map((entry) {
-                    return InterventionSegment(
-                      intervention: entry.value,
-                      isCurrent: currentPhase == entry.key,
-                      isFuture: currentPhase < entry.key,
-                      phaseDuration: widget.subject.study.schedule.phaseDuration,
-                      percentCompleted: widget.subject.percentCompletedForPhase(entry.key),
-                      percentMissed: widget.subject.percentMissedForPhase(entry.key, DateTime.now()),
-                    );
-                  })),
-              SizedBox(width: 8),
-              Icon(MdiIcons.flagCheckered, size: 30),
+                (index) => Expanded(
+                  child: Divider(
+                    indent: 5,
+                    endIndent: 5,
+                    thickness: 3,
+                    color: currentPhase > index ? theme.primaryColor : theme.disabledColor,
+                  ),
+                ),
+                widget.subject.getInterventionsInOrder().asMap().entries.map((entry) {
+                  return InterventionSegment(
+                    intervention: entry.value,
+                    isCurrent: currentPhase == entry.key,
+                    isFuture: currentPhase < entry.key,
+                    phaseDuration: widget.subject.study.schedule.phaseDuration,
+                    percentCompleted: widget.subject.percentCompletedForPhase(entry.key),
+                    percentMissed: widget.subject.percentMissedForPhase(entry.key, DateTime.now()),
+                  );
+                }),
+              ),
+              const SizedBox(width: 8),
+              const Icon(MdiIcons.flagCheckered, size: 30),
             ],
           ),
         ],
@@ -69,15 +71,15 @@ class InterventionSegment extends StatelessWidget {
   final bool isFuture;
   final int phaseDuration;
 
-  const InterventionSegment(
-      {@required this.intervention,
-      @required this.percentCompleted,
-      @required this.percentMissed,
-      @required this.isCurrent,
-      @required this.isFuture,
-      @required this.phaseDuration,
-      Key key})
-      : super(key: key);
+  const InterventionSegment({
+    @required this.intervention,
+    @required this.percentCompleted,
+    @required this.percentMissed,
+    @required this.isCurrent,
+    @required this.isFuture,
+    @required this.phaseDuration,
+    Key key,
+  }) : super(key: key);
 
   List<Widget> buildSeparators(int nbSeparators) {
     final sep = <Widget>[];
@@ -150,18 +152,20 @@ class InterventionSegment extends StatelessWidget {
             children: buildSeparators(phaseDuration),
           ),
           RawMaterialButton(
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          contentPadding: EdgeInsets.all(0),
-                          content: InterventionCard(intervention),
-                        ));
-              },
-              elevation: 0,
-              fillColor: color,
-              shape: CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
-              child: interventionIcon(intervention)),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  contentPadding: const EdgeInsets.all(0),
+                  content: InterventionCard(intervention),
+                ),
+              );
+            },
+            elevation: 0,
+            fillColor: color,
+            shape: const CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
+            child: interventionIcon(intervention),
+          ),
         ],
       ),
     );

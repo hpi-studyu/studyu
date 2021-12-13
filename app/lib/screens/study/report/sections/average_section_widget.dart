@@ -33,7 +33,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   charts.StaticNumericTickProviderSpec generateTicks(int numberOfPhases, int phaseDuration) {
     if (section.aggregate == TemporalAggregation.intervention) {
-      return charts.StaticNumericTickProviderSpec(const []);
+      return const charts.StaticNumericTickProviderSpec([]);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return PlotUtilities.createNumericTicks(
         Iterable<int>.generate(numberOfPhases).map((i) => MapEntry(i, (i + 1).toString())),
@@ -82,43 +82,51 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   Iterable<_DiagramDatum> getAggregatedData() {
     final values = section.resultProperty.retrieveFromResults(subject);
-    final data = values.entries.map((e) => _DiagramDatum(
-          subject.getDayOfStudyFor(e.key),
-          e.value,
-          e.key,
-          subject.getInterventionForDate(e.key).id,
-        ));
+    final data = values.entries.map(
+      (e) => _DiagramDatum(
+        subject.getDayOfStudyFor(e.key),
+        e.value,
+        e.key,
+        subject.getInterventionForDate(e.key).id,
+      ),
+    );
 
     if (section.aggregate == TemporalAggregation.day) {
       return data
           .groupBy((e) => e.x)
-          .aggregateWithKey((data, day) => _DiagramDatum(
-                day,
-                FoldAggregators.mean()(data.map((e) => e.value)),
-                null,
-                data.first.intervention,
-              ))
+          .aggregateWithKey(
+            (data, day) => _DiagramDatum(
+              day,
+              FoldAggregators.mean()(data.map((e) => e.value)),
+              null,
+              data.first.intervention,
+            ),
+          )
           .map((e) => e.value);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return data
           .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp))
-          .aggregateWithKey((data, phase) => _DiagramDatum(
-                phase,
-                FoldAggregators.mean()(data.map((e) => e.value)),
-                null,
-                data.first.intervention,
-              ))
+          .aggregateWithKey(
+            (data, phase) => _DiagramDatum(
+              phase,
+              FoldAggregators.mean()(data.map((e) => e.value)),
+              null,
+              data.first.intervention,
+            ),
+          )
           .map((e) => e.value);
     } else {
       final order = PlotUtilities.getInterventionPositions(subject.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
-          .aggregateWithKey((data, intervention) => _DiagramDatum(
-                order[intervention],
-                FoldAggregators.mean()(data.map((e) => e.value)),
-                null,
-                intervention,
-              ))
+          .aggregateWithKey(
+            (data, intervention) => _DiagramDatum(
+              order[intervention],
+              FoldAggregators.mean()(data.map((e) => e.value)),
+              null,
+              intervention,
+            ),
+          )
           .map((e) => e.value);
     }
   }
@@ -129,14 +137,16 @@ class AverageSectionWidget extends ReportSectionWidget {
 
     return getAggregatedData()
         .groupBy((datum) => datum.intervention)
-        .map((entry) => charts.Series<_DiagramDatum, num>(
-              id: entry.key,
-              displayName: interventionNames[entry.key],
-              seriesColor: colorPalette[entry.key],
-              domainFn: (datum, _) => datum.x,
-              measureFn: (datum, _) => datum.value,
-              data: entry.value.toList(),
-            ))
+        .map(
+          (entry) => charts.Series<_DiagramDatum, num>(
+            id: entry.key,
+            displayName: interventionNames[entry.key],
+            seriesColor: colorPalette[entry.key],
+            domainFn: (datum, _) => datum.x,
+            measureFn: (datum, _) => datum.value,
+            data: entry.value.toList(),
+          ),
+        )
         .toList();
   }
 }

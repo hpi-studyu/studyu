@@ -60,13 +60,16 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
                     ..._results
                         .asMap()
                         .entries
-                        .map((entry) => StudyResultEditor(
+                        .map(
+                          (entry) => StudyResultEditor(
                             key: UniqueKey(),
                             result: entry.value,
                             remove: () => _removeResult(entry.key),
-                            changeResultType: (newType) => _changeResultsType(entry.key, newType)))
+                            changeResultType: (newType) => _changeResultsType(entry.key, newType),
+                          ),
+                        )
                         .toList(),
-                    SizedBox(height: 200)
+                    const SizedBox(height: 200)
                   ],
                 ),
               ),

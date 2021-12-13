@@ -8,7 +8,11 @@ import '../models/app_state.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
   Future<void> scheduleReminderForDate(
-      int initialId, Task task, DateTime date, NotificationDetails notificationDetails) async {
+    int initialId,
+    Task task,
+    DateTime date,
+    NotificationDetails notificationDetails,
+  ) async {
     var id = initialId;
     for (final reminder in task.schedule.reminders) {
       if (date.isSameDate(DateTime.now()) &&
@@ -18,10 +22,16 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 
       final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
       // TODO add body
-      zonedSchedule(id, task.title, '', reminderTime, notificationDetails,
-          payload: task.id,
-          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
-          androidAllowWhileIdle: true);
+      zonedSchedule(
+        id,
+        task.title,
+        '',
+        reminderTime,
+        notificationDetails,
+        payload: task.id,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
+        androidAllowWhileIdle: true,
+      );
       id++;
     }
   }
@@ -29,8 +39,8 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 
 Future<void> scheduleStudyNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
-  final androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU main');
-  final iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  final androidPlatformChannelSpecifics = const AndroidNotificationDetails('0', 'StudyU main');
+  final iOSPlatformChannelSpecifics = const IOSNotificationDetails();
   final platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
 
@@ -53,7 +63,11 @@ Future<void> scheduleStudyNotifications(BuildContext context) async {
       final date = DateTime.now().add(Duration(days: index));
       for (final observation in subject.study.observations) {
         (await appState.notificationsPlugin).scheduleReminderForDate(
-            id - observation.schedule.reminders.length, observation, date, platformChannelSpecifics);
+          id - observation.schedule.reminders.length,
+          observation,
+          date,
+          platformChannelSpecifics,
+        );
         id += observation.schedule.reminders.length;
       }
       for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {

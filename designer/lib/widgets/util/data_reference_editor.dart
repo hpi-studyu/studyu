@@ -7,9 +7,12 @@ class DataReferenceEditor<T> extends StatefulWidget {
   final List<Task> availableTaks;
   final void Function(DataReference<T> newReference) updateReference;
 
-  const DataReferenceEditor(
-      {@required this.reference, @required this.availableTaks, @required this.updateReference, Key key})
-      : super(key: key);
+  const DataReferenceEditor({
+    @required this.reference,
+    @required this.availableTaks,
+    @required this.updateReference,
+    Key key,
+  }) : super(key: key);
 
   @override
   _DataReferenceEditorState<T> createState() => _DataReferenceEditorState<T>();
@@ -28,10 +31,12 @@ class _DataReferenceEditorState<T> extends State<DataReferenceEditor<T>> {
     for (final task in widget.availableTaks) {
       for (final entry in task.getAvailableProperties().entries) {
         if (entry.value == T) {
-          items.add(DropdownMenuItem<_DataReferenceIdentifier>(
-            value: _DataReferenceIdentifier(task.id, entry.key),
-            child: Text('${task.title} > ${task.getHumanReadablePropertyName(entry.key)}'),
-          ));
+          items.add(
+            DropdownMenuItem<_DataReferenceIdentifier>(
+              value: _DataReferenceIdentifier(task.id, entry.key),
+              child: Text('${task.title} > ${task.getHumanReadablePropertyName(entry.key)}'),
+            ),
+          );
         }
       }
     }

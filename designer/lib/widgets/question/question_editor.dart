@@ -14,13 +14,13 @@ class QuestionEditor extends StatefulWidget {
   final void Function() remove;
   final void Function(String newType) changeQuestionType;
 
-  const QuestionEditor(
-      {@required this.question,
-      @required this.questionTypes,
-      @required this.remove,
-      @required this.changeQuestionType,
-      Key key})
-      : super(key: key);
+  const QuestionEditor({
+    @required this.question,
+    @required this.questionTypes,
+    @required this.remove,
+    @required this.changeQuestionType,
+    Key key,
+  }) : super(key: key);
 
   @override
   _QuestionEditorState createState() => _QuestionEditorState();
@@ -34,7 +34,7 @@ class _QuestionEditorState extends State<QuestionEditor> {
     final questionBody = _buildQuestionBody();
 
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
@@ -60,25 +60,30 @@ class _QuestionEditorState extends State<QuestionEditor> {
             child: Column(
               children: [
                 FormBuilder(
-                    key: _editFormKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    // readonly: true,
-                    child: Column(children: <Widget>[
+                  key: _editFormKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // readonly: true,
+                  child: Column(
+                    children: <Widget>[
                       FormBuilderTextField(
-                          onChanged: (value) {
-                            _saveFormChanges();
-                          },
-                          name: 'prompt',
-                          decoration: InputDecoration(labelText: AppLocalizations.of(context).prompt),
-                          initialValue: widget.question.prompt),
+                        onChanged: (value) {
+                          _saveFormChanges();
+                        },
+                        name: 'prompt',
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).prompt),
+                        initialValue: widget.question.prompt,
+                      ),
                       FormBuilderTextField(
-                          onChanged: (value) {
-                            _saveFormChanges();
-                          },
-                          name: 'rationale',
-                          decoration: InputDecoration(labelText: AppLocalizations.of(context).rationale),
-                          initialValue: widget.question.rationale),
-                    ])),
+                        onChanged: (value) {
+                          _saveFormChanges();
+                        },
+                        name: 'rationale',
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context).rationale),
+                        initialValue: widget.question.rationale,
+                      ),
+                    ],
+                  ),
+                ),
                 if (questionBody != null) questionBody
               ],
             ),

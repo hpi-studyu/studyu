@@ -50,15 +50,19 @@ class ReportHistoryItem extends StatelessWidget {
           Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject));
         },
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Icon(MdiIcons.fromString(subject.study.iconName) ?? MdiIcons.accountHeart,
-                    color: isActiveStudy ? Colors.white : Colors.black),
-                Text(subject.study.title,
-                    style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black)),
+                Icon(
+                  MdiIcons.fromString(subject.study.iconName) ?? MdiIcons.accountHeart,
+                  color: isActiveStudy ? Colors.white : Colors.black,
+                ),
+                Text(
+                  subject.study.title,
+                  style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                ),
               ],
             ),
           ),

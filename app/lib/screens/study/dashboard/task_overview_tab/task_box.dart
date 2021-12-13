@@ -13,8 +13,12 @@ class TaskBox extends StatefulWidget {
   final Icon icon;
   final Function() onCompleted;
 
-  const TaskBox(
-      {@required this.task, @required this.completionPeriod, @required this.icon, @required this.onCompleted});
+  const TaskBox({
+    @required this.task,
+    @required this.completionPeriod,
+    @required this.icon,
+    @required this.onCompleted,
+  });
 
   @override
   State<TaskBox> createState() => _TaskBoxState();

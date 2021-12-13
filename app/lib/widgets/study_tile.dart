@@ -11,14 +11,14 @@ class StudyTile extends StatelessWidget {
 
   final EdgeInsetsGeometry contentPadding;
 
-  const StudyTile(
-      {@required this.title,
-      @required this.description,
-      @required this.iconName,
-      this.onTap,
-      this.contentPadding = const EdgeInsets.all(16),
-      Key key})
-      : super(key: key);
+  const StudyTile({
+    @required this.title,
+    @required this.description,
+    @required this.iconName,
+    this.onTap,
+    this.contentPadding = const EdgeInsets.all(16),
+    Key key,
+  }) : super(key: key);
 
   StudyTile.fromStudy({@required Study study, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key key})
       : title = study.title,
@@ -26,9 +26,12 @@ class StudyTile extends StatelessWidget {
         iconName = study.iconName,
         super(key: key);
 
-  StudyTile.fromUserStudy(
-      {@required StudySubject subject, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key key})
-      : title = subject.study.title,
+  StudyTile.fromUserStudy({
+    @required StudySubject subject,
+    this.onTap,
+    this.contentPadding = const EdgeInsets.all(16),
+    Key key,
+  })  : title = subject.study.title,
         description = subject.study.description,
         iconName = subject.study.iconName,
         super(key: key);
@@ -40,11 +43,12 @@ class StudyTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-            contentPadding: contentPadding,
-            onTap: onTap,
-            title: Center(child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
-            subtitle: Center(child: Text(description)),
-            leading: Icon(MdiIcons.fromString(iconName ?? 'accountHeart'), color: theme.primaryColor)),
+          contentPadding: contentPadding,
+          onTap: onTap,
+          title: Center(child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+          subtitle: Center(child: Text(description)),
+          leading: Icon(MdiIcons.fromString(iconName ?? 'accountHeart'), color: theme.primaryColor),
+        ),
       ],
     );
   }
