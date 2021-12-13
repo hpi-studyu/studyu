@@ -25,6 +25,12 @@ scripts:
         "dart format -l 120 ."
     description: Format all code
 
+  fix:
+    run: |
+      melos exec -c 6 -- \
+        "dart fix --apply"
+    description: Fix auto-fixable lint errors
+
   format:ci:
     run: |
       melos exec -c 6 -- \
