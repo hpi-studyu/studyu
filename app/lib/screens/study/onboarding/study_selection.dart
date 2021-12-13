@@ -159,6 +159,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 final result = res.data as Map<String, dynamic>;
                 final studyId = result['study_id'] as String;
                 final study = await SupabaseQuery.getById<Study>(studyId);
+                if (!mounted) return;
                 Navigator.pop(context);
 
                 if (result.containsKey('preselected_intervention_ids') &&

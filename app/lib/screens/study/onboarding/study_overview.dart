@@ -56,6 +56,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: study));
     if (result == null) return;
 
+    if (!mounted) return;
     if (result.eligible != null && result.eligible) {
       navigateToJourney(context);
     } else if (result.answers != null) {

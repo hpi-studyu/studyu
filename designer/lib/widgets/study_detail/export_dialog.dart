@@ -150,7 +150,7 @@ class _ExportDialogState extends State<ExportDialog> {
               ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
-              onPressed: () => downloadFormattedResults(),
+              onPressed: downloadFormattedResults,
               icon: const Icon(MdiIcons.tableArrowDown, color: Colors.green),
               label: const Text('Formatted CSV files as defined in Results', style: TextStyle(color: Colors.green)),
             ),

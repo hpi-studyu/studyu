@@ -219,6 +219,7 @@ class _HeaderState extends State<Header> {
                   final isDeleted =
                       await showDialog<bool>(context: context, builder: (_) => DeleteAlertDialog(study: widget.study));
                   if (isDeleted) {
+                    if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('${widget.study.title} ${AppLocalizations.of(context).deleted}')),
                     );
@@ -235,18 +236,24 @@ class _HeaderState extends State<Header> {
 
 const buttonProgressIndicator = SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 3));
 
-class DeleteAlertDialog extends StatelessWidget {
+class DeleteAlertDialog extends StatefulWidget {
   final Study study;
 
   const DeleteAlertDialog({@required this.study, Key key}) : super(key: key);
 
+  @override
+  State<DeleteAlertDialog> createState() => _DeleteAlertDialogState();
+}
+
+class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text(AppLocalizations.of(context).delete_draft_study),
         actions: [
           ElevatedButton.icon(
             onPressed: () async {
-              await study.delete();
+              await widget.study.delete();
+              if (!mounted) return;
               Navigator.pop(context, true);
             },
             icon: const Icon(Icons.delete),

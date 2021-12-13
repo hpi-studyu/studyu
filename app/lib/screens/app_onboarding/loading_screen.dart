@@ -36,6 +36,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     final model = context.read<AppState>();
     final selectedStudyObjectId = await UserQueries.getActiveSubjectId();
     print('Selected study: $selectedStudyObjectId');
+    if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (UserQueries.isUserLoggedIn()) {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
@@ -66,6 +67,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         ],
       );
     } finally {
+      if (!mounted) return;
       if (subject != null) {
         model.activeSubject = subject;
         if (!kIsWeb) {

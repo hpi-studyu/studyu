@@ -108,7 +108,7 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
                           }
                           return null;
                         },
-                        onFieldSubmitted: (value) => _addNewCollaborator(value),
+                        onFieldSubmitted: _addNewCollaborator,
                       ),
                     ),
                     const SizedBox(width: 16),

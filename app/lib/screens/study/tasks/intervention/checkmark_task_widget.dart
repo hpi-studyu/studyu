@@ -7,17 +7,23 @@ import 'package:supabase/supabase.dart';
 
 import '../../../../models/app_state.dart';
 
-class CheckmarkTaskWidget extends StatelessWidget {
+class CheckmarkTaskWidget extends StatefulWidget {
   final CheckmarkTask task;
 
   const CheckmarkTaskWidget({this.task, Key key}) : super(key: key);
 
+  @override
+  State<CheckmarkTaskWidget> createState() => _CheckmarkTaskWidgetState();
+}
+
+class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
   Future<void> _handleCompletion(BuildContext context, Future<void> animation) async {
     final model = context.read<AppState>();
     final activeStudy = model.activeSubject;
     try {
-      await activeStudy.addResult<bool>(taskId: task.id, result: true);
+      await activeStudy.addResult<bool>(taskId: widget.task.id, result: true);
       await animation;
+      if (!mounted) return;
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(

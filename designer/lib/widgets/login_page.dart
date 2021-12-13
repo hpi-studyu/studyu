@@ -132,7 +132,7 @@ class _LoginPageState extends SupabaseAuthState<LoginPage> {
                 ),
                 const SizedBox(height: 32),
                 OutlinedButton(
-                  onPressed: () => appState.skipLogin(),
+                  onPressed: appState.skipLogin,
                   child: const Text('Skip login'),
                 ),
               ],

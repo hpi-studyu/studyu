@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
-import 'package:studyu_designer/util/save.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -48,6 +48,33 @@ class _DesignerState extends State<Designer> {
     _backButtonDispatcher = Router.of(context).backButtonDispatcher.createChildBackButtonDispatcher();
   }
 
+  Future<Study> saveStudy(BuildContext context, Study study, {bool publish}) async {
+    if (publish) {
+      final publishingAccepted =
+          await showDialog<bool>(context: context, builder: (_) => PublishAlertDialog(studyTitle: study.title));
+      if (!publishingAccepted) return null;
+      study.published = true;
+    }
+
+    final savedStudy = await study.save();
+    if (!mounted) return null;
+    if (savedStudy == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${study.title} ${AppLocalizations.of(context).failed_saving}')));
+      return null;
+    }
+
+    final savedMessage = publish
+        ? AppLocalizations.of(context).was_saved_and_published
+        : AppLocalizations.of(context).was_saved_as_draft;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${study.title} $savedMessage')),
+    );
+
+    return savedStudy;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Claim priority, If there are parallel sub router, you will need
@@ -72,7 +99,8 @@ class _DesignerState extends State<Designer> {
                 label: Text(AppLocalizations.of(context).publish_study),
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () async {
-                  final newStudy = await publishStudy(context, study);
+                  final newStudy = await saveStudy(context, study, publish: true);
+                  if (!mounted) return;
                   if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
                 },
               ),
@@ -84,8 +112,9 @@ class _DesignerState extends State<Designer> {
                 label: Text(AppLocalizations.of(context).save_draft),
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () async {
-                  final newStudy = await saveDraft(context, study);
-                  if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
+                  final newDraftStudy = await saveStudy(context, study, publish: false);
+                  if (!mounted) return;
+                  if (newDraftStudy != null) context.read<AppState>().openNewStudy(newDraftStudy);
                 },
               ),
             ),
@@ -107,6 +136,7 @@ class _DesignerState extends State<Designer> {
                 icon: const Icon(Icons.copy),
                 onPressed: () async {
                   await FlutterClipboard.copy(prettyJson(study.toJson()));
+                  if (!mounted) return;
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).copied_json)));
                 },
@@ -248,5 +278,42 @@ class DesignerRouterDelegate extends RouterDelegate<RoutePath>
     // This is not required for inner router delegate because it does not
     // parse route
     assert(false);
+  }
+}
+
+class PublishAlertDialog extends StatelessWidget {
+  final String studyTitle;
+
+  const PublishAlertDialog({@required this.studyTitle}) : super();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AlertDialog(
+      title: Text(AppLocalizations.of(context).lock_and_publish),
+      content: RichText(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black),
+          children: [
+            const TextSpan(text: 'The study '),
+            TextSpan(
+              text: studyTitle,
+              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            TextSpan(text: AppLocalizations.of(context).really_want_to_publish),
+          ],
+        ),
+      ),
+      actions: [
+        ElevatedButton.icon(
+          onPressed: () async {
+            Navigator.pop(context, true);
+          },
+          icon: const Icon(Icons.publish),
+          style: ElevatedButton.styleFrom(primary: Colors.green, elevation: 0),
+          label: Text('${AppLocalizations.of(context).publish} $studyTitle'),
+        )
+      ],
+    );
   }
 }

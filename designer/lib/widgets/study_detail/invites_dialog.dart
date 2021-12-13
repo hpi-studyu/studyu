@@ -172,7 +172,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
                           }
                           return null;
                         },
-                        onFieldSubmitted: (value) => addNewInviteCode(value),
+                        onFieldSubmitted: addNewInviteCode,
                       ),
                     ),
                     const SizedBox(width: 16),

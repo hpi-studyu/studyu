@@ -25,6 +25,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     final activeStudy = context.read<AppState>().activeSubject;
     try {
       await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
+      if (!mounted) return;
       Navigator.pop(context, true);
     } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(

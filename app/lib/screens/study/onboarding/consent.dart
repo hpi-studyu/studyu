@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,7 +65,29 @@ class _ConsentScreenState extends State<ConsentScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: () async => savePDF(context, '${subject.study.title}_consent', await generatePdfContent()),
+            onPressed: () async {
+              if (kIsWeb) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    elevation: 24,
+                    title: Text(AppLocalizations.of(context).save_not_supported),
+                    content: Text(AppLocalizations.of(context).save_not_supported_description),
+                  ),
+                );
+                return null;
+              }
+              final savedFilePath =
+                  await savePDF(context, '${subject.study.title}_consent', await generatePdfContent());
+              if (!mounted) return;
+              if (savedFilePath != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${AppLocalizations.of(context).was_saved_to}$savedFilePath.'),
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),

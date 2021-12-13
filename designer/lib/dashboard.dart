@@ -161,6 +161,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       );
                       if (wasUploaded) {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(content: Text('Successfully imported study JSON 🎉')));
                       }
@@ -178,12 +179,12 @@ class _DashboardState extends State<Dashboard> {
           if (appState.loggedIn)
             IconButton(
               icon: const Icon(Icons.logout),
-              onPressed: () => appState.signOut(),
+              onPressed: appState.signOut,
             )
           else
             IconButton(
               icon: const Icon(Icons.login),
-              onPressed: () => appState.goToLoginScreen(),
+              onPressed: appState.goToLoginScreen,
             ),
         ],
       ),

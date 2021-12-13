@@ -22,8 +22,10 @@ class _KickoffScreen extends State<KickoffScreen> {
   Future<void> _storeUserStudy(BuildContext context) async {
     try {
       subject = await subject.save();
+      if (!mounted) return;
       context.read<AppState>().activeSubject = subject;
       await UserQueries.storeActiveSubjectId(subject.id);
+      if (!mounted) return;
       if (!kIsWeb) {
         scheduleStudyNotifications(context);
       }
