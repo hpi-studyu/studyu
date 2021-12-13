@@ -16,7 +16,7 @@ jobs:
           java-version: '8.x'
       - uses: subosito/flutter-action@v1
         with:
-          channel: beta
+          channel: stable
       - name: run flutter package updater
         uses: tianhaoz95/update-flutter-packages@v0.0.5
         with:
