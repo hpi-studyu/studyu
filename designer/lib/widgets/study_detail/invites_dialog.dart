@@ -48,8 +48,11 @@ class _InvitesDialogState extends State<InvitesDialog> {
   Future<void> addNewInviteCode(String code) async {
     if (_formKey.currentState.validate()) {
       StudyInvite invite;
-      invite = StudyInvite(code, widget.study.id,
-          preselectedInterventionIds: _preselectInterventions ? [_interventionA.id, _interventionB.id] : null,);
+      invite = StudyInvite(
+        code,
+        widget.study.id,
+        preselectedInterventionIds: _preselectInterventions ? [_interventionA.id, _interventionB.id] : null,
+      );
       try {
         await invite.save();
         setState(() {
@@ -115,8 +118,10 @@ class _InvitesDialogState extends State<InvitesDialog> {
           children: [
             Text('Invite codes (${_invites.length})'),
             const Spacer(),
-            Text('Preselect interventions (Order: ${widget.study.schedule.nameOfSequence})',
-                style: Theme.of(context).textTheme.bodyText2,),
+            Text(
+              'Preselect interventions (Order: ${widget.study.schedule.nameOfSequence})',
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
             Switch(
               value: _preselectInterventions,
               onChanged: (value) => setState(() {
@@ -133,21 +138,23 @@ class _InvitesDialogState extends State<InvitesDialog> {
             children: [
               Expanded(
                 child: ListView.separated(
-                    shrinkWrap: true,
-                    separatorBuilder: (context, index) => const Divider(),
-                    itemCount: _invites.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final invite = _invites[index];
-                      return ListTile(
-                          leading: SelectableText(invite.code),
-                          title: invite.preselectedInterventionIds != null
-                              ? _buildSelectedInterventions(invite.preselectedInterventionIds)
-                              : null,
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => deleteInviteCode(invite),
-                          ),);
-                    },),
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemCount: _invites.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final invite = _invites[index];
+                    return ListTile(
+                      leading: SelectableText(invite.code),
+                      title: invite.preselectedInterventionIds != null
+                          ? _buildSelectedInterventions(invite.preselectedInterventionIds)
+                          : null,
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => deleteInviteCode(invite),
+                      ),
+                    );
+                  },
+                ),
               ),
               Form(
                 key: _formKey,
@@ -188,10 +195,12 @@ class _InvitesDialogState extends State<InvitesDialog> {
                           value: _interventionA,
                           onChanged: (value) => setState(() => _interventionA = value),
                           items: widget.study.interventions
-                              .map((i) => DropdownMenuItem<Intervention>(
-                                    value: i,
-                                    child: _buildIntervention(i),
-                                  ),)
+                              .map(
+                                (i) => DropdownMenuItem<Intervention>(
+                                  value: i,
+                                  child: _buildIntervention(i),
+                                ),
+                              )
                               .toList(),
                         ),
                       ),
@@ -207,10 +216,12 @@ class _InvitesDialogState extends State<InvitesDialog> {
                           value: _interventionB,
                           onChanged: (value) => setState(() => _interventionB = value),
                           items: widget.study.interventions
-                              .map((i) => DropdownMenuItem<Intervention>(
-                                    value: i,
-                                    child: _buildIntervention(i),
-                                  ),)
+                              .map(
+                                (i) => DropdownMenuItem<Intervention>(
+                                  value: i,
+                                  child: _buildIntervention(i),
+                                ),
+                              )
                               .toList(),
                         ),
                       ),

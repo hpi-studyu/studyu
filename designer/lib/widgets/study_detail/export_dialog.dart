@@ -62,22 +62,26 @@ class _ExportDialogState extends State<ExportDialog> {
                   onPressed: () async {
                     final res = await Supabase.instance.client
                         .from(Study.tableName)
-                        .select([
-                          '*',
-                          'study_participant_count',
-                          'study_ended_count',
-                          'active_subject_count',
-                          'study_missed_days',
-                          if (_includeParticipantData) 'study_subject(*, subject_progress(*))',
-                        ].join(','),)
+                        .select(
+                          [
+                            '*',
+                            'study_participant_count',
+                            'study_ended_count',
+                            'active_subject_count',
+                            'study_missed_days',
+                            if (_includeParticipantData) 'study_subject(*, subject_progress(*))',
+                          ].join(','),
+                        )
                         .eq('id', widget.study.id)
                         .single()
                         .execute();
                     if (res.error != null) {
                       print(res.error.message);
                     }
-                    await downloadFile(prettyJson(res.data),
-                        _includeParticipantData ? 'study_model_with_participant_data.json' : 'study_model.json',);
+                    await downloadFile(
+                      prettyJson(res.data),
+                      _includeParticipantData ? 'study_model_with_participant_data.json' : 'study_model.json',
+                    );
                   },
                   icon: const Icon(MdiIcons.fileDownload, color: Color(0xff323330)),
                   label: Column(
@@ -93,13 +97,15 @@ class _ExportDialogState extends State<ExportDialog> {
                     onPressed: () async {
                       final res = await Supabase.instance.client
                           .from(Study.tableName)
-                          .select([
-                            '*',
-                            'study_participant_count',
-                            'study_ended_count',
-                            'active_subject_count',
-                            'study_missed_days',
-                          ].join(','),)
+                          .select(
+                            [
+                              '*',
+                              'study_participant_count',
+                              'study_ended_count',
+                              'active_subject_count',
+                              'study_missed_days',
+                            ].join(','),
+                          )
                           .eq('id', widget.study.id)
                           .csv()
                           .execute();

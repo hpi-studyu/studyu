@@ -71,19 +71,21 @@ class _AddCollaboratorDialogState extends State<AddCollaboratorDialog> {
             children: [
               Expanded(
                 child: ListView.separated(
-                    shrinkWrap: true,
-                    separatorBuilder: (context, index) => const Divider(),
-                    itemCount: widget.study.collaboratorEmails.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final email = widget.study.collaboratorEmails[index];
-                      return ListTile(
-                          leading: const Icon(Icons.mail),
-                          title: SelectableText(email),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _removeCollaborator(email),
-                          ),);
-                    },),
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemCount: widget.study.collaboratorEmails.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final email = widget.study.collaboratorEmails[index];
+                    return ListTile(
+                      leading: const Icon(Icons.mail),
+                      title: SelectableText(email),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _removeCollaborator(email),
+                      ),
+                    );
+                  },
+                ),
               ),
               Form(
                 key: _formKey,
