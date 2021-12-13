@@ -11,7 +11,7 @@ RUN pub get --offline
 
 RUN dart compile exe bin/repo_generator.dart
 
-FROM python:latest
+FROM python:3.9
 
 RUN pip install git+https://github.com/copier-org/copier.git@1f24b5a02e33960cd7d71c998e475b253efd62ae
 
