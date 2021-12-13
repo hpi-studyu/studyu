@@ -25,15 +25,17 @@ Konigorski S, Wernicke S, Slosarek T, Zenner AM, Strelow N, Ruether FD, Henschel
 ### Install Flutter
 
 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. `flutter channel beta`
-3. `flutter upgrade`
-4. `flutter config --enable-web` To enable [web support](https://flutter.dev/docs/get-started/web).
+2. `flutter upgrade`
+3. `flutter config --enable-web` To enable [web support](https://flutter.dev/docs/get-started/web).
 
 #### A word about beta
 
-We only developed on beta, since it is required for web and we did not build a have a running production app.
-It is stable, but some plugins may not be instantly adapted to beta, causing incompatibilities.
-This was the case a few times, we managed to find fixes in the GitHub issues of those packages.
+We used to keep the channel on beta to get the newest changes (web support) and react quickly to breaking changes.
+Beta was mostly stable, but sometimes packages were not being updated quickly to address beta changes.
+Sometimes we had to include packages from Github PRs, which required some effort to maintain.
+
+Flutter has come a long way since then and now with version 2.8, we switched our code to use stable.
+This will make it easier to maintain in the future and reduce the occurrence of breaking changes and workarounds.
 
 ### Running the app and designer
 
