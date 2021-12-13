@@ -206,9 +206,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: six_ft_apart
-      resolved-ref: "5da952b491a454bc5d199a85e8bd530209f0c8d8"
-      url: "https://github.com/hoxuanvinh1999/FlutterIconPicker"
+      ref: HEAD
+      resolved-ref: "7e919d29dd3869b7f49a027ed66cca82a4fd7a01"
+      url: "https://github.com/Ahmadre/FlutterIconPicker"
     source: git
     version: "3.0.4"
   flutter_keyboard_visibility:
@@ -332,7 +332,7 @@ packages:
     source: hosted
     version: "0.15.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"

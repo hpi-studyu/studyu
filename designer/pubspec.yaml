@@ -26,6 +26,7 @@ dependencies:
     sdk: flutter
   form_builder_extra_fields: ^7.0.0
   form_builder_validators: ^7.2.0
+  http: ^0.13.4
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.6595
   pretty_json: ^2.0.0
@@ -47,8 +48,7 @@ dev_dependencies:
 dependency_overrides:
   flutter_iconpicker:
     git:
-      url: https://github.com/hoxuanvinh1999/FlutterIconPicker
-      ref: six_ft_apart
+      url: https://github.com/Ahmadre/FlutterIconPicker
 
 flutter_icons:
   image_path: 'assets/images/icon.png'
