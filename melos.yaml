@@ -1,5 +1,7 @@
 name: studyu-packages
 
+repository: https://github.com/hpi-studyu/studyu
+
 packages:
   - 'app/*'
   - 'designer/*'
@@ -7,6 +9,10 @@ packages:
   - 'flutter_common/*'
   - 'repo_generator/*'
   - 'notebook_uploader/*'
+
+command:
+  version:
+    linkToCommits: true
 
 scripts:
   tuneup: melos exec -- pub global run tuneup check
