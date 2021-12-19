@@ -1,3 +1,10 @@
+## 1.5.7
+
+ - **REFACTOR**: Use FormBuilderColorPickerField from form_builder_extra_fields. ([80c4bf43](https://github.com/hpi-studyu/studyu/commit/80c4bf43b2e008c30748fdcaca0c564a1756ab84))
+ - **FIX**: Upgrade studyu deps. ([c9445358](https://github.com/hpi-studyu/studyu/commit/c9445358d10e0ef72595e7561d153e3f5ebddcfb))
+ - **FIX**: Upgrade dependencies. ([f59a9989](https://github.com/hpi-studyu/studyu/commit/f59a9989be6238576a20f5288951745345ec84af))
+ - **FIX**: Use new dart 2.15 enum functions. ([4a3d7ab6](https://github.com/hpi-studyu/studyu/commit/4a3d7ab694d0eac9161070d5c656d0054aaaf958))
+
 ## 1.5.6
 
  - **FIX**: Adapt to flutter deprecations.

@@ -1,3 +1,8 @@
+## 1.10.8
+
+ - **FIX**: Upgrade studyu deps. ([c9445358](https://github.com/hpi-studyu/studyu/commit/c9445358d10e0ef72595e7561d153e3f5ebddcfb))
+ - **FIX**: Upgrade dependencies. ([f59a9989](https://github.com/hpi-studyu/studyu/commit/f59a9989be6238576a20f5288951745345ec84af))
+
 ## 1.10.7
 
  - **FIX**: Add more german translation.
