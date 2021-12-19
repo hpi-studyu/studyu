@@ -1,3 +1,7 @@
+## 1.3.9
+
+ - **FIX**: Upgrade core. ([5ccbc3d1](https://github.com/hpi-studyu/studyu/commit/5ccbc3d1577f0fb8c0cbe78bbe6b44c322d6ed7d))
+
 ## 1.3.8
 
  - Update a dependency to the latest release.
