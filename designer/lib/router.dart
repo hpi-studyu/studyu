@@ -8,11 +8,6 @@ import 'widgets/login_page.dart';
 import 'widgets/study_detail/notebook_viewer.dart';
 import 'widgets/study_detail/study_details.dart';
 
-/// Transforms String to Enum value. Dart does not have support for this (yet)
-T enumFromString<T>(Iterable<T> values, String value) {
-  return values.firstWhere((type) => type.toString().split('.').last == value, orElse: () => null);
-}
-
 extension ListGetExtension<T> on List<T> {
   T tryGet(int index) => index < 0 || index >= length ? null : this[index];
 }
@@ -33,7 +28,7 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
         if (uri.pathSegments.length >= 2 && uri.pathSegments[1].isNotEmpty) {
           switch (uri.pathSegments[1]) {
             case DesignerPath.basePath:
-              final page = enumFromString<DesignerPage>(DesignerPage.values, uri.pathSegments.tryGet(2));
+              final page = DesignerPage.values.byName(uri.pathSegments.tryGet(2));
               // /:id/designer/:page
               return DesignerPath(studyId: studyId, page: page);
             case NotebookPath.basePath:
@@ -66,7 +61,7 @@ class RootRouteInformationParser extends RouteInformationParser<RoutePath> {
 
         location += '/${DesignerPath.basePath}';
         if (configuration.page != null) {
-          location += '/${configuration.page.toString().split('.')[1]}';
+          location += '/${configuration.page.name}';
         }
       } else if (configuration is NotebookPath) {
         location += '/${NotebookPath.basePath}';
