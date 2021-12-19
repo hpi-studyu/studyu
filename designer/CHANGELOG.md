@@ -1,3 +1,7 @@
+## 1.5.8
+
+ - **FIX**: Needed upgrade of core, fixes bug in generated files. ([44483b73](https://github.com/hpi-studyu/studyu/commit/44483b733ab53e34456b5b4bcf041c2bee3fc628))
+
 ## 1.5.7
 
  - **REFACTOR**: Use FormBuilderColorPickerField from form_builder_extra_fields. ([80c4bf43](https://github.com/hpi-studyu/studyu/commit/80c4bf43b2e008c30748fdcaca0c564a1756ab84))

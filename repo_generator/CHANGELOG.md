@@ -1,3 +1,7 @@
+## 1.4.8
+
+ - **FIX**: Needed upgrade of core, fixes bug in generated files. ([44483b73](https://github.com/hpi-studyu/studyu/commit/44483b733ab53e34456b5b4bcf041c2bee3fc628))
+
 ## 1.4.7
 
  - Update a dependency to the latest release.
