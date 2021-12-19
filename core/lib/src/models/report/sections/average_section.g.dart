@@ -13,10 +13,10 @@ AverageSection _$AverageSectionFromJson(Map<String, dynamic> json) =>
       ..title = json['title'] as String?
       ..description = json['description'] as String?
       ..aggregate =
-          $enumDecodeNullable(_$TemporalAggregationEnumMap, json['aggregate'])
+          _$enumDecodeNullable(_$TemporalAggregationEnumMap, json['aggregate'])
       ..resultProperty = json['resultProperty'] == null
           ? null
-          : DataReference<num>.fromJson(
+          : DataReference.fromJson(
               json['resultProperty'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) {
@@ -36,6 +36,43 @@ Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) {
   writeNotNull('aggregate', _$TemporalAggregationEnumMap[instance.aggregate]);
   writeNotNull('resultProperty', instance.resultProperty?.toJson());
   return val;
+}
+
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
+  }
+
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$TemporalAggregationEnumMap = {

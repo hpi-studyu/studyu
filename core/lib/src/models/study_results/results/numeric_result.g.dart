@@ -11,7 +11,7 @@ NumericResult _$NumericResultFromJson(Map<String, dynamic> json) =>
       ..type = json['type'] as String
       ..id = json['id'] as String
       ..filename = json['filename'] as String
-      ..resultProperty = DataReference<num>.fromJson(
+      ..resultProperty = DataReference.fromJson(
           json['resultProperty'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$NumericResultToJson(NumericResult instance) =>
