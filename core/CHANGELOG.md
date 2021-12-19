@@ -1,3 +1,8 @@
+## 3.7.4
+
+ - **FIX**: Upgrade dependencies. ([f59a9989](https://github.com/hpi-studyu/studyu/commit/f59a9989be6238576a20f5288951745345ec84af))
+ - **FIX**: Update generated files. ([0627db30](https://github.com/hpi-studyu/studyu/commit/0627db3064a44d0538aa490868f7332411a1347c))
+
 ## 3.7.3
 
  - **REFACTOR**: Import symbols from supabase package.

@@ -1,3 +1,7 @@
+## 1.3.5
+
+ - **FIX**: Upgrade dependencies. ([f59a9989](https://github.com/hpi-studyu/studyu/commit/f59a9989be6238576a20f5288951745345ec84af))
+
 ## 1.3.4
 
  - **FIX**: Upgrade studyu core.
