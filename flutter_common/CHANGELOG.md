@@ -1,3 +1,7 @@
+## 1.3.7
+
+ - **FIX**: Upgrade core. ([19132045](https://github.com/hpi-studyu/studyu/commit/19132045c9d71ccd3c98e5eb6eb9751153a5533e))
+
 ## 1.3.6
 
  - **FIX**: Upgrade dependencies. ([f59a9989](https://github.com/hpi-studyu/studyu/commit/f59a9989be6238576a20f5288951745345ec84af))
