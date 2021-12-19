@@ -1,3 +1,7 @@
+## 3.7.5
+
+ - **FIX**: Revert "fix: Update generated files". ([5e512f89](https://github.com/hpi-studyu/studyu/commit/5e512f890774c52e794ac63ee87a556e5188e193))
+
 ## 3.7.4
 
  - **FIX**: Upgrade dependencies. ([f59a9989](https://github.com/hpi-studyu/studyu/commit/f59a9989be6238576a20f5288951745345ec84af))

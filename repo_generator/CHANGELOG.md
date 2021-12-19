@@ -1,3 +1,7 @@
+## 1.4.7
+
+ - Update a dependency to the latest release.
+
 ## 1.4.6
 
  - **FIX**: Upgrade studyu deps. ([c9445358](https://github.com/hpi-studyu/studyu/commit/c9445358d10e0ef72595e7561d153e3f5ebddcfb))
