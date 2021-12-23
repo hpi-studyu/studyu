@@ -1,18 +1,23 @@
 # N of 1 app built at HPI with ❤
 
-We have 3 different Flutter packages all contained in this monorepo.
+We have 6 different Flutter/Dart packages all contained in this monorepo.
 
-- StudyU App
-- StudyU Study Designer
-- Core: shared code
+- StudyU App (flutter)
+- StudyU Study Designer (flutter)
+- Repository Generator (dart web server)
+- Analysis Generator (dart CLI script)
+- Core: shared code for all 4 applications
+- Flutter Common: shared code for all Flutter apps (App, Designer)
 
 ## App Test Instances
+
 - StudyU App [Instance](https://studyu-app-v1.web.app)
 - StudyU Study Designer [Instance](https://studyu-designer-v1.web.app)
 
 ## App Stores
 
 - [Google Play Store](https://play.google.com/store/apps/details?id=health.studyu.app)
+- [Apple App Store](https://apps.apple.com/us/app/studyu-health/id1571991198)
 
 ## Publications
 
@@ -22,13 +27,19 @@ Konigorski S, Wernicke S, Slosarek T, Zenner AM, Strelow N, Ruether FD, Henschel
 
 ## Setup
 
-### Install Flutter
+### Getting started
 
 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. `flutter upgrade`
-3. `flutter config --enable-web` To enable [web support](https://flutter.dev/docs/get-started/web).
+2. Make sure both flutter and dart are in your PATH. Run `dart --version` and `flutter --version` to check.
+3. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global activate melos`. Melos is used to manage the Monorepo structure and links all packages.
+4. Run `melos bootstrap` to generate Android Studio/VS Code IDE files to make sure your IDE is setup properly. This also takes care of downloading all other dependencies (usually `flutter pub get` is used).
+5. Open the root folder of the studyu Git repository in Android Studio or VS Code. You should have new run-configurations/tasks added for running the Flutter apps or executing Melos scripts. More information at the [Melos Documentation](https://melos.invertase.dev/).
 
-#### A word about beta
+### Running Flutter apps
+
+Select the run-configuration/task in your IDE to run the Flutter apps.
+
+#### A word about Flutter beta
 
 We used to keep the channel on beta to get the newest changes (web support) and react quickly to breaking changes.
 Beta was mostly stable, but sometimes packages were not being updated quickly to address beta changes.
@@ -37,16 +48,9 @@ Sometimes we had to include packages from Github PRs, which required some effort
 Flutter has come a long way since then and now with version 2.8, we switched our code to use stable.
 This will make it easier to maintain in the future and reduce the occurrence of breaking changes and workarounds.
 
-### Running the app and designer
+## Running everything with docker-compose (depcreated)
 
-Inside the respective folders run:
-
-```
-flutter pub get
-flutter run -t lib/main.dart
-```
-
-## Running everything with docker-compose
+⚠️ DISCLAIMER: This needs to be updated to use Supabase instead of Parse.
 
 There exist 4 different compose files to run locally:
 
@@ -82,75 +86,54 @@ docker-compose -f docker-compose-full.yml up --build
 
 ### Environments
 
-Above command starts the app or designer using the `development` environment. This currently points to our hosted Heroku instance (will be shut down on Nov 10th).
-We use .env (environment) files, to specify the parse App ID, server URL and debug mode.
-We have multiple configurations stored under `envs/` in both app and designer.
-By default `.env` (see below) is used, which contains the instance running on Heroku.
+We use .env (environment) files, to specify the enviroment variables such as Supabase instance and other servers.
+We have multiple configurations stored under `flutter_common/lib/envs/`.
+By default `.env` (see below) is used, which is our production environment.
 We can specify the other files by using e.g. `--dart-define=ENV=.env.local`.
 This can also be added to the run configuration in Android Studio or VS Code.
 
-```
+```shell
 flutter build/run android/web/... --dart-define=ENV=.env.dev/.env.prod/.env.local/...
 ```
 
-**envs/.env file example**
+#### flutter_common/lib/envs/.env file example
+
+```shell
+STUDYU_SUPABASE_URL=https://efeapuvwaxtxnlkzlajv.supabase.co
+STUDYU_SUPABASE_PUBLIC_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyNTUwODMyOCwiZXhwIjoxOTQxMDg0MzI4fQ.PUirsx5Zzhj3akaStc5Djid0aAVza3ELoZ5XUTqM91A
+STUDYU_PROJECT_GENERATOR_URL=https://studyu-project-generator-2zro3rzera-ew.a.run.app
+STUDYU_APP_URL="https://studyu-app.web.app/#/"
 ```
-PARSE_APP_ID=nof1
-PARSE_SERVER_URL=https://nof1.herokuapp.com/parse
-PARSE_DEBUG=true
-```
-(Previously listed the Master key as well, but it should never be used for client applications. It is only used for changing ACLs)
 
 The great advantage of this new approach
 (compared to the previous approach which different entrypoint `main.dart` files)
-is can set the configuration of already compiled web apps. Previously, once built,
+is that we can set the configuration of already compiled web apps. Previously, once built,
 a Flutter web app and its container would be hardcoded to whatever variable was given at the build time.
-In the docker-compose setup, we leverage this by copying the config (`envs/.env`)
+In the docker-compose setup, we leverage this by copying the config (`.env`)
 to the right place in the container, without needing to rebuild.
-Now we can publish a docker image studyU-designer:1.3.4 and the same image can be used in multiple environments.
-This is also needed for a Kubernetes setup.
+Now we can publish a docker image and the same image can be used in multiple environments.
 
-Additionally we have 5 envs for convenience. Replace or create for more convenience:
+Additionally we have 3 envs for convenience. Replace or create for more convenience:
 
-- `.env`: Used by default, same as .env.dev
-- `.env.dev`: Points to our Heroku instance. What we mainly use.
-- `.env.prod`: Same as development currently
-- `.env.local`: Used when connecting to a local running parse server.
-- `.env.local-android`: Same as local, but for connecting from an android emulator.
+- `.env`: Production database used by default
+- `.env.staging`: Staging database, currently not used
+- `.env.local`: Used when connecting to a locally running supabase instance.
 
-### Coding
+Ideally we should only use staging for all our development work or run an instance locally.
+This needs to be setup using the new [supabase cli](https://github.com/supabase/cli).
 
-Setup your editor of choice: https://flutter.dev/docs/get-started/editor?tab=androidstudio
-
-We prefer Android Studio, Visual Studio Code is also well supported.
-
-To open and edit the project, the best option is to open the whole repository in Android Studio. This allows you to work on all 3 projects at the same time. It is especially useful when navigating the code from app/designer to core, as it is loaded in the same project and you can directly see and edit the code.
-
-To run the app or study designer, you need to create your own run config in Android Studio.
-
-1. Click on add run configuration
-2. Click on the `+` in the `Run/Debug Configurations` screen.
-3. Select Flutter
-4. Give it a name
-5. Add the path to the main file. e.g. `<repo-root>/app/lib/main.dart` or a different main file. We recommend having one for the app and one for the designer.
+Also see melos commands `app:web:local` and `designer:web:local`.
 
 #### Coding on `core`
 
 When developing models in the `core` package you need to make sure the JSON IO code is generated correctly.
 To do this we use `build_runner` together with `json_serializable`.
 
-To generate the IO code once, run `flutter pub run build_runner build`.
+To generate the IO code once, run `melos run generate`.
 
-To watch the model files and continually generate the files, run `flutter pub run build_runner watch`.
+Contrary to most recommendations, we commit those generated files to Git. This is needed, because core is a dependency by app and designer and dependencies need to have all files generated, when being imported.
 
-Contrary to most recommendations, we commit those generated files to Git. This is needed, because core is a dependency by app and designer and dependencies need to have all files generated.
+### Supabase
 
-### Parse
-
-We are using [parse-server](https://github.com/ParsePlatform/parse-server) and [Parse Dashboard](https://github.com/parse-community/parse-dashboard).
-
-[Read the full Parse Server guide here](https://github.com/ParsePlatform/parse-server/wiki/Parse-Server-Guide)
-
-We use the official [parse-server docker image](https://hub.docker.com/r/parseplatform/parse-server)
-and the [bitnami parse-dashboard image](https://hub.docker.com/r/bitnami/parse-dashboard),
-which is more actively maintained than the official one
+We are using [supabase](https://supabase.com/) as a Backend-as-a-Service provider.
+Supabase provides different backend services such as a database, API, authentication, storage service all based around PostgreSQL and other FOSS.
