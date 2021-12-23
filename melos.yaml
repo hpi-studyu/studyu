@@ -15,8 +15,6 @@ command:
     linkToCommits: true
 
 scripts:
-  tuneup: melos exec -- pub global run tuneup check
-
   analyze:
     run: |
       melos exec -c 6 -- \
@@ -110,6 +108,23 @@ scripts:
     description: Build app for Web.
     select-package:
       scope: studyu_designer
+
+  # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
+  app:web:local:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run lib/main.dart -d chrome --web-port 3001 --dart-define=ENV=.env.local"
+    select-package:
+      scope: studyu_app
+    description: Runs app in chrome on port 3001 with local env
+
+  designer:web:local:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run lib/main.dart -d chrome --web-port 3000 --dart-define=ENV=.env.local"
+    select-package:
+      scope: studyu_designer
+    description: Runs designer in chrome on port 3000 with local env
 
 # Clean things very deeply, can be used to establish "pristine checkout" status
 clean:deep: >
