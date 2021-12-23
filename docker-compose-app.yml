@@ -8,4 +8,4 @@ services:
     ports:
       - 8081:80
     env_file:
-      - common/lib/envs/.env
+      - flutter_common/lib/envs/.env

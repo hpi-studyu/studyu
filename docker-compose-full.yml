@@ -8,13 +8,13 @@ services:
     ports:
       - 8081:80
     env_file:
-      - common/lib/envs/.env
+      - flutter_common/lib/envs/.env
   designer:
     build:
       context: .
       args:
-        FLUTTER_APP_FOLDER: study_designer
+        FLUTTER_APP_FOLDER: designer
     ports:
       - 8080:80
     env_file:
-      - common/lib/envs/.env
+      - flutter_common/lib/envs/.env

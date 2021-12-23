@@ -12,14 +12,11 @@ ENV FLUTTER_ROOT=$FLUTTER_HOME
 
 ENV PATH ${PATH}:${FLUTTER_HOME}/bin:${FLUTTER_HOME}/bin/cache/dart-sdk/bin:/root/.pub-cache/bin/
 
-RUN git clone --depth 1 --branch beta https://github.com/flutter/flutter.git ${FLUTTER_HOME}
+RUN git clone --depth 1 --branch stable https://github.com/flutter/flutter.git ${FLUTTER_HOME}
 
 RUN yes | flutter doctor --android-licenses \
     && flutter doctor \
     && chown -R root:root ${FLUTTER_HOME}
-
-# Enable Flutter web
-RUN flutter config --enable-web
 
 # Install melos
 RUN pub global activate melos
@@ -32,8 +29,8 @@ COPY melos.yaml melos.yaml
 COPY core/pubspec.yaml core/pubspec.yaml
 COPY core/pubspec.lock core/pubspec.lock
 
-COPY common/pubspec.yaml common/pubspec.yaml
-COPY common/pubspec.lock common/pubspec.lock
+COPY flutter_common/pubspec.yaml flutter_common/pubspec.yaml
+COPY flutter_common/pubspec.lock flutter_common/pubspec.lock
 
 COPY $FLUTTER_APP_FOLDER/pubspec.yaml $FLUTTER_APP_FOLDER/pubspec.yaml
 COPY $FLUTTER_APP_FOLDER/pubspec.lock $FLUTTER_APP_FOLDER/pubspec.lock
