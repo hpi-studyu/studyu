@@ -205,12 +205,10 @@ packages:
   flutter_iconpicker:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "7e919d29dd3869b7f49a027ed66cca82a4fd7a01"
-      url: "https://github.com/Ahmadre/FlutterIconPicker"
-    source: git
-    version: "3.0.4"
+      name: flutter_iconpicker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:

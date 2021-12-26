@@ -28,7 +28,7 @@ class _AboutDesignerState extends State<AboutDesigner> {
   Future<void> _pickIcon() async {
     final icon = await FlutterIconPicker.showIconPicker(
       context,
-      iconPackMode: IconPack.custom,
+      iconPackModes: [IconPack.custom],
       customIconPack: {for (var key in MdiIcons.getIconsName()) key: MdiIcons.fromString(key)},
     );
 
