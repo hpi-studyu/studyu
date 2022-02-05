@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.0.2
-  shared_preferences: ^2.0.11
+  shared_preferences: ^2.0.13
   studyu_core:
-  supabase_flutter: ^0.2.9
+  supabase_flutter: ^0.2.12
   uuid: ^3.0.4
 
 flutter:

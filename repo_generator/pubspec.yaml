@@ -15,10 +15,10 @@ dependencies:
   pretty_json: ^2.0.0
   shelf: ^1.2.0
   studyu_core:
-  supabase: ^0.2.10
+  supabase: ^0.2.14
 
 dev_dependencies:
-    shelf_hotreload: ^1.0.0
+    shelf_hotreload: ^1.0.1
 
 executables:
   repo_generator:
