@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer/util/storage_helper.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import 'package:webviewx/webviewx.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class NotebookViewer extends StatelessWidget {
   final String studyId;
@@ -14,6 +15,22 @@ class NotebookViewer extends StatelessWidget {
     @required this.notebook,
     Key key,
   }) : super(key: key);
+
+  _loadHTML(WebViewController con, String html) async {
+    con.loadUrl(Uri.dataFromString(
+        html,
+        mimeType: 'text/html',
+        encoding: Encoding.getByName('utf-8')
+    ).toString());
+  }
+
+  Widget _buildWebView(String html) {
+    return WebView(
+      onWebViewCreated: (WebViewController webViewController) {
+        _loadHTML(webViewController, html);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +64,7 @@ class NotebookViewer extends StatelessWidget {
               child: RetryFutureBuilder<String>(
                 tryFunction: () => downloadFromStorage('${studyId}/${notebook}'),
                 successBuilder: (context, notebookHtml) => LayoutBuilder(
-                  builder: (context, constraints) => WebViewX(
-                    height: constraints.maxHeight,
-                    width: constraints.maxWidth,
-                    initialContent: notebookHtml,
-                    initialSourceType: SourceType.html,
-                  ),
+                  builder: (context, constraints) => _buildWebView(notebookHtml),
                 ),
               ),
             ),
