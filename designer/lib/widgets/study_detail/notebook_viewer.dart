@@ -17,11 +17,13 @@ class NotebookViewer extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> _loadHTML(WebViewController con, String html) async {
-    con.loadUrl(Uri.dataFromString(
+    con.loadUrl(
+      Uri.dataFromString(
         html,
         mimeType: 'text/html',
         encoding: Encoding.getByName('utf-8'),
-    ).toString(),);
+      ).toString(),
+    );
   }
 
   Widget _buildWebView(String html) {

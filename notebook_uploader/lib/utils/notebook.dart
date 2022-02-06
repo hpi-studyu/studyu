@@ -14,7 +14,7 @@ Future<void> uploadNotebookToSupabase(String filePath, String studyId) async {
 Future<void> _uploadToSupabaseStorage(String studyId, String fileName, File file, String bucketId) async {
   final uploadResponse = await env.client.storage
       .from(bucketId)
-      .upload('$studyId/$fileName', file, fileOptions: const FileOptions( upsert: true));
+      .upload('$studyId/$fileName', file, fileOptions: const FileOptions(upsert: true));
 
   if (uploadResponse.hasError) {
     print(uploadResponse.error!.message);
