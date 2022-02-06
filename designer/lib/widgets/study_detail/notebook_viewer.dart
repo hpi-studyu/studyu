@@ -16,12 +16,12 @@ class NotebookViewer extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  _loadHTML(WebViewController con, String html) async {
+  Future<void> _loadHTML(WebViewController con, String html) async {
     con.loadUrl(Uri.dataFromString(
         html,
         mimeType: 'text/html',
-        encoding: Encoding.getByName('utf-8')
-    ).toString());
+        encoding: Encoding.getByName('utf-8'),
+    ).toString(),);
   }
 
   Widget _buildWebView(String html) {
@@ -62,7 +62,7 @@ class NotebookViewer extends StatelessWidget {
             ),
             Expanded(
               child: RetryFutureBuilder<String>(
-                tryFunction: () => downloadFromStorage('${studyId}/${notebook}'),
+                tryFunction: () => downloadFromStorage('$studyId/$notebook'),
                 successBuilder: (context, notebookHtml) => LayoutBuilder(
                   builder: (context, constraints) => _buildWebView(notebookHtml),
                 ),

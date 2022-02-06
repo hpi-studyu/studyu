@@ -90,7 +90,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   MdiIcons.informationOutline,
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
-                    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
                     showAboutDialog(
                       context: context,
                       applicationIcon: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
@@ -175,7 +175,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const fontSize = 30.0;
-    final textStyle = const TextStyle(fontSize: fontSize);
+    const textStyle = TextStyle(fontSize: fontSize);
     final theme = Theme.of(context);
     return Center(
       child: Padding(

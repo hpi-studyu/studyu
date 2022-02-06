@@ -37,7 +37,7 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
   } catch (e) {
     print(e);
   }
-  await CliService.generateSshKey();
+  await cliGenerateSshKey();
   final public = File('gitlabkey.pub').readAsStringSync();
   final private = File('gitlabkey').readAsStringSync();
 
@@ -50,11 +50,10 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
     projectId: projectId,
     key: 'session',
     value: env.client.auth.session()!.persistSessionString,
-    masked: false,
   );
   await gl.createProjectVariable(projectId: projectId, key: 'study_id', value: studyId, masked: true);
   // Key cannot be masked due to format
-  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private, masked: false);
+  await gl.createProjectVariable(projectId: projectId, key: 'key', value: private);
 
   print('Creating project environment variables for supabase');
   await gl.createProjectVariable(
@@ -79,11 +78,11 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
         .where((q) => q.type == AnnotatedScaleQuestion.questionType || q.type == VisualAnalogueQuestion.questionType)
         .map((q) => q.id);
   }).toList(growable: false);
-  await CliService.generateCopierProject(
+  await cliGenerateCopierProject(
     generatedProjectPath,
     study.title!,
     scaleQuestionIds,
-    Uri.encodeComponent(projectProperties['http_url_to_repo']),
+    Uri.encodeComponent(projectProperties['http_url_to_repo'] as String),
   );
 
   // Save study schema and subjects data
@@ -114,8 +113,8 @@ Future<void> generateRepo(GitlabClient gl, String studyId) async {
       env.client.auth.user()!.id,
       studyId,
       GitProvider.gitlab,
-      projectProperties['web_url'],
-      projectProperties['http_url_to_repo'],
+      projectProperties['web_url'] as String,
+      projectProperties['http_url_to_repo'] as String,
     ).save();
   } catch (e) {
     print(e);

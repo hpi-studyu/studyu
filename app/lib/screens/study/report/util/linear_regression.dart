@@ -26,8 +26,9 @@ class LinearRegression {
     final numVariables = samples.first.key.length;
     designMatrix = Matrix(
       samples.map((sample) {
-        if (sample.key.length != numVariables)
+        if (sample.key.length != numVariables) {
           throw ArgumentError('Not all samples have the same number of variables.');
+        }
         return [1, ...sample.key];
       }).toList(),
     );

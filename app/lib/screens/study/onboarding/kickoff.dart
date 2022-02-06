@@ -24,7 +24,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       subject = await subject.save();
       if (!mounted) return;
       context.read<AppState>().activeSubject = subject;
-      await UserQueries.storeActiveSubjectId(subject.id);
+      await storeActiveSubjectId(subject.id);
       if (!mounted) return;
       if (!kIsWeb) {
         scheduleStudyNotifications(context);

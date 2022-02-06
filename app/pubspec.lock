@@ -331,6 +331,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.1"
+  lint:
+    dependency: "direct dev"
+    description:
+      name: lint
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.2"
   logging:
     dependency: transitive
     description:
@@ -682,16 +689,16 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      name: studyu_core
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../core"
+      relative: true
+    source: path
     version: "3.7.5"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      name: studyu_flutter_common
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../flutter_common"
+      relative: true
+    source: path
     version: "1.3.9"
   supabase:
     dependency: "direct main"

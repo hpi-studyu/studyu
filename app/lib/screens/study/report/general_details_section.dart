@@ -14,7 +14,7 @@ class GeneralDetailsSection extends GenericSection {
             title: subject.study.title,
             description: subject.study.description,
             iconName: subject.study.iconName,
-            contentPadding: const EdgeInsets.all(0),
+            contentPadding: EdgeInsets.zero,
           ),
         ],
       );

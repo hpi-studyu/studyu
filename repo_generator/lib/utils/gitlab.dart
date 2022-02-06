@@ -27,7 +27,7 @@ class GitlabClient {
 
     if (httpSuccess(response.statusCode)) {
       final json = jsonDecode(response.body);
-      return json;
+      return json as Map<String, dynamic>;
     } else {
       print('Creating project failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }

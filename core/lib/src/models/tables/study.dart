@@ -138,10 +138,10 @@ class Study extends SupabaseObjectFunctions<Study> {
     final tableHeadersSet = jsonList[0].keys.toSet();
     final flattenedQuestions = jsonList.map((progress) {
       if (progress['result_type'] == 'QuestionnaireState') {
-        List<Map<String, dynamic>>.from(progress['result'] as List).forEach((result) {
-          progress[result['question']] = result['response'];
-          tableHeadersSet.add(result['question']);
-        });
+        for (final result in List<Map<String, dynamic>>.from(progress['result'] as List)) {
+          progress[result['question'] as String] = result['response'];
+          tableHeadersSet.add(result['question'] as String);
+        }
         // progress.remove('result');
       }
       return progress;

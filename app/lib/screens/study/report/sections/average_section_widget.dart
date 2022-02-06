@@ -22,12 +22,12 @@ class AverageSectionWidget extends ReportSectionWidget {
     );
   }
 
-  bool get needsSeperators => section.aggregate == TemporalAggregation.day;
+  bool get needsSeparators => section.aggregate == TemporalAggregation.day;
   bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
 
   charts.RangeAnnotation<num> generateSeperators(int numberOfPhases, int phaseDuration) => charts.RangeAnnotation<num>(
         Iterable<int>.generate(numberOfPhases + 1)
-            .map((i) => PlotUtilities.createSeparator(i * phaseDuration - 0.5))
+            .map((i) => createPlotSeparator(i * phaseDuration - 0.5))
             .toList(),
       );
 
@@ -35,11 +35,11 @@ class AverageSectionWidget extends ReportSectionWidget {
     if (section.aggregate == TemporalAggregation.intervention) {
       return const charts.StaticNumericTickProviderSpec([]);
     } else if (section.aggregate == TemporalAggregation.phase) {
-      return PlotUtilities.createNumericTicks(
+      return createNumericTicks(
         Iterable<int>.generate(numberOfPhases).map((i) => MapEntry(i, (i + 1).toString())),
       );
     } else {
-      return PlotUtilities.createNumericTicks(
+      return createNumericTicks(
         Iterable<int>.generate(numberOfPhases)
             .map((i) => MapEntry(i * phaseDuration + (phaseDuration - 1) / 2, (i + 1).toString())),
       );
@@ -64,12 +64,12 @@ class AverageSectionWidget extends ReportSectionWidget {
       animate: true,
       behaviors: [
         charts.SeriesLegend(desiredMaxColumns: 2),
-        if (needsSeperators) generateSeperators(numberOfPhases, phaseDuration),
+        if (needsSeparators) generateSeperators(numberOfPhases, phaseDuration),
         if (needsDomainLabel)
           charts.ChartTitle(
             AppLocalizations.of(context).report_axis_phase,
             behaviorPosition: charts.BehaviorPosition.bottom,
-            titleStyleSpec: PlotUtilities.convertTextTheme(Theme.of(context).textTheme.caption),
+            titleStyleSpec: convertTextTheme(Theme.of(context).textTheme.caption),
           )
       ],
       domainAxis: charts.NumericAxisSpec(
@@ -97,7 +97,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           .aggregateWithKey(
             (data, day) => _DiagramDatum(
               day,
-              FoldAggregators.mean()(data.map((e) => e.value)),
+              foldAggregateMean()(data.map((e) => e.value)),
               null,
               data.first.intervention,
             ),
@@ -109,20 +109,20 @@ class AverageSectionWidget extends ReportSectionWidget {
           .aggregateWithKey(
             (data, phase) => _DiagramDatum(
               phase,
-              FoldAggregators.mean()(data.map((e) => e.value)),
+              foldAggregateMean()(data.map((e) => e.value)),
               null,
               data.first.intervention,
             ),
           )
           .map((e) => e.value);
     } else {
-      final order = PlotUtilities.getInterventionPositions(subject.selectedInterventions);
+      final order = getInterventionPositions(subject.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey(
             (data, intervention) => _DiagramDatum(
               order[intervention],
-              FoldAggregators.mean()(data.map((e) => e.value)),
+              foldAggregateMean()(data.map((e) => e.value)),
               null,
               intervention,
             ),
@@ -132,8 +132,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   List<charts.Series<_DiagramDatum, num>> getBarData() {
-    final colorPalette = PlotUtilities.getInterventionPalette(subject.selectedInterventions);
-    final interventionNames = PlotUtilities.getInterventionNames(subject.selectedInterventions);
+    final colorPalette = getInterventionPalette(subject.selectedInterventions);
+    final interventionNames = getInterventionNames(subject.selectedInterventions);
 
     return getAggregatedData()
         .groupBy((datum) => datum.intervention)

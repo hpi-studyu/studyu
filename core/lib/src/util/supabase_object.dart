@@ -63,6 +63,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
       SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).execute()).single;
 }
 
+// ignore: avoid_classes_with_only_static_members
 class SupabaseQuery {
   static Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async =>
       extractSupabaseList(await env.client.from(tableName(T)).select(selectedColumns.join(',')).execute());

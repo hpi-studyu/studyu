@@ -74,7 +74,7 @@ class _TermsScreenState extends State<TermsScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: userCanContinue()
             ? () async {
-                final success = await UserQueries.anonymousSignUp();
+                final success = await anonymousSignUp();
                 if (success) {
                   if (!mounted) return;
                   Navigator.pushNamed(context, Routes.studySelection);

@@ -139,7 +139,7 @@ class OptOutAlertDialog extends StatelessWidget {
           style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
           onPressed: () async {
             subject.delete();
-            UserQueries.deleteActiveStudyReference();
+            deleteActiveStudyReference();
             Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           },
         )
@@ -161,7 +161,7 @@ class DeleteAlertDialog extends StatelessWidget {
             label: const Text('Delete all local data'),
             style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
             onPressed: () async {
-              UserQueries.deleteLocalData();
+              deleteLocalData();
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             },
           )

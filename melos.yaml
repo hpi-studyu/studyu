@@ -72,7 +72,7 @@ scripts:
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk --no-tree-shake-icons"
+        "flutter build apk --no-tree-shake-icons --multidex"
     description: Build app for Android.
     select-package:
       dir-exists: android
@@ -133,6 +133,3 @@ clean:deep: >
 # Additional cleanup lifecycle script, executed when `melos clean` is ran.
 postclean: >
   melos exec -c 6 -- "flutter clean"
-
-dev_dependencies:
-  lint: ^1.7.2

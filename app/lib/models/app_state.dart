@@ -23,7 +23,7 @@ class AppState {
 
   Future<FlutterLocalNotificationsPlugin> initNotificationsPlugin() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid = const AndroidInitializationSettings('app_icon');
+    const initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS =
         IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     final initializationSettings =
