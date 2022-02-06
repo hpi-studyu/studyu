@@ -50,7 +50,7 @@ scripts:
   upgrade:
     run: |
       melos exec -c 6 --fail-fast -- \
-        "flutter pub upgrade"
+        "flutter pub upgrade" && melos bootstrap
     description: Check all outdated dependencies
 
   test:
@@ -132,4 +132,4 @@ clean:deep: >
 
 # Additional cleanup lifecycle script, executed when `melos clean` is ran.
 postclean: >
-  melos exec -c 6 -- "flutter clean"
+  melos exec --flutter --concurrency=3 -- "flutter clean"
