@@ -31,6 +31,7 @@ class GitlabClient {
     } else {
       print('Creating project failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
+    return null;
   }
 
   static bool httpSuccess(int statusCode) => statusCode ~/ 200 == 1 && statusCode % 200 < 100;
@@ -50,6 +51,7 @@ class GitlabClient {
       print(response.body);
       print('Adding deploy key $title failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
+    return null;
   }
 
   Future<Map<String, dynamic>?> makeCommit({
@@ -67,6 +69,7 @@ class GitlabClient {
       print(response.body);
       print('Making commit failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
+    return null;
   }
 
   Future<Map<String, dynamic>?> createProjectVariable({
@@ -84,6 +87,7 @@ class GitlabClient {
       print(response.body);
       print('Creating variable $key failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
+    return null;
   }
 
   Future<Map<String, dynamic>?> updateProjectVariable({
@@ -100,6 +104,7 @@ class GitlabClient {
       print(response.body);
       print('Updating variable failed. Statuscode: ${response.statusCode} Reason: ${response.reasonPhrase}');
     }
+    return null;
   }
 
   Map<String, String> commitAction({

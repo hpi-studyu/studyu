@@ -129,6 +129,8 @@ class AppState extends ChangeNotifier {
           break;
         case AuthChangeEvent.passwordRecovery:
           break;
+        case AuthChangeEvent.tokenRefreshed:
+          break;
       }
       reloadResearcherDashboard();
       notifyListeners();
