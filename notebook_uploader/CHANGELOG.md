@@ -1,3 +1,8 @@
+## 1.3.9
+
+ - **FIX**: Fix linting and fix lints. ([765b3525](https://github.com/hpi-studyu/studyu/commit/765b3525c89255bbf983a825bedc45a5ef7d8706))
+ - **FIX**: Upgrade flutter packages. ([d5d0387a](https://github.com/hpi-studyu/studyu/commit/d5d0387a9a7df464861070be44a9931d2ebb0547))
+
 ## 1.3.8
 
  - **FIX**: Needed upgrade of core, fixes bug in generated files. ([44483b73](https://github.com/hpi-studyu/studyu/commit/44483b733ab53e34456b5b4bcf041c2bee3fc628))
