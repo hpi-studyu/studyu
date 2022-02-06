@@ -1,3 +1,13 @@
+## 1.10.10
+
+ - **FIX**: Set android targetSdk to latest stable API. ([0e875048](https://github.com/hpi-studyu/studyu/commit/0e875048e904c639be0bfb39d2b9fd2c50e8b52e))
+ - **FIX**: Fix automatic multidex not working in IntelliJ. ([4b2cd481](https://github.com/hpi-studyu/studyu/commit/4b2cd4817a06851d5610fb7e0bd6b489851ae399))
+ - **FIX**: Fix linting and fix lints. ([765b3525](https://github.com/hpi-studyu/studyu/commit/765b3525c89255bbf983a825bedc45a5ef7d8706))
+ - **FIX**: Add new requirements for mulitdex support. ([6fb88196](https://github.com/hpi-studyu/studyu/commit/6fb8819690452c5cb077c7bcb7dbe56d0fd4fa34))
+ - **FIX**: Upgrade flutter packages. ([d5d0387a](https://github.com/hpi-studyu/studyu/commit/d5d0387a9a7df464861070be44a9931d2ebb0547))
+ - **FIX**: Upgrade android sdk, gradle, kotlin. ([e4886d03](https://github.com/hpi-studyu/studyu/commit/e4886d03c82eb087b275a26f161edc4d85318683))
+ - **FIX**: Upgrade deps. ([27f6e8bc](https://github.com/hpi-studyu/studyu/commit/27f6e8bc4526b14320d6d1ca3657db55db2e7c5c))
+
 ## 1.10.9
 
  - **FIX**: Needed upgrade of core, fixes bug in generated files. ([44483b73](https://github.com/hpi-studyu/studyu/commit/44483b733ab53e34456b5b4bcf041c2bee3fc628))

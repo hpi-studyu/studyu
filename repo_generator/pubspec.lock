@@ -245,7 +245,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.7.5"
+    version: "3.7.6"
   supabase:
     dependency: "direct main"
     description:

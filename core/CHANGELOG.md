@@ -1,3 +1,9 @@
+## 3.7.6
+
+ - **FIX**: Fix linting and fix lints. ([765b3525](https://github.com/hpi-studyu/studyu/commit/765b3525c89255bbf983a825bedc45a5ef7d8706))
+ - **FIX**: Upgrade flutter packages. ([d5d0387a](https://github.com/hpi-studyu/studyu/commit/d5d0387a9a7df464861070be44a9931d2ebb0547))
+ - **FIX**: Upgrade deps. ([27f6e8bc](https://github.com/hpi-studyu/studyu/commit/27f6e8bc4526b14320d6d1ca3657db55db2e7c5c))
+
 ## 3.7.5
 
  - **FIX**: Revert "fix: Update generated files". ([5e512f89](https://github.com/hpi-studyu/studyu/commit/5e512f890774c52e794ac63ee87a556e5188e193))

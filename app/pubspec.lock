@@ -692,14 +692,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.7.5"
+    version: "3.7.6"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.3.9"
+    version: "1.3.10"
   supabase:
     dependency: "direct main"
     description:
