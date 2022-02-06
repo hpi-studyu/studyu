@@ -11,7 +11,7 @@ RUN pub get --offline
 
 RUN dart compile exe bin/notebook_uploader.dart
 
-FROM mambaorg/micromamba:0.20.0
+FROM mambaorg/micromamba:0.19.0
 
 ADD notebook_uploader/env.yml /tmp/env.yml
 RUN micromamba install -y -n base -f /tmp/env.yml && \
