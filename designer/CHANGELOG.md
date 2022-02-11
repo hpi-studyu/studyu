@@ -1,3 +1,7 @@
+## 1.5.10
+
+ - **FIX**: Upgrade dependencies. ([31ca516b](https://github.com/hpi-studyu/studyu/commit/31ca516be6518de7a41f4762b669f9059c83f3bc))
+
 ## 1.5.9
 
  - **FIX**: Set android targetSdk to latest stable API. ([0e875048](https://github.com/hpi-studyu/studyu/commit/0e875048e904c639be0bfb39d2b9fd2c50e8b52e))
