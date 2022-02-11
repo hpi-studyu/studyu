@@ -19,7 +19,7 @@ dependencies:
 
 dev_dependencies:
   lint: 1.8.2
-  shelf_hotreload: ^1.0.1
+  shelf_hotreload: ^1.1.0
 
 executables:
   repo_generator:
