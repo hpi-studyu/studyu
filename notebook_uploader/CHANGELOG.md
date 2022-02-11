@@ -1,3 +1,8 @@
+## 1.3.10
+
+ - **FIX**: Upgrade dependencies. ([31ca516b](https://github.com/hpi-studyu/studyu/commit/31ca516be6518de7a41f4762b669f9059c83f3bc))
+ - **FIX**: Fix Rscript not found by using micromamba 0.19.0. ([6dd8ef1d](https://github.com/hpi-studyu/studyu/commit/6dd8ef1d37dfb9e69b31af34934564356cf5cbe9))
+
 ## 1.3.9
 
  - **FIX**: Fix linting and fix lints. ([765b3525](https://github.com/hpi-studyu/studyu/commit/765b3525c89255bbf983a825bedc45a5ef7d8706))
