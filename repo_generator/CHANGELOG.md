@@ -1,3 +1,7 @@
+## 1.4.11
+
+ - **FIX**: Use API 30 required queries for opening links and sending emails. ([9aef6585](https://github.com/hpi-studyu/studyu/commit/9aef6585c9ff8cf04196d30f525dd732d14c46b4))
+
 ## 1.4.10
 
  - **FIX**: Upgrade dependencies. ([31ca516b](https://github.com/hpi-studyu/studyu/commit/31ca516be6518de7a41f4762b669f9059c83f3bc))
