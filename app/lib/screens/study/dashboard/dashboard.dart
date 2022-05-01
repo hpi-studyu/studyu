@@ -121,7 +121,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onTap: () {
                                     launchUrl(
                                       Uri.parse(
-                                          'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}'),
+                                        'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
+                                      ),
                                     );
                                   },
                                   child: Text(

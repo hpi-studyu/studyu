@@ -126,7 +126,8 @@ class _DesignerState extends State<Designer> {
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () => launchUrl(
                   Uri.parse(
-                      '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}'),
+                    '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}',
+                  ),
                 ),
               ),
             ),
