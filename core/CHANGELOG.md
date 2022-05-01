@@ -1,3 +1,7 @@
+## 3.7.8
+
+ - **FIX**: Adjust to breaking dependencies. ([2f4e14bc](https://github.com/hpi-studyu/studyu/commit/2f4e14bc0a5858f18a2883a7ce3ea38e30a2b8fe))
+
 ## 3.7.7
 
  - **FIX**: Upgrade dependencies. ([31ca516b](https://github.com/hpi-studyu/studyu/commit/31ca516be6518de7a41f4762b669f9059c83f3bc))
