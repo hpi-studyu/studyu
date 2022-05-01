@@ -125,7 +125,8 @@ class _DesignerState extends State<Designer> {
                 label: const Text('Try draft study'),
                 style: TextButton.styleFrom(primary: Colors.white),
                 onPressed: () => launchUrl(
-                  Uri.parse('${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}'),
+                  Uri.parse(
+                      '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}'),
                 ),
               ),
             ),

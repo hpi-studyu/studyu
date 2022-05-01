@@ -120,7 +120,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 (author) => InkWell(
                                   onTap: () {
                                     launchUrl(
-                                     Uri.parse('https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}'),
+                                      Uri.parse(
+                                          'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}'),
                                     );
                                   },
                                   child: Text(

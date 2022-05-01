@@ -31,6 +31,6 @@ Future<void> loadEnv() async {
     dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
     envAppUrl: dotenv.env['STUDYU_APP_URL'],
     envProjectGeneratorUrl: dotenv.env['STUDYU_PROJECT_GENERATOR_URL'],
-      supabaseClient: Supabase.instance.client,
+    supabaseClient: Supabase.instance.client,
   );
 }

@@ -4,8 +4,7 @@ import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_repo_generator/server.dart';
 
 void loadEnv() {
-  final dotEnv = DotEnv()
-    ..load();
+  final dotEnv = DotEnv()..load();
   env.setEnv(
     dotEnv['STUDYU_SUPABASE_URL']!,
     dotEnv['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,

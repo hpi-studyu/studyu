@@ -6,7 +6,8 @@ late String supabaseAnonKey;
 late String? appUrl;
 late String? projectGeneratorUrl;
 
-void setEnv(String envSupabaseUrl, String envSupabaseAnonKey, {String? envAppUrl, String? envProjectGeneratorUrl, SupabaseClient? supabaseClient}) {
+void setEnv(String envSupabaseUrl, String envSupabaseAnonKey,
+    {String? envAppUrl, String? envProjectGeneratorUrl, SupabaseClient? supabaseClient}) {
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
   projectGeneratorUrl = envProjectGeneratorUrl;
