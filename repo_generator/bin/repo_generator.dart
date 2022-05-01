@@ -1,10 +1,15 @@
-import 'package:dotenv/dotenv.dart' as dot_env show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_repo_generator/server.dart';
 
 void loadEnv() {
-  dot_env.load();
-  env.loadEnv(dot_env.env);
+  final dotEnv = DotEnv()..load();
+  env.setEnv(
+    dotEnv['STUDYU_SUPABASE_URL']!,
+    dotEnv['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
+    envAppUrl: dotEnv['STUDYU_APP_URL'],
+    envProjectGeneratorUrl: dotEnv['STUDYU_PROJECT_GENERATOR_URL'],
+  );
 }
 
 Future<void> main(List<String> args) async {

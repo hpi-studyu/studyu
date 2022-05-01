@@ -61,7 +61,7 @@ class _TermsScreenState extends State<TermsScreen> {
                     const SizedBox(height: 30),
                     OutlinedButton.icon(
                       icon: const Icon(MdiIcons.scaleBalance),
-                      onPressed: () => launch(appConfig.imprint[appLocale.toString()]),
+                      onPressed: () => launchUrl(Uri.parse(appConfig.imprint[appLocale.toString()])),
                       label: Text(AppLocalizations.of(context).imprint_read),
                     ),
                   ],
@@ -119,7 +119,7 @@ class LegalSection extends StatelessWidget {
         const SizedBox(height: 20),
         OutlinedButton.icon(
           icon: icon,
-          onPressed: () => launch(pdfUrl),
+          onPressed: () => launchUrl(Uri.parse(pdfUrl)),
           label: Text(pdfUrlLabel),
         ),
         CheckboxListTile(title: Text(acknowledgment), value: isChecked, onChanged: onChange),

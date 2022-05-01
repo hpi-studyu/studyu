@@ -124,8 +124,8 @@ class _DesignerState extends State<Designer> {
                 icon: const Icon(MdiIcons.testTube),
                 label: const Text('Try draft study'),
                 style: TextButton.styleFrom(primary: Colors.white),
-                onPressed: () => launch(
-                  '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}',
+                onPressed: () => launchUrl(
+                  Uri.parse('${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}'),
                 ),
               ),
             ),

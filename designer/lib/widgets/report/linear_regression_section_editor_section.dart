@@ -59,7 +59,7 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
                 name: AppLocalizations.of(context).alpha,
                 decoration: InputDecoration(labelText: AppLocalizations.of(context).alpha_confidence),
                 initialValue: widget.section.alpha.toString(),
-                validator: FormBuilderValidators.numeric(context),
+                validator: FormBuilderValidators.numeric(),
               ),
             ],
           ),
