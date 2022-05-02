@@ -1,3 +1,5 @@
+# DEPRECATED in favor of Supabase
+
 version: '3'
 services:
   mongodb:
