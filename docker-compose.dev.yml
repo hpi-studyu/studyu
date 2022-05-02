@@ -15,6 +15,7 @@ services:
     volumes:
       - /var/lib/postgresql/data
       - ./supabase/dev/data.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./database/studyu-schema.sql:/docker-entrypoint-initdb.d/studyu-schema.sql
   storage:
     volumes:
       - /var/lib/storage
