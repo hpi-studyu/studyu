@@ -105,7 +105,24 @@ scripts:
     run: |
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons"
-    description: Build app for Web.
+    description: Build designer for Web.
+    select-package:
+      scope: studyu_designer
+
+  # Build for Docker and a self-hosted Supabase instance
+  build:web:app:selfhost:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.selfhost"
+    description: Build app for Docker and self-hosted Supabase instance.
+    select-package:
+      scope: studyu_app
+
+  build:web:designer:selfhost:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.selfhost"
+    description: Build designer for Docker and self-hosted Supabase instance.
     select-package:
       scope: studyu_designer
 

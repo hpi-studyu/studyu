@@ -40,7 +40,11 @@ RUN melos bootstrap
 
 COPY ./ ./
 
-RUN melos run build:web:$FLUTTER_APP_FOLDER
+# Can be 'selfhost'
+ARG ENV
+
+# Env variable from docker-compose-*.yaml is used here if set
+RUN if [[ -z "$ENV" ]] ; then RUN melos run build:web:$FLUTTER_APP_FOLDER:$ENV ; else melos run build:web:$FLUTTER_APP_FOLDER ; fi
 
 FROM nginx:stable-alpine
 ARG FLUTTER_APP_FOLDER
