@@ -156,19 +156,19 @@ class ContactItem extends StatelessWidget {
       switch (type) {
         case ContactItemType.website:
           if (!itemValue.startsWith('http://') && !itemValue.startsWith('https://')) {
-            launch('http://$itemValue');
+            launchUrl(Uri.parse('http://$itemValue'));
           } else {
-            launch(itemValue);
+            launchUrl(Uri.parse(itemValue));
           }
           break;
         case ContactItemType.email:
-          launch('mailto:$itemValue');
+          launchUrl(Uri.parse('mailto:$itemValue'));
           break;
         case ContactItemType.phone:
-          launch('tel:$itemValue');
+          launchUrl(Uri.parse('tel:$itemValue'));
           break;
       }
-      launch(itemValue);
+      launchUrl(Uri.parse(itemValue));
     }
   }
 

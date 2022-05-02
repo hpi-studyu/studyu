@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 text: 'www.flaticon.com',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    launch('https://www.flaticon.com/');
+                                    launchUrl(Uri.parse('https://www.flaticon.com/'));
                                   },
                               ),
                               const TextSpan(text: ' made by'),
@@ -119,8 +119,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               .map(
                                 (author) => InkWell(
                                   onTap: () {
-                                    launch(
-                                      'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
+                                    launchUrl(
+                                      Uri.parse(
+                                        'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
+                                      ),
                                     );
                                   },
                                   child: Text(

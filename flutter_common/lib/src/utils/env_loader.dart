@@ -26,5 +26,11 @@ Future<void> loadEnv() async {
     authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
     debug: true, // optional
   );
-  env.loadEnv(dotenv.env, supabaseClient: Supabase.instance.client);
+  env.setEnv(
+    dotenv.env['STUDYU_SUPABASE_URL']!,
+    dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
+    envAppUrl: dotenv.env['STUDYU_APP_URL'],
+    envProjectGeneratorUrl: dotenv.env['STUDYU_PROJECT_GENERATOR_URL'],
+    supabaseClient: Supabase.instance.client,
+  );
 }

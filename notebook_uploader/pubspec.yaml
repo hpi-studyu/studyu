@@ -1,17 +1,17 @@
 name: studyu_notebook_uploader
 description: A cli tool to upload html of jupyter notebooks to supabase
-version: 1.3.11
+version: 1.3.13
 homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: ">=2.15.0 <3.0.0"
+  sdk: ">=2.15.1 <3.0.0"
 
 dependencies:
   args: ^2.1.1
   path: ^1.8.1
-  studyu_core: ^3.7.7
-  supabase: ^0.2.14
+  studyu_core: ^3.7.8
+  supabase: ^0.3.2
 
 dev_dependencies:
   lint: 1.8.2

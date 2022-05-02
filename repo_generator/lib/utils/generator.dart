@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dotenv/dotenv.dart' as dot_env show env;
+import 'package:dotenv/dotenv.dart';
 import 'package:path/path.dart' as p;
 import 'package:pretty_json/pretty_json.dart';
 import 'package:studyu_core/core.dart';
@@ -13,7 +13,8 @@ import 'gitlab.dart';
 
 Future<void> generateRepo(GitlabClient gl, String studyId) async {
   print('Generating repo...');
-  final generatedProjectPath = dot_env.env['STUDYU_PROJECT_PATH'] ?? 'generated';
+  final dotEnv = DotEnv()..load();
+  final generatedProjectPath = dotEnv['STUDYU_PROJECT_PATH'] ?? 'generated';
 
   // Fetch study schema and subjects data
   print('Fetching study data...');

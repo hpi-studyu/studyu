@@ -10,7 +10,12 @@ const studyId = 'study-id';
 late final ArgResults argResults;
 
 void loadEnv() {
-  env.loadEnv(Platform.environment);
+  env.setEnv(
+    Platform.environment['STUDYU_SUPABASE_URL']!,
+    Platform.environment['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
+    envAppUrl: Platform.environment['STUDYU_APP_URL'],
+    envProjectGeneratorUrl: Platform.environment['STUDYU_PROJECT_GENERATOR_URL'],
+  );
 }
 
 Future<void> main(List<String> arguments) async {

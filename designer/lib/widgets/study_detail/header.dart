@@ -77,7 +77,7 @@ class _HeaderState extends State<Header> {
   List<Widget> gitPublicActions() {
     return [
       TextButton.icon(
-        onPressed: () => launch(widget.study.repo.webUrl),
+        onPressed: () => launchUrl(Uri.parse(widget.study.repo.webUrl)),
         icon: const Icon(MdiIcons.gitlab, color: gitlabColor),
         label: const Text('Open Gitlab project', style: TextStyle(color: gitlabColor)),
       ),
@@ -86,7 +86,7 @@ class _HeaderState extends State<Header> {
           final res = await http.get(Uri.parse('https://gitlab.com/api/v4/projects/${widget.study.repo.projectId}'));
           final encodedRepoUrl =
               Uri.encodeComponent((jsonDecode(res.body) as Map<String, dynamic>)['http_url_to_repo'] as String);
-          await launch('https://mybinder.org/v2/git/$encodedRepoUrl/HEAD?urlpath=lab');
+          await launchUrl(Uri.parse('https://mybinder.org/v2/git/$encodedRepoUrl/HEAD?urlpath=lab'));
         },
         icon: Image.asset('assets/images/binder.png', height: 24, width: 24),
         label: const Text('Launch on Binder'),

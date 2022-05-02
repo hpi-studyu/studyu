@@ -112,14 +112,14 @@ class _AboutDesignerState extends State<AboutDesigner> {
                     FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'website',
-                      validator: FormBuilderValidators.url(context),
+                      validator: FormBuilderValidators.url(),
                       decoration: InputDecoration(labelText: AppLocalizations.of(context).website),
                       initialValue: _draftStudy.contact.website,
                     ),
                     FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'email',
-                      validator: FormBuilderValidators.email(context),
+                      validator: FormBuilderValidators.email(),
                       decoration: InputDecoration(labelText: AppLocalizations.of(context).email),
                       initialValue: _draftStudy.contact.email,
                     ),
