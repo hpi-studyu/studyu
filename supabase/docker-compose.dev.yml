@@ -8,9 +8,13 @@ services:
       - '2500:2500' # SMTP
       - '9000:9000' # web interface
       - '1100:1100' # POP3
+    networks:
+      - supabase-dev-net
   meta:
     ports:
       - 5555:8080
+    networks:
+      - supabase-dev-net
   db:
     volumes:
       - /var/lib/postgresql/data
@@ -19,3 +23,7 @@ services:
   storage:
     volumes:
       - /var/lib/storage
+networks:
+  supabase-dev-net:
+    external:
+      name: studyu_network

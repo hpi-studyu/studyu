@@ -1,6 +1,6 @@
 This is borrowed from the [Supabase Github repository](https://github.com/supabase/supabase/tree/master/docker)
 
-In case of upgrading, manual changes to the `docker-compose.dev.yml` file have to be considered.
+In case of upgrading, manual changes to the `docker-compose` files have to be considered.
 
 # Supabase Docker
 

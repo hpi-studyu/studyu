@@ -21,6 +21,8 @@ services:
       SUPABASE_REST_URL: ${PUBLIC_REST_URL}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+    networks:
+      - supabase-net
 
   kong:
     container_name: supabase-kong
@@ -37,6 +39,8 @@ services:
       KONG_PLUGINS: request-transformer,cors,key-auth,acl
     volumes:
       - ./volumes/api/kong.yml:/var/lib/kong/kong.yml
+    networks:
+      - supabase-net
 
   auth:
     container_name: supabase-auth
@@ -76,6 +80,8 @@ services:
 
       GOTRUE_EXTERNAL_PHONE_ENABLED: ${ENABLE_PHONE_SIGNUP}
       GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
+    networks:
+      - supabase-net
 
   rest:
     container_name: supabase-rest
@@ -89,6 +95,8 @@ services:
       PGRST_DB_ANON_ROLE: anon
       PGRST_JWT_SECRET: ${JWT_SECRET}
       PGRST_DB_USE_LEGACY_GUCS: "false"
+    networks:
+      - supabase-net
 
   realtime:
     container_name: supabase-realtime
@@ -113,6 +121,8 @@ services:
     command: >
       bash -c "./prod/rel/realtime/bin/realtime eval Realtime.Release.migrate
       && ./prod/rel/realtime/bin/realtime start"
+    networks:
+      - supabase-net
 
   storage:
     container_name: supabase-storage
@@ -137,6 +147,8 @@ services:
       GLOBAL_S3_BUCKET: stub
     volumes:
       - ./volumes/storage:/var/lib/storage
+    networks:
+      - supabase-net
 
   meta:
     container_name: supabase-meta
@@ -148,6 +160,8 @@ services:
       PG_META_PORT: 8080
       PG_META_DB_HOST: db
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - supabase-net
 
   db:
     container_name: supabase-db
@@ -161,3 +175,8 @@ services:
     volumes:
       # - ./volumes/db/data:/var/lib/postgresql/data
       - ./volumes/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - supabase-net
+networks:
+  supabase-net:
+    name: studyu_network
