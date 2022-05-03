@@ -8,5 +8,10 @@ services:
         ENV: selfhost
     ports:
       - 8081:80
+    networks:
+      - studyu-net
     env_file:
       - flutter_common/lib/envs/.env.selfhost
+networks:
+  studyu-net:
+    name: studyu_network

@@ -14,5 +14,4 @@ services:
       - flutter_common/lib/envs/.env.selfhost
 networks:
   studyu-net:
-    external:
-      name: studyu_network
+    name: studyu_network
