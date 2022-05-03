@@ -10,14 +10,3 @@ services:
       - 8081:80
     env_file:
       - flutter_common/lib/envs/.env.selfhost
-
-  designer-selfhost:
-    build:
-      context: .
-      args:
-        FLUTTER_APP_FOLDER: designer
-        ENV: selfhost
-    ports:
-      - 8080:80
-    env_file:
-      - flutter_common/lib/envs/.env.selfhost
