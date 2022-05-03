@@ -36,7 +36,7 @@ services:
       KONG_DNS_ORDER: LAST,A,CNAME
       KONG_PLUGINS: request-transformer,cors,key-auth,acl
     volumes:
-      - ./supabase/volumes/api/kong.yml:/var/lib/kong/kong.yml
+      - ./volumes/api/kong.yml:/var/lib/kong/kong.yml
 
   auth:
     container_name: supabase-auth
@@ -136,7 +136,7 @@ services:
       REGION: stub
       GLOBAL_S3_BUCKET: stub
     volumes:
-      - ./supabase/volumes/storage:/var/lib/storage
+      - ./volumes/storage:/var/lib/storage
 
   meta:
     container_name: supabase-meta
@@ -159,5 +159,5 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      # - ./supabase/volumes/db/data:/var/lib/postgresql/data
-      - ./supabase/volumes/db/init:/docker-entrypoint-initdb.d
+      # - ./volumes/db/data:/var/lib/postgresql/data
+      - ./volumes/db/init:/docker-entrypoint-initdb.d
