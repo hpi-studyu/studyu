@@ -48,58 +48,6 @@ Sometimes we had to include packages from Github PRs, which required some effort
 Flutter has come a long way since then and now with version 2.8, we switched our code to use stable.
 This will make it easier to maintain in the future and reduce the occurrence of breaking changes and workarounds.
 
-### Run with Docker
-
-The StudyU modules can be run with Docker and `docker-compose` which makes it easy to operate.
-This allows to store data in a self-hosted Supabase instance data, rather than relying on a public cloud service.
-Especially, when it comes to sensitive data, this is a very convenient solution.
-
-#### Configure
-
-1. Make sure you have Docker and `docker-compose` installed and running
-2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a `JWT_SECRET` with at least 32 characters.
-   Then [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
-3. Insert the secrets and keys into the following files:
-   - `supabase/.env`
-   - `supabase/volumes/api/kong.yml`
-   - `flutter_common/lib/envs/.env` or `flutter_common/lib/envs/.env.selfhost` (see below)
-
-StudyU modules can be run with a managed (`.env`) or a self-hosted (`.env.selfhost`) instance of Supabase.
-Depending on your choice, the respective environment file has to be customized.
-For more information on how to do this have a look at [Environments](#user-content-environments).
-
-All next steps require that StudyU and Supabase have been configured correctly!
-
-##### Run StudyU modules with a managed Supabase instance
-
-Run `docker-compose -f docker-compose-<module> up --build`
-
-Make sure to replace `<module>` with one of the following:
-- `app`: Start only the StudyU App
-- `designer`: Start the StudyU Designer
-- `full`: Start the StudyU App and the StudyU Designer
-
-##### Run StudyU modules with a self-hosted Supabase instance
-
-1. Run Supabase: `cd supabase` and `docker-compose -f docker-compose-supabase.yml -f docker-compose.dev.yml up`
-
-2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost up --build` (replace \<module\> as described above)
-
-3. Open your local Supabase instance (default: `http://localhost:3000` and navigate to the table editor.
-   Add a row to the table `app_config` with the id `prod`. The other fields need to be valid json.
-   
-#### Good to know
-
-In order to stop docker containers from running press CTRL+C.
-Use `-d` to run containers in the background.
-When experimenting with consecutively run Docker setups, it might be necessary to remove previous resources e.g. Supabase volumes.
-The following commands can be helpful with this:
-- `docker-compose down` - Stop and remove resources
-- `docker rm -f $(docker ps -a -q)` - Remove all containers
-- `docker volume rm $(docker volume ls -q)` - Remove all volumes
-
-Moreover, do not forget to clear the cache of your webbrowser when making changes to environment files.
-
 ### Environments
 
 We use .env (environment) files, to specify the enviroment variables such as Supabase instance and other servers.
@@ -141,7 +89,7 @@ This needs to be setup using the new [supabase cli](https://github.com/supabase/
 
 Also see melos commands `app:web:local` and `designer:web:local`.
 
-#### Coding on `core`
+### Coding on `core`
 
 When developing models in the `core` package you need to make sure the JSON IO code is generated correctly.
 To do this we use `build_runner` together with `json_serializable`.
@@ -154,3 +102,59 @@ Contrary to most recommendations, we commit those generated files to Git. This i
 
 We are using [Supabase](https://supabase.com/) as a Backend-as-a-Service provider.
 Supabase provides different backend services such as a database, API, authentication, storage service all based around PostgreSQL and other FOSS.
+
+## Run with Docker
+
+The StudyU modules can be run with Docker and `docker-compose` which makes it easy to operate.
+This allows to store data in a self-hosted Supabase instance data, rather than relying on a public cloud service.
+Especially, when it comes to sensitive data, this is a very convenient solution.
+
+### Configure
+
+1. Make sure you have Docker and `docker-compose` installed and running
+2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a `JWT_SECRET` with at least 32 characters.
+   Then [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
+3. Insert the secrets and keys into the following files:
+   - `supabase/.env`
+   - `supabase/volumes/api/kong.yml`
+   - `flutter_common/lib/envs/.env` or `flutter_common/lib/envs/.env.selfhost` (see below)
+
+StudyU modules can be run with a managed (`.env`) or a self-hosted (`.env.selfhost`) instance of Supabase.
+Depending on your choice, the respective environment file has to be customized.
+For more information on how to do this have a look at [Environments](#user-content-environments).
+
+All next steps require that StudyU and Supabase have been configured correctly!
+
+### Run with a managed Supabase instance
+
+1. Run `docker-compose -f docker-compose-<module> up --build`
+
+Make sure to replace `<module>` with one of the following:
+- `app`: Start only the StudyU App
+- `designer`: Start the StudyU Designer
+- `full`: Start the StudyU App and the StudyU Designer
+
+2. The StudyU modules should be available at the URLs you specified in the `.env` file.
+
+### Run with a self-hosted Supabase instance
+
+1. Run Supabase: `cd supabase` and `docker-compose -f docker-compose-supabase.yml -f docker-compose.dev.yml up`
+
+2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost up --build` (replace `<module>` as described above)
+
+3. Open your local Supabase instance (default: `http://localhost:3000` and navigate to the table editor.
+   Add a row to the table `app_config` with the id `prod`. The other fields need to be valid json.
+   
+4. The StudyU modules should be available at the URLs you specified in the `.env.selfhost` file.
+   
+### Good to know
+
+In order to stop docker containers from running press CTRL+C.
+Use `-d` to run containers in the background.
+When experimenting with consecutively run Docker setups, it might be necessary to remove previous resources e.g. Supabase volumes.
+The following commands can be helpful with this:
+- `docker-compose down` - Stop and remove resources
+- `docker rm -f $(docker ps -a -q)` - Remove all containers
+- `docker volume rm $(docker volume ls -q)` - Remove all volumes
+
+Moreover, do not forget to clear the cache of your webbrowser when making changes to environment files.
