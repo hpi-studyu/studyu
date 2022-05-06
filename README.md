@@ -152,10 +152,5 @@ Make sure to replace `<module>` with one of the following:
 
 In order to stop docker containers from running press CTRL+C.
 Use `-d` to run containers in the background.
-When experimenting with consecutively run Docker setups, it might be necessary to remove previous resources e.g. Supabase volumes.
-The following commands can be helpful with this:
-- `docker-compose down` - Stop and remove resources
-- `docker rm -f $(docker ps -a -q)` - Remove all containers
-- `docker volume rm $(docker volume ls -q)` - Remove all volumes
-
+When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
 Moreover, it often helps to clear the cache of your webbrowser when making changes to environment files.
