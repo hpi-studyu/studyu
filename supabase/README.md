@@ -1,6 +1,8 @@
 This is borrowed from the [Supabase Github repository](https://github.com/supabase/supabase/tree/master/docker)
 
-In case of upgrading, manual changes to the `docker-compose` files have to be considered.
+To run a local Supabase instance for the StudyU project, see the README.md file of the original repository for more information.
+
+In case of upgrading this setup from the official repository, custom changes to the Docker Compose files have to be considered.
 
 # Supabase Docker
 

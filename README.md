@@ -118,6 +118,7 @@ Especially, when it comes to sensitive data, this is a very convenient solution.
    - `supabase/.env`
    - `supabase/volumes/api/kong.yml`
    - `flutter_common/lib/envs/.env` or `flutter_common/lib/envs/.env.selfhost` (see below)
+4. Configure `supabase/.env` and your chosen StudyU environment file according to your wishes. Do not forget to replace `localhost` with the correct hostname.
 
 StudyU modules can be run with a managed (`.env`) or a self-hosted (`.env.selfhost`) instance of Supabase.
 Depending on your choice, the respective environment file has to be customized.
@@ -142,7 +143,7 @@ Make sure to replace `<module>` with one of the following:
 
 2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost up --build` (replace `<module>` as described above)
 
-3. Open your local Supabase instance (default: `http://localhost:3000` and navigate to the table editor.
+3. Open your local Supabase Studio instance (default: `http://<YourHostname>:3000`) and navigate to the table editor.
    Add a row to the table `app_config` with the id `prod`. The other fields need to be valid json.
    
 4. The StudyU modules should be available at the URLs you specified in the `.env.selfhost` file.
@@ -157,4 +158,4 @@ The following commands can be helpful with this:
 - `docker rm -f $(docker ps -a -q)` - Remove all containers
 - `docker volume rm $(docker volume ls -q)` - Remove all volumes
 
-Moreover, do not forget to clear the cache of your webbrowser when making changes to environment files.
+Moreover, it often helps to clear the cache of your webbrowser when making changes to environment files.
