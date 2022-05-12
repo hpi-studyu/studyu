@@ -19,7 +19,7 @@ RUN yes | flutter doctor --android-licenses \
     && chown -R root:root ${FLUTTER_HOME}
 
 # Install melos
-RUN pub global activate melos
+RUN dart pub global activate melos
 
 # SETUP STUDYU
 WORKDIR /src/
