@@ -139,7 +139,7 @@ Make sure to replace `<module>` with one of the following:
 
 ### Run with a self-hosted Supabase instance
 
-1. Run Supabase: `cd supabase` and `docker-compose -f docker-compose-supabase.yml -f docker-compose.dev.yml up`
+1. Run Supabase: `cd supabase` and `docker-compose -f docker-compose-supabase.yml -f ./dev/docker-compose.dev.yml up`
 
 2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost up --build` (replace `<module>` as described above)
 
