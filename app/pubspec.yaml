@@ -7,7 +7,7 @@ repository: https://github.com/hpi-studyu/studyu
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.7.0 <=3.0.0"
 
 dependencies:
   charts_common: ^0.12.0
