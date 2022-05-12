@@ -139,9 +139,9 @@ Make sure to replace `<module>` with one of the following:
 
 ### Run with a self-hosted Supabase instance
 
-1. Run Supabase: `cd supabase` and `docker-compose -f docker-compose-supabase.yml -f ./dev/docker-compose.dev.yml up`
+1. Run Supabase: `cd supabase` and `docker-compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml up`
 
-2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost up --build` (replace `<module>` as described above)
+2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost.yml up --build` (replace `<module>` as described above)
 
 3. Open your local Supabase Studio instance (default: `http://<YourHostname>:3000`) and navigate to the table editor.
    Add a row to the table `app_config` with the id `prod`. The other fields need to be valid json.
