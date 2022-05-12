@@ -1,3 +1,7 @@
+## 1.3.14
+
+- **FIX**: Upgrade dependencies
+
 ## 1.3.13
 
  - **FIX**: Use new studyu package versions. ([cfc65599](https://github.com/hpi-studyu/studyu/commit/cfc65599bca7a28490321c7731bc6e8de4cc1e0a))

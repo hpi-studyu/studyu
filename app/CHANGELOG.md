@@ -1,3 +1,7 @@
+## 1.10.14
+
+- **FIX**: Upgrade dependencies.
+
 ## 1.10.13
 
  - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))
