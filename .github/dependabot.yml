@@ -5,23 +5,41 @@ updates:
     directory: "core/"
     schedule:
       interval: "daily"
+    labels:
+      - "core"
+      - "dependencies"
   - package-ecosystem: "pub"
     directory: "flutter_common/"
     schedule:
       interval: "daily"
+    labels:
+      - "flutter_common"
+      - "dependencies"
   - package-ecosystem: "pub"
     directory: "app/"
     schedule:
       interval: "daily"
+    labels:
+      - "app"
+      - "dependencies"
   - package-ecosystem: "pub"
     directory: "designer/"
     schedule:
       interval: "daily"
+    labels:
+      - "designer"
+      - "dependencies"
   - package-ecosystem: "pub"
     directory: "notebook_uploader/"
     schedule:
       interval: "daily"
+    labels:
+      - "notebook_uploader"
+      - "dependencies"
   - package-ecosystem: "pub"
     directory: "repo_generator/"
     schedule:
       interval: "daily"
+    labels:
+      - "repo_generator"
+      - "dependencies"
