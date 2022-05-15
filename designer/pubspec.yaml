@@ -21,7 +21,8 @@ dependencies:
     sdk: flutter
   flutter_file_dialog: ^2.3.0
   flutter_form_builder: ^7.1.1
-  flutter_iconpicker: ^3.1.4
+  flutter_iconpicker:
+    git: https://github.com/dmhuisma/FlutterIconPicker.git
   flutter_localizations:
     sdk: flutter
   form_builder_extra_fields: ^7.1.0
@@ -46,6 +47,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: 1.8.2
+
+dependency_overrides:
+  flutter_chips_input:
+    git: https://github.com/jhaglund/flutter_chips_input.git
 
 flutter_icons:
   image_path: 'assets/images/icon.png'
