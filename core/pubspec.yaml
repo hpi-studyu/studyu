@@ -12,8 +12,8 @@ dependencies:
   csv: ^5.0.1
   fhir: ^0.4.7 # 0.6.0
   json_annotation: ^4.5.0
-  quiver: ^3.0.1
-  supabase: ^0.3.2
+  quiver: ^3.1.0
+  supabase: ^0.3.4
   uuid: ^3.0.6
 
 dev_dependencies:
