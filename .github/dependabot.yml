@@ -1,0 +1,27 @@
+version: 2
+enable-beta-ecosystems: true
+updates:
+  - package-ecosystem: "pub"
+    directory: "core/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "pub"
+    directory: "flutter_common/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "pub"
+    directory: "app/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "pub"
+    directory: "designer/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "pub"
+    directory: "notebook_uploader/"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "pub"
+    directory: "repo_generator/"
+    schedule:
+      interval: "daily"
