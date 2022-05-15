@@ -91,7 +91,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.2"
   hotreloader:
     dependency: transitive
     description:
@@ -263,9 +263,9 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      path: "../core"
-      relative: true
-    source: path
+      name: studyu_core
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.7.8"
   supabase:
     dependency: "direct main"
@@ -273,7 +273,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2"
+    version: "0.3.4"
   term_glyph:
     dependency: transitive
     description:
