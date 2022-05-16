@@ -27,7 +27,6 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -43,7 +42,6 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -59,7 +57,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -72,27 +69,3 @@ jobs:
         run: melos bootstrap
       - name: "Run Test"
         run: melos run test --no-select
-
-  build-web:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: stable
-      - name: Enable web support
-        run: flutter config --enable-web
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Build Web"
-        run: melos run build:web --no-select
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_E37AF }}'
-          channelId: live
-          projectId: studyu-e37af
