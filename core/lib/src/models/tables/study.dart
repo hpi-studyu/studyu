@@ -11,6 +11,7 @@ import '../models.dart';
 part 'study.g.dart';
 
 enum Participation { open, invite }
+
 enum ResultSharing { public, private, organization }
 
 @JsonSerializable()
