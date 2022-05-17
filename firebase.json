@@ -28,7 +28,6 @@
         }
       ]
     },
-
     {
       "target": "designer",
       "public": "designer/build/web",
@@ -45,7 +44,7 @@
               "value": "*"
             },
             {
-              "key":"Access-Control-Allow-Headers",
+              "key": "Access-Control-Allow-Headers",
               "value": "*"
             }
           ]

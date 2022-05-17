@@ -19,7 +19,7 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
       - name: Get packages
-        run: pub get
+        run: dart pub get
         working-directory: ./notebook_uploader
       - name: Compile Binary
         run: dart compile exe bin/notebook_uploader.dart -o notebook_uploader.exe
