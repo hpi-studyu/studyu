@@ -5,9 +5,9 @@ WORKDIR /app
 RUN mkdir /core
 ADD core /core/
 ADD notebook_uploader/pubspec.* /app/
-RUN pub get
+RUN dart pub get
 ADD notebook_uploader/. /app
-RUN pub get --offline
+RUN dart pub get --offline
 
 RUN dart compile exe bin/notebook_uploader.dart
 
