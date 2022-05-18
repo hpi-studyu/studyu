@@ -14,7 +14,7 @@ class BarChartView extends StatelessWidget {
           BarChartGroupData(
             x: x,
             barRods: [
-              BarChartRodData(y: y.toDouble(), colors: [color])
+              BarChartRodData(toY: y.toDouble(), colors: [color])
             ],
             showingTooltipIndicators: [0],
           ),
@@ -41,9 +41,9 @@ class BarChartView extends StatelessWidget {
               BarChartRodData rod,
               int rodIndex,
             ) {
-              if (rod.y == 0) return null;
+              if (rod.toY == 0) return null;
               return BarTooltipItem(
-                rod.y.round().toString(),
+                rod.toY.round().toString(),
                 TextStyle(
                   color: color,
                   fontWeight: FontWeight.bold,
