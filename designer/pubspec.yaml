@@ -16,7 +16,7 @@ dependencies:
   csv: ^5.0.0
   cupertino_icons: ^1.0.4
   email_validator: ^2.0.1
-  fl_chart: ^0.46.0 # migrate to ^0.50.5
+  fl_chart: ^0.50.6 # migrate to ^0.50.5
   flutter:
     sdk: flutter
   flutter_file_dialog: ^2.3.0
