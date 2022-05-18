@@ -1,3 +1,8 @@
+## 3.7.9
+
+ - **FIX**: Upgrade fl_chart to 0.46 and fix minor breaking change. ([c0399ba9](https://github.com/hpi-studyu/studyu/commit/c0399ba9f622383a6dae8002ea1c2d1aca2edc16))
+ - **FIX**: Adjust to breaking dependencies. ([2f4e14bc](https://github.com/hpi-studyu/studyu/commit/2f4e14bc0a5858f18a2883a7ce3ea38e30a2b8fe))
+
 ## 3.7.8
 
  - **FIX**: Adjust to breaking dependencies. ([2f4e14bc](https://github.com/hpi-studyu/studyu/commit/2f4e14bc0a5858f18a2883a7ce3ea38e30a2b8fe))
