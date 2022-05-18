@@ -1,3 +1,7 @@
+## 1.3.14
+
+ - **DOCS**: add run command. ([12997ce4](https://github.com/hpi-studyu/studyu/commit/12997ce44c26fb7083e04b95cce86efe6aaffe5a))
+
 ## 1.3.13
 
  - **FIX**: Use new studyu package versions. ([cfc65599](https://github.com/hpi-studyu/studyu/commit/cfc65599bca7a28490321c7731bc6e8de4cc1e0a))

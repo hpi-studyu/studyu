@@ -1,13 +1,13 @@
 FROM google/dart as builder
-
+RUN apt -y update && apt -y upgrade
 WORKDIR /app
 
 RUN mkdir /core
 ADD core /core/
 ADD repo_generator/pubspec.* /app/
-RUN pub get
+RUN dart pub get
 ADD repo_generator/. /app
-RUN pub get --offline
+RUN dart pub get --offline
 
 RUN dart compile exe bin/repo_generator.dart
 
