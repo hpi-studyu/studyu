@@ -1,5 +1,5 @@
 FROM google/dart as builder
-
+RUN apt -y update && apt -y upgrade
 WORKDIR /app
 
 RUN mkdir /core
