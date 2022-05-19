@@ -151,11 +151,9 @@ packages:
   fl_chart:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: b0ec904ab6406f702332f69c9e29bfb631234b2e
-      url: "https://github.com/imaNNeoFighT/fl_chart.git"
-    source: git
+      name: fl_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.50.6"
   flutter:
     dependency: "direct main"
