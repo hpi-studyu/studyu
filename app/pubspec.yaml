@@ -56,7 +56,6 @@ flutter_icons:
   android: true
   ios: true
 
-
 flutter:
   generate: true
   uses-material-design: true

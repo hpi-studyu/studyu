@@ -48,42 +48,6 @@ Sometimes we had to include packages from Github PRs, which required some effort
 Flutter has come a long way since then and now with version 2.8, we switched our code to use stable.
 This will make it easier to maintain in the future and reduce the occurrence of breaking changes and workarounds.
 
-## Running everything with docker-compose (depcreated)
-
-⚠️ DISCLAIMER: This needs to be updated to use Supabase instead of Parse.
-
-There exist 4 different compose files to run locally:
-
-- `docker-compose.yml`: Parse, Parse Dashboard
-- `docker-compose-full.yml`: Parse, Parse Dashboard, App, Study Designer
-- `docker-compose-app.yml`: App
-- `docker-compose-designer.yml`: Study Designer
-
-### Start it up
-0. Make sure you have Docker and docker-compose installed and running
-1. Inside run `docker-compose up --build`. This starts a nodejs docker container running the Parse Server and Dashboard and a MongoDB container, which is used by Parse.
-2. You can login with the credentials specified in the env vars: `admin: nof1`
-3. You should now be able to see your parse dashboard under http://localhost:1337/dashboard
-4. To stop the services you can press CTRL-C in your terminal
-
-To run the study designer with parse:
-
-```
-docker-compose -f docker-compose.yml -f docker-compose-designer.yml up --build
-```
-
-To run app with parse:
-
-```
-docker-compose -f docker-compose.yml -f docker-compose-app.yml up --build
-```
-
-To run both with parse:
-
-```
-docker-compose -f docker-compose-full.yml up --build
-```
-
 ### Environments
 
 We use .env (environment) files, to specify the enviroment variables such as Supabase instance and other servers.
@@ -113,18 +77,19 @@ In the docker-compose setup, we leverage this by copying the config (`.env`)
 to the right place in the container, without needing to rebuild.
 Now we can publish a docker image and the same image can be used in multiple environments.
 
-Additionally we have 3 envs for convenience. Replace or create for more convenience:
+Additionally we have 4 envs for convenience. Replace or create for more convenience:
 
 - `.env`: Production database used by default
 - `.env.staging`: Staging database, currently not used
 - `.env.local`: Used when connecting to a locally running supabase instance.
+- `.env.selfhost`: Used when connecting to a self-hosted supabase instance.
 
 Ideally we should only use staging for all our development work or run an instance locally.
 This needs to be setup using the new [supabase cli](https://github.com/supabase/cli).
 
 Also see melos commands `app:web:local` and `designer:web:local`.
 
-#### Coding on `core`
+### Coding on `core`
 
 When developing models in the `core` package you need to make sure the JSON IO code is generated correctly.
 To do this we use `build_runner` together with `json_serializable`.
@@ -135,5 +100,57 @@ Contrary to most recommendations, we commit those generated files to Git. This i
 
 ### Supabase
 
-We are using [supabase](https://supabase.com/) as a Backend-as-a-Service provider.
+We are using [Supabase](https://supabase.com/) as a Backend-as-a-Service provider.
 Supabase provides different backend services such as a database, API, authentication, storage service all based around PostgreSQL and other FOSS.
+
+## Run with Docker
+
+The StudyU modules can be run with Docker and `docker-compose` which makes it easy to operate.
+This allows to store data in a self-hosted Supabase instance data, rather than relying on a public cloud service.
+Especially, when it comes to sensitive data, this is a very convenient solution.
+
+### Configure
+
+1. Make sure you have Docker and `docker-compose` installed and running
+2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a `JWT_SECRET` with at least 32 characters.
+   Then [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
+3. Insert the secrets and keys into the following files:
+   - `supabase/.env`
+   - `supabase/volumes/api/kong.yml`
+   - `flutter_common/lib/envs/.env` or `flutter_common/lib/envs/.env.selfhost` (see below)
+4. Configure `supabase/.env` and your chosen StudyU environment file according to your wishes. Do not forget to replace `localhost` with the correct hostname.
+
+StudyU modules can be run with a managed (`.env`) or a self-hosted (`.env.selfhost`) instance of Supabase.
+Depending on your choice, the respective environment file has to be customized.
+For more information on how to do this have a look at [Environments](#user-content-environments).
+
+All next steps require that StudyU and Supabase have been configured correctly!
+
+### Run with a managed Supabase instance
+
+1. Run `docker-compose -f docker-compose-<module> up --build`
+
+Make sure to replace `<module>` with one of the following:
+- `app`: Start only the StudyU App
+- `designer`: Start the StudyU Designer
+- `full`: Start the StudyU App and the StudyU Designer
+
+2. The StudyU modules should be available at the URLs you specified in the `.env` file.
+
+### Run with a self-hosted Supabase instance
+
+1. Run Supabase: `cd supabase` and `docker-compose up`
+
+2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost.yml up --build` (replace `<module>` as described above)
+
+3. Open your local Supabase Studio instance (default: `http://<YourHostname>:3000`) and navigate to the table editor.
+   Add a row to the table `app_config` with the id `prod`. The other fields need to be valid json.
+   
+4. The StudyU modules should be available at the URLs you specified in the `.env.selfhost` file.
+   
+### Good to know
+
+In order to stop docker containers from running press CTRL+C.
+Use `-d` to run containers in the background.
+When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
+Moreover, it often helps to clear the cache of your webbrowser when making changes to environment files.
