@@ -57,18 +57,21 @@ class BarChartView extends StatelessWidget {
               'Amount of missed days',
               style: TextStyle(
                 color: Color(0xff7589a2),
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
               ),
             ),
             sideTitles: SideTitles(
               showTitles: true,
-              getTitlesWidget: (value, titleMeta) {
-                return const Padding(
-                  // You can use any widget here
-                  padding: EdgeInsets.only(top: 20, bottom: 20),
+            // TODO: How to add text styling and padding?
+    /*getTitlesWidget: (value, titleMeta) {
+                getTextStyles: (context, value) => const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Color(0xff7589a2),
                 );
-              },
+                return const Padding(
+                    padding: EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
+                );
+              },*/
             ),
           ),
           leftTitles: AxisTitles(
