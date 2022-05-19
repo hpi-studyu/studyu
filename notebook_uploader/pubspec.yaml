@@ -10,7 +10,8 @@ environment:
 dependencies:
   args: ^2.3.1
   path: ^1.8.1
-  studyu_core: ^3.7.9
+  studyu_core: # ^3.7.9
+    path: ../core
   supabase: ^0.3.4
 
 dev_dependencies:
