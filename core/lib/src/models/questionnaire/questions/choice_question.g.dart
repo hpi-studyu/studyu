@@ -6,20 +6,15 @@ part of 'choice_question.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChoiceQuestion _$ChoiceQuestionFromJson(Map<String, dynamic> json) =>
-    ChoiceQuestion()
-      ..type = json['type'] as String
-      ..id = json['id'] as String
-      ..prompt = json['prompt'] as String?
-      ..rationale = json['rationale'] as String?
-      ..conditional = json['conditional'] == null
-          ? null
-          : QuestionConditional.fromJson(
-              json['conditional'] as Map<String, dynamic>)
-      ..multiple = json['multiple'] as bool
-      ..choices = (json['choices'] as List<dynamic>)
-          .map((e) => Choice.fromJson(e as Map<String, dynamic>))
-          .toList();
+ChoiceQuestion _$ChoiceQuestionFromJson(Map<String, dynamic> json) => ChoiceQuestion()
+  ..type = json['type'] as String
+  ..id = json['id'] as String
+  ..prompt = json['prompt'] as String?
+  ..rationale = json['rationale'] as String?
+  ..conditional =
+      json['conditional'] == null ? null : QuestionConditional.fromJson(json['conditional'] as Map<String, dynamic>)
+  ..multiple = json['multiple'] as bool
+  ..choices = (json['choices'] as List<dynamic>).map((e) => Choice.fromJson(e as Map<String, dynamic>)).toList();
 
 Map<String, dynamic> _$ChoiceQuestionToJson(ChoiceQuestion instance) {
   final val = <String, dynamic>{

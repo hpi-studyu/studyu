@@ -12,41 +12,29 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
     )
       ..title = json['title'] as String?
       ..description = json['description'] as String?
-      ..participation =
-          _$enumDecode(_$ParticipationEnumMap, json['participation'])
-      ..resultSharing =
-          _$enumDecode(_$ResultSharingEnumMap, json['result_sharing'])
+      ..participation = _$enumDecode(_$ParticipationEnumMap, json['participation'])
+      ..resultSharing = _$enumDecode(_$ResultSharingEnumMap, json['result_sharing'])
       ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
       ..iconName = json['icon_name'] as String
       ..published = json['published'] as bool
-      ..questionnaire =
-          StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
+      ..questionnaire = StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
       ..eligibilityCriteria = (json['eligibility_criteria'] as List<dynamic>)
           .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..consent = (json['consent'] as List<dynamic>)
-          .map((e) => ConsentItem.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..interventions = (json['interventions'] as List<dynamic>)
-          .map((e) => Intervention.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..observations = (json['observations'] as List<dynamic>)
-          .map((e) => Observation.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..schedule =
-          StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
-      ..reportSpecification = ReportSpecification.fromJson(
-          json['report_specification'] as Map<String, dynamic>)
-      ..results = (json['results'] as List<dynamic>)
-          .map((e) => StudyResult.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..collaboratorEmails = (json['collaborator_emails'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList()
+      ..consent =
+          (json['consent'] as List<dynamic>).map((e) => ConsentItem.fromJson(e as Map<String, dynamic>)).toList()
+      ..interventions =
+          (json['interventions'] as List<dynamic>).map((e) => Intervention.fromJson(e as Map<String, dynamic>)).toList()
+      ..observations =
+          (json['observations'] as List<dynamic>).map((e) => Observation.fromJson(e as Map<String, dynamic>)).toList()
+      ..schedule = StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+      ..reportSpecification = ReportSpecification.fromJson(json['report_specification'] as Map<String, dynamic>)
+      ..results =
+          (json['results'] as List<dynamic>).map((e) => StudyResult.fromJson(e as Map<String, dynamic>)).toList()
+      ..collaboratorEmails = (json['collaborator_emails'] as List<dynamic>).map((e) => e as String).toList()
       ..fhirQuestionnaire = json['fhir_questionnaire'] == null
           ? null
-          : Questionnaire.fromJson(
-              json['fhir_questionnaire'] as Map<String, dynamic>);
+          : Questionnaire.fromJson(json['fhir_questionnaire'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$StudyToJson(Study instance) {
   final val = <String, dynamic>{
@@ -68,8 +56,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   val['icon_name'] = instance.iconName;
   val['published'] = instance.published;
   val['questionnaire'] = instance.questionnaire.toJson();
-  val['eligibility_criteria'] =
-      instance.eligibilityCriteria.map((e) => e.toJson()).toList();
+  val['eligibility_criteria'] = instance.eligibilityCriteria.map((e) => e.toJson()).toList();
   val['consent'] = instance.consent.map((e) => e.toJson()).toList();
   val['interventions'] = instance.interventions.map((e) => e.toJson()).toList();
   val['observations'] = instance.observations.map((e) => e.toJson()).toList();

@@ -11,8 +11,7 @@ AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => AppConfig(
       contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
       appPrivacy: Map<String, String>.from(json['app_privacy'] as Map),
       appTerms: Map<String, String>.from(json['app_terms'] as Map),
-      designerPrivacy:
-          Map<String, String>.from(json['designer_privacy'] as Map),
+      designerPrivacy: Map<String, String>.from(json['designer_privacy'] as Map),
       designerTerms: Map<String, String>.from(json['designer_terms'] as Map),
       imprint: Map<String, String>.from(json['imprint'] as Map),
     );
