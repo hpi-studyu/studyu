@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^2.3.0
-  flutter_form_builder: ^7.1.1
+  flutter_form_builder: ^7.2.0
   flutter_iconpicker:
     git: https://github.com/dmhuisma/FlutterIconPicker.git
   flutter_localizations:
