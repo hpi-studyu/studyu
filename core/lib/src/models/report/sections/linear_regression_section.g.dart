@@ -6,23 +6,17 @@ part of 'linear_regression_section.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LinearRegressionSection _$LinearRegressionSectionFromJson(
-        Map<String, dynamic> json) =>
-    LinearRegressionSection()
-      ..type = json['type'] as String
-      ..id = json['id'] as String
-      ..title = json['title'] as String?
-      ..description = json['description'] as String?
-      ..resultProperty = json['resultProperty'] == null
-          ? null
-          : DataReference.fromJson(
-              json['resultProperty'] as Map<String, dynamic>)
-      ..alpha = (json['alpha'] as num).toDouble()
-      ..improvement = _$enumDecodeNullable(
-          _$ImprovementDirectionEnumMap, json['improvement']);
+LinearRegressionSection _$LinearRegressionSectionFromJson(Map<String, dynamic> json) => LinearRegressionSection()
+  ..type = json['type'] as String
+  ..id = json['id'] as String
+  ..title = json['title'] as String?
+  ..description = json['description'] as String?
+  ..resultProperty =
+      json['resultProperty'] == null ? null : DataReference.fromJson(json['resultProperty'] as Map<String, dynamic>)
+  ..alpha = (json['alpha'] as num).toDouble()
+  ..improvement = _$enumDecodeNullable(_$ImprovementDirectionEnumMap, json['improvement']);
 
-Map<String, dynamic> _$LinearRegressionSectionToJson(
-    LinearRegressionSection instance) {
+Map<String, dynamic> _$LinearRegressionSectionToJson(LinearRegressionSection instance) {
   final val = <String, dynamic>{
     'type': instance.type,
     'id': instance.id,
@@ -38,8 +32,7 @@ Map<String, dynamic> _$LinearRegressionSectionToJson(
   writeNotNull('description', instance.description);
   writeNotNull('resultProperty', instance.resultProperty?.toJson());
   val['alpha'] = instance.alpha;
-  writeNotNull(
-      'improvement', _$ImprovementDirectionEnumMap[instance.improvement]);
+  writeNotNull('improvement', _$ImprovementDirectionEnumMap[instance.improvement]);
   return val;
 }
 

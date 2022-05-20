@@ -10,13 +10,9 @@ StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) => StudySubject(
       json['id'] as String,
       json['study_id'] as String,
       json['user_id'] as String,
-      (json['selected_intervention_ids'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      (json['selected_intervention_ids'] as List<dynamic>).map((e) => e as String).toList(),
     )
-      ..startedAt = json['started_at'] == null
-          ? null
-          : DateTime.parse(json['started_at'] as String)
+      ..startedAt = json['started_at'] == null ? null : DateTime.parse(json['started_at'] as String)
       ..inviteCode = json['invite_code'] as String?;
 
 Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
