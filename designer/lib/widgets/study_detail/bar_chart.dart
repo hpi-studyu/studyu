@@ -5,7 +5,8 @@ class BarChartView extends StatelessWidget {
   final Map<int, num> data;
   final Color color;
 
-  const BarChartView(this.data, {this.color = Colors.black, Key key}) : super(key: key);
+  const BarChartView(this.data, {this.color = Colors.black, Key key})
+      : super(key: key);
 
   List<BarChartGroupData> _histogramBarChartData(Color color) => data
       .map(
@@ -13,9 +14,7 @@ class BarChartView extends StatelessWidget {
           x,
           BarChartGroupData(
             x: x,
-            barRods: [
-              BarChartRodData(toY: y.toDouble(), colors: [color])
-            ],
+            barRods: [BarChartRodData(toY: y.toDouble(), color: color)],
             showingTooltipIndicators: [0],
           ),
         ),
@@ -28,7 +27,7 @@ class BarChartView extends StatelessWidget {
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
-        // maxY: 20,
+        //maxY: data.values.max.toDouble() + data.values.max.toDouble() * 0.25,
         barTouchData: BarTouchData(
           enabled: true,
           touchTooltipData: BarTouchTooltipData(
@@ -52,28 +51,71 @@ class BarChartView extends StatelessWidget {
             },
           ),
         ),
-        axisTitleData: FlAxisTitleData(
-          bottomTitle: AxisTitle(
-            titleText: 'Amount of missed days',
-            showTitle: true,
-            textStyle: const TextStyle(color: Color(0xff7589a2)),
-          ),
-          leftTitle:
-              AxisTitle(titleText: 'Number of participants', showTitle: true, textStyle: TextStyle(color: color)),
-        ),
         titlesData: FlTitlesData(
           show: true,
-          bottomTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (context, value) =>
-                const TextStyle(color: Color(0xff7589a2), fontWeight: FontWeight.bold, fontSize: 14),
-            margin: 20,
+          topTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: false,
+            ),
           ),
-          leftTitles: SideTitles(showTitles: false),
+          bottomTitles: AxisTitles(
+            axisNameWidget: const Text(
+              'Amount of missed days',
+              style: TextStyle(
+                color: Color(0xff7589a2),
+              ),
+            ),
+            sideTitles: SideTitles(
+              showTitles: true,
+              // TODO: `interval` is currently bugged:
+              // see: https://github.com/imaNNeoFighT/fl_chart/issues/964
+              //interval: 5,
+              reservedSize: 50,
+              getTitlesWidget: (value, titleMeta) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text(
+                    value.toString(),
+                    style: const TextStyle(
+                      color: Color(0xff7589a2),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          leftTitles: AxisTitles(
+            axisNameWidget: Text(
+              'Number of participants',
+              style: TextStyle(color: color),
+            ),
+            sideTitles: SideTitles(
+              showTitles: false,
+            ),
+          ),
+          rightTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, titleMeta) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    value.toString(),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-        borderData: FlBorderData(
-          show: false,
+        gridData: FlGridData(
+          show: true,
+          drawHorizontalLine: true,
+          drawVerticalLine: true,
         ),
+        borderData: FlBorderData(show: false),
         barGroups: _histogramBarChartData(color),
       ),
     );
