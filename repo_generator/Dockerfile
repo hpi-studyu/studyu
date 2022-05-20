@@ -1,5 +1,5 @@
-FROM google/dart as builder
-RUN apt -y update && apt -y upgrade
+FROM dart:stable AS builder
+
 WORKDIR /app
 
 RUN mkdir /core
