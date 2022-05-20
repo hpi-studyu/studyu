@@ -5,8 +5,7 @@ class BarChartView extends StatelessWidget {
   final Map<int, num> data;
   final Color color;
 
-  const BarChartView(this.data, {this.color = Colors.black, Key key})
-      : super(key: key);
+  const BarChartView(this.data, {this.color = Colors.black, Key key}) : super(key: key);
 
   List<BarChartGroupData> _histogramBarChartData(Color color) => data
       .map(
