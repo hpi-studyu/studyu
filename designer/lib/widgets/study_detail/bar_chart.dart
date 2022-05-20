@@ -5,7 +5,8 @@ class BarChartView extends StatelessWidget {
   final Map<int, num> data;
   final Color color;
 
-  const BarChartView(this.data, {this.color = Colors.black, Key key}) : super(key: key);
+  const BarChartView(this.data, {this.color = Colors.black, Key key})
+      : super(key: key);
 
   List<BarChartGroupData> _histogramBarChartData(Color color) => data
       .map(
@@ -26,7 +27,7 @@ class BarChartView extends StatelessWidget {
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
-        // maxY: 20,
+        //maxY: data.values.max.toDouble() + data.values.max.toDouble() * 0.25,
         barTouchData: BarTouchData(
           enabled: true,
           touchTooltipData: BarTouchTooltipData(
@@ -52,6 +53,11 @@ class BarChartView extends StatelessWidget {
         ),
         titlesData: FlTitlesData(
           show: true,
+          topTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: false,
+            ),
+          ),
           bottomTitles: AxisTitles(
             axisNameWidget: const Text(
               'Amount of missed days',
@@ -61,34 +67,55 @@ class BarChartView extends StatelessWidget {
             ),
             sideTitles: SideTitles(
               showTitles: true,
-            // TODO: How to add text styling and padding?
-    /*getTitlesWidget: (value, titleMeta) {
-                getTextStyles: (context, value) => const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: Color(0xff7589a2),
+              // TODO: `interval` is currently bugged:
+              // see: https://github.com/imaNNeoFighT/fl_chart/issues/964
+              //interval: 5,
+              reservedSize: 50,
+              getTitlesWidget: (value, titleMeta) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text(
+                    value.toString(),
+                    style: const TextStyle(
+                      color: Color(0xff7589a2),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
                 );
-                return const Padding(
-                    padding: EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
-                );
-              },*/
+              },
             ),
           ),
           leftTitles: AxisTitles(
             axisNameWidget: Text(
               'Number of participants',
-              style: TextStyle(
-                color: color,
-              ),
+              style: TextStyle(color: color),
             ),
             sideTitles: SideTitles(
               showTitles: false,
             ),
           ),
+          rightTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, titleMeta) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    value.toString(),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-        borderData: FlBorderData(
-          show: false,
+        gridData: FlGridData(
+          show: true,
+          drawHorizontalLine: true,
+          drawVerticalLine: true,
         ),
+        borderData: FlBorderData(show: false),
         barGroups: _histogramBarChartData(color),
       ),
     );
