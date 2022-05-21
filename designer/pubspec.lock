@@ -98,7 +98,7 @@ packages:
       name: dropdown_search
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "4.0.1"
   email_validator:
     dependency: "direct main"
     description:
@@ -161,14 +161,12 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_chips_input:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: efa949dfec239bd0cf5bbac69fe7f8d9547acdcc
-      url: "https://github.com/jhaglund/flutter_chips_input.git"
-    source: git
-    version: "1.10.0"
+      name: flutter_chips_input
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_colorpicker:
     dependency: transitive
     description:
@@ -203,7 +201,7 @@ packages:
       name: flutter_form_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.1"
+    version: "7.2.0"
   flutter_iconpicker:
     dependency: "direct main"
     description:
@@ -271,7 +269,7 @@ packages:
       name: flutter_typeahead
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.7"
+    version: "4.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -290,7 +288,7 @@ packages:
       name: form_builder_extra_fields
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.0"
+    version: "8.1.0"
   form_builder_validators:
     dependency: "direct main"
     description:
@@ -353,14 +351,14 @@ packages:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   image:
     dependency: transitive
     description:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.3"
+    version: "3.2.0"
   intl:
     dependency: "direct main"
     description:
@@ -666,14 +664,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.7.8"
+    version: "3.7.9"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.3.14"
+    version: "1.3.15"
   supabase:
     dependency: "direct main"
     description:
@@ -764,7 +762,7 @@ packages:
       name: url_launcher_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.16"
+    version: "6.0.17"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -841,7 +839,7 @@ packages:
       name: webview_flutter_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.9.0"
   webview_flutter_web:
     dependency: "direct main"
     description:
@@ -876,7 +874,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.4.1"
+    version: "6.0.1"
   yaml:
     dependency: transitive
     description:
@@ -886,4 +884,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.17.0 <3.0.0"
-  flutter: ">=2.10.0"
+  flutter: ">=3.0.0"
