@@ -1,3 +1,8 @@
+## 1.4.15
+
+ - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
+ - **DOCS**: add run command. ([12997ce4](https://github.com/hpi-studyu/studyu/commit/12997ce44c26fb7083e04b95cce86efe6aaffe5a))
+
 ## 1.4.14
 
  - **DOCS**: add run command. ([12997ce4](https://github.com/hpi-studyu/studyu/commit/12997ce44c26fb7083e04b95cce86efe6aaffe5a))

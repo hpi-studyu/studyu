@@ -1,3 +1,8 @@
+## 1.10.14
+
+ - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
+ - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))
+
 ## 1.10.13
 
  - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))
