@@ -1,3 +1,10 @@
+## 1.5.13
+
+ - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
+ - **FIX**: Upgrade fl_chart to 0.46 and fix minor breaking change. ([c0399ba9](https://github.com/hpi-studyu/studyu/commit/c0399ba9f622383a6dae8002ea1c2d1aca2edc16))
+ - **FIX**: Fix Flutter 3.0 breaking packages. ([982b7fc8](https://github.com/hpi-studyu/studyu/commit/982b7fc834db7d37db2b8cb9e57668c2d0dc9f72))
+ - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))
+
 ## 1.5.12
 
  - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))
