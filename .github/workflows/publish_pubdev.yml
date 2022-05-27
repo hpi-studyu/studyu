@@ -23,20 +23,20 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v2 # required!
 
-      - name: '>> Dart package app <<'
+      - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          relativePath: app
+          relativePath: core
           dryRunOnly: true # TODO REMOVE IF WORKING
 
-      - name: '>> Dart package designer <<'
+      - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
         with:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          relativePath: designer
+          relativePath: flutter_common
           dryRunOnly: true # TODO REMOVE IF WORKING
 
       - name: '>> Dart package repo_generator <<'
@@ -53,20 +53,4 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: notebook_uploader
-          dryRunOnly: true # TODO REMOVE IF WORKING
-
-      - name: '>> Dart package core <<'
-        uses: k-paxian/dart-package-publisher@master
-        with:
-          accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
-          refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          relativePath: core
-          dryRunOnly: true # TODO REMOVE IF WORKING
-
-      - name: '>> Dart package flutter_common <<'
-        uses: k-paxian/dart-package-publisher@master
-        with:
-          accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
-          refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          relativePath: flutter_common
           dryRunOnly: true # TODO REMOVE IF WORKING
