@@ -1,3 +1,7 @@
+## 1.10.15
+
+ - **FIX**: upgrade deps. ([dca763c6](https://github.com/hpi-studyu/studyu/commit/dca763c6f5531c725148bb99e25c2a2debdeadd6))
+
 ## 1.10.14
 
  - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))

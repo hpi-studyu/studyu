@@ -1,3 +1,7 @@
+## 1.4.16
+
+ - Update a dependency to the latest release.
+
 ## 1.4.15
 
  - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
