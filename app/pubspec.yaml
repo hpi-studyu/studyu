@@ -14,7 +14,7 @@ dependencies:
   charts_common: ^0.12.0
   charts_flutter: ^0.12.0
   chewie: ^1.3.3
-  cupertino_icons: ^1.0.4
+  cupertino_icons: ^1.0.5
   extended_math:
     git:
       url: https://github.com/nstrelow/extended_math.git
