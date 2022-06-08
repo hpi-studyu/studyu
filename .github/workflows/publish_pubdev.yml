@@ -35,6 +35,7 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: flutter_common
+          flutter: true
           # dryRunOnly: true
 
       - name: '>> Dart package repo_generator <<'
