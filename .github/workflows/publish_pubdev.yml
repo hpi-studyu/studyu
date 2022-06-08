@@ -9,8 +9,6 @@ name: Publish to Pub.dev
 on:
   push:
     tags:
-      - 'studyu_app-v*'
-      - 'studyu_designer-v*'
       - 'studyu_repo_generator-v*'
       - 'studyu_notebook_uploader-v*'
       - 'studyu_core-v*'
