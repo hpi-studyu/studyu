@@ -9,10 +9,10 @@ name: Publish to Pub.dev
 on:
   push:
     tags:
-      - 'studyu_repo_generator-v*'
-      - 'studyu_notebook_uploader-v*'
       - 'studyu_core-v*'
       - 'studyu_flutter_common-v*'
+      - 'studyu_repo_generator-v*'
+      - 'studyu_notebook_uploader-v*'
 
 jobs:
   publishing:
@@ -27,7 +27,7 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: core
-          dryRunOnly: true # TODO REMOVE IF WORKING
+          # dryRunOnly: true
 
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
@@ -35,7 +35,7 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: flutter_common
-          dryRunOnly: true # TODO REMOVE IF WORKING
+          # dryRunOnly: true
 
       - name: '>> Dart package repo_generator <<'
         uses: k-paxian/dart-package-publisher@master
@@ -43,7 +43,7 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: repo_generator
-          dryRunOnly: true # TODO REMOVE IF WORKING
+          # dryRunOnly: true
 
       - name: '>> Dart package notebook_uploader <<'
         uses: k-paxian/dart-package-publisher@master
@@ -51,4 +51,4 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: notebook_uploader
-          dryRunOnly: true # TODO REMOVE IF WORKING
+          # dryRunOnly: true
