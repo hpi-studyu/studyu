@@ -1,3 +1,7 @@
+## 1.3.17
+
+ - **FIX**: upgrade deps. ([18dc5206](https://github.com/hpi-studyu/studyu/commit/18dc5206aff15093338a3973ef4196ea9d78d922))
+
 ## 1.3.16
 
  - Update a dependency to the latest release.
