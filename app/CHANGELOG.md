@@ -1,3 +1,7 @@
+## 1.10.18
+
+ - Update a dependency to the latest release.
+
 ## 1.10.17
 
  - **FIX**: fix jmespath vulnerability issue. ([182e67a9](https://github.com/hpi-studyu/studyu/commit/182e67a92c148e47a3a3f2e40a7e6763499aeeb6))
