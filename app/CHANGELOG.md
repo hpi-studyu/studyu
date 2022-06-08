@@ -1,3 +1,7 @@
+## 1.10.17
+
+ - **FIX**: fix jmespath vulnerability issue. ([182e67a9](https://github.com/hpi-studyu/studyu/commit/182e67a92c148e47a3a3f2e40a7e6763499aeeb6))
+
 ## 1.10.16
 
  - **FIX**: upgrade deps. ([18dc5206](https://github.com/hpi-studyu/studyu/commit/18dc5206aff15093338a3973ef4196ea9d78d922))
