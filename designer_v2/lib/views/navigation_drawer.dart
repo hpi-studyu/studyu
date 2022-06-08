@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth_store.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final String title;
@@ -16,6 +19,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+    final authService = Provider.of<AuthService>(context);
 
     return Drawer(
         width: 250.0,
@@ -31,6 +35,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   child: ListView(
                     // Important: Remove any padding from the ListView.
                     padding: EdgeInsets.zero,
+                    shrinkWrap: false,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(32.0),
@@ -66,12 +71,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                         ),
                       ),
                       ListTile(
+                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
                         title: Text('Open Enrollment', style: _selectedDestination == 3 ? TextStyle(fontWeight: FontWeight.bold) : null),
                         contentPadding: EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 3,
                         onTap: () => selectDestination(3),
                       ),
                       ListTile(
+                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
                         title: Text('Open Results', style: _selectedDestination == 4 ? TextStyle(fontWeight: FontWeight.bold) : null),
                         contentPadding: EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 4,
@@ -81,17 +88,19 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   ),
                 ),
               ),
-              Spacer(),
               Padding(
                 padding: EdgeInsets.only(bottom: 24.0),
                 child: Column(children: <Widget>[
                   ListTile(
+                    hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: Text('Change language'),
                     contentPadding: EdgeInsets.only(left: 48.0),
                   ),
                   ListTile(
+                    hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: Text('Sign out'),
                     contentPadding: EdgeInsets.only(left: 48.0),
+                    onTap: authService.logout,
                   ),
                 ]),
               )

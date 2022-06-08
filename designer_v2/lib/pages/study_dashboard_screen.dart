@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../domain/model.dart';
 import '../domain/study.dart';
-import '../providers/study_provider.dart';
+import '../services/study_provider.dart';
 import '../views/navigation_drawer.dart';
 import '../views/sidenav_layout.dart';
 
@@ -19,6 +19,7 @@ class StudyDashboardScreen extends StatefulWidget {
 class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SidenavLayout(
         sideDrawerWidget: NavigationDrawer(title: 'StudyU'),
         mainContentWidget: Scaffold(
@@ -31,7 +32,7 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
               children: [
                 _buildContentHeader(context),
                 const SizedBox(height: 24.0), // spacing between body elements
-                _buildStudiesTable(context),
+                _buildStudiesTable(context)
               ],
             ),
           ),
@@ -145,7 +146,7 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
         color: Colors.transparent,
         child: Table(
             columnWidths: const {
-              0: FlexColumnWidth(2.5),
+              0: MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.5)),
               1: FlexColumnWidth(1.3),
               2: FlexColumnWidth(1.3),
               3: FlexColumnWidth(1.3),
@@ -176,7 +177,7 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
           icon: Icon(Icons.add),
           label: Text("New study"),
           onPressed: () {
-            print("foo");
+            print("new study");
           },
         )
       ],

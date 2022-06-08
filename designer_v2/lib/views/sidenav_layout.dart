@@ -32,7 +32,8 @@ class SidenavLayout extends StatelessWidget {
                   vertical: mainContentPaddingVertical,
                   horizontal: mainContentPaddingHorizontal
               ),
-              child: mainContentWidget),
+              child: mainContentWidget
+          ),
         ),
       ],
     );
