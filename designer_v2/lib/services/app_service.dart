@@ -1,4 +1,4 @@
-import 'package:designer_v2/services/auth_store.dart';
+import 'package:studyu_designer_v2/services/auth_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

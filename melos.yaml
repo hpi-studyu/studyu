@@ -5,6 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 packages:
   - 'app/*'
   - 'designer/*'
+  - 'designer_v2/*'
   - 'core/*'
   - 'flutter_common/*'
   - 'repo_generator/*'
