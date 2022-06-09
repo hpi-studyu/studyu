@@ -109,6 +109,10 @@ The StudyU modules can be run with Docker and `docker-compose` which makes it ea
 This allows to store data in a self-hosted Supabase instance data, rather than relying on a public cloud service.
 Especially, when it comes to sensitive data, this is a very convenient solution.
 
+### Automatic install and update script
+
+The following steps describe the manual installation process. However, in order to install and update StudyU and a self-hosted Supabase instance automatically, [this gist script](https://gist.github.com/johannesvedder/29a384f82e761527fc7acce1d06f78b9) can also be used.
+
 ### Configure
 
 1. Make sure you have Docker and `docker-compose` installed and running
@@ -147,10 +151,12 @@ Make sure to replace `<module>` with one of the following:
    Add a row to the table `app_config` with the id `prod`. The other fields need to be valid json.
    
 4. The StudyU modules should be available at the URLs you specified in the `.env.selfhost` file.
-   
+
+### Automatic deployment script
+
 ### Good to know
 
-In order to stop docker containers from running press CTRL+C.
 Use `-d` to run containers in the background.
+In order to stop docker containers from running press CTRL+C or run `docker-compose -p 'studyu' down --remove-orphans` and `docker-compose -p 'supabase' down --remove-orphans`.
 When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
 Moreover, it often helps to clear the cache of your webbrowser when making changes to environment files.

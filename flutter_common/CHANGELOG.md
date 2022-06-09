@@ -1,3 +1,21 @@
+## 1.3.19
+
+ - **FIX**: Add missing env to .pubignore. ([ebbb769b](https://github.com/hpi-studyu/studyu/commit/ebbb769b79c7ff61a14febbecfdeb8c8dec43128))
+
+## 1.3.18
+
+ - **FIX**: upgrade deps. ([18dc5206](https://github.com/hpi-studyu/studyu/commit/18dc5206aff15093338a3973ef4196ea9d78d922))
+
+## 1.3.17
+
+ - **FIX**: upgrade deps. ([dca763c6](https://github.com/hpi-studyu/studyu/commit/dca763c6f5531c725148bb99e25c2a2debdeadd6))
+
+## 1.3.16
+
+ - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
+ - **FIX**: add newlines. ([6adb5952](https://github.com/hpi-studyu/studyu/commit/6adb5952d9b358094f13d7ab192ea32d1bb70846))
+ - **FIX**: use default api keys from now on consistently. ([52afef81](https://github.com/hpi-studyu/studyu/commit/52afef81b53abc23f1dec66cca46dbc8a1c8b6c6))
+
 ## 1.3.15
 
  - **FIX**: Use new studyu package versions. ([cfc65599](https://github.com/hpi-studyu/studyu/commit/cfc65599bca7a28490321c7731bc6e8de4cc1e0a))

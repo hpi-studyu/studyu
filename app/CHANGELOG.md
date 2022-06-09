@@ -1,3 +1,24 @@
+## 1.10.18
+
+ - Update a dependency to the latest release.
+
+## 1.10.17
+
+ - **FIX**: fix jmespath vulnerability issue. ([182e67a9](https://github.com/hpi-studyu/studyu/commit/182e67a92c148e47a3a3f2e40a7e6763499aeeb6))
+
+## 1.10.16
+
+ - **FIX**: upgrade deps. ([18dc5206](https://github.com/hpi-studyu/studyu/commit/18dc5206aff15093338a3973ef4196ea9d78d922))
+
+## 1.10.15
+
+ - **FIX**: upgrade deps. ([dca763c6](https://github.com/hpi-studyu/studyu/commit/dca763c6f5531c725148bb99e25c2a2debdeadd6))
+
+## 1.10.14
+
+ - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
+ - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))
+
 ## 1.10.13
 
  - **FIX**: Use new flutter_common. ([0c9919e4](https://github.com/hpi-studyu/studyu/commit/0c9919e46ad8936a88950ac275c7759705124bf9))

@@ -1,3 +1,16 @@
+## 1.3.17
+
+ - **FIX**: upgrade deps. ([18dc5206](https://github.com/hpi-studyu/studyu/commit/18dc5206aff15093338a3973ef4196ea9d78d922))
+
+## 1.3.16
+
+ - Update a dependency to the latest release.
+
+## 1.3.15
+
+ - **FIX**: upgrade deps. ([d14c52dd](https://github.com/hpi-studyu/studyu/commit/d14c52dd492bb2e6ceed941a2d33a053276629f4))
+ - **DOCS**: add run command. ([12997ce4](https://github.com/hpi-studyu/studyu/commit/12997ce44c26fb7083e04b95cce86efe6aaffe5a))
+
 ## 1.3.14
 
  - **DOCS**: add run command. ([12997ce4](https://github.com/hpi-studyu/studyu/commit/12997ce44c26fb7083e04b95cce86efe6aaffe5a))
