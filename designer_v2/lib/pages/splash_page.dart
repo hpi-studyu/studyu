@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../services/app_service.dart';
 
+// TODO: This needs to be rewritten to use riverpod
 class SplashPage extends StatefulWidget {
   const SplashPage({ Key? key }) : super(key: key);
 

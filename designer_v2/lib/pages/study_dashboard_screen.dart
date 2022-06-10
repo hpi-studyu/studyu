@@ -9,6 +9,7 @@ import '../views/sidenav_layout.dart';
 // - Implement: Load studies from Supabase (copy from main repo)
 // - After: Architecture refactor + migrate to main repo + integrate
 
+// TODO: This needs to be rewritten to use riverpod
 class StudyDashboardScreen extends StatefulWidget {
   const StudyDashboardScreen({Key? key}) : super(key: key);
 

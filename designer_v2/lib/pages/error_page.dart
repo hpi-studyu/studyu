@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: This needs to be rewritten to use riverpod
 class ErrorPage extends StatefulWidget {
   final String error;
 

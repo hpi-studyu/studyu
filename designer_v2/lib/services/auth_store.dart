@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 abstract class IAuthServiceDelegate {
   void onLogin();
   void onLogout();
 }
+// first try of a riverpod auth implementation
+/*
+final authProvider = StateNotifierProvider((ref) {
+  return AuthNotifier();
+});
 
+//class AuthNotifier extends StateNotifier<User> {
+class AuthNotifier {
+  //AuthNotifier(User state) : super(state);
 
+  setCurrentUser(User user) {
+    state = user;
+  }
+
+  void clearUser() {
+    state = null;
+  }
+}*/
+
+// TODO: This needs to be rewritten to use riverpod
 class AuthService {
   // Backend client providing authentication APIs
   final SupabaseClient supabaseClient;
