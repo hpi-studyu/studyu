@@ -63,14 +63,14 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   dynamic_color:
     dependency: "direct main"
     description:
       name: dynamic_color
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.2"
+    version: "1.4.0"
   fake_async:
     dependency: transitive
     description:
@@ -125,6 +125,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -155,7 +162,7 @@ packages:
       name: go_router
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   gotrue:
     dependency: transitive
     description:
@@ -351,7 +358,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   quiver:
     dependency: transitive
     description:
@@ -366,6 +373,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.15"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -441,6 +455,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.2+1"
   storage_client:
     dependency: transitive
     description:
@@ -465,31 +486,31 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      name: studyu_core
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.7.8"
+      path: "../core"
+      relative: true
+    source: path
+    version: "3.7.12"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      name: studyu_flutter_common
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.14"
+      path: "../flutter_common"
+      relative: true
+    source: path
+    version: "1.3.19"
   supabase:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.4"
+    version: "0.3.4+1"
   supabase_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: supabase_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.1+1"
   term_glyph:
     dependency: transitive
     description:
@@ -639,4 +660,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.17.0 <3.0.0"
-  flutter: ">=2.13.0-0.2.pre"
+  flutter: ">=3.0.0"
