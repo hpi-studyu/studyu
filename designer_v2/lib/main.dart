@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/my_app.dart';
+import 'pages/designer.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_core/env.dart' as env;
 
@@ -30,7 +30,7 @@ Future<void> main() async {
       // override the previous value with the new object
       sharedPreferencesProvider.overrideWithValue(sharedPreferences),
     ],
-    child: MyApp(supabaseClient: env.client),
+    child: Designer(supabaseClient: env.client),
     ),
   );
 }

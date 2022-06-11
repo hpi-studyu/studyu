@@ -3,11 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/pages/login_page.dart';
 import 'package:studyu_designer_v2/pages/study_dashboard_screen.dart';
-
-import '../pages/my_app.dart';
 import 'services/app_service.dart';
 import 'services/auth_store.dart';
-import 'user.dart';
 
 // List of all pages in the application
 // To create a new page, 1) add an entry to the enum and 2) add the page to the AppRouter class

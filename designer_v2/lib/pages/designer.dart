@@ -6,22 +6,19 @@ import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase/supabase.dart';
 import '../router.dart';
-//import '../services/app_service.dart';
 import '../services/app_service.dart';
 import '../services/auth_store.dart';
 import '../theme.dart';
 
-import '../user.dart';
-
 const isDebugMode = false;
 
 // Extend ConsumerWidget instead of StatelessWidget, which is exposed by Riverpod
-class MyApp extends ConsumerWidget {
+class Designer extends ConsumerWidget {
   final SupabaseClient supabaseClient;
   late AppDelegate appDelegate;
   late AuthService authService;
 
-  MyApp({Key? key, required this.supabaseClient}) : super(key: key);
+  Designer({Key? key, required this.supabaseClient}) : super(key: key);
 
   final settings = ValueNotifier(ThemeSettings(
     //sourceColor: Color(0xff2a4fda),
