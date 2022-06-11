@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-// todo activate this for custom login page and remove the one from my_app
-//import 'package:studyu_designer_v2/pages/login_page.dart';
+import 'package:studyu_designer_v2/pages/login_page.dart';
 import 'package:studyu_designer_v2/pages/study_dashboard_screen.dart';
 
 import '../pages/my_app.dart';
@@ -106,14 +105,14 @@ class RouterNotifier extends ChangeNotifier {
       path: RouterPage.dashboard.path,
       name: RouterPage.dashboard.title,
       // TODO SWITCH TO DASHBOARD
-      //uilder: (context, state) => const StudyDashboardScreen(),
+      //builder: (context, state) => const StudyDashboardScreen(),
       builder: (context, _) => const StudyDashboardScreen(),
       //builder: (context, _) => const HomePage(),
     ),
     GoRoute(
       name: "login",
       path: '/login',
-      builder: (context, _) => LoginPage(),
+      builder: (context, _) => const LoginPage(),
     ),
   ];
 }

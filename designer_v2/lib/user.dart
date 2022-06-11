@@ -12,9 +12,9 @@ class UserState extends StateNotifier<User?> {
 
   Future<void> login(String email, String password) async {
     // This mocks some sort of request / response
-    state = const User(
-      name: "My Name",
-      email: "My Email",
+    state = User(
+      name: email,
+      email: password,
     );
   }
 

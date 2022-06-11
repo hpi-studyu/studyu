@@ -71,35 +71,7 @@ class MyApp extends ConsumerWidget {
 
   }
 }
-
-class HomePage extends ConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Your phenomenal app"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text("This is your homepage. Horray!"),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(userProvider.notifier).logout();
-              },
-              child: const Text("Logout"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
+/*
 class LoginPage extends ConsumerWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -127,4 +99,4 @@ class LoginPage extends ConsumerWidget {
       ),
     );
   }
-}
+}*/
