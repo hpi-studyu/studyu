@@ -106,8 +106,9 @@ class RouterNotifier extends ChangeNotifier {
       path: RouterPage.dashboard.path,
       name: RouterPage.dashboard.title,
       // TODO SWITCH TO DASHBOARD
-      //builder: (context, state) => const StudyDashboardScreen(),
-      builder: (context, _) => const HomePage(),
+      //uilder: (context, state) => const StudyDashboardScreen(),
+      builder: (context, _) => const StudyDashboardScreen(),
+      //builder: (context, _) => const HomePage(),
     ),
     GoRoute(
       name: "login",

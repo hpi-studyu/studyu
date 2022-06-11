@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import '../domain/model.dart';
 import '../domain/study.dart';
@@ -9,20 +10,20 @@ import '../views/sidenav_layout.dart';
 // - Implement: Load studies from Supabase (copy from main repo)
 // - After: Architecture refactor + migrate to main repo + integrate
 
-// TODO: This needs to be rewritten to use riverpod
-class StudyDashboardScreen extends StatefulWidget {
+class StudyDashboardScreen extends ConsumerStatefulWidget {
   const StudyDashboardScreen({Key? key}) : super(key: key);
 
   @override
-  _StudyDashboardScreenState createState() => _StudyDashboardScreenState();
+  StudyDashboardScreenState createState() => StudyDashboardScreenState();
 }
 
-class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
+
+class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SidenavLayout(
-        sideDrawerWidget: NavigationDrawer(title: 'StudyU'),
+        sideDrawerWidget: const NavigationDrawer(title: 'StudyU'),
         mainContentWidget: Scaffold(
           appBar: null, // default app bar not suitable for our layout
           body: Container(

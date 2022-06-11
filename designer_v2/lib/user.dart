@@ -19,7 +19,7 @@ class UserState extends StateNotifier<User?> {
   }
 
   Future<void> logout() async {
-    // In this example user==null iff we're logged out
+    // In this example user==null if we're logged out
     state = null; // No request is mocked here but I guess we could
   }
 }

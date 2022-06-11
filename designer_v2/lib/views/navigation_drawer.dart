@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/auth_store.dart';
+import '../user.dart';
+//import '../services/auth_store.dart';
 
-class NavigationDrawer extends StatefulWidget {
+class NavigationDrawer extends ConsumerStatefulWidget {
   final String title;
 
-  NavigationDrawer({Key? key, required this.title}) : super(key: key);
+  const NavigationDrawer({Key? key, required this.title}) : super(key: key);
 
   @override
-  _NavigationDrawerState createState() => _NavigationDrawerState();
+  NavigationDrawerState createState() => NavigationDrawerState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
+class NavigationDrawerState extends ConsumerState<NavigationDrawer> {
   int _selectedDestination = 0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final authService = Provider.of<AuthService>(context);
+    //final authService = Provider.of<AuthService>(context);
 
     return Drawer(
         width: 250.0,
@@ -47,23 +48,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       ),
                       ListTile(
                         hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('My Studies', style: _selectedDestination == 0 ? TextStyle(fontWeight: FontWeight.bold) : null),
-                        contentPadding: EdgeInsets.only(left: 48.0),
+                        title: Text('My Studies', style: _selectedDestination == 0 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 0,
                         onTap: () => selectDestination(0),
                       ),
                       ListTile(
                         hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Shared With Me', style: _selectedDestination == 1 ? TextStyle(fontWeight: FontWeight.bold) : null),
-                        contentPadding: EdgeInsets.only(left: 48.0),
+                        title: Text('Shared With Me', style: _selectedDestination == 1 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 1,
                         onTap: () => selectDestination(1),
                       ),
-                      Divider(
+                      const Divider(
                         height: 1,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
+                      const Padding(
+                        padding: EdgeInsets.only(
                             top: 24.0, bottom: 12.0, left: 32.0),
                         child: SelectableText(
                           'Study Registry',
@@ -72,15 +73,15 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                       ),
                       ListTile(
                         hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Open Enrollment', style: _selectedDestination == 3 ? TextStyle(fontWeight: FontWeight.bold) : null),
-                        contentPadding: EdgeInsets.only(left: 48.0),
+                        title: Text('Open Enrollment', style: _selectedDestination == 3 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 3,
                         onTap: () => selectDestination(3),
                       ),
                       ListTile(
                         hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Open Results', style: _selectedDestination == 4 ? TextStyle(fontWeight: FontWeight.bold) : null),
-                        contentPadding: EdgeInsets.only(left: 48.0),
+                        title: Text('Open Results', style: _selectedDestination == 4 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 4,
                         onTap: () => selectDestination(4),
                       ),
@@ -89,18 +90,18 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 24.0),
+                padding: const EdgeInsets.only(bottom: 24.0),
                 child: Column(children: <Widget>[
                   ListTile(
                     hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                    title: Text('Change language'),
-                    contentPadding: EdgeInsets.only(left: 48.0),
+                    title: const Text('Change language'),
+                    contentPadding: const EdgeInsets.only(left: 48.0),
                   ),
                   ListTile(
                     hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                    title: Text('Sign out'),
-                    contentPadding: EdgeInsets.only(left: 48.0),
-                    onTap: authService.logout,
+                    title: const Text('Sign out'),
+                    contentPadding: const EdgeInsets.only(left: 48.0),
+                    onTap: () => ref.read(userProvider.notifier).logout(),
                   ),
                 ]),
               )
@@ -110,8 +111,8 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   }
 
   void selectDestination(int index) {
-    setState(() {
+    //setState(() {
       _selectedDestination = index;
-    });
+    //});
   }
 }
