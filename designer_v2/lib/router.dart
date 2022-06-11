@@ -5,6 +5,8 @@ import 'package:studyu_designer_v2/pages/login_page.dart';
 import 'package:studyu_designer_v2/pages/study_dashboard_screen.dart';
 
 import '../pages/my_app.dart';
+import 'services/app_service.dart';
+import 'services/auth_store.dart';
 import 'user.dart';
 
 // List of all pages in the application
@@ -21,7 +23,7 @@ enum RouterPage {
   const RouterPage({required this.title, required this.path, });
 }
 
-//late final AppDelegate appDelegate;
+late final AppDelegate appDelegate;
 
 /// Caches and Exposes a [GoRouter]
 final routerProvider = Provider<GoRouter>((ref) {
@@ -53,8 +55,9 @@ class RouterNotifier extends ChangeNotifier {
   /// This implementation exploits `ref.listen()` to add a simple callback that
   /// calls `notifyListeners()` whenever there's change onto a desider provider.
   RouterNotifier(this._ref) {
-    _ref.listen<User?>(
-      userProvider,
+    _ref.listen<AuthRepository?>(
+      //userProvider,
+      authServiceProvider,
       // In our case, we're interested in the log in / log out events.
       (_, __) => notifyListeners(), // Obviously more logic can be added here
     );
@@ -71,9 +74,8 @@ class RouterNotifier extends ChangeNotifier {
 
     //final isLoggedIn = appDelegate.isLoggedIn;
     //@TODO use app_service
-    final user = _ref.read(userProvider);
-    final isLoggedIn = user != null;
-
+    final bool isLoggedIn = _ref.watch(authServiceProvider.notifier).isLoggedIn;
+    print("IS LOGGED IN: $isLoggedIn");
     //final isInitialized = appDelegate.isInitialized;
     const isInitialized = true;
 
@@ -85,10 +87,8 @@ class RouterNotifier extends ChangeNotifier {
       //return (isOnSplashPage) ? null : splashLocation;
     } else {
       if (!isLoggedIn) {
-        print("not logged in");
         return (isOnLoginPage) ? null : loginLocation;
       } else {
-        print("logged in");
         return (isOnLoginPage) ? dashboardLocation : null;
       }
     }
@@ -96,18 +96,10 @@ class RouterNotifier extends ChangeNotifier {
   }
 
   List<GoRoute> get _routes => [
-    /*GoRoute(
-      name: "home",
-      path: '/',
-      builder: (context, _) => const HomePage(),
-    ),*/
     GoRoute(
       path: RouterPage.dashboard.path,
       name: RouterPage.dashboard.title,
-      // TODO SWITCH TO DASHBOARD
-      //builder: (context, state) => const StudyDashboardScreen(),
-      builder: (context, _) => const StudyDashboardScreen(),
-      //builder: (context, _) => const HomePage(),
+      builder: (context, state) => const StudyDashboardScreen(),
     ),
     GoRoute(
       name: "login",

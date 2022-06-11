@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../user.dart';
+import '../services/auth_store.dart';
 
 // TODO The UI needs to be replaced by the actual login page
 
 final emailProvider = StateProvider<String>((ref) => "");
 final passwordProvider = StateProvider<String>((ref) => "");
-
-final counterProvider = StateProvider<int>((ref) => 0);
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -73,7 +71,8 @@ class LoginPage extends ConsumerWidget {
               decoration: BoxDecoration(
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
-                onPressed: () => ref.read(userProvider.notifier).login(ref.read(emailProvider), ref.read(passwordProvider)),
+                //onPressed: () => ref.read(userProvider.notifier).login(ref.read(emailProvider), ref.read(passwordProvider)),
+                onPressed: () => ref.read(authServiceProvider.notifier).signIn(ref.read(emailProvider), ref.read(passwordProvider)),
                 child: const Text(
                   'Login',
                   style: TextStyle(color: Colors.white, fontSize: 25),

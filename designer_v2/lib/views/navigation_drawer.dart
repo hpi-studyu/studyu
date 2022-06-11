@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../services/auth_store.dart';
 import '../user.dart';
 //import '../services/auth_store.dart';
 
@@ -101,7 +102,7 @@ class NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                     hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: const Text('Sign out'),
                     contentPadding: const EdgeInsets.only(left: 48.0),
-                    onTap: () => ref.read(userProvider.notifier).logout(),
+                    onTap: () => ref.read(authServiceProvider.notifier).signOut(),
                   ),
                 ]),
               )

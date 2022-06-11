@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/user.dart';
 import '../domain/model.dart';
 import '../domain/study.dart';
+import '../services/auth_store.dart';
 import '../services/study_provider.dart';
 import '../views/navigation_drawer.dart';
 import '../views/sidenav_layout.dart';
@@ -166,7 +166,7 @@ class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
     final theme = Theme.of(context);
     return Row(
       children: [
-        SelectableText("My Studies ${ref.read(userProvider)?.name}",
+        SelectableText("My Studies ${ref.read(authServiceProvider.notifier).currentUser?.email}",
             style: theme.textTheme.headline5
                 ?.copyWith(fontWeight: FontWeight.bold)),
         Container(width: 32.0),

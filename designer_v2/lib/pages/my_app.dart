@@ -6,6 +6,7 @@ import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase/supabase.dart';
 import '../router.dart';
+//import '../services/app_service.dart';
 import '../services/app_service.dart';
 import '../services/auth_store.dart';
 import '../theme.dart';
@@ -32,7 +33,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     appDelegate = AppDelegate(ref.watch(sharedPreferencesProvider));
-    authService = AuthService(supabaseClient: supabaseClient);
+
+    //AuthRepository authRepository = AuthRepository(supabaseClient: supabaseClient);
+    //authService = AuthRepository(supabaseClient: supabaseClient);
+    //ref.read(authProvider.state).state = supabaseClient;
+
+    // todo Is delegate necessary with riverpod?
+    authService = AuthService();
     authService.delegate = appDelegate;
 
     //final theme = ThemeProvider.of(context);
@@ -67,36 +74,7 @@ class MyApp extends ConsumerWidget {
                     title: 'StudyU Designer',
                     theme: appTheme.light(settings.value.sourceColor),
                     home: const StudyDashboardScreen(),
-                  );*/
+              );*/
 
   }
 }
-/*
-class LoginPage extends ConsumerWidget {
-  const LoginPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: null,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text("Looks like you're not logged in. Let's change that."),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(userProvider.notifier).login(
-                  "myEmail",
-                  "myPassword",
-                );
-              },
-              child: const Text("Login"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
