@@ -19,7 +19,7 @@ dependencies:
   provider: ^6.0.3
   shared_preferences: ^2.0.15
   supabase: ^0.3.4+1
-  supabase_flutter: ^0.3.1+1
+  supabase_flutter: ^0.3.1+2
 
 dev_dependencies:
   flutter_test:
