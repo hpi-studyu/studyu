@@ -54,24 +54,24 @@ class Study implements IModelActionProvider<StudyActionType> {
       ModelAction(
         type: StudyActionType.addCollaborator,
         label: "Add collaborator",
-        onExecute: () => print("Adding collaborator: " + title),
+        onExecute: () => print("Adding collaborator: $title"),
       ),
       ModelAction(
         type: StudyActionType.recruit,
         label: "Recruit participants",
-        onExecute: () => print("Recruit participants: " + title),
+        onExecute: () => print("Recruit participants: $title"),
         isAvailable: status == "RUNNING",
       ),
       ModelAction(
         type: StudyActionType.addCollaborator,
         label: "Export results",
-        onExecute: () => print("Export results: " + title),
+        onExecute: () => print("Export results: $title"),
         isAvailable: status != "DRAFT",
       ),
       ModelAction(
           type: StudyActionType.addCollaborator,
           label: "Delete",
-          onExecute: () => print("Delete: " + title),
+          onExecute: () => print("Delete: $title"),
           isAvailable: status == "DRAFT",
           isDestructive: true
       ),

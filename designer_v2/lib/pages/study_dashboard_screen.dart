@@ -23,7 +23,7 @@ class StudyDashboardScreen extends ConsumerStatefulWidget {
 class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
     return SidenavLayout(
         sideDrawerWidget: const NavigationDrawer(title: 'StudyU'),
         mainContentWidget: Scaffold(
@@ -93,7 +93,7 @@ class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
         return PopupMenuItem(
           value: action,
           child: action.isDestructive
-              ? Text(action.label, style: TextStyle(color: Colors.red))
+              ? Text(action.label, style: const TextStyle(color: Colors.red))
               : Text(action.label),
         );
       }).toList();

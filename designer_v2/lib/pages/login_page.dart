@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/auth_store.dart';
 
-// TODO The UI needs to be replaced by the actual login page
-
+// TODO UI needs to be replaced by the actual login page
 final emailProvider = StateProvider<String>((ref) => "");
 final passwordProvider = StateProvider<String>((ref) => "");
 

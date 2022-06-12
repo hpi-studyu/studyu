@@ -1,4 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// TODO delete me
+/*import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class User {
   final String name;
@@ -27,3 +28,4 @@ class UserState extends StateNotifier<User?> {
 final userProvider = StateNotifierProvider<UserState, User?>((ref) {
   return UserState();
 });
+*/

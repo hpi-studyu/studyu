@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_designer_v2/services/app_service.dart';
+import 'package:studyu_designer_v2/services/auth_store.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'pages/designer.dart';
@@ -10,7 +12,6 @@ import 'pages/designer.dart';
   return SharedPreferences.getInstance();
 });*/
 
-//final sharedPreferencesProvider = FutureProvider<SharedPreferences>((_) async => await SharedPreferences.getInstance());
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   //The return type Future<SharedPreferences> isn’t a ‘SharedPreferences’, as required by the closure’s context
   // https://codewithandrea.com/videos/flutter-state-management-riverpod
@@ -31,7 +32,7 @@ Future<void> main() async {
         // override the previous value with the new object
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
-      child: Designer(supabaseClient: env.client),
+      child: Designer(),
     ),
   );
 }
