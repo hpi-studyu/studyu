@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/pages/login_page.dart';
 import 'package:studyu_designer_v2/pages/study_dashboard_screen.dart';
+
 import 'services/app_service.dart';
 import 'services/auth_store.dart';
 
@@ -17,7 +18,10 @@ enum RouterPage {
   final String title;
   final String path;
 
-  const RouterPage({required this.title, required this.path, });
+  const RouterPage({
+    required this.title,
+    required this.path,
+  });
 }
 
 late final AppDelegate appDelegate;
@@ -30,9 +34,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     //refreshListenable: appDelegate,
     refreshListenable: router,
     initialLocation: RouterPage.dashboard.path,
-    debugLogDiagnostics: true, // For demo purposes
+    debugLogDiagnostics: true,
+    // For demo purposes
     //errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
-    redirect: router._redirectLogic, // All the logic is centralized here
+    redirect: router._redirectLogic,
+    // All the logic is centralized here
     routes: router._routes, // All the routes can be found there
   );
 });
@@ -64,7 +70,6 @@ class RouterNotifier extends ChangeNotifier {
   /// GoRouter is already aware of state changes through `refreshListenable`
   /// We don't want to trigger a rebuild of the surrounding provider.
   String? _redirectLogic(GoRouterState state) {
-
     final loginLocation = state.namedLocation(RouterPage.login.title);
     //final splashLocation = state.namedLocation(RouterPage.splash.title);
     final dashboardLocation = state.namedLocation(RouterPage.dashboard.title);
@@ -72,7 +77,9 @@ class RouterNotifier extends ChangeNotifier {
     //final isLoggedIn = appDelegate.isLoggedIn;
     //@TODO use app_service
     final bool isLoggedIn = _ref.watch(authServiceProvider.notifier).isLoggedIn;
-    print("IS LOGGED IN: $isLoggedIn");
+    if (kDebugMode) {
+      print("IS LOGGED IN: $isLoggedIn");
+    }
     //final isInitialized = appDelegate.isInitialized;
     const isInitialized = true;
 
@@ -93,15 +100,15 @@ class RouterNotifier extends ChangeNotifier {
   }
 
   List<GoRoute> get _routes => [
-    GoRoute(
-      path: RouterPage.dashboard.path,
-      name: RouterPage.dashboard.title,
-      builder: (context, state) => const StudyDashboardScreen(),
-    ),
-    GoRoute(
-      name: "login",
-      path: '/login',
-      builder: (context, _) => const LoginPage(),
-    ),
-  ];
+        GoRoute(
+          path: RouterPage.dashboard.path,
+          name: RouterPage.dashboard.title,
+          builder: (context, state) => const StudyDashboardScreen(),
+        ),
+        GoRoute(
+          name: "login",
+          path: '/login',
+          builder: (context, _) => const LoginPage(),
+        ),
+      ];
 }

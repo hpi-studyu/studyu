@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/env.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 abstract class IAuthServiceDelegate {
   void onLogin();
@@ -19,8 +17,10 @@ class AuthRepository {
   final bool loggedIn;
   const AuthRepository({required this.loggedIn});
 }
+
 //final authService = StateNotifierProvider((ref) => AuthService(ref.read));
-final authServiceProvider = StateNotifierProvider<AuthService, AuthRepository?>((ref) => AuthService());
+final authServiceProvider =
+    StateNotifierProvider<AuthService, AuthRepository?>((ref) => AuthService());
 
 class AuthService extends StateNotifier<AuthRepository?> {
   AuthService() : super(null);

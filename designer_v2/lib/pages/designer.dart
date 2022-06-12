@@ -1,16 +1,13 @@
-import 'package:provider/provider.dart';
-import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase/supabase.dart';
+
+import '../main.dart';
 import '../router.dart';
 import '../services/app_service.dart';
 import '../services/auth_store.dart';
 import '../theme.dart';
-
-const isDebugMode = false;
 
 // Extend ConsumerWidget instead of StatelessWidget, which is exposed by Riverpod
 class Designer extends ConsumerWidget {
@@ -42,9 +39,9 @@ class Designer extends ConsumerWidget {
     //final theme = ThemeProvider.of(context);
     final router = ref.watch(routerProvider);
 
-  //return MaterialApp(home: Scaffold(appBar: AppBar(title: const Text('Example')), body: const Center(child: Text("hi"),),),);
+    //return MaterialApp(home: Scaffold(appBar: AppBar(title: const Text('Example')), body: const Center(child: Text("hi"),),),);
     /*  return */
-      /*DynamicColorBuilder(
+    /*DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) => ThemeProvider(
             lightDynamic: lightDynamic,
             darkDynamic: darkDynamic,
@@ -56,22 +53,23 @@ class Designer extends ConsumerWidget {
               //final appRouter = context.read<AppRouter>().router;
 
               return*/
-      return MaterialApp.router(
-                debugShowCheckedModeBanner: isDebugMode,
-                title: 'StudyU Designer V2',
-                //color: appTheme.colorScheme.surface,
-                //theme: appTheme,
-                theme: ThemeData(primarySwatch: Colors.blue,),
-                routeInformationParser: router.routeInformationParser,
-                routerDelegate: router.routerDelegate,
-              );
-              /*
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: kDebugMode,
+      title: 'StudyU Designer V2',
+      //color: appTheme.colorScheme.surface,
+      //theme: appTheme,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+    );
+    /*
                   return MaterialApp(
                     debugShowCheckedModeBanner: isDebugMode,
                     title: 'StudyU Designer',
                     theme: appTheme.light(settings.value.sourceColor),
                     home: const StudyDashboardScreen(),
               );*/
-
   }
 }

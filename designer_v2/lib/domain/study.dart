@@ -52,21 +52,21 @@ class Study implements IModelActionProvider<StudyActionType> {
   List<ModelAction<StudyActionType>> availableActions() {
     return [
       ModelAction(
-          type: StudyActionType.addCollaborator,
-          label: "Add collaborator",
-          onExecute: () => print("Adding collaborator: " + title),
+        type: StudyActionType.addCollaborator,
+        label: "Add collaborator",
+        onExecute: () => print("Adding collaborator: " + title),
       ),
       ModelAction(
-          type: StudyActionType.recruit,
-          label: "Recruit participants",
-          onExecute: () => print("Recruit participants: " + title),
-          isAvailable: status == "RUNNING",
+        type: StudyActionType.recruit,
+        label: "Recruit participants",
+        onExecute: () => print("Recruit participants: " + title),
+        isAvailable: status == "RUNNING",
       ),
       ModelAction(
-          type: StudyActionType.addCollaborator,
-          label: "Export results",
-          onExecute: () => print("Export results: " + title),
-          isAvailable: status != "DRAFT",
+        type: StudyActionType.addCollaborator,
+        label: "Export results",
+        onExecute: () => print("Export results: " + title),
+        isAvailable: status != "DRAFT",
       ),
       ModelAction(
           type: StudyActionType.addCollaborator,

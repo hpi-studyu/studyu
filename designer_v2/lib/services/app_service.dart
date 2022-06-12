@@ -1,7 +1,6 @@
-import 'package:studyu_designer_v2/services/auth_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/services/auth_store.dart';
 
 //final authProvider = StateNotifierProvider((ref) {
 //  return AuthNotifier(null);

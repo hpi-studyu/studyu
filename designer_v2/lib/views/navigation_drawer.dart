@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/auth_store.dart';
-import '../user.dart';
 //import '../services/auth_store.dart';
 
 class NavigationDrawer extends ConsumerStatefulWidget {
@@ -48,15 +47,23 @@ class NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                         ),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('My Studies', style: _selectedDestination == 0 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('My Studies',
+                            style: _selectedDestination == 0
+                                ? const TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 0,
                         onTap: () => selectDestination(0),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Shared With Me', style: _selectedDestination == 1 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('Shared With Me',
+                            style: _selectedDestination == 1
+                                ? const TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 1,
                         onTap: () => selectDestination(1),
@@ -73,15 +80,23 @@ class NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                         ),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Open Enrollment', style: _selectedDestination == 3 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('Open Enrollment',
+                            style: _selectedDestination == 3
+                                ? const TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 3,
                         onTap: () => selectDestination(3),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Open Results', style: _selectedDestination == 4 ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('Open Results',
+                            style: _selectedDestination == 4
+                                ? const TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: const EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 4,
                         onTap: () => selectDestination(4),
@@ -94,26 +109,27 @@ class NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                 padding: const EdgeInsets.only(bottom: 24.0),
                 child: Column(children: <Widget>[
                   ListTile(
-                    hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                    hoverColor:
+                        theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: const Text('Change language'),
                     contentPadding: const EdgeInsets.only(left: 48.0),
                   ),
                   ListTile(
-                    hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                    hoverColor:
+                        theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: const Text('Sign out'),
                     contentPadding: const EdgeInsets.only(left: 48.0),
-                    onTap: () => ref.read(authServiceProvider.notifier).signOut(),
+                    onTap: () =>
+                        ref.read(authServiceProvider.notifier).signOut(),
                   ),
                 ]),
               )
-            ]
-        )
-    );
+            ]));
   }
 
   void selectDestination(int index) {
     //setState(() {
-      _selectedDestination = index;
+    _selectedDestination = index;
     //});
   }
 }

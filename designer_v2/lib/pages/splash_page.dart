@@ -3,15 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../services/app_service.dart';
 
-// TODO: This needs to be rewritten to use riverpod
 class SplashPage extends StatefulWidget {
-  const SplashPage({ Key? key }) : super(key: key);
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
-  _SplashPageState createState() => _SplashPageState();
+  SplashPageState createState() => SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class SplashPageState extends State<SplashPage> {
   late AppDelegate _appDelegate;
 
   @override
@@ -27,8 +26,8 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(
+    return const Scaffold(
+      body: Center(
         child: Text("Loading..."),
       ),
     );

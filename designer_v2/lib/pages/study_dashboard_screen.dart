@@ -1,5 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../domain/model.dart';
 import '../domain/study.dart';
 import '../services/auth_store.dart';
@@ -17,7 +19,6 @@ class StudyDashboardScreen extends ConsumerStatefulWidget {
   @override
   StudyDashboardScreenState createState() => StudyDashboardScreenState();
 }
-
 
 class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
   @override
@@ -88,17 +89,14 @@ class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
     // Build row for each study
     final List<TableRow> rows = [];
     studyProvider.studies.forEach((study) {
-      final studyMenuItems = study
-          .availableActions()
-          .map((action) {
-            return PopupMenuItem(
-                value: action,
-                child: action.isDestructive ?
-                      Text(action.label, style: TextStyle(color: Colors.red))
-                    : Text(action.label),
-            );
-          })
-          .toList();
+      final studyMenuItems = study.availableActions().map((action) {
+        return PopupMenuItem(
+          value: action,
+          child: action.isDestructive
+              ? Text(action.label, style: TextStyle(color: Colors.red))
+              : Text(action.label),
+        );
+      }).toList();
 
       TableRow studyDataRow = TableRow(children: [
         wrapRowContents(Text(study.title)),
@@ -166,7 +164,8 @@ class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
     final theme = Theme.of(context);
     return Row(
       children: [
-        SelectableText("My Studies ${ref.read(authServiceProvider.notifier).currentUser?.email}",
+        SelectableText(
+            "My Studies ${ref.read(authServiceProvider.notifier).currentUser?.email}",
             style: theme.textTheme.headline5
                 ?.copyWith(fontWeight: FontWeight.bold)),
         Container(width: 32.0),
@@ -177,10 +176,12 @@ class StudyDashboardScreenState extends ConsumerState<StudyDashboardScreen> {
             // Background color
             primary: Theme.of(context).colorScheme.primary,
           ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-          icon: Icon(Icons.add),
-          label: Text("New study"),
+          icon: const Icon(Icons.add),
+          label: const Text("New study"),
           onPressed: () {
-            print("new study");
+            if (kDebugMode) {
+              print("new study");
+            }
           },
         )
       ],

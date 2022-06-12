@@ -20,6 +20,7 @@ class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
 
 class ThemeSettingChange extends Notification {
   ThemeSettingChange({required this.settings});
+
   final ThemeSettings settings;
 }
 

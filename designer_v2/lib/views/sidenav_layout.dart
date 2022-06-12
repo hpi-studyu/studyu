@@ -30,10 +30,8 @@ class SidenavLayout extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.symmetric(
                   vertical: mainContentPaddingVertical,
-                  horizontal: mainContentPaddingHorizontal
-              ),
-              child: mainContentWidget
-          ),
+                  horizontal: mainContentPaddingHorizontal),
+              child: mainContentWidget),
         ),
       ],
     );

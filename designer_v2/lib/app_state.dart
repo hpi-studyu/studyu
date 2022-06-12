@@ -3,13 +3,13 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 class AppState extends ChangeNotifier {
   bool skippedLogin = false;
   String? authError;
 
   // ignore: prefer_function_declarations_over_variables
-  Future<List<Study>> Function() researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
+  Future<List<Study>> Function() researcherDashboardQuery =
+      () => Study.getResearcherDashboardStudies();
 
   AppState();
 
@@ -21,7 +21,8 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reloadResearcherDashboard() => researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
+  void reloadResearcherDashboard() =>
+      researcherDashboardQuery = () => Study.getResearcherDashboardStudies();
 
   void reloadStudies() {
     reloadResearcherDashboard();
@@ -50,7 +51,8 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> signIn(String email, String password) async {
-    final res = await Supabase.instance.client.auth.signIn(email: email, password: password);
+    final res = await Supabase.instance.client.auth
+        .signIn(email: email, password: password);
     if (res.error != null) {
       authError = res.error?.message;
       notifyListeners();
@@ -67,8 +69,8 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> signInWithProvider(Provider provider, String scopes) async {
-    await Supabase.instance.client.auth
-        .signInWithProvider(provider, options: AuthOptions(scopes: scopes, redirectTo: authRedirectToUrl));
+    await Supabase.instance.client.auth.signInWithProvider(provider,
+        options: AuthOptions(scopes: scopes, redirectTo: authRedirectToUrl));
   }
 
   Future<void> signOut() async {

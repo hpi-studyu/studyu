@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../services/auth_store.dart';
 
 // TODO The UI needs to be replaced by the actual login page
@@ -37,7 +38,9 @@ class LoginPage extends ConsumerWidget {
                     labelText: 'Email',
                     hintText: 'Enter email'),
                 onChanged: (emailInput) {
-                  ref.read(emailProvider.notifier).update((state) => emailInput);
+                  ref
+                      .read(emailProvider.notifier)
+                      .update((state) => emailInput);
                 },
               ),
             ),
@@ -45,19 +48,20 @@ class LoginPage extends ConsumerWidget {
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
-
                 obscureText: true,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter password'),
                 onChanged: (passwordInput) {
-                  ref.read(passwordProvider.notifier).update((state) => passwordInput);
+                  ref
+                      .read(passwordProvider.notifier)
+                      .update((state) => passwordInput);
                 },
               ),
             ),
             TextButton(
-              onPressed: (){
+              onPressed: () {
                 //FORGOT PASSWORD SCREEN
               },
               child: const Text(
@@ -72,7 +76,8 @@ class LoginPage extends ConsumerWidget {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 //onPressed: () => ref.read(userProvider.notifier).login(ref.read(emailProvider), ref.read(passwordProvider)),
-                onPressed: () => ref.read(authServiceProvider.notifier).signIn(ref.read(emailProvider), ref.read(passwordProvider)),
+                onPressed: () => ref.read(authServiceProvider.notifier).signIn(
+                    ref.read(emailProvider), ref.read(passwordProvider)),
                 child: const Text(
                   'Login',
                   style: TextStyle(color: Colors.white, fontSize: 25),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/designer.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+
+import 'pages/designer.dart';
 
 /*final sharedPref = FutureProvider<SharedPreferences>((ref) async {
   return SharedPreferences.getInstance();
@@ -25,12 +26,12 @@ Future<void> main() async {
     // For widgets to be able to read providers, we need to wrap the entire
     // application in a "ProviderScope" widget.
     // This is where the state of our providers will be stored.
-  ProviderScope(
-    overrides: [
-      // override the previous value with the new object
-      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-    ],
-    child: Designer(supabaseClient: env.client),
+    ProviderScope(
+      overrides: [
+        // override the previous value with the new object
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: Designer(supabaseClient: env.client),
     ),
   );
 }
