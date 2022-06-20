@@ -1,3 +1,4 @@
+import 'package:designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +28,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text("Loading..."),
+      body: Center(
+        child: Text('Loading...'.hardcoded),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,7 @@ class LoginPage extends StatelessWidget {
       child: Align(
         alignment: Alignment.center,
         child: ElevatedButton(
-          child: Text('Skip login'),
+          child: Text('Skip login'.hardcoded),
           onPressed: authService.skipLogin,
         )
       )

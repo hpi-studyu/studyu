@@ -1,4 +1,4 @@
-import 'package:designer_v2/pages/study_dashboard_screen.dart';
+import 'package:designer_v2/localization/string_hardcoded.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
 
                   return MaterialApp.router(
                     debugShowCheckedModeBanner: isDebugMode,
-                    title: 'StudyU Designer',
+                    title: 'StudyU Designer'.hardcoded,
                     color: appTheme.colorScheme.surface,
                     theme: appTheme,
                     routeInformationParser: appRouter.routeInformationParser,

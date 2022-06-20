@@ -16,6 +16,9 @@ dependencies:
   go_router: ^3.1.0
   provider: ^6.0.2
   shared_preferences: ^2.0.15
+  flutter_riverpod: ^1.0.4
+  equatable: ^2.0.3
+  rxdart: ^0.27.4
 
 dev_dependencies:
   flutter_test:
@@ -24,4 +27,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
+  assets:
+    - assets/data/

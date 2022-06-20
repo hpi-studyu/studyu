@@ -1,61 +1,67 @@
+import 'package:designer_v2/localization/string_hardcoded.dart';
+import 'package:designer_v2/utils/model_action.dart';
+import 'package:designer_v2/domain/study.dart';
+import 'package:designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:flutter/material.dart';
-import '../domain/model.dart';
-import '../domain/study.dart';
-import '../services/study_provider.dart';
-import '../views/navigation_drawer.dart';
-import '../views/sidenav_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:designer_v2/common_views/navigation_drawer.dart';
+import 'package:designer_v2/common_views/sidenav_layout.dart';
 
-// TODOS
-// - Implement: Load studies from Supabase (copy from main repo)
-// - After: Architecture refactor + migrate to main repo + integrate
 
-class StudyDashboardScreen extends StatefulWidget {
-  const StudyDashboardScreen({Key? key}) : super(key: key);
-
+class DashboardScreen extends ConsumerWidget {
   @override
-  _StudyDashboardScreenState createState() => _StudyDashboardScreenState();
-}
-
-class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
     return SidenavLayout(
-        sideDrawerWidget: NavigationDrawer(title: 'StudyU'),
+        sideDrawerWidget: NavigationDrawer(title: 'StudyU'.hardcoded),
         mainContentWidget: Scaffold(
           appBar: null, // default app bar not suitable for our layout
-          body: Container(
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildContentHeader(context),
-                const SizedBox(height: 24.0), // spacing between body elements
-                _buildStudiesTable(context)
-              ],
-            ),
+          body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: Container(
+                    color: Colors.white,
+                    child: IntrinsicHeight(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          _contentHeader(context, ref),
+                          const SizedBox(height: 24.0), // spacing between body elements
+                          _studiesTable(context, ref)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-        ));
+        )
+    );
   }
 
-  Widget _buildStudiesTable(BuildContext context) {
+  Widget _studiesTable(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final StudyProvider studyProvider = StudyProvider.shared;
+    final controller = ref.watch(dashboardControllerProvider.notifier);
+    final state = ref.watch(dashboardControllerProvider);
 
     const cellSpacing = 16.0;
     const rowSpacing = 6.0;
     const minRowHeight = 50.0;
 
     // Build table header
-    const List<String> headerFields = [
-      "Study Title",
-      "Status",
-      "Enrollment",
-      "Started At",
-      "Enrolled Participants",
-      "Active Participants",
-      "Completed",
+    final List<String> headerFields = [
+      'Study Title'.hardcoded,
+      "Status".hardcoded,
+      "Enrollment".hardcoded,
+      "Started At".hardcoded,
+      "Enrolled Participants".hardcoded,
+      "Active Participants".hardcoded,
+      "Completed".hardcoded,
       ""
     ];
     final headerRow = TableRow(
@@ -84,29 +90,17 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
 
     // Build row for each study
     final List<TableRow> rows = [];
-    studyProvider.studies.forEach((study) {
-      final studyMenuItems = study
-          .availableActions()
-          .map((action) {
-            return PopupMenuItem(
-                value: action,
-                child: action.isDestructive ?
-                      Text(action.label, style: TextStyle(color: Colors.red))
-                    : Text(action.label),
-            );
-          })
-          .toList();
-
+    state.studies.forEach((study) {
       TableRow studyDataRow = TableRow(children: [
-        wrapRowContents(Text(study.title)),
-        wrapRowContents(SelectableText(study.status)),
-        wrapRowContents(SelectableText(study.enrollmentTypeValue)),
-        wrapRowContents(SelectableText(study.startDate ?? "")),
-        wrapRowContents(SelectableText(study.countEnrolled.toString()),
+        wrapRowContents(Text(study.title ?? '[Missing Study.title]')),
+        wrapRowContents(SelectableText(study.status.value)),
+        wrapRowContents(SelectableText(study.participation.value)),
+        wrapRowContents(SelectableText('[Todo: Start date]')),
+        wrapRowContents(SelectableText(study.participantCount.toString()),
             hasInkwell: false),
-        wrapRowContents(SelectableText(study.countActive.toString()),
+        wrapRowContents(SelectableText(study.activeSubjectCount.toString()),
             hasInkwell: false),
-        wrapRowContents(SelectableText(study.countCompleted.toString()),
+        wrapRowContents(SelectableText('[Todo: Completed count]'),
             hasInkwell: false),
         wrapRowContents(
             PopupMenuButton(
@@ -114,16 +108,17 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
                 onSelected: (ModelAction<StudyActionType> action) {
                   action.onExecute();
                 },
-                itemBuilder: (BuildContext context) => studyMenuItems),
+                itemBuilder: (BuildContext context) {
+                  return controller.getAvailableActionsFor(study).map((action) {
+                    return PopupMenuItem(
+                      value: action,
+                      child: action.isDestructive
+                          ? Text(action.label, style: const TextStyle(color: Colors.red))
+                          : Text(action.label),
+                    );
+                  }).toList();
+                }),
             hasInkwell: false
-            /*
-                IconButton(
-                  icon: Icon(Icons.more_vert),
-                  onPressed: () => print(study.title),
-                  hoverColor: theme.colorScheme.primaryContainer,
-                  splashRadius: 24.0,)
-
-               */
             ),
       ]);
 
@@ -159,11 +154,11 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
             children: [headerRow, ...rows]));
   }
 
-  Widget _buildContentHeader(BuildContext context) {
+  Widget _contentHeader(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return Row(
       children: [
-        SelectableText("My Studies",
+        SelectableText("My Studies".hardcoded,
             style: theme.textTheme.headline5
                 ?.copyWith(fontWeight: FontWeight.bold)),
         Container(width: 32.0),
@@ -174,10 +169,11 @@ class _StudyDashboardScreenState extends State<StudyDashboardScreen> {
             // Background color
             primary: Theme.of(context).colorScheme.primary,
           ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-          icon: Icon(Icons.add),
-          label: Text("New study"),
+          icon: const Icon(Icons.add),
+          label: Text("New study".hardcoded),
           onPressed: () {
-            print("new study");
+            // TODO transition to study details page
+            print("creating new study");
           },
         )
       ],
