@@ -1,4 +1,4 @@
-import 'package:designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatefulWidget {

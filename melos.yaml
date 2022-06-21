@@ -5,6 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 packages:
   - 'app/*'
   - 'designer/*'
+  - 'designer_v2/*'
   - 'core/*'
   - 'flutter_common/*'
   - 'repo_generator/*'
@@ -108,6 +109,14 @@ scripts:
     description: Build designer for Web.
     select-package:
       scope: studyu_designer
+
+  build:web:designer_v2:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons"
+    description: Build designer_v2 for Web.
+    select-package:
+      scope: studyu_designer_v2
 
   # Build for Docker and a self-hosted Supabase instance
   build:web:app:selfhost:

@@ -1,4 +1,4 @@
-import 'package:designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +35,6 @@ class _MyAppState extends State<MyApp> {
     sourceColor: const Color(0xff4845e5),
     themeMode: ThemeMode.system,
   ));
-
 
   @override
   void initState() {

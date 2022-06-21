@@ -1,14 +1,16 @@
-import 'package:designer_v2/localization/string_hardcoded.dart';
-import 'package:designer_v2/utils/model_action.dart';
-import 'package:designer_v2/domain/study.dart';
-import 'package:designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:designer_v2/common_views/navigation_drawer.dart';
-import 'package:designer_v2/common_views/sidenav_layout.dart';
+import 'package:studyu_designer_v2/common_views/navigation_drawer.dart';
+import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
 
 
 class DashboardScreen extends ConsumerWidget {
+  const DashboardScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SidenavLayout(

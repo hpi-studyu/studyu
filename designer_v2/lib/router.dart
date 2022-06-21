@@ -1,8 +1,8 @@
-import 'package:designer_v2/pages/error_page.dart';
-import 'package:designer_v2/pages/login_page.dart';
-import 'package:designer_v2/pages/splash_page.dart';
-import 'package:designer_v2/features/dashboard/dashboard_page.dart';
-import 'package:designer_v2/services/app_service.dart';
+import 'package:studyu_designer_v2/pages/error_page.dart';
+import 'package:studyu_designer_v2/pages/login_page.dart';
+import 'package:studyu_designer_v2/pages/splash_page.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
+import 'package:studyu_designer_v2/services/app_service.dart';
 import 'package:go_router/go_router.dart';
 
 // List of all pages in the application

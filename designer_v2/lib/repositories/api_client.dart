@@ -1,5 +1,5 @@
-import 'package:designer_v2/utils/json_file_loader.dart';
-import 'package:designer_v2/utils/typings.dart';
+import 'package:studyu_designer_v2/utils/json_file_loader.dart';
+import 'package:studyu_designer_v2/utils/typings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 

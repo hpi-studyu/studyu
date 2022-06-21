@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:designer_v2/domain/study.dart';
-import 'package:designer_v2/localization/string_hardcoded.dart';
-import 'package:designer_v2/utils/model_action.dart';
-import 'package:designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'dashboard_state.dart';
