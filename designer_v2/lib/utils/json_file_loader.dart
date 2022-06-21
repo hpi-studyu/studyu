@@ -1,4 +1,4 @@
-import 'package:designer_v2/utils/typings.dart';
+import 'package:studyu_designer_v2/utils/typings.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 

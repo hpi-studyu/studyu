@@ -16,9 +16,17 @@ dependencies:
   go_router: ^3.1.0
   provider: ^6.0.2
   shared_preferences: ^2.0.15
-  flutter_riverpod: ^1.0.4
   equatable: ^2.0.3
   rxdart: ^0.27.4
+  # for flutterflow
+  auto_size_text: ^3.0.0
+  font_awesome_flutter: ^10.1.0
+  google_fonts: ^3.0.1
+  intl: ^0.17.0
+  json_path: ^0.4.1
+  timeago: ^3.2.2
+  url_launcher: ^6.1.3
+  page_transition: ^2.0.9
 
 dev_dependencies:
   flutter_test:
