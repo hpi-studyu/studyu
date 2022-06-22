@@ -9,31 +9,36 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  dynamic_color: ^1.2.2
-  studyu_core: ^3.7.8
-  studyu_flutter_common: ^1.3.14
+  flutter_riverpod: ^2.0.0-dev.0 # use prerelease version
+  cupertino_icons: ^1.0.5
+  dynamic_color: ^1.4.0
+  studyu_core: ^3.7.12
+  studyu_flutter_common: ^1.3.19
+  # go_router 4.0.0 seems to have issues with redirecting
+  # When this is fixed, add my_app.dart:71 for migration
   go_router: ^3.1.0
-  provider: ^6.0.2
   shared_preferences: ^2.0.15
   equatable: ^2.0.3
   rxdart: ^0.27.4
-  # for flutterflow
+
+  # flutterflow deps
   auto_size_text: ^3.0.0
   font_awesome_flutter: ^10.1.0
   google_fonts: ^3.0.1
   intl: ^0.17.0
   json_path: ^0.4.1
   timeago: ^3.2.2
-  url_launcher: ^6.1.3
+  url_launcher: ^6.1.4
   page_transition: ^2.0.9
+  easy_debounce: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true
+  # todo this can be removed if there are no more local asseets
   assets:
     - assets/data/

@@ -1,22 +1,24 @@
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 import '../services/app_service.dart';
 
-class SplashPage extends StatefulWidget {
-  const SplashPage({ Key? key }) : super(key: key);
+class SplashPage extends ConsumerStatefulWidget {
+  final AppDelegate delegate;
+
+  SplashPage(this.delegate);
 
   @override
   _SplashPageState createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
   late AppDelegate _appDelegate;
 
   @override
   void initState() {
-    _appDelegate = Provider.of<AppDelegate>(context, listen: false);
+    _appDelegate = widget.delegate;
     onStartUp();
     super.initState();
   }

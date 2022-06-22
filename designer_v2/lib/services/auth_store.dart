@@ -1,43 +1,53 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 
 abstract class IAuthServiceDelegate {
   void onLogin();
+
   void onLogout();
 }
 
-
-class AuthService {
+@immutable
+class AuthStore {
+  // todo use a provider instead of static?
   // Backend client providing authentication APIs
-  final SupabaseClient supabaseClient;
-
-  // Optional listener interested in authentication state updates
-  IAuthServiceDelegate? delegate;
-
-  bool skippedLogin = false;
-  String? authError;
-
-  AuthService({required this.supabaseClient});
+  static late final SupabaseClient supabaseClient;
 
   bool get isLoggedIn => supabaseClient.auth.session() != null;
+
   User? get currentUser => supabaseClient.auth.user();
+}
+
+final authServiceProvider = ChangeNotifierProvider((ref) {
+  return AuthServiceNotifier();
+});
+
+class AuthServiceNotifier extends ChangeNotifier {
+  // Optional listener interested in authentication state updates
+  IAuthServiceDelegate? delegate;
+  bool skippedLogin = false;
+  String? authError;
 
   // TODO: remove later
   void skipLogin() {
     skippedLogin = true;
+    notifyListeners();
     delegate?.onLogin();
   }
 
   // TODO real implementation
+  // use signOut instead?
   void logout() {
     skippedLogin = false;
+    notifyListeners();
     delegate?.onLogout();
   }
 
   // What is this used for?
   void registerAuthListener() {
-    supabaseClient.auth.onAuthStateChange((event, session) {
+    AuthStore.supabaseClient.auth.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
           skippedLogin = false;
@@ -56,14 +66,16 @@ class AuthService {
   }
 
   Future<void> signIn(String email, String password) async {
-    final res = await supabaseClient.auth.signIn(email: email, password: password);
+    final res = await AuthStore.supabaseClient.auth
+        .signIn(email: email, password: password);
     if (res.error != null) {
       authError = res.error?.message;
     }
+    delegate?.onLogin();
   }
 
   Future<void> signUp(String email, String password) async {
-    final res = await supabaseClient.auth.signUp(email, password);
+    final res = await AuthStore.supabaseClient.auth.signUp(email, password);
     if (res.error != null) {
       authError = res.error?.message;
     }
@@ -71,9 +83,11 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    final res = await supabaseClient.auth.signOut();
+    //final res = await super.state.instance.auth.signOut();
+    final res = await AuthStore.supabaseClient.auth.signOut();
     if (res.error != null) {
       authError = res.error?.message;
     }
+    delegate?.onLogout();
   }
 }

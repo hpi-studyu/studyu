@@ -1,10 +1,10 @@
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 import '../services/auth_store.dart';
 
-class NavigationDrawer extends StatefulWidget {
+class NavigationDrawer extends ConsumerStatefulWidget {
   final String title;
 
   NavigationDrawer({Key? key, required this.title}) : super(key: key);
@@ -13,14 +13,13 @@ class NavigationDrawer extends StatefulWidget {
   _NavigationDrawerState createState() => _NavigationDrawerState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
+class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
   int _selectedDestination = 0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final authService = Provider.of<AuthService>(context);
 
     return Drawer(
         width: 250.0,
@@ -47,15 +46,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                         ),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('My Studies'.hardcoded, style: _selectedDestination == 0 ? TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('My Studies'.hardcoded,
+                            style: _selectedDestination == 0
+                                ? TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 0,
                         onTap: () => selectDestination(0),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Shared With Me'.hardcoded, style: _selectedDestination == 1 ? TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('Shared With Me'.hardcoded,
+                            style: _selectedDestination == 1
+                                ? TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 1,
                         onTap: () => selectDestination(1),
@@ -72,15 +79,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                         ),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Open Enrollment'.hardcoded, style: _selectedDestination == 3 ? TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('Open Enrollment'.hardcoded,
+                            style: _selectedDestination == 3
+                                ? TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 3,
                         onTap: () => selectDestination(3),
                       ),
                       ListTile(
-                        hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                        title: Text('Open Results'.hardcoded, style: _selectedDestination == 4 ? TextStyle(fontWeight: FontWeight.bold) : null),
+                        hoverColor:
+                            theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        title: Text('Open Results'.hardcoded,
+                            style: _selectedDestination == 4
+                                ? TextStyle(fontWeight: FontWeight.bold)
+                                : null),
                         contentPadding: EdgeInsets.only(left: 48.0),
                         selected: _selectedDestination == 4,
                         onTap: () => selectDestination(4),
@@ -93,21 +108,21 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 padding: EdgeInsets.only(bottom: 24.0),
                 child: Column(children: <Widget>[
                   ListTile(
-                    hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                    hoverColor:
+                        theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: Text('Change language'.hardcoded),
                     contentPadding: EdgeInsets.only(left: 48.0),
                   ),
                   ListTile(
-                    hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                    hoverColor:
+                        theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: Text('Sign out'.hardcoded),
                     contentPadding: EdgeInsets.only(left: 48.0),
-                    onTap: authService.logout,
+                    onTap: ref.read(authServiceProvider.notifier).signOut,
                   ),
                 ]),
               )
-            ]
-        )
-    );
+            ]));
   }
 
   void selectDestination(int index) {
