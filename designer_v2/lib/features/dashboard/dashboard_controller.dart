@@ -1,12 +1,13 @@
 import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_core/core.dart' as core;
-import 'dashboard_state.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
+import 'dashboard_state.dart';
 
 class DashboardController extends StateNotifier<DashboardState> {
   /// Initial value for the controller's state (see [StateNotifier])
@@ -16,10 +17,9 @@ class DashboardController extends StateNotifier<DashboardState> {
   final StudyRepository studyRepository;
 
   /// A subscription for synchronizing state between the repository & controller
-  StreamSubscription<List<core.Study>>? _studiesSubscription;
+  StreamSubscription<List<Study>>? _studiesSubscription;
 
-  DashboardController({required this.studyRepository}):
-        super(initialState) {
+  DashboardController({required this.studyRepository}) : super(initialState) {
     // Initialize the subscription
     _subscribeStudies();
   }
@@ -29,13 +29,11 @@ class DashboardController extends StateNotifier<DashboardState> {
     _studiesSubscription = studyRepository.watchUserStudies().listen((studies) {
       // Update the controller's state when new studies are available in the repository
       state = state.copyWith(
-          status: () => DashboardStatus.success,
-          studies: () => studies
-      );
+          status: () => DashboardStatus.success, studies: () => studies);
     });
   }
 
-  List<ModelAction<StudyActionType>> getAvailableActionsFor(core.Study study) {
+  List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study) {
     return [
       ModelAction(
         type: StudyActionType.addCollaborator,
@@ -66,16 +64,15 @@ class DashboardController extends StateNotifier<DashboardState> {
         isAvailable: study.results.isNotEmpty,
       ),
       ModelAction(
-        type: StudyActionType.delete,
-        label: "Delete".hardcoded,
-        onExecute: () {
-          // Delegate the deletion request to the data & networking layer
-          // Any changes are received back through the stream
-          studyRepository.deleteStudy(study.id);
-        },
-        isAvailable: !study.published,
-        isDestructive: true
-      ),
+          type: StudyActionType.delete,
+          label: "Delete".hardcoded,
+          onExecute: () {
+            // Delegate the deletion request to the data & networking layer
+            // Any changes are received back through the stream
+            studyRepository.deleteStudy(study.id);
+          },
+          isAvailable: !study.published,
+          isDestructive: true),
     ];
   }
 
@@ -86,7 +83,9 @@ class DashboardController extends StateNotifier<DashboardState> {
   }
 }
 
-final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
+final dashboardControllerProvider =
+    StateNotifierProvider.autoDispose<DashboardController, DashboardState>(
+        (ref) {
   final studyRepository = ref.watch(studyRepositoryProvider);
   return DashboardController(studyRepository: studyRepository);
 });

@@ -1,13 +1,18 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
+
 import 'api_client.dart';
 
 abstract class StudyRepository {
   Stream<List<Study>> watchUserStudies({fetchOnSubscribe = true});
+
   Future<List<Study>> fetchUserStudies();
+
   Future<void> deleteStudy(String id);
+
   // - Lifecycle
   void dispose();
 }
@@ -16,7 +21,8 @@ class StudyNotFoundException implements Exception {}
 
 class FakeStudyRepository implements StudyRepository {
   /// A stream controller for broadcasting the studies that can be accessed by the current user
-  final BehaviorSubject<List<Study>> _studiesStreamController = BehaviorSubject();
+  final BehaviorSubject<List<Study>> _studiesStreamController =
+      BehaviorSubject();
 
   /// A reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -29,24 +35,18 @@ class FakeStudyRepository implements StudyRepository {
     // closes the stream when the future resolves, but we want to keep
     // it open for future updates
     if (fetchOnSubscribe) {
-      fetchUserStudies().then(
-              (value) => _studiesStreamController.add(value)
-      );
+      fetchUserStudies().then((value) => _studiesStreamController.add(value));
     }
     return _studiesStreamController.stream;
   }
 
   @override
   Future<List<Study>> fetchUserStudies() async {
-    // Real implementation: delegate to SupabaseClient here
-    return _fetchUserStudies();
-  }
-
-  Future<List<Study>> _fetchUserStudies() async {
     final studies = await apiClient.getUserStudies();
     return studies;
   }
 
+  @override
   Future<void> deleteStudy(String id) async {
     // Re-emits the latest value added to the stream controller
     // minus the deleted object

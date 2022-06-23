@@ -1,4 +1,3 @@
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
@@ -103,11 +102,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 ),
                                 TextFormField(
                                   controller: emailController,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    'emailController',
-                                    Duration(milliseconds: 2000),
-                                    () => setState(() {}),
-                                  ),
+                                  onChanged: (_) => (_),
                                   autofocus: true,
                                   obscureText: false,
                                   decoration: InputDecoration(
@@ -137,11 +132,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 ),
                                 TextFormField(
                                   controller: passwordController,
-                                  onChanged: (_) => EasyDebounce.debounce(
-                                    'passwordController',
-                                    Duration(milliseconds: 2000),
-                                    () => setState(() {}),
-                                  ),
+                                  onChanged: (_) => (_),
                                   autofocus: true,
                                   obscureText: !passwordVisibility,
                                   decoration: InputDecoration(

@@ -1,12 +1,11 @@
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/navigation_drawer.dart';
 import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
-
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -18,7 +17,8 @@ class DashboardScreen extends ConsumerWidget {
         mainContentWidget: Scaffold(
           appBar: null, // default app bar not suitable for our layout
           body: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
               return SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -32,7 +32,8 @@ class DashboardScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           _contentHeader(context, ref),
-                          const SizedBox(height: 24.0), // spacing between body elements
+                          const SizedBox(height: 24.0),
+                          // spacing between body elements
                           _studiesTable(context, ref)
                         ],
                       ),
@@ -42,8 +43,7 @@ class DashboardScreen extends ConsumerWidget {
               );
             },
           ),
-        )
-    );
+        ));
   }
 
   Widget _studiesTable(BuildContext context, WidgetRef ref) {
@@ -92,17 +92,19 @@ class DashboardScreen extends ConsumerWidget {
 
     // Build row for each study
     final List<TableRow> rows = [];
+    // This can be removed later, when we have a working policy
+    //final userStudies = state.studies.where((element) => element.isOwner(AuthStore().currentUser) || element.isEditor(AuthStore().currentUser));
     state.studies.forEach((study) {
       TableRow studyDataRow = TableRow(children: [
         wrapRowContents(Text(study.title ?? '[Missing Study.title]')),
         wrapRowContents(SelectableText(study.status.value)),
         wrapRowContents(SelectableText(study.participation.value)),
-        wrapRowContents(SelectableText('[Todo: Start date]')),
+        wrapRowContents(SelectableText(study.createdAt.toString())),
         wrapRowContents(SelectableText(study.participantCount.toString()),
             hasInkwell: false),
         wrapRowContents(SelectableText(study.activeSubjectCount.toString()),
             hasInkwell: false),
-        wrapRowContents(SelectableText('[Todo: Completed count]'),
+        wrapRowContents(SelectableText(study.endedCount.toString()),
             hasInkwell: false),
         wrapRowContents(
             PopupMenuButton(
@@ -115,13 +117,13 @@ class DashboardScreen extends ConsumerWidget {
                     return PopupMenuItem(
                       value: action,
                       child: action.isDestructive
-                          ? Text(action.label, style: const TextStyle(color: Colors.red))
+                          ? Text(action.label,
+                              style: const TextStyle(color: Colors.red))
                           : Text(action.label),
                     );
                   }).toList();
                 }),
-            hasInkwell: false
-            ),
+            hasInkwell: false),
       ]);
 
       TableRow rowSpacer = const TableRow(children: [
