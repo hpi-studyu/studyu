@@ -47,9 +47,7 @@ android {
         multiDexEnabled true
     }
 
-    /*
     // These are the signing configs for publishing the app to the PlayStore.
-    // TODO: Certificate file is needed for release
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -66,7 +64,6 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    */
 }
 
 flutter {
