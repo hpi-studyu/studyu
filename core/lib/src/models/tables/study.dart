@@ -65,6 +65,9 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(ignore: true)
   List<StudyInvite>? invites;
 
+  @JsonKey(ignore: true)
+  DateTime? createdAt;
+
   Study(this.id, this.userId);
 
   Study.withId(this.userId) : id = const Uuid().v4();
@@ -73,11 +76,14 @@ class Study extends SupabaseObjectFunctions<Study> {
     final study = _$StudyFromJson(json);
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
-      study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+      study.repo =
+          Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
     }
     final List? invites = json['study_invite'] as List?;
     if (invites != null) {
-      study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
+      study.invites = invites
+          .map((json) => StudyInvite.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
     final int? participantCount = json['study_participant_count'] as int?;
     if (participantCount != null) {
@@ -95,6 +101,10 @@ class Study extends SupabaseObjectFunctions<Study> {
     if (missedDays != null) {
       study.missedDays = List<int>.from(json['study_missed_days'] as List);
     }
+    final String createdAt = json['created_at'] as String;
+    if (createdAt.isNotEmpty) {
+      study.createdAt = DateTime.parse(createdAt);
+    }
     return study;
   }
 
@@ -102,7 +112,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
+  static Future<List<Study>> getResearcherDashboardStudies() async =>
+      SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
           'repo(*)',
@@ -114,8 +125,13 @@ class Study extends SupabaseObjectFunctions<Study> {
       );
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  static Future<List<Study>> publishedPublicStudies() async => SupabaseQuery.extractSupabaseList<Study>(
-        await env.client.from(tableName).select().eq('participation', 'open').execute(),
+  static Future<List<Study>> publishedPublicStudies() async =>
+      SupabaseQuery.extractSupabaseList<Study>(
+        await env.client
+            .from(tableName)
+            .select()
+            .eq('participation', 'open')
+            .execute(),
       );
 
   bool isOwner(User? user) => user != null && userId == user.id;
@@ -124,14 +140,22 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
-  bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
+  bool get hasEligibilityCheck =>
+      eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
 
-  int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
+  int get totalMissedDays => missedDays.isNotEmpty
+      ? missedDays.reduce((total, days) => total += days)
+      : 0;
 
-  double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
+  double get percentageMissedDays =>
+      totalMissedDays / (participantCount * schedule.length);
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
-    final res = await env.client.from('study_progress').select().eq('study_id', studyId).execute();
+    final res = await env.client
+        .from('study_progress')
+        .select()
+        .eq('study_id', studyId)
+        .execute();
     SupabaseQuery.catchPostgrestError(res);
 
     final jsonList = List<Map<String, dynamic>>.from(res.data as List);
@@ -139,7 +163,8 @@ class Study extends SupabaseObjectFunctions<Study> {
     final tableHeadersSet = jsonList[0].keys.toSet();
     final flattenedQuestions = jsonList.map((progress) {
       if (progress['result_type'] == 'QuestionnaireState') {
-        for (final result in List<Map<String, dynamic>>.from(progress['result'] as List)) {
+        for (final result
+            in List<Map<String, dynamic>>.from(progress['result'] as List)) {
           progress[result['question'] as String] = result['response'];
           tableHeadersSet.add(result['question'] as String);
         }
@@ -151,8 +176,9 @@ class Study extends SupabaseObjectFunctions<Study> {
     // Convert to List and fill empty cells with empty string
     final resultsTable = [
       tableHeaders,
-      ...flattenedQuestions
-          .map((progress) => tableHeaders.map((header) => progress[header] ?? '').toList(growable: false))
+      ...flattenedQuestions.map((progress) => tableHeaders
+          .map((header) => progress[header] ?? '')
+          .toList(growable: false))
     ];
     return const ListToCsvConverter().convert(resultsTable);
   }
