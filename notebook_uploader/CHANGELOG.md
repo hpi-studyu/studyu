@@ -1,3 +1,7 @@
+## 1.3.19
+
+ - **FIX**: rename notebook.dart to studyu_notebook_uploader.dart. ([26aac914](https://github.com/hpi-studyu/studyu/commit/26aac91440e9c00bddae06ffdab5511566785bbb))
+
 ## 1.3.18
 
  - **FIX**: upgrade deps. ([c16d7722](https://github.com/hpi-studyu/studyu/commit/c16d7722719efa732392d0f04bf74f4eefd95406))
