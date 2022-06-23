@@ -1,3 +1,7 @@
+## 1.3.20
+
+ - **FIX**: upgrade deps. ([c16d7722](https://github.com/hpi-studyu/studyu/commit/c16d7722719efa732392d0f04bf74f4eefd95406))
+
 ## 1.3.19
 
  - **FIX**: Add missing env to .pubignore. ([ebbb769b](https://github.com/hpi-studyu/studyu/commit/ebbb769b79c7ff61a14febbecfdeb8c8dec43128))
