@@ -15,7 +15,7 @@ dependencies:
 
 dev_dependencies:
   lint: 1.8.2
-  shelf_hotreload: ^1.1.0
+  shelf_hotreload: ^1.3.0
 
 executables:
   notebook_uploader:
