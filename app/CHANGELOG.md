@@ -1,3 +1,7 @@
+## 1.10.19
+
+ - **FIX**: upgrade deps. ([c16d7722](https://github.com/hpi-studyu/studyu/commit/c16d7722719efa732392d0f04bf74f4eefd95406))
+
 ## 1.10.18
 
  - Update a dependency to the latest release.
