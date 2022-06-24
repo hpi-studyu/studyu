@@ -1,36 +1,24 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/services/app_service.dart';
-import 'package:studyu_designer_v2/services/auth_store.dart';
+import 'package:studyu_designer_v2/services/shared_prefs.dart';
+import 'package:studyu_designer_v2/router.dart';
+import 'package:studyu_designer_v2/services/app_delegate.dart';
 import 'package:studyu_designer_v2/theme.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../router.dart';
 
 const isDebugMode = false;
 
-class MyApp extends ConsumerStatefulWidget {
-  final SharedPreferences sharedPreferences;
-  final SupabaseClient supabaseClient;
-
-  const MyApp(
-      {Key? key, required this.sharedPreferences, required this.supabaseClient})
-      : super(key: key);
+class App extends ConsumerStatefulWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _AppState createState() => _AppState();
 }
 
-late AppDelegate appDelegate;
+class _AppState extends ConsumerState<App> {
+  late AppDelegate appDelegate;
 
-final appDelegateProvider = ChangeNotifierProvider((ref) {
-  return appDelegate;
-});
-
-class _MyAppState extends ConsumerState<MyApp> {
   final settings = ValueNotifier(ThemeSettings(
     //sourceColor: Color(0xff2a4fda),
     //sourceColor: Color(0xff583aee),
@@ -40,12 +28,9 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void initState() {
-    appDelegate = AppDelegate(widget.sharedPreferences);
-    AuthStore.supabaseClient = widget.supabaseClient;
-    // todo use appDelegateProvider instead
-    ref.read(authServiceProvider).delegate = appDelegate;
-    ref.read(routerNotifierProvider).delegate = appDelegate;
     super.initState();
+    appDelegate = AppDelegate(ref.read(sharedPreferencesProvider));
+    appDelegate.onAppStart();
   }
 
   @override
@@ -70,6 +55,8 @@ class _MyAppState extends ConsumerState<MyApp> {
                 routerDelegate: appRouter.routerDelegate,
                 //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
               );
-            })));
+            })
+        )
+    );
   }
 }

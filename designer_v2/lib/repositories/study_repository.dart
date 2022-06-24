@@ -1,25 +1,22 @@
 import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/repositories/api_client.dart';
 
-import 'api_client.dart';
 
-abstract class StudyRepository {
+abstract class IStudyRepository {
+  // - Studies
   Stream<List<Study>> watchUserStudies({fetchOnSubscribe = true});
-
   Future<List<Study>> fetchUserStudies();
-
   Future<void> deleteStudy(String id);
-
   // - Lifecycle
   void dispose();
 }
 
 class StudyNotFoundException implements Exception {}
 
-class FakeStudyRepository implements StudyRepository {
+class FakeStudyRepository implements IStudyRepository {
   /// A stream controller for broadcasting the studies that can be accessed by the current user
   final BehaviorSubject<List<Study>> _studiesStreamController =
       BehaviorSubject();
@@ -66,7 +63,7 @@ class FakeStudyRepository implements StudyRepository {
   }
 }
 
-final studyRepositoryProvider = Provider<StudyRepository>((ref) {
+final studyRepositoryProvider = Provider<IStudyRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   final studyRepository = FakeStudyRepository(apiClient: apiClient);
   // Bind lifecycle to Riverpod

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-
-import '../services/auth_store.dart';
 
 class NavigationDrawer extends ConsumerStatefulWidget {
   final String title;
@@ -20,6 +19,7 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+    final authController = ref.watch(authControllerProvider.notifier);
 
     return Drawer(
         width: 250.0,
@@ -118,7 +118,7 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                         theme.colorScheme.primaryContainer.withOpacity(0.4),
                     title: Text('Sign out'.hardcoded),
                     contentPadding: EdgeInsets.only(left: 48.0),
-                    onTap: ref.read(authServiceProvider.notifier).signOut,
+                    onTap: authController.signOut,
                   ),
                 ]),
               )

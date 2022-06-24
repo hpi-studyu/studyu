@@ -14,7 +14,7 @@ class DashboardController extends StateNotifier<DashboardState> {
   static const initialState = DashboardState();
 
   /// Reference to the data repository injected by Riverpod
-  final StudyRepository studyRepository;
+  final IStudyRepository studyRepository;
 
   /// A subscription for synchronizing state between the repository & controller
   StreamSubscription<List<Study>>? _studiesSubscription;

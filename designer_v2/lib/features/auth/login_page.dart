@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_widgets.dart';
 
-import '../services/auth_store.dart';
 
 // Example of a login page exported with flutterflow
 
@@ -32,6 +32,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //final theme = Theme.of(context); // todo needs to be replaced with flutterflow
+    final authController = ref.watch(authControllerProvider.notifier);
 
     return Scaffold(
       key: scaffoldKey,
@@ -185,10 +186,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   child: FFButtonWidget(
                                     onPressed: () {
                                       print('Button pressed ...');
-                                      ref
-                                          .read(authServiceProvider.notifier)
-                                          .signIn(emailController.text,
-                                              passwordController.text);
+                                      authController.signInWith(
+                                          emailController.text,
+                                          passwordController.text);
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(
