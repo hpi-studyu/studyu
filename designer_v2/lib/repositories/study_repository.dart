@@ -52,8 +52,16 @@ class FakeStudyRepository implements IStudyRepository {
     if (studyIdx == -1) {
       throw StudyNotFoundException();
     } else {
-      studies.removeAt(studyIdx);
-      _studiesStreamController.add(studies);
+      final study = studies[studyIdx];
+      try {
+        await apiClient.deleteStudy(study);
+        // Update local state
+        studies.removeAt(studyIdx);
+        _studiesStreamController.add(studies);
+      } catch(e) {
+        print(e.toString());
+        print("Something went wrong...");
+      }
     }
   }
 

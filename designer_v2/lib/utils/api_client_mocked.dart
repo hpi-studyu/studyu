@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/utils/json_file_loader.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
 
+
 /// A mocked API client that loads data from JSON fixtures
 class MockApiClient extends JsonFileLoader implements StudyUApi {
   final int responseDelaySeconds;
@@ -25,6 +26,12 @@ class MockApiClient extends JsonFileLoader implements StudyUApi {
     final JsonList jsonList = await parseJsonListFromAssets('user_studies.json');
     final studies = jsonList.map((jsonMap) => Study.fromJson(jsonMap)).toList();
     return studies;
+  }
+
+  @override
+  Future<void> deleteStudy(Study study) {
+    // TODO: implement deleteStudy
+    throw UnimplementedError();
   }
 }
 
