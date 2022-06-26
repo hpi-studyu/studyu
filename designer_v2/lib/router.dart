@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
-import 'package:studyu_designer_v2/pages/error_page.dart';
+import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
-import 'package:studyu_designer_v2/pages/splash_page.dart';
+import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
+import 'package:studyu_designer_v2/utils/debug_print.dart';
 
 /// To create a new page:
 /// 1) add an entry to the [RouterPage] enum
@@ -49,34 +52,39 @@ final List<GoRoute> routes = [
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
+  final appController = ref.read(appControllerProvider.notifier);
 
   return GoRouter(
-    refreshListenable: GoRouterRefreshStream(
-        authRepository.watchAuthStateChanges()),
+    refreshListenable: CombinedStreamNotifier([
+      // Any stream registered here will trigger the router's redirect logic
+      appController.stream,                   // initialization events
+      authRepository.watchAuthStateChanges()  // authentication events
+    ]),
     initialLocation: RouterPage.dashboard.path,
     routes: routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
     redirect: (state) {
+      debugLog("Router redirect: ${state.location}");
       final loginLocation = state.namedLocation(RouterPage.login.title);
       final splashLocation = state.namedLocation(RouterPage.splash.title);
       final dashboardLocation = state.namedLocation(RouterPage.dashboard.title);
-
-      final isLoggedIn = authRepository.isLoggedIn;
-      //final isInitialized = appDelegate.isInitialized;
-
       final isOnLoginPage = state.subloc == loginLocation;
+      final isOnDashboard = state.subloc == dashboardLocation;
       final isOnSplashPage = state.subloc == splashLocation;
+      // Read most recent app state on re-evaluation (see refreshListenable)
+      final isLoggedIn = authRepository.isLoggedIn;
+      final isInitialized = appController.isInitialized;
 
-      // TODO: Re-integrate splash screen when initializing app
-      /*
+      // Redirect to splash screen while app is pending initialization
       if (!isInitialized) {
-        // Redirect to splash screen while app is pending initialization
         return (isOnSplashPage) ? null : splashLocation;
-      } else {*/
+      }
+      // Redirect to login page when not logged in
       if (!isLoggedIn) {
         return (isOnLoginPage) ? null : loginLocation;
       } else {
-        return (isOnLoginPage) ? dashboardLocation : null;
+        // Forward to dashboard after user was authenticated
+        return (isOnDashboard) ? null : dashboardLocation;
       }
     }
   );

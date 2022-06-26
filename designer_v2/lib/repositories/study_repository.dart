@@ -16,7 +16,7 @@ abstract class IStudyRepository {
 
 class StudyNotFoundException implements Exception {}
 
-class FakeStudyRepository implements IStudyRepository {
+class StudyRepository implements IStudyRepository {
   /// A stream controller for broadcasting the studies that can be accessed by the current user
   final BehaviorSubject<List<Study>> _studiesStreamController =
       BehaviorSubject();
@@ -24,7 +24,7 @@ class FakeStudyRepository implements IStudyRepository {
   /// A reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
 
-  FakeStudyRepository({required this.apiClient});
+  StudyRepository({required this.apiClient});
 
   @override
   Stream<List<Study>> watchUserStudies({fetchOnSubscribe = true}) {
@@ -73,7 +73,7 @@ class FakeStudyRepository implements IStudyRepository {
 
 final studyRepositoryProvider = Provider<IStudyRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
-  final studyRepository = FakeStudyRepository(apiClient: apiClient);
+  final studyRepository = StudyRepository(apiClient: apiClient);
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
     studyRepository.dispose();

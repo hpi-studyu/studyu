@@ -1,13 +1,12 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:studyu_designer_v2/router.dart';
-import 'package:studyu_designer_v2/services/app_delegate.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-const isDebugMode = false;
 
 class App extends ConsumerStatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -17,7 +16,7 @@ class App extends ConsumerStatefulWidget {
 }
 
 class _AppState extends ConsumerState<App> {
-  late AppDelegate appDelegate;
+  late final AppController appController;
 
   final settings = ValueNotifier(ThemeSettings(
     //sourceColor: Color(0xff2a4fda),
@@ -29,8 +28,8 @@ class _AppState extends ConsumerState<App> {
   @override
   void initState() {
     super.initState();
-    appDelegate = AppDelegate(ref.read(sharedPreferencesProvider));
-    appDelegate.onAppStart();
+    appController = ref.read(appControllerProvider.notifier);
+    appController.onAppStart();
   }
 
   @override
@@ -47,7 +46,7 @@ class _AppState extends ConsumerState<App> {
               final appTheme = themeProvider.light(settings.value.sourceColor);
 
               return MaterialApp.router(
-                debugShowCheckedModeBanner: isDebugMode,
+                debugShowCheckedModeBanner: Config.isDebugMode,
                 title: 'StudyU Designer'.hardcoded,
                 color: appTheme.colorScheme.surface,
                 theme: appTheme,
