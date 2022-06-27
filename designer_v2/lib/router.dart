@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
@@ -5,6 +6,9 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/features/study/scaffold.dart';
+import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
+import 'package:studyu_designer_v2/features/study/study_recruit_page.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
@@ -16,9 +20,15 @@ import 'package:studyu_designer_v2/utils/debug_print.dart';
 /// List of all pages in the application
 enum RouterPage {
   dashboard(id: "dashboard", path: "/studies"),
-  dashboardOwned(id: "dashboardOwned", path: "owned"),
-  dashboardShared(id: "dashboardShared", path: "shared"),
-  studyRegistry(id: "studyRegistry", path: "registry"),
+    dashboardOwned(id: "dashboardOwned", path: "owned"),
+    dashboardShared(id: "dashboardShared", path: "shared"),
+    registry(id: "registry", path: "registry"),
+  study(id: "study", path: "/study/:studyId"),
+    studyEditor(id: "studyEditor", path: "edit"),
+    studyTester(id: "studyTester", path: "test"),
+    studyMonitor(id: "studyMonitor", path: "monitor"),
+    studyRecruit(id: "studyRecruiting", path: "recruit"),
+    studyResults(id: "studyResults", path: "results"),
   splash(id: "splash", path: "/splash"),
   login(id: "login", path: "/login"),
   error(id: "error", path: "/error");
@@ -27,6 +37,8 @@ enum RouterPage {
   final String path;
 
   const RouterPage({required this.id, required this.path});
+
+  ValueKey get valueKey => ValueKey<String>(id);
 }
 
 /// Each route defines a mapping between the URL path and Flutter widget
@@ -39,17 +51,60 @@ final List<GoRoute> routes = [
       GoRoute(
         path: RouterPage.dashboardOwned.path,
         name: RouterPage.dashboardOwned.id,
-        builder: (context, state) => DashboardScreen(),
+        pageBuilder: (context, state) => MaterialPage(
+            key: RouterPage.dashboard.valueKey, // shared key
+            child: DashboardScreen()
+        )
       ),
       GoRoute(
         path: RouterPage.dashboardShared.path,
         name: RouterPage.dashboardShared.id,
-        builder: (context, state) => DashboardScreen(),
+        pageBuilder: (context, state) => MaterialPage(
+            key: RouterPage.dashboard.valueKey, // shared key
+            child: DashboardScreen()
+        )
       ),
       GoRoute(
-        path: RouterPage.studyRegistry.path,
-        name: RouterPage.studyRegistry.id,
-        builder: (context, state) => DashboardScreen(),
+        path: RouterPage.registry.path,
+        name: RouterPage.registry.id,
+        pageBuilder: (context, state) => MaterialPage(
+            key: RouterPage.dashboard.valueKey, // shared key
+            child: DashboardScreen()
+        )
+      ),
+    ]
+  ),
+  GoRoute(
+    path: RouterPage.study.path,
+    name: RouterPage.study.id,
+    redirect: (GoRouterState state) => state.namedLocation(
+        RouterPage.studyEditor.id,
+        params: {'studyId': state.params['studyId']!}
+    ),
+    routes: [
+      GoRoute(
+        path: RouterPage.studyEditor.path,
+        name: RouterPage.studyEditor.id,
+        pageBuilder: (context, state) => MaterialPage(
+          key: RouterPage.study.valueKey, // shared key
+          child: StudyScaffold(
+            studyId: state.params['studyId']!,
+            selectedTab: StudyScaffoldTab.edit,
+            child: StudyEditScreen(state.params['studyId']!)
+          )
+        )
+      ),
+      GoRoute(
+        path: RouterPage.studyRecruit.path,
+        name: RouterPage.studyRecruit.id,
+        pageBuilder: (context, state) => MaterialPage(
+          key: RouterPage.study.valueKey, // shared key
+          child: StudyScaffold(
+              studyId: state.params['studyId']!,
+              selectedTab: StudyScaffoldTab.recruit,
+              child: StudyRecruitScreen(state.params['studyId']!)
+          )
+        )
       ),
     ]
   ),

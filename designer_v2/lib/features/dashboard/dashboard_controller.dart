@@ -55,7 +55,7 @@ class DashboardController extends StateNotifier<DashboardState> {
       RouterPage.dashboard: StudiesFilter.owned,
       RouterPage.dashboardOwned: StudiesFilter.owned,
       RouterPage.dashboardShared: StudiesFilter.shared,
-      RouterPage.studyRegistry: StudiesFilter.all,
+      RouterPage.registry: StudiesFilter.all,
     };
     routeToFilter.forEach((routerPage, studyFilter) {
       final pageLoc = router.namedLocation(routerPage.id);

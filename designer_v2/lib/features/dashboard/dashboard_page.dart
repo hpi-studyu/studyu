@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/navigation_drawer.dart';
 import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/features/study/app_drawer.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
@@ -14,7 +15,8 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SidenavLayout(
-        sideDrawerWidget: NavigationDrawer(title: 'StudyU'.hardcoded),
+        //sideDrawerWidget: NavigationDrawer(title: 'StudyU'.hardcoded),
+        sideDrawerWidget: AppDrawer(),
         mainContentWidget: Scaffold(
           appBar: null, // default app bar not suitable for our layout
           body: LayoutBuilder(

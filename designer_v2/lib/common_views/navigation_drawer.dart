@@ -43,7 +43,7 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
       NavigationGoRouterEntry('Shared With Me'.hardcoded, RouterPage.dashboardShared),
     ],
     [
-      NavigationGoRouterEntry('Study Registry'.hardcoded, RouterPage.studyRegistry),
+      NavigationGoRouterEntry('Study Registry'.hardcoded, RouterPage.registry),
     ]
   ];
 
