@@ -15,37 +15,57 @@ import 'package:studyu_designer_v2/utils/debug_print.dart';
 
 /// List of all pages in the application
 enum RouterPage {
-  dashboard(title: "dashboard", path: "/"),
-  splash(title: "splash", path: "/splash"),
-  login(title: "login", path: "/login"),
-  error(title: "error", path: "/error");
+  dashboard(id: "dashboard", path: "/studies"),
+  dashboardOwned(id: "dashboardOwned", path: "owned"),
+  dashboardShared(id: "dashboardShared", path: "shared"),
+  studyRegistry(id: "studyRegistry", path: "registry"),
+  splash(id: "splash", path: "/splash"),
+  login(id: "login", path: "/login"),
+  error(id: "error", path: "/error");
 
-  final String title;
+  final String id;
   final String path;
 
-  const RouterPage({required this.title, required this.path});
+  const RouterPage({required this.id, required this.path});
 }
 
 /// Each route defines a mapping between the URL path and Flutter widget
 final List<GoRoute> routes = [
   GoRoute(
     path: RouterPage.dashboard.path,
-    name: RouterPage.dashboard.title,
+    name: RouterPage.dashboard.id,
     builder: (context, state) => DashboardScreen(),
+    routes: [
+      GoRoute(
+        path: RouterPage.dashboardOwned.path,
+        name: RouterPage.dashboardOwned.id,
+        builder: (context, state) => DashboardScreen(),
+      ),
+      GoRoute(
+        path: RouterPage.dashboardShared.path,
+        name: RouterPage.dashboardShared.id,
+        builder: (context, state) => DashboardScreen(),
+      ),
+      GoRoute(
+        path: RouterPage.studyRegistry.path,
+        name: RouterPage.studyRegistry.id,
+        builder: (context, state) => DashboardScreen(),
+      ),
+    ]
   ),
   GoRoute(
     path: RouterPage.splash.path,
-    name: RouterPage.splash.title,
+    name: RouterPage.splash.id,
     builder: (context, state) => SplashPage(),
   ),
   GoRoute(
     path: RouterPage.login.path,
-    name: RouterPage.login.title,
+    name: RouterPage.login.id,
     builder: (context, state) => LoginPage(),
   ),
   GoRoute(
     path: RouterPage.error.path,
-    name: RouterPage.error.title,
+    name: RouterPage.error.id,
     builder: (context, state) => ErrorPage(error: state.extra.toString()),
   ),
 ];
@@ -53,6 +73,7 @@ final List<GoRoute> routes = [
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
+  final defaultLocation = RouterPage.dashboard.path;
 
   return GoRouter(
     refreshListenable: CombinedStreamNotifier([
@@ -60,33 +81,72 @@ final routerProvider = Provider<GoRouter>((ref) {
       appController.stream,                   // initialization events
       authRepository.watchAuthStateChanges()  // authentication events
     ]),
-    initialLocation: RouterPage.dashboard.path,
+    initialLocation: defaultLocation,
     routes: routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
     redirect: (state) {
       debugLog("Router redirect: ${state.location}");
-      final loginLocation = state.namedLocation(RouterPage.login.title);
-      final splashLocation = state.namedLocation(RouterPage.splash.title);
-      final dashboardLocation = state.namedLocation(RouterPage.dashboard.title);
+
+      final loginLocation = state.namedLocation(RouterPage.login.id);
+      final splashLocation = state.namedLocation(RouterPage.splash.id);
+      final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
-      final isOnDashboard = state.subloc == dashboardLocation;
       final isOnSplashPage = state.subloc == splashLocation;
+
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
       final isInitialized = appController.isInitialized;
 
-      // Redirect to splash screen while app is pending initialization
-      if (!isInitialized) {
-        return (isOnSplashPage) ? null : splashLocation;
-      }
-      // Redirect to login page when not logged in
-      if (!isLoggedIn) {
-        return (isOnLoginPage) ? null : loginLocation;
+      // Carry original location through the redirect flow so that we can
+      // redirect the user to where the came from after initialization
+      final String? from;
+      if (state.queryParams.containsKey('from')) {
+        from = state.queryParams['from'];
       } else {
-        // Forward to dashboard after user was authenticated
-        return (isOnDashboard) ? null : dashboardLocation;
+        if (!(isOnDefaultPage | isOnLoginPage | isOnSplashPage)) {
+          from = state.subloc;
+        } else {
+          from = null;
+        }
       }
-    }
+      // Helper to generate routes carrying the 'from' param (if any)
+      namedLocForwarded(String name) {
+        final Map<String,String> qParams = {};
+        if (from != null) {
+          qParams["from"] = from;
+        }
+        return state.namedLocation(name, queryParams: qParams);
+      }
+
+      if (!isInitialized) {
+        // Redirect to splash screen while app is pending initialization
+        return (isOnSplashPage) ? null : namedLocForwarded(RouterPage.splash.id);
+      }
+      if (!isLoggedIn) {
+        // Redirect to login page when not logged in
+        return (isOnLoginPage) ? null : namedLocForwarded(RouterPage.login.id);
+      }
+
+      if (isInitialized && isLoggedIn) {
+        // If the app is initialized & user is authenticated, forward to where
+        // they were going initially...
+        if (from != null && from != state.subloc) {
+          return from;
+        }
+        // ...or send them to the default location if they just authenticated
+        // and weren't going anywhere
+        if (isOnLoginPage || isOnSplashPage) {
+          return defaultLocation;
+        }
+      }
+
+      return null; // don't redirect in all other cases
+    },
+    // Turn off the # in the URLs on the web
+    urlPathStrategy: UrlPathStrategy.path,
   );
 });
 
+extension RouterConvencienceX on GoRouter {
+  get currentPath => routerDelegate.currentConfiguration.path;
+}

@@ -31,8 +31,7 @@ class AppController extends StateNotifier<AppControllerState> {
 
   AppController({
     required this.sharedPreferences,
-    required this.appDelegates}) : super(const AppControllerState()) {
-  }
+    required this.appDelegates}) : super(const AppControllerState());
 
   get isInitialized => state.status == AppStatus.initialized;
 

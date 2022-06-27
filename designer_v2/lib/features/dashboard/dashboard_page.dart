@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
+
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -94,7 +95,7 @@ class DashboardScreen extends ConsumerWidget {
     final List<TableRow> rows = [];
     // This can be removed later, when we have a working policy
     //final userStudies = state.studies.where((element) => element.isOwner(AuthStore().currentUser) || element.isEditor(AuthStore().currentUser));
-    state.studies.forEach((study) {
+    state.visibleStudies.forEach((study) {
       TableRow studyDataRow = TableRow(children: [
         wrapRowContents(Text(study.title ?? '[Missing Study.title]')),
         wrapRowContents(SelectableText(study.status.value)),
