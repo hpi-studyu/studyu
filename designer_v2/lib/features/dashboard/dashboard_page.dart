@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/common_views/navigation_drawer.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
-import 'package:studyu_designer_v2/features/study/app_drawer.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/router.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
@@ -15,8 +17,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SidenavLayout(
-        //sideDrawerWidget: NavigationDrawer(title: 'StudyU'.hardcoded),
-        sideDrawerWidget: AppDrawer(),
+        sideDrawerWidget: AppDrawer(title: 'StudyU'.hardcoded),
         mainContentWidget: Scaffold(
           appBar: null, // default app bar not suitable for our layout
           body: LayoutBuilder(
@@ -102,7 +103,9 @@ class DashboardScreen extends ConsumerWidget {
         wrapRowContents(Text(study.title ?? '[Missing Study.title]')),
         wrapRowContents(SelectableText(study.status.value)),
         wrapRowContents(SelectableText(study.participation.value)),
-        wrapRowContents(SelectableText(study.createdAt.toString())),
+        // TODO: resolve missing createdAt
+        //wrapRowContents(SelectableText(study.createdAt.toString())),
+        wrapRowContents(SelectableText("")),
         wrapRowContents(SelectableText(study.participantCount.toString()),
             hasInkwell: false),
         wrapRowContents(SelectableText(study.activeSubjectCount.toString()),
@@ -179,8 +182,11 @@ class DashboardScreen extends ConsumerWidget {
           icon: const Icon(Icons.add),
           label: Text("New study".hardcoded),
           onPressed: () {
-            // TODO transition to study details page
-            print("creating new study");
+            // Open new study page
+            context.goNamed(
+                RouterPage.study.id,
+                params: {'studyId': Config.newStudyId}
+            );
           },
         )
       ],

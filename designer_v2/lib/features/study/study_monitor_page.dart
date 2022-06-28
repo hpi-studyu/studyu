@@ -9,6 +9,7 @@ class StudyEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("StudyEditScreen.build");
     return Container(
       alignment: Alignment.center,
       child: Column(

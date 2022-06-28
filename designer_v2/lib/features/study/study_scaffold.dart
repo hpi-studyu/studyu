@@ -1,28 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/features/study/app_drawer.dart';
+import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/app_drawer.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/router.dart';
 
 enum StudyScaffoldTab {
-  edit,
-  //test,
-  recruit,
+  edit(title: "Edit", page: RouterPage.studyEditor), // TODO: "Edit".hardcoded
+  test(title: "Test", page: RouterPage.studyTester), // TODO: "Test".hardcoded
+  recruit(title: "Recruit", page: RouterPage.studyRecruit), // TODO: "Recruit".hardcoded
+  monitor(title: "Monitor", page: RouterPage.studyMonitor), // TODO: "Monitor".hardcoded
+  analyze(title: "Analyze", page: RouterPage.studyAnalysis); // TODO: "Analyze".hardcoded
+
+  /// The text displayed as the tab's title
+  final String title; // TODO: use localization key here
+  /// The route to navigate to when switching to the tab
+  final RouterPage page;
+
+  const StudyScaffoldTab({required this.title, required this.page});
 }
 
+/// Custom scaffold shared between all pages of an individual [Study]
 class StudyScaffold extends StatefulWidget {
   const StudyScaffold({
-    required this.studyId,
+    this.studyId = Config.newStudyId,
     required this.selectedTab,
     required this.child,
     Key? key
   }) : super(key: key);
 
+  /// The currently selected [Study.id]
+  /// Defaults to [Config.newStudyId] when creating a new study
   final String studyId;
   final StudyScaffoldTab selectedTab;
+
+  /// The page to be rendered for the currently selected [StudyScaffoldTab]
   final Widget child;
 
   @override
@@ -32,23 +45,32 @@ class StudyScaffold extends StatefulWidget {
 class _StudyScaffoldState extends State<StudyScaffold> {
   @override
   Widget build(BuildContext context) {
-    print("_StudyScaffoldState.build");
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Text("Backpain Interventions (Demo Template)",
+          Expanded(
+            flex: 1,
+            child: Text("Backpain Interventions (Demo Template)", // TODO: display study title
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               softWrap: false,),
-            Spacer(),
-            StudyPageNav(studyId: widget.studyId, selectedTab: widget.selectedTab),
+          ),
+            //Spacer(),
+        Expanded(
+          flex: 2,
+            child: StudyPageNav(studyId: widget.studyId, selectedTab: widget.selectedTab),
+        ),
+            //Spacer(),
+            //SizedBox(width: 1)
+            /*
             Spacer(),
             Text("2nd text",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               softWrap: false,),
+             */
           ],
         ),
         //leading: Text("Breadcrumbs"),
@@ -92,7 +114,7 @@ class _StudyScaffoldState extends State<StudyScaffold> {
         ],
       ),
       body: widget.child,
-      drawer: AppDrawer(),
+      drawer: AppDrawer(title: 'StudyU'.hardcoded),
     );
   }
 }
