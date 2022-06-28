@@ -6,9 +6,13 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
-import 'package:studyu_designer_v2/features/study/scaffold.dart';
+import 'package:studyu_designer_v2/features/legacy/designer_page.dart';
+import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
+import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
+import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_recruit_page.dart';
+import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
@@ -23,12 +27,13 @@ enum RouterPage {
     dashboardOwned(id: "dashboardOwned", path: "owned"),
     dashboardShared(id: "dashboardShared", path: "shared"),
     registry(id: "registry", path: "registry"),
-  study(id: "study", path: "/study/:studyId"),
+
+  study(id: "study", path: "/study/:studyId"), // studyId or 'new'
     studyEditor(id: "studyEditor", path: "edit"),
     studyTester(id: "studyTester", path: "test"),
     studyMonitor(id: "studyMonitor", path: "monitor"),
     studyRecruit(id: "studyRecruiting", path: "recruit"),
-    studyResults(id: "studyResults", path: "results"),
+    studyAnalysis(id: "studyAnalysis", path: "analyze"),
   splash(id: "splash", path: "/splash"),
   login(id: "login", path: "/login"),
   error(id: "error", path: "/error");
@@ -90,21 +95,59 @@ final List<GoRoute> routes = [
           child: StudyScaffold(
             studyId: state.params['studyId']!,
             selectedTab: StudyScaffoldTab.edit,
-            child: StudyEditScreen(state.params['studyId']!)
+            // TODO: replace legacy editor with new version
+            //child: StudyEditScreen(state.params['studyId']!)
+            child: DesignerScreen(state.params['studyId'] == 'new' ? null : state.params['studyId']),
           )
         )
       ),
       GoRoute(
-        path: RouterPage.studyRecruit.path,
-        name: RouterPage.studyRecruit.id,
+        path: RouterPage.studyTester.path,
+        name: RouterPage.studyTester.id,
         pageBuilder: (context, state) => MaterialPage(
           key: RouterPage.study.valueKey, // shared key
           child: StudyScaffold(
               studyId: state.params['studyId']!,
-              selectedTab: StudyScaffoldTab.recruit,
-              child: StudyRecruitScreen(state.params['studyId']!)
+              selectedTab: StudyScaffoldTab.test,
+              child: StudyTestScreen(state.params['studyId']!)
           )
         )
+      ),
+      GoRoute(
+          path: RouterPage.studyRecruit.path,
+          name: RouterPage.studyRecruit.id,
+          pageBuilder: (context, state) => MaterialPage(
+              key: RouterPage.study.valueKey, // shared key
+              child: StudyScaffold(
+                  studyId: state.params['studyId']!,
+                  selectedTab: StudyScaffoldTab.recruit,
+                  child: StudyRecruitScreen(state.params['studyId']!)
+              )
+          )
+      ),
+      GoRoute(
+          path: RouterPage.studyMonitor.path,
+          name: RouterPage.studyMonitor.id,
+          pageBuilder: (context, state) => MaterialPage(
+              key: RouterPage.study.valueKey, // shared key
+              child: StudyScaffold(
+                  studyId: state.params['studyId']!,
+                  selectedTab: StudyScaffoldTab.monitor,
+                  child: StudyMonitorScreen(state.params['studyId']!)
+              )
+          )
+      ),
+      GoRoute(
+          path: RouterPage.studyAnalysis.path,
+          name: RouterPage.studyAnalysis.id,
+          pageBuilder: (context, state) => MaterialPage(
+              key: RouterPage.study.valueKey, // shared key
+              child: StudyScaffold(
+                  studyId: state.params['studyId']!,
+                  selectedTab: StudyScaffoldTab.analyze,
+                  child: StudyAnalyzeScreen(state.params['studyId']!)
+              )
+          )
       ),
     ]
   ),

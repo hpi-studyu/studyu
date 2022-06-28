@@ -1,12 +1,13 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/router.dart';
 import 'package:studyu_designer_v2/theme.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class App extends ConsumerStatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -52,6 +53,13 @@ class _AppState extends ConsumerState<App> {
                 theme: appTheme,
                 routeInformationParser: appRouter.routeInformationParser,
                 routerDelegate: appRouter.routerDelegate,
+                locale: const Locale('en'),
+                supportedLocales: AppLocalizations.supportedLocales,
+                localizationsDelegates: [
+                  ...AppLocalizations.localizationsDelegates,
+                  // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
+                  FormBuilderLocalizations.delegate,
+                ]
                 //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
               );
             })

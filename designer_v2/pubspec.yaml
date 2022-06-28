@@ -20,7 +20,6 @@ dependencies:
   shared_preferences: ^2.0.15
   equatable: ^2.0.3
   rxdart: ^0.27.4
-
   # flutterflow deps
   auto_size_text: ^3.0.0
   font_awesome_flutter: ^10.1.0
@@ -31,6 +30,14 @@ dependencies:
   url_launcher: ^6.1.4
   page_transition: ^2.0.9
   easy_debounce: ^2.0.2+1
+  # legacy compatibility (remove later)
+  flutter_form_builder: ^7.3.1
+  provider: ^6.0.3
+  material_design_icons_flutter: ^5.0.6595
+  form_builder_validators: ^8.1.1
+  form_builder_extra_fields: ^8.1.0
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +46,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   # todo this can be removed if there are no more local asseets
   assets:
     - assets/data/

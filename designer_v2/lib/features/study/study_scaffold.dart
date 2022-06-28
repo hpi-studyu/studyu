@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/router.dart';
 
 enum StudyScaffoldTab {
-  edit(title: "Edit", page: RouterPage.studyEditor), // TODO: "Edit".hardcoded
+  edit(title: "Design", page: RouterPage.studyEditor), // TODO: "Edit".hardcoded
   test(title: "Test", page: RouterPage.studyTester), // TODO: "Test".hardcoded
   recruit(title: "Recruit", page: RouterPage.studyRecruit), // TODO: "Recruit".hardcoded
   monitor(title: "Monitor", page: RouterPage.studyMonitor), // TODO: "Monitor".hardcoded
@@ -50,65 +50,54 @@ class _StudyScaffoldState extends State<StudyScaffold> {
       appBar: AppBar(
         title: Row(
           children: [
-          Expanded(
-            flex: 1,
-            child: Text("Backpain Interventions (Demo Template)", // TODO: display study title
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,),
-          ),
-            //Spacer(),
-        Expanded(
-          flex: 2,
-            child: StudyPageNav(studyId: widget.studyId, selectedTab: widget.selectedTab),
-        ),
-            //Spacer(),
-            //SizedBox(width: 1)
-            /*
-            Spacer(),
-            Text("2nd text",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,),
-             */
+            // Use the title widget slot to render both the title and a
+            // tabbed control for switching between different pages (combined
+            // in a [Row] widget).
+            //
+            // Alternatively, [Appbar.flexibleSpace] would be suitable for
+            // rendering the tabbed navigation. But since [Appbar.flexibleSpace]
+            // is stacked behind the app bar, we'd have to manually manage
+            // responsive layout conflicts (the tabbed control would be overlaid
+            // by the app bar widgets).
+            Expanded(
+              flex: 4,
+              child: Text("Backpain Interventions (Demo Template)".hardcoded, // TODO: display study title
+                maxLines: 1,
+                style: theme.textTheme.titleSmall,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false
+              ),
+            ),
+            Flexible(
+              flex: 5,
+              child: StudyTabbedNavigation(
+                  studyId: widget.studyId,
+                  selectedTab: widget.selectedTab
+              ),
+            ),
           ],
         ),
-        //leading: Text("Breadcrumbs"),
         backgroundColor:theme.colorScheme.primaryContainer,
+        // TODO: fallback to [AppBar.bottom] as tabbed navigation slot for small screens
         /*
-        shape: Border(
-            bottom: BorderSide(
-              color: theme.colorScheme.primaryContainer,
-              width: 1
-            )
-        ),
-         */
-        // Flexible space is stacked below the app bar so we can use it
-        // to display the center navigation
-        flexibleSpace: Container(
-            //alignment: Alignment.topCenter,
-          alignment: Alignment.center,
-          //child: StudyPageNav(studyId: widget.studyId, selectedTab: widget.selectedTab)
-        ),
-        /*
-        bottom: widget.selectedTab == StudyScaffoldTab.edit ? PreferredSize(
+        bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Expanded(child:Container(
             color: Colors.red,
             width: double.infinity,
           )
-        )) : null,
+        )),
          */
         actions: [
           Container(
             alignment: Alignment.center,
-            child: Text("Status: Draft")
+            child: Text("Status: Draft".hardcoded) // TODO display study status
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: OutlinedButton(
-              child: Text("Save draft"),
-              onPressed: () => print("pressed"),
+              child: Text("Save draft".hardcoded), // TODO implement autosave
+              onPressed: () => print("Save pressed"),
             )
           )
         ],
@@ -119,8 +108,8 @@ class _StudyScaffoldState extends State<StudyScaffold> {
   }
 }
 
-class StudyPageNav extends ConsumerStatefulWidget {
-  const StudyPageNav({
+class StudyTabbedNavigation extends ConsumerStatefulWidget {
+  const StudyTabbedNavigation({
     required this.studyId,
     required this.selectedTab,
     Key? key
@@ -133,7 +122,7 @@ class StudyPageNav extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _StudyPageNavState();
 }
 
-class _StudyPageNavState extends ConsumerState<StudyPageNav> with TickerProviderStateMixin {
+class _StudyPageNavState extends ConsumerState<StudyTabbedNavigation> with TickerProviderStateMixin {
   late TabController _tabController;
   late GoRouter _router;
   int _selectedIndex = 0;
@@ -169,7 +158,7 @@ class _StudyPageNavState extends ConsumerState<StudyPageNav> with TickerProvider
   }
 
   @override
-  void didUpdateWidget(StudyPageNav oldWidget) {
+  void didUpdateWidget(StudyTabbedNavigation oldWidget) {
     super.didUpdateWidget(oldWidget);
     print("_StudyPageNavState.DID UPDATE WIDGET");
     _setSelectedIndex(widget.selectedTab.index);
@@ -203,17 +192,12 @@ class _StudyPageNavState extends ConsumerState<StudyPageNav> with TickerProvider
   @override
   Widget build(BuildContext context) {
     print("_StudyPageNavState.build");
-    return Container(child: SizedBox(
-      width: 300,
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 420),
       child: TabBar(
         controller: _tabController,
-        tabs: [
-          Tab(text: "Edit"),
-          //Tab(text: "Test"),
-          Tab(text: "Recruit"),
-        ],
-
+        tabs: StudyScaffoldTab.values.map((e) => Tab(text: e.title)).toList(),
       )
-    ));
+    );
   }
 }

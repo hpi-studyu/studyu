@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/router.dart';
 
-class StudyEditScreen extends StatelessWidget {
-  const StudyEditScreen(this.studyId, {Key? key}) : super(key: key);
+class StudyAnalyzeScreen extends StatelessWidget {
+  const StudyAnalyzeScreen(this.studyId, {Key? key}) : super(key: key);
 
   final String studyId;
 
@@ -14,10 +14,10 @@ class StudyEditScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Edit study: $studyId"),
+          Text("Analyze study: $studyId"),
           TextButton(
-              onPressed: () => context.goNamed(RouterPage.studyRecruit.id, params: {"studyId": studyId}),
-              child: Text("Go to recruit")
+              onPressed: () => context.goNamed(RouterPage.studyEditor.id, params: {"studyId": studyId}),
+              child: Text("Go to design")
           ),
         ],
       )

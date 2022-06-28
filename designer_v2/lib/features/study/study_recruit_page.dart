@@ -9,7 +9,6 @@ class StudyRecruitScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("StudyRecruitScreen.build");
     return Container(
       alignment: Alignment.center,
         child: Column(
