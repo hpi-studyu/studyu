@@ -107,12 +107,12 @@ class ThemeProvider extends InheritedWidget {
 
   TabBarTheme tabBarTheme(ColorScheme colors) {
     return TabBarTheme(
-      labelColor: colors.secondary,
+      labelColor: colors.primary,
       unselectedLabelColor: colors.onSurfaceVariant,
       indicator: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: colors.secondary,
+            color: colors.primary,
             width: 2,
           ),
         ),

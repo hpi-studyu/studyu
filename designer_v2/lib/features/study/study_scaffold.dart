@@ -21,7 +21,7 @@ enum StudyScaffoldTab {
   const StudyScaffoldTab({required this.title, required this.page});
 }
 
-/// Custom scaffold shared between all pages of an individual [Study]
+/// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends StatefulWidget {
   const StudyScaffold({
     this.studyId = Config.newStudyId,
@@ -33,6 +33,8 @@ class StudyScaffold extends StatefulWidget {
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
   final String studyId;
+
+  /// Determines the currently active tab in the app bar's navigation
   final StudyScaffoldTab selectedTab;
 
   /// The page to be rendered for the currently selected [StudyScaffoldTab]
@@ -42,7 +44,40 @@ class StudyScaffold extends StatefulWidget {
   State<StudyScaffold> createState() => _StudyScaffoldState();
 }
 
-class _StudyScaffoldState extends State<StudyScaffold> {
+class _StudyScaffoldState extends State<StudyScaffold>
+    with TickerProviderStateMixin {
+  /// A [TabController] that has its index synced to the currently selected
+  /// tab provided by the widget. The widget's parameter may be injected e.g.
+  /// via a router
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: StudyScaffoldTab.values.length, vsync: this);
+    _tabController.index = widget.selectedTab.index;
+  }
+
+  @override
+  void didUpdateWidget(StudyScaffold oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Sync up the tab controller when a new widget is created
+    // (e.g. by navigating to a different page)
+    _tabController.animateTo(widget.selectedTab.index);
+  }
+
+  List<Tab> _getTabs() {
+    return StudyScaffoldTab.values.map((e) => Tab(text: e.title)).toList();
+  }
+
+  void _onSelectTab(int tabIndex) {
+    // Navigate to the page associated with the selected tab
+    context.goNamed(
+      StudyScaffoldTab.values[tabIndex].page.id,
+      params: {"studyId": widget.studyId},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -70,14 +105,18 @@ class _StudyScaffoldState extends State<StudyScaffold> {
             ),
             Flexible(
               flex: 5,
-              child: StudyTabbedNavigation(
-                  studyId: widget.studyId,
-                  selectedTab: widget.selectedTab
-              ),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: TabBar(
+                  controller: _tabController,
+                  tabs: _getTabs(),
+                  onTap: _onSelectTab,
+                )
+              )
             ),
           ],
         ),
-        backgroundColor:theme.colorScheme.primaryContainer,
+        backgroundColor: theme.colorScheme.primaryContainer,
         // TODO: fallback to [AppBar.bottom] as tabbed navigation slot for small screens
         /*
         bottom: PreferredSize(
@@ -104,100 +143,6 @@ class _StudyScaffoldState extends State<StudyScaffold> {
       ),
       body: widget.child,
       drawer: AppDrawer(title: 'StudyU'.hardcoded),
-    );
-  }
-}
-
-class StudyTabbedNavigation extends ConsumerStatefulWidget {
-  const StudyTabbedNavigation({
-    required this.studyId,
-    required this.selectedTab,
-    Key? key
-  }) : super(key: key);
-
-  final String studyId;
-  final StudyScaffoldTab selectedTab;
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _StudyPageNavState();
-}
-
-class _StudyPageNavState extends ConsumerState<StudyTabbedNavigation> with TickerProviderStateMixin {
-  late TabController _tabController;
-  late GoRouter _router;
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    print("_StudyPageNavState.INITSTATE");
-    super.initState();
-    _tabController = TabController(length: StudyScaffoldTab.values.length, vsync: this);
-    _setSelectedIndex(widget.selectedTab.index);
-    _router = ref.read(routerProvider);
-    _router.addListener(_syncTabsWithRoute);
-    _tabController.addListener(() {
-      setState(() {
-        _selectedIndex = _tabController.index;
-      });
-      final tab = StudyScaffoldTab.values[_selectedIndex];
-      final routerPage;
-      switch(tab) {
-        case StudyScaffoldTab.edit:
-          routerPage = RouterPage.studyEditor;
-          break;
-        case StudyScaffoldTab.recruit:
-          routerPage = RouterPage.studyRecruit;
-          break;
-        default:
-          routerPage = RouterPage.studyEditor;
-      }
-      context.goNamed(routerPage.id, params: {"studyId": widget.studyId});
-      print("Selected tab index: " + _tabController.index.toString());
-    });
-    _syncTabsWithRoute();
-  }
-
-  @override
-  void didUpdateWidget(StudyTabbedNavigation oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    print("_StudyPageNavState.DID UPDATE WIDGET");
-    _setSelectedIndex(widget.selectedTab.index);
-    //_controller.index = widget.index;
-  }
-
-
-  _syncTabsWithRoute() {
-    print("SYNC");
-    print("_syncTabsWithRoute: " + _router.currentPath);
-    switch(_router.currentPath) {
-      case RouterPage.studyEditor:
-        _setSelectedIndex(StudyScaffoldTab.edit.index);
-        break;
-      case RouterPage.studyRecruit:
-        _setSelectedIndex(StudyScaffoldTab.recruit.index);
-        break;
-      default:
-        break;
-    }
-  }
-
-  _setSelectedIndex(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _tabController.animateTo(_selectedIndex);
-    //_tabController.index = _selectedIndex;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    print("_StudyPageNavState.build");
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 420),
-      child: TabBar(
-        controller: _tabController,
-        tabs: StudyScaffoldTab.values.map((e) => Tab(text: e.title)).toList(),
-      )
     );
   }
 }
