@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 
 enum DesignerPage {
   about,
@@ -14,15 +17,35 @@ enum DesignerPage {
   consent,
 }
 
-class AppState extends ChangeNotifier {
-  String? _selectedStudyId;
-  Study? draftStudy;
-  DesignerPage _selectedDesignerPage = DesignerPage.about;
+abstract class LegacyAppStateDelegate {
+  void onStudyUpdate(Study study);
+}
 
+class AppState extends ChangeNotifier {
+  /*static final AppState _instance = AppState._();
+  static AppState get instance => _instance;
+
+  AppState._();*/
   AppState();
 
-  String get selectedStudyId => _selectedStudyId!;
+  String? _selectedStudyId;
+  //Study? draftStudy;
+  DesignerPage _selectedDesignerPage = DesignerPage.about;
 
+  Study? _draftStudy;
+  Study? get draftStudy {
+    // Dirty hack so we can sync changes from [AppState.draftStudy] to
+    // the new [StudyController]
+    Future.delayed(
+        const Duration(milliseconds: 0),
+        () => _updateDelegate(_draftStudy),
+    );
+    return _draftStudy;
+  }
+  set draftStudy(Study? study) => _draftStudy = study;
+  LegacyAppStateDelegate? delegate;
+
+  String get selectedStudyId => _selectedStudyId!;
   DesignerPage get selectedDesignerPage => _selectedDesignerPage;
 
   set selectedDesignerPage(DesignerPage page) {
@@ -30,23 +53,23 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createStudy({DesignerPage page = DesignerPage.about}) {
-    draftStudy = Study.withId(Supabase.instance.client.auth.user()!.id);
-    _selectedStudyId = null;
-    _selectedDesignerPage = page;
-    notifyListeners();
-  }
-
-  Future<void> openDesigner(String studyId, {DesignerPage page = DesignerPage.about}) async {
-    draftStudy = await SupabaseQuery.getById<Study>(studyId);
-    _selectedStudyId = studyId;
-    _selectedDesignerPage = page;
-    notifyListeners();
-  }
-
-  Future<void> openNewStudy(Study study) async {
-    draftStudy = study;
-    _selectedStudyId = study.id;
-    notifyListeners();
+  _updateDelegate(Study? study) {
+    if (_draftStudy != null) {
+      delegate?.onStudyUpdate(_draftStudy!);
+    }
   }
 }
+
+final legacyAppStateProvider = ChangeNotifierProvider.autoDispose
+    .family<AppState, StudyID>((ref, studyId) {
+  final studyController = ref.watch(studyControllerProvider(studyId).notifier);
+  final appState = AppState();
+  appState.delegate = studyController;
+
+  ref.listen<StudyControllerState>(studyControllerProvider(studyId),
+      (prevState, state) => appState._draftStudy = state.study.value,
+      fireImmediately: true
+  );
+
+  return appState;
+});

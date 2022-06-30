@@ -64,7 +64,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   void _updateSelectedRoute() {
-    print("UPDATE SELECTED ROUTE");
     final entryIdx = _getCurrentRouteIndex();
     setSelectedIdx(entryIdx);
   }

@@ -97,7 +97,7 @@ final List<GoRoute> routes = [
             selectedTab: StudyScaffoldTab.edit,
             // TODO: replace legacy editor with new version
             //child: StudyEditScreen(state.params['studyId']!)
-            child: DesignerScreen(state.params['studyId'] == 'new' ? null : state.params['studyId']),
+            child: DesignerScreen(state.params['studyId']!),
           )
         )
       ),

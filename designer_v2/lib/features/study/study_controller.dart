@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -11,7 +12,8 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/navigation_service.dart';
 
 
-class StudyController extends StateNotifier<StudyControllerState> {
+class StudyController extends StateNotifier<StudyControllerState>
+    implements LegacyAppStateDelegate {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -70,6 +72,15 @@ class StudyController extends StateNotifier<StudyControllerState> {
   dispose() {
     _studySubscription?.cancel();
     super.dispose();
+  }
+
+  // - LegacyAppStateDelegate
+
+  @override
+  void onStudyUpdate(Study study) {
+    state = state.copyWith(
+        study: () => AsyncValue.data(study)
+    );
   }
 }
 

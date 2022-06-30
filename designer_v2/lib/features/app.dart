@@ -5,7 +5,7 @@ import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/router.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -47,21 +47,21 @@ class _AppState extends ConsumerState<App> {
               final appTheme = themeProvider.light(settings.value.sourceColor);
 
               return MaterialApp.router(
-                debugShowCheckedModeBanner: Config.isDebugMode,
-                title: 'StudyU Designer'.hardcoded,
-                color: appTheme.colorScheme.surface,
-                theme: appTheme,
-                routeInformationParser: appRouter.routeInformationParser,
-                routerDelegate: appRouter.routerDelegate,
-                locale: const Locale('en'),
-                supportedLocales: AppLocalizations.supportedLocales,
-                localizationsDelegates: [
-                  ...AppLocalizations.localizationsDelegates,
-                  // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
-                  FormBuilderLocalizations.delegate,
-                ]
-                //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
-              );
+                  debugShowCheckedModeBanner: Config.isDebugMode,
+                  title: 'StudyU Designer'.hardcoded,
+                  color: appTheme.colorScheme.surface,
+                  theme: appTheme,
+                  routeInformationParser: appRouter.routeInformationParser,
+                  routerDelegate: appRouter.routerDelegate,
+                  locale: const Locale('en'),
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  localizationsDelegates: [
+                    ...AppLocalizations.localizationsDelegates,
+                    // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
+                    FormBuilderLocalizations.delegate,
+                  ]
+                  //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
+                );
             })
         )
     );
