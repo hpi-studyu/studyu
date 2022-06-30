@@ -1,3 +1,4 @@
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _ErrorPageState extends State<ErrorPage> {
     return Container(
         child: Align(
             alignment: Alignment.center,
-            child: Text('Oops something went wrong!')
+            child: Text('Oops something went wrong!'.hardcoded)
         )
     );
   }
