@@ -14,8 +14,8 @@ class DesignerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(legacyAppStateProvider(studyId).notifier);
-    return p.ChangeNotifierProvider(
-        create: (_) => appState,
+    return p.ChangeNotifierProvider.value(
+        value: appState,
         builder: (context, child) {
           return Designer(studyId: studyId);
         }

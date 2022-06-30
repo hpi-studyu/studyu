@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import '../buttons.dart';
 
 class AnnotationEditor extends StatefulWidget {
@@ -58,6 +60,7 @@ class _AnnotationEditorState extends State<AnnotationEditor> {
         widget.annotation.value = int.parse(_editFormKey.currentState!.value['value'] as String);
         widget.annotation.annotation = _editFormKey.currentState!.value['annotation'] as String;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import './choice_expression_editor_section.dart';
 
 class ValueExpressionEditor extends StatefulWidget {
@@ -44,6 +45,7 @@ class _ValueExpressionEditorState extends State<ValueExpressionEditor> {
     setState(() {
       targetQuestion = newTarget;
     });
+    context.read<AppState>().updateDelegate();
     if (newExpression != null) {
       newExpression.target = newTarget!.id;
       widget.updateExpression(newExpression);

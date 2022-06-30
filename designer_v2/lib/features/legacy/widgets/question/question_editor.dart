@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/legacy/widgets/util/helper.dart';
 
 import '../../widgets/question/choice_question_editor_section.dart';
@@ -116,5 +118,6 @@ class _QuestionEditorState extends State<QuestionEditor> {
         widget.question.rationale = _editFormKey.currentState!.value['rationale'] as String;
       });
     }
+    context.read<AppState>().updateDelegate();
   }
 }

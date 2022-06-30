@@ -20,12 +20,14 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
     setState(() {
       _results.add(InterventionResult.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeResult(int index) {
     setState(() {
       _results.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _changeResultsType(int index, String newType) {
@@ -39,6 +41,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
       setState(() {
         _results[index] = newResult!;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 

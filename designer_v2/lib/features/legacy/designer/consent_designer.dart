@@ -20,12 +20,14 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
     setState(() {
       _consent.add(ConsentItem.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeConsentItem(int index) {
     setState(() {
       _consent.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

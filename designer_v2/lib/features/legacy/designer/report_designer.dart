@@ -25,6 +25,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
         _reportSpecification!.secondary.add(section);
       }
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeSection(int index) {
@@ -35,6 +36,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
         _reportSpecification!.secondary.removeAt(index);
       }
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _replaceSection(int index, ReportSection section) {
@@ -45,6 +47,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
         _reportSpecification!.secondary[index] = section;
       }
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

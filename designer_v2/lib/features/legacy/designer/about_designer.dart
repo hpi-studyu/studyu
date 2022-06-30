@@ -10,6 +10,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/legacy/designer/help_wrapper.dart';
 import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 
+
 class AboutDesigner extends StatefulWidget {
   @override
   _AboutDesignerState createState() => _AboutDesignerState();
@@ -158,6 +159,7 @@ class _AboutDesignerState extends State<AboutDesigner> {
           ..contact.website = _editFormKey.currentState!.value['website'] as String
           ..contact.email = _editFormKey.currentState!.value['email'] as String
           ..contact.phone = _editFormKey.currentState!.value['phone'] as String;
+        context.read<AppState>().updateDelegate();
       });
     }
   }

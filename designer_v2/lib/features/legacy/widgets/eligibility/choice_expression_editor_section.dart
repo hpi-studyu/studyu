@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/legacy/widgets/buttons.dart';
 
 class ChoiceExpressionEditorSection extends StatefulWidget {
@@ -29,6 +31,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
       selectedChoices.removeAt(index);
       widget.expression.choices.remove(choice.id);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override
@@ -71,6 +74,7 @@ class _ChoiceExpressionEditorSectionState extends State<ChoiceExpressionEditorSe
                 widget.expression.choices.add(choice!.id);
                 selectedChoices.add(choice);
               });
+              context.read<AppState>().updateDelegate();
             },
             items: widget.targetQuestion.choices
                 .where((choice) => !selectedChoices.contains(choice))

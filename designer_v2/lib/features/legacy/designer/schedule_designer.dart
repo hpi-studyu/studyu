@@ -88,6 +88,7 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
           ..includeBaseline = _editFormKey.currentState!.value['includeBaseline'] as bool
           ..sequence = _editFormKey.currentState!.value['sequence'] as PhaseSequence;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -61,11 +62,20 @@ class StudyController extends StateNotifier<StudyControllerState>
     });
   }
 
+  _updateCurrentStudy(Study study, {autoSave = false}) {
+    state = state.copyWith(
+      study: () => AsyncValue.data(study),
+    );
+    if (autoSave) {
+      studyRepository.saveStudy(study);
+    }
+  }
+
   _initWithNewStudy() {
     final newDraft = Study.withId(authRepository.currentUser!.id);
-    state = state.copyWith(
-        study: () => AsyncValue.data(newDraft)
-    );
+    newDraft.title = "Unnamed study".hardcoded;
+    newDraft.description = "Lorem ipsum".hardcoded;
+    _updateCurrentStudy(newDraft, autoSave: true);
   }
 
   @override
@@ -78,9 +88,8 @@ class StudyController extends StateNotifier<StudyControllerState>
 
   @override
   void onStudyUpdate(Study study) {
-    state = state.copyWith(
-        study: () => AsyncValue.data(study)
-    );
+    print("APP STATE => CONTROLLER");
+    _updateCurrentStudy(study, autoSave: true);
   }
 }
 

@@ -20,12 +20,14 @@ class _ObservationDesignerState extends State<ObservationDesigner> {
     setState(() {
       _observations.add(QuestionnaireTask.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeObservation(Observation observation) {
     setState(() {
       _observations.remove(observation);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

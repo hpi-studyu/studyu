@@ -47,7 +47,10 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
         DataReferenceEditor<num>(
           reference: widget.section.resultProperty,
           availableTaks: tasks,
-          updateReference: (reference) => setState(() => widget.section.resultProperty = reference),
+          updateReference: (reference) {
+            setState(() => widget.section.resultProperty = reference);
+            context.read<AppState>().updateDelegate();
+          },
         ),
       ],
     );
@@ -57,5 +60,6 @@ class _AverageSectionEditorSectionState extends State<AverageSectionEditorSectio
     setState(() {
       widget.section.aggregate = value;
     });
+    context.read<AppState>().updateDelegate();
   }
 }

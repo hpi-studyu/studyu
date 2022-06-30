@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import './complation_period_editor.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import '../../widgets/task/reminder_editor.dart';
 
 class TaskScheduleEditorSection extends StatefulWidget {
@@ -17,12 +19,14 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
     setState(() {
       widget.task.schedule.reminders.add(StudyUTimeOfDay());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeReminder(int index) {
     setState(() {
       widget.task.schedule.reminders.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _addCompletionPeriod() {
@@ -31,12 +35,14 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
     setState(() {
       widget.task.schedule.completionPeriods.add(completionPeriod);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeCompletionPeriod(int index) {
     setState(() {
       widget.task.schedule.completionPeriods.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

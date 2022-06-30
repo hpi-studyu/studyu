@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 //import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 //import 'package:material_design_icons_flutter/icon_map.dart';
 //import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/legacy/widgets/buttons.dart';
 
 import '../task/task_editor.dart';
@@ -42,12 +44,14 @@ class _InterventionEditorState extends State<InterventionEditor> {
     setState(() {
       widget.intervention.tasks.add(CheckmarkTask.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeTask(int taskIndex) {
     setState(() {
       widget.intervention.tasks.removeAt(taskIndex);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override
@@ -142,6 +146,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
         widget.intervention.id = (_editFormKey.currentState!.value['name'] as String).toId();
         widget.intervention.description = _editFormKey.currentState!.value['description'] as String;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

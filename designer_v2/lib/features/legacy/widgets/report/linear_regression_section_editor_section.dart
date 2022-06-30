@@ -67,7 +67,10 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
         DataReferenceEditor<num>(
           reference: widget.section.resultProperty,
           availableTaks: tasks,
-          updateReference: (reference) => setState(() => widget.section.resultProperty = reference),
+          updateReference: (reference) {
+            setState(() => widget.section.resultProperty = reference);
+            context.read<AppState>().updateDelegate();
+          },
         ),
       ],
     );
@@ -80,6 +83,7 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
     setState(() {
       widget.section.improvement = value;
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _changeAlpha(String? value) {
@@ -91,6 +95,7 @@ class _LinearRegressionSectionEditorSectionState extends State<LinearRegressionS
       setState(() {
         widget.section.alpha = double.parse(value);
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

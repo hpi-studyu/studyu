@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import './expression_editor.dart';
 
 class NotExpressionEditor extends StatefulWidget {
@@ -23,6 +26,7 @@ class _NotExpressionEditorState extends State<NotExpressionEditor> {
         setState(() {
           widget.expression.expression = newExpression;
         });
+        context.read<AppState>().updateDelegate();
       },
     );
   }

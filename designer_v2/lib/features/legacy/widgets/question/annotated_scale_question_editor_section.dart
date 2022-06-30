@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import './annotation_editor.dart';
 
 class AnnotatedScaleQuestionEditorSection extends StatefulWidget {
@@ -19,12 +20,14 @@ class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQues
       final choice = Annotation();
       widget.question.annotations.add(choice);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeAnnotation(int index) {
     setState(() {
       widget.question.annotations.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

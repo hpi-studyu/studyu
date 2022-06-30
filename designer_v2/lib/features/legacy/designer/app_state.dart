@@ -22,14 +22,9 @@ abstract class LegacyAppStateDelegate {
 }
 
 class AppState extends ChangeNotifier {
-  /*static final AppState _instance = AppState._();
-  static AppState get instance => _instance;
-
-  AppState._();*/
   AppState();
 
   String? _selectedStudyId;
-  //Study? draftStudy;
   DesignerPage _selectedDesignerPage = DesignerPage.about;
 
   Study? _draftStudy;
@@ -38,7 +33,7 @@ class AppState extends ChangeNotifier {
     // the new [StudyController]
     Future.delayed(
         const Duration(milliseconds: 0),
-        () => _updateDelegate(_draftStudy),
+        () => updateDelegate(),
     );
     return _draftStudy;
   }
@@ -53,7 +48,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  _updateDelegate(Study? study) {
+  updateDelegate() {
     if (_draftStudy != null) {
       delegate?.onStudyUpdate(_draftStudy!);
     }
@@ -65,11 +60,7 @@ final legacyAppStateProvider = ChangeNotifierProvider.autoDispose
   final studyController = ref.watch(studyControllerProvider(studyId).notifier);
   final appState = AppState();
   appState.delegate = studyController;
-
-  ref.listen<StudyControllerState>(studyControllerProvider(studyId),
-      (prevState, state) => appState._draftStudy = state.study.value,
-      fireImmediately: true
-  );
+  appState._draftStudy = studyController.state.study.value;
 
   return appState;
 });

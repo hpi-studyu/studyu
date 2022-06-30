@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import '../question/questionnaire_editor.dart';
 
 class QuestionnaireTaskEditorSection extends StatefulWidget {
@@ -18,6 +19,7 @@ class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection
     setState(() {
       widget.task.questions.questions.add(BooleanQuestion.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

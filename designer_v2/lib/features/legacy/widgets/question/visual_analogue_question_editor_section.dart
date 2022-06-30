@@ -3,6 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:form_builder_extra_fields/form_builder_extra_fields.dart';
 import 'package:studyu_core/core.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 
 class VisualAnalogueQuestionEditorSection extends StatefulWidget {
   final VisualAnalogueQuestion question;
@@ -64,6 +66,7 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
         widget.question.maximumAnnotation = _editFormKey.currentState!.value['maximumAnnotation'] as String;
         widget.question.maximumColor = (_editFormKey.currentState!.value['maximumColor'] as Color).value;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

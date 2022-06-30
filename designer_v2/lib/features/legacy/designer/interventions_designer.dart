@@ -20,12 +20,14 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
     setState(() {
       _interventions.add(Intervention.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeIntervention(int index) {
     setState(() {
       _interventions.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

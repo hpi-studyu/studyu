@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
-
 import '../util/data_reference_editor.dart';
 
 class NumericResultEditorSection extends StatefulWidget {
@@ -28,7 +27,10 @@ class _NumericResultEditorSectionState extends State<NumericResultEditorSection>
         DataReferenceEditor<num>(
           reference: widget.result.resultProperty,
           availableTaks: tasks,
-          updateReference: (reference) => setState(() => widget.result.resultProperty = reference),
+          updateReference: (reference) {
+            setState(() => widget.result.resultProperty = reference);
+            context.read<AppState>().updateDelegate();
+          },
         )
       ],
     );

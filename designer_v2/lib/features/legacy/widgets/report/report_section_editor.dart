@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 
 import '../buttons.dart';
 import '../util/helper.dart';
@@ -43,6 +45,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
       ..description = widget.section.description;
 
     widget.updateSection(newSection);
+    context.read<AppState>().updateDelegate();
   }
 
   @override
@@ -141,6 +144,7 @@ class _ReportSectionEditorState extends State<ReportSectionEditor> {
         widget.section.id = (_editFormKey.currentState!.value['title'] as String).toId();
         widget.section.description = _editFormKey.currentState!.value['description'] as String;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

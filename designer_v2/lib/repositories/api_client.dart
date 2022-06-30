@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:supabase/src/supabase.dart';
 
 abstract class StudyUApi {
+  Future<Study> saveStudy(Study study);
+  Future<Study> publishStudy(Study study);
   Future<Study> fetchStudy(StudyID studyId);
   Future<List<Study>> getUserStudies();
   Future<void> deleteStudy(Study study);
@@ -52,22 +54,6 @@ class StudyUApiClient extends SupabaseClientDependant
       HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
       HttpStatus.notFound: (e) => throw StudyNotFoundException(),
     });
-    /*
-    try {
-      final study = await getById<Study>(studyId);
-      return study;
-    } on SupabaseQueryError catch (e) {
-      switch (e.statusCode) {
-        case HttpStatus.notAcceptable:
-        case HttpStatus.notFound:
-          throw StudyNotFoundException();
-        default:
-          throw _apiException();
-      }
-    } catch (_) {
-      throw _apiException();
-    }
-     */
   }
 
   @override
@@ -75,6 +61,24 @@ class StudyUApiClient extends SupabaseClientDependant
     // Delegate to [SupabaseObjectMethods]
     // TODO: proper error handling here
     await study.delete();
+  }
+
+  @override
+  Future<Study> saveStudy(Study study) {
+    return _saveStudy(study, publish: false);
+  }
+
+  @override
+  Future<Study> publishStudy(Study study) {
+    return _saveStudy(study, publish: true);
+  }
+
+  Future<Study> _saveStudy(Study study, {bool publish = false}) async {
+    if (publish) {
+      study.published = true;
+    }
+    final request = study.save();
+    return _awaitGuarded<Study>(request);
   }
 
   /// Helper that tries to complete the given Supabase query [future] while

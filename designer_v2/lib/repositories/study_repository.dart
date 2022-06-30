@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 
 abstract class IStudyRepository {
   // - Studies
+  Future<Study> saveStudy(Study study);
+  Future<Study> publishStudy(Study study);
   Future<Study> fetchStudy(StudyID studyId);
   Stream<Study> watchStudy(StudyID studyId, {fetchOnSubscribe = true});
   Future<List<Study>> fetchUserStudies();
@@ -44,6 +46,20 @@ class StudyRepository implements IStudyRepository {
   @override
   Future<Study> fetchStudy(StudyID studyId) async {
     return await apiClient.fetchStudy(studyId);
+  }
+
+  @override
+  Future<Study> saveStudy(Study study) async {
+    final savedStudy = await apiClient.saveStudy(study);
+    _upsertStudyLocally(savedStudy);
+    return savedStudy;
+  }
+
+  @override
+  Future<Study> publishStudy(Study study) async {
+    final publishedStudy = await apiClient.publishStudy(study);
+    _upsertStudyLocally(publishedStudy);
+    return publishedStudy;
   }
 
   @override

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import '../buttons.dart';
 
 class ReminderEditor extends StatefulWidget {
@@ -66,6 +68,7 @@ class _ReminderEditorState extends State<ReminderEditor> {
         widget.reminder.hour = time.hour;
         widget.reminder.minute = time.minute;
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'choice_editor.dart';
 
 class ChoiceQuestionEditorSection extends StatefulWidget {
@@ -19,12 +20,14 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
       final choice = Choice.withId();
       widget.question.choices.add(choice);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeChoice(int index) {
     setState(() {
       widget.question.choices.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override
@@ -41,6 +44,7 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
                 setState(() {
                   widget.question.multiple = value;
                 });
+                context.read<AppState>().updateDelegate();
               },
             )
           ],

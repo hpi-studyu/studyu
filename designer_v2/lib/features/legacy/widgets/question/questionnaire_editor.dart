@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 
 import '../../widgets/question/question_editor.dart';
 
@@ -18,6 +20,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     setState(() {
       widget.questionnaire.questions.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _changeQuestionType(int index, String newType) {
@@ -49,6 +52,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
     setState(() {
       widget.questionnaire.questions[index] = newQuestion!;
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override

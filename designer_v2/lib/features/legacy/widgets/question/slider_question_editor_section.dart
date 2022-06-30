@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:provider/provider.dart';
+import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import '../../widgets/question/annotated_scale_question_editor_section.dart';
 import '../../widgets/question/visual_analogue_question_editor_section.dart';
 
@@ -81,6 +82,7 @@ class _SliderQuestionEditorSectionState extends State<SliderQuestionEditorSectio
         widget.question.initial = double.parse(_editFormKey.currentState!.value['initial'] as String);
         widget.question.step = double.parse(_editFormKey.currentState!.value['step'] as String);
       });
+      context.read<AppState>().updateDelegate();
     }
   }
 }

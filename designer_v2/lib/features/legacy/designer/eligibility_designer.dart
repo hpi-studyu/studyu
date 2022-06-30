@@ -21,12 +21,14 @@ class _EligibilityCriteriaDesignerState extends State<EligibilityCriteriaDesigne
     setState(() {
       _eligibility.add(EligibilityCriterion.withId());
     });
+    context.read<AppState>().updateDelegate();
   }
 
   void _removeEligibilityCriterion(int index) {
     setState(() {
       _eligibility.removeAt(index);
     });
+    context.read<AppState>().updateDelegate();
   }
 
   @override
