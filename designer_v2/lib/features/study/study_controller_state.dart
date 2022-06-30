@@ -15,14 +15,13 @@ class StudyControllerState extends Equatable {
   /// a [AsyncValue] for loading & error states
   ///
   /// May be incomplete (for new studies / drafts)
-  /// TODO: null value = 404?
-  final AsyncValue<Study?> study;
+  final AsyncValue<Study> study;
 
   /// Flag indicating whether the managed study has any unsaved changes
   final bool isDirty;
 
   StudyControllerState copyWith({
-    AsyncValue<Study?> Function()? study,
+    AsyncValue<Study> Function()? study,
     bool Function()? isDirty,
   }) {
     return StudyControllerState(
@@ -38,6 +37,8 @@ class StudyControllerState extends Equatable {
 }
 
 extension StudyControllerStateX on StudyControllerState {
-  String get titleText => study.value?.title ?? "Unnamed study".hardcoded;
-  String get statusText => "Status: ${study.value?.status.string ?? ""}".hardcoded;
+  /// Make sure to only access these in an [AsyncWidget] so that [study.value]
+  /// is available
+  String get titleText => study.value!.title ?? "";
+  String get statusText => "Status: ${study.value!.status.string}".hardcoded;
 }

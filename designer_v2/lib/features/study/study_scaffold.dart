@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 enum StudyScaffoldTab {
   edit(title: "Design", page: RouterPage.studyEditor), // TODO: "Edit".hardcoded
@@ -85,6 +86,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final state = ref.watch(studyControllerProvider(widget.studyId));
+    final controller = ref.watch(studyControllerProvider(widget.studyId).notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -139,6 +141,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
          */
         actions: [
           Container(
+            padding: const EdgeInsets.all(16),
             alignment: Alignment.center,
             child: AsyncValueWidget(
               value: state.study,
@@ -152,13 +155,26 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
               error: (e, str) => Container(),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: OutlinedButton(
-              child: Text("Save draft".hardcoded), // TODO implement autosave
-              onPressed: () => print("Save pressed"),
-            )
-          )
+          PopupMenuButton(
+            iconSize: 18,
+            elevation: 20,
+            icon: const Icon(Icons.more_vert),
+            position: PopupMenuPosition.under,
+            onSelected: (ModelAction action) {
+              action.onExecute();
+            },
+            itemBuilder: (BuildContext context) {
+              return controller.studyActions.map((action) {
+                return PopupMenuItem(
+                  value: action,
+                  child: action.isDestructive
+                      ? Text(action.label,
+                      style: const TextStyle(color: Colors.red))
+                      : Text(action.label),
+                );
+              }).toList();
+            }
+          ),
         ],
       ),
       body: AsyncValueWidget(

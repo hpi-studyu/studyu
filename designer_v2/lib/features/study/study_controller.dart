@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/navigation_service.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
 class StudyController extends StateNotifier<StudyControllerState>
@@ -82,6 +83,37 @@ class StudyController extends StateNotifier<StudyControllerState>
   dispose() {
     _studySubscription?.cancel();
     super.dispose();
+  }
+
+  List<ModelAction<StudyActionType>> get studyActions {
+    return [
+      ModelAction(
+        type: StudyActionType.addCollaborator,
+        label: "Add collaborator".hardcoded,
+        onExecute: () {
+          // TODO open modal to add collaborator
+        },
+      ),
+      ModelAction(
+        type: StudyActionType.export,
+        label: "Export results".hardcoded,
+        onExecute: () {
+          // TODO trigger download of results
+        },
+      ),
+      ModelAction(
+        type: StudyActionType.delete,
+        label: "Delete".hardcoded,
+        onExecute: () {
+          final study = state.study.value;
+          if (study != null) {
+            studyRepository.deleteStudy(study.id)
+                .then((value) => navigationService.goToDashboard());
+          }
+        },
+        isAvailable: state.study.value?.published ?? false,
+        isDestructive: true),
+    ];
   }
 
   // - LegacyAppStateDelegate
