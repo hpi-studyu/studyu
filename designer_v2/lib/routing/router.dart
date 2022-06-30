@@ -164,7 +164,11 @@ final List<GoRoute> routes = [
   GoRoute(
     path: RouterPage.error.path,
     name: RouterPage.error.id,
-    builder: (context, state) => ErrorPage(error: state.extra.toString()),
+    pageBuilder: (context, state) => MaterialPage(
+      key: RouterPage.error.valueKey, // shared key
+      child: ErrorPage(error: state.extra as Exception)
+    )
+    //builder: (context, state) => ErrorPage(error: state.extra.toString()),
   ),
 ];
 
@@ -181,7 +185,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     ]),
     initialLocation: defaultLocation,
     routes: routes,
-    errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
+    errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (state) {
       debugLog("Router redirect: ${state.location}");
 

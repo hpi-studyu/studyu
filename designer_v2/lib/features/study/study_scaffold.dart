@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/router.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 
 enum StudyScaffoldTab {
   edit(title: "Design", page: RouterPage.studyEditor), // TODO: "Edit".hardcoded
@@ -22,7 +25,7 @@ enum StudyScaffoldTab {
 }
 
 /// Custom scaffold shared between all pages for an individual [Study]
-class StudyScaffold extends StatefulWidget {
+class StudyScaffold extends ConsumerStatefulWidget {
   const StudyScaffold({
     this.studyId = Config.newStudyId,
     required this.selectedTab,
@@ -41,10 +44,10 @@ class StudyScaffold extends StatefulWidget {
   final Widget child;
 
   @override
-  State<StudyScaffold> createState() => _StudyScaffoldState();
+  ConsumerState<StudyScaffold> createState() => _StudyScaffoldState();
 }
 
-class _StudyScaffoldState extends State<StudyScaffold>
+class _StudyScaffoldState extends ConsumerState<StudyScaffold>
     with TickerProviderStateMixin {
   /// A [TabController] that has its index synced to the currently selected
   /// tab provided by the widget. The widget's parameter may be injected e.g.
@@ -81,6 +84,8 @@ class _StudyScaffoldState extends State<StudyScaffold>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final state = ref.watch(studyControllerProvider(widget.studyId));
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -96,11 +101,16 @@ class _StudyScaffoldState extends State<StudyScaffold>
             // by the app bar widgets).
             Expanded(
               flex: 4,
-              child: Text("Backpain Interventions (Demo Template)".hardcoded, // TODO: display study title
-                maxLines: 1,
-                style: theme.textTheme.titleSmall,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false
+              child: AsyncValueWidget(
+                value: state.study,
+                data: (study) => Text(state.titleText,
+                    maxLines: 1,
+                    style: theme.textTheme.titleSmall,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false
+                ),
+                loading: () => Container(),
+                error: (e, str) => Container(),
               ),
             ),
             Flexible(
@@ -130,7 +140,17 @@ class _StudyScaffoldState extends State<StudyScaffold>
         actions: [
           Container(
             alignment: Alignment.center,
-            child: Text("Status: Draft".hardcoded) // TODO display study status
+            child: AsyncValueWidget(
+              value: state.study,
+              data: (study) => Text(state.statusText,
+                  maxLines: 1,
+                  style: theme.textTheme.titleSmall,
+                  overflow: TextOverflow.clip,
+                  softWrap: false
+              ),
+              loading: () => Container(),
+              error: (e, str) => Container(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(10),
@@ -141,7 +161,10 @@ class _StudyScaffoldState extends State<StudyScaffold>
           )
         ],
       ),
-      body: widget.child,
+      body: AsyncValueWidget(
+        value: state.study,
+        data: (study) => widget.child,
+      ),
       drawer: AppDrawer(title: 'StudyU'.hardcoded),
     );
   }

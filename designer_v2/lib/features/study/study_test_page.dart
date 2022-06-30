@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:studyu_designer_v2/router.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 
 class StudyTestScreen extends StatelessWidget {
   const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);

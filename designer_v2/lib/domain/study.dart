@@ -14,6 +14,8 @@ enum StudyStatus {
   closed
 }
 
+typedef StudyID = String;
+
 extension StudyWithStatus on core.Study {
   StudyStatus get status {
     // TODO: missing a flag to indicate a study has been completed & participation is closed
@@ -26,7 +28,7 @@ extension StudyWithStatus on core.Study {
 
 /// Provides a human-readable translation of the study status
 extension StudyStatusFormatted on StudyStatus {
-  String get value {
+  String get string {
     switch (this) {
       case StudyStatus.draft:
         return "Draft".hardcoded;

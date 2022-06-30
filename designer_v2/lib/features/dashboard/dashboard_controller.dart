@@ -8,7 +8,8 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:studyu_designer_v2/router.dart';
+import 'package:studyu_designer_v2/routing/navigation_service.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import 'dashboard_state.dart';
@@ -22,13 +23,18 @@ class DashboardController extends StateNotifier<DashboardState> {
   /// Used to determine the [StudiesFilter] based on the current route
   final GoRouter router;
 
+  /// Reference to the coordinator used for navigation
+  final INavigationService navigationService;
+
   /// A subscription for synchronizing state between the repository & controller
   StreamSubscription<List<Study>>? _studiesSubscription;
 
   DashboardController({
     required this.studyRepository,
     required this.authRepository,
-    required this.router})
+    required this.router,
+    required this.navigationService
+  })
       : super(DashboardState(currentUser: authRepository.currentUser!)) {
     _subscribeStudies();
     _subscribeRouteUpdates();
@@ -39,8 +45,11 @@ class DashboardController extends StateNotifier<DashboardState> {
     _studiesSubscription = studyRepository.watchUserStudies().listen((studies) {
       // Update the controller's state when new studies are available in the repository
       state = state.copyWith(
-          status: () => DashboardStatus.success,
-          studies: () => studies
+          studies: () => AsyncValue.data(studies)
+      );
+    }, onError: (error) {
+      state = state.copyWith(
+        studies: () => AsyncValue.error(error),
       );
     });
   }
@@ -75,7 +84,15 @@ class DashboardController extends StateNotifier<DashboardState> {
         studiesFilter: () => filter ?? DashboardState.defaultFilter);
   }
 
-  List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study) {
+  onSelectStudy(Study study) {
+    navigationService.goToStudy(study);
+  }
+
+  onClickNewStudy() {
+    navigationService.goToNewStudy();
+  }
+
+  List<ModelAction<StudyActionType>> getAvailableActionsForStudy(Study study) {
     return [
       ModelAction(
         type: StudyActionType.addCollaborator,
@@ -131,5 +148,6 @@ final dashboardControllerProvider =
         (ref) => DashboardController(
             studyRepository: ref.watch(studyRepositoryProvider),
             authRepository: ref.watch(authRepositoryProvider),
-            router: ref.watch(routerProvider)
+            router: ref.watch(routerProvider),
+            navigationService: ref.watch(navigationServiceProvider)
         ));
