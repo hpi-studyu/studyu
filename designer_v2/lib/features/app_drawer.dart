@@ -27,11 +27,16 @@ class GoRouterDrawerEntry extends DrawerEntry {
 
 
 class AppDrawer extends ConsumerStatefulWidget {
+  AppDrawer({
+    required this.title,
+    this.width = 260,
+    this.leftPaddingEntries = 36.0,
+    Key? key
+  }) : super(key: key);
+
   final String title;
   final int width;
-
-  AppDrawer({required this.title, this.width = 260, Key? key})
-      : super(key: key);
+  final double leftPaddingEntries;
 
   @override
   _AppDrawerState createState() => _AppDrawerState();
@@ -153,7 +158,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 style: isSelected
                     ? const TextStyle(fontWeight: FontWeight.bold)
                     : null),
-            contentPadding: const EdgeInsets.only(left: 32.0),
+            contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
             selected: isSelected,
             onTap: () => entry.onClick(context),
           ),
@@ -178,14 +183,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         hoverColor:
         theme.colorScheme.primaryContainer.withOpacity(0.4),
         title: Text('Change language'.hardcoded),
-        contentPadding: const EdgeInsets.only(left: 48.0),
+        contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
         // TODO: open settings page/modal
       ),
       ListTile(
         hoverColor:
         theme.colorScheme.primaryContainer.withOpacity(0.4),
         title: Text('Sign out'.hardcoded),
-        contentPadding: const  EdgeInsets.only(left: 48.0),
+        contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
         onTap: authController.signOut,
       ),
     ];

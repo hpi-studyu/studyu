@@ -11,6 +11,8 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/navigation_service.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
@@ -21,6 +23,7 @@ class StudyController extends StateNotifier<StudyControllerState>
   final IAuthRepository authRepository;
 
   final INavigationService navigationService;
+  final INotificationService notificationService;
 
   /// Identifier of the study currently being edited / viewed
   /// Used to retrieve the [Study] object from the data layer
@@ -33,7 +36,8 @@ class StudyController extends StateNotifier<StudyControllerState>
     required this.studyId,
     required this.studyRepository,
     required this.authRepository,
-    required this.navigationService
+    required this.navigationService,
+    required this.notificationService
   })
       : super(const StudyControllerState()) {
     if (studyId != Config.newStudyId) {
@@ -108,7 +112,11 @@ class StudyController extends StateNotifier<StudyControllerState>
           final study = state.study.value;
           if (study != null) {
             studyRepository.deleteStudy(study.id)
-                .then((value) => navigationService.goToDashboard());
+                .then((value) => navigationService.goToDashboard())
+                .then((value) => Future.delayed(
+                    const Duration(milliseconds: 200),
+                    () => notificationService.show(Notifications.studyDeleted))
+            );
           }
         },
         isAvailable: state.study.value?.published ?? false,
@@ -132,6 +140,7 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
         studyId: studyId,
         studyRepository: ref.watch(studyRepositoryProvider),
         authRepository: ref.watch(authRepositoryProvider),
-        navigationService: ref.watch(navigationServiceProvider)
+        navigationService: ref.watch(navigationServiceProvider),
+        notificationService: ref.watch(notificationServiceProvider),
       )
 );

@@ -10,6 +10,8 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/navigation_service.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import 'dashboard_state.dart';
@@ -19,12 +21,13 @@ class DashboardController extends StateNotifier<DashboardState> {
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
 
+  /// Reference to services injected via Riverpod
+  final INavigationService navigationService;
+  final INotificationService notificationService;
+
   /// Reference to [GoRouter] injected via Riverpod
   /// Used to determine the [StudiesFilter] based on the current route
   final GoRouter router;
-
-  /// Reference to the coordinator used for navigation
-  final INavigationService navigationService;
 
   /// A subscription for synchronizing state between the repository & controller
   StreamSubscription<List<Study>>? _studiesSubscription;
@@ -33,7 +36,8 @@ class DashboardController extends StateNotifier<DashboardState> {
     required this.studyRepository,
     required this.authRepository,
     required this.router,
-    required this.navigationService
+    required this.navigationService,
+    required this.notificationService
   })
       : super(DashboardState(currentUser: authRepository.currentUser!)) {
     _subscribeStudies();
@@ -128,7 +132,8 @@ class DashboardController extends StateNotifier<DashboardState> {
           onExecute: () {
             // Delegate the deletion request to the data & networking layer
             // Any changes are received back through the stream
-            studyRepository.deleteStudy(study.id);
+            studyRepository.deleteStudy(study.id)
+                .then((value) => notificationService.show(Notifications.studyDeleted));
           },
           isAvailable: !study.published,
           isDestructive: true),
@@ -149,5 +154,6 @@ final dashboardControllerProvider =
             studyRepository: ref.watch(studyRepositoryProvider),
             authRepository: ref.watch(authRepositoryProvider),
             router: ref.watch(routerProvider),
-            navigationService: ref.watch(navigationServiceProvider)
+            navigationService: ref.watch(navigationServiceProvider),
+            notificationService: ref.watch(notificationServiceProvider),
         ));

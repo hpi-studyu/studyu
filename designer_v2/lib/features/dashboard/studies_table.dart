@@ -62,7 +62,7 @@ class StudiesTable extends StatelessWidget {
         );
         return Ink(
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.25),
+              color: theme.colorScheme.primaryContainer.withOpacity(0.35),
             ),
             child: (!hasInkwell) ? innerContent : TableRowInkWell(
                 onTap: () => onSelectStudy(study),
