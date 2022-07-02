@@ -2,11 +2,27 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 
+/// Full list of routing events used across the app.
+///
+/// Each [RoutingIntent] represents a call to [GoRouter.goNamed] and can be
+/// dispatched through a [GoRouter] reference like so:
+///
+///   final router = ref.read(routerProvider) // get router ref via riverpod
+///   router.dispatch(RoutingIntents.someIntent)
+///
+/// For parametrized routes, consider using [RoutingIntentFactory] instead.
+///
+/// Some guidelines:
+/// - If your route has a parameter that takes a fixed set of values, you
+/// probably want to specify multiple [RoutingIntent]s (one for each value)
+/// - If your route has a parameter that takes an infinite range of values,
+/// your [RoutingIntent] should be a [RoutingIntentFactory] instead.
+///
 class RoutingIntents {
   static final studies = RoutingIntent(
       route: RouterConfig.studies,
@@ -53,11 +69,20 @@ class RoutingIntents {
         RouteParams.studyId: studyId,
       }
   );
+  static final studyNew = studyEdit(Config.newStudyId);
+  static final error = (Exception error) => RoutingIntent(
+      route: RouterConfig.error,
+      extra: error,
+  );
 }
 
+/// Signature for a function that returns a [RoutingIntent]
+/// Helpful for parametrized routes with an infinite or indeterminate range of values
 typedef RoutingIntentFactory = RoutingIntent Function(String);
 
-/// Encapsulates a call to [GoRouter.goNamed]
+/// Represent a unique routing event in the app, encapsulating a call to
+/// [GoRouter.goNamed]. The intent is unpacked & results in a route change
+/// when calling [GoRouter.dispatch].
 class RoutingIntent extends Equatable {
   RoutingIntent({
     required this.route,
@@ -103,6 +128,7 @@ class RoutingIntent extends Equatable {
 }
 
 extension GoRouterX on GoRouter {
+  /// Transforms a [RoutingIntent] into a call to [goNamed]
   void dispatch(RoutingIntent intent) {
     goNamed(intent.route.name!, params: intent.params,
         queryParams:intent.queryParams, extra: intent.extra);

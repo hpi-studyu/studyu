@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -10,7 +11,8 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:studyu_designer_v2/routing/navigation_service.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -22,7 +24,7 @@ class StudyController extends StateNotifier<StudyControllerState>
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
 
-  final INavigationService navigationService;
+  final GoRouter router;
   final INotificationService notificationService;
 
   /// Identifier of the study currently being edited / viewed
@@ -36,7 +38,7 @@ class StudyController extends StateNotifier<StudyControllerState>
     required this.studyId,
     required this.studyRepository,
     required this.authRepository,
-    required this.navigationService,
+    required this.router,
     required this.notificationService
   })
       : super(const StudyControllerState()) {
@@ -58,7 +60,7 @@ class StudyController extends StateNotifier<StudyControllerState>
       // during app initialization so that we don't need to render the loading state
       // if the study doesn't exist
       if (error is StudyNotFoundException) {
-        navigationService.goToErrorPage(error);
+        router.dispatch(RoutingIntents.error(error));
       } else {
         state = state.copyWith(
           study: () => AsyncValue.error(error),
@@ -112,7 +114,7 @@ class StudyController extends StateNotifier<StudyControllerState>
           final study = state.study.value;
           if (study != null) {
             studyRepository.deleteStudy(study.id)
-                .then((value) => navigationService.goToDashboard())
+                .then((value) => router.dispatch(RoutingIntents.studies))
                 .then((value) => Future.delayed(
                     const Duration(milliseconds: 200),
                     () => notificationService.show(Notifications.studyDeleted))
@@ -140,7 +142,7 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
         studyId: studyId,
         studyRepository: ref.watch(studyRepositoryProvider),
         authRepository: ref.watch(authRepositoryProvider),
-        navigationService: ref.watch(navigationServiceProvider),
+        router: ref.watch(routerProvider),
         notificationService: ref.watch(notificationServiceProvider),
       )
 );

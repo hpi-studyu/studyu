@@ -12,7 +12,6 @@ import 'package:studyu_designer_v2/features/study/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
@@ -23,9 +22,16 @@ class RouteParams {
   static const studyId = 'studyId';
 }
 
-/// Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
-/// can be dispatched correctly
+/// The route configuration passed to [GoRouter] during instantiation.
+///
+/// Any route that should be accessible from the app must be registered as
+/// a [topLevelRoutes] (or as a subroute of a top-level route)
+///
+/// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
+/// can be dispatched correctly.
 class RouterConfig {
+  /// This list is provided to [GoRouter.routes] during instantiation.
+  /// See router.dart
   static final topLevelRoutes = [
     root,
     studies,
@@ -39,8 +45,6 @@ class RouterConfig {
     splash,
     error
   ];
-
-  // - Individual routes
 
   static final root = GoRoute(
     path: "/",

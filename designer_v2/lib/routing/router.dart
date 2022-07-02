@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
@@ -9,10 +8,15 @@ import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 
 import 'router_config.dart';
 
-// TODO: Update docs here
-/// To create a new page:
-/// 1) add an entry to the [RouterPage] enum
-/// 2) add the page widget to the [routes] list
+/// How to create a new page & use it for navigation:
+///
+/// 1. Add the [GoRoute] in router_config.dart and register it as
+/// a [RouterConfig.topLevelRoute] (most likely it should be a top-level
+/// route, unless you know what you are doing with subroutes)
+///
+/// 2. To navigate to the new route from your code, specify one or more
+/// [RoutingIntent]s in router_intent.dart. These intents correspond to
+/// route changes in the app. See router_intent.dart for more details.
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);

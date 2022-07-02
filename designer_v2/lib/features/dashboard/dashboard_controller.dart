@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:studyu_designer_v2/routing/navigation_service.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -20,7 +22,7 @@ class DashboardController extends StateNotifier<DashboardState> {
   final IAuthRepository authRepository;
 
   /// Reference to services injected via Riverpod
-  final INavigationService navigationService;
+  final GoRouter router;
   final INotificationService notificationService;
 
   /// A subscription for synchronizing state between the repository & controller
@@ -29,7 +31,7 @@ class DashboardController extends StateNotifier<DashboardState> {
   DashboardController({
     required this.studyRepository,
     required this.authRepository,
-    required this.navigationService,
+    required this.router,
     required this.notificationService
   })
       : super(DashboardState(currentUser: authRepository.currentUser!)) {
@@ -55,11 +57,11 @@ class DashboardController extends StateNotifier<DashboardState> {
   }
 
   onSelectStudy(Study study) {
-    navigationService.goToStudy(study);
+    router.dispatch(RoutingIntents.studyEdit(study.id));
   }
 
   onClickNewStudy() {
-    navigationService.goToNewStudy();
+    router.dispatch(RoutingIntents.studyNew);
   }
 
   List<ModelAction<StudyActionType>> getAvailableActionsForStudy(Study study) {
@@ -118,6 +120,6 @@ final dashboardControllerProvider =
         (ref) => DashboardController(
             studyRepository: ref.watch(studyRepositoryProvider),
             authRepository: ref.watch(authRepositoryProvider),
-            navigationService: ref.watch(navigationServiceProvider),
+            router: ref.watch(routerProvider),
             notificationService: ref.watch(notificationServiceProvider),
         ));
