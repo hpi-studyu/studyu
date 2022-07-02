@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
@@ -169,25 +170,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
               error: (e, str) => Container(),
             ),
           ),
-          PopupMenuButton(
-            iconSize: 18,
-            elevation: 20,
-            icon: const Icon(Icons.more_vert),
-            position: PopupMenuPosition.under,
-            onSelected: (ModelAction action) {
-              action.onExecute();
-            },
-            itemBuilder: (BuildContext context) {
-              return controller.studyActions.map((action) {
-                return PopupMenuItem(
-                  value: action,
-                  child: action.isDestructive
-                      ? Text(action.label,
-                      style: const TextStyle(color: Colors.red))
-                      : Text(action.label),
-                );
-              }).toList();
-            }
+          ActionPopUpMenuButton(
+            actions: controller.studyActions,
+            orientation: Axis.vertical,
+            hideOnEmpty: false,
           ),
         ],
       ),

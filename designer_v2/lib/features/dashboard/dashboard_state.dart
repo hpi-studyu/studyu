@@ -67,12 +67,14 @@ class DashboardState extends Equatable {
 extension DashboardStateSafeViewProps on DashboardState {
   String get visibleListTitle {
     switch(studiesFilter) {
-      case StudiesFilter.all:
+      case StudiesFilter.public:
         return "Study registry".hardcoded;
       case StudiesFilter.owned:
         return "My studies".hardcoded;
       case StudiesFilter.shared:
         return "Shared with me".hardcoded;
+      case StudiesFilter.all:
+        return "All studies".hardcoded;
     }
   }
 }

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl_standalone.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef OnSelectStudyHandler = void Function(Study study);
-typedef StudyActionsProvider = List<ModelAction> Function(Study study);
-
 
 class StudiesTable extends StatefulWidget {
   const StudiesTable({
@@ -23,7 +20,7 @@ class StudiesTable extends StatefulWidget {
 
   final List<Study> studies;
   final OnSelectStudyHandler onSelectStudy;
-  final StudyActionsProvider getActionsForStudy;
+  final ActionsProviderFor<Study> getActionsForStudy;
 
   final double cellSpacing;
   final double rowSpacing;
@@ -153,8 +150,8 @@ class _StudiesTableState extends State<StudiesTable> {
       "Status".hardcoded,
       "Enrollment".hardcoded,
       "Started At".hardcoded,
-      "Enrolled Participants".hardcoded,
-      "Active Participants".hardcoded,
+      "Enrolled".hardcoded,
+      "Active".hardcoded,
       "Completed".hardcoded,
       ""
     ];
@@ -231,39 +228,14 @@ class _StudiesTableState extends State<StudiesTable> {
       buildCell(Text(
           study.endedCount.toString(), style: tableTextStyleSecondary),),
       buildCell(
-        MouseEventsRegion(builder: (context, state) {
-          final isHovered = state.contains(MaterialState.hovered);
-          final iconColorHover = theme.colorScheme.primary;
-          final iconColorRegular = tableTextSecondaryColor.withOpacity(0.8);
-          return Theme(
-            // disable default hover & splash effects
-            data: Theme.of(context).copyWith(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-            ),
-            child: PopupMenuButton(
-                icon: Icon(Icons.more_horiz_sharp,
-                    color: (isHovered) ? iconColorHover : iconColorRegular),
-                elevation: 0,
-                splashRadius: 24.0,
-                onSelected: (ModelAction action) {
-                  action.onExecute();
-                },
-                itemBuilder: (BuildContext context) {
-                  final textTheme = theme.textTheme.labelMedium!;
-                  return widget.getActionsForStudy(study).map((action) {
-                    return PopupMenuItem(
-                      value: action,
-                      child: action.isDestructive
-                          ? Text(action.label, style: textTheme.copyWith(color: Colors.red))
-                          : Text(action.label, style: textTheme),
-                    );
-                  }).toList();
-                }
-            ),
-          );
-        }),
+        ActionPopUpMenuButton(
+          actions: widget.getActionsForStudy(study),
+          orientation: Axis.horizontal,
+          triggerIconColor: tableTextSecondaryColor.withOpacity(0.8),
+          triggerIconColorHover: theme.colorScheme.primary,
+          disableSplashEffect: true,
+          position: PopupMenuPosition.over,
+        ),
         alignment: Alignment.center,
       ),
     ],

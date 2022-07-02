@@ -51,10 +51,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              SelectableText(state.visibleListTitle,
-                  style: theme.textTheme.headline5?.copyWith(
-                      fontWeight: FontWeight.bold)),
-              Container(width: 32.0),
               ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     onPrimary: Theme.of(context).colorScheme.onPrimary,
@@ -63,7 +59,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   icon: const Icon(Icons.add),
                   label: Text("New study".hardcoded),
                   onPressed: controller.onClickNewStudy
-              )
+              ),
+              Container(width: 32.0),
+              SelectableText(state.visibleListTitle,
+                  style: theme.textTheme.headline5?.copyWith(
+                      fontWeight: FontWeight.bold)),
+              Container(width: 32.0),
+
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements

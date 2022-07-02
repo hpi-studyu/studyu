@@ -2,12 +2,15 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
 
 enum StudyActionType {
+  edit,
+  duplicate,
   addCollaborator,
   recruit,
   export,
   delete
 }
 
+// TODO: Add status field to core package domain model
 enum StudyStatus {
   draft,
   running,

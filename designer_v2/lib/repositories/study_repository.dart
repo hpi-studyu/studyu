@@ -3,11 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notifications.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
 abstract class IStudyRepository {
   // - Studies
+  List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study);
+  Future<Study> duplicateStudy(Study study);
   Future<Study> saveStudy(Study study);
   Future<Study> publishStudy(Study study);
   Future<Study> fetchStudy(StudyID studyId);
@@ -20,7 +29,11 @@ abstract class IStudyRepository {
 }
 
 class StudyRepository implements IStudyRepository {
-  StudyRepository({required this.apiClient});
+  StudyRepository({
+    required this.apiClient,
+    required this.authRepository,
+    required this.ref
+  });
 
   /// Stream controller for broadcasting the studies that can be accessed by the current user
   final BehaviorSubject<List<Study>> _studiesStreamController =
@@ -31,6 +44,12 @@ class StudyRepository implements IStudyRepository {
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
+
+  /// Reference to the auth repository injected via Riverpod
+  final IAuthRepository authRepository;
+
+  /// Reference to Riverpod's context to resolve dependencies in callbacks
+  final ProviderRef ref;
 
   /// Last emitted value for the list of studies
   List<Study> get _studyList {
@@ -53,6 +72,116 @@ class StudyRepository implements IStudyRepository {
     final savedStudy = await apiClient.saveStudy(study);
     _upsertStudyLocally(savedStudy);
     return savedStudy;
+  }
+
+  @override
+  Future<Study> duplicateStudy(Study study) async {
+    final draftCopy = _createCleanDraftCopyFrom(study);
+    final savedCopy = await apiClient.saveStudy(draftCopy);
+    _upsertStudyLocally(savedCopy);
+    return savedCopy;
+  }
+
+  @override
+  List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study) {
+    // TODO: review Postgres policies to match [ModelAction.isAvailable]
+    final actions = [
+      ModelAction(
+        type: StudyActionType.edit,
+        label: "Edit".hardcoded,
+        onExecute: () {
+          ref.read(routerProvider)
+              .dispatch(RoutingIntents.studyEdit(study.id));
+        },
+        isAvailable: study.isOwner(authRepository.currentUser!)
+            && study.status == StudyStatus.draft,
+      ),
+      ModelAction(
+        type: StudyActionType.duplicate,
+        label: "Copy draft".hardcoded,
+        onExecute: () {
+          duplicateStudy(study).then((draftCopy) =>
+              ref.read(routerProvider)
+                  .dispatch(RoutingIntents.studyEdit(draftCopy.id)));
+        },
+        isAvailable: study.isOwner(authRepository.currentUser!),
+      ),
+      ModelAction(
+        type: StudyActionType.addCollaborator,
+        label: "Add collaborator".hardcoded,
+        onExecute: () {
+          // TODO open modal to add collaborator
+          print("Adding collaborator: ${study.title ?? ''}");
+        },
+        isAvailable: study.isOwner(authRepository.currentUser!),
+      ),
+      ModelAction(
+        type: StudyActionType.recruit,
+        label: "Recruit participants".hardcoded,
+        onExecute: () {
+          ref.read(routerProvider)
+              .dispatch(RoutingIntents.studyRecruit(study.id));
+        },
+        isAvailable: study.isOwner(authRepository.currentUser!)
+            && study.status == StudyStatus.running,
+      ),
+      ModelAction(
+        type: StudyActionType.export,
+        label: "Export results".hardcoded,
+        onExecute: () {
+          // TODO trigger download of results
+          print("Export results: ${study.title ?? ''}");
+        },
+        isAvailable: study.results.isNotEmpty
+            && (study.isOwner(authRepository.currentUser!) ||
+                study.isEditor(authRepository.currentUser!) ||
+                study.resultSharing == ResultSharing.public),
+      ),
+      ModelAction(
+        type: StudyActionType.delete,
+        label: "Delete".hardcoded,
+        onExecute: () {
+          return deleteStudy(study.id)
+              .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies))
+              .then((value) => Future.delayed(
+                  const Duration(milliseconds: 200),
+                  () => ref.read(notificationServiceProvider).show(
+                      Notifications.studyDeleted)
+              ));
+        },
+        isAvailable: study.isOwner(authRepository.currentUser!)
+            && !study.published,
+        isDestructive: true
+      ),
+    ];
+
+    return actions.where((action) => action.isAvailable).toList();
+  }
+
+  /// Creates a clean copy of the given [study] only containing the
+  /// study protocol / editor data model
+  _createCleanDraftCopyFrom(Study study) {
+    // TODO: what's the best place for this logic without a server?
+    // TODO: review Postgres access control policies
+    final copy = Study.fromJson(study.toJson());
+    copy.title = copy.title! + " (Copy)".hardcoded;
+    copy.userId = authRepository.currentUser!.id;
+    copy.published = false;
+    copy.activeSubjectCount = 0;
+    copy.participantCount = 0;
+    copy.endedCount = 0;
+    copy.missedDays = [];
+    copy.resultSharing = ResultSharing.private;
+    copy.results = [];
+    copy.repo = null;
+    copy.invites = null;
+    copy.collaboratorEmails = [];
+
+    // Generate a new random UID
+    final dummy = Study.withId(authRepository.currentUser!.id);
+    copy.id = dummy.id;
+
+    return copy;
   }
 
   @override
@@ -170,8 +299,11 @@ class StudyRepository implements IStudyRepository {
 }
 
 final studyRepositoryProvider = Provider<IStudyRepository>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  final studyRepository = StudyRepository(apiClient: apiClient);
+  final studyRepository = StudyRepository(
+      apiClient: ref.watch(apiClientProvider),
+      authRepository: ref.watch(authRepositoryProvider),
+      ref: ref,
+  );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
     studyRepository.dispose();

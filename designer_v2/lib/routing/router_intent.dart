@@ -36,7 +36,7 @@ class RoutingIntents {
   static final publicRegistry = RoutingIntent(
       route: RouterConfig.studies,
       queryParams: {
-        RouteParams.studiesFilter: StudiesFilter.all.toShortString(),
+        RouteParams.studiesFilter: StudiesFilter.public.toShortString(),
       }
   );
   static final studyEdit = (StudyID studyId) => RoutingIntent(
