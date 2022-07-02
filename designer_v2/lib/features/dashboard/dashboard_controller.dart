@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
@@ -9,7 +8,6 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/navigation_service.dart';
-import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -25,27 +23,20 @@ class DashboardController extends StateNotifier<DashboardState> {
   final INavigationService navigationService;
   final INotificationService notificationService;
 
-  /// Reference to [GoRouter] injected via Riverpod
-  /// Used to determine the [StudiesFilter] based on the current route
-  final GoRouter router;
-
   /// A subscription for synchronizing state between the repository & controller
   StreamSubscription<List<Study>>? _studiesSubscription;
 
   DashboardController({
     required this.studyRepository,
     required this.authRepository,
-    required this.router,
     required this.navigationService,
     required this.notificationService
   })
       : super(DashboardState(currentUser: authRepository.currentUser!)) {
     _subscribeStudies();
-    _subscribeRouteUpdates();
   }
 
   _subscribeStudies() {
-    // TODO: onError
     _studiesSubscription = studyRepository.watchUserStudies().listen((studies) {
       // Update the controller's state when new studies are available in the repository
       state = state.copyWith(
@@ -55,31 +46,6 @@ class DashboardController extends StateNotifier<DashboardState> {
       state = state.copyWith(
         studies: () => AsyncValue.error(error),
       );
-    });
-  }
-
-  _subscribeRouteUpdates() {
-    router.addListener(_updateStudiesFilterFromRoute);
-    _updateStudiesFilterFromRoute();
-  }
-
-  _updateStudiesFilterFromRoute() {
-    Map<RouterPage,StudiesFilter> routeToFilter = {
-      RouterPage.dashboard: StudiesFilter.owned,
-      RouterPage.dashboardOwned: StudiesFilter.owned,
-      RouterPage.dashboardShared: StudiesFilter.shared,
-      RouterPage.registry: StudiesFilter.all,
-    };
-    routeToFilter.forEach((routerPage, studyFilter) {
-      final pageLoc = router.namedLocation(routerPage.id);
-      if (pageLoc == router.currentPath) {
-        // Queue this up in the event loop to avoid state updates during render
-        // A bit hacky...
-        Future.delayed(
-            const Duration(milliseconds: 0),
-            () => setStudiesFilter(studyFilter)
-        );
-      }
     });
   }
 
@@ -143,17 +109,15 @@ class DashboardController extends StateNotifier<DashboardState> {
   @override
   dispose() {
     _studiesSubscription?.cancel();
-    router.removeListener(_updateStudiesFilterFromRoute);
     super.dispose();
   }
 }
 
 final dashboardControllerProvider =
-    StateNotifierProvider<DashboardController, DashboardState>(
+    StateNotifierProvider.autoDispose<DashboardController, DashboardState>(
         (ref) => DashboardController(
             studyRepository: ref.watch(studyRepositoryProvider),
             authRepository: ref.watch(authRepositoryProvider),
-            router: ref.watch(routerProvider),
             navigationService: ref.watch(navigationServiceProvider),
             notificationService: ref.watch(notificationServiceProvider),
         ));

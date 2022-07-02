@@ -1,39 +1,56 @@
 import 'package:flutter/material.dart';
 
-class SidenavLayout extends StatelessWidget {
+class FixedSideScrollBodyLayout extends StatefulWidget {
   final Widget sideDrawerWidget;
   final Widget mainContentWidget;
   final Widget? dividerWidget;
 
-  static const mainContentPaddingHorizontal = 48.0;
-  static const mainContentPaddingVertical = 32.0;
+  final double mainContentPaddingHorizontal;
+  final double mainContentPaddingVertical;
 
   static const VerticalDivider defaultDivider = VerticalDivider(
     width: 1,
     thickness: 1,
   );
 
-  const SidenavLayout({
+  const FixedSideScrollBodyLayout({
     Key? key,
     required this.sideDrawerWidget,
     required this.mainContentWidget,
+    this.mainContentPaddingHorizontal = 48.0,
+    this.mainContentPaddingVertical = 32.0,
     Widget? this.dividerWidget,
   }) : super(key: key);
 
   @override
+  State<FixedSideScrollBodyLayout> createState() => _FixedSideScrollBodyLayoutState();
+}
+
+class _FixedSideScrollBodyLayoutState extends State<FixedSideScrollBodyLayout> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        sideDrawerWidget,
-        dividerWidget ?? SidenavLayout.defaultDivider,
+        widget.sideDrawerWidget,
+        widget.dividerWidget ?? FixedSideScrollBodyLayout.defaultDivider,
         Expanded(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: mainContentPaddingVertical,
-                  horizontal: mainContentPaddingHorizontal
+          child: Scrollbar(
+            thumbVisibility: true,
+            controller: _scrollController,
+            child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: widget.mainContentPaddingVertical,
+                      horizontal: widget.mainContentPaddingHorizontal
+                  ),
+                  child: widget.mainContentWidget,
+                ),
               ),
-              child: mainContentWidget
-          ),
+            ),
         ),
       ],
     );

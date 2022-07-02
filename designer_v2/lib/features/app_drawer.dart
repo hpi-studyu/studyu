@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/routing/router_utils.dart';
 
+typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
 class DrawerEntry {
-  const DrawerEntry(this.title);
+  const DrawerEntry({required this.title, this.icon, this.onSelected});
   final String title;
+  final IconData? icon;
+  final OnEntrySelectedCallback? onSelected;
 
-  void onClick(BuildContext context) {
-    // subclass responsibility
+  void onClick(BuildContext context, WidgetRef ref) {
+    if (onSelected != null) {
+      onSelected!(context, ref);
+    }
   }
 }
 
 class GoRouterDrawerEntry extends DrawerEntry {
-  const GoRouterDrawerEntry(title, this.routerPage) : super(title);
-  final RouterPage routerPage;
+  const GoRouterDrawerEntry({
+    required super.title, required this.intent, super.icon});
+  final RoutingIntent intent;
 
   @override
-  onClick(BuildContext context) {
-    context.goNamed(routerPage.id);
+  onClick(BuildContext context, WidgetRef ref) {
+    super.onClick(context, ref);
+    ref.read(routerProvider).dispatch(intent);
   }
 }
-
 
 class AppDrawer extends ConsumerStatefulWidget {
   AppDrawer({
     required this.title,
-    this.width = 260,
-    this.leftPaddingEntries = 36.0,
+    this.width = 250,
+    this.leftPaddingEntries = 28.0,
     Key? key
   }) : super(key: key);
 
@@ -44,28 +51,59 @@ class AppDrawer extends ConsumerStatefulWidget {
 
 class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
-  final List<List<GoRouterDrawerEntry>> entries = [
+  final List<List<GoRouterDrawerEntry>> topEntries = [
     [
-      GoRouterDrawerEntry('My Studies'.hardcoded, RouterPage.dashboard),
-      GoRouterDrawerEntry('Shared With Me'.hardcoded, RouterPage.dashboardShared),
+      GoRouterDrawerEntry(
+        title: 'My Studies'.hardcoded,
+        icon: Icons.folder_copy_rounded,
+        intent: RoutingIntents.studies,
+      ),
+      GoRouterDrawerEntry(
+        title: 'Shared With Me'.hardcoded,
+        icon: Icons.folder_shared_rounded,
+        intent: RoutingIntents.studiesShared
+      ),
     ],
     [
-      GoRouterDrawerEntry('Study Registry'.hardcoded, RouterPage.registry),
+      GoRouterDrawerEntry(
+        title: 'Study Registry'.hardcoded,
+        icon: Icons.public,
+        intent: RoutingIntents.publicRegistry
+      ),
     ]
   ];
+
+  /// List of sections with their corresponding menu entries
+  final List<List<DrawerEntry>> bottomEntries = [
+    [
+      DrawerEntry(
+        title: 'Settings'.hardcoded,
+        icon: Icons.settings_rounded,
+      ),
+      DrawerEntry(
+        title: 'Sign out'.hardcoded,
+        icon: Icons.logout_rounded,
+        onSelected: (context, ref) {
+          ref.read(authControllerProvider.notifier).signOut();
+        }
+      ),
+    ],
+  ];
+
+  List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries]
+      .expand((e) => e).toList();
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
   int _selectedIdx = -1;
 
-  late final GoRouter _router;
-
   @override
-  void initState() {
-    super.initState();
-    _router = ref.read(routerProvider);
-    _router.addListener(_updateSelectedRoute);
+  void didUpdateWidget(AppDrawer oldWidget) {
+    // Changing routes will rebuilt the widget if it's below the Navigator
+    // (which should almost always be the case for a drawer)
+    // That means we can listen for route changes here
     _updateSelectedRoute();
+    super.didUpdateWidget(oldWidget);
   }
 
   void _updateSelectedRoute() {
@@ -74,9 +112,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   int _getCurrentRouteIndex() {
-    final flattenedEntries = entries.expand((e) => e).toList();
-    final idx = flattenedEntries.indexWhere(
-            (e) => _router.namedLocation(e.routerPage.id) == _router.currentPath);
+    final currentRouteSettings = readCurrentRouteSettingsFrom(context);
+    final idx = allEntries.indexWhere((e) {
+        if (e is! GoRouterDrawerEntry) {
+          return false;
+        }
+        return e.intent.matches(currentRouteSettings);
+    });
     return idx;
   }
 
@@ -87,53 +129,50 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   @override
-  void dispose() {
-    _router.removeListener(_updateSelectedRoute);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Drawer(
-        width: widget.width.toDouble(),
-        backgroundColor: theme.colorScheme.surface,
-        child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: ListTileTheme(
-                  selectedColor: theme.colorScheme.primary,
-                  selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
-                  child: ListView(
-                    // Important: Remove any padding from the ListView.
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: false,
-                    children: [
-                      _buildLogoTile(context),
-                      ..._buildEntryTiles(context),
-                    ],
+    return Theme(
+        data: theme.copyWith(splashColor: Colors.transparent), // disable splash
+        child: Drawer(
+          width: widget.width.toDouble(),
+          backgroundColor: theme.colorScheme.surface,
+          child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: ListTileTheme(
+                    selectedColor: theme.colorScheme.primary,
+                    selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
+                    child: ListView(
+                      // Important: Remove any padding from the ListView.
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: false,
+                      children: [
+                        _buildLogo(context),
+                        ..._buildTopMenuItems(context),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: Column(
-                    children: _buildBottomMenuItems(context)
-                ),
-              )
-            ]
-        )
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: Column(
+                      children: _buildBottomMenuItems(context)
+                  ),
+                )
+              ]
+          )
+      )
     );
   }
 
-  Widget _buildLogoTile(BuildContext context) {
+  Widget _buildLogo(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: EdgeInsets.all(widget.leftPaddingEntries),
       child: SelectableText(
         widget.title,
         style: textTheme.headline5
@@ -142,28 +181,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     );
   }
 
-  List<Widget> _buildEntryTiles(BuildContext context) {
-    final theme = Theme.of(context);
-
+  _buildSections(List<List<DrawerEntry>> sections) {
     final List<Widget> widgets = [];
-    var currentIdx = 0;
-    for (final section in entries) {
+    for (final section in sections) {
       for (final entry in section) {
-        final isSelected = currentIdx == _selectedIdx;
-        widgets.add(
-          ListTile(
-            hoverColor:
-            theme.colorScheme.primaryContainer.withOpacity(0.4),
-            title: Text(entry.title,
-                style: isSelected
-                    ? const TextStyle(fontWeight: FontWeight.bold)
-                    : null),
-            contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
-            selected: isSelected,
-            onTap: () => entry.onClick(context),
-          ),
-        );
-        currentIdx += 1;
+        widgets.add(_entryToListTile(entry));
       }
       // Add section divider
       widgets.add(const SizedBox(height: 8));
@@ -174,27 +196,29 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     return widgets.sublist(0, widgets.length-3);
   }
 
-  List<Widget> _buildBottomMenuItems(BuildContext context) {
-    final theme = Theme.of(context);
-    final authController = ref.watch(authControllerProvider.notifier);
-
-    return [
-      ListTile(
-        hoverColor:
-        theme.colorScheme.primaryContainer.withOpacity(0.4),
-        title: Text('Change language'.hardcoded),
-        contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
-        // TODO: open settings page/modal
-      ),
-      ListTile(
-        hoverColor:
-        theme.colorScheme.primaryContainer.withOpacity(0.4),
-        title: Text('Sign out'.hardcoded),
-        contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
-        onTap: authController.signOut,
-      ),
-    ];
+  List<Widget> _buildTopMenuItems(BuildContext context) {
+    return _buildSections(topEntries);
   }
 
+  List<Widget> _buildBottomMenuItems(BuildContext context) {
+    return _buildSections(bottomEntries);
+  }
 
+  ListTile _entryToListTile(DrawerEntry entry) {
+    final theme = Theme.of(context);
+    final entryIdx = allEntries.indexOf(entry);
+    final isSelected = entryIdx == _selectedIdx;
+
+    return ListTile(
+      leading: Icon(entry.icon),
+      hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
+      title: Text(entry.title,
+          style: isSelected
+              ? const TextStyle(fontWeight: FontWeight.bold)
+              : null),
+      contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
+      selected: isSelected,
+      onTap: () => entry.onClick(context, ref),
+    );
+  }
 }

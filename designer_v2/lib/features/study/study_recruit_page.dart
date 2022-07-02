@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class StudyRecruitScreen extends StatelessWidget {
+class StudyRecruitScreen extends ConsumerWidget {
   const StudyRecruitScreen(this.studyId, {Key? key}) : super(key: key);
 
   final String studyId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       alignment: Alignment.center,
         child: Column(
@@ -16,7 +17,8 @@ class StudyRecruitScreen extends StatelessWidget {
           children: [
             Text("Recruit participants: $studyId"),
             TextButton(
-                onPressed: () => context.goNamed(RouterPage.studyEditor.id, params: {"studyId": studyId}),
+                onPressed: () => ref.read(routerProvider).dispatch(
+                    RoutingIntents.studyEdit(studyId)),
                 child: Text("Go to editor")
             ),
           ],

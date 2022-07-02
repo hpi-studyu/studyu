@@ -1,7 +1,8 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/routing/router_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum StudiesFilter {
+enum StudiesFilter with GoRouteParamEnum {
   all,
   owned,
   shared

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 
@@ -31,11 +32,18 @@ class DashboardState extends Equatable {
   /// but resolves to a different subset of studies based on the [studiesFilter]
   AsyncValue<List<Study>> get visibleStudies {
     return studies.when(
-        data: (studies) => AsyncValue.data(
-            studiesFilter.apply(studies: studies, user: currentUser).toList()),
+        data: (studies) => AsyncValue.data(_filterAndSortStudies(studies)),
         error: (error, _) => AsyncValue.error(error),
         loading: () => const AsyncValue.loading(),
     );
+  }
+
+  List<Study> _filterAndSortStudies(List<Study> studies) {
+    final filteredStudies = studiesFilter.apply(
+        studies: studies, user: currentUser).toList();
+    filteredStudies.sort(
+            (study, other) => study.title!.compareTo(other.title!));
+    return filteredStudies;
   }
 
   DashboardState copyWith({
@@ -54,4 +62,17 @@ class DashboardState extends Equatable {
 
   @override
   List<Object?> get props => [studies, studiesFilter];
+}
+
+extension DashboardStateSafeViewProps on DashboardState {
+  String get visibleListTitle {
+    switch(studiesFilter) {
+      case StudiesFilter.all:
+        return "Study registry".hardcoded;
+      case StudiesFilter.owned:
+        return "My studies".hardcoded;
+      case StudiesFilter.shared:
+        return "Shared with me".hardcoded;
+    }
+  }
 }

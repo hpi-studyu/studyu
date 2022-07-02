@@ -3,8 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_config.dart';
 
 import '../constants.dart';
+
+
+
 
 
 abstract class INavigationService extends IAppDelegate {
@@ -28,29 +32,29 @@ class NavigationService implements INavigationService {
 
   @override
   void goToStudy(Study study) {
-    _go(RouterPage.studyEditor, params: {"studyId": study.id});
+    _go(RouterConfig.studyEdit, params: {"studyId": study.id});
   }
 
   @override
   void goToNewStudy() {
-    _go(RouterPage.studyEditor, params: {"studyId": Config.newStudyId});
+    _go(RouterConfig.studyEdit, params: {"studyId": Config.newStudyId});
   }
 
   @override
   void goToDashboard() {
-    _go(RouterPage.dashboard);
+    _go(RouterConfig.studies);
   }
 
   @override
   void goToErrorPage(Exception? error) {
-    _go(RouterPage.error, extra: error);
+    _go(RouterConfig.error, extra: error);
   }
 
   void goTo404Page(Exception? error) {
-    _go(RouterPage.error, extra: error);
+    _go(RouterConfig.error, extra: error);
   }
 
-  _go(RouterPage page, {
+  _go(GoRoute route, {
     Map<String, String> params = const <String, String>{},
     Map<String, String> queryParams = const <String, String>{},
     Object? extra,
@@ -58,7 +62,7 @@ class NavigationService implements INavigationService {
   }) {
     navigateClosure() {
       router.goNamed(
-          page.id, params: params, queryParams: queryParams, extra: extra);
+          route.name!, params: params, queryParams: queryParams, extra: extra);
     }
 
     if (delayMilliseconds != null) {

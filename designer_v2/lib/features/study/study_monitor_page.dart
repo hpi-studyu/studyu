@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class StudyMonitorScreen extends StatelessWidget {
+class StudyMonitorScreen extends ConsumerWidget {
   const StudyMonitorScreen(this.studyId, {Key? key}) : super(key: key);
 
   final String studyId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       alignment: Alignment.center,
       child: Column(
@@ -16,7 +17,8 @@ class StudyMonitorScreen extends StatelessWidget {
         children: [
           Text("Monitor study: $studyId"),
           TextButton(
-              onPressed: () => context.goNamed(RouterPage.studyAnalysis.id, params: {"studyId": studyId}),
+              onPressed: () => ref.read(routerProvider).dispatch(
+                  RoutingIntents.studyAnalyze(studyId)),
               child: Text("Go to analyze")
           ),
         ],
