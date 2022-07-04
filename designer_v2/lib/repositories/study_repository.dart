@@ -100,9 +100,7 @@ class StudyRepository implements IStudyRepository {
         type: StudyActionType.duplicate,
         label: "Copy draft".hardcoded,
         onExecute: () {
-          duplicateStudy(study).then((draftCopy) =>
-              ref.read(routerProvider)
-                  .dispatch(RoutingIntents.studyEdit(draftCopy.id)));
+          duplicateStudy(study);
         },
         isAvailable: study.isOwner(authRepository.currentUser!),
       ),
