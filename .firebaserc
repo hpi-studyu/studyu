@@ -6,10 +6,7 @@
     "studyu-e37af": {
       "hosting": {
         "app": [
-          "studyu-app"
-        ],
-        "designer": [
-          "studyu-designer"
+          "studyu-app-v2"
         ],
         "designer-v2": [
           "studyu-designer-v2"
