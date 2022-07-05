@@ -22,8 +22,8 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  //String previewSrc = 'https://studyu-app.web.app/';
-  String previewSrc = 'https://studyu-app-v2.web.app/';
+  String previewSrc = 'https://studyu-app.web.app/';
+  //String previewSrc = 'https://studyu-app-v2.web.app/'; // returns json error on start probably due to almost empty database
   //String previewSrc = 'http://localhost:62352/';
 
   final StudyControllerState studyControllerState = const StudyControllerState();
