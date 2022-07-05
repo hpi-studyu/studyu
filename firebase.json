@@ -29,38 +29,6 @@
       ]
     },
     {
-      "target": "designer",
-      "public": "designer/build/web",
-      "ignore": [
-        "firebase.json",
-        "**/node_modules/**"
-      ],
-      "headers": [
-        {
-          "source": "*",
-          "headers": [
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            },
-            {
-              "key": "Access-Control-Allow-Headers",
-              "value": "*"
-            }
-          ]
-        },
-        {
-          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-          "headers": [
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "target": "designer-v2",
       "public": "designer_v2/build/web",
       "ignore": [
