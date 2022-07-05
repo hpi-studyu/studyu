@@ -29,8 +29,8 @@
       ]
     },
     {
-      "target": "designer",
-      "public": "designer/build/web",
+      "target": "designer-v2",
+      "public": "designer_v2/build/web",
       "ignore": [
         "firebase.json",
         "**/node_modules/**"

@@ -94,6 +94,15 @@ scripts:
     select-package:
       dir-exists: web
 
+  build:web:staging:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
+    description: Build web staging.
+    select-package:
+      scope: [studyu_app, studyu_designer_v2]
+      dir-exists: web
+
   build:web:app:
     run: |
       melos exec -c 1 --fail-fast -- \
