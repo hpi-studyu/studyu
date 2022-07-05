@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/routing/router.dart';
-import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 
-class StudyTestScreen extends ConsumerWidget {
-  const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
+class StudyTestScreen extends ConsumerStatefulWidget {
+  StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
 
   final String studyId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StudyTestScreen> createState() => _StudyTestScreen();
+}
+
+class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(StudyTestScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final studyTestController = ref.read(studyTestControllerProvider(widget.studyId).notifier);
+
     return Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Test study: $studyId"),
-          TextButton(
-              onPressed: () => ref.read(routerProvider).dispatch(
-                  RoutingIntents.studyRecruit(studyId)),
-              child: Text("Go to recruit")
-          ),
-        ],
-      )
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            studyTestController.platformController.scaffold,
+          ],
+        )
     );
   }
 }
