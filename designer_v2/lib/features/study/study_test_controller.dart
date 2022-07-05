@@ -22,9 +22,9 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  // todo use get parameters as initial loading source
-  final String previewSrc = 'https://app.studyu.health/';
-  //final String previewSrc = 'http://localhost:60667/';
+  //String previewSrc = 'https://studyu-app.web.app/';
+  String previewSrc = 'https://studyu-app-v2.web.app/';
+  //String previewSrc = 'http://localhost:62352/';
 
   final StudyControllerState studyControllerState = const StudyControllerState();
   final IAuthRepository authRepository;
