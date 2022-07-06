@@ -12,6 +12,9 @@ import 'routes.dart';
 import 'theme.dart';
 
 class MyApp extends StatefulWidget {
+  const MyApp(this.queryParameters);
+  final Map<String, String> queryParameters;
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -45,7 +48,9 @@ class _MyAppState extends State<MyApp> {
             title: 'StudyU',
             theme: theme,
             initialRoute: Routes.loading,
-            onGenerateRoute: Routes.generateRoute,
+            onGenerateRoute: (RouteSettings settings) {
+              return Routes.generateRoute(settings, widget.queryParameters);
+            },
             onUnknownRoute: Routes.unknownRoute,
             locale: model.appLocal,
             supportedLocales: AppLocalizations.supportedLocales,

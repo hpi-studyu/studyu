@@ -7,6 +7,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await loadEnv();
-
-  runApp(MyApp());
+  final queryParameters = Uri.base.queryParameters;
+  runApp(MyApp(queryParameters));
 }
