@@ -10,10 +10,11 @@ import 'package:studyu_designer_v2/features/study/study_test_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
 abstract class PlatformController {
+  final String studyId;
   final String previewSrc;
   late Widget scaffold;
 
-  PlatformController(this.previewSrc);
+  PlatformController(this.previewSrc, this.studyId);
 
   void registerViews();
 
@@ -46,9 +47,9 @@ class StudyTestController extends StateNotifier<StudyTestState> {
       // just check if run on the web or not
       // Mobile
       // Could be built with the webview_flutter package
-      platformController = MobileController(previewSrc);
+      platformController = MobileController(previewSrc, studyId);
     } else {
-      platformController = WebController(previewSrc);
+      platformController = WebController(previewSrc, studyId);
     }
   }
 
@@ -60,16 +61,16 @@ class StudyTestController extends StateNotifier<StudyTestState> {
 }
 
 class WebController extends PlatformController {
-  WebController(String previewSrc) : super(previewSrc) {
+  WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
     registerViews();
-    scaffold = const WebScaffold();
+    scaffold = WebScaffold(previewSrc, studyId);
   }
 
   @override
   void registerViews() {
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
-        'studyu_app_web_preview',
+        studyId,
         (int viewId) => html.IFrameElement()
           ..id = 'studyu_app_preview'
           ..src = previewSrc
@@ -94,7 +95,7 @@ class WebController extends PlatformController {
 }
 
 class MobileController extends PlatformController {
-  MobileController(String previewSrc) : super(previewSrc) {
+  MobileController(String previewSrc, studyId) : super(previewSrc, studyId) {
     //throw UnimplementedError();
     scaffold = const MobileScaffold();
   }
