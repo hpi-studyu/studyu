@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class WebScaffold extends StatelessWidget {
-  const WebScaffold({Key? key}) : super(key: key);
+  final String previewSrc;
+  final String studyId;
+  const WebScaffold(this.previewSrc, this.studyId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,9 +12,9 @@ class WebScaffold extends StatelessWidget {
       width: 300,
       child: Stack(
         children: <Widget>[
-          const ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(25)),
-            child: HtmlElementView(viewType: 'studyu_app_web_preview'),
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+            child: HtmlElementView(key: UniqueKey(), viewType: studyId),
           ),
           Container(
             decoration: BoxDecoration(
