@@ -11,6 +11,7 @@ abstract class IAuthRepository extends IAppDelegate {
   // - Authentication
   User? get currentUser;
   bool get isLoggedIn;
+  Session? get session;
   Stream<User?> watchAuthStateChanges();
   Future<void> signInWith({required String email, required String password});
   Future<void> signOut();
@@ -36,6 +37,7 @@ class AuthRepository implements IAuthRepository {
   late final GotrueSubscription _authSubscription;
   
   GoTrueClient get authClient => supabaseClient.auth;
+  @override
   Session? get session => authClient.session();
 
   AuthRepository({
