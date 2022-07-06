@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -17,16 +16,15 @@ abstract class PlatformController {
   PlatformController(this.previewSrc);
 
   void registerViews();
+
   void listen();
+
   void send();
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = 'https://studyu-app.web.app/';
-  //String previewSrc = 'https://studyu-app-v2.web.app/'; // returns json error on start probably due to almost empty database
-  //String previewSrc = 'http://localhost:62352/';
+  String previewSrc = 'https://studyu-app-v2.web.app/';
 
-  final StudyControllerState studyControllerState = const StudyControllerState();
   final IAuthRepository authRepository;
   late final PlatformController platformController;
   final String studyId;
@@ -35,6 +33,7 @@ class StudyTestController extends StateNotifier<StudyTestState> {
     required this.studyId,
     required this.authRepository,
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
+    _modifySrc();
     _selectPlatform();
   }
 
@@ -51,6 +50,12 @@ class StudyTestController extends StateNotifier<StudyTestState> {
     } else {
       platformController = WebController(previewSrc);
     }
+  }
+
+  _modifySrc() {
+    String sessionStr = authRepository.session?.persistSessionString ?? '';
+    previewSrc +=
+        '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=$studyId';
   }
 }
 
