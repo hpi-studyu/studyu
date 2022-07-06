@@ -52,11 +52,11 @@ class Routes {
     );
   }
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  static Route<dynamic> generateRoute(RouteSettings settings, Map<String, String> queryParameters) {
     switch (settings.name) {
       // init Parse on our initial route
       case loading:
-        return MaterialPageRoute(builder: (_) => const LoadingScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => LoadingScreen(queryParameters: queryParameters), settings: settings);
       case dashboard:
         return MaterialPageRoute(builder: (_) => DashboardScreen(), settings: settings);
       case welcome:
