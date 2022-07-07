@@ -15,6 +15,7 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
   @override
   void initState() {
     super.initState();
+    //subject = context.read<AppState>().activeSubject;
   }
 
   @override
@@ -24,7 +25,8 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final studyTestController = ref.read(studyTestControllerProvider(widget.studyId).notifier);
+    final studyTestController =
+        ref.read(studyTestControllerProvider(widget.studyId).notifier);
 
     return Container(
         alignment: Alignment.center,
@@ -32,8 +34,28 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             studyTestController.platformController.scaffold,
+            IconButton(
+                icon: const Icon(Icons.restart_alt),
+                onPressed: () async {
+                  // todo remove progress and reload current iframe
+                  return;
+                  /*String? subjectid = await getActiveSubjectId();
+                if (subjectid != null) {
+                  final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
+                    subjectid,
+                    selectedColumns: [
+                      '*',
+                      'study!study_subject_studyId_fkey(*)',
+                      'subject_progress(*)',
+                    ],
+                  );
+                  subject.delete();
+                }
+                deleteActiveStudyReference();
+                studyTestController.selectPlatform(); // reload iframe
+                */
+                }),
           ],
-        )
-    );
+        ));
   }
 }

@@ -24,10 +24,12 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = 'https://studyu-app-v2.web.app/';
+  String previewSrc = 'https://studyu-app-v2--pr92-dev-designer-v2-prev-ahingod1.web.app';
+  //String previewSrc = 'https://studyu-app-v2.web.app/';
+  //String previewSrc = 'http://localhost:12345/';
 
   final IAuthRepository authRepository;
-  late final PlatformController platformController;
+  late PlatformController platformController;
   final String studyId;
 
   StudyTestController({
@@ -35,10 +37,10 @@ class StudyTestController extends StateNotifier<StudyTestState> {
     required this.authRepository,
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
     _modifySrc();
-    _selectPlatform();
+    selectPlatform();
   }
 
-  _selectPlatform() {
+  selectPlatform() {
     // We can also use defaultTargetPlatform to detect running environment
     // mobile: (TargetPlatform.iOS || TargetPlatform.android)
     // Desktop: (linux, macOS, windows)
