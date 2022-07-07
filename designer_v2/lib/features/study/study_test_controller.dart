@@ -17,10 +17,10 @@ abstract class PlatformController {
   PlatformController(this.previewSrc, this.studyId);
 
   void registerViews();
-
+  void sendCmd(String command);
+  void refresh();
   void listen();
-
-  void send();
+  void send(String message);
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
@@ -37,10 +37,10 @@ class StudyTestController extends StateNotifier<StudyTestState> {
     required this.authRepository,
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
     _modifySrc();
-    selectPlatform();
+    _selectPlatform();
   }
 
-  selectPlatform() {
+  _selectPlatform() {
     // We can also use defaultTargetPlatform to detect running environment
     // mobile: (TargetPlatform.iOS || TargetPlatform.android)
     // Desktop: (linux, macOS, windows)
@@ -76,22 +76,39 @@ class WebController extends PlatformController {
         (int viewId) => html.IFrameElement()
           ..id = 'studyu_app_preview'
           ..src = previewSrc
-          ..style.border = 'none');
+          ..style.border = 'none'
+    );
+  }
+
+  @override
+  void sendCmd(String command) {
+    html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
+    as html.IFrameElement;
+    String localPreviewSrc = "$previewSrc&cmd=$command";
+    iFrameElement.src = localPreviewSrc;
+  }
+
+  @override
+  void refresh() {
+    // todo test
+    html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
+    as html.IFrameElement;
+    iFrameElement.src = previewSrc;
   }
 
   @override
   void listen() {
-    // todo seems to be triggering two times. Is the message getting sent twice or is the listener started twice?
+    // seems to be triggering two times. Is the message getting sent twice or is the listener started twice?
     html.window.onMessage.listen((event) {
       var data = event.data;
     });
   }
 
   @override
-  void send() {
+  void send(String message) {
     html.IFrameElement iw = html.document.getElementById("studyu_app_preview")
         as html.IFrameElement;
-    iw.contentWindow?.postMessage('designer message', "*");
+    iw.contentWindow?.postMessage(message, "*");  // todo replace * with url
     print("designer send");
   }
 }
@@ -100,6 +117,15 @@ class MobileController extends PlatformController {
   MobileController(String previewSrc, studyId) : super(previewSrc, studyId) {
     //throw UnimplementedError();
     scaffold = const MobileScaffold();
+  }
+
+  @override
+  void sendCmd(String command) {
+  }
+
+  @override
+  void refresh() {
+    // implement refresh
   }
 
   @override
@@ -113,7 +139,7 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void send() {
+  void send(String message) {
     // implement send
   }
 }
