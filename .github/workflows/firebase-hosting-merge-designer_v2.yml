@@ -6,7 +6,7 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - dev-designer_v2
-      - dev-designer_v2-preview
+      # - dev-designer_v2-preview
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
