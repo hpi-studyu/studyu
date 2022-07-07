@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudyTestScreen extends ConsumerStatefulWidget {
   StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
@@ -36,25 +38,11 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
             studyTestController.platformController.scaffold,
             IconButton(
                 icon: const Icon(Icons.restart_alt),
-                onPressed: () async {
-                  // todo remove progress and reload current iframe
-                  return;
-                  /*String? subjectid = await getActiveSubjectId();
-                if (subjectid != null) {
-                  final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
-                    subjectid,
-                    selectedColumns: [
-                      '*',
-                      'study!study_subject_studyId_fkey(*)',
-                      'subject_progress(*)',
-                    ],
-                  );
-                  subject.delete();
-                }
-                deleteActiveStudyReference();
-                studyTestController.selectPlatform(); // reload iframe
-                */
-                }),
+                onPressed: () {
+                    studyTestController.platformController.sendCmd("reset");
+                    //studyTestController.platformController.refresh();
+                  }
+            ),
           ],
         ));
   }

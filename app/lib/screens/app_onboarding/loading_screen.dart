@@ -32,18 +32,19 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
     if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
         widget.queryParameters['mode'] == 'preview') {
+
       if (!mounted) return;
       context.read<AppState>().isPreview = true;
     }
 
     initStudy();
-    print("returned from initStudy");
+    print('returned from initStudy');
   }
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
-    final selectedStudyObjectId = await getActiveSubjectId();
-    print("initStudy");
+    String selectedStudyObjectId = await getActiveSubjectId();
+    print('initStudy');
     if (!mounted) return;
     if (widget.queryParameters != null &&
         widget.queryParameters['mode'] != null &&
@@ -57,9 +58,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         print('Parameter Error');
         return;
       }
-      print("preview");
-      // maybe use another test account for study preview that will be deleted after study goes live
-      //final success = await anonymousSignUp();
+      print('preview');
       final String session =
       Uri.decodeComponent(widget.queryParameters['session']);
       final recovery =
@@ -79,26 +78,68 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         print('Study Error: ${recovery.error.toString()}');
         return;
       }
-
       if (!mounted) return;
       model.selectedStudy = study;
+
+      // authentication completed
+
+      if (widget.queryParameters['cmd'] != null &&
+          widget.queryParameters['cmd'] == 'reset') {
+        // deleting study progress
+        print('subject id: $selectedStudyObjectId');
+        if (selectedStudyObjectId != null) {
+          try {
+            final StudySubject subject =
+            await SupabaseQuery.getById<StudySubject>(
+              selectedStudyObjectId,
+              selectedColumns: [
+                '*',
+                'study!study_subject_studyId_fkey(*)',
+                'subject_progress(*)',
+              ],
+            );
+            subject.delete();
+            deleteActiveStudyReference();
+            selectedStudyObjectId = await getActiveSubjectId();
+            print('after deletion: $selectedStudyObjectId');
+            selectedStudyObjectId = null;
+            print('successfully deleted');
+          } catch (e) {
+            print('error with deleting: $e');
+          }
+        }
+      }
+
+      // Using the user session of the designer for the app preview interferes with the subscribed study of the user
+      // --> WORKAROUND host the preview app version under a separate domain than the actual app!
+      // e.g. normal app runs at app.studyu.health and preview version at preview.app.studyu.health
+      // Preview version can be the same version as the app, since we use ?mode=preview to differentiate
+      // between normal and preview use. The only importance is to have a different domain with different local storage
+      // Thus the same user can also take part in studies on his own device and we do not have to work using anonymous accounts
+
+      // old stuff:
+      // we will use test accounts for study preview that can be deleted after the  study goes live
+      // for this grant this account rights to access to the draft study
+      // to do: send the anonymous account back to the designer and store the data somewhere with the creation data of the study
+      //final success = await anonymousSignUp();
+
       StudySubject subject;
 
       if (selectedStudyObjectId != null) {
-        print("Found subject id in shared prefs");
+        print('Found subject id in shared prefs: $selectedStudyObjectId');
         // found study subject
-        subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-        if (subject != null) {
+        try {
+          subject = await SupabaseQuery.getById<StudySubject>(
+            selectedStudyObjectId,
+            selectedColumns: [
+              '*',
+              'study!study_subject_studyId_fkey(*)',
+              'subject_progress(*)',
+            ],
+          );
           // user is already subscribed to a study
           model.activeSubject = subject;
-          print("equal check: " + subject.studyId + " " + study.id);
+          print('equal check: ${subject.studyId} ${study.id}');
           if (subject.studyId == study.id) {
             // user is subscribed to the currently shown study
             print('go to dashboard');
@@ -114,6 +155,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             //deleteActiveStudyReference();
             //Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           }
+        } catch(e) {
+          print('could not load subject id');
         }
 
       }
@@ -163,14 +206,14 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           // Notifications not supported on web
           scheduleStudyNotifications(context);
         }
-        print("no preview dashboard");
+        print('no preview dashboard');
         Navigator.pushReplacementNamed(context, Routes.dashboard);
       } else {
-        print("no preview welcome");
+        print('no preview welcome');
         Navigator.pushReplacementNamed(context, Routes.welcome);
       }
     } else {
-      print("Nix");
+      print('Nix');
     }
   }
 
