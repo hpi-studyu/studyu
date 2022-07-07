@@ -29,87 +29,148 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
+
+    if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
+        widget.queryParameters['mode'] == 'preview') {
+      if (!mounted) return;
+      context.read<AppState>().isPreview = true;
+    }
+
     initStudy();
+    print("returned from initStudy");
   }
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
     final selectedStudyObjectId = await getActiveSubjectId();
+    print("initStudy");
     if (!mounted) return;
-    if (selectedStudyObjectId == null) {
-      if (widget.queryParameters != null &&
-          widget.queryParameters['mode'] != null &&
-          widget.queryParameters['mode'] == 'preview') {
-        if (widget.queryParameters['studyid'] == null ||
-            widget.queryParameters['studyid'].isEmpty ||
-            widget.queryParameters['session'] == null ||
-            widget.queryParameters['session'].isEmpty ||
-            widget.queryParameters['studyid'] == null ||
-            widget.queryParameters['studyid'].isEmpty) {
-          print('Parameter Error');
+    if (widget.queryParameters != null &&
+        widget.queryParameters['mode'] != null &&
+        widget.queryParameters['mode'] == 'preview') {
+      if (widget.queryParameters['studyid'] == null ||
+          widget.queryParameters['studyid'].isEmpty ||
+          widget.queryParameters['session'] == null ||
+          widget.queryParameters['session'].isEmpty ||
+          widget.queryParameters['studyid'] == null ||
+          widget.queryParameters['studyid'].isEmpty) {
+        print('Parameter Error');
+        return;
+      }
+      print("preview");
+      // maybe use another test account for study preview that will be deleted after study goes live
+      //final success = await anonymousSignUp();
+      final String session =
+      Uri.decodeComponent(widget.queryParameters['session']);
+      final recovery =
+      await Supabase.instance.client.auth.recoverSession(session);
+      // handle error on UI level
+      if (recovery.error != null) {
+        print('Recovery Error: ${recovery.error.toString()}');
+        return;
+      }
+
+      final Study study = await SupabaseQuery.getById<Study>( // todo getById<StudySubject> if subscribed
+        widget.queryParameters['studyid'],);
+      print('study: ${study.id}');
+      // todo allow preview for published studies? Are results visible?
+      // handle error on UI level
+      if (study == null) {
+        print('Study Error: ${recovery.error.toString()}');
+        return;
+      }
+
+      if (!mounted) return;
+      model.selectedStudy = study;
+      StudySubject subject;
+
+      if (selectedStudyObjectId != null) {
+        print("Found subject id in shared prefs");
+        // found study subject
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+        if (subject != null) {
+          // user is already subscribed to a study
+          model.activeSubject = subject;
+          print("equal check: " + subject.studyId + " " + study.id);
+          if (subject.studyId == study.id) {
+            // user is subscribed to the currently shown study
+            print('go to dashboard');
+            if (!mounted) return;
+            context.read<AppState>().isPreview = false;
+            print('dashboard');
+            Navigator.pushReplacementNamed(context, Routes.dashboard);
+            return;
+          } else {
+            // delete current study progress
+            //print("delete");
+            //subject.delete();
+            //deleteActiveStudyReference();
+            //Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
+          }
+        }
+
+      }
+      // user still has to subscribe to the study
+      print('go to studyOverview');
+      if (!mounted) return;
+      context.read<AppState>().isPreview = false;
+      print('studyOverview');
+      Navigator.pushReplacementNamed(context, Routes.studyOverview);
+      return;
+    } else if (!context.read<AppState>().isPreview) {
+      print('no preview');
+      if (selectedStudyObjectId == null) {
+        if (isUserLoggedIn()) {
+          Navigator.pushReplacementNamed(context, Routes.studySelection);
           return;
         }
-        // maybe use another test account for study preview that will be deleted after study goes live
-        //final success = await anonymousSignUp();
-        final String session =
-            Uri.decodeComponent(widget.queryParameters['session']);
-        final recovery =
-            await Supabase.instance.client.auth.recoverSession(session);
-        if (recovery.error != null) {
-          print('Recovery Error: ${recovery.error.toString()}');
-          return;
-        } // handle error on UI level
-        final study = await SupabaseQuery.getById<Study>(
-            widget.queryParameters['studyid'],);
-        // todo allow preview for published studies? Are results visible?
-        if (study == null) {
-          print('Study Error: ${recovery.error.toString()}');
-          return;
-        } // handle error on UI level
-        if (!mounted) return;
-        context.read<AppState>().selectedStudy = study;
-        Navigator.pushReplacementNamed(context, Routes.studyOverview);
-        return;
-      } else if (isUserLoggedIn()) {
-        Navigator.pushReplacementNamed(context, Routes.studySelection);
-        return;
-      } else {
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
-    }
-    StudySubject subject;
-    try {
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
-    } catch (e) {
-      // Try signing in again. Needed if JWT is expired
-      await signInParticipant();
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
-    }
-    if (!mounted) return;
-    if (subject != null) {
-      model.activeSubject = subject;
-      if (!kIsWeb) {
-        // Notifications not supported on web
-        scheduleStudyNotifications(context);
+      StudySubject subject;
+      try {
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+      } catch (e) {
+        // Try signing in again. Needed if JWT is expired
+        await signInParticipant();
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
       }
-      Navigator.pushReplacementNamed(context, Routes.dashboard);
+      if (!mounted) return;
+      if (subject != null) {
+        model.activeSubject = subject;
+        if (!kIsWeb) {
+          // Notifications not supported on web
+          scheduleStudyNotifications(context);
+        }
+        print("no preview dashboard");
+        Navigator.pushReplacementNamed(context, Routes.dashboard);
+      } else {
+        print("no preview welcome");
+        Navigator.pushReplacementNamed(context, Routes.welcome);
+      }
     } else {
-      Navigator.pushReplacementNamed(context, Routes.welcome);
+      print("Nix");
     }
   }
 
