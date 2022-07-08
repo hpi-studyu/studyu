@@ -35,7 +35,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     }
 
     preview = Preview(widget.queryParameters ?? {});
-    //await preview.init();
 
     if (preview.containsQueryPair('mode', 'preview')) {
       if (!mounted) return;
@@ -50,6 +49,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
   Future<void> initStudy() async {
     final model = context.read<AppState>();
     String selectedStudyObjectId = await getActiveSubjectId();
+    await preview.init();
+    print('study object initStudy: $selectedStudyObjectId');
     print('initStudy');
     if (!mounted) return;
     if (preview.containsQueryPair('mode', 'preview')) {
@@ -64,7 +65,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       final bool ret = await preview.runCommands(selectedStudyObjectId);
       if (ret) {
         selectedStudyObjectId = await getActiveSubjectId();
-        print('after deletion: $selectedStudyObjectId');
+        print('study object after deletion: $selectedStudyObjectId');
         selectedStudyObjectId = null;
       }
 
@@ -81,7 +82,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       // to do: send the anonymous account back to the designer and store the data somewhere with the creation data of the study
       //final success = await anonymousSignUp();
 
-      final bool subscribed = await preview.isSubscribed(selectedStudyObjectId);
+      final bool subscribed = await preview.isSubscribed();
       model.activeSubject = preview.subject;
 
       // check if user is subscribed to the currently shown study

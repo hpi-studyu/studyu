@@ -5,15 +5,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Preview {
   final Map<String, String> queryParameters;
   Study study;
-  //String selectedStudyObjectId;
+  String selectedStudyObjectId;
   StudySubject subject;
 
   Preview(this.queryParameters);
 
-  /*Future init() async {
+  Future init() async {
     selectedStudyObjectId = await getActiveSubjectId();
-    print('init study object: $selectedStudyObjectId');
-  }*/
+    print('study object preview: $selectedStudyObjectId');
+  }
 
   Future<bool> handleAuthorization() async {
     if (!containsQuery('studyid') && !containsQuery('session')) return false;
@@ -48,6 +48,8 @@ class Preview {
           subject.delete();
           deleteActiveStudyReference();
           print('successfully deleted');
+          this.selectedStudyObjectId = await getActiveSubjectId();
+          print("study object this: " + selectedStudyObjectId);
           return true; // needs to return void later
         } catch (e) {
           print('error with deleting: $e');
@@ -57,7 +59,7 @@ class Preview {
     return false;
   }
 
-  Future<bool> isSubscribed(String selectedStudyObjectId) async {
+  Future<bool> isSubscribed() async {
     if (selectedStudyObjectId != null) {
       print('Found subject id in shared prefs: $selectedStudyObjectId');
       // found study subject
