@@ -29,6 +29,14 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
+
+    if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
+        widget.queryParameters['mode'] == 'preview') {
+
+      if (!mounted) return;
+      context.read<AppState>().isPreview = true;
+    }
+
     initStudy();
     print('returned from initStudy');
   }
@@ -38,14 +46,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     String selectedStudyObjectId = await getActiveSubjectId();
     print('initStudy');
     if (!mounted) return;
-
-    if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
-        widget.queryParameters['mode'] == 'preview') {
-      if (!mounted) return;
-      context.read<AppState>().isPreviewLock = true;
-      context.read<AppState>().isPreview = true;
-    }
-
     if (widget.queryParameters != null &&
         widget.queryParameters['mode'] != null &&
         widget.queryParameters['mode'] == 'preview') {
@@ -144,7 +144,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             // user is subscribed to the currently shown study
             print('go to dashboard');
             if (!mounted) return;
-            context.read<AppState>().isPreviewLock = false;
+            context.read<AppState>().isPreview = false;
             print('dashboard');
             Navigator.pushReplacementNamed(context, Routes.dashboard);
             return;
@@ -163,11 +163,11 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       // user still has to subscribe to the study
       print('go to studyOverview');
       if (!mounted) return;
-      context.read<AppState>().isPreviewLock = false;
+      context.read<AppState>().isPreview = false;
       print('studyOverview');
       Navigator.pushReplacementNamed(context, Routes.studyOverview);
       return;
-    } else if (!context.read<AppState>().isPreviewLock) {
+    } else if (!context.read<AppState>().isPreview) {
       print('no preview');
       if (selectedStudyObjectId == null) {
         if (isUserLoggedIn()) {
