@@ -5,15 +5,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Preview {
   final Map<String, String> queryParameters;
   Study study;
-  String selectedStudyObjectId;
+  //String selectedStudyObjectId;
   StudySubject subject;
 
   Preview(this.queryParameters);
 
-  Future init() async {
+  /*Future init() async {
     selectedStudyObjectId = await getActiveSubjectId();
     print('init study object: $selectedStudyObjectId');
-  }
+  }*/
 
   Future<bool> handleAuthorization() async {
     if (!containsQuery('studyid') && !containsQuery('session')) return false;
@@ -29,7 +29,7 @@ class Preview {
     return true;
   }
 
-  Future<void> runCommands() async {
+  /*Future<void> runCommands() async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
       print('subject id: $selectedStudyObjectId');
@@ -57,9 +57,9 @@ class Preview {
       }
       print('reset finish');
     }
-  }
+  }*/
 
-  Future<bool> isSubscribed() async {
+  Future<bool> isSubscribed(String selectedStudyObjectId) async {
     if (selectedStudyObjectId != null) {
       print('Found subject id in shared prefs: $selectedStudyObjectId');
       // found study subject
