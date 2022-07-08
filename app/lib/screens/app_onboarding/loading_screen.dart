@@ -32,9 +32,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
     if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
         widget.queryParameters['mode'] == 'preview') {
-
       if (!mounted) return;
       context.read<AppState>().isPreview = true;
+    }
+
+    if (!mounted) return;
+
+    if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
+        widget.queryParameters['mode'] == 'preview' || context.read<AppState>().isPreview) {
+      context.read<AppState>().isPreviewSkipping = true;
     }
 
     initStudy();

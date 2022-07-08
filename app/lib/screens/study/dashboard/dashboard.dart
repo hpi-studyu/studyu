@@ -156,7 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               scheduleToday: scheduleToday,
               interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon,
             ),
-      bottomSheet: kDebugMode && !subject.completedStudy
+      bottomSheet: (kDebugMode || context.read<AppState>().isPreviewSkipping) && !subject.completedStudy
           ? TextButton(
               onPressed: () async {
                 await subject.setStartDateBackBy(days: 1);
