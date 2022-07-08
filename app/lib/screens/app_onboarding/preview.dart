@@ -5,14 +5,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Preview {
   final Map<String, String> queryParameters;
   Study study;
-  String selectedStudyObjectId;
+  //String selectedStudyObjectId;
   StudySubject subject;
 
   Preview(this.queryParameters);
 
   Future init() async {
-    selectedStudyObjectId = await getActiveSubjectId();
-    print('init study object: $selectedStudyObjectId');
+    //selectedStudyObjectId = await getActiveSubjectId();
+    //print('init study object: $selectedStudyObjectId');
   }
 
   Future<bool> handleAuthorization() async {
@@ -29,7 +29,7 @@ class Preview {
     return true;
   }
 
-  Future<void> runCommands() async {
+  Future<void> runCommands(String selectedStudyObjectId) async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
       //print('subject id: $selectedStudyObjectId');
@@ -46,9 +46,9 @@ class Preview {
         );
         subject.delete();
         deleteActiveStudyReference();
-        selectedStudyObjectId = await getActiveSubjectId();
-        print('after deletion: $selectedStudyObjectId');
-        selectedStudyObjectId = null; // should normally be updated automatically?
+        //selectedStudyObjectId = await getActiveSubjectId();
+        //print('after deletion: $selectedStudyObjectId');
+        //selectedStudyObjectId = null; // should normally be updated automatically?
         print('successfully deleted');
         } catch (e) {
           print('error with deleting: $e');
@@ -59,27 +59,27 @@ class Preview {
     }
   }
 
-  Future<bool> isSubscribed() async {
+  Future<bool> isSubscribed(String selectedStudyObjectId) async {
     if (selectedStudyObjectId != null) {
       print('Found subject id in shared prefs: $selectedStudyObjectId');
       // found study subject
-      //try {
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
-      // user is already subscribed to a study
-      print('equal check: ${subject.studyId} ${study.id}');
-      if (subject.studyId == study.id) {
-        return true;
+      try {
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+        // user is already subscribed to a study
+        print('equal check: ${subject.studyId} ${study.id}');
+        if (subject.studyId == study.id) {
+          return true;
+        }
+      } catch (e) {
+        print('could not load subject id');
       }
-      //} catch (e) {
-        //print('could not load subject id');
-      //}
     }
     return false;
   }
