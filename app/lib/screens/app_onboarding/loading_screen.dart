@@ -35,7 +35,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     }
 
     preview = Preview(widget.queryParameters ?? {});
-    await preview.init();
+    //await preview.init();
 
     if (preview.containsQueryPair('mode', 'preview')) {
       if (!mounted) return;
@@ -49,7 +49,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
-    //String selectedStudyObjectId = await getActiveSubjectId();
+    String selectedStudyObjectId = await getActiveSubjectId();
     print('initStudy');
     if (!mounted) return;
     if (preview.containsQueryPair('mode', 'preview')) {
@@ -61,7 +61,34 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       // authentication completed
 
-      preview.runCommands();
+      //preview.runCommands();
+
+      if (preview.containsQueryPair('cmd', 'reset')) {
+        // deleting study progress
+        print('subject id: $selectedStudyObjectId');
+        if (selectedStudyObjectId != null) {
+          try {
+            final StudySubject subject =
+            await SupabaseQuery.getById<StudySubject>(
+              selectedStudyObjectId,
+              selectedColumns: [
+                '*',
+                'study!study_subject_studyId_fkey(*)',
+                'subject_progress(*)',
+              ],
+            );
+            subject.delete();
+            deleteActiveStudyReference();
+            selectedStudyObjectId = await getActiveSubjectId();
+            print('after deletion: $selectedStudyObjectId');
+            selectedStudyObjectId = null;
+            print('successfully deleted');
+          } catch (e) {
+            print('error with deleting: $e');
+          }
+        }
+      }
+
       //selectedStudyObjectId = await getActiveSubjectId();
 
       // Using the user session of the designer for the app preview interferes with the subscribed study of the user
@@ -77,7 +104,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       // to do: send the anonymous account back to the designer and store the data somewhere with the creation data of the study
       //final success = await anonymousSignUp();
 
-      final bool subscribed = await preview.isSubscribed();
+      final bool subscribed = await preview.isSubscribed(selectedStudyObjectId);
       model.activeSubject = preview.subject;
 
       // check if user is subscribed to the currently shown study
@@ -99,7 +126,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     } else if (!context.read<AppState>().isPreview) {
       // non preview routes
       print('non preview');
-      if (preview.selectedStudyObjectId == null) {
+      if (selectedStudyObjectId == null) {
         if (isUserLoggedIn()) {
           print('push to studySelection');
           Navigator.pushReplacementNamed(context, Routes.studySelection);
@@ -113,7 +140,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       StudySubject subject;
       try {
         subject = await SupabaseQuery.getById<StudySubject>(
-          preview.selectedStudyObjectId,
+          selectedStudyObjectId,
           selectedColumns: [
             '*',
             'study!study_subject_studyId_fkey(*)',
@@ -124,7 +151,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // Try signing in again. Needed if JWT is expired
         await signInParticipant();
         subject = await SupabaseQuery.getById<StudySubject>(
-          preview.selectedStudyObjectId,
+          selectedStudyObjectId,
           selectedColumns: [
             '*',
             'study!study_subject_studyId_fkey(*)',
