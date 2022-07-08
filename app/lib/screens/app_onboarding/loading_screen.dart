@@ -49,7 +49,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
-    String selectedStudyObjectId = await getActiveSubjectId();
+    //String selectedStudyObjectId = await getActiveSubjectId();
     print('initStudy');
     if (!mounted) return;
     if (preview.containsQueryPair('mode', 'preview')) {
@@ -61,9 +61,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       // authentication completed
 
-      preview.runCommands(selectedStudyObjectId);
-      // todo move selectedStudyObjectId to preview class
-      selectedStudyObjectId = await getActiveSubjectId();
+      preview.runCommands();
+      //selectedStudyObjectId = await getActiveSubjectId();
 
       // Using the user session of the designer for the app preview interferes with the subscribed study of the user
       // --> WORKAROUND host the preview app version under a separate domain than the actual app!
@@ -78,7 +77,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       // to do: send the anonymous account back to the designer and store the data somewhere with the creation data of the study
       //final success = await anonymousSignUp();
 
-      final bool subscribed = await preview.isSubscribed(selectedStudyObjectId);
+      final bool subscribed = await preview.isSubscribed();
       model.activeSubject = preview.subject;
 
       // check if user is subscribed to the currently shown study
@@ -100,7 +99,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     } else if (!context.read<AppState>().isPreview) {
       // non preview routes
       print('non preview');
-      if (selectedStudyObjectId == null) {
+      if (preview.selectedStudyObjectId == null) {
         if (isUserLoggedIn()) {
           print('push to studySelection');
           Navigator.pushReplacementNamed(context, Routes.studySelection);
@@ -114,7 +113,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       StudySubject subject;
       try {
         subject = await SupabaseQuery.getById<StudySubject>(
-            selectedStudyObjectId,
+          preview.selectedStudyObjectId,
           selectedColumns: [
             '*',
             'study!study_subject_studyId_fkey(*)',
@@ -125,7 +124,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // Try signing in again. Needed if JWT is expired
         await signInParticipant();
         subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId,
+          preview.selectedStudyObjectId,
           selectedColumns: [
             '*',
             'study!study_subject_studyId_fkey(*)',
