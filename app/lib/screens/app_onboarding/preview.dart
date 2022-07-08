@@ -29,7 +29,7 @@ class Preview {
     return true;
   }
 
-  Future<bool> runCommands(String selectedStudyObjectId) async {
+  Future<void> runCommands() async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
       // deleting study progress
@@ -48,15 +48,16 @@ class Preview {
           subject.delete();
           deleteActiveStudyReference();
           print('successfully deleted');
-          this.selectedStudyObjectId = await getActiveSubjectId();
+          selectedStudyObjectId = await getActiveSubjectId();
+          print('study object after deletion: $selectedStudyObjectId');
+          assert (selectedStudyObjectId == null);
+          //selectedStudyObjectId = null;
           print("study object this: " + selectedStudyObjectId);
-          return true; // needs to return void later
         } catch (e) {
           print('error with deleting: $e');
         }
       }
     }
-    return false;
   }
 
   Future<bool> isSubscribed() async {
