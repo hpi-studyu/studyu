@@ -15,17 +15,14 @@ class LoadingScreen extends StatefulWidget {
   final String sessionString;
   final Map<String, String> queryParameters;
 
-  const LoadingScreen({Key key, this.sessionString, this.queryParameters})
-      : super(key: key);
+  const LoadingScreen({Key key, this.sessionString, this.queryParameters}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
 }
 
 class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
-
   Preview preview;
-
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
@@ -39,28 +36,27 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (preview.containsQueryPair('mode', 'preview')) {
       if (!mounted) return;
       context.read<AppState>().isPreview = true;
-      context.read<AppState>().isPreviewSkipping = true;
+      context.read<AppState>().previewInit = true;
     }
 
     initStudy();
-    print('returned from initStudy');
+    //print('returned from initStudy');
   }
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
     //String selectedStudyObjectId = await getActiveSubjectId();
     await preview.init();
-    print('study object initStudy: $preview.selectedStudyObjectId');
-    print('initStudy');
+    //print('study object initStudy: $preview.selectedStudyObjectId');
+    //print('initStudy');
     if (!mounted) return;
     if (preview.containsQueryPair('mode', 'preview')) {
-
       // todo handle error on UI level
       if (!await preview.handleAuthorization()) return;
       //if (!mounted) return;
       model.selectedStudy = preview.study;
 
-      // authentication completed
+      // Authentication completed
 
       await preview.runCommands();
       /*if (ret) {
@@ -87,30 +83,30 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       // check if user is subscribed to the currently shown study
       if (subscribed) {
-        print('subscribed');
+        //print('subscribed');
         if (!mounted) return;
-        context.read<AppState>().isPreview = false;
-        print('to dashboard');
+        context.read<AppState>().previewInit = false;
+        //print('to dashboard');
         Navigator.pushReplacementNamed(context, Routes.dashboard);
         return;
       }
-      print('unsubscribed');
+      //print('unsubscribed');
       // user still has to subscribe to the study
       if (!mounted) return;
-      context.read<AppState>().isPreview = false;
-      print('to overview');
+      context.read<AppState>().previewInit = false;
+      //print('to overview');
       Navigator.pushReplacementNamed(context, Routes.studyOverview);
       return;
-    } else if (!context.read<AppState>().isPreview) {
+    } else if (!context.read<AppState>().previewInit) {
       // non preview routes
-      print('non preview');
+      //print('non preview');
       if (preview.selectedStudyObjectId == null) {
         if (isUserLoggedIn()) {
-          print('push to studySelection');
+          //print('push to studySelection');
           Navigator.pushReplacementNamed(context, Routes.studySelection);
           return;
         }
-        print('push to welcome');
+        //print('push to welcome');
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
@@ -144,14 +140,12 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           // Notifications not supported on web
           scheduleStudyNotifications(context);
         }
-        print('no preview dashboard');
+        //print('no preview dashboard');
         Navigator.pushReplacementNamed(context, Routes.dashboard);
       } else {
-        print('no preview welcome');
+        //print('no preview welcome');
         Navigator.pushReplacementNamed(context, Routes.welcome);
       }
-    } else {
-      print('Nix');
     }
   }
 
@@ -164,8 +158,13 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${AppLocalizations.of(context).loading}...',
-                style: Theme.of(context).textTheme.headline4,
+                '${AppLocalizations
+                    .of(context)
+                    .loading}...',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline4,
               ),
               const CircularProgressIndicator(),
             ],

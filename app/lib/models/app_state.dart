@@ -13,7 +13,7 @@ class AppState {
   List<String> preselectedInterventionIds;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
   bool isPreview = false;
-  bool isPreviewSkipping = false;
+  bool previewInit = false;
 
   /// Context used for FlutterLocalNotificationsPlugin
   BuildContext context;
