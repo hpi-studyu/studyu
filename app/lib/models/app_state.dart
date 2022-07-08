@@ -12,6 +12,7 @@ class AppState {
   String inviteCode;
   List<String> preselectedInterventionIds;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
+  bool isPreviewLock = false;
   bool isPreview = false;
 
   /// Context used for FlutterLocalNotificationsPlugin
