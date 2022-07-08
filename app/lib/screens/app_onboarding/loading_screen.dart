@@ -53,60 +53,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     print('initStudy');
     if (!mounted) return;
     if (preview.containsQueryPair('mode', 'preview')) {
-      if (!preview.containsQuery('studyid') && !preview.containsQuery('session')) {
-        print('Parameter Error');
-        return;
-      }
-      print('preview');
-      final String session =
-      Uri.decodeComponent(widget.queryParameters['session']);
-      final recovery =
-      await Supabase.instance.client.auth.recoverSession(session);
-      // handle error on UI level
-      if (recovery.error != null) {
-        print('Recovery Error: ${recovery.error.toString()}');
-        return;
-      }
 
-      final Study study = await SupabaseQuery.getById<Study>( // todo getById<StudySubject> if subscribed
-        widget.queryParameters['studyid'],);
-      print('study: ${study.id}');
-      // todo allow preview for published studies? Are results visible?
-      // handle error on UI level
-      if (study == null) {
-        print('Study Error: ${recovery.error.toString()}');
-        return;
-      }
-      if (!mounted) return;
-      model.selectedStudy = study;
+      // todo handle error on UI level
+      if (!await preview.handleAuthorization()) return;
+      //if (!mounted) return;
+      model.selectedStudy = preview.study;
 
       // authentication completed
 
-      if (preview.containsQueryPair('cmd', 'reset')) {
-        // deleting study progress
-        print('subject id: $selectedStudyObjectId');
-        if (selectedStudyObjectId != null) {
-          try {
-            final StudySubject subject =
-            await SupabaseQuery.getById<StudySubject>(
-              selectedStudyObjectId,
-              selectedColumns: [
-                '*',
-                'study!study_subject_studyId_fkey(*)',
-                'subject_progress(*)',
-              ],
-            );
-            subject.delete();
-            deleteActiveStudyReference();
-            selectedStudyObjectId = await getActiveSubjectId();
-            print('after deletion: $selectedStudyObjectId');
-            selectedStudyObjectId = null;
-            print('successfully deleted');
-          } catch (e) {
-            print('error with deleting: $e');
-          }
-        }
-      }
+      preview.runCommands();
 
       // Using the user session of the designer for the app preview interferes with the subscribed study of the user
       // --> WORKAROUND host the preview app version under a separate domain than the actual app!
@@ -137,8 +92,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           );
           // user is already subscribed to a study
           model.activeSubject = subject;
-          print('equal check: ${subject.studyId} ${study.id}');
-          if (subject.studyId == study.id) {
+          print('equal check: ${subject.studyId} ${preview.study.id}');
+          if (subject.studyId == preview.study.id) {
             // user is subscribed to the currently shown study
             print('go to dashboard');
             if (!mounted) return;
