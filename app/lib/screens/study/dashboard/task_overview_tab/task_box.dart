@@ -37,11 +37,12 @@ class _TaskBoxState extends State<TaskBox> {
     final completed = context.watch<AppState>().activeSubject.isTaskFinishedFor(widget.task.id, DateTime.now());
     final now = DateTime.now();
     final nowTime = StudyUTimeOfDay(hour: now.hour, minute: now.minute);
+    final bool preview = context.read<AppState>().isPreview;
 
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: completed || !widget.completionPeriod.contains(nowTime) ? () {} : _navigateToTaskScreen,
+        onTap: completed || !widget.completionPeriod.contains(nowTime) || !preview ? () {} : _navigateToTaskScreen,
         child: Row(
           children: [
             Expanded(
@@ -50,7 +51,7 @@ class _TaskBoxState extends State<TaskBox> {
                 title: Text(widget.task.title),
               ),
             ),
-            if (widget.completionPeriod.contains(nowTime))
+            if (widget.completionPeriod.contains(nowTime) || preview)
               RoundCheckbox(
                 value: completed, //_isCompleted,
                 onChanged: (value) => completed ? () {} : _navigateToTaskScreen(),
