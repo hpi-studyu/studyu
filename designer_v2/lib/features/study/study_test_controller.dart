@@ -24,7 +24,7 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = 'https://studyu-app-v2--pr101-dev-designer-v2-prev-abb89qaw.web.app';
+  String previewSrc = 'https://studyu-app-v2--pr92-dev-designer-v2-prev-ahingod1.web.app/';
   //String previewSrc = 'https://studyu-app-v2.web.app/';
   //String previewSrc = 'http://localhost:12345/';
 
@@ -41,16 +41,11 @@ class StudyTestController extends StateNotifier<StudyTestState> {
   }
 
   _selectPlatform() {
-    // We can also use defaultTargetPlatform to detect running environment
-    // mobile: (TargetPlatform.iOS || TargetPlatform.android)
-    // Desktop: (linux, macOS, windows)
-    // else: Web
     if (!kIsWeb) {
-      // just check if run on the web or not
-      // Mobile
-      // Could be built with the webview_flutter package
+      // Mobile could be built with the webview_flutter package
       platformController = MobileController(previewSrc, studyId);
     } else {
+      // Desktop and Web
       platformController = WebController(previewSrc, studyId);
     }
   }
@@ -90,7 +85,6 @@ class WebController extends PlatformController {
 
   @override
   void refresh() {
-    // todo test
     html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
     as html.IFrameElement;
     iFrameElement.src = previewSrc;
@@ -98,7 +92,6 @@ class WebController extends PlatformController {
 
   @override
   void listen() {
-    // seems to be triggering two times. Is the message getting sent twice or is the listener started twice?
     html.window.onMessage.listen((event) {
       var data = event.data;
     });
@@ -106,16 +99,16 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    html.IFrameElement iw = html.document.getElementById("studyu_app_preview")
+    html.IFrameElement frame = html.document.getElementById("studyu_app_preview")
         as html.IFrameElement;
-    iw.contentWindow?.postMessage(message, "*");  // todo replace * with url
-    print("designer send");
+    // For debug purposes: postMessage(message, '*')
+    frame.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
   }
 }
 
+// Mostly unfinished, since we only support Desktop for now
 class MobileController extends PlatformController {
   MobileController(String previewSrc, studyId) : super(previewSrc, studyId) {
-    //throw UnimplementedError();
     scaffold = const MobileScaffold();
   }
 
@@ -125,22 +118,18 @@ class MobileController extends PlatformController {
 
   @override
   void refresh() {
-    // implement refresh
   }
 
   @override
   void registerViews() {
-    // implement _registerViews
   }
 
   @override
   void listen() {
-    // implement listen
   }
 
   @override
   void send(String message) {
-    // implement send
   }
 }
 
