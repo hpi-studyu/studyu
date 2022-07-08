@@ -35,7 +35,7 @@ class Preview {
       //print('subject id: $selectedStudyObjectId');
       if (selectedStudyObjectId != null) {
         print('reset do');
-        //try {
+        try {
         subject = await SupabaseQuery.getById<StudySubject>(
           selectedStudyObjectId,
           selectedColumns: [
@@ -46,13 +46,13 @@ class Preview {
         );
         subject.delete();
         deleteActiveStudyReference();
-        //selectedStudyObjectId = await getActiveSubjectId();
-        //print('after deletion: $selectedStudyObjectId');
+        selectedStudyObjectId = await getActiveSubjectId();
+        print('after deletion: $selectedStudyObjectId');
         selectedStudyObjectId = null; // should normally be updated automatically?
-        //print('successfully deleted');
-        //} catch (e) {
-          //print('error with deleting: $e');
-        //}
+        print('successfully deleted');
+        } catch (e) {
+          print('error with deleting: $e');
+        }
         print('reset completed');
       }
       print('reset finish');
