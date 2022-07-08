@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 
 class StudyTestScreen extends ConsumerStatefulWidget {
-  StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
+  const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
 
   final String studyId;
 
