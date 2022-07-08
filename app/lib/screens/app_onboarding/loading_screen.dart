@@ -61,35 +61,12 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       // authentication completed
 
-      //preview.runCommands();
-
-      if (preview.containsQueryPair('cmd', 'reset')) {
-        // deleting study progress
-        print('subject id: $selectedStudyObjectId');
-        if (selectedStudyObjectId != null) {
-          try {
-            final StudySubject subject =
-            await SupabaseQuery.getById<StudySubject>(
-              selectedStudyObjectId,
-              selectedColumns: [
-                '*',
-                'study!study_subject_studyId_fkey(*)',
-                'subject_progress(*)',
-              ],
-            );
-            subject.delete();
-            deleteActiveStudyReference();
-            selectedStudyObjectId = await getActiveSubjectId();
-            print('after deletion: $selectedStudyObjectId');
-            selectedStudyObjectId = null;
-            print('successfully deleted');
-          } catch (e) {
-            print('error with deleting: $e');
-          }
-        }
+      final bool ret = await preview.runCommands(selectedStudyObjectId);
+      if (ret) {
+        selectedStudyObjectId = await getActiveSubjectId();
+        print('after deletion: $selectedStudyObjectId');
+        selectedStudyObjectId = null;
       }
-
-      //selectedStudyObjectId = await getActiveSubjectId();
 
       // Using the user session of the designer for the app preview interferes with the subscribed study of the user
       // --> WORKAROUND host the preview app version under a separate domain than the actual app!
