@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/app_state.dart';
 import '../../routes.dart';
 import '../../util/notifications.dart';
+import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String sessionString;
@@ -22,6 +23,9 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
+
+  Preview preview;
+
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
@@ -30,19 +34,14 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
 
-    if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
-        widget.queryParameters['mode'] == 'preview') {
+    preview = Preview(widget.queryParameters ?? {});
+    await preview.init();
+
+    if (preview.containsQueryPair('mode', 'preview')) {
       if (!mounted) return;
       context.read<AppState>().isPreview = true;
       context.read<AppState>().isPreviewSkipping = true;
     }
-
-    if (!mounted) return;
-
-    // testing for context.read<AppState>().isPreview shouldn't make a difference
-    /*if (widget.queryParameters != null && widget.queryParameters['mode'] != null &&
-        widget.queryParameters['mode'] == 'preview' || context.read<AppState>().isPreview) {
-    }*/
 
     initStudy();
     print('returned from initStudy');
@@ -53,15 +52,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     String selectedStudyObjectId = await getActiveSubjectId();
     print('initStudy');
     if (!mounted) return;
-    if (widget.queryParameters != null &&
-        widget.queryParameters['mode'] != null &&
-        widget.queryParameters['mode'] == 'preview') {
-      if (widget.queryParameters['studyid'] == null ||
-          widget.queryParameters['studyid'].isEmpty ||
-          widget.queryParameters['session'] == null ||
-          widget.queryParameters['session'].isEmpty ||
-          widget.queryParameters['studyid'] == null ||
-          widget.queryParameters['studyid'].isEmpty) {
+    if (preview.containsQueryPair('mode', 'preview')) {
+      if (!preview.containsQuery('studyid') && !preview.containsQuery('session')) {
         print('Parameter Error');
         return;
       }
@@ -90,8 +82,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       // authentication completed
 
-      if (widget.queryParameters['cmd'] != null &&
-          widget.queryParameters['cmd'] == 'reset') {
+      if (preview.containsQueryPair('cmd', 'reset')) {
         // deleting study progress
         print('subject id: $selectedStudyObjectId');
         if (selectedStudyObjectId != null) {
