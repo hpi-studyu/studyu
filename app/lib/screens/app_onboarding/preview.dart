@@ -29,35 +29,33 @@ class Preview {
     return true;
   }
 
-  /*Future<void> runCommands() async {
+  Future<bool> runCommands(String selectedStudyObjectId) async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
+      // deleting study progress
       print('subject id: $selectedStudyObjectId');
       if (selectedStudyObjectId != null) {
-        print('reset do');
         try {
-        subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-        subject.delete();
-        deleteActiveStudyReference();
-        selectedStudyObjectId = await getActiveSubjectId();
-        print('after deletion: $selectedStudyObjectId');
-        selectedStudyObjectId = null; // should normally be updated automatically?
-        print('successfully deleted');
+          final StudySubject subject =
+          await SupabaseQuery.getById<StudySubject>(
+            selectedStudyObjectId,
+            selectedColumns: [
+              '*',
+              'study!study_subject_studyId_fkey(*)',
+              'subject_progress(*)',
+            ],
+          );
+          subject.delete();
+          deleteActiveStudyReference();
+          print('successfully deleted');
+          return true; // needs to return void later
         } catch (e) {
           print('error with deleting: $e');
         }
-        print('reset completed');
       }
-      print('reset finish');
     }
-  }*/
+    return false;
+  }
 
   Future<bool> isSubscribed(String selectedStudyObjectId) async {
     if (selectedStudyObjectId != null) {
