@@ -14,7 +14,7 @@ ChoiceQuestion _$ChoiceQuestionFromJson(Map<String, dynamic> json) =>
       ..rationale = json['rationale'] as String?
       ..conditional = json['conditional'] == null
           ? null
-          : QuestionConditional.fromJson(
+          : QuestionConditional<List<String>>.fromJson(
               json['conditional'] as Map<String, dynamic>)
       ..multiple = json['multiple'] as bool
       ..choices = (json['choices'] as List<dynamic>)
