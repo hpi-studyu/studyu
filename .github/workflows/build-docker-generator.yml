@@ -20,6 +20,9 @@ jobs:
   push_to_registry:
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
