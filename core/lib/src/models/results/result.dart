@@ -21,6 +21,8 @@ class Result<T> {
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
+  factory Result.fromJson(Map<String, dynamic> json) => _fromJson(json) as Result<T>;
+
   Map<String, dynamic> toJson() {
     Map<String, dynamic> resultMap;
     switch (T) {
@@ -40,7 +42,7 @@ class Result<T> {
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);
   }
 
-  static Result fromJson(Map<String, dynamic> data) {
+  static Result _fromJson(Map<String, dynamic> data) {
     switch (data[keyType] as String) {
       case 'fhir.QuestionnaireResponse':
         return Result<fhir.QuestionnaireResponse>.parseJson(data)

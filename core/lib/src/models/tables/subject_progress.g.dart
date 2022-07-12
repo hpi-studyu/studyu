@@ -12,7 +12,7 @@ SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) =>
       interventionId: json['intervention_id'] as String,
       taskId: json['task_id'] as String,
       resultType: json['result_type'] as String,
-      result: Result.fromJson(json['result'] as Map<String, dynamic>),
+      result: Result<dynamic>.fromJson(json['result'] as Map<String, dynamic>),
     )..completedAt = json['completed_at'] == null
         ? null
         : DateTime.parse(json['completed_at'] as String);
