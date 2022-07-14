@@ -305,14 +305,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context).primaryBackground,
                         ),
-                        child: Align(
-                          alignment: const AlignmentDirectional(0.3, 0),
-                          child: Image.asset(
-                            'assets/images/hpi_logo.png',
-                            width: 175,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
+                        child: const Image(
+                            image: AssetImage('assets/images/hpi_logo.webp'),
                         ),
                       ),
                     ),
