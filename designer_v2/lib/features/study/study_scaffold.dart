@@ -13,10 +13,11 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyScaffoldTab {
-  static var _index = 0;
-
-  StudyScaffoldTab({required this.title, required this.intent})
-      : index = _index++;
+  StudyScaffoldTab({
+    required this.title,
+    required this.intent,
+    required this.index
+  });
 
   /// The text displayed as the tab's title
   final String title; // TODO: use localization key here
@@ -26,15 +27,15 @@ class StudyScaffoldTab {
   final int index;
 
   static final edit = StudyScaffoldTab(
-      title: "Design".hardcoded, intent: RoutingIntents.studyEdit);
+      index: 0, title: "Design".hardcoded, intent: RoutingIntents.studyEdit);
   static final test = StudyScaffoldTab(
-      title: "Test".hardcoded, intent: RoutingIntents.studyTest);
+      index: 1, title: "Test".hardcoded, intent: RoutingIntents.studyTest);
   static final recruit = StudyScaffoldTab(
-      title: "Recruit".hardcoded, intent: RoutingIntents.studyRecruit);
+      index: 2, title: "Recruit".hardcoded, intent: RoutingIntents.studyRecruit);
   static final monitor = StudyScaffoldTab(
-      title: "Monitor".hardcoded, intent: RoutingIntents.studyMonitor);
+      index: 3, title: "Monitor".hardcoded, intent: RoutingIntents.studyMonitor);
   static final analyze = StudyScaffoldTab(
-      title: "Analyze".hardcoded, intent: RoutingIntents.studyAnalyze);
+      index: 4, title: "Analyze".hardcoded, intent: RoutingIntents.studyAnalyze);
 
   static List<StudyScaffoldTab> get values =>
       [edit, test, recruit, monitor, analyze];
