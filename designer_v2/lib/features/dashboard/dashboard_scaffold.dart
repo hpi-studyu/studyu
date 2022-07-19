@@ -12,24 +12,9 @@ class DashboardScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null, // default app bar not suitable for our layout
-      body: SidenavLayout(
+      body: FixedSideScrollBodyLayout(
         sideDrawerWidget: AppDrawer(title: 'StudyU'.hardcoded),
-        mainContentWidget: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: viewportConstraints.maxHeight,
-                  ),
-                  child: Container(
-                    child: IntrinsicHeight(
-                        child: body
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+        mainContentWidget: body,
         ),
       );
   }

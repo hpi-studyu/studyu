@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
@@ -8,21 +9,35 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
-enum StudyScaffoldTab {
-  edit(title: "Design", page: RouterPage.studyEditor), // TODO: "Edit".hardcoded
-  test(title: "Test", page: RouterPage.studyTester), // TODO: "Test".hardcoded
-  recruit(title: "Recruit", page: RouterPage.studyRecruit), // TODO: "Recruit".hardcoded
-  monitor(title: "Monitor", page: RouterPage.studyMonitor), // TODO: "Monitor".hardcoded
-  analyze(title: "Analyze", page: RouterPage.studyAnalysis); // TODO: "Analyze".hardcoded
+class StudyScaffoldTab {
+  static var _index = 0;
+
+  StudyScaffoldTab({required this.title, required this.intent})
+      : index = _index++;
 
   /// The text displayed as the tab's title
   final String title; // TODO: use localization key here
   /// The route to navigate to when switching to the tab
-  final RouterPage page;
+  final RoutingIntentFactory intent;
 
-  const StudyScaffoldTab({required this.title, required this.page});
+  final int index;
+
+  static final edit = StudyScaffoldTab(
+      title: "Design".hardcoded, intent: RoutingIntents.studyEdit);
+  static final test = StudyScaffoldTab(
+      title: "Test".hardcoded, intent: RoutingIntents.studyTest);
+  static final recruit = StudyScaffoldTab(
+      title: "Recruit".hardcoded, intent: RoutingIntents.studyRecruit);
+  static final monitor = StudyScaffoldTab(
+      title: "Monitor".hardcoded, intent: RoutingIntents.studyMonitor);
+  static final analyze = StudyScaffoldTab(
+      title: "Analyze".hardcoded, intent: RoutingIntents.studyAnalyze);
+
+  static List<StudyScaffoldTab> get values =>
+      [edit, test, recruit, monitor, analyze];
 }
 
 /// Custom scaffold shared between all pages for an individual [Study]
@@ -58,7 +73,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: StudyScaffoldTab.values.length, vsync: this);
+    _tabController = TabController(
+        length: StudyScaffoldTab.values.length,
+        vsync: this);
     _tabController.index = widget.selectedTab.index;
   }
 
@@ -76,10 +93,8 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
 
   void _onSelectTab(int tabIndex) {
     // Navigate to the page associated with the selected tab
-    context.goNamed(
-      StudyScaffoldTab.values[tabIndex].page.id,
-      params: {"studyId": widget.studyId},
-    );
+    ref.read(routerProvider).dispatch(
+        StudyScaffoldTab.values[tabIndex].intent(widget.studyId));
   }
 
   @override
@@ -155,25 +170,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
               error: (e, str) => Container(),
             ),
           ),
-          PopupMenuButton(
-            iconSize: 18,
-            elevation: 20,
-            icon: const Icon(Icons.more_vert),
-            position: PopupMenuPosition.under,
-            onSelected: (ModelAction action) {
-              action.onExecute();
-            },
-            itemBuilder: (BuildContext context) {
-              return controller.studyActions.map((action) {
-                return PopupMenuItem(
-                  value: action,
-                  child: action.isDestructive
-                      ? Text(action.label,
-                      style: const TextStyle(color: Colors.red))
-                      : Text(action.label),
-                );
-              }).toList();
-            }
+          ActionPopUpMenuButton(
+            actions: controller.studyActions,
+            orientation: Axis.vertical,
+            hideOnEmpty: false,
           ),
         ],
       ),

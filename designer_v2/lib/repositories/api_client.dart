@@ -59,7 +59,7 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<void> deleteStudy(Study study) async {
     // Delegate to [SupabaseObjectMethods]
-    // TODO: proper error handling here
+    // TODO: proper error handling here (encountered so far: 409, 406)
     await study.delete();
   }
 

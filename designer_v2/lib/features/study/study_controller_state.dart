@@ -36,7 +36,7 @@ class StudyControllerState extends Equatable {
   List<Object?> get props => [study, isDirty];
 }
 
-extension StudyControllerStateX on StudyControllerState {
+extension StudyControllerStateUnsafeProps on StudyControllerState {
   /// Make sure to only access these in an [AsyncWidget] so that [study.value]
   /// is available
   String get titleText => study.value!.title ?? "";

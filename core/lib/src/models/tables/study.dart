@@ -101,8 +101,8 @@ class Study extends SupabaseObjectFunctions<Study> {
     if (missedDays != null) {
       study.missedDays = List<int>.from(json['study_missed_days'] as List);
     }
-    final String createdAt = json['created_at'] as String;
-    if (createdAt.isNotEmpty) {
+    final String? createdAt = json['created_at'] as String?;
+    if (createdAt != null && createdAt.isNotEmpty) {
       study.createdAt = DateTime.parse(createdAt);
     }
     return study;
