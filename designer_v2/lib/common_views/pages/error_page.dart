@@ -1,24 +1,27 @@
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/routing/navigation_service.dart';
 
-class ErrorPage extends StatefulWidget {
-  final String error;
+class ErrorPage extends ConsumerWidget {
+  final Exception? error;
 
-  const ErrorPage({Key? key, required this.error}) : super(key: key);
+  const ErrorPage({required this.error, Key? key}) : super(key: key);
 
   @override
-  _ErrorPageState createState() => _ErrorPageState();
-}
-
-class _ErrorPageState extends State<ErrorPage> {
-  @override
-  Widget build(BuildContext context) {
-    print(widget.error);
-    return Container(
-        child: Align(
-            alignment: Alignment.center,
-            child: Text('Oops something went wrong!'.hardcoded)
-        )
+  Widget build(BuildContext context, WidgetRef ref) {
+    final navigationService = ref.read(navigationServiceProvider);
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SelectableText(error.toString()),
+          TextButton(
+            onPressed: () => navigationService.goToDashboard(),
+            child: Text('Go back home'.hardcoded),
+          ),
+        ],
+      ),
     );
   }
 }

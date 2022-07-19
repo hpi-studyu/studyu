@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/router.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 
 
-class NavigationDrawerEntry {
-  const NavigationDrawerEntry(this.title);
+class DrawerEntry {
+  const DrawerEntry(this.title);
   final String title;
 
   void onClick(BuildContext context) {
@@ -15,8 +15,8 @@ class NavigationDrawerEntry {
   }
 }
 
-class NavigationGoRouterEntry extends NavigationDrawerEntry {
-  const NavigationGoRouterEntry(title, this.routerPage) : super(title);
+class GoRouterDrawerEntry extends DrawerEntry {
+  const GoRouterDrawerEntry(title, this.routerPage) : super(title);
   final RouterPage routerPage;
 
   @override
@@ -26,29 +26,37 @@ class NavigationGoRouterEntry extends NavigationDrawerEntry {
 }
 
 
-class NavigationDrawer extends ConsumerStatefulWidget {
-  final String title;
+class AppDrawer extends ConsumerStatefulWidget {
+  AppDrawer({
+    required this.title,
+    this.width = 260,
+    this.leftPaddingEntries = 36.0,
+    Key? key
+  }) : super(key: key);
 
-  NavigationDrawer({Key? key, required this.title}) : super(key: key);
+  final String title;
+  final int width;
+  final double leftPaddingEntries;
 
   @override
-  _NavigationDrawerState createState() => _NavigationDrawerState();
+  _AppDrawerState createState() => _AppDrawerState();
 }
 
-class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
+class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
-  final List<List<NavigationGoRouterEntry>> entries = [
+  final List<List<GoRouterDrawerEntry>> entries = [
     [
-      NavigationGoRouterEntry('My Studies'.hardcoded, RouterPage.dashboard),
-      NavigationGoRouterEntry('Shared With Me'.hardcoded, RouterPage.dashboardShared),
+      GoRouterDrawerEntry('My Studies'.hardcoded, RouterPage.dashboard),
+      GoRouterDrawerEntry('Shared With Me'.hardcoded, RouterPage.dashboardShared),
     ],
     [
-      NavigationGoRouterEntry('Study Registry'.hardcoded, RouterPage.studyRegistry),
+      GoRouterDrawerEntry('Study Registry'.hardcoded, RouterPage.registry),
     ]
   ];
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
-  int _selectedIdx = 0;
+  /// Defaults to -1 if none of the entries is currently selected
+  int _selectedIdx = -1;
 
   late final GoRouter _router;
 
@@ -69,7 +77,7 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
     final flattenedEntries = entries.expand((e) => e).toList();
     final idx = flattenedEntries.indexWhere(
             (e) => _router.namedLocation(e.routerPage.id) == _router.currentPath);
-    return (idx != -1) ? idx : 0;
+    return idx;
   }
 
   void setSelectedIdx(int index) {
@@ -89,7 +97,7 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
     final theme = Theme.of(context);
 
     return Drawer(
-        width: 250.0,
+        width: widget.width.toDouble(),
         backgroundColor: theme.colorScheme.surface,
         child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -116,7 +124,9 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                     children: _buildBottomMenuItems(context)
                 ),
               )
-            ]));
+            ]
+        )
+    );
   }
 
   Widget _buildLogoTile(BuildContext context) {
@@ -148,7 +158,7 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
                 style: isSelected
                     ? const TextStyle(fontWeight: FontWeight.bold)
                     : null),
-            contentPadding: const EdgeInsets.only(left: 32.0),
+            contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
             selected: isSelected,
             onTap: () => entry.onClick(context),
           ),
@@ -173,13 +183,14 @@ class _NavigationDrawerState extends ConsumerState<NavigationDrawer> {
         hoverColor:
         theme.colorScheme.primaryContainer.withOpacity(0.4),
         title: Text('Change language'.hardcoded),
-        contentPadding: const EdgeInsets.only(left: 48.0),
+        contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
+        // TODO: open settings page/modal
       ),
       ListTile(
         hoverColor:
         theme.colorScheme.primaryContainer.withOpacity(0.4),
         title: Text('Sign out'.hardcoded),
-        contentPadding: const  EdgeInsets.only(left: 48.0),
+        contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
         onTap: authController.signOut,
       ),
     ];
