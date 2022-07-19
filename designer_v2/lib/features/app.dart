@@ -38,7 +38,7 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
-    final appRouter = ref.watch(routerProvider);
+    final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) => ThemeProvider(
@@ -47,20 +47,21 @@ class _AppState extends ConsumerState<App> {
             settings: settings,
             child: Builder(builder: (context) {
               final themeProvider = ThemeProvider.of(context);
-              final appTheme = themeProvider.light(settings.value.sourceColor);
+              final theme = themeProvider.light(settings.value.sourceColor);
 
               return MaterialApp.router(
                 scaffoldMessengerKey: scaffoldMessengerKey,
                 builder: (context, widget) => NotificationDispatcher(
                     scaffoldMessengerKey: scaffoldMessengerKey,
+                    navigatorKey: router.routerDelegate.navigatorKey,
                     child: widget
                 ),
                 debugShowCheckedModeBanner: Config.isDebugMode,
                 title: 'StudyU Designer'.hardcoded,
-                color: appTheme.colorScheme.surface,
-                theme: appTheme,
-                routeInformationParser: appRouter.routeInformationParser,
-                routerDelegate: appRouter.routerDelegate,
+                color: theme.colorScheme.surface,
+                theme: theme,
+                routeInformationParser: router.routeInformationParser,
+                routerDelegate: router.routerDelegate,
                 locale: const Locale('en'),
                 supportedLocales: AppLocalizations.supportedLocales,
                 localizationsDelegates: const [

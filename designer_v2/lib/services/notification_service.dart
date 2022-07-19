@@ -1,45 +1,18 @@
 import 'dart:async';
-
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:studyu_designer_v2/services/notification_types.dart';
 
-
-/// Encapsulates a call to [showDialog] or [showSnackbar]
-class NotificationMessage extends Equatable {
-  const NotificationMessage({
-    required this.message,
-    this.icon,
-    this.duration,
-    this.actions = const [],
-  });
-
-  final String message;
-  final IconData? icon;
-  final int? duration;
-  final List<NotificationAction> actions;
-
-  @override
-  List<Object?> get props => [message, duration, actions];
-}
-
-class NotificationAction {
-  final String label;
-  final Function onExecute;
-
-  NotificationAction(this.label, this.onExecute);
-}
 
 abstract class INotificationService {
-  void showMessage(String notificationText);
-  void show(NotificationMessage notification);
-  Stream<NotificationMessage> watchNotifications();
+  void showMessage(String notificationText, {List<NotificationAction>? actions});
+  void show(NotificationIntent notification, {List<NotificationAction>? actions});
+  Stream<NotificationIntent> watchNotifications();
   // - Lifecycle
   void dispose();
 }
 
-/// Notification center that is responsible for showing [NotificationMessage]s
+/// Notification center that is responsible for showing [NotificationIntent]s
 /// across the app via snackbars or alerts.
 ///
 /// Enables notifications to be decoupled from UI widgets so that
@@ -47,18 +20,25 @@ abstract class INotificationService {
 class NotificationService implements INotificationService {
   /// A stream controller that exposes a stream of [Notifications]s that
   /// are consumed & dispatched by a [NotificationDispatcher] widget
-  final BehaviorSubject<NotificationMessage> _streamController = BehaviorSubject();
+  final BehaviorSubject<NotificationIntent> _streamController = BehaviorSubject();
 
   @override
-  Stream<NotificationMessage> watchNotifications() => _streamController.stream;
+  Stream<NotificationIntent> watchNotifications() => _streamController.stream;
 
   @override
-  void showMessage(String message) {
-    show(NotificationMessage(message: message));
+  void showMessage(String message, {List<NotificationAction>? actions}) {
+    show(SnackbarIntent(message: message), actions: actions);
   }
 
   @override
-  void show(NotificationMessage notification) {
+  void show(NotificationIntent notification,
+      {List<NotificationAction>? actions}) {
+    // Register any additional actions passed as callbacks by the calling code
+    if (actions != null) {
+      for (final action in actions) {
+        notification.register(action);
+      }
+    }
     _streamController.add(notification);
   }
 
