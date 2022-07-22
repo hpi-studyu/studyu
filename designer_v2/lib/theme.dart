@@ -146,6 +146,52 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  InputDecorationTheme inputDecorationTheme(ColorScheme colors) {
+    return InputDecorationTheme(
+      filled: true,
+      fillColor: Color(0xFFFFFFFF),
+      hoverColor: Color(0xFFFFFFFF),
+      isDense: true,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.surfaceVariant.withOpacity(0.8),
+          width: 1.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.primary,
+          width: 1.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.error,
+          width: 1.0,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.error,
+          width: 1.0,
+        ),
+      ),
+    );
+  }
+
+  TextTheme textTheme(ColorScheme colors) {
+    // TODO: migrate to 2021 term set across the codebase
+    // See https://stackoverflow.com/questions/72271461/cannot-mix-2018-and-2021-terms-in-call-to-texttheme-constructor
+    return TextTheme(
+      caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.9)), // Form Labels
+      subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
+    );
+  }
+
   NavigationRailThemeData navigationRailTheme(ColorScheme colors) {
     return const NavigationRailThemeData();
   }
@@ -173,6 +219,8 @@ class ThemeProvider extends InheritedWidget {
       scaffoldBackgroundColor: colorScheme.background,
       splashColor: colorScheme.primary.withOpacity(0.3),
       highlightColor: colorScheme.primaryContainer.withOpacity(0.4),
+      inputDecorationTheme: inputDecorationTheme(colorScheme),
+      textTheme: textTheme(colorScheme),
       useMaterial3: true,
     );
   }
@@ -192,6 +240,8 @@ class ThemeProvider extends InheritedWidget {
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
+      inputDecorationTheme: inputDecorationTheme(colorScheme),
+      textTheme: textTheme(colorScheme),
       useMaterial3: true,
     );
   }

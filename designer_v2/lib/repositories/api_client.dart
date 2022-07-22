@@ -29,19 +29,20 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   final SupabaseClient supabaseClient;
 
+  static final studyColumns = [
+    '*',
+    'repo(*)',
+    'study_invite!study_invite_studyId_fkey(*)', // TODO: how does this work?
+    'study_participant_count',
+    'study_ended_count',
+    'active_subject_count',
+    'study_missed_days'
+  ];
+
   @override
   Future<List<Study>> getUserStudies() async {
     // TODO: fix Postgres policy for proper multi-tenancy
-    final request = getAll<Study>(
-      selectedColumns: [
-        '*',
-        'repo(*)',
-        'study_participant_count',
-        'study_ended_count',
-        'active_subject_count',
-        'study_missed_days'
-      ],
-    );
+    final request = getAll<Study>(selectedColumns: studyColumns);
     return _awaitGuarded(request);
   }
 
@@ -49,7 +50,7 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<Study> fetchStudy(StudyID studyId) async {
     // uncomment to test loading states
     await Future.delayed(const Duration(seconds: 2));
-    final request = getById<Study>(studyId);
+    final request = getById<Study>(studyId, selectedColumns: studyColumns);
     return _awaitGuarded(request, onError: {
       HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
       HttpStatus.notFound: (e) => throw StudyNotFoundException(),

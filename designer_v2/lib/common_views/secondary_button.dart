@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 
-/// See also: [SecondaryButton]
-class PrimaryButton extends StatelessWidget {
+/// See also: [PrimaryButton]
+class SecondaryButton extends StatelessWidget {
   /// The text displayed as the button label
   final String text;
   /// The icon displayed to the left of the label
@@ -11,7 +12,7 @@ class PrimaryButton extends StatelessWidget {
   /// Callback to be called when the button is pressd
   final VoidCallback? onPressed;
 
-  const PrimaryButton({
+  const SecondaryButton({
     required this.text,
     this.icon = Icons.add,
     this.isLoading = false,
@@ -21,21 +22,21 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryStyle = ElevatedButton.styleFrom(
-      onPrimary: Theme.of(context).colorScheme.onPrimary,
-      primary: Theme.of(context).colorScheme.primary,
-    ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
+    final theme = Theme.of(context);
+    final secondaryStyle = OutlinedButton.styleFrom(
+      side: BorderSide(color: theme.colorScheme.primary),
+    );
 
     if (icon != null) {
-      return ElevatedButton.icon(
-        style: primaryStyle,
+      return OutlinedButton.icon(
+        style: secondaryStyle,
         onPressed: onPressed,
         icon: Icon(icon),
         label: Text(text),
       );
     }
-    return ElevatedButton(
-      style: primaryStyle,
+    return OutlinedButton(
+      style: secondaryStyle,
       onPressed: onPressed,
       child: isLoading
           ? const CircularProgressIndicator()

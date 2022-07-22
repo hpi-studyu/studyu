@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -47,8 +48,13 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.studyId = Config.newStudyId,
     required this.selectedTab,
     required this.child,
+    this.mainContentPaddingHorizontal = 48.0,
+    this.mainContentPaddingVertical = 32.0,
     Key? key
   }) : super(key: key);
+
+  final double mainContentPaddingHorizontal;
+  final double mainContentPaddingVertical;
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
@@ -106,6 +112,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 4.0,
         title: Row(
           children: [
             // Use the title widget slot to render both the title and a
@@ -178,10 +185,33 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
           ),
         ],
       ),
+
       body: AsyncValueWidget(
         value: state.study,
-        data: (study) => widget.child,
+        data: (study) => Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: widget.mainContentPaddingVertical,
+            horizontal: widget.mainContentPaddingHorizontal
+          ),
+          child: widget.child,
+        )
       ),
+
+      /*
+      body: AsyncValueWidget(
+          value: state.study,
+          data: (study) => BodyWithSideSheet(
+              body: Container(
+                child:Text("My App Body"),
+              ),
+              sheetBody: Container(
+                child:Text("My Sheet Body"),
+              ),
+              show: true
+          ),
+      ),
+
+       */
       drawer: AppDrawer(title: 'StudyU'.hardcoded),
     );
   }
