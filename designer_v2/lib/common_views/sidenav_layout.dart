@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 
-class FixedSideScrollBodyLayout extends StatefulWidget {
-  final Widget sideDrawerWidget;
-  final Widget mainContentWidget;
+class TwoColumnLayoutLeftFixedBodyScroll extends StatefulWidget {
+  final Widget leftWidget;
+  final Widget bodyWidget;
   final Widget? dividerWidget;
 
-  final double mainContentPaddingHorizontal;
-  final double mainContentPaddingVertical;
+  final double bodyPaddingHorizontal;
+  final double bodyPaddingVertical;
 
   static const VerticalDivider defaultDivider = VerticalDivider(
     width: 1,
     thickness: 1,
   );
 
-  const FixedSideScrollBodyLayout({
+  const TwoColumnLayoutLeftFixedBodyScroll({
     Key? key,
-    required this.sideDrawerWidget,
-    required this.mainContentWidget,
-    this.mainContentPaddingHorizontal = 48.0,
-    this.mainContentPaddingVertical = 32.0,
+    required this.leftWidget,
+    required this.bodyWidget,
+    this.bodyPaddingHorizontal = 48.0,
+    this.bodyPaddingVertical = 32.0,
     Widget? this.dividerWidget,
   }) : super(key: key);
 
   @override
-  State<FixedSideScrollBodyLayout> createState() => _FixedSideScrollBodyLayoutState();
+  State<TwoColumnLayoutLeftFixedBodyScroll> createState() => _TwoColumnLayoutLeftFixedBodyScrollState();
 }
 
-class _FixedSideScrollBodyLayoutState extends State<FixedSideScrollBodyLayout> {
+class _TwoColumnLayoutLeftFixedBodyScrollState
+    extends State<TwoColumnLayoutLeftFixedBodyScroll> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -34,8 +35,8 @@ class _FixedSideScrollBodyLayoutState extends State<FixedSideScrollBodyLayout> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        widget.sideDrawerWidget,
-        widget.dividerWidget ?? FixedSideScrollBodyLayout.defaultDivider,
+        widget.leftWidget,
+        widget.dividerWidget ?? TwoColumnLayoutLeftFixedBodyScroll.defaultDivider,
         Expanded(
           child: Scrollbar(
             thumbVisibility: true,
@@ -44,10 +45,10 @@ class _FixedSideScrollBodyLayoutState extends State<FixedSideScrollBodyLayout> {
                 controller: _scrollController,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: widget.mainContentPaddingVertical,
-                      horizontal: widget.mainContentPaddingHorizontal
+                      vertical: widget.bodyPaddingVertical,
+                      horizontal: widget.bodyPaddingHorizontal
                   ),
-                  child: widget.mainContentWidget,
+                  child: widget.bodyWidget,
                 ),
               ),
             ),

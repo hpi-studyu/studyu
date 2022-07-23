@@ -10,10 +10,16 @@ class NullHelperDecoration extends InputDecoration {
 
 class FormTableRow {
   final String label;
+  final TextStyle? labelStyle;
   final String? labelHelpText;
   final Widget input;
 
-  FormTableRow({required this.label, this.labelHelpText, required this.input});
+  FormTableRow({
+    required this.label,
+    required this.input,
+    this.labelStyle,
+    this.labelHelpText,
+  });
 }
 
 /// Renders a list of [FormTableRow]s in a two-column tabular layout
@@ -38,25 +44,32 @@ class FormTableLayout extends StatelessWidget {
     for (final row in rows) {
       final tableRow = TableRow(
           children: [
-            Row(
-                children: [
-                  Text(row.label, style: theme.textTheme.caption!),
-                  (row.labelHelpText != null)
-                      ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-                  (row.labelHelpText != null)
-                      ? Tooltip(
-                      message: row.labelHelpText,
-                      child: Icon(
-                          Icons.help_outline_rounded,
-                          size: theme.textTheme.caption!.fontSize! + 4.0,
-                          color: theme.colorScheme.onSurface.withOpacity(0.65)
-                      )
-                  ) : const SizedBox.shrink(),
-                ]
+            Container(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 10.0),
+              child: Row(
+                  children: [
+                    Text(row.label,
+                        style: theme.textTheme.caption!.merge(row.labelStyle)),
+                    (row.labelHelpText != null)
+                        ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
+                    (row.labelHelpText != null)
+                        ? Tooltip(
+                        message: row.labelHelpText,
+                        child: Icon(
+                            Icons.help_outline_rounded,
+                            size: theme.textTheme.caption!.fontSize! + 4.0,
+                            color: theme.colorScheme.onSurface.withOpacity(0.7)
+                        )
+                    ) : const SizedBox.shrink(),
+                  ]
+              ),
             ),
             Container(
               padding: const EdgeInsets.only(bottom: 10.0),
-              child: row.input,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: row.input,
+              ),
             )
           ]
       );

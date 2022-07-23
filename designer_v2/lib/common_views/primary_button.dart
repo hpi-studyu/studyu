@@ -11,9 +11,14 @@ class PrimaryButton extends StatelessWidget {
   /// Callback to be called when the button is pressd
   final VoidCallback? onPressed;
 
+  final String tooltip;
+  final String tooltipDisabled;
+
   const PrimaryButton({
     required this.text,
     this.icon = Icons.add,
+    this.tooltip = "",
+    this.tooltipDisabled = "",
     this.isLoading = false,
     this.onPressed,
     Key? key,
@@ -27,19 +32,25 @@ class PrimaryButton extends StatelessWidget {
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 
     if (icon != null) {
-      return ElevatedButton.icon(
-        style: primaryStyle,
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(text),
+      return Tooltip(
+        message: (onPressed != null) ? tooltip : tooltipDisabled,
+        child: ElevatedButton.icon(
+          style: primaryStyle,
+          onPressed: onPressed,
+          icon: Icon(icon),
+          label: Text(text),
+        )
       );
     }
-    return ElevatedButton(
-      style: primaryStyle,
-      onPressed: onPressed,
-      child: isLoading
-          ? const CircularProgressIndicator()
-          : Text(text, textAlign: TextAlign.center),
+    return Tooltip(
+      message: (onPressed != null) ? tooltip : tooltipDisabled,
+      child: ElevatedButton(
+        style: primaryStyle,
+        onPressed: onPressed,
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : Text(text, textAlign: TextAlign.center),
+      )
     );
   }
 }

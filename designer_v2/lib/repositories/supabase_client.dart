@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -64,9 +62,15 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   Future<T> getById<T extends SupabaseObject>(String id, {
     List<String> selectedColumns = const ['*']
   }) async {
+    return getByColumn('id', id, selectedColumns: selectedColumns);
+  }
+
+  Future<T> getByColumn<T extends SupabaseObject>(String colName, String value, {
+    List<String> selectedColumns = const ['*']
+  }) async {
     final PostgrestResponse res = await supabaseClient.from(tableName(T))
         .select(selectedColumns.join(','))
-        .eq('id', id)
+        .eq(colName, value)
         .single()
         .execute();
     return res.guarded((data) => deserializeObject<T>(data));

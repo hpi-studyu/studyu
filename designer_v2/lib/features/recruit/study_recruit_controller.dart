@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/forms/study_invite_code_form.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
@@ -18,20 +17,11 @@ class StudyRecruitController extends StateNotifier<StudyControllerState> {
   /// Used to retrieve the [Study] object from the data layer
   final StudyID studyId;
 
-  final StudyInviteCodeForm inviteCodeForm;
-
   StudyRecruitController({
     required this.studyId,
     required this.studyRepository,
     required this.studyControllerState,
-  }) :  inviteCodeForm = StudyInviteCodeForm(studyControllerState.study.value!),
-        super(studyControllerState);
-
-  get saveFormCallback => (inviteCodeForm.isValid) ? saveForm : null;
-
-  void saveForm() {
-    print("saving valid form");
-  }
+  }) :  super(studyControllerState);
 
   onSelectInvite(StudyInvite invite) {
     print("selected invite");
