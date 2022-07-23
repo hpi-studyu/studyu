@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
+import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// Displays a Material Side Sheet transitioned from Right side of the screen.
@@ -139,11 +142,14 @@ Future<T?> showModalSideSheet<T extends Object?>(
   );
 }
 
+typedef WidgetDecorator = Widget Function(Widget widget);
+
 Future<T?> showDefaultSideSheet<T extends Object?>({
     required BuildContext context,
     required String title,
     required Widget body,
     required List<Widget> actionButtons,
+    WidgetDecorator? wrapBody,
     width = 560,
     barrierColor = const Color(0x80FFFFFF),
     barrierDismissible = true,
@@ -153,6 +159,7 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
     bodyPaddingHorizontal = 48.0,
   }) {
   final theme = Theme.of(context);
+  final wrapper = wrapBody ?? (widget) => widget; // default to identity no-op
 
   return showModalSideSheet(
     context: context,
@@ -166,7 +173,7 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
         border: Border(left: BorderSide(
           color: theme.colorScheme.surfaceVariant.withOpacity(0.6)))
       ),
-      child: Column(
+      child: wrapper(Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -183,7 +190,7 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
               ],
             ),
           ),
-          //Divider(),
+          const Divider(),
           Flexible(
             child: SingleChildScrollView(
               child: Column(
@@ -200,7 +207,7 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
             )
           ),
         ]
-      ),
+      )),
     ),
   );
 }
@@ -242,4 +249,61 @@ class DismissButton extends StatelessWidget {
       },
     );
   }
+}
+
+/// Signature for a builder that renders the widget corresponding to the
+/// [FormViewModel] view model of type [T]
+typedef FormViewBuilder<T extends FormViewModel> = Widget Function(T formViewModel);
+
+showFormSideSheet<T extends FormViewModel>({
+  required BuildContext context,
+  required T formViewModel,
+  required FormViewBuilder<T> formViewBuilder,
+  List<Widget>? actionButtons,
+  width = 560,
+  barrierColor = const Color(0x80FFFFFF),
+  barrierDismissible = true,
+  ignoreAppBar = false,
+  bodyPaddingVertical = 32.0,
+  bodyPaddingHorizontal = 48.0,
+}) {
+  final defaultActionButtons = [
+    const DismissButton(),
+    ReactiveFormConsumer( // enable re-rendering based on form validation status
+        builder: (context, form, child) {
+          return PrimaryButton(
+            text: "Save".hardcoded,
+            tooltipDisabled: "Please fill out all fields as required".hardcoded,
+            icon: null,
+            onPressed: (formViewModel.isValid)
+              ? () => formViewModel.save().then(
+                // Close the side sheet if future completed successfully
+                (value) => Navigator.maybePop(context))
+              : null,
+          );
+        }
+    ),
+  ];
+
+  // Wraps the whole side sheet in a [ReactiveForm] widget
+  Widget wrapBody(widget) {
+    return ReactiveForm(
+      formGroup: formViewModel.form,
+      child: widget,
+    );
+  }
+
+  return showDefaultSideSheet(
+    context: context,
+    title: formViewModel.title,
+    body: formViewBuilder(formViewModel),
+    wrapBody: wrapBody,
+    actionButtons: actionButtons ?? defaultActionButtons,
+    width: width,
+    barrierColor: barrierColor,
+    barrierDismissible: barrierDismissible,
+    ignoreAppBar: ignoreAppBar,
+    bodyPaddingVertical: bodyPaddingVertical,
+    bodyPaddingHorizontal: bodyPaddingHorizontal,
+  );
 }

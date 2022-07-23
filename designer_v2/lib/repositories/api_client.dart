@@ -13,6 +13,8 @@ abstract class StudyUApi {
   Future<Study> fetchStudy(StudyID studyId);
   Future<List<Study>> getUserStudies();
   Future<void> deleteStudy(Study study);
+  Future<StudyInvite> saveStudyInvite(StudyInvite invite);
+  Future<StudyInvite> fetchStudyInvite(String code);
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -20,6 +22,7 @@ typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 /// Base class for domain-specific exceptions
 class APIException implements Exception {}
 class StudyNotFoundException extends APIException {}
+class StudyInviteNotFoundException extends APIException {}
 
 class StudyUApiClient extends SupabaseClientDependant
     with SupabaseQueryMixin implements StudyUApi  {
@@ -78,8 +81,27 @@ class StudyUApiClient extends SupabaseClientDependant
     if (publish) {
       study.published = true;
     }
-    final request = study.save();
+    // Chain a fetch request to make sure we return a  complete & updated study
+    final request = study.save().then((study) => fetchStudy(study.id));
     return _awaitGuarded<Study>(request);
+  }
+
+  @override
+  Future<StudyInvite> fetchStudyInvite(String code) async {
+    // uncomment to test loading states
+    //await Future.delayed(const Duration(seconds: 2));
+    final request = getByColumn<StudyInvite>('code', code);
+    return _awaitGuarded(request, onError: {
+      HttpStatus.notAcceptable: (e) => throw StudyInviteNotFoundException(),
+      HttpStatus.notFound: (e) => throw StudyInviteNotFoundException(),
+    });
+  }
+
+  @override
+  Future<StudyInvite> saveStudyInvite(StudyInvite invite) {
+    final request = invite.save();
+    return _awaitGuarded<StudyInvite>(request);
+    // TODO: handle already exists error here
   }
 
   /// Helper that tries to complete the given Supabase query [future] while

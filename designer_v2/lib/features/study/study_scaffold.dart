@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:modal_side_sheet/modal_side_sheet.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -11,7 +10,8 @@ import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
+import 'package:studyu_designer_v2/theme.dart';
+
 
 class StudyScaffoldTab {
   StudyScaffoldTab({
@@ -48,13 +48,8 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.studyId = Config.newStudyId,
     required this.selectedTab,
     required this.child,
-    this.mainContentPaddingHorizontal = 48.0,
-    this.mainContentPaddingVertical = 32.0,
     Key? key
   }) : super(key: key);
-
-  final double mainContentPaddingHorizontal;
-  final double mainContentPaddingVertical;
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
@@ -151,7 +146,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
             ),
           ],
         ),
-        backgroundColor: theme.colorScheme.primaryContainer,
+        //backgroundColor: theme.colorScheme.primaryContainer,
         // TODO: fallback to [AppBar.bottom] as tabbed navigation slot for small screens
         /*
         bottom: PreferredSize(
@@ -185,33 +180,23 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
           ),
         ],
       ),
-
       body: AsyncValueWidget(
         value: state.study,
-        data: (study) => Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: widget.mainContentPaddingVertical,
-            horizontal: widget.mainContentPaddingHorizontal
-          ),
-          child: widget.child,
-        )
-      ),
-
-      /*
-      body: AsyncValueWidget(
-          value: state.study,
-          data: (study) => BodyWithSideSheet(
-              body: Container(
-                child:Text("My App Body"),
+        data: (study) => TwoColumnLayoutLeftFixedBodyScroll(
+          bodyWidget: Row(
+            children: [
+              Flexible(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: ThemeConfig.kMaxContentWidth),
+                  child: widget.child,
+                )
               ),
-              sheetBody: Container(
-                child:Text("My Sheet Body"),
-              ),
-              show: true
+            ],
           ),
+          leftWidget: const SizedBox.shrink(),
+          dividerWidget: const SizedBox.shrink(),
+        ),
       ),
-
-       */
       drawer: AppDrawer(title: 'StudyU'.hardcoded),
     );
   }

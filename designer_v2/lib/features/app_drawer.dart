@@ -136,7 +136,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         data: theme.copyWith(splashColor: Colors.transparent), // disable splash
         child: Drawer(
           width: widget.width.toDouble(),
-          backgroundColor: theme.colorScheme.surface,
           child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
