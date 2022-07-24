@@ -45,6 +45,30 @@ class RoutingIntents {
         RouteParams.studyId: studyId,
       }
   );
+  static final studyEditInfo = (StudyID studyId) => RoutingIntent(
+      route: RouterConfig.studyEditInfo,
+      params: {
+        RouteParams.studyId: studyId,
+      }
+  );
+  static final studyEditEnrollment = (StudyID studyId) => RoutingIntent(
+      route: RouterConfig.studyEditEnrollment,
+      params: {
+        RouteParams.studyId: studyId,
+      }
+  );
+  static final studyEditInterventions = (StudyID studyId) => RoutingIntent(
+      route: RouterConfig.studyEditInterventions,
+      params: {
+        RouteParams.studyId: studyId,
+      }
+  );
+  static final studyEditMeasurements = (StudyID studyId) => RoutingIntent(
+      route: RouterConfig.studyEditMeasurements,
+      params: {
+        RouteParams.studyId: studyId,
+      }
+  );
   static final studyTest = (StudyID studyId) => RoutingIntent(
       route: RouterConfig.studyTest,
       params: {
