@@ -71,7 +71,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             data: (visibleStudies) => StudiesTable(
               studies: visibleStudies,
               onSelectStudy: controller.onSelectStudy,
-              getActionsForStudy: controller.getAvailableActionsForStudy,
+              getActionsForStudy: controller.availableActions,
             ),
             empty: () => EmptyBody(
               icon: Icons.folder_open_rounded,

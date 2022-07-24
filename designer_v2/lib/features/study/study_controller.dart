@@ -94,8 +94,11 @@ class StudyController extends StateNotifier<StudyControllerState>
       return [];
     }
     // filter out edit action since we are already editing the study
-    return withIcons(studyRepository.getAvailableActionsFor(study)
-        .where((action) => action.type != StudyActionType.edit).toList());
+    return withIcons(
+        studyRepository.availableActions(study).where(
+                (action) => action.type != StudyActionType.edit).toList(),
+        studyActionIcons
+    );
   }
 
   // - LegacyAppStateDelegate

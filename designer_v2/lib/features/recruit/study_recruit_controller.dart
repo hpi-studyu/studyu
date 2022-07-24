@@ -3,32 +3,44 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
-import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
-class StudyRecruitController extends StateNotifier<StudyControllerState> {
-  /// References to the data repositories injected by Riverpod
-  final IStudyRepository studyRepository;
+class StudyRecruitController extends StateNotifier<StudyControllerState>
+    implements IModelActionProvider<ModelActionType, StudyInvite> {
 
-  final StudyControllerState studyControllerState;
+  StudyRecruitController({
+    required this.studyId,
+    required this.inviteCodeRepository,
+    required this.studyControllerState,
+  }) :  super(studyControllerState);
 
   /// Identifier of the study currently being edited / viewed
   /// Used to retrieve the [Study] object from the data layer
   final StudyID studyId;
 
-  StudyRecruitController({
-    required this.studyId,
-    required this.studyRepository,
-    required this.studyControllerState,
-  }) :  super(studyControllerState);
+  final IInviteCodeRepository inviteCodeRepository;
 
-  onSelectInvite(StudyInvite invite) {
-    print("selected invite");
+  final StudyControllerState studyControllerState;
+
+  Intervention? getIntervention(String interventionId) {
+    return state.study.value!.getIntervention(interventionId);
   }
 
-  List<ModelAction> getActionsForInvite(StudyInvite invite) {
-    return [];
+  // - IModelActionProvider
+
+  @override
+  List<ModelAction<ModelActionType>> availableActions(StudyInvite model) {
+    final actions = inviteCodeRepository.availableActions(model)
+        .where((action) => action.type != ModelActionType.clipboard).toList();
+    return withIcons(actions, modelActionIcons);
+  }
+
+  List<ModelAction<ModelActionType>> availableInlineActions(StudyInvite model) {
+    final actions = inviteCodeRepository.availableActions(model)
+        .where((action) => action.type == ModelActionType.clipboard).toList();
+    return withIcons(actions, modelActionIcons);
   }
 }
 
@@ -37,7 +49,7 @@ final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
     .family<StudyRecruitController, StudyControllerState, StudyID>((ref, studyId) =>
     StudyRecruitController(
       studyId: studyId,
-      studyRepository: ref.watch(studyRepositoryProvider),
+      inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider),
       // Bind to parent controller's state & rebuild when it changes
       studyControllerState: ref.watch(studyControllerProvider(studyId)),
     )

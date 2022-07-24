@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class ModelAction<T> {
   final T type;
@@ -18,6 +19,47 @@ class ModelAction<T> {
   });
 }
 
-abstract class IModelActionProvider<T> {
-  List<ModelAction<T>> availableActions();
+abstract class IModelActionProvider<T, V> {
+  List<ModelAction<T>> availableActions(V model);
+}
+
+enum ModelActionType {
+  edit,
+  delete,
+  clipboard
+}
+
+/// Provides a human-readable translation of the model action type
+extension ModelActionTypeFormatted on ModelActionType {
+  String get string {
+    switch (this) {
+      case ModelActionType.edit:
+        return "Edit".hardcoded;
+      case ModelActionType.delete:
+        return "Delete".hardcoded;
+      case ModelActionType.clipboard:
+        return "Copy to clipboard".hardcoded;
+      default:
+        return "[Invalid ModelActionType]";
+    }
+  }
+}
+
+Map<ModelActionType, IconData> modelActionIcons = {
+  ModelActionType.edit: Icons.edit_rounded,
+  ModelActionType.delete: Icons.delete_rounded,
+  ModelActionType.clipboard: Icons.copy_rounded,
+};
+
+/// Decorates a list of [actions] with their corresponding icon
+/// Helps us keep presentational data & business logic separate
+List<ModelAction<T>> withIcons<T>(
+    List<ModelAction<T>> actions,
+    Map<T,IconData> iconMap) {
+  for (final action in actions) {
+    if (iconMap.containsKey(action.type)) {
+      action.icon = iconMap[action.type];
+    }
+  }
+  return actions;
 }

@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -10,11 +11,11 @@ import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:uuid/uuid.dart';
 
 
-class InviteCodeFormViewModel extends FormViewModel {
+class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({
     required this.study,
     required this.inviteCodeRepository
-  }) {
+  }) : super() {
     regenerateCode(); // initialize randomly
   }
 
@@ -22,34 +23,30 @@ class InviteCodeFormViewModel extends FormViewModel {
   final IInviteCodeRepository inviteCodeRepository;
 
   @override
-  String get title => "New Access Code".hardcoded;
+  Map<FormMode,String> get titles => {
+    FormMode.create: "New Access Code".hardcoded,
+    FormMode.readonly: "Access Code".hardcoded,
+  };
 
   // - Form Fields
 
   late final codeControl = FormControl<String>(
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.minLength(8), Validators.maxLength(24)],
     asyncValidators: [_uniqueInviteCode],
     asyncValidatorsDebounceTime: 200,
+    touched: true,
   );
-  String get code => codeControl.value!;
   final codeControlValidationMessages = (control) => {
-    ValidationMessage.required: 'The access code must not be empty'.hardcoded,
-    'inviteCodeAlreadyUsed': 'This access code is already in use'.hardcoded,
+    ValidationMessage.required: 'The code must not be empty'.hardcoded,
+    ValidationMessage.minLength: 'The code must have at least 8 characters'.hardcoded,
+    ValidationMessage.maxLength: 'The code must have at most 24 characters'.hardcoded,
+    'inviteCodeAlreadyUsed': 'This code is already in use'.hardcoded,
   };
-
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);
-  bool get isPreconfiguredSchedule => isPreconfiguredScheduleControl.value!;
-
   final preconfiguredScheduleTypeControl = FormControl<StudyScheduleType>(
       value: StudyScheduleType.abab);
-  StudyScheduleType? get preconfiguredScheduleType =>
-      preconfiguredScheduleTypeControl.value;
-
   final interventionAControl = FormControl<String>();
-  String? get interventionA => interventionAControl.value;
-
   final interventionBControl = FormControl<String>();
-  String? get interventionB => interventionBControl.value;
 
   List<FormControlOption<String>> get interventionControlOptions =>
       study.interventions.map((intervention) =>
@@ -59,9 +56,11 @@ class InviteCodeFormViewModel extends FormViewModel {
     FormControlOption(StudyScheduleType.abab, StudyScheduleType.abab.string)
   ];
 
-  List<String>? get preconfiguredSchedule =>
-      (interventionA != null && interventionB != null)
-          ? [interventionA!, interventionB!] : null;
+  bool get isPreconfiguredSchedule => isPreconfiguredScheduleControl.value!;
+
+  List<String>? get preconfiguredSchedule => (isPreconfiguredSchedule &&
+      interventionAControl.value != null && interventionBControl.value != null)
+          ? [interventionAControl.value!, interventionBControl.value!] : null;
 
   @override
   late final form = FormGroup({
@@ -91,23 +90,33 @@ class InviteCodeFormViewModel extends FormViewModel {
 
   String _generateCode() {
     final studyComponent = study.id.substring(0,8);
-    final uniqueComponent = Uuid().v4().substring(0,8);
+    final uniqueComponent = const Uuid().v4().substring(0,8);
     final code = "$uniqueComponent-$studyComponent";
     return code;
   }
 
-  StudyInvite toDomainModel() {
-    return StudyInvite(code, study.id,
-        preselectedInterventionIds: preconfiguredSchedule);
+  @override
+  StudyInvite toData() {
+    return StudyInvite(
+      codeControl.value!,
+      study.id,
+      preselectedInterventionIds: preconfiguredSchedule
+    );
   }
 
-  void fromDomainModel(StudyInvite invite) {
-    throw UnimplementedError();
+  @override
+  void fromData(StudyInvite data) {
+    codeControl.value = data.code;
+    isPreconfiguredScheduleControl.value = data.hasPreconfiguredSchedule;
+    if (data.hasPreconfiguredSchedule) {
+      interventionAControl.value = data.preselectedInterventionIds![0];
+      interventionBControl.value = data.preselectedInterventionIds![1];
+    }
   }
 
   @override
   Future<StudyInvite> save() {
-    return inviteCodeRepository.saveStudyInvite(toDomainModel());
+    return inviteCodeRepository.saveStudyInvite(toData());
   }
 }
 

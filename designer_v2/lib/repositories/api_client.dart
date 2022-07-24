@@ -15,6 +15,7 @@ abstract class StudyUApi {
   Future<void> deleteStudy(Study study);
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
+  Future<void> deleteStudyInvite(StudyInvite invite);
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -81,7 +82,7 @@ class StudyUApiClient extends SupabaseClientDependant
     if (publish) {
       study.published = true;
     }
-    // Chain a fetch request to make sure we return a  complete & updated study
+    // Chain a fetch request to make sure we return a complete & updated study
     final request = study.save().then((study) => fetchStudy(study.id));
     return _awaitGuarded<Study>(request);
   }
@@ -99,9 +100,15 @@ class StudyUApiClient extends SupabaseClientDependant
 
   @override
   Future<StudyInvite> saveStudyInvite(StudyInvite invite) {
-    final request = invite.save();
+    final request = invite.save(); // upsert will override existing record
     return _awaitGuarded<StudyInvite>(request);
-    // TODO: handle already exists error here
+  }
+
+  @override
+  Future<void> deleteStudyInvite(StudyInvite invite) async {
+    // Delegate to [SupabaseObjectMethods]
+    final request = invite.delete(); // upsert will override existing record
+    return _awaitGuarded<void>(request); // TODO: any errors here?
   }
 
   /// Helper that tries to complete the given Supabase query [future] while

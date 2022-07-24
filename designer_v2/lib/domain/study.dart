@@ -1,3 +1,4 @@
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
 
@@ -26,6 +27,14 @@ extension StudyWithStatus on core.Study {
       return StudyStatus.running;
     }
     return StudyStatus.draft;
+  }
+}
+
+typedef InterventionProvider = Intervention? Function(String id);
+
+extension StudyHelpers on core.Study {
+  Intervention? getIntervention(String id) {
+    return interventions.firstWhere((i) => i.id == id);
   }
 }
 
@@ -58,3 +67,4 @@ extension ParticipationTypeFormatted on core.Participation {
     }
   }
 }
+

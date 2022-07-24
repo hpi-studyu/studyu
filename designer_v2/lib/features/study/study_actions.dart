@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
 
 Map<StudyActionType, IconData> studyActionIcons = {
   StudyActionType.edit: Icons.edit_rounded,
@@ -10,15 +9,3 @@ Map<StudyActionType, IconData> studyActionIcons = {
   StudyActionType.export: Icons.download_rounded,
   StudyActionType.delete: Icons.delete_rounded,
 };
-
-/// Decorates a list of [actions] with their corresponding icon
-/// Helps us keep presentational data & business logic separate
-List<ModelAction<StudyActionType>> withIcons(
-    List<ModelAction<StudyActionType>> actions) {
-  for (final action in actions) {
-    if (studyActionIcons.containsKey(action.type)) {
-      action.icon = studyActionIcons[action.type];
-    }
-  }
-  return actions;
-}

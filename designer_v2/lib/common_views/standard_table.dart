@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 typedef OnSelectHandler<T> = void Function(T item);
@@ -8,7 +7,7 @@ typedef StandardTableRowBuilder = TableRow Function(
     BuildContext context, List<StandardTableColumn> columns);
 
 typedef StandardTableCellsBuilder<T> = List<Widget> Function(
-    BuildContext context, T item, int rowIdx);
+    BuildContext context, T item, int rowIdx, Set<MaterialState> states);
 
 /// Default descriptor for a table column
 class StandardTableColumn {
@@ -26,7 +25,6 @@ class StandardTable<T> extends StatefulWidget {
     required this.items,
     required this.columns,
     required this.onSelectItem,
-    required this.getActionsForItem,
     required this.buildCellsAt,
     this.headerRowBuilder,
     this.dataRowBuilder,
@@ -39,7 +37,6 @@ class StandardTable<T> extends StatefulWidget {
   final List<T> items;
   final List<StandardTableColumn> columns;
   final OnSelectHandler<T> onSelectItem;
-  final ActionsProviderFor<T> getActionsForItem;
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final StandardTableRowBuilder? headerRowBuilder;
@@ -174,8 +171,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
               widget.cellSpacing
           ),
           child: SelectableText(columns[i].label,
-              style: TextStyle(
-                color: theme.colorScheme.onSurface.withOpacity(0.9),
+              style: theme.textTheme.caption!.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
               )
           )
       ));
@@ -187,17 +184,19 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   TableRow _buildDataRow(int rowIdx) {
     final item = widget.items[rowIdx];
     final dataRowBuilder = widget.dataRowBuilder ?? _defaultDataRow;
-    return dataRowBuilder(context, item, rowIdx);
+    final rowStates = _rowStates[rowIdx];
+    return dataRowBuilder(context, item, rowIdx, rowStates);
   }
 
   TableRow _defaultDataRow(
       BuildContext context,
       T item,
       int rowIdx,
-      ) {
+      Set<MaterialState> states,
+  ) {
     final theme = Theme.of(context);
-    final rowIsHovered = _rowStates[rowIdx].contains(MaterialState.hovered);
-    final rowIsPressed = _rowStates[rowIdx].contains(MaterialState.pressed);
+    final rowIsHovered = states.contains(MaterialState.hovered);
+    final rowIsPressed = states.contains(MaterialState.pressed);
     final rowColor = theme.colorScheme.onPrimary;
 
     Widget decorateCell(Widget child, {
@@ -230,7 +229,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       return innerContent;
     }
 
-    final List<Widget> rawCells = widget.buildCellsAt(context, item, rowIdx);
+    final List<Widget> rawCells = widget.buildCellsAt(
+        context, item, rowIdx, states);
     final List<Widget> dataCells = [];
     for (var i = 0; i < rawCells.length; i++) {
       final isLeadingTrailing = i == 0 || i == rawCells.length-1;
