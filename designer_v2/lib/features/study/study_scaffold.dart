@@ -183,6 +183,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
       body: AsyncValueWidget(
         value: state.study,
         data: (study) => TwoColumnLayoutLeftFixedBodyScroll(
+          /*
           bodyWidget: Row(
             children: [
               Flexible(
@@ -192,7 +193,8 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
                 )
               ),
             ],
-          ),
+          ),*/
+          bodyWidget: widget.child,
           leftWidget: const SizedBox.shrink(),
           dividerWidget: const SizedBox.shrink(),
         ),

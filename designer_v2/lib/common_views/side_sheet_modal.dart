@@ -267,7 +267,7 @@ showFormSideSheet<T extends FormViewModel>({
   bodyPaddingVertical = 32.0,
   bodyPaddingHorizontal = 48.0,
 }) {
-  final defaultActionButtons = [
+  final modifyActionButtons = [
     const DismissButton(),
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
@@ -276,14 +276,22 @@ showFormSideSheet<T extends FormViewModel>({
             tooltipDisabled: "Please fill out all fields as required".hardcoded,
             icon: null,
             onPressed: (formViewModel.isValid)
-              ? () => formViewModel.save().then(
-                // Close the side sheet if future completed successfully
-                (value) => Navigator.maybePop(context))
-              : null,
+                ? () => formViewModel.save().then(
+              // Close the side sheet if future completed successfully
+                    (value) => Navigator.maybePop(context))
+                : null,
           );
         }
     ),
   ];
+  final readonlyActionButtons = [
+    DismissButton(text: "Close".hardcoded),
+  ];
+  final defaultActionButtons = {
+    FormMode.create: modifyActionButtons,
+    FormMode.edit: modifyActionButtons,
+    FormMode.readonly: readonlyActionButtons,
+  }[formViewModel.formMode] ?? modifyActionButtons;
 
   // Wraps the whole side sheet in a [ReactiveForm] widget
   Widget wrapBody(widget) {

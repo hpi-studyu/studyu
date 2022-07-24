@@ -64,6 +64,12 @@ class MockApiClient extends JsonFileLoader implements StudyUApi {
     // TODO: implement fetchStudyInvite
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> deleteStudyInvite(StudyInvite invite) {
+    // TODO: implement deleteStudyInvite
+    throw UnimplementedError();
+  }
 }
 
 final apiClientProvider = Provider<StudyUApi>((ref) => MockApiClient());

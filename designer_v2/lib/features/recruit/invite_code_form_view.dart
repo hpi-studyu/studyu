@@ -22,31 +22,24 @@ class InviteCodeFormView extends FormConsumerWidget {
         FormTableLayout(
           rows: [
             FormTableRow(
-              label: "Access Code".hardcoded,
+              label: "Code".hardcoded,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               labelHelpText: "TODO Access code help text".hardcoded,
               input: ReactiveTextField(
                 formControl: formViewModel.codeControl,
                 validationMessages: formViewModel.codeControlValidationMessages,
-                decoration: InputDecoration(
-                  helperText: "",
-                  /*
-                  suffix: (formViewModel.codeControl.pending) ? Container(
-                      width: 13.0,
-                      height: 13.0,
-                      child: const CircularProgressIndicator(strokeWidth: 2.0))
-                      : null,
-                  */
-                  // suffixText: (formViewModel.codeControl.pending) ? "Validating..." : null,
-                  suffixIcon: Material(
-                    color: Colors.transparent,
-                    child: IconButton(
-                      splashRadius: 18.0,
-                      onPressed: formViewModel.regenerateCode,
-                      icon: const Icon(Icons.refresh_rounded),
-                    )
-                  )
-                ),
+                decoration: (formViewModel.codeControl.enabled)
+                    ? InputDecoration(
+                        helperText: "",
+                        suffixIcon: Material(
+                            color: Colors.transparent,
+                            child: IconButton(
+                              splashRadius: 18.0,
+                              onPressed: formViewModel.regenerateCode,
+                              icon: const Icon(Icons.refresh_rounded),
+                            )
+                        )
+                    ) : const InputDecoration(),
               ),
             ),
             FormTableRow(

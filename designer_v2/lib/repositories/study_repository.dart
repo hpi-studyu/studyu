@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -14,13 +15,15 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
-abstract class IStudyRepository {
+abstract class IStudyRepository extends IInviteCodeRepositoryDelegate
+    implements IModelActionProvider<StudyActionType, Study> {
   // - Studies
-  List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study);
+  List<ModelAction<StudyActionType>> availableActions(Study study);
   Future<Study> duplicateStudy(Study study);
   Future<Study> saveStudy(Study study);
   Future<Study> publishStudy(Study study);
   Future<Study> fetchStudy(StudyID studyId);
+  Study? getStudy(StudyID studyId);
   Stream<Study> watchStudy(StudyID studyId, {fetchOnSubscribe = true});
   Future<List<Study>> fetchUserStudies();
   Stream<List<Study>> watchUserStudies({fetchOnSubscribe = true});
@@ -65,7 +68,9 @@ class StudyRepository implements IStudyRepository {
 
   @override
   Future<Study> fetchStudy(StudyID studyId) async {
-    return await apiClient.fetchStudy(studyId);
+    final study = await apiClient.fetchStudy(studyId);
+    _upsertStudyLocally(study);
+    return study;
   }
 
   @override
@@ -84,7 +89,7 @@ class StudyRepository implements IStudyRepository {
   }
 
   @override
-  List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study) {
+  List<ModelAction<StudyActionType>> availableActions(Study study) {
     Future<void> onDeleteCallback() {
       return deleteStudy(study.id)
         .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies))
@@ -111,7 +116,8 @@ class StudyRepository implements IStudyRepository {
         type: StudyActionType.duplicate,
         label: "Copy draft".hardcoded,
         onExecute: () {
-          duplicateStudy(study);
+          return duplicateStudy(study)
+              .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
         isAvailable: study.isOwner(authRepository.currentUser!),
       ),
@@ -307,6 +313,50 @@ class StudyRepository implements IStudyRepository {
     _studyStreamControllers.forEach((_, controller) {
       controller.close();
     });
+  }
+
+  // - IInviteCodeRepositoryDelegate
+
+  @override
+  onSavedStudyInvite(StudyInvite invite) {
+    // TODO: abstract & simplify mutations with optimistic updates
+    // Update local state optimistically
+    final study = getStudy(invite.studyId);
+    if (study != null) {
+      final inviteIdx = study.invites!.indexWhere((i) => i.code == invite.code);
+      if (inviteIdx == -1) {
+        // StudyInvite does not exist locally yet, add it to the client-side list
+        study.invites!.add(invite);
+      } else {
+        // StudyInvite already exists, replace with the new object
+        study.invites![inviteIdx] = invite;
+      }
+      _upsertStudyLocally(study);
+    }
+    // Refetch study with updated invite list
+    fetchStudy(invite.studyId);
+  }
+
+  @override
+  onDeletedStudyInvite(StudyInvite invite) {
+    // TODO: abstract & simplify mutations with optimistic updates
+    // Update local state optimistically
+    final study = getStudy(invite.studyId);
+    if (study != null) {
+      final inviteIdx = study.invites!.indexWhere((i) => i.code == invite.code);
+      if (inviteIdx != -1) {
+        study.invites!.removeAt(inviteIdx);
+        _upsertStudyLocally(study);
+      }
+    }
+    // Refetch study with updated invite list
+    fetchStudy(invite.studyId);
+  }
+
+  Study? getStudy(StudyID id) {
+    final studies = [..._studyList];
+    final studyIdx = studies.indexWhere((t) => t.id == id);
+    return (studyIdx != -1) ? studies[studyIdx] : null;
   }
 }
 

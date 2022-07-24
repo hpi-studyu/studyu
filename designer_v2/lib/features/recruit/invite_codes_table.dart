@@ -1,35 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class StudyInvitesTable extends StatelessWidget {
   const StudyInvitesTable({
     required this.invites,
     required this.onSelectInvite,
+    required this.getIntervention,
+    required this.getInlineActionsForInvite,
     required this.getActionsForInvite,
     Key? key
   }) : super(key: key);
 
   final List<StudyInvite> invites;
   final OnSelectHandler<StudyInvite> onSelectInvite;
+  final InterventionProvider getIntervention;
   final ActionsProviderFor<StudyInvite> getActionsForInvite;
+  final ActionsProviderFor<StudyInvite> getInlineActionsForInvite;
 
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
-        label: '#'.hardcoded, columnWidth: FixedColumnWidth(40)),
+        label: '#'.hardcoded,
+        columnWidth: const FixedColumnWidth(65)),
     StandardTableColumn(
-        label: 'Code'.hardcoded, columnWidth: FlexColumnWidth(1.4)),
+        label: 'Code'.hardcoded,
+        columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(200), FlexColumnWidth(1.6))),
     StandardTableColumn(
-        label: 'Enrolled'.hardcoded, columnWidth: FixedColumnWidth(120)),
+        label: 'Enrolled'.hardcoded,
+        columnWidth: const FixedColumnWidth(120)),
     StandardTableColumn(
-        label: 'Created at'.hardcoded, columnWidth: FixedColumnWidth(120)),
+        label: 'Created at'.hardcoded,
+        columnWidth: const FixedColumnWidth(120)),
     StandardTableColumn(
-        label: 'Intervention A'.hardcoded, columnWidth: FlexColumnWidth(1.3)),
+        label: 'Intervention A'.hardcoded,
+        columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150), FlexColumnWidth(1))),
     StandardTableColumn(
-        label: 'Intervention B'.hardcoded, columnWidth: FlexColumnWidth(1.3)),
-    StandardTableColumn(label: ''),
+        label: 'Intervention B'.hardcoded,
+        columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150), FlexColumnWidth(1))),
+    StandardTableColumn(
+        label: '',
+        columnWidth: const FixedColumnWidth(65)
+    ),
   ];
 
   @override
@@ -38,7 +56,6 @@ class StudyInvitesTable extends StatelessWidget {
         items: invites,
         columns: columns,
         onSelectItem: onSelectInvite,
-        getActionsForItem: getActionsForInvite,
         buildCellsAt: _buildRow,
         cellSpacing: 10.0,
         rowSpacing: 5.0,
@@ -46,7 +63,12 @@ class StudyInvitesTable extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx) {
+  List<Widget> _buildRow(
+      BuildContext context,
+      StudyInvite item,
+      int rowIdx,
+      Set<MaterialState> states
+  ) {
     final theme = Theme.of(context);
     final tableTextStylePrimary = theme.textTheme.bodyText1;
     final tableTextSecondaryColor = theme.colorScheme.secondary;
@@ -55,104 +77,65 @@ class StudyInvitesTable extends StatelessWidget {
     final tableTextStyleTertiary = tableTextStylePrimary.copyWith(
         color: tableTextSecondaryColor.withOpacity(0.5));
 
+    Intervention? interventionA;
+    Intervention? interventionB;
+
+    if (item.preselectedInterventionIds != null
+        && item.preselectedInterventionIds!.isNotEmpty) {
+      interventionA = getIntervention(item.preselectedInterventionIds![0]);
+      interventionB = getIntervention(item.preselectedInterventionIds![1]);
+    }
+
+    Widget buildInterventionCell(Intervention? intervention) {
+      return (intervention != null) ?
+        Text(
+          intervention.name ?? '',
+          style: tableTextStyleSecondary,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+        ) : Text(
+          'Default'.hardcoded,
+          style: tableTextStyleTertiary,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+        );
+    }
+
     return [
       Text(rowIdx.toString(), style: tableTextStyleTertiary),
-      Text(item.code, style: tableTextStyleSecondary),
-      Text('[TODO]', style: tableTextStyleSecondary), // TODO
-      Text('[TODO]', style: tableTextStyleSecondary), // TODO
-      Text(item.preselectedInterventionIds?[0] ?? '', style: tableTextStyleSecondary), // TODO
-      Text(item.preselectedInterventionIds?[1] ?? '', style: tableTextStyleSecondary), // TODO
-      ActionPopUpMenuButton(
-        actions: getActionsForInvite(item),
-        orientation: Axis.horizontal,
-        triggerIconColor: tableTextSecondaryColor.withOpacity(0.8),
-        triggerIconColorHover: theme.colorScheme.primary,
-        disableSplashEffect: true,
-        position: PopupMenuPosition.over,
+      SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            Text(
+              item.code,
+              style: tableTextStyleSecondary.copyWith(
+                overflow: TextOverflow.ellipsis,
+              ),
+              maxLines: 1,
+            ),
+            ActionMenuInline(actions: getInlineActionsForInvite(item))
+          ],
+        ),
       ),
+      Text('[TODO]', style: tableTextStyleSecondary), // TODO
+      Text('[TODO]', style: tableTextStyleSecondary), // TODO
+      buildInterventionCell(interventionA),
+      buildInterventionCell(interventionB),
+      Align(
+        alignment: Alignment.centerRight,
+        child: ActionPopUpMenuButton(
+          actions: getActionsForInvite(item),
+          orientation: Axis.horizontal,
+          triggerIconColor: tableTextSecondaryColor.withOpacity(0.8),
+          triggerIconColorHover: theme.colorScheme.primary,
+          disableSplashEffect: true,
+          position: PopupMenuPosition.over,
+        ),
+      )
     ];
   }
 }
-
-/*
-class StudyInvitesTable extends StatefulWidget {
-  const StudyInvitesTable({
-    required this.invites,
-    required this.onSelectInvite,
-    required this.getActionsForInvite,
-    this.cellSpacing = 10.0,
-    this.rowSpacing = 9.0,
-    this.minRowHeight = 50.0,
-    Key? key
-  }) : super(key: key);
-
-  final List<StudyInvite> invites;
-  final OnSelectInviteHandler onSelectInvite;
-  final ActionsProviderFor<StudyInvite> getActionsForInvite;
-
-  final double cellSpacing;
-  final double rowSpacing;
-  final double minRowHeight;
-
-  @override
-  State<StudyInvitesTable> createState() => _StudyInvitesTableState();
-}
-
-
-class _StudyInvitesTableState extends State<StudyInvitesTable> {
-  late final List<bool> isRowSelected;
-
-  @override
-  void initState() {
-    _initSelectionState();
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(StudyInvitesTable oldWidget) {
-    _initSelectionState();
-    super.didUpdateWidget(oldWidget);
-  }
-
-  _initSelectionState() {
-    isRowSelected = List<bool>.generate(
-        widget.invites.length, (int index) => false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    print("_StudiesTableState.build");
-    final theme = Theme.of(context);
-
-    return DataTable(
-      columns: const <DataColumn>[
-        DataColumn(
-          label: Text('Number'),
-        ),
-      ],
-      rows: List<DataRow>.generate(
-        widget.invites.length,
-        (int index) => DataRow(
-          color: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              // All rows will have the same selected color.
-              if (states.contains(MaterialState.selected)) {
-                return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-              }
-              // Even rows will have a grey color.
-              if (index.isEven) {
-                return Colors.grey.withOpacity(0.3);
-              }
-              return null; // Use default value for other states and odd rows.
-            }),
-          cells: <DataCell>[DataCell(Text('Row $index'))],
-          selected: isRowSelected[index],
-          onSelectChanged: (bool? value) {
-            setState(() {
-              isRowSelected[index] = value!;
-            });
-          },
-      ),
-    ));
-  }
-}*/

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 class ThemeConfig {
-  static const double kMaxContentWidth = 1400.0;
+  static const double kMaxContentWidth = 1200.0;
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -154,13 +154,25 @@ class ThemeProvider extends InheritedWidget {
     return SwitchThemeData(
       thumbColor: MaterialStateColor.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
+          if (states.contains(MaterialState.disabled)) {
+            return colors.primary.withOpacity(0.6);
+          }
           return colors.primary;
+        }
+        if (states.contains(MaterialState.disabled)) {
+          return Colors.white.withOpacity(0.6);
         }
         return Colors.white;
       }),
       trackColor: MaterialStateColor.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
+          if (states.contains(MaterialState.disabled)) {
+            return colors.primary.withOpacity(0.5*0.6);
+          }
           return colors.primary.withOpacity(0.5);
+        }
+        if (states.contains(MaterialState.disabled)) {
+          return colors.onSurface.withOpacity(0.3*0.6);
         }
         return colors.onSurface.withOpacity(0.3);
       }),

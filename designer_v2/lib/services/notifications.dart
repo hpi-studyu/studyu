@@ -6,6 +6,12 @@ class Notifications {
   static final studyDeleted = SnackbarIntent(
     message: "Study was deleted from your account".hardcoded,
   );
+  static final inviteCodeDeleted = SnackbarIntent(
+    message: "Access code deleted".hardcoded,
+  );
+  static final inviteCodeClipped = SnackbarIntent(
+    message: "Access code copied".hardcoded,
+  );
   static final studyDeleteConfirmation = AlertIntent(
     title: "Permanently delete?".hardcoded,
     message: "Are you sure you want to delete this study? You will "
