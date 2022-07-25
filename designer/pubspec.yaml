@@ -15,7 +15,7 @@ dependencies:
   collection: ^1.16.0
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
-  email_validator: ^2.0.1
+  email_validator: ^2.1.2
   fl_chart: ^0.46.0 # migrate to ^0.50.5
   flutter:
     sdk: flutter
