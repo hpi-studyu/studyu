@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/domain/forms/invite_code_form.dart';
+import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 

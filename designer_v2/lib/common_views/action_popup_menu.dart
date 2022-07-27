@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef ActionsProvider<T> = List<ModelAction> Function();
 typedef ActionsProviderFor<T> = List<ModelAction> Function(T from);
+typedef ActionsProviderAt<T> = List<ModelAction> Function(T from, int idx);
 
 class ActionPopUpMenuButton extends StatelessWidget {
   const ActionPopUpMenuButton({

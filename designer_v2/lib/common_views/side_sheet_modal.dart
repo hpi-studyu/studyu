@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/form_buttons.dart';
+import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
@@ -117,20 +119,21 @@ Future<T?> showModalSideSheet<T extends Object?>(
       return Align(
         alignment: Alignment.bottomRight,
         child: Material(
-            elevation: elevation,
-            color: Theme.of(context).colorScheme.surface,
-            child: SizedBox(
-              width: width,
-              height: height,
-              child: withCloseControll
-                  ? Stack(
-                children: [
+          elevation: 0,
+          color: Colors.white,
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Scaffold(
+              appBar: null,
+              body: withCloseControll ? Stack(children: [
                   body,
                   const Positioned(top: 5, right: 5, child: CloseButton())
                 ],
-              )
-                  : body,
-            )),
+              ) : body,
+            )
+          )
+        )
       );
     },
     transitionBuilder: (_, animation, __, child) {
@@ -151,7 +154,7 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
     required List<Widget> actionButtons,
     WidgetDecorator? wrapBody,
     width = 560,
-    barrierColor = const Color(0x80FFFFFF),
+    barrierColor = const Color(0xA8FFFFFF),
     barrierDismissible = true,
     ignoreAppBar = false,
     withCloseControll = false,
@@ -170,43 +173,43 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
     withCloseControll: withCloseControll,
     body: Container(
       decoration: BoxDecoration(
-        border: Border(left: BorderSide(
-          color: theme.colorScheme.surfaceVariant.withOpacity(0.6)))
+          border: Border(left: BorderSide(
+              color: theme.colorScheme.surfaceVariant.withOpacity(0.6)))
       ),
       child: wrapper(Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              bodyPaddingHorizontal, bodyPaddingVertical,
-              bodyPaddingHorizontal, bodyPaddingVertical*0.5
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title, style: theme.textTheme.headline6),
-                Wrap(spacing: 8.0, children: actionButtons),
-              ],
-            ),
-          ),
-          const Divider(),
-          Flexible(
-            child: SingleChildScrollView(
-              child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                  bodyPaddingHorizontal, bodyPaddingVertical,
+                  bodyPaddingHorizontal, bodyPaddingVertical*0.5
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        bodyPaddingHorizontal, bodyPaddingVertical*0.5,
-                        bodyPaddingHorizontal, bodyPaddingVertical
-                    ),
-                    child: body
-                  )
+                  Text(title, style: theme.textTheme.headline6),
+                  Wrap(spacing: 8.0, children: actionButtons),
                 ],
               ),
-            )
-          ),
-        ]
+            ),
+            const Divider(),
+            Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(
+                              bodyPaddingHorizontal, bodyPaddingVertical*0.5,
+                              bodyPaddingHorizontal, bodyPaddingVertical
+                          ),
+                          child: body
+                      )
+                    ],
+                  ),
+                )
+            ),
+          ]
       )),
     ),
   );
@@ -251,47 +254,20 @@ class DismissButton extends StatelessWidget {
   }
 }
 
-/// Signature for a builder that renders the widget corresponding to the
-/// [FormViewModel] view model of type [T]
-typedef FormViewBuilder<T extends FormViewModel> = Widget Function(T formViewModel);
-
 showFormSideSheet<T extends FormViewModel>({
   required BuildContext context,
   required T formViewModel,
   required FormViewBuilder<T> formViewBuilder,
   List<Widget>? actionButtons,
   width = 560,
-  barrierColor = const Color(0x80FFFFFF),
+  barrierColor = const Color(0xA8FFFFFF),
   barrierDismissible = true,
   ignoreAppBar = false,
   bodyPaddingVertical = 32.0,
   bodyPaddingHorizontal = 48.0,
 }) {
-  final modifyActionButtons = [
-    const DismissButton(),
-    ReactiveFormConsumer( // enable re-rendering based on form validation status
-        builder: (context, form, child) {
-          return PrimaryButton(
-            text: "Save".hardcoded,
-            tooltipDisabled: "Please fill out all fields as required".hardcoded,
-            icon: null,
-            onPressed: (formViewModel.isValid)
-                ? () => formViewModel.save().then(
-              // Close the side sheet if future completed successfully
-                    (value) => Navigator.maybePop(context))
-                : null,
-          );
-        }
-    ),
-  ];
-  final readonlyActionButtons = [
-    DismissButton(text: "Close".hardcoded),
-  ];
-  final defaultActionButtons = {
-    FormMode.create: modifyActionButtons,
-    FormMode.edit: modifyActionButtons,
-    FormMode.readonly: readonlyActionButtons,
-  }[formViewModel.formMode] ?? modifyActionButtons;
+  final defaultActionButtons = buildFormButtons(
+      formViewModel, formViewModel.formMode);
 
   // Wraps the whole side sheet in a [ReactiveForm] widget
   Widget wrapBody(widget) {

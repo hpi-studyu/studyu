@@ -19,6 +19,7 @@ enum StudyStatus {
 }
 
 typedef StudyID = String;
+typedef MeasurementID = String;
 
 extension StudyWithStatus on core.Study {
   StudyStatus get status {

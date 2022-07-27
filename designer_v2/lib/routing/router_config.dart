@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
-import 'package:studyu_designer_v2/features/legacy/designer_page.dart';
+import 'package:studyu_designer_v2/features/design/common_views/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_view.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
+import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
@@ -23,6 +27,7 @@ class RouterKeys {
 class RouteParams {
   static const studiesFilter = 'filter';
   static const studyId = 'studyId';
+  static const measurementId = 'measurementId';
 }
 
 /// The route configuration passed to [GoRouter] during instantiation.
@@ -163,8 +168,30 @@ class RouterConfig {
                 tabsSubnav: StudyDesignNav.tabs(studyId),
                 selectedTab: StudyNav.edit(studyId),
                 selectedTabSubnav: StudyDesignNav.measurements(studyId),
-                body: StudyEditScreen(studyId)
+                body: StudyDesignMeasurementsFormView(studyId)
         ));
+      },
+      routes: [studyEditMeasurement]
+  );
+
+  static final studyEditMeasurement = GoRoute(
+      path: ":${RouteParams.measurementId}",
+      name: "studyEditMeasurement",
+      pageBuilder: (context, state) {
+        final studyId = state.params[RouteParams.studyId]!;
+        final measurementId = state.params[RouteParams.measurementId]!;
+        return MaterialPage(
+          child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
+            studyId: studyId,
+            formViewModelBuilder: (ref) => ref.read(
+                measurementSurveyFormViewModelProvider(MeasurementFormRouteArgs(
+                    studyId: studyId, measurementId: measurementId))
+            ),
+            formViewBuilder: (formViewModel) => MeasurementSurveyFormView(
+                formViewModel: formViewModel
+            ),
+          )
+        );
       }
   );
 
@@ -249,5 +276,14 @@ class RouterConfig {
     name: "error",
     builder: (context, state) => ErrorPage(error: state.extra as Exception),
   );
+}
+
+// - Route Args
+
+class MeasurementFormRouteArgs {
+  MeasurementFormRouteArgs({required this.studyId, required this.measurementId});
+
+  final StudyID studyId;
+  final MeasurementID measurementId;
 }
 

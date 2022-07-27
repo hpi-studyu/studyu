@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
+import 'package:studyu_designer_v2/common_views/layout_two_column_scroll.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 

@@ -103,9 +103,21 @@ class ThemeProvider extends InheritedWidget {
 
   AppBarTheme appBarTheme(ColorScheme colors) {
     return AppBarTheme(
-      elevation: 0,
+      elevation: 2,
+      //backgroundColor: Colors.transparent,
+      //backgroundColor: colors.surface.withOpacity(0.1),
       backgroundColor: colors.surface,
       foregroundColor: colors.onSurface,
+      surfaceTintColor: Colors.white,
+      shadowColor: colors.secondary.withOpacity(0.4),
+      /*
+      shape: Border(
+          bottom: BorderSide(
+              color: colors.secondary.withOpacity(0.1),
+              width: 1
+          )
+      ),
+       */
     );
   }
 
@@ -258,8 +270,8 @@ class ThemeProvider extends InheritedWidget {
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
-      splashColor: colorScheme.primary.withOpacity(0.3),
-      highlightColor: colorScheme.primaryContainer.withOpacity(0.4),
+      //splashColor: colorScheme.secondary.withOpacity(0.4),
+      //highlightColor: colorScheme.secondary.withOpacity(0.3),
       inputDecorationTheme: inputDecorationTheme(colorScheme),
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),

@@ -34,7 +34,7 @@ class GoRouterDrawerEntry extends DrawerEntry {
 }
 
 class AppDrawer extends ConsumerStatefulWidget {
-  AppDrawer({
+  const AppDrawer({
     required this.title,
     this.width = 250,
     this.leftPaddingEntries = 28.0,

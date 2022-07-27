@@ -19,8 +19,13 @@ class ModelAction<T> {
   });
 }
 
-abstract class IModelActionProvider<T, V> {
+abstract class IModelActionProvider<T,V> {
   List<ModelAction<T>> availableActions(V model);
+}
+
+abstract class IListActionProvider<T,V> extends IModelActionProvider<T,V> {
+  void onSelectItem(V item);
+  void onNewItem();
 }
 
 enum ModelActionType {

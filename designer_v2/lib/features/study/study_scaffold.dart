@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
-import 'package:studyu_designer_v2/common_views/sidenav_layout.dart';
+import 'package:studyu_designer_v2/common_views/layout_two_column_scroll.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -16,10 +16,12 @@ class StudyScaffold extends ConsumerStatefulWidget {
   const StudyScaffold({
     this.studyId = Config.newStudyId,
     required this.body,
-    required this.tabs,
+    this.tabs,
     this.tabsSubnav,
     this.selectedTab,
     this.selectedTabSubnav,
+    this.drawer = const AppDrawer(title: 'StudyU'),
+    this.disableActions = false,
     Key? key
   }) : super(key: key);
 
@@ -27,13 +29,16 @@ class StudyScaffold extends ConsumerStatefulWidget {
   /// Defaults to [Config.newStudyId] when creating a new study
   final String studyId;
 
-  final List<NavbarTab> tabs;
+  final List<NavbarTab>? tabs;
   final List<NavbarTab>? tabsSubnav;
   final NavbarTab? selectedTab;
   final NavbarTab? selectedTabSubnav;
 
   /// The widget to be rendered as the main page body
   final Widget body;
+
+  final Widget? drawer;
+  final bool disableActions;
 
   @override
   ConsumerState<StudyScaffold> createState() => _StudyScaffoldState();
@@ -48,21 +53,15 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
 
     return Scaffold(
       appBar: AppBar(
-        shape: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.secondary.withOpacity(0.1),
-            width: 1
-          )
-        ),
-        elevation: 4.0,
         bottom: (widget.tabsSubnav != null) ? PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
-            color: theme.colorScheme.primary.withOpacity(0.05),
+            //color: theme.colorScheme.primary.withOpacity(0.05),
+            color: theme.colorScheme.primaryContainer.withOpacity(0.25),
             child: Row(
               children: [
                 Container(
-                  constraints: const BoxConstraints(maxWidth: 500),
+                  constraints: const BoxConstraints(maxWidth: 550),
                   child: TabbedNavbar(
                     tabs: widget.tabsSubnav!,
                     selectedTab: widget.selectedTabSubnav,
@@ -99,19 +98,18 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             ),
             Flexible(
               flex: 5,
-              child: Container(
+              child: (widget.tabs != null) ? Container(
                 constraints: const BoxConstraints(maxWidth: 420),
                 child: TabbedNavbar(
-                  tabs: widget.tabs,
+                  tabs: widget.tabs!,
                   selectedTab: widget.selectedTab,
                 ),
-              )
+              ) : Container(),
             ),
           ],
         ),
-        backgroundColor: theme.colorScheme.primaryContainer.withOpacity(0.5),
-        surfaceTintColor: Colors.white,
-        actions: [
+        //backgroundColor: theme.colorScheme.primaryContainer.withOpacity(0.5),
+        actions: (widget.disableActions) ? null : [
           Container(
             padding: const EdgeInsets.all(16),
             alignment: Alignment.center,
@@ -142,7 +140,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           dividerWidget: const SizedBox.shrink(),
         ),
       ),
-      drawer: AppDrawer(title: 'StudyU'.hardcoded),
+      drawer: widget.drawer,
     );
   }
 }

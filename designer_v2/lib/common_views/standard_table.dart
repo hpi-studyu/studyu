@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef OnSelectHandler<T> = void Function(T item);
 
@@ -11,7 +13,7 @@ typedef StandardTableCellsBuilder<T> = List<Widget> Function(
 
 /// Default descriptor for a table column
 class StandardTableColumn {
-  StandardTableColumn({
+  const StandardTableColumn({
     required this.label,
     this.columnWidth = const FlexColumnWidth(),
   });
@@ -21,30 +23,44 @@ class StandardTableColumn {
 }
 
 class StandardTable<T> extends StatefulWidget {
-  const StandardTable({
+  StandardTable({
     required this.items,
     required this.columns,
     required this.onSelectItem,
     required this.buildCellsAt,
+    this.popoverActionsAt,
+    this.popoverActionsColumn = const StandardTableColumn(
+        label: '', columnWidth: FixedColumnWidth(65)),
     this.headerRowBuilder,
     this.dataRowBuilder,
     this.cellSpacing = 10.0,
     this.rowSpacing = 9.0,
     this.minRowHeight = 50.0,
+    this.showTableHeader = true,
     Key? key
-  }) : super(key: key);
+  }) : super(key: key) {
+    // Insert trailing column for popover actions menu
+    if (popoverActionsAt != null) {
+      columns = [...columns]; // don't modify original reference
+      columns.add(popoverActionsColumn);
+    }
+  }
 
   final List<T> items;
-  final List<StandardTableColumn> columns;
+  List<StandardTableColumn> columns;
   final OnSelectHandler<T> onSelectItem;
+  final ActionsProviderAt<T>? popoverActionsAt;
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
+  final StandardTableColumn popoverActionsColumn;
 
   final double cellSpacing;
   final double rowSpacing;
   final double minRowHeight;
+
+  final bool showTableHeader;
 
   @override
   State<StandardTable<T>> createState() => _StandardTableState<T>();
@@ -103,13 +119,14 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       columnWidths[idx] = widget.columns[idx].columnWidth;
     }
 
+    final tableHeaderRows = (widget.showTableHeader)
+        ? [headerRow, paddingRow, paddingRow] : [];
+
     return Table(
         columnWidths: columnWidths,
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
-          headerRow,
-          paddingRow,
-          paddingRow,
+          ...tableHeaderRows,
           ..._tableRows(theme)
         ]
     );
@@ -231,6 +248,13 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
 
     final List<Widget> rawCells = widget.buildCellsAt(
         context, item, rowIdx, states);
+
+    if (widget.popoverActionsAt != null) {
+      // Insert additional table cell to hold popover actions menu
+      final rowActions = widget.popoverActionsAt!(item, rowIdx) as List<ModelAction>;
+      rawCells.add(_buildPopoverActionsMenu(context, rowActions));
+    }
+
     final List<Widget> dataCells = [];
     for (var i = 0; i < rawCells.length; i++) {
       final isLeadingTrailing = i == 0 || i == rawCells.length-1;
@@ -243,7 +267,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       decoration: BoxDecoration(
         border: Border.all(
           color: (rowIsPressed) ? theme.colorScheme.primary.withOpacity(0.7) :
-          theme.colorScheme.secondaryContainer.withOpacity(0.1),
+          theme.colorScheme.primaryContainer.withOpacity(0.9),
         ),
         borderRadius: const BorderRadius.all(Radius.circular(4)),
         boxShadow: [BoxShadow(
@@ -255,6 +279,21 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
             offset: (rowIsHovered) ? const Offset(1,1) : const Offset(0, 1)
         )],
         color: theme.colorScheme.onPrimary,
+      ),
+    );
+  }
+
+  Widget _buildPopoverActionsMenu(BuildContext context, List<ModelAction> actions) {
+    final theme = Theme.of(context);
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ActionPopUpMenuButton(
+        actions: actions,
+        orientation: Axis.horizontal,
+        triggerIconColor: theme.colorScheme.secondary.withOpacity(0.8),
+        triggerIconColorHover: theme.colorScheme.primary,
+        disableSplashEffect: true,
+        position: PopupMenuPosition.over,
       ),
     );
   }
