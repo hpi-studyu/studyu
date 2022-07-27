@@ -41,31 +41,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(859, 20, 0, 0),
-                      child: Container(
-                        width: 200,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).primaryBackground,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                          child: Image.asset(
-                            'assets/images/icon_wide.png',
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 200,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                    child: Image.asset(
+                      'assets/images/icon_wide.png',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
                     ),
-                  ],
+                  ),
                 ),
               ),
               Container(
