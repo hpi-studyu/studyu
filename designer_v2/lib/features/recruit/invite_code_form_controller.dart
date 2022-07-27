@@ -15,9 +15,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({
     required this.study,
     required this.inviteCodeRepository
-  }) : super() {
-    regenerateCode(); // initialize randomly
-  }
+  }) : super();
 
   final Study study;
   final IInviteCodeRepository inviteCodeRepository;
@@ -69,6 +67,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     'interventionA': interventionAControl,
     'interventionB': interventionBControl,
   });
+
+  @override
+  void setFormDefaults() {
+    regenerateCode(); // initialize randomly
+  }
 
   // - Validation
 

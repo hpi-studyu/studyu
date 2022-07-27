@@ -69,6 +69,14 @@ class RoutingIntents {
         RouteParams.studyId: studyId,
       }
   );
+  static final studyEditMeasurement =
+    (StudyID studyId, MeasurementID measurementId) => RoutingIntent(
+        route: RouterConfig.studyEditMeasurement,
+        params: {
+            RouteParams.studyId: studyId,
+            RouteParams.measurementId: measurementId,
+        }
+  );
   static final studyTest = (StudyID studyId) => RoutingIntent(
       route: RouterConfig.studyTest,
       params: {
