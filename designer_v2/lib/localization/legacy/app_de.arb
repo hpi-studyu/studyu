@@ -4,6 +4,9 @@
   "language": "Sprache",
   "en": "Englisch",
   "de": "Deutsch",
+
+  "study_u": "Study U",
+
   "create_new_study": "Neue Studie anlegen",
   "contact_details": "Kontaktdaten",
   "view_published_study": "Publizierte Studien betrachten",
@@ -98,6 +101,18 @@
   "minute": "Minute",
   "data_source": "Datenquelle",
 
+  "study_title": "Studienname",
+  "my_studies": "Meine Studien",
+  "shared_with_me": "Mit mir geteilt",
+  "study_registry": "Studienregister",
+  "status": "Status",
+  "settings": "Einstellungen",
+  "enrollment": "Anmeldung",
+  "started_at": "Gestartet am",
+  "enrolled": "Angemeldet",
+  "active": "Aktiv",
+  "completed": "Abgeschlossen",
+  "signed_out": "Abgemeldet",
   "terms_privacy": "Nutzungsbedingungen & Datenschutzbestimmung",
   "terms_read": "Nutzungsbedingungen lesen",
   "privacy_read": "Datenschutzbestimmung lesen",
