@@ -98,7 +98,7 @@ packages:
       name: dropdown_search
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "5.0.2"
   email_validator:
     dependency: "direct main"
     description:
@@ -288,7 +288,7 @@ packages:
       name: form_builder_extra_fields
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.1.0"
+    version: "8.3.0"
   form_builder_validators:
     dependency: "direct main"
     description:
@@ -661,16 +661,16 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      path: "../core"
-      relative: true
-    source: path
+      name: studyu_core
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.7.14"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      path: "../flutter_common"
-      relative: true
-    source: path
+      name: studyu_flutter_common
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.3.21"
   supabase:
     dependency: "direct main"

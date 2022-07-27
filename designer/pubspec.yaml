@@ -25,7 +25,7 @@ dependencies:
     git: https://github.com/dmhuisma/FlutterIconPicker.git
   flutter_localizations:
     sdk: flutter
-  form_builder_extra_fields: ^8.1.0
+  form_builder_extra_fields: ^8.3.0
   form_builder_validators: ^8.1.1
   http: ^0.13.4
   intl: 0.17.0
