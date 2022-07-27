@@ -8,34 +8,39 @@ enum FormMode {
 
 class FormInvalidException implements Exception {}
 
+abstract class IFormViewModelDelegate<T extends FormViewModel> {
+  void onSave(T formViewModel, FormMode prevFormMode);
+  void onClose(T formViewModel, FormMode prevFormMode);
+}
+
+class FormControlOption<T> {
+  final T value;
+  final String label;
+
+  FormControlOption(this.value, this.label);
+}
+
 abstract class FormViewModel<T> {
   FormViewModel({
-    //mode = FormMode.create,
     formData,
     this.delegate
-  }) : _data = formData,/* _formMode = mode*/
+  }) : _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
-    if (formData != null) {
-      fromData(formData!);
-    } else {
-      setFormDefaults();
-    }
-
-    // TODO Why does this break?
+    _restoreControlsFromFormData();
+    // TODO: do we still need this?
     //_saveControlDefaults();
     _applyFormMode();
   }
 
-  T? get data => _data;
-  set data(T? data) {
-    _data = data;
-    if (data != null) {
-      fromData(data); // update [form] automatically
+  T? get formData => _formData;
+  set formData(T? formData) {
+    _formData = formData;
+    if (formData != null) {
+      setFormControlValuesFrom(formData); // update [form] controls automatically
     }
   }
-  T? _data;
+  T? _formData;
 
-  //T? data;
   final IFormViewModelDelegate? delegate;
 
   FormMode get formMode => _formMode;
@@ -47,6 +52,17 @@ abstract class FormViewModel<T> {
 
   String get title => titles[formMode] ?? "[Missing title]";
   bool get isValid => form.valid;
+
+  _restoreControlsFromFormData() {
+    if (formData != null) {
+      setFormControlValuesFrom(formData!);
+    } else {
+      setFormControlDefaults();
+    }
+  }
+
+  /*
+  TODO: do we still need this?
 
   /// Map that stores the default enabled/disabled state for each control in
   /// the [form]
@@ -73,6 +89,7 @@ abstract class FormViewModel<T> {
       }
     }
   }
+   */
 
   _disableAllControls() {
     for (final control in form.controls.values) {
@@ -85,28 +102,23 @@ abstract class FormViewModel<T> {
       case FormMode.readonly:
         _disableAllControls();
         break;
+        /* TODO: do we still need this?
       case FormMode.create:
       case FormMode.edit:
         _restoreControlDefaults();
         break;
+         */
     }
   }
 
-  void edit(T data) {
-    this.data = data;
-    //fromData(data);
+  void edit(T formData) {
+    this.formData = formData;
     formMode = FormMode.edit;
   }
 
-  void read(T data) {
-    this.data = data;
-    //fromData(data);
+  void read(T formData) {
+    this.formData = formData;
     formMode = FormMode.readonly;
-  }
-
-  void refreshData() {
-    data = toData();
-    //fromData(toData());
   }
 
   // - Subclass responsibility
@@ -114,8 +126,12 @@ abstract class FormViewModel<T> {
   FormGroup get form;
   Map<FormMode, String> get titles;
   /// Initialize the values of all [FormControl]s in the [form]
-  void fromData(T data);
-  T toData();
+  void setFormControlValuesFrom(T data);
+  T buildFormDataFromControls();
+
+  void setFormControlDefaults() {
+    // subclass responsibility (optional)
+  }
 
   Future save() {
     if (!form.valid) {
@@ -124,7 +140,7 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    refreshData();
+    formData = buildFormDataFromControls();
     delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
@@ -136,42 +152,9 @@ abstract class FormViewModel<T> {
   }
 
   Future<void> close() {
+    _restoreControlsFromFormData();
     delegate?.onClose(this, formMode);
-    return Future.value(null); // no-op
+
+    return Future.value(null);
   }
-
-  void setFormDefaults() {
-    // subclass responsibility (optional)
-  }
-}
-
-abstract class IFormViewModelDelegate<T extends FormViewModel> {
-  void onSave(T formViewModel, FormMode prevFormMode);
-  void onClose(T formViewModel, FormMode prevFormMode);
-}
-
-// TODO: get rid of this in favor of delegate pattern?
-abstract class ChildFormViewModel<T, P extends FormViewModel>
-    extends FormViewModel<T> {
-
-  ChildFormViewModel({
-    super.formData,
-    required this.parent,
-  });
-
-  P parent;
-
-  @override
-  Future save() async {
-    final newData = toData();
-    print(newData);
-    return parent.save();
-  }
-}
-
-class FormControlOption<T> {
-  final T value;
-  final String label;
-
-  FormControlOption(this.value, this.label);
 }

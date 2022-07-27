@@ -4,3 +4,7 @@ extension EnumX on Enum {
     return toString().split('.').last;
   }
 }
+
+extension StringJoinedPath on String {
+
+}

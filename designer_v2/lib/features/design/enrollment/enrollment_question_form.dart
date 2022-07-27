@@ -12,12 +12,10 @@ class EnrollmentQuestionFormData {
 }
 typedef EnrollmentQuestionType = String;
 
-class EnrollmentQuestionFormViewModel
-    extends ChildFormViewModel<EnrollmentQuestionFormData, EnrollmentFormViewModel> {
-
+class EnrollmentQuestionFormViewModel extends FormViewModel<EnrollmentQuestionFormData> {
   EnrollmentQuestionFormViewModel({
     super.formData,
-    required super.parent
+    super.delegate,
   });
 
   // - Form fields
@@ -35,13 +33,13 @@ class EnrollmentQuestionFormViewModel
   });
 
   @override
-  void fromData(EnrollmentQuestionFormData data) {
+  void setFormControlValuesFrom(EnrollmentQuestionFormData data) {
     questionTextControl.value = data.question.prompt ?? '';
     questionTypeControl.value = data.question.type;
   }
 
   @override
-  EnrollmentQuestionFormData toData() {
+  EnrollmentQuestionFormData buildFormDataFromControls() {
     // TODO: create question of corresponding type (for now create boolean default)
     final question = BooleanQuestion();
     question.prompt = questionTextControl.value;

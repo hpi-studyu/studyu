@@ -26,8 +26,7 @@ class MeasurementsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("build measurements table");
-    print(items);
+    print("MeasurementsTable.build");
     return StandardTable<MeasurementSurveyFormData>(
         items: items,
         columns: columns,

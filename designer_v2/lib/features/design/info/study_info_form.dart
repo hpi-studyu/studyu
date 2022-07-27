@@ -17,13 +17,9 @@ class StudyInfoFormData implements IStudyFormData {
   }
 }
 
-class StudyInfoFormViewModel
-    extends ChildFormViewModel<StudyInfoFormData, StudyFormViewModel> {
+class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
 
-  StudyInfoFormViewModel({
-    super.formData,
-    required super.parent
-  });
+  StudyInfoFormViewModel({super.formData});
 
   // - Form fields
 
@@ -36,12 +32,12 @@ class StudyInfoFormViewModel
   });
 
   @override
-  void fromData(StudyInfoFormData data) {
+  void setFormControlValuesFrom(StudyInfoFormData data) {
     //titleControl.value = data.title;
   }
 
   @override
-  StudyInfoFormData toData() {
+  StudyInfoFormData buildFormDataFromControls() {
     return StudyInfoFormData(
         title: titleControl.value!
     );

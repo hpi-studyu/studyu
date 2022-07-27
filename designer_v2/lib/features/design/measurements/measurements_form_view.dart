@@ -46,10 +46,15 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodyText1?.copyWith(
                         fontWeight: FontWeight.bold)),
                 const SizedBox(height: 18.0),
-                MeasurementsTable(
-                  items: formViewModel.surveyMeasurementFormDataArray,
-                  onSelectItem: formViewModel.onSelectItem,
-                  getActionsAt: (item, _) => formViewModel.availableActions(item),
+                ReactiveFormArray(
+                  formArray: formViewModel.measurementsArray,
+                  builder: (context, formArray, child) {
+                    return MeasurementsTable(
+                      items: formViewModel.measurementsData,
+                      onSelectItem: formViewModel.onSelectItem,
+                      getActionsAt: (item, _) => formViewModel.availableActions(item),
+                    );
+                  },
                 ),
                 const SizedBox(height: 18.0),
                 PrimaryButton(

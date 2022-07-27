@@ -22,12 +22,10 @@ class EnrollmentFormData implements IStudyFormData {
   }
 }
 
-class EnrollmentFormViewModel extends ChildFormViewModel<EnrollmentFormData, StudyFormViewModel> {
+class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
+    implements IFormViewModelDelegate<EnrollmentQuestionFormViewModel> {
 
-  EnrollmentFormViewModel({
-    super.formData,
-    required super.parent
-  });
+  EnrollmentFormViewModel({super.formData});
 
   final List<EnrollmentQuestionFormViewModel> enrollmentQuestionFormViewModels = [];
 
@@ -45,26 +43,38 @@ class EnrollmentFormViewModel extends ChildFormViewModel<EnrollmentFormData, Stu
   });
 
   @override
-  void fromData(EnrollmentFormData data) {
+  void setFormControlValuesFrom(EnrollmentFormData data) {
     enrollmentTypeControl.value = data.enrollmentType;
     for (final enrollmentQuestion in data.enrollmentQuestions) {
       enrollmentQuestionFormViewModels.add(
-          EnrollmentQuestionFormViewModel(formData: enrollmentQuestion, parent: this));
+          EnrollmentQuestionFormViewModel(formData: enrollmentQuestion, delegate: this));
     }
   }
 
   @override
-  EnrollmentFormData toData() {
+  EnrollmentFormData buildFormDataFromControls() {
     return EnrollmentFormData(
       enrollmentType: enrollmentTypeControl.value!,
       enrollmentQuestions: enrollmentQuestionFormViewModels.map(
-              (vm) => vm.toData()).toList()
+              (vm) => vm.buildFormDataFromControls()).toList()
     );
   }
 
   @override
   // TODO: implement titles
   Map<FormMode, String> get titles => throw UnimplementedError();
+
+  // - IFormViewModelDelegate
+
+  @override
+  void onClose(EnrollmentQuestionFormViewModel formViewModel, FormMode prevFormMode) {
+    // TODO: implement onClose
+  }
+
+  @override
+  void onSave(EnrollmentQuestionFormViewModel formViewModel, FormMode prevFormMode) {
+    // TODO: implement onSave
+  }
 
 // Operates on:
 // study.participation
