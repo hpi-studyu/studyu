@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
@@ -51,47 +51,51 @@ class AppDrawer extends ConsumerStatefulWidget {
 
 class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
-  final List<List<GoRouterDrawerEntry>> topEntries = [
-    [
-      GoRouterDrawerEntry(
-        title: 'My Studies'.hardcoded,
-        icon: Icons.folder_copy_rounded,
-        intent: RoutingIntents.studies,
-      ),
-      GoRouterDrawerEntry(
-        title: 'Shared With Me'.hardcoded,
-        icon: Icons.folder_shared_rounded,
-        intent: RoutingIntents.studiesShared
-      ),
-    ],
-    [
-      GoRouterDrawerEntry(
-        title: 'Study Registry'.hardcoded,
-        icon: Icons.public,
-        intent: RoutingIntents.publicRegistry
-      ),
-    ]
-  ];
+  List<List<GoRouterDrawerEntry>> getTopEntries(BuildContext context) {
+    return [
+      [
+        GoRouterDrawerEntry(
+          title: AppLocalizations.of(this.context)!.my_studies,
+          icon: Icons.folder_copy_rounded,
+          intent: RoutingIntents.studies,
+        ),
+        GoRouterDrawerEntry(
+            title: AppLocalizations.of(context)!.shared_with_me,
+            icon: Icons.folder_shared_rounded,
+            intent: RoutingIntents.studiesShared),
+      ],
+      [
+        GoRouterDrawerEntry(
+            title: AppLocalizations.of(context)!.study_registry,
+            icon: Icons.public,
+            intent: RoutingIntents.publicRegistry),
+      ]
+    ];
+  }
 
   /// List of sections with their corresponding menu entries
-  final List<List<DrawerEntry>> bottomEntries = [
-    [
-      DrawerEntry(
-        title: 'Settings'.hardcoded,
-        icon: Icons.settings_rounded,
-      ),
-      DrawerEntry(
-        title: 'Sign out'.hardcoded,
-        icon: Icons.logout_rounded,
-        onSelected: (context, ref) {
-          ref.read(authControllerProvider.notifier).signOut();
-        }
-      ),
-    ],
-  ];
+  List<List<DrawerEntry>> getBottomEntries(BuildContext context) {
+    return [
+      [
+        DrawerEntry(
+          title: AppLocalizations.of(context)!.settings,
+          icon: Icons.settings_rounded,
+        ),
+        DrawerEntry(
+            title: AppLocalizations.of(context)!.signed_out,
+            icon: Icons.logout_rounded,
+            onSelected: (context, ref) {
+              ref.read(authControllerProvider.notifier).signOut();
+            }),
+      ],
+    ];
+  }
 
-  List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries]
-      .expand((e) => e).toList();
+  List<DrawerEntry> getAllEntries(BuildContext context) {
+    return [...getTopEntries(context), ...getBottomEntries(context)]
+        .expand((e) => e)
+        .toList();
+  }
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
@@ -113,11 +117,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
   int _getCurrentRouteIndex() {
     final currentRouteSettings = readCurrentRouteSettingsFrom(context);
-    final idx = allEntries.indexWhere((e) {
-        if (e is! GoRouterDrawerEntry) {
-          return false;
-        }
-        return e.intent.matches(currentRouteSettings);
+    final idx = getAllEntries(context).indexWhere((e) {
+      if (e is! GoRouterDrawerEntry) {
+        return false;
+      }
+      return e.intent.matches(currentRouteSettings);
     });
     return idx;
   }
@@ -135,37 +139,33 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     return Theme(
         data: theme.copyWith(splashColor: Colors.transparent), // disable splash
         child: Drawer(
-          width: widget.width.toDouble(),
-          backgroundColor: theme.colorScheme.surface,
-          child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: ListTileTheme(
-                    selectedColor: theme.colorScheme.primary,
-                    selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
-                    child: ListView(
-                      // Important: Remove any padding from the ListView.
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: false,
-                      children: [
-                        _buildLogo(context),
-                        ..._buildTopMenuItems(context),
-                      ],
+            width: widget.width.toDouble(),
+            backgroundColor: theme.colorScheme.surface,
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: ListTileTheme(
+                      selectedColor: theme.colorScheme.primary,
+                      selectedTileColor:
+                          theme.colorScheme.primary.withOpacity(0.1),
+                      child: ListView(
+                        // Important: Remove any padding from the ListView.
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: false,
+                        children: [
+                          _buildLogo(context),
+                          ..._buildTopMenuItems(context),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
-                  child: Column(
-                      children: _buildBottomMenuItems(context)
-                  ),
-                )
-              ]
-          )
-      )
-    );
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24.0),
+                    child: Column(children: _buildBottomMenuItems(context)),
+                  )
+                ])));
   }
 
   Widget _buildLogo(BuildContext context) {
@@ -175,17 +175,16 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       padding: EdgeInsets.all(widget.leftPaddingEntries),
       child: SelectableText(
         widget.title,
-        style: textTheme.headline5
-            ?.copyWith(fontWeight: FontWeight.bold),
+        style: textTheme.headline5?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  _buildSections(List<List<DrawerEntry>> sections) {
+  _buildSections(List<List<DrawerEntry>> sections, BuildContext context) {
     final List<Widget> widgets = [];
     for (final section in sections) {
       for (final entry in section) {
-        widgets.add(_entryToListTile(entry));
+        widgets.add(_entryToListTile(entry, context));
       }
       // Add section divider
       widgets.add(const SizedBox(height: 8));
@@ -193,29 +192,28 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       widgets.add(const SizedBox(height: 8));
     }
     // Slice off the last section divider
-    return widgets.sublist(0, widgets.length-3);
+    return widgets.sublist(0, widgets.length - 3);
   }
 
   List<Widget> _buildTopMenuItems(BuildContext context) {
-    return _buildSections(topEntries);
+    return _buildSections(getTopEntries(context), context);
   }
 
   List<Widget> _buildBottomMenuItems(BuildContext context) {
-    return _buildSections(bottomEntries);
+    return _buildSections(getBottomEntries(context), context);
   }
 
-  ListTile _entryToListTile(DrawerEntry entry) {
+  ListTile _entryToListTile(DrawerEntry entry, BuildContext context) {
     final theme = Theme.of(context);
-    final entryIdx = allEntries.indexOf(entry);
+    final entryIdx = getAllEntries(context).indexOf(entry);
     final isSelected = entryIdx == _selectedIdx;
 
     return ListTile(
       leading: Icon(entry.icon),
       hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
       title: Text(entry.title,
-          style: isSelected
-              ? const TextStyle(fontWeight: FontWeight.bold)
-              : null),
+          style:
+              isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null),
       contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
       selected: isSelected,
       onTap: () => entry.onClick(context, ref),
