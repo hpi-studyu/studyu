@@ -1,3 +1,5 @@
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+
 class Config {
   static const isDebugMode = false;
 
@@ -11,3 +13,6 @@ class Config {
   /// (may result in the splash screen not being shown at all)
   static const minSplashTime = 500;
 }
+
+const kPathSeparator = '   /   ';
+final kDuplicateSuffix = " (Copy)".hardcoded;

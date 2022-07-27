@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -182,7 +183,7 @@ class StudyRepository implements IStudyRepository {
     // TODO: what's the best place for this logic without a server?
     // TODO: review Postgres access control policies
     final copy = Study.fromJson(study.toJson());
-    copy.title = copy.title! + " (Copy)".hardcoded;
+    copy.title = copy.title! + kDuplicateSuffix;
     copy.userId = authRepository.currentUser!.id;
     copy.published = false;
     copy.activeSubjectCount = 0;

@@ -26,7 +26,7 @@ class StudyFormViewModel extends FormViewModel<Study> {
   });
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
-      study: data!, formData: MeasurementsFormData.fromStudy(data!), router: router);
+      study: formData!, formData: MeasurementsFormData.fromStudy(formData!), router: router);
 
   //late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
   //    data: StudyInfoFormData.fromStudy(data!), parent: this);
@@ -44,16 +44,16 @@ class StudyFormViewModel extends FormViewModel<Study> {
   });
 
   @override
-  void fromData(Study data) {
+  void setFormControlValuesFrom(Study data) {
     //studyInfoFormViewModel.fromData(StudyInfoFormData.fromStudy(data));
     //enrollmentFormViewModel.fromData(EnrollmentFormData.fromStudy(data));
-    measurementsFormViewModel.fromData(MeasurementsFormData.fromStudy(data));
+    measurementsFormViewModel.setFormControlValuesFrom(MeasurementsFormData.fromStudy(data));
   }
 
   @override
-  Study toData() {
+  Study buildFormDataFromControls() {
     // TODO return updated study
-    return data!;
+    return formData!;
   }
 
   @override

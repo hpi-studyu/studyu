@@ -1,7 +1,6 @@
 import 'package:reactive_forms/src/models/models.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class SurveyQuestionFormData {
@@ -12,12 +11,11 @@ class SurveyQuestionFormData {
 typedef QuestionType = String;
 
 // TODO: maybe reuse EligibilityQuestionFormViewModel as a general QuestionFormViewModel here
-class SurveyQuestionFormViewModel
-    extends ChildFormViewModel<SurveyQuestionFormData, MeasurementSurveyFormViewModel> {
+class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData> {
 
   SurveyQuestionFormViewModel({
     super.formData,
-    required super.parent
+    super.delegate
   });
 
   // - Form fields
@@ -29,19 +27,19 @@ class SurveyQuestionFormViewModel
   // TODO: logic controls specific for each question type
 
   @override
-  FormGroup get form => FormGroup({
+  late final FormGroup form = FormGroup({
     'questionText': questionTextControl,
     'questionType': questionTypeControl,
   });
 
   @override
-  void fromData(SurveyQuestionFormData data) {
+  void setFormControlValuesFrom(SurveyQuestionFormData data) {
     questionTextControl.value = data.question.prompt ?? '';
     questionTypeControl.value = data.question.type;
   }
 
   @override
-  SurveyQuestionFormData toData() {
+  SurveyQuestionFormData buildFormDataFromControls() {
     // TODO: create question of corresponding type (for now create boolean default)
     final question = BooleanQuestion();
     question.prompt = questionTextControl.value;

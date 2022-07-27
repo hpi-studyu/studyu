@@ -69,7 +69,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   });
 
   @override
-  void setFormDefaults() {
+  void setFormControlDefaults() {
     regenerateCode(); // initialize randomly
   }
 
@@ -99,7 +99,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  StudyInvite toData() {
+  StudyInvite buildFormDataFromControls() {
     return StudyInvite(
       codeControl.value!,
       study.id,
@@ -108,7 +108,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  void fromData(StudyInvite data) {
+  void setFormControlValuesFrom(StudyInvite data) {
     codeControl.value = data.code;
     isPreconfiguredScheduleControl.value = data.hasPreconfiguredSchedule;
     if (data.hasPreconfiguredSchedule) {
@@ -119,7 +119,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Future<StudyInvite> save() {
-    return inviteCodeRepository.saveStudyInvite(toData());
+    return inviteCodeRepository.saveStudyInvite(buildFormDataFromControls());
   }
 }
 
