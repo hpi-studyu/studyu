@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
+import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -27,6 +28,13 @@ class MeasurementsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("MeasurementsTable.build");
+    if (items.isEmpty) {
+      return EmptyBody(
+        title: null,
+        description: "TODO empty state".hardcoded,
+      );
+    }
+
     return StandardTable<MeasurementSurveyFormData>(
         items: items,
         columns: columns,

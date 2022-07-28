@@ -25,17 +25,17 @@ class StudyInvitesTable extends StatelessWidget {
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
         label: '#'.hardcoded,
-        columnWidth: const FixedColumnWidth(65)),
+        columnWidth: const FixedColumnWidth(60)),
     StandardTableColumn(
         label: 'Code'.hardcoded,
         columnWidth: const MaxColumnWidth(
             FixedColumnWidth(200), FlexColumnWidth(1.6))),
     StandardTableColumn(
         label: 'Enrolled'.hardcoded,
-        columnWidth: const FixedColumnWidth(120)),
+        columnWidth: const FixedColumnWidth(100)),
     StandardTableColumn(
         label: 'Created at'.hardcoded,
-        columnWidth: const FixedColumnWidth(120)),
+        columnWidth: const FixedColumnWidth(100)),
     StandardTableColumn(
         label: 'Intervention A'.hardcoded,
         columnWidth: const MaxColumnWidth(
@@ -46,7 +46,7 @@ class StudyInvitesTable extends StatelessWidget {
             FixedColumnWidth(150), FlexColumnWidth(1))),
     StandardTableColumn(
         label: '',
-        columnWidth: const FixedColumnWidth(65)
+        columnWidth: const FixedColumnWidth(60)
     ),
   ];
 
