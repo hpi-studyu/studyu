@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -109,12 +110,13 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
-                selectedTabSubnav: StudyDesignNav.info(studyId),
-                body: StudyEditScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              tabsSubnav: StudyDesignNav.tabs(studyId),
+              selectedTab: StudyNav.edit(studyId),
+              selectedTabSubnav: StudyDesignNav.info(studyId),
+              body: StudyEditScreen(studyId),
+              layoutType: SingleColumnLayoutType.split,
         ));
       }
   );
@@ -127,12 +129,13 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
-                selectedTabSubnav: StudyDesignNav.enrollment(studyId),
-                body: StudyEditScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              tabsSubnav: StudyDesignNav.tabs(studyId),
+              selectedTab: StudyNav.edit(studyId),
+              selectedTabSubnav: StudyDesignNav.enrollment(studyId),
+              body: StudyEditScreen(studyId),
+              layoutType: SingleColumnLayoutType.split,
         ));
       }
   );
@@ -145,12 +148,13 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
-                selectedTabSubnav: StudyDesignNav.interventions(studyId),
-                body: StudyEditScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              tabsSubnav: StudyDesignNav.tabs(studyId),
+              selectedTab: StudyNav.edit(studyId),
+              selectedTabSubnav: StudyDesignNav.interventions(studyId),
+              body: StudyEditScreen(studyId),
+              layoutType: SingleColumnLayoutType.split,
         ));
       }
   );
@@ -163,12 +167,13 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
-                selectedTabSubnav: StudyDesignNav.measurements(studyId),
-                body: StudyDesignMeasurementsFormView(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              tabsSubnav: StudyDesignNav.tabs(studyId),
+              selectedTab: StudyNav.edit(studyId),
+              selectedTabSubnav: StudyDesignNav.measurements(studyId),
+              body: StudyDesignMeasurementsFormView(studyId),
+              layoutType: SingleColumnLayoutType.split,
         ));
       },
       routes: [studyEditMeasurement]
@@ -203,10 +208,11 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                selectedTab: StudyNav.test(studyId),
-                body: StudyTestScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              selectedTab: StudyNav.test(studyId),
+              body: StudyTestScreen(studyId),
+              layoutType: SingleColumnLayoutType.stretched,
         ));
       }
   );
@@ -219,10 +225,11 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                selectedTab: StudyNav.recruit(studyId),
-                body: StudyRecruitScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              selectedTab: StudyNav.recruit(studyId),
+              body: StudyRecruitScreen(studyId),
+              layoutType: SingleColumnLayoutType.bounded,
         ));
       }
   );
@@ -235,10 +242,11 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                selectedTab: StudyNav.monitor(studyId),
-                body: StudyMonitorScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              selectedTab: StudyNav.monitor(studyId),
+              body: StudyMonitorScreen(studyId),
+              layoutType: SingleColumnLayoutType.bounded,
         ));
       }
   );
@@ -251,10 +259,11 @@ class RouterConfig {
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
-                studyId: studyId,
-                tabs: StudyNav.tabs(studyId),
-                selectedTab: StudyNav.analyze(studyId),
-                body: StudyAnalyzeScreen(studyId)
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              selectedTab: StudyNav.analyze(studyId),
+              body: StudyAnalyzeScreen(studyId),
+              layoutType: SingleColumnLayoutType.bounded,
         ));
       }
   );

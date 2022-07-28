@@ -52,7 +52,7 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
                     return MeasurementsTable(
                       items: formViewModel.measurementsData,
                       onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (item, _) => formViewModel.availableActions(item),
+                      getActionsAt: (item, _) => formViewModel.availablePopupActions(item),
                     );
                   },
                 ),

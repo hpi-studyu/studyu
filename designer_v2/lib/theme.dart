@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 class ThemeConfig {
-  static const double kMaxContentWidth = 1200.0;
+  static const double kMinContentWidth = 600.0;
+  static const double kMaxContentWidth = 1264.0;
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
-import 'package:studyu_designer_v2/common_views/layout_two_column_scroll.dart';
+import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 
 /// Custom scaffold shared between all pages for an individual [Study]
@@ -16,6 +18,7 @@ class StudyScaffold extends ConsumerStatefulWidget {
   const StudyScaffold({
     this.studyId = Config.newStudyId,
     required this.body,
+    this.layoutType,
     this.tabs,
     this.tabsSubnav,
     this.selectedTab,
@@ -40,6 +43,8 @@ class StudyScaffold extends ConsumerStatefulWidget {
   final Widget? drawer;
   final bool disableActions;
 
+  final SingleColumnLayoutType? layoutType;
+
   @override
   ConsumerState<StudyScaffold> createState() => _StudyScaffoldState();
 }
@@ -57,7 +62,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
             //color: theme.colorScheme.primary.withOpacity(0.05),
-            color: theme.colorScheme.primaryContainer.withOpacity(0.25),
+            color: theme.colorScheme.primaryContainer.withOpacity(0.3),
             child: Row(
               children: [
                 Container(
@@ -134,10 +139,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       ),
       body: AsyncValueWidget(
         value: state.study,
-        data: (study) => TwoColumnLayoutLeftFixedBodyScroll(
-          bodyWidget: widget.body,
-          leftWidget: const SizedBox.shrink(),
-          dividerWidget: const SizedBox.shrink(),
+        data: (study) => SingleColumnLayout.fromType(
+            type: widget.layoutType ?? SingleColumnLayoutType.stretched,
+            body: widget.body
         ),
       ),
       drawer: widget.drawer,

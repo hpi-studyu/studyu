@@ -26,6 +26,7 @@ class StudyRecruitScreen extends ConsumerWidget {
 
     return AsyncValueWidget<List<StudyInvite>?>(
       value: state.studyInvites,
+      /*
       data: (studyInvites) => BoundedContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -43,6 +44,23 @@ class StudyRecruitScreen extends ConsumerWidget {
           ],
         ),
       ),
+
+       */
+      data: (studyInvites) => Container(child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _inviteCodesSectionHeader(context, ref),
+          const SizedBox(height: 24.0), // spacing between body elements
+          StudyInvitesTable(
+            invites: studyInvites!, // otherwise falls through to [AsyncValueWidget.empty]
+            onSelectInvite: _onSelectInvite(context, ref),
+            getActionsForInvite: controller.availableActions,
+            getInlineActionsForInvite: controller.availableInlineActions,
+            getIntervention: controller.getIntervention,
+          ),
+        ],
+      )),
       empty: () => Padding(
         padding: const EdgeInsets.only(top: 24),
         child: EmptyBody(
