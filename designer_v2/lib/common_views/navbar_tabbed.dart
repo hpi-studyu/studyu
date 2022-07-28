@@ -71,6 +71,8 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TabBar(
+      unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),
+      unselectedLabelStyle: theme.textTheme.labelLarge,
       indicator: widget.indicator ?? theme.tabBarTheme.indicator,
       controller: _tabController,
       tabs: widget.tabs.map((e) => Tab(text: e.title)).toList(),

@@ -62,9 +62,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
             //color: theme.colorScheme.primary.withOpacity(0.05),
-            color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+            color: theme.scaffoldBackgroundColor.withOpacity(0.15),
             child: Row(
               children: [
+                const SizedBox(width: 12),
                 Container(
                   constraints: const BoxConstraints(maxWidth: 550),
                   child: TabbedNavbar(

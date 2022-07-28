@@ -15,6 +15,10 @@ class DashboardScaffold extends StatelessWidget {
       body: TwoColumnLayout(
         leftWidget: AppDrawer(title: 'StudyU'.hardcoded),
         rightWidget: body,
+        dividerWidget: const VerticalDivider(
+          width: 1,
+          thickness: 0.3,
+        ),
         scrollLeft: false,
         scrollRight: true,
         paddingLeft: null,

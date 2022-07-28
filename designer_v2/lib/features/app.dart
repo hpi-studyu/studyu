@@ -26,6 +26,7 @@ class _AppState extends ConsumerState<App> {
     //sourceColor: Color(0xff2a4fda),
     //sourceColor: Color(0xff583aee),
     sourceColor: const Color(0xff4845e5),
+    //sourceColor: const Color(0xff2962ff),
     themeMode: ThemeMode.system,
   ));
 
@@ -57,7 +58,7 @@ class _AppState extends ConsumerState<App> {
                     child: widget
                 ),
                 debugShowCheckedModeBanner: Config.isDebugMode,
-                title: 'StudyU Designer'.hardcoded,
+                title: 'Study Designer'.hardcoded,
                 color: theme.colorScheme.surface,
                 theme: theme,
                 routeInformationParser: router.routeInformationParser,

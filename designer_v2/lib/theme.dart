@@ -107,10 +107,10 @@ class ThemeProvider extends InheritedWidget {
       elevation: 2,
       //backgroundColor: Colors.transparent,
       //backgroundColor: colors.surface.withOpacity(0.1),
-      backgroundColor: colors.surface,
+      backgroundColor: Colors.white,
       foregroundColor: colors.onSurface,
       surfaceTintColor: Colors.white,
-      shadowColor: colors.secondary.withOpacity(0.4),
+      shadowColor: colors.primaryContainer.withOpacity(0.4),
       /*
       shape: Border(
           bottom: BorderSide(
@@ -246,13 +246,20 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  DividerThemeData dividerTheme(ColorScheme colors) {
+    return DividerThemeData(
+      thickness: 0.5,
+      color: colors.secondary.withOpacity(0.2),
+    );
+  }
+
   NavigationRailThemeData navigationRailTheme(ColorScheme colors) {
     return const NavigationRailThemeData();
   }
 
   DrawerThemeData drawerTheme(ColorScheme colors) {
     return DrawerThemeData(
-      backgroundColor: colors.surface,
+      backgroundColor: Colors.white,
     );
   }
 
@@ -270,7 +277,8 @@ class ThemeProvider extends InheritedWidget {
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.primaryContainer.withOpacity(0.15),
+      dividerTheme: dividerTheme(colorScheme),
       //splashColor: colorScheme.secondary.withOpacity(0.4),
       //highlightColor: colorScheme.secondary.withOpacity(0.3),
       inputDecorationTheme: inputDecorationTheme(colorScheme),

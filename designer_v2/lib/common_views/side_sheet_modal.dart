@@ -126,6 +126,7 @@ Future<T?> showModalSideSheet<T extends Object?>(
             height: height,
             child: Scaffold(
               appBar: null,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1),
               body: withCloseControll ? Stack(children: [
                   body,
                   const Positioned(top: 5, right: 5, child: CloseButton())
@@ -174,7 +175,8 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
     body: Container(
       decoration: BoxDecoration(
           border: Border(left: BorderSide(
-              color: theme.colorScheme.surfaceVariant.withOpacity(0.6)))
+            color: (theme.dividerTheme.color ?? theme.dividerColor).withOpacity(0.1)
+          ))
       ),
       child: wrapper(Column(
           mainAxisAlignment: MainAxisAlignment.start,
