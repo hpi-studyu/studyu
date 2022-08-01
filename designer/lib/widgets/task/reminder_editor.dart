@@ -40,7 +40,6 @@ class _ReminderEditorState extends State<ReminderEditor> {
                   decoration: const InputDecoration(
                     labelText: 'Reminder time',
                   ),
-                  alwaysUse24HourFormat: true,
                   initialValue: DateTime(0, 0, 0, time.hour, time.minute),
                   onChanged: (value) {
                     saveFormChanges();
