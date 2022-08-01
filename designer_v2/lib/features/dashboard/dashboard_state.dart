@@ -1,24 +1,23 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum DashboardStatus { initial, loading, success, failure }
 
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
 
   const DashboardState({
-    this.status = DashboardStatus.initial,
-    this.studies = const [],
+    this.studies = const AsyncValue.loading(),
     this.studiesFilter = defaultFilter,
     required this.currentUser,
   });
 
-  final DashboardStatus status;
-
   /// The list of studies that can be accessed by the current user
-  final List<Study> studies;
+  /// Wrapped in an [AsyncValue] to represent loading / error states
+  final AsyncValue<List<Study>> studies;
 
   /// Currently selected filter to be applied to the list of studies
   /// in order to determine the [visibleStudies]
@@ -28,17 +27,31 @@ class DashboardState extends Equatable {
   final User currentUser;
 
   /// The currently visible list of studies as by the selected filter
-  List<Study> get visibleStudies =>
-      studiesFilter.apply(studies: studies, user: currentUser).toList();
+  ///
+  /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
+  /// but resolves to a different subset of studies based on the [studiesFilter]
+  AsyncValue<List<Study>> get visibleStudies {
+    return studies.when(
+        data: (studies) => AsyncValue.data(_filterAndSortStudies(studies)),
+        error: (error, _) => AsyncValue.error(error),
+        loading: () => const AsyncValue.loading(),
+    );
+  }
+
+  List<Study> _filterAndSortStudies(List<Study> studies) {
+    final filteredStudies = studiesFilter.apply(
+        studies: studies, user: currentUser).toList();
+    filteredStudies.sort(
+            (study, other) => study.title!.compareTo(other.title!));
+    return filteredStudies;
+  }
 
   DashboardState copyWith({
-    DashboardStatus Function()? status,
-    List<Study> Function()? studies,
+    AsyncValue<List<Study>> Function()? studies,
     StudiesFilter Function() ? studiesFilter,
     User Function() ? currentUser,
   }) {
     return DashboardState(
-      status: status != null ? status() : this.status,
       studies: studies != null ? studies() : this.studies,
       studiesFilter: studiesFilter != null ? studiesFilter() : this.studiesFilter,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
@@ -48,5 +61,20 @@ class DashboardState extends Equatable {
   // - Equatable
 
   @override
-  List<Object?> get props => [status, studies, studiesFilter];
+  List<Object?> get props => [studies, studiesFilter];
+}
+
+extension DashboardStateSafeViewProps on DashboardState {
+  String get visibleListTitle {
+    switch(studiesFilter) {
+      case StudiesFilter.public:
+        return "Study registry".hardcoded;
+      case StudiesFilter.owned:
+        return "My studies".hardcoded;
+      case StudiesFilter.shared:
+        return "Shared with me".hardcoded;
+      case StudiesFilter.all:
+        return "All studies".hardcoded;
+    }
+  }
 }

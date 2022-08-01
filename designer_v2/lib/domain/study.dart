@@ -2,17 +2,22 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
 
 enum StudyActionType {
+  edit,
+  duplicate,
   addCollaborator,
   recruit,
   export,
   delete
 }
 
+// TODO: Add status field to core package domain model
 enum StudyStatus {
   draft,
   running,
   closed
 }
+
+typedef StudyID = String;
 
 extension StudyWithStatus on core.Study {
   StudyStatus get status {
@@ -26,7 +31,7 @@ extension StudyWithStatus on core.Study {
 
 /// Provides a human-readable translation of the study status
 extension StudyStatusFormatted on StudyStatus {
-  String get value {
+  String get string {
     switch (this) {
       case StudyStatus.draft:
         return "Draft".hardcoded;

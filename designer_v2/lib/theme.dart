@@ -105,14 +105,22 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  SnackBarThemeData snackBarThemeData(ColorScheme colors) {
+    return SnackBarThemeData(
+      actionTextColor: colors.onPrimary,
+      backgroundColor: colors.primaryVariant,
+      elevation: 1,
+    );
+  }
+
   TabBarTheme tabBarTheme(ColorScheme colors) {
     return TabBarTheme(
-      labelColor: colors.secondary,
+      labelColor: colors.primary,
       unselectedLabelColor: colors.onSurfaceVariant,
       indicator: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: colors.secondary,
+            color: colors.primary,
             width: 2,
           ),
         ),
@@ -161,6 +169,7 @@ class ThemeProvider extends InheritedWidget {
       navigationRailTheme: navigationRailTheme(colorScheme),
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
+      snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
       splashColor: colorScheme.primary.withOpacity(0.3),
       highlightColor: colorScheme.primaryContainer.withOpacity(0.4),
@@ -181,6 +190,7 @@ class ThemeProvider extends InheritedWidget {
       navigationRailTheme: navigationRailTheme(colorScheme),
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
+      snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
       useMaterial3: true,
     );

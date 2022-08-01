@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/utils/json_file_loader.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
@@ -31,6 +32,24 @@ class MockApiClient extends JsonFileLoader implements StudyUApi {
   @override
   Future<void> deleteStudy(Study study) {
     // TODO: implement deleteStudy
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Study> fetchStudy(StudyID studyId) {
+    // TODO: implement fetchStudy
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Study> publishStudy(Study study) {
+    // TODO: implement publishStudy
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Study> saveStudy(Study study) {
+    // TODO: implement saveStudy
     throw UnimplementedError();
   }
 }

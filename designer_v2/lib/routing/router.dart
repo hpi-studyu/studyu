@@ -1,79 +1,27 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
-import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
-import 'package:studyu_designer_v2/features/auth/login_page.dart';
-import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
-import 'package:studyu_designer_v2/utils/debug_print.dart';
 
-/// To create a new page:
-/// 1) add an entry to the [RouterPage] enum
-/// 2) add the page widget to the [routes] list
+import 'router_config.dart';
 
-/// List of all pages in the application
-enum RouterPage {
-  dashboard(id: "dashboard", path: "/studies"),
-  dashboardOwned(id: "dashboardOwned", path: "owned"),
-  dashboardShared(id: "dashboardShared", path: "shared"),
-  studyRegistry(id: "studyRegistry", path: "registry"),
-  splash(id: "splash", path: "/splash"),
-  login(id: "login", path: "/login"),
-  error(id: "error", path: "/error");
-
-  final String id;
-  final String path;
-
-  const RouterPage({required this.id, required this.path});
-}
-
-/// Each route defines a mapping between the URL path and Flutter widget
-final List<GoRoute> routes = [
-  GoRoute(
-    path: RouterPage.dashboard.path,
-    name: RouterPage.dashboard.id,
-    builder: (context, state) => DashboardScreen(),
-    routes: [
-      GoRoute(
-        path: RouterPage.dashboardOwned.path,
-        name: RouterPage.dashboardOwned.id,
-        builder: (context, state) => DashboardScreen(),
-      ),
-      GoRoute(
-        path: RouterPage.dashboardShared.path,
-        name: RouterPage.dashboardShared.id,
-        builder: (context, state) => DashboardScreen(),
-      ),
-      GoRoute(
-        path: RouterPage.studyRegistry.path,
-        name: RouterPage.studyRegistry.id,
-        builder: (context, state) => DashboardScreen(),
-      ),
-    ]
-  ),
-  GoRoute(
-    path: RouterPage.splash.path,
-    name: RouterPage.splash.id,
-    builder: (context, state) => SplashPage(),
-  ),
-  GoRoute(
-    path: RouterPage.login.path,
-    name: RouterPage.login.id,
-    builder: (context, state) => LoginPage(),
-  ),
-  GoRoute(
-    path: RouterPage.error.path,
-    name: RouterPage.error.id,
-    builder: (context, state) => ErrorPage(error: state.extra.toString()),
-  ),
-];
+/// How to create a new page & use it for navigation:
+///
+/// 1. Add the [GoRoute] in router_config.dart and register it as
+/// a [RouterConfig.topLevelRoute] (most likely it should be a top-level
+/// route, unless you know what you are doing with subroutes)
+///
+/// 2. To navigate to the new route from your code, specify one or more
+/// [RoutingIntent]s in router_intent.dart. These intents correspond to
+/// route changes in the app. See router_intent.dart for more details.
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
-  final defaultLocation = RouterPage.dashboard.path;
+  final defaultLocation = RouterConfig.studies.path;
 
   return GoRouter(
     refreshListenable: CombinedStreamNotifier([
@@ -82,13 +30,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       authRepository.watchAuthStateChanges()  // authentication events
     ]),
     initialLocation: defaultLocation,
-    routes: routes,
-    errorBuilder: (context, state) => ErrorPage(error: state.error.toString()),
+    routes: RouterConfig.topLevelRoutes,
+    errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (state) {
-      debugLog("Router redirect: ${state.location}");
-
-      final loginLocation = state.namedLocation(RouterPage.login.id);
-      final splashLocation = state.namedLocation(RouterPage.splash.id);
+      final loginLocation = state.namedLocation(RouterConfig.login.name!);
+      final splashLocation = state.namedLocation(RouterConfig.splash.name!);
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSplashPage = state.subloc == splashLocation;
@@ -120,11 +66,13 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       if (!isInitialized) {
         // Redirect to splash screen while app is pending initialization
-        return (isOnSplashPage) ? null : namedLocForwarded(RouterPage.splash.id);
+        return (isOnSplashPage)
+            ? null : namedLocForwarded(RouterConfig.splash.name!);
       }
       if (!isLoggedIn) {
         // Redirect to login page when not logged in
-        return (isOnLoginPage) ? null : namedLocForwarded(RouterPage.login.id);
+        return (isOnLoginPage)
+            ? null : namedLocForwarded(RouterConfig.login.name!);
       }
 
       if (isInitialized && isLoggedIn) {
@@ -144,9 +92,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     // Turn off the # in the URLs on the web
     urlPathStrategy: UrlPathStrategy.path,
+    debugLogDiagnostics: kDebugMode,
   );
 });
 
-extension RouterConvencienceX on GoRouter {
-  get currentPath => routerDelegate.currentConfiguration.path;
-}
