@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 import '../../flutter_flow/flutter_flow_widgets.dart';
 
@@ -74,7 +75,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: Column(
                         children: <Widget>[
                           SizedBox(
-                            height: 3*height/12,
+                            height: 0.5*height/12
+                          ),
+                          SizedBox(
+                            height: 1*height/12,
+                            child: _topbar(),
+                          ),
+                          SizedBox(
+                            height: 2*height/12,
                             child: _title(height),
                           ),
                           SizedBox(
@@ -85,40 +93,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             child: _formWidget(),
                           ),
                           SizedBox(
-                            height: 3*height/12,
-                            child: _footerWidget(),
+                            height: 2.5*height/12,
+                            child: _bottombar(),
                           )
                         ]
                     ),
                 )
             )
         )
-    );
-  }
-
-  Widget _footerWidget() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // TODO ADD LANGUAGE SELECTOR
-          /*Text(
-            'Language: English',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).alternate,
-            ),
-          ),*/
-          /*Container(
-              child: Image(
-                image: AssetImage('assets/images/hpi_logo.webp'),
-              ),
-            ),*/
-          Text(
-            '© HPI Digital Health Center 2022',
-            style: TextStyle(
-              color: FlutterFlowTheme.of(context).alternate,
-            ),
-          )
-        ]
     );
   }
 
@@ -132,7 +114,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           authController.signInWith(
               emailController.text, passwordController.text);
         },
-        text: 'Login',
+        text: 'Sign In'.hardcoded,
         options: FFButtonOptions(
           width: 130,
           height: 40,
@@ -159,11 +141,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               rememberMeValue = newValue!;
             }),
         title: Text(
-          'Remember me',
+          'Remember me'.hardcoded,
           style: FlutterFlowTheme.of(context).subtitle2.override(
             fontFamily: 'Roboto',
             color: const Color(0xFF7B8995),
           ),
+        )
+    );
+  }
+
+  Widget _forgotPassword() {
+    return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        child: Container(
+            alignment: Alignment.centerLeft,
+            child:
+              Text('Forgot your password?'.hardcoded, style: FlutterFlowTheme.of(context).bodyText2,)
         )
     );
   }
@@ -180,17 +173,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 autofocus: true,
                 obscureText: !passwordVisibility,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Password'.hardcoded,
+                  icon: const Icon(Icons.lock),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: const BorderSide(
-                      color: const Color(0x00000000),
+                      color: Color(0x00000000),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: const BorderSide(
-                      color: const Color(0x00000000),
+                      color: Color(0x00000000),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(10),
@@ -231,17 +225,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               autofocus: true,
               obscureText: false,
               decoration: InputDecoration(
-                labelText: 'Email',
+                icon: const Icon(Icons.email),
+                labelText: 'Email'.hardcoded,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: const BorderSide(
-                    color: const Color(0x00000000),
+                    color: Color(0x00000000),
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 focusedBorder: UnderlineInputBorder(
                   borderSide: const BorderSide(
-                    color: const Color(0x00000000),
+                    color: Color(0x00000000),
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(10),
@@ -262,10 +257,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Center(child: Text('Login', style: FlutterFlowTheme.of(context).title2,)),
+          Center(child: Text('Researcher Login'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
+          const SizedBox(height: 20),
           _emailWidget(),
           _passwordWidget(),
           _rememberMeWidget(),
+          _forgotPassword(),
           const SizedBox(height: 20),
           _buttonWidget(),
         ]
@@ -280,6 +277,81 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         height: height * 0.2,
         fit: BoxFit.cover,
       ),
+    );
+  }
+
+  Widget _topbar() {
+    return Row(
+        children: <Widget>[
+          const SizedBox(width: 40),
+          Container (
+              alignment: Alignment.centerLeft,
+              child: Text('StudyU', style: FlutterFlowTheme.of(context).title1)
+          ),
+          const SizedBox(width: 20),
+          Container (
+              alignment: Alignment.centerLeft,
+              child: Text('Learn more'.hardcoded,
+                  style: TextStyle(
+                      color: FlutterFlowTheme.of(context).primaryText)
+              )
+          ),
+          const Spacer(),
+          Container (
+            alignment: Alignment.centerRight,
+            child: Text('Don\'t have an account?'.hardcoded,
+              style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Container (
+              alignment: Alignment.centerRight,
+              child: Text('Sign up here'.hardcoded,
+                style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
+                ),
+              )
+          ),
+          const SizedBox(width: 40)
+        ]
+    );
+  }
+
+  Widget _bottombar() {
+    return Column(
+        children: [
+          Spacer(),
+          Row(
+              children: <Widget>[
+                const SizedBox(width: 40),
+                Container (
+                    alignment: Alignment.centerLeft,
+                    child: Text('© HPI Digital Health Center 2022'.hardcoded,
+                        style: TextStyle(
+                            color: FlutterFlowTheme.of(context).alternate)
+                    )
+                ),
+                const Spacer(),
+                Container (
+                  alignment: Alignment.centerRight,
+                  child: Text('Language: English'.hardcoded,
+                    style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Container (
+                    alignment: Alignment.centerRight,
+                    child: Text('Imprint'.hardcoded,
+                      style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
+                      ),
+                    )
+                ),
+                const SizedBox(width: 40)
+              ]
+          ),
+          const SizedBox(height: 20)
+        ]
     );
   }
 }
