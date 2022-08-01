@@ -1,3 +1,7 @@
+## 1.10.21
+
+ - **FIX**: upgrade deps. ([d221eae7](https://github.com/hpi-studyu/studyu/commit/d221eae7ea55fa8761d7ff7625f92eaa3488148e))
+
 ## 1.10.20
 
  - **FIX**: upgrade dependencies. ([bc8cda17](https://github.com/hpi-studyu/studyu/commit/bc8cda17561511d8ec05ce13bc9fcba644768ef5))
