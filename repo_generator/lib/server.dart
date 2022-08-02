@@ -34,10 +34,10 @@ Future<HttpServer> startServer(List<String> args) async {
   shelf.Response? _options(shelf.Request request) =>
       (request.method == 'OPTIONS') ? shelf.Response.ok(null, headers: corsHeaders) : null;
   shelf.Response _cors(shelf.Response response) => response.change(headers: corsHeaders);
-  final _fixCORS = shelf.createMiddleware(requestHandler: _options, responseHandler: _cors);
+  final fixCORS = shelf.createMiddleware(requestHandler: _options, responseHandler: _cors);
 
   final handler =
-      const shelf.Pipeline().addMiddleware(_fixCORS).addMiddleware(shelf.logRequests()).addHandler(serverHandler);
+      const shelf.Pipeline().addMiddleware(fixCORS).addMiddleware(shelf.logRequests()).addHandler(serverHandler);
 
   print('Starting server on $_hostname:$port');
   return io.serve(handler, _hostname, port);

@@ -1,3 +1,13 @@
+## 3.7.15
+
+ - **FIX**: upgrade deps. ([d221eae7](https://github.com/hpi-studyu/studyu/commit/d221eae7ea55fa8761d7ff7625f92eaa3488148e))
+ - **FIX**: update factories for json sequelize update. ([2970b00f](https://github.com/hpi-studyu/studyu/commit/2970b00f00cc4644238f5186821d45c8b6a9fc2e))
+ - **FIX**: update generated *.g.dart files. ([a931675c](https://github.com/hpi-studyu/studyu/commit/a931675ca4fad8fe24f873c9d97e4c7d4739972d))
+
+## 3.7.14
+
+ - **FIX**: upgrade dependencies. ([bc8cda17](https://github.com/hpi-studyu/studyu/commit/bc8cda17561511d8ec05ce13bc9fcba644768ef5))
+
 ## 3.7.13
 
  - **FIX**: upgrade deps. ([c16d7722](https://github.com/hpi-studyu/studyu/commit/c16d7722719efa732392d0f04bf74f4eefd95406))

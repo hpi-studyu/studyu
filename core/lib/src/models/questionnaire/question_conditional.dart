@@ -11,7 +11,12 @@ class QuestionConditional<V> {
   V? defaultValue;
   late Expression condition;
 
-  static QuestionConditional<V> fromJson<V>(Map<String, dynamic> json) =>
+  QuestionConditional();
+
+  factory QuestionConditional.fromJson(Map<String, dynamic> json) => _fromJson(json);
+
+  static QuestionConditional<V> _fromJson<K, V>(Map<String, dynamic> json) =>
       _$QuestionConditionalFromJson<V>(json)..defaultValue = json[keyDefaultValue] as V?;
+
   Map<String, dynamic> toJson() => _$QuestionConditionalToJson<V>(this)..[keyDefaultValue] = defaultValue;
 }

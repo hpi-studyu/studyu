@@ -14,7 +14,7 @@ BooleanQuestion _$BooleanQuestionFromJson(Map<String, dynamic> json) =>
       ..rationale = json['rationale'] as String?
       ..conditional = json['conditional'] == null
           ? null
-          : QuestionConditional.fromJson(
+          : QuestionConditional<bool>.fromJson(
               json['conditional'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$BooleanQuestionToJson(BooleanQuestion instance) {
