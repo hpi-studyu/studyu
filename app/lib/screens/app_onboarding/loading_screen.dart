@@ -34,11 +34,11 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     preview = Preview(widget.queryParameters ?? {});
 
     if (preview.containsQueryPair('mode', 'preview')) {
+      modifySelectedSubjectIdKey(preview: true);
       if (!mounted) return;
       context.read<AppState>().isPreview = true;
       context.read<AppState>().previewInit = true;
     }
-
     initStudy();
     //print('returned from initStudy');
   }

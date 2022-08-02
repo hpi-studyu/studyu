@@ -73,9 +73,9 @@ class Preview {
           'subject_progress(*)',
         ],
       );
-      // user is already subscribed to a study
       //print('equal check: ${subject.studyId} ${study.id}');
       if (subject.studyId == study.id) {
+        // user is already subscribed to a study
         return true;
       }
       /*} catch (e) {
@@ -86,16 +86,10 @@ class Preview {
   }
 
   bool containsQuery(String key) {
-    if (queryParameters.containsKey(key) && queryParameters[key].isNotEmpty) {
-      return true;
-    }
-    return false;
+    return queryParameters.containsKey(key) && queryParameters[key].isNotEmpty;
   }
 
   bool containsQueryPair(String key, String value) {
-    if (queryParameters.containsKey(key) && queryParameters[key] == value) {
-      return true;
-    }
-    return false;
+    return queryParameters.containsKey(key) && queryParameters[key] == value;
   }
 }

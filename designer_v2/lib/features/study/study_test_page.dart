@@ -35,7 +35,6 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("Attention: Subscribing to a preview study currently deletes your all previous study progress on this device, INCLUDING the StudyU App.\nOnly use the preview feature if you are fine with this. (Will be fixed in a later version)"),
             studyTestController.platformController.scaffold,
             IconButton(
                 icon: const Icon(Icons.restart_alt),
@@ -44,7 +43,7 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
                 }
             ),
             //const SizedBox(width: 1,),
-            const Text("Reset progress")
+            const Text("Reset preview")
           ],
         ));
   }
