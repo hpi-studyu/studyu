@@ -38,8 +38,11 @@ class StudyTestController extends StateNotifier<StudyTestState> {
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
     List<dynamic> missingRequirements = _missingRequirements();
     if (missingRequirements.isEmpty) {
-      _modifySrc();
+      // requirements satisfied
+      String sessionStr = authRepository.session?.persistSessionString ?? '';
+      previewSrc += '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
     } else {
+      // todo show modal and add error
       print("Requirements not satisfied: $missingRequirements");
     }
     _selectPlatform();
@@ -53,11 +56,6 @@ class StudyTestController extends StateNotifier<StudyTestState> {
       // Desktop and Web
       platformController = WebController(previewSrc, study.id);
     }
-  }
-
-  _modifySrc() {
-    String sessionStr = authRepository.session?.persistSessionString ?? '';
-    previewSrc += '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
   }
 
   // Check if the study satisfies the requirements to be previewed
@@ -167,6 +165,7 @@ class MobileController extends PlatformController {
 final studyTestControllerProvider = StateNotifierProvider.autoDispose
     .family<StudyTestController, StudyTestState, Study>(
         (ref, study) => StudyTestController(
-              study: study,
-              authRepository: ref.watch(authRepositoryProvider),
-            ));
+          study: study,
+          authRepository: ref.watch(authRepositoryProvider),
+        )
+);
