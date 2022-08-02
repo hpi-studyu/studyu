@@ -32,19 +32,57 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
 
     return Container(
         alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            studyTestController.platformController.scaffold,
-            IconButton(
-                icon: const Icon(Icons.restart_alt),
-                onPressed: () {
-                    studyTestController.platformController.sendCmd("reset");
-                }
-            ),
-            //const SizedBox(width: 1,),
-            const Text("Reset preview")
-          ],
-        ));
+        child: Row(
+            children: [
+              Expanded(
+                flex: 3000,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 150),
+                      const Text("This is the preview mode.\nPress reset to remove the test progress and start over again.\nLorem ipsum dolor sit amet",
+                          textAlign: TextAlign.center
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton.icon(
+                              icon: const Icon(Icons.restart_alt),
+                              label: const Text("Reset"),
+                              onPressed: () {
+                                studyTestController.platformController.sendCmd("reset");
+                              },
+                            ),
+                            TextButton.icon(
+                                icon: const Icon(Icons.open_in_new_sharp),
+                                label: const Text("Open in new tab"),
+                                onPressed: () {
+                                  studyTestController.platformController.openNewPage();
+                                }
+                            ),
+                          ]
+                      )
+                    ]
+                ),
+              ),
+              Expanded(
+                  flex: 3000,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      studyTestController.platformController.scaffold,
+                    ],
+                  )
+              ),
+              Expanded(
+                  flex: 3000,
+                  child: Column(
+                  )
+              )
+            ]
+        )
+    );
   }
 }

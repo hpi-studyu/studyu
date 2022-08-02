@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'dart:js' as js;
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,8 @@ abstract class PlatformController {
   void refresh();
   void listen();
   void send(String message);
+
+  void openNewPage() {}
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
@@ -120,6 +123,11 @@ class WebController extends PlatformController {
   }
 
   @override
+  void openNewPage() {
+    js.context.callMethod('open', [previewSrc]);
+  }
+
+  @override
   void listen() {
     html.window.onMessage.listen((event) {
       var data = event.data;
@@ -143,6 +151,10 @@ class MobileController extends PlatformController {
 
   @override
   void sendCmd(String command) {
+  }
+
+  @override
+  void openNewPage() {
   }
 
   @override
