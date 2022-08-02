@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 
 class StudyTestScreen extends ConsumerStatefulWidget {
@@ -24,8 +25,10 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final studyTestController =
-        ref.read(studyTestControllerProvider(widget.studyId).notifier);
+    final study = ref.watch(studyControllerProvider(widget.studyId)).study.value;
+
+    // todo error handling Study?
+    final studyTestController = ref.read(studyTestControllerProvider(study!).notifier);
 
     return Container(
         alignment: Alignment.center,

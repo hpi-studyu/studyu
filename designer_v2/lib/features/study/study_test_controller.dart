@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_test_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -24,36 +24,67 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = 'https://studyu-app-v2--pr92-dev-designer-v2-prev-ahingod1.web.app/';
-  //String previewSrc = 'https://studyu-app-v2.web.app/';
-  //String previewSrc = 'http://localhost:12345/';
+  String previewSrc = 'https://studyu-app-v2--pr143-dev-designer-v2-prev-6dl0nxo1.web.app/';
+  // String previewSrc = 'https://studyu-app-v2.web.app/';
+  // String previewSrc = 'http://localhost:12345/';
 
   final IAuthRepository authRepository;
   late PlatformController platformController;
-  final String studyId;
+  final Study study;
 
   StudyTestController({
-    required this.studyId,
+    required this.study,
     required this.authRepository,
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
-    _modifySrc();
+    List<dynamic> missingRequirements = _missingRequirements();
+    if (missingRequirements.isEmpty) {
+      _modifySrc();
+    } else {
+      print("Requirements not satisfied: $missingRequirements");
+    }
     _selectPlatform();
   }
 
   _selectPlatform() {
     if (!kIsWeb) {
       // Mobile could be built with the webview_flutter package
-      platformController = MobileController(previewSrc, studyId);
+      platformController = MobileController(previewSrc, study.id);
     } else {
       // Desktop and Web
-      platformController = WebController(previewSrc, studyId);
+      platformController = WebController(previewSrc, study.id);
     }
   }
 
   _modifySrc() {
     String sessionStr = authRepository.session?.persistSessionString ?? '';
-    previewSrc +=
-        '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=$studyId';
+    previewSrc += '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
+  }
+
+  // Check if the study satisfies the requirements to be previewed
+  // Todo we might also include this check before publishing a study
+  _missingRequirements() {
+    List<dynamic> conditions = [
+      study.title,
+      study.description,
+      study.interventions,
+      study.hasEligibilityCheck,
+      study.eligibilityCriteria,
+      study.observations,
+      study.consent,
+    ];
+    //print('before: $conditions');
+    conditions.removeWhere((element) => _isValid(element));
+    //print('after: $conditions');
+    //print('result: ${conditions.isEmpty}');
+    return conditions;
+  }
+
+  _isValid(dynamic val) {
+    if (val is bool) {
+      return val;
+    }
+    // todo check for custom class and throw error
+    return val?.isNotEmpty ?? false;
   }
 }
 
@@ -134,8 +165,8 @@ class MobileController extends PlatformController {
 }
 
 final studyTestControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyTestController, StudyTestState, StudyID>(
-        (ref, studyId) => StudyTestController(
-              studyId: studyId,
+    .family<StudyTestController, StudyTestState, Study>(
+        (ref, study) => StudyTestController(
+              study: study,
               authRepository: ref.watch(authRepositoryProvider),
             ));
