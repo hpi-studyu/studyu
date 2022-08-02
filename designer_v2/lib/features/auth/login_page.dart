@@ -119,7 +119,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           width: 130,
           height: 40,
           color: FlutterFlowTheme.of(context).secondaryColor,
-          textStyle: FlutterFlowTheme.of(context).bodyText1.override(
+          textStyle: FlutterFlowTheme.of(context).bodyText1.override( // todo fix
                 fontFamily: 'Roboto',
                 color: FlutterFlowTheme.of(context).primaryBackground,
               ),
@@ -142,7 +142,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             }),
         title: Text(
           'Remember me'.hardcoded,
-          style: FlutterFlowTheme.of(context).subtitle2.override(
+          style: FlutterFlowTheme.of(context).subtitle2.override( // todo fix
             fontFamily: 'Roboto',
             color: const Color(0xFF7B8995),
           ),
@@ -205,7 +205,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
                 ),
-                style: FlutterFlowTheme.of(context).bodyText1.override(
+                style: FlutterFlowTheme.of(context).bodyText1.override( // todo fix
                       fontFamily: 'Open Sans',
                       fontWeight: FontWeight.w300,
                     ),
@@ -244,7 +244,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 filled: true,
                 fillColor: FlutterFlowTheme.of(context).lineColor,
               ),
-              style: FlutterFlowTheme.of(context).bodyText1.override(
+              style: FlutterFlowTheme.of(context).bodyText1.override( // todo fix
                     fontFamily: 'Open Sans',
                     fontWeight: FontWeight.w300,
                   ),
