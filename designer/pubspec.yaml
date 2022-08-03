@@ -27,7 +27,7 @@ dependencies:
     sdk: flutter
   form_builder_extra_fields: ^8.3.0
   form_builder_validators: ^8.3.0
-  http: ^0.13.4
+  http: ^0.13.5
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.6996
   pretty_json: ^2.0.0
