@@ -16,6 +16,10 @@ class AuthController extends StateNotifier<void> {
   Future<void> signOut() async{
     return await authRepository.signOut();
   }
+
+  Future<void> resetPasswordForEmail(String email) async {
+    return await authRepository.resetPasswordForEmail(email: email);
+  }
 }
 
 final authControllerProvider = StateNotifierProvider.autoDispose<AuthController, void>((ref) {

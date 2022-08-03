@@ -14,6 +14,7 @@ abstract class IAuthRepository extends IAppDelegate {
   Stream<User?> watchAuthStateChanges();
   Future<void> signInWith({required String email, required String password});
   Future<void> signOut();
+  Future<void> resetPasswordForEmail({required String email});
   // - Lifecycle
   void dispose();
 }
@@ -24,22 +25,24 @@ class AuthRepository implements IAuthRepository {
 
   /// Reference to the Supabase API client injected via Riverpod
   final SupabaseClient supabaseClient;
-  
+
   /// Reference to shared preferences used for session storage
   final SharedPreferences sharedPreferences;
 
   /// A stream controller for broadcasting the currently logged in user
   /// Broadcasts null if the user is logged out
-  final BehaviorSubject<User?> _authStateStreamController = BehaviorSubject.seeded(null);
+  final BehaviorSubject<User?> _authStateStreamController = BehaviorSubject
+      .seeded(null);
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
   late final GotrueSubscription _authSubscription;
-  
+
   GoTrueClient get authClient => supabaseClient.auth;
+
   Session? get session => authClient.session();
 
   AuthRepository({
-    required this.supabaseClient, 
+    required this.supabaseClient,
     required this.sharedPreferences}) {
     _registerAuthListener();
   }
@@ -50,17 +53,17 @@ class AuthRepository implements IAuthRepository {
     _authSubscription = authClient.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
-          // Update stream with logged in user
+        // Update stream with logged in user
           _authStateStreamController.add(authClient.currentUser);
           _persistSession();
           break;
         case AuthChangeEvent.signedOut:
-          // Send null to indicate that no user is available (logged out)
+        // Send null to indicate that no user is available (logged out)
           _authStateStreamController.add(null);
           _resetPersistedSession();
           break;
         case AuthChangeEvent.userUpdated:
-          // Update stream with new user object
+        // Update stream with new user object
           _authStateStreamController.add(authClient.currentUser);
           _persistSession();
           break;
@@ -83,7 +86,8 @@ class AuthRepository implements IAuthRepository {
   Stream<User?> watchAuthStateChanges() => _authStateStreamController.stream;
 
   @override
-  Future<void> signInWith({required String email, required String password}) async {
+  Future<void> signInWith(
+      {required String email, required String password}) async {
     final res = await authClient.signIn(
         email: email, password: password);
     if (res.error != null) {
@@ -98,6 +102,15 @@ class AuthRepository implements IAuthRepository {
     if (res.error != null) {
       // TODO propagate error to controller / UI
       print("logout error");
+    }
+  }
+
+  @override
+  Future<void> resetPasswordForEmail({required String email}) async {
+    final res = await authClient.api.resetPasswordForEmail(email);
+    if (res.error != null) {
+      // TODO propagate error to controller / UI
+      print("reset password error");
     }
   }
 

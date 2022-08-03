@@ -34,9 +34,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (state) {
       final loginLocation = state.namedLocation(RouterConfig.login.name!);
+      final resetPasswordLocation = state.namedLocation(RouterConfig.passwordReset.name!);
       final splashLocation = state.namedLocation(RouterConfig.splash.name!);
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
+      final isOnPasswordResetPage = state.subloc == resetPasswordLocation;
       final isOnSplashPage = state.subloc == splashLocation;
 
       // Read most recent app state on re-evaluation (see refreshListenable)
@@ -58,7 +60,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Helper to generate routes carrying the 'from' param (if any)
       namedLocForwarded(String name) {
         final Map<String,String> qParams = {};
-        if (from != null) {
+        if (from != null && from != '/') {
           qParams["from"] = from;
         }
         return state.namedLocation(name, queryParams: qParams);
@@ -70,6 +72,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             ? null : namedLocForwarded(RouterConfig.splash.name!);
       }
       if (!isLoggedIn) {
+        if (from == RouterConfig.passwordReset.path) {
+          return (isOnPasswordResetPage)
+              ? null : state.namedLocation(RouterConfig.passwordReset.name!);
+        }
+
         // Redirect to login page when not logged in
         return (isOnLoginPage)
             ? null : namedLocForwarded(RouterConfig.login.name!);

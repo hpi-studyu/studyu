@@ -5,7 +5,9 @@ import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-import '../../flutter_flow/flutter_flow_widgets.dart';
+import 'package:studyu_designer_v2/flutter_flow/flutter_flow_widgets.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -63,44 +65,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-        key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: SafeArea(
-            child: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: Container(
-                    height: height,
-                    child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 0.5*height/12
-                          ),
-                          SizedBox(
-                            height: 1*height/12,
-                            child: _topbar(),
-                          ),
-                          SizedBox(
-                            height: 2*height/12,
-                            child: _title(height),
-                          ),
-                          SizedBox(
-                            width: 500,
-                            height: 6*height/12,
-                            //crossAxisAlignment: CrossAxisAlignment.center,
-                            //mainAxisAlignment: MainAxisAlignment.center,
-                            child: _formWidget(),
-                          ),
-                          SizedBox(
-                            height: 2.5*height/12,
-                            child: _bottombar(),
-                          )
-                        ]
-                    ),
-                )
-            )
-        )
+    return _formWidget();
+  }
+
+  Widget _formWidget() {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(child: Text('Researcher Login'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
+          const SizedBox(height: 20),
+          _emailWidget(),
+          _passwordWidget(),
+          _rememberMeWidget(),
+          _forgotPassword(),
+          const SizedBox(height: 20),
+          _buttonWidget(),
+        ]
     );
   }
 
@@ -155,8 +135,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: Container(
             alignment: Alignment.centerLeft,
-            child:
-              Text('Forgot your password?'.hardcoded, style: FlutterFlowTheme.of(context).bodyText2,)
+            child: TextButton(
+                onPressed: () => ref.read(routerProvider).dispatch(
+                    RoutingIntents.passwordReset),
+                child: Text("Forgot your password?".hardcoded, style: FlutterFlowTheme.of(context).bodyText2)
+            ),
         )
     );
   }
@@ -251,107 +234,5 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             )
           ],
         ));
-  }
-
-  Widget _formWidget() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(child: Text('Researcher Login'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
-          const SizedBox(height: 20),
-          _emailWidget(),
-          _passwordWidget(),
-          _rememberMeWidget(),
-          _forgotPassword(),
-          const SizedBox(height: 20),
-          _buttonWidget(),
-        ]
-    );
-  }
-
-  Widget _title(double height) {
-    return Container(
-      alignment: Alignment.center,
-      child: Image.asset(
-        'assets/images/icon_wide.png',
-        height: height * 0.2,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
-  Widget _topbar() {
-    return Row(
-        children: <Widget>[
-          const SizedBox(width: 40),
-          Container (
-              alignment: Alignment.centerLeft,
-              child: Text('StudyU', style: FlutterFlowTheme.of(context).title1)
-          ),
-          const SizedBox(width: 20),
-          Container (
-              alignment: Alignment.centerLeft,
-              child: Text('Learn more'.hardcoded,
-                  style: TextStyle(
-                      color: FlutterFlowTheme.of(context).primaryText)
-              )
-          ),
-          const Spacer(),
-          Container (
-            alignment: Alignment.centerRight,
-            child: Text('Don\'t have an account?'.hardcoded,
-              style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Container (
-              alignment: Alignment.centerRight,
-              child: Text('Sign up here'.hardcoded,
-                style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              )
-          ),
-          const SizedBox(width: 40)
-        ]
-    );
-  }
-
-  Widget _bottombar() {
-    return Column(
-        children: [
-          Spacer(),
-          Row(
-              children: <Widget>[
-                const SizedBox(width: 40),
-                Container (
-                    alignment: Alignment.centerLeft,
-                    child: Text('© HPI Digital Health Center 2022'.hardcoded,
-                        style: TextStyle(
-                            color: FlutterFlowTheme.of(context).alternate)
-                    )
-                ),
-                const Spacer(),
-                Container (
-                  alignment: Alignment.centerRight,
-                  child: Text('Language: English'.hardcoded,
-                    style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Container (
-                    alignment: Alignment.centerRight,
-                    child: Text('Imprint'.hardcoded,
-                      style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
-                      ),
-                    )
-                ),
-                const SizedBox(width: 40)
-              ]
-          ),
-          const SizedBox(height: 20)
-        ]
-    );
   }
 }
