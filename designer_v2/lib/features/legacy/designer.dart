@@ -112,151 +112,77 @@ class _DesignerState extends State<Designer> {
 
     final appState = context.watch<AppState>();
     final study = appState.draftStudy;
-    return Scaffold(
-      /*
-      appBar: AppBar(
-        title: Text(
-          study != null
-              ? AppLocalizations.of(context)!.view_published_study
-              : AppLocalizations.of(context)!.create_new_study,
-        ),
-        actions: [
-          if (appState.loggedIn && (study == null || !study.published || kDebugMode)) ...[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: TextButton.icon(
-                icon: const Icon(Icons.publish),
-                label: Text(AppLocalizations.of(context)!.publish_study),
-                style: TextButton.styleFrom(primary: Colors.white),
-                onPressed: () async {
-                  final newStudy = await saveStudy(context, study!, publish: true);
-                  if (!mounted) return;
-                  if (newStudy != null) context.read<AppState>().openNewStudy(newStudy);
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: TextButton.icon(
-                icon: const Icon(Icons.save),
-                label: Text(AppLocalizations.of(context)!.save_draft),
-                style: TextButton.styleFrom(primary: Colors.white),
-                onPressed: () async {
-                  final newDraftStudy = await saveStudy(context, study!, publish: false);
-                  if (!mounted) return;
-                  if (newDraftStudy != null) context.read<AppState>().openNewStudy(newDraftStudy);
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: TextButton.icon(
-                icon: const Icon(MdiIcons.testTube),
-                label: const Text('Try draft study'),
-                style: TextButton.styleFrom(primary: Colors.white),
-                onPressed: () => launchUrl(
-                  Uri.parse(
-                    '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session()!.persistSessionString)}',
-                  ),
-                ),
-              ),
-            ),
-          ],
-          /*
-          if (kDebugMode)
-            Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.copy),
-                onPressed: () async {
-                  await FlutterClipboard.copy(prettyJson(study.toJson()));
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.copied_json)));
-                },
-              ),
-            ),
-           */
-        ],
-      ),
-       */
-      body: Row(
+    return Container(
+      child: Row(
         children: [
-          LayoutBuilder(
-            builder: (context, constraint) => SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraint.maxHeight),
-                child: IntrinsicHeight(
-                  child: NavigationRail(
-                    selectedIndex: appState.selectedDesignerPage.index,
-                    onDestinationSelected: (int index) {
-                      appState.selectedDesignerPage = DesignerPage.values[index];
-                    },
-                    labelType: NavigationRailLabelType.all,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.info_outline),
-                        selectedIcon: const Icon(Icons.info_outline),
-                        label: Text(AppLocalizations.of(context)!.about),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.accessibility_new),
-                        selectedIcon: const Icon(Icons.accessibility_new),
-                        label: Text(AppLocalizations.of(context)!.interventions),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.question_answer),
-                        selectedIcon: const Icon(Icons.question_answer),
-                        label: Text(AppLocalizations.of(context)!.eligibility_questions),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.verified_user),
-                        selectedIcon: const Icon(Icons.verified_user),
-                        label: Text(AppLocalizations.of(context)!.eligibility_criteria),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.zoom_in),
-                        selectedIcon: const Icon(Icons.zoom_in),
-                        label: Text(AppLocalizations.of(context)!.observations),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.schedule),
-                        selectedIcon: const Icon(Icons.schedule),
-                        label: Text(AppLocalizations.of(context)!.schedule),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.content_paste),
-                        selectedIcon: const Icon(Icons.content_paste),
-                        label: Text(AppLocalizations.of(context)!.report),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.assignment_turned_in),
-                        selectedIcon: const Icon(Icons.assignment_turned_in),
-                        label: Text(AppLocalizations.of(context)!.results),
-                      ),
-                      NavigationRailDestination(
-                        icon: const Icon(Icons.warning),
-                        selectedIcon: const Icon(Icons.warning),
-                        label: Text(AppLocalizations.of(context)!.consent),
-                      ),
-                    ],
-                  ),
+          IntrinsicHeight(
+            child: NavigationRail(
+              selectedIndex: appState.selectedDesignerPage.index,
+              onDestinationSelected: (int index) {
+                appState.selectedDesignerPage = DesignerPage.values[index];
+              },
+              labelType: NavigationRailLabelType.all,
+              destinations: [
+                NavigationRailDestination(
+                  icon: const Icon(Icons.info_outline),
+                  selectedIcon: const Icon(Icons.info_outline),
+                  label: Text(AppLocalizations.of(context)!.about),
                 ),
-              ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.accessibility_new),
+                  selectedIcon: const Icon(Icons.accessibility_new),
+                  label: Text(AppLocalizations.of(context)!.interventions),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.question_answer),
+                  selectedIcon: const Icon(Icons.question_answer),
+                  label: Text(AppLocalizations.of(context)!.eligibility_questions),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.verified_user),
+                  selectedIcon: const Icon(Icons.verified_user),
+                  label: Text(AppLocalizations.of(context)!.eligibility_criteria),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.zoom_in),
+                  selectedIcon: const Icon(Icons.zoom_in),
+                  label: Text(AppLocalizations.of(context)!.observations),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.schedule),
+                  selectedIcon: const Icon(Icons.schedule),
+                  label: Text(AppLocalizations.of(context)!.schedule),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.content_paste),
+                  selectedIcon: const Icon(Icons.content_paste),
+                  label: Text(AppLocalizations.of(context)!.report),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.assignment_turned_in),
+                  selectedIcon: const Icon(Icons.assignment_turned_in),
+                  label: Text(AppLocalizations.of(context)!.results),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.warning),
+                  selectedIcon: const Icon(Icons.warning),
+                  label: Text(AppLocalizations.of(context)!.consent),
+                ),
+              ],
             ),
           ),
           const VerticalDivider(thickness: 1, width: 1),
           Flexible(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 900),
-              child: Router(
-                routerDelegate: _designerRouterDelegate,
-                backButtonDispatcher: _backButtonDispatcher,
-              ),
-             )
+              child: Container(
+                constraints: BoxConstraints(maxHeight: 600),
+                child: Router(
+                  routerDelegate: _designerRouterDelegate,
+                  backButtonDispatcher: _backButtonDispatcher,
+                ),
+              )
           ),
-        ],
-      ),
-    );
+        ]
+    ));
   }
 }
 
