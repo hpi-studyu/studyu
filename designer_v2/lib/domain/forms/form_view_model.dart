@@ -21,15 +21,11 @@ class FormControlOption<T> {
 }
 
 abstract class FormViewModel<T> {
-  FormViewModel({
-    formData,
-    this.delegate
-  }) : _formData = formData,
+  FormViewModel({formData, this.delegate}) :
+        _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
     _restoreControlsFromFormData();
-    // TODO: do we still need this?
-    //_saveControlDefaults();
-    _applyFormMode();
+    _formModeUpdated();
   }
 
   T? get formData => _formData;
@@ -44,15 +40,61 @@ abstract class FormViewModel<T> {
 
   final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
 
+  /// Map that stores the default enabled/disabled state for each control in
+  /// the [form]
+  final Map<String, bool> _defaultControlStates = {};
+
   FormMode get formMode => _formMode;
   set formMode(FormMode mode) {
     _formMode = mode;
-    _applyFormMode(); // TODO is this what we always want to do?
+    _formModeUpdated();
   }
   FormMode _formMode;
 
   String get title => titles[formMode] ?? "[Missing title]";
   bool get isValid => form.valid;
+
+  _saveControlStates() {
+    for (final entry in form.controls.entries) {
+      entry.value as FormArray;
+      final controlName = entry.key;
+      final control = entry.value;
+      _defaultControlStates[controlName] = control.enabled;
+    }
+  }
+
+  _disableAllControls() {
+    for (final control in form.controls.values) {
+      control.markAsDisabled();
+    }
+    assert(form.allControlsDisabled());
+  }
+
+  _restoreControlStates() {
+    for (final entry in form.controls.entries) {
+      final controlName = entry.key;
+      final control = entry.value;
+      final isEnabledByDefault = _defaultControlStates[controlName] ?? true;
+      if (isEnabledByDefault) {
+        control.markAsEnabled();
+      } else {
+        control.markAsDisabled();
+      }
+    }
+  }
+
+  _formModeUpdated() {
+    switch (formMode) {
+      case FormMode.readonly:
+        _saveControlStates();
+        _disableAllControls();
+        break;
+      case FormMode.create:
+      case FormMode.edit:
+        _restoreControlStates();
+        break;
+    }
+  }
 
   _restoreControlsFromFormData() {
     if (formData != null) {
@@ -63,56 +105,6 @@ abstract class FormViewModel<T> {
     form.updateValueAndValidity();
   }
 
-  /*
-  TODO: do we still need this?
-
-  /// Map that stores the default enabled/disabled state for each control in
-  /// the [form]
-  final Map<String, bool> defaultControlStates = {};
-
-  _saveControlDefaults() {
-    for (final entry in form.controls.entries) {
-      entry.value as FormArray;
-      final controlName = entry.key;
-      final control = entry.value;
-      defaultControlStates[controlName] = control.enabled;
-    }
-  }
-
-  _restoreControlDefaults() {
-    for (final entry in form.controls.entries) {
-      final controlName = entry.key;
-      final control = entry.value;
-      final isEnabledByDefault = defaultControlStates[controlName] ?? true;
-      if (isEnabledByDefault) {
-        control.markAsEnabled();
-      } else {
-        control.markAsDisabled();
-      }
-    }
-  }
-   */
-
-  _disableAllControls() {
-    for (final control in form.controls.values) {
-      control.markAsDisabled();
-    }
-  }
-
-  _applyFormMode() {
-    switch (formMode) {
-      case FormMode.readonly:
-        _disableAllControls();
-        break;
-        /* TODO: do we still need this?
-      case FormMode.create:
-      case FormMode.edit:
-        _restoreControlDefaults();
-        break;
-         */
-    }
-  }
-
   void edit(T formData) {
     this.formData = formData;
     formMode = FormMode.edit;
@@ -121,18 +113,6 @@ abstract class FormViewModel<T> {
   void read(T formData) {
     this.formData = formData;
     formMode = FormMode.readonly;
-  }
-
-  // - Subclass responsibility
-
-  FormGroup get form;
-  Map<FormMode, String> get titles;
-  /// Initialize the values of all [FormControl]s in the [form]
-  void setControlsFrom(T data);
-  T buildFormData();
-
-  void initControls() {
-    // subclass responsibility (optional)
   }
 
   Future save() {
@@ -158,5 +138,18 @@ abstract class FormViewModel<T> {
     delegate?.onCancel(this, formMode);
 
     return Future.value(null);
+  }
+
+  // - Subclass responsibility
+
+  FormGroup get form;
+  Map<FormMode, String> get titles;
+
+  /// Initialize the values of all [FormControl]s in the [form]
+  void setControlsFrom(T data);
+  T buildFormData();
+
+  void initControls() {
+    // subclass responsibility (optional)
   }
 }

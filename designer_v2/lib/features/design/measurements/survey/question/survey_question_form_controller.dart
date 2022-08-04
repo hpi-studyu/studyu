@@ -119,6 +119,9 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
       case SurveyQuestionType.choice:
         data = data as ChoiceQuestionFormData;
         isMultipleChoiceControl.value = data.isMultipleChoice;
+        // Unfortunately needed because of how [FormArray.updateValue] is implemented
+        // Note: `formArray.value = []` does not remove any controls!
+        answerOptionsArray.clear();
         answerOptionsArray.value = data.answerOptions.map(
                 (option) => option.label).toList();
         break;
@@ -163,6 +166,7 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
   Map<FormMode, String> get titles => {
     FormMode.create: "New Survey Question".hardcoded,
     FormMode.edit: "Edit Survey Question".hardcoded,
+    FormMode.readonly: "View Survey Question".hardcoded,
   };
 
   @override

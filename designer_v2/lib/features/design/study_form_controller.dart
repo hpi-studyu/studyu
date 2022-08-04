@@ -100,20 +100,18 @@ final studyInfoFormViewModelProvider = Provider.autoDispose
 
 final measurementsFormViewModelProvider = Provider
     .family<MeasurementsFormViewModel, StudyID>((ref, studyId) {
-  return ref.watch(studyFormViewModelProvider(studyId)).measurementsFormViewModel;
+      return ref.watch(
+          studyFormViewModelProvider(studyId)).measurementsFormViewModel;
 });
 
 final surveyFormViewModelProvider = Provider.autoDispose
     .family<MeasurementSurveyFormViewModel,MeasurementFormRouteArgs>((ref, args) {
       final owner = ref.watch(measurementsFormViewModelProvider(args.studyId));
-      print("before provide");
       return owner.provide(args);
 });
 
 final surveyQuestionFormViewModelProvider = Provider.autoDispose
     .family<SurveyQuestionFormViewModel,SurveyQuestionFormRouteArgs>((ref, args) {
-  final owner = ref.watch(surveyFormViewModelProvider(args));
-  print("in providr");
-  print(owner);
-  return owner.provide(args);
+      final owner = ref.watch(surveyFormViewModelProvider(args));
+      return owner.provide(args);
 });
