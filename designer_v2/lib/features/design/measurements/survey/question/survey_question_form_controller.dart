@@ -12,7 +12,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
 
-class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData> 
+class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
     implements IListActionProvider<ModelActionType, AbstractControl<String>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
@@ -129,12 +129,6 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
 
   @override
   SurveyQuestionFormData buildFormData() {
-    print("buildFormData");
-    print(answerOptionsArray.value!);
-    print(answerOptionsArray.value!  // required
-        .where((optionStr) => optionStr != null && optionStr.isNotEmpty)
-        .map((optionStr) => optionStr)
-        .toList());
     switch (questionType) {
       case SurveyQuestionType.bool:
         return BoolQuestionFormData(

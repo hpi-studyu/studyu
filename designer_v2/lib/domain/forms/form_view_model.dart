@@ -42,7 +42,7 @@ abstract class FormViewModel<T> {
   }
   T? _formData;
 
-  final IFormViewModelDelegate? delegate;
+  final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
 
   FormMode get formMode => _formMode;
   set formMode(FormMode mode) {
