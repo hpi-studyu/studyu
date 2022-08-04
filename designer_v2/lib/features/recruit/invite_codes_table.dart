@@ -34,9 +34,6 @@ class StudyInvitesTable extends StatelessWidget {
         label: 'Enrolled'.hardcoded,
         columnWidth: const FixedColumnWidth(100)),
     StandardTableColumn(
-        label: 'Created at'.hardcoded,
-        columnWidth: const FixedColumnWidth(100)),
-    StandardTableColumn(
         label: 'Intervention A'.hardcoded,
         columnWidth: const MaxColumnWidth(
             FixedColumnWidth(150), FlexColumnWidth(1))),
@@ -121,7 +118,6 @@ class StudyInvitesTable extends StatelessWidget {
           ],
         ),
       ),
-      Text('[TODO]', style: tableTextStyleSecondary), // TODO
       Text('[TODO]', style: tableTextStyleSecondary), // TODO
       buildInterventionCell(interventionA),
       buildInterventionCell(interventionB),
