@@ -6,17 +6,22 @@ class ActionMenuInline extends StatelessWidget {
   const ActionMenuInline({
     required this.actions,
     this.splashRadius = 18.0,
-    this.iconSize = 20.0,
+    this.iconSize,
     this.iconColor,
     this.visible = true,
+    this.paddingHorizontal = 2.0,
+    this.paddingVertical = 0.0,
     Key? key
   }) : super(key: key);
 
   final List<ModelAction> actions;
   final MaterialStateProperty<Color>? iconColor;
-  final double iconSize;
+  final double? iconSize;
   final bool visible;
   final double? splashRadius;
+
+  final double? paddingVertical;
+  final double? paddingHorizontal;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +29,9 @@ class ActionMenuInline extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final theme = Theme.of(context);
+
     defaultIconColor(Set<MaterialState> states) {
-      final theme = Theme.of(context);
       if (states.contains(MaterialState.hovered)) {
         return theme.colorScheme.secondary.withOpacity(0.8);
       }
@@ -40,7 +46,7 @@ class ActionMenuInline extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 splashRadius: splashRadius,
                 onPressed: () => action.onExecute(),
-                iconSize: iconSize,
+                iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
                 icon: Icon(
                     action.icon,
                     color: iconColor?.resolve(state) ?? (
@@ -51,9 +57,15 @@ class ActionMenuInline extends StatelessWidget {
       );
     }).toList();
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: actionButtons,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: paddingHorizontal ?? 0,
+          vertical: paddingVertical ?? 0
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: actionButtons,
+      ),
     );
   }
 }

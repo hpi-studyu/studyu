@@ -263,6 +263,13 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  IconThemeData iconTheme(ColorScheme colors) {
+    return IconThemeData(
+      color: colors.onSurface.withOpacity(0.8),
+      size: 17.0,
+    );
+  }
+
   ThemeData light([Color? targetColor]) {
     final colorScheme = colors(Brightness.light, targetColor);
     return ThemeData.light().copyWith(
@@ -284,6 +291,7 @@ class ThemeProvider extends InheritedWidget {
       inputDecorationTheme: inputDecorationTheme(colorScheme),
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),
+      iconTheme: iconTheme(colorScheme),
       useMaterial3: true,
     );
   }
@@ -306,6 +314,7 @@ class ThemeProvider extends InheritedWidget {
       inputDecorationTheme: inputDecorationTheme(colorScheme),
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),
+      iconTheme: iconTheme(colorScheme),
       useMaterial3: true,
     );
   }

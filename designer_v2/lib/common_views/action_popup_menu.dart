@@ -60,8 +60,8 @@ class ActionPopUpMenuButton extends StatelessWidget {
   Widget _buildPopupMenu(BuildContext context, Set<MaterialState> state) {
     final theme = Theme.of(context);
     final isHovered = state.contains(MaterialState.hovered);
-    final iconColorDefault = triggerIconColor ?? theme.iconTheme.color;
-    final iconColorHover = triggerIconColorHover ?? theme.iconTheme.color;
+    final iconColorDefault = triggerIconColor ?? theme.iconTheme.color!.withOpacity(0.7);
+    final iconColorHover = triggerIconColorHover ?? theme.iconTheme.color!.withOpacity(0.7);
     final triggerIcon = (orientation == Axis.vertical)
         ? Icons.more_vert_rounded : Icons.more_horiz_rounded;
 
@@ -86,7 +86,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
               leading: (action.icon == null)
                   ? const SizedBox.shrink()
                   : Icon(action.icon,
-                  size: 18.0,
+                  size: theme.iconTheme.size ?? 14.0,
                   color: action.isDestructive ? Colors.red : iconColorDefault),
               title: action.isDestructive
                   ? Text(action.label, style: textTheme.copyWith(color: Colors.red))

@@ -46,8 +46,11 @@ class FormScaffold<T extends FormViewModel> extends ConsumerWidget {
       );
     }
 
+    final theme = Theme.of(context);
+
     return inForm(Scaffold(
       appBar: AppBar(
+        iconTheme: theme.iconTheme,
         // TODO: enable async title here
         title: Text(formViewModel.title,
             maxLines: 1,

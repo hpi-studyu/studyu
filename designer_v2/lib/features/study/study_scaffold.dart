@@ -58,6 +58,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: theme.iconTheme.copyWith(size: theme.iconTheme.size! * 1.2),
         bottom: (widget.tabsSubnav != null) ? PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(

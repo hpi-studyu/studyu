@@ -63,8 +63,9 @@ class FormTableLayout extends StatelessWidget {
                         message: row.labelHelpText,
                         child: Icon(
                             Icons.help_outline_rounded,
-                            size: theme.textTheme.caption!.fontSize! + 4.0,
-                            color: theme.colorScheme.onSurface.withOpacity(0.7)
+                            size: theme.textTheme.caption!.fontSize! + 2.0,
+                            color: theme.iconTheme.color?.withOpacity(0.7)
+                                ?? theme.colorScheme.onSurface.withOpacity(0.7)
                         )
                     ) : const SizedBox.shrink(),
                   ]

@@ -209,7 +209,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final isSelected = entryIdx == _selectedIdx;
 
     return ListTile(
-      leading: Icon(entry.icon),
+      leading: Icon(
+        entry.icon,
+        size: theme.iconTheme.size! * 1.2,
+        color: theme.iconTheme.color!.withOpacity(0.65),
+      ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(
           entry.title,
