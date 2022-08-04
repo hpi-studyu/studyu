@@ -1,7 +1,7 @@
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class Config {
-  static const isDebugMode = false;
+  static const isDebugMode = true;
 
   /// Default id for new studies that haven't been saved yet
   static const newStudyId = 'new';
@@ -15,4 +15,4 @@ class Config {
 }
 
 const kPathSeparator = '   /   ';
-final kDuplicateSuffix = " (Copy)".hardcoded;
+const kDuplicateLabel = "Copy"; // .hardcoded

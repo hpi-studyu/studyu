@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
+import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -10,6 +12,10 @@ typedef StandardTableRowBuilder = TableRow Function(
 
 typedef StandardTableCellsBuilder<T> = List<Widget> Function(
     BuildContext context, T item, int rowIdx, Set<MaterialState> states);
+
+enum StandardTableStyle {
+  plain, material
+}
 
 /// Default descriptor for a table column
 class StandardTableColumn {
@@ -28,39 +34,65 @@ class StandardTable<T> extends StatefulWidget {
     required this.columns,
     required this.onSelectItem,
     required this.buildCellsAt,
-    this.popoverActionsAt,
-    this.popoverActionsColumn = const StandardTableColumn(
-        label: '', columnWidth: FixedColumnWidth(65)),
+    this.trailingActionsAt,
+    this.trailingActionsColumn = const StandardTableColumn(
+        label: '',
+        columnWidth: MaxColumnWidth(IntrinsicColumnWidth(), FixedColumnWidth(65))
+    ),
+    this.trailingActionsMenuType = ActionMenuType.popup,
     this.headerRowBuilder,
     this.dataRowBuilder,
     this.cellSpacing = 10.0,
     this.rowSpacing = 9.0,
     this.minRowHeight = 50.0,
     this.showTableHeader = true,
+    this.leadingWidget,
+    this.trailingWidget,
+    this.leadingWidgetSpacing = 18.0,
+    this.trailingWidgetSpacing = 18.0,
+    this.emptyWidget,
+    this.rowStyle = StandardTableStyle.material,
+    this.disableRowInteractions = false,
     Key? key
   }) : super(key: key) {
-    // Insert trailing column for popover actions menu
-    if (popoverActionsAt != null) {
+    // Insert trailing column for actions menu
+    if (trailingActionsAt != null) {
       columns = [...columns]; // don't modify original reference
-      columns.add(popoverActionsColumn);
+      columns.add(trailingActionsColumn);
     }
   }
 
   final List<T> items;
   List<StandardTableColumn> columns;
   final OnSelectHandler<T> onSelectItem;
-  final ActionsProviderAt<T>? popoverActionsAt;
+  final ActionsProviderAt<T>? trailingActionsAt;
+  final ActionMenuType? trailingActionsMenuType;
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
-  final StandardTableColumn popoverActionsColumn;
+  final StandardTableColumn trailingActionsColumn;
 
   final double cellSpacing;
   final double rowSpacing;
   final double minRowHeight;
 
   final bool showTableHeader;
+
+  /// Optional widget rendered above/below the table body
+  final Widget? leadingWidget;
+  final Widget? trailingWidget;
+
+  final double? leadingWidgetSpacing;
+  final double? trailingWidgetSpacing;
+
+  /// Optional widget rendered when there are no rows in the table
+  /// If undefined, renders an empty table instead
+  final Widget? emptyWidget;
+
+  final StandardTableStyle rowStyle;
+
+  final bool disableRowInteractions;
 
   @override
   State<StandardTable<T>> createState() => _StandardTableState<T>();
@@ -121,15 +153,39 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
 
     final tableHeaderRows = (widget.showTableHeader)
         ? [headerRow, paddingRow, paddingRow] : [];
+    final tableDataRows = _tableRows(theme);
 
-    return Table(
+    final tableWidget = Table(
         columnWidths: columnWidths,
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
           ...tableHeaderRows,
-          ..._tableRows(theme)
+          ...tableDataRows
         ]
     );
+    final isTableVisible = !(tableHeaderRows.isEmpty && tableDataRows.isEmpty);
+
+    if (tableDataRows.isEmpty && widget.emptyWidget != null) {
+      return widget.emptyWidget!;
+    }
+
+    if (widget.leadingWidget != null || widget.trailingWidget != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.leadingWidget ?? const SizedBox.shrink(),
+          (widget.leadingWidget != null && widget.leadingWidgetSpacing != null)
+              ? SizedBox(height: widget.leadingWidgetSpacing!)
+              : const SizedBox.shrink(),
+          (isTableVisible) ? tableWidget : Container(),
+          (widget.trailingWidget != null && widget.trailingWidgetSpacing != null)
+              ? SizedBox(height: widget.trailingWidgetSpacing!)
+              : const SizedBox.shrink(),
+          widget.trailingWidget ?? const SizedBox.shrink(),
+        ],
+      );
+    }
+    return tableWidget;
   }
 
   List<TableRow> _tableRows(ThemeData theme) {
@@ -214,55 +270,74 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     final theme = Theme.of(context);
     final rowIsHovered = states.contains(MaterialState.hovered);
     final rowIsPressed = states.contains(MaterialState.pressed);
-    final rowColor = theme.colorScheme.onPrimary;
+    final rowColor = (widget.rowStyle == StandardTableStyle.material)
+        ? theme.colorScheme.onPrimary : Colors.transparent;
+
+    Widget _decorateCellInteractions(Widget child, {disableOnTap = false}) {
+      return MouseEventsRegion(
+          onTap: (disableOnTap) ? null : (() => widget.onSelectItem(item)),
+          onStateChanged: (states) => _onRowStateChanged(rowIdx, states),
+          builder: (context, mouseEventState) => child,
+      );
+    }
 
     Widget decorateCell(Widget child, {
       alignment = Alignment.centerLeft,
-      isLeadingTrailing = false
+      isLeading = false,
+      isTrailing = false,
+      disableOnTap = false,
     }) {
-      Widget innerContent = MouseEventsRegion(
-          onTap: () => widget.onSelectItem(item),
-          onStateChanged: (states) => _onRowStateChanged(rowIdx, states),
-          builder: (context, mouseEventState) => Material(
-              color: rowColor,
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      (isLeadingTrailing) ? 2*widget.cellSpacing : widget.cellSpacing,
-                      widget.cellSpacing,
-                      (isLeadingTrailing) ? 2*widget.cellSpacing : widget.cellSpacing,
-                      widget.cellSpacing
-                  ),
-                  child: SizedBox(
-                      height: widget.minRowHeight,
-                      child: Align(
-                        alignment: alignment,
-                        child: child,
-                      )
+      final styledCell = Material(
+          color: rowColor,
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                  (isLeading || isTrailing) ? 2*widget.cellSpacing : widget.cellSpacing,
+                  widget.cellSpacing,
+                  (isLeading || isTrailing) ? 2*widget.cellSpacing : widget.cellSpacing,
+                  widget.cellSpacing
+              ),
+              child: SizedBox(
+                  height: widget.minRowHeight,
+                  child: Align(
+                    alignment: alignment,
+                    child: child,
                   )
               )
           )
       );
 
-      return innerContent;
+      return (!widget.disableRowInteractions)
+          ? _decorateCellInteractions(styledCell, disableOnTap: disableOnTap)
+          : styledCell;
     }
 
     final List<Widget> rawCells = widget.buildCellsAt(
         context, item, rowIdx, states);
 
-    if (widget.popoverActionsAt != null) {
-      // Insert additional table cell to hold popover actions menu
-      final rowActions = widget.popoverActionsAt!(item, rowIdx) as List<ModelAction>;
-      rawCells.add(_buildPopoverActionsMenu(context, rowActions));
+    if (widget.trailingActionsAt != null) {
+      // Insert additional table cell to hold actions menu
+      final rowActions = widget.trailingActionsAt!(item, rowIdx) as List<ModelAction>;
+      rawCells.add(_buildActionMenu(context, rowActions));
     }
 
     final List<Widget> dataCells = [];
     for (var i = 0; i < rawCells.length; i++) {
-      final isLeadingTrailing = i == 0 || i == rawCells.length-1;
-      final cell = decorateCell(rawCells[i], isLeadingTrailing: isLeadingTrailing);
-      dataCells.add(cell);
+      final isLeading = i == 0;
+      final isTrailing = i == rawCells.length-1;
+      //final disableOnTap = (widget.trailingActionsAt != null && isTrailing)
+      //    ? true : false;
+
+      dataCells.add(
+        decorateCell(
+          rawCells[i],
+          isLeading: isLeading,
+          isTrailing: isTrailing,
+          disableOnTap: false)
+      );
     }
 
-    return TableRow(
+    return (widget.rowStyle == StandardTableStyle.material) ? TableRow(
+      key: ObjectKey(item),
       children: dataCells,
       decoration: BoxDecoration(
         border: Border.all(
@@ -280,21 +355,35 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
         )],
         color: theme.colorScheme.onPrimary,
       ),
+    ) : TableRow(
+      key: ObjectKey(item),
+      children: dataCells,
+      decoration: null,
     );
   }
 
-  Widget _buildPopoverActionsMenu(BuildContext context, List<ModelAction> actions) {
-    final theme = Theme.of(context);
-    return Align(
-      alignment: Alignment.centerRight,
-      child: ActionPopUpMenuButton(
+  Widget _buildActionMenu(BuildContext context, List<ModelAction> actions) {
+    final Widget actionMenuWidget;
+
+    if (widget.trailingActionsMenuType == ActionMenuType.inline) {
+      actionMenuWidget = ActionMenuInline(
+        actions: actions,
+      );
+    } else {
+      final theme = Theme.of(context);
+      actionMenuWidget = ActionPopUpMenuButton(
         actions: actions,
         orientation: Axis.horizontal,
         triggerIconColor: theme.colorScheme.secondary.withOpacity(0.8),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,
-      ),
+      );
+    }
+
+    return Align(
+      alignment: Alignment.centerRight,
+      child: actionMenuWidget,
     );
   }
 }

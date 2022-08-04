@@ -25,6 +25,9 @@ class TwoColumnLayout extends StatefulWidget {
   static const EdgeInsets defaultContentPadding = EdgeInsets.symmetric(
     horizontal: 48.0, vertical: 32.0,
   );
+  static const EdgeInsets slimContentPadding = EdgeInsets.symmetric(
+    horizontal: 32.0, vertical: 32.0,
+  );
 
   final Widget leftWidget;
   final Widget rightWidget;
@@ -49,6 +52,8 @@ class TwoColumnLayout extends StatefulWidget {
     required Widget leftWidget,
     required Widget rightWidget,
     Widget? dividerWidget,
+    int? flexLeft = 9,
+    int? flexRight = 8,
     BoxConstraints? constraintsLeft,
     BoxConstraints? constraintsRight,
     bool scrollLeft = true,
@@ -60,8 +65,8 @@ class TwoColumnLayout extends StatefulWidget {
       leftWidget: leftWidget,
       rightWidget: rightWidget,
       dividerWidget: dividerWidget,
-      flexLeft: 9,
-      flexRight: 8,
+      flexLeft: flexLeft,
+      flexRight: flexRight,
       constraintsLeft: constraintsLeft,
       constraintsRight: constraintsRight,
       scrollLeft: scrollLeft,

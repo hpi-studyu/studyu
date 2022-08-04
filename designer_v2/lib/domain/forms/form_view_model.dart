@@ -10,7 +10,7 @@ class FormInvalidException implements Exception {}
 
 abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onSave(T formViewModel, FormMode prevFormMode);
-  void onClose(T formViewModel, FormMode prevFormMode);
+  void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
 class FormControlOption<T> {
@@ -36,7 +36,8 @@ abstract class FormViewModel<T> {
   set formData(T? formData) {
     _formData = formData;
     if (formData != null) {
-      setFormControlValuesFrom(formData); // update [form] controls automatically
+      setControlsFrom(formData); // update [form] controls automatically
+      form.updateValueAndValidity();
     }
   }
   T? _formData;
@@ -55,10 +56,11 @@ abstract class FormViewModel<T> {
 
   _restoreControlsFromFormData() {
     if (formData != null) {
-      setFormControlValuesFrom(formData!);
+      setControlsFrom(formData!);
     } else {
-      setFormControlDefaults();
+      initControls();
     }
+    form.updateValueAndValidity();
   }
 
   /*
@@ -126,10 +128,10 @@ abstract class FormViewModel<T> {
   FormGroup get form;
   Map<FormMode, String> get titles;
   /// Initialize the values of all [FormControl]s in the [form]
-  void setFormControlValuesFrom(T data);
-  T buildFormDataFromControls();
+  void setControlsFrom(T data);
+  T buildFormData();
 
-  void setFormControlDefaults() {
+  void initControls() {
     // subclass responsibility (optional)
   }
 
@@ -140,7 +142,7 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    formData = buildFormDataFromControls();
+    formData = buildFormData();
     delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
@@ -151,9 +153,9 @@ abstract class FormViewModel<T> {
     return Future.value(null);
   }
 
-  Future<void> close() {
+  Future<void> cancel() {
     _restoreControlsFromFormData();
-    delegate?.onClose(this, formMode);
+    delegate?.onCancel(this, formMode);
 
     return Future.value(null);
   }

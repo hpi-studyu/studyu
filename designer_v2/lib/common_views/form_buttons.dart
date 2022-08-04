@@ -60,7 +60,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         builder: (context, form, child) {
           return _retainSizeInAppBar(DismissButton(
             onPressed: () =>
-                formViewModel.close().then(
+                formViewModel.cancel().then(
                         (_) => Navigator.maybePop(context)),
           ));
         }
@@ -89,7 +89,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
           return _retainSizeInAppBar(DismissButton(
             text: "Close".hardcoded,
             onPressed: () =>
-                formViewModel.close().then(
+                formViewModel.cancel().then(
                         (_) => Navigator.maybePop(context)),
           ));
         }

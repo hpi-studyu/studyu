@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
+import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/common_views/study_form_scaffold.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_view.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
@@ -183,17 +186,24 @@ class RouterConfig {
       path: ":${RouteParams.measurementId}",
       name: "studyEditMeasurement",
       pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        final measurementId = state.params[RouteParams.measurementId]!;
+        final routeArgs = MeasurementFormRouteArgs(
+            studyId: state.params[RouteParams.studyId]!,
+            measurementId: state.params[RouteParams.measurementId]!
+        );
         return MaterialPage(
           child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
-            studyId: studyId,
+            studyId: routeArgs.studyId,
             formViewModelBuilder: (ref) => ref.read(
-                measurementSurveyFormViewModelProvider(MeasurementFormRouteArgs(
-                    studyId: studyId, measurementId: measurementId))
+                surveyFormViewModelProvider(routeArgs)
             ),
-            formViewBuilder: (formViewModel) => MeasurementSurveyFormView(
-                formViewModel: formViewModel
+            formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+              leftWidget: MeasurementSurveyFormView(formViewModel: formViewModel),
+              rightWidget: SurveyPreview(routeArgs: routeArgs),
+              flexLeft: 7,
+              flexRight: 8,
+              scrollLeft: true,
+              scrollRight: false,
+              paddingRight: null,
             ),
           )
         );
@@ -296,3 +306,12 @@ class MeasurementFormRouteArgs {
   final MeasurementID measurementId;
 }
 
+class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs {
+  SurveyQuestionFormRouteArgs({
+    required super.studyId,
+    required super.measurementId,
+    required this.questionId
+  });
+
+  final QuestionID questionId;
+}

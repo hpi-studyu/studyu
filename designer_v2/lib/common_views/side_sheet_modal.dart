@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
-import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// Displays a Material Side Sheet transitioned from Right side of the screen.
 ///
@@ -126,7 +123,7 @@ Future<T?> showModalSideSheet<T extends Object?>(
             height: height,
             child: Scaffold(
               appBar: null,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.15),
               body: withCloseControll ? Stack(children: [
                   body,
                   const Positioned(top: 5, right: 5, child: CloseButton())
@@ -215,45 +212,6 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
       )),
     ),
   );
-}
-
-/// A cancel / dismiss button for the sidesheet
-/// Heavily inspired by [CloseButton]
-class DismissButton extends StatelessWidget {
-  const DismissButton({
-    this.text,
-    this.onPressed,
-    Key? key
-  }) : super(key: key);
-
-  /// An override callback to perform instead of the default behavior which is
-  /// to pop the [Navigator].
-  ///
-  /// It can, for instance, be used to pop the platform's navigation stack
-  /// via [SystemNavigator] instead of Flutter's [Navigator] in add-to-app
-  /// situations.
-  ///
-  /// Defaults to null.
-  final VoidCallback? onPressed;
-
-  final String? text;
-
-  @override
-  Widget build(BuildContext context) {
-    assert(debugCheckHasMaterialLocalizations(context));
-    return SecondaryButton(
-      text: text ?? "Cancel".hardcoded,
-      icon: null,
-      //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-      onPressed: () {
-        if (onPressed != null) {
-          onPressed!();
-        } else {
-          Navigator.maybePop(context);
-        }
-      },
-    );
-  }
 }
 
 showFormSideSheet<T extends FormViewModel>({

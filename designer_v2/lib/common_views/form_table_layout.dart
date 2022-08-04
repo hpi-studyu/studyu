@@ -39,17 +39,23 @@ class FormTableLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final List<TableRow> tableRows = [];
-    for (final row in rows) {
+
+    for (var i = 0; i < rows.length; i++) {
+      final row = rows[i];
+      final isTrailing = i == rows.length-1;
+      final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
+
       final tableRow = TableRow(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 10.0),
+              padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing),
               child: Row(
                   children: [
-                    Text(row.label,
-                        style: theme.textTheme.caption!.merge(row.labelStyle)),
+                    Text(
+                      row.label,
+                      style: theme.textTheme.caption!.merge(row.labelStyle),
+                    ),
                     (row.labelHelpText != null)
                         ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
                     (row.labelHelpText != null)
@@ -65,7 +71,7 @@ class FormTableLayout extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.only(bottom: 10.0),
+              padding: EdgeInsets.only(bottom: bottomSpacing),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: row.input,

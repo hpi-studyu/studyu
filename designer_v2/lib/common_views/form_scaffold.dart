@@ -46,7 +46,7 @@ class FormScaffold<T extends FormViewModel> extends ConsumerWidget {
       );
     }
 
-      return inForm(Scaffold(
+    return inForm(Scaffold(
       appBar: AppBar(
         // TODO: enable async title here
         title: Text(formViewModel.title,
@@ -62,10 +62,7 @@ class FormScaffold<T extends FormViewModel> extends ConsumerWidget {
           paddingEnd: actionsPadding,
         ),
       ),
-      body: TwoColumnLayout.split(
-          leftWidget: body,
-          rightWidget: Container()
-      ),
+      body: body,
       drawer: drawer,
     ));
   }

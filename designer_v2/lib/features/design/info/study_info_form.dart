@@ -32,12 +32,12 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   });
 
   @override
-  void setFormControlValuesFrom(StudyInfoFormData data) {
+  void setControlsFrom(StudyInfoFormData data) {
     //titleControl.value = data.title;
   }
 
   @override
-  StudyInfoFormData buildFormDataFromControls() {
+  StudyInfoFormData buildFormData() {
     return StudyInfoFormData(
         title: titleControl.value!
     );

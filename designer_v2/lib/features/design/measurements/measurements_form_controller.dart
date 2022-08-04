@@ -4,10 +4,13 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
@@ -49,63 +52,37 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   List<MeasurementSurveyFormData> get measurementsData =>
       surveyMeasurementFormViewModels.formData;
 
-  /*
-  final List<MeasurementSurveyFormViewModel> surveyMeasurementFormViewModels = [];
-  List<MeasurementSurveyFormData> get surveyMeasurementFormDataArray =>
-      surveyMeasurementFormViewModels.map((vm) => vm.formData!).toList();
-   */
-
-  // - IProviderArgsResolver
-
-  @override
-  MeasurementSurveyFormViewModel provide(MeasurementFormRouteArgs args) {
-    if (args.measurementId == Config.newModelId) {
-      return MeasurementSurveyFormViewModel(
-          study: study, formData: null, delegate: this);
-    }
-    // TODO handle 404 not found
-    /*
-    final idx = surveyMeasurementFormViewModels.indexWhere(
-            (vm) => vm.formData!.measurementId == args.measurementId);
-    return surveyMeasurementFormViewModels[idx];
-     */
-    return surveyMeasurementFormViewModels.findWhere(
-            (vm) => vm.formData!.measurementId == args.measurementId)!;
-  }
-
   // - Form fields
-
-  /*
-  FormArray get surveyMeasurementsArray => FormArray(
-      surveyMeasurementFormViewModels.map((vm) => vm.form).toList());
-
-   */
 
   FormArray get measurementsArray => surveyMeasurementFormViewModels.formArray;
 
   @override
-  FormGroup get form => FormGroup({
-    //'surveyMeasurements': surveyMeasurementsArray,
+  late final FormGroup form = FormGroup({
     'surveyMeasurements': measurementsArray,
   });
 
   @override
-  void setFormControlValuesFrom(MeasurementsFormData data) {
+  void setControlsFrom(MeasurementsFormData data) {
+    final viewModels = data.surveyMeasurements.map(
+            (data) => MeasurementSurveyFormViewModel(
+            study: study, formData: data, delegate: this
+        )).toList();
+    surveyMeasurementFormViewModels.reset(viewModels);
+
+    /*
     for (final surveyMeasurement in data.surveyMeasurements) {
       surveyMeasurementFormViewModels.add(
           MeasurementSurveyFormViewModel(
               study: study, formData: surveyMeasurement, delegate: this));
     }
+
+     */
   }
 
   @override
-  MeasurementsFormData buildFormDataFromControls() {
+  MeasurementsFormData buildFormData() {
     return MeasurementsFormData(
       surveyMeasurements: surveyMeasurementFormViewModels.formData,
-      /*
-        surveyMeasurements: surveyMeasurementFormViewModels.map(
-                (vm) => vm.buildFormDataFromControls()).toList()
-       */
     );
   }
 
@@ -133,7 +110,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
         onExecute: () {
           // Add a new view model with copied data to the form
           final formViewModel = MeasurementSurveyFormViewModel(
-              study: study, formData: MeasurementSurveyFormData.copyFrom(model));
+            study: study,
+            formData: model.copy(),
+            delegate: this,
+          );
           surveyMeasurementFormViewModels.add(formViewModel);
         },
         isAvailable: isNotReadonly,
@@ -180,20 +160,40 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     );
   }
 
+  // - IProviderArgsResolver
+
+  @override
+  MeasurementSurveyFormViewModel provide(MeasurementFormRouteArgs args) {
+    if (args.measurementId.isNewId) {
+      // Eagerly add the managed viewmodel in case it needs to be [provide]d
+      // to a child controller
+      final viewModel = MeasurementSurveyFormViewModel(
+          study: study, formData: null, delegate: this);
+      surveyMeasurementFormViewModels.stage(viewModel);
+      return viewModel;
+    }
+
+    final viewModel = surveyMeasurementFormViewModels.findWhere(
+            (vm) => vm.measurementId == args.measurementId);
+    if (viewModel == null) {
+      throw MeasurementNotFoundException(); // TODO handle 404 not found
+    }
+    return viewModel;
+  }
+
   // - IFormViewModelDelegate
 
   @override
-  void onClose(MeasurementSurveyFormViewModel formViewModel, FormMode formMode) {
+  void onCancel(MeasurementSurveyFormViewModel formViewModel, FormMode formMode) {
     return; // no-op
   }
 
   @override
-  void onSave(MeasurementSurveyFormViewModel formViewModel, FormMode formMode) {
-    if (formMode == FormMode.create) {
-      print("onSave");
-      surveyMeasurementFormViewModels.add(formViewModel);
-      print("afteronSave");
-    } else if (formMode == FormMode.edit) {
+  void onSave(MeasurementSurveyFormViewModel formViewModel, FormMode prevFormMode) {
+    if (prevFormMode == FormMode.create) {
+      // Commit the managed viewmodel that was eagerly added in [provide]
+      surveyMeasurementFormViewModels.commit(formViewModel);
+    } else if (prevFormMode == FormMode.edit) {
       // nothing to do here
     }
   }

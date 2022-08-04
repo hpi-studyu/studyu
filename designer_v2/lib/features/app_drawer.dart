@@ -210,11 +210,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
     return ListTile(
       leading: Icon(entry.icon),
-      hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-      title: Text(entry.title,
-          style: isSelected
-              ? const TextStyle(fontWeight: FontWeight.bold)
-              : null),
+      //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
+      title: Text(
+          entry.title,
+          style: isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null,
+      ),
       contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
       selected: isSelected,
       onTap: () => entry.onClick(context, ref),

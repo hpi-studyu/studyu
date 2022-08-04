@@ -33,13 +33,13 @@ class EnrollmentQuestionFormViewModel extends FormViewModel<EnrollmentQuestionFo
   });
 
   @override
-  void setFormControlValuesFrom(EnrollmentQuestionFormData data) {
+  void setControlsFrom(EnrollmentQuestionFormData data) {
     questionTextControl.value = data.question.prompt ?? '';
     questionTypeControl.value = data.question.type;
   }
 
   @override
-  EnrollmentQuestionFormData buildFormDataFromControls() {
+  EnrollmentQuestionFormData buildFormData() {
     // TODO: create question of corresponding type (for now create boolean default)
     final question = BooleanQuestion();
     question.prompt = questionTextControl.value;

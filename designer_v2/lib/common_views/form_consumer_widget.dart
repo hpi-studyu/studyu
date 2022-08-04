@@ -35,22 +35,3 @@ class _FormConsumerWidgetState extends State<FormConsumerWidget> {
     );
   }
 }
-
-/*
-class FormConsumerWidget extends StatelessWidget {
-  const FormConsumerWidget({
-    required this.child,
-    Key? key
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return ReactiveFormConsumer(
-      builder: (context, form, _) {
-        return child;
-      }
-    );
-  }
-}*/

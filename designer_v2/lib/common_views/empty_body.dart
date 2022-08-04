@@ -27,12 +27,14 @@ class EmptyBody extends StatelessWidget {
           (title != null) ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: SelectableText(title!,
+                  textAlign: TextAlign.center,
                   style: theme.textTheme.titleLarge!.copyWith(
                     color: theme.colorScheme.onSurface.withOpacity(0.8),
                     fontWeight: FontWeight.bold,
               ))
           ) : const SizedBox.shrink(),
           (description != null) ? SelectableText(description!,
+              textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium!.copyWith(
                 color: theme.colorScheme.onSurface.withOpacity(0.8))
           ) : const SizedBox.shrink(),

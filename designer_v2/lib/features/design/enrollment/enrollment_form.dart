@@ -43,7 +43,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   });
 
   @override
-  void setFormControlValuesFrom(EnrollmentFormData data) {
+  void setControlsFrom(EnrollmentFormData data) {
     enrollmentTypeControl.value = data.enrollmentType;
     for (final enrollmentQuestion in data.enrollmentQuestions) {
       enrollmentQuestionFormViewModels.add(
@@ -52,11 +52,11 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   @override
-  EnrollmentFormData buildFormDataFromControls() {
+  EnrollmentFormData buildFormData() {
     return EnrollmentFormData(
       enrollmentType: enrollmentTypeControl.value!,
       enrollmentQuestions: enrollmentQuestionFormViewModels.map(
-              (vm) => vm.buildFormDataFromControls()).toList()
+              (vm) => vm.buildFormData()).toList()
     );
   }
 
@@ -67,7 +67,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   // - IFormViewModelDelegate
 
   @override
-  void onClose(EnrollmentQuestionFormViewModel formViewModel, FormMode prevFormMode) {
+  void onCancel(EnrollmentQuestionFormViewModel formViewModel, FormMode prevFormMode) {
     // TODO: implement onClose
   }
 

@@ -69,7 +69,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   });
 
   @override
-  void setFormControlDefaults() {
+  void initControls() {
     regenerateCode(); // initialize randomly
   }
 
@@ -99,7 +99,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  StudyInvite buildFormDataFromControls() {
+  StudyInvite buildFormData() {
     return StudyInvite(
       codeControl.value!,
       study.id,
@@ -108,7 +108,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  void setFormControlValuesFrom(StudyInvite data) {
+  void setControlsFrom(StudyInvite data) {
     codeControl.value = data.code;
     isPreconfiguredScheduleControl.value = data.hasPreconfiguredSchedule;
     if (data.hasPreconfiguredSchedule) {
@@ -119,7 +119,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Future<StudyInvite> save() {
-    return inviteCodeRepository.saveStudyInvite(buildFormDataFromControls());
+    return inviteCodeRepository.saveStudyInvite(buildFormData());
   }
 }
 
@@ -137,4 +137,3 @@ final inviteCodeFormViewModelProvider = Provider.autoDispose
         inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider),
       );
 });
-

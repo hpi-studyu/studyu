@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
@@ -183,7 +184,7 @@ class StudyRepository implements IStudyRepository {
     // TODO: what's the best place for this logic without a server?
     // TODO: review Postgres access control policies
     final copy = Study.fromJson(study.toJson());
-    copy.title = copy.title! + kDuplicateSuffix;
+    copy.title = copy.title!.withDuplicateLabel();
     copy.userId = authRepository.currentUser!.id;
     copy.published = false;
     copy.activeSubjectCount = 0;

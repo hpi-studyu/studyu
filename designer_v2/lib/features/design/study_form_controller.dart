@@ -1,13 +1,13 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/features/design/info/study_info_form.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurement_survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -23,7 +23,14 @@ class StudyFormViewModel extends FormViewModel<Study> {
   StudyFormViewModel({
     required this.router,
     required super.formData,
-  });
+  }) {
+    _formChangesSubscription = form.valueChanges.listen((event) {
+      // TODO: implement autosave if form is valid
+      print("StudyFormViewModel.form.valueChanged");
+    });
+  }
+
+  late final StreamSubscription _formChangesSubscription;
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
       study: formData!, formData: MeasurementsFormData.fromStudy(formData!), router: router);
@@ -37,21 +44,21 @@ class StudyFormViewModel extends FormViewModel<Study> {
   final GoRouter router;
 
   @override
-  FormGroup get form => FormGroup({
+  late final FormGroup form = FormGroup({
     //'info': studyInfoFormViewModel.form,
     //'enrollment': enrollmentFormViewModel.form,
     'measurements': measurementsFormViewModel.form,
   });
 
   @override
-  void setFormControlValuesFrom(Study data) {
+  void setControlsFrom(Study data) {
     //studyInfoFormViewModel.fromData(StudyInfoFormData.fromStudy(data));
     //enrollmentFormViewModel.fromData(EnrollmentFormData.fromStudy(data));
-    measurementsFormViewModel.setFormControlValuesFrom(MeasurementsFormData.fromStudy(data));
+    measurementsFormViewModel.setControlsFrom(MeasurementsFormData.fromStudy(data));
   }
 
   @override
-  Study buildFormDataFromControls() {
+  Study buildFormData() {
     // TODO return updated study
     return formData!;
   }
@@ -67,7 +74,6 @@ class StudyFormViewModel extends FormViewModel<Study> {
     FormMode.create: "TODO create",
     FormMode.edit: "TODO edit",
   };
-
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
@@ -97,8 +103,17 @@ final measurementsFormViewModelProvider = Provider
   return ref.watch(studyFormViewModelProvider(studyId)).measurementsFormViewModel;
 });
 
-final measurementSurveyFormViewModelProvider = Provider.autoDispose
+final surveyFormViewModelProvider = Provider.autoDispose
     .family<MeasurementSurveyFormViewModel,MeasurementFormRouteArgs>((ref, args) {
       final owner = ref.watch(measurementsFormViewModelProvider(args.studyId));
+      print("before provide");
       return owner.provide(args);
+});
+
+final surveyQuestionFormViewModelProvider = Provider.autoDispose
+    .family<SurveyQuestionFormViewModel,SurveyQuestionFormRouteArgs>((ref, args) {
+  final owner = ref.watch(surveyFormViewModelProvider(args));
+  print("in providr");
+  print(owner);
+  return owner.provide(args);
 });

@@ -23,6 +23,8 @@ typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 /// Base class for domain-specific exceptions
 class APIException implements Exception {}
 class StudyNotFoundException extends APIException {}
+class MeasurementNotFoundException extends APIException {}
+class SurveyQuestionNotFoundException extends APIException {}
 class StudyInviteNotFoundException extends APIException {}
 
 class StudyUApiClient extends SupabaseClientDependant

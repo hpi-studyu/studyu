@@ -241,7 +241,7 @@ class ThemeProvider extends InheritedWidget {
     // TODO: migrate to 2021 term set across the codebase
     // See https://stackoverflow.com/questions/72271461/cannot-mix-2018-and-2021-terms-in-call-to-texttheme-constructor
     return TextTheme(
-      caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.8)), // Form Labels
+      caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.85)), // Form Labels
       subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
     );
   }

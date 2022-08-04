@@ -4,7 +4,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/container_bounded.dart';
-import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -42,10 +41,6 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85)),
                 ),
                 const SizedBox(height: 32.0),
-                SelectableText("Surveys".hardcoded,
-                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 18.0),
                 ReactiveFormArray(
                   formArray: formViewModel.measurementsArray,
                   builder: (context, formArray, child) {
@@ -53,14 +48,9 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
                       items: formViewModel.measurementsData,
                       onSelectItem: formViewModel.onSelectItem,
                       getActionsAt: (item, _) => formViewModel.availablePopupActions(item),
+                      onNewItem: formViewModel.onNewItem,
                     );
                   },
-                ),
-                const SizedBox(height: 18.0),
-                PrimaryButton(
-                  icon: Icons.add,
-                  text: "Add survey".hardcoded,
-                  onPressed: formViewModel.onNewItem
                 ),
               ],
             ),
