@@ -62,6 +62,7 @@ class FormArrayTable<T> extends StatelessWidget {
       minRowHeight: 40.0,
       showTableHeader: false,
       leadingWidget: FormTableLayout(
+        rowDivider: const Divider(),
         rows: [
           FormTableRow(
               label: sectionTitle!,

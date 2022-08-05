@@ -51,3 +51,9 @@ class CountWhereValidator<T> extends Validator<T> {
     return null;
   }
 }
+
+class Patterns {
+  /// Regex pattern for hh:mm time format (with or without leading zero)
+  //static const timeFormatString = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$';
+  static const timeFormatString = r'^[ab]$';
+}

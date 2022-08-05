@@ -46,15 +46,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   final Study study;
   final GoRouter router;
 
-  final surveyMeasurementFormViewModels = FormViewModelCollection<
-      MeasurementSurveyFormViewModel, MeasurementSurveyFormData>([]);
+  // - Form fields
+
+  //FormArray get measurementsArray => surveyMeasurementFormViewModels.formArray;
+  final FormArray measurementsArray = FormArray([],
+      validators: [Validators.minLength(1)]);
+
+  late final surveyMeasurementFormViewModels = FormViewModelCollection<
+      MeasurementSurveyFormViewModel, MeasurementSurveyFormData>([], measurementsArray);
 
   List<MeasurementSurveyFormData> get measurementsData =>
       surveyMeasurementFormViewModels.formData;
-
-  // - Form fields
-
-  FormArray get measurementsArray => surveyMeasurementFormViewModels.formArray;
 
   @override
   late final FormGroup form = FormGroup({

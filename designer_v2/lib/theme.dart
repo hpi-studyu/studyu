@@ -198,6 +198,7 @@ class ThemeProvider extends InheritedWidget {
       fillColor: Colors.white,
       hoverColor: Colors.white,
       isDense: true,
+      //constraints: BoxConstraints(maxHeight: 40.0),
       //contentPadding: EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
@@ -243,6 +244,7 @@ class ThemeProvider extends InheritedWidget {
     return TextTheme(
       caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.85)), // Form Labels
       subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
+      bodyText2: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
     );
   }
 
@@ -270,6 +272,17 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  CheckboxThemeData checkboxTheme(ColorScheme colors) {
+    return CheckboxThemeData(
+      splashRadius: 18.0,
+      fillColor: MaterialStateColor.resolveWith((states) => colors.primary.withOpacity(0.9)),
+      side: BorderSide(
+        color: colors.secondary.withOpacity(0.2),
+        width: 1.5,
+      ),
+    );
+  }
+
   ThemeData light([Color? targetColor]) {
     final colorScheme = colors(Brightness.light, targetColor);
     return ThemeData.light().copyWith(
@@ -292,6 +305,7 @@ class ThemeProvider extends InheritedWidget {
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
+      checkboxTheme: checkboxTheme(colorScheme),
       useMaterial3: true,
     );
   }
@@ -315,6 +329,7 @@ class ThemeProvider extends InheritedWidget {
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
+      checkboxTheme: checkboxTheme(colorScheme),
       useMaterial3: true,
     );
   }

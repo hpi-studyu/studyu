@@ -11,10 +11,10 @@ class FormViewModelNotFoundException implements Exception {}
 /// Enables reactive re-rendering of forms containing a [FormArray] that is
 /// derived from a list of [FormViewModel]s
 class FormViewModelCollection<T extends FormViewModel, D> {
-  FormViewModelCollection(this.formViewModels);
+  FormViewModelCollection(this.formViewModels, this.formArray);
 
   List<T> formViewModels;
-  FormArray formArray = FormArray([]);
+  FormArray formArray;
 
   /// Staged [FormViewModel]s can be retrieved from the collection using
   /// [findWhere], but are not represented in [formArray] or [formData]
@@ -93,12 +93,14 @@ class FormViewModelCollection<T extends FormViewModel, D> {
 
   void reset(List<T>? viewModels) {
     formViewModels = [];
-    formArray = FormArray([]);
+    formArray.clear();
 
     if (viewModels != null) {
       for (final viewModel in viewModels) {
         add(viewModel);
       }
     }
+
+    formArray.updateValueAndValidity();
   }
 }

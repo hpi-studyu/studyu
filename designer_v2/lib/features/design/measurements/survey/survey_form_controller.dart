@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -27,23 +28,50 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
   });
 
   final Study study;
-  final surveyQuestionFormViewModels = FormViewModelCollection<
-      SurveyQuestionFormViewModel, SurveyQuestionFormData>([]);
-
-  List<SurveyQuestionFormData> get surveyQuestionsData =>
-      surveyQuestionFormViewModels.formData;
 
   // - Form fields
 
   final FormControl<MeasurementID> measurementIdControl = FormControl(
-      validators: [Validators.required], disabled: true); // hidden
+      validators: [Validators.required], value: const Uuid().v4()); // hidden
   final FormControl<String> surveyTitleControl = FormControl(
-      validators: [Validators.minLength(3)]);
+      validators: [Validators.required, Validators.minLength(3)],
+      value: MeasurementSurveyFormData.kDefaultTitle);
   final FormControl<String> surveyIntroTextControl = FormControl();
   final FormControl<String> surveyOutroTextControl = FormControl();
-  FormArray get surveyQuestionsArray => surveyQuestionFormViewModels.formArray;
+
+  final FormControl<bool> isTimeRestrictedControl = FormControl(
+      validators: [Validators.required], value: false);
+  final FormControl<TimeOfDay> restrictedTimeStartControl = FormControl(
+      value: const TimeOfDay(hour: 6, minute: 0));
+  final FormControl<TimeOfDay> restrictedTimeEndControl = FormControl(
+      value: const TimeOfDay(hour: 23, minute: 59));
+
+  final FormControl<bool> hasReminderControl = FormControl(
+      validators: [Validators.required], value: false);
+  final FormControl<int> reminderTimeControl = FormControl(value: 10);
+
+  final FormArray surveyQuestionsArray = FormArray([],
+      validators: [Validators.minLength(1)]);
+
+  bool get hasReminder => hasReminderControl.value!;
+  bool get isTimeRestricted => isTimeRestrictedControl.value!;
+
+  List<TimeOfDay>? get timeRestriction => (isTimeRestricted &&
+      restrictedTimeStartControl.value != null && restrictedTimeEndControl.value != null)
+        ? [restrictedTimeStartControl.value!, restrictedTimeEndControl.value!] : null;
+
+  List<FormControlOption<int>> get reminderTimeControlOptions =>
+      [0, 5, 10, 15, 20, 30, 45, 60]
+          .map((minutes) => FormControlOption(minutes, minutes.toString()))
+          .toList();
 
   MeasurementID get measurementId => measurementIdControl.value!;
+
+  late final surveyQuestionFormViewModels = FormViewModelCollection<
+      SurveyQuestionFormViewModel, SurveyQuestionFormData>([], surveyQuestionsArray);
+
+  List<SurveyQuestionFormData> get surveyQuestionsData =>
+      surveyQuestionFormViewModels.formData;
 
   @override
   late final FormGroup form = FormGroup({
@@ -52,13 +80,12 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
     'surveyIntroText': surveyIntroTextControl,
     'surveyOutroText': surveyOutroTextControl,
     'surveyQuestions': surveyQuestionsArray,
+    'isTimeRestricted': isTimeRestrictedControl,
+    'restrictedTimeStart': restrictedTimeStartControl,
+    'restrictedTimeEnd': restrictedTimeEndControl,
+    'hasReminder': hasReminderControl,
+    'reminderTime': reminderTimeControl,
   });
-
-  @override
-  void initControls() {
-    measurementIdControl.value = const Uuid().v4();
-    surveyTitleControl.value = MeasurementSurveyFormData.kDefaultTitle;
-  }
 
   @override
   void setControlsFrom(MeasurementSurveyFormData data) {

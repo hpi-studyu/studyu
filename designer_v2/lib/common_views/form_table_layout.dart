@@ -30,11 +30,13 @@ class FormTableLayout extends StatelessWidget {
       0: FixedColumnWidth(160.0),
       1: FlexColumnWidth(),
     },
+    this.rowDivider,
     Key? key
   }) : super(key: key);
 
   final List<FormTableRow> rows;
   final Map<int,TableColumnWidth> columnWidths;
+  final Widget? rowDivider;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class FormTableLayout extends StatelessWidget {
       final tableRow = TableRow(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing),
+              padding: EdgeInsets.only(top: 14.0, bottom: bottomSpacing),
               child: Row(
                   children: [
                     Text(
@@ -77,10 +79,19 @@ class FormTableLayout extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: row.input,
               ),
-            )
+            ),
           ]
       );
       tableRows.add(tableRow);
+
+      if (rowDivider != null) {
+        tableRows.add(TableRow(
+          children: [
+            rowDivider!,
+            rowDivider!
+          ]
+        ));
+      }
     }
 
     return Table(
