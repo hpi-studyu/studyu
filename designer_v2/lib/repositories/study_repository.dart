@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
@@ -9,6 +10,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
@@ -84,6 +86,16 @@ class StudyRepository implements IStudyRepository {
 
   @override
   List<ModelAction<StudyActionType>> getAvailableActionsFor(Study study) {
+    Future<void> onDeleteCallback() {
+      return deleteStudy(study.id)
+        .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies))
+        .then((value) => Future.delayed(
+            const Duration(milliseconds: 200),
+            () => ref.read(notificationServiceProvider).show(
+                Notifications.studyDeleted)
+        ));
+    }
+
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
       ModelAction(
@@ -139,13 +151,16 @@ class StudyRepository implements IStudyRepository {
         type: StudyActionType.delete,
         label: "Delete".hardcoded,
         onExecute: () {
-          return deleteStudy(study.id)
-              .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies))
-              .then((value) => Future.delayed(
-                  const Duration(milliseconds: 200),
-                  () => ref.read(notificationServiceProvider).show(
-                      Notifications.studyDeleted)
-              ));
+          return ref.read(notificationServiceProvider).show(
+            Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+            actions: [
+              NotificationAction(
+                label: "Delete".hardcoded,
+                onSelect: onDeleteCallback,
+                isDestructive: true
+              ),
+            ]
+          );
         },
         isAvailable: study.isOwner(authRepository.currentUser!)
             && !study.published,
