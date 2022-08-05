@@ -17,6 +17,7 @@ Future<void> main() async {
     FlutterError.onError = (FlutterErrorDetails errorDetails) {
       // TODO: top-level error handling
       print("Exception: ${errorDetails.exception.toString()}");
+      print("Stack: ${errorDetails.stack.toString()}");
     };
 
     runApp(
@@ -32,5 +33,6 @@ Future<void> main() async {
   }, (error, stackTrace) {
     // TODO: top-level error handling
     print("Exception: ${error.toString()}");
+    print("Stack: ${stackTrace.toString()}");
   });
 }

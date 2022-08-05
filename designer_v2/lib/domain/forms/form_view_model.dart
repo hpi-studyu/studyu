@@ -56,7 +56,6 @@ abstract class FormViewModel<T> {
 
   _saveControlStates() {
     for (final entry in form.controls.entries) {
-      entry.value as FormArray;
       final controlName = entry.key;
       final control = entry.value;
       _defaultControlStates[controlName] = control.enabled;
