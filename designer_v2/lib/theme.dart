@@ -245,6 +245,7 @@ class ThemeProvider extends InheritedWidget {
       caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.85)), // Form Labels
       subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
       bodyText2: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
+      bodyText1: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
     );
   }
 

@@ -9,7 +9,6 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_tab
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-
 class StudyDesignMeasurementsFormView extends ConsumerWidget {
   const StudyDesignMeasurementsFormView(this.studyId, {Key? key}) : super(key: key);
 
@@ -22,7 +21,6 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        print("StudyDesignnMeasurementsFormView.AsyncBody.build");
         final formViewModel = ref.read(measurementsFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,

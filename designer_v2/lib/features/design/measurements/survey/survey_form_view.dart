@@ -87,6 +87,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
   }
 
   Widget _scheduleSection(BuildContext context) {
+    //formViewModel.reminderTimeControl.markAsDisabled();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -107,19 +108,49 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 label: "App reminder".hardcoded,
                 labelHelpText: "TODO reminder notification help text".hardcoded,
                 input: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      ReactiveCheckbox(
-                        formControl: formViewModel.hasReminderControl,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    ReactiveCheckbox(
+                      formControl: formViewModel.hasReminderControl,
+                    ),
+                    const SizedBox(width: 3.0),
+                    FormControlLabel(
+                      formControl: formViewModel.hasReminderControl,
+                      text: "Send notification ".hardcoded
+                    ),
+                    const SizedBox(width: 8.0),
+                    Opacity(
+                      opacity: (formViewModel.hasReminder) ? 1 : 0.5,
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          IntrinsicWidth(
+                              child: ReactiveTimePicker(
+                                formControl: formViewModel.reminderTimeControl,
+                                initialEntryMode: TimePickerEntryMode.input,
+                                builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
+                                  return ReactiveTextField(
+                                    formControl: formViewModel.reminderTimeControl,
+                                    decoration: InputDecoration(
+                                      hintText: "hh:mm".hardcoded,
+                                      suffixIcon: Material(
+                                          color: Colors.transparent,
+                                          child: IconButton(
+                                            splashRadius: 18.0,
+                                            onPressed: picker.showPicker,
+                                            icon: const Icon(Icons.access_time),
+                                          )
+                                      )
+                                    ),
+                                  );
+                                },
+                              )
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 3.0),
-                      FormControlLabel(
-                        formControl: formViewModel.hasReminderControl,
-                        text: "Send notification".hardcoded
-                      ),
-                      _conditionalReminder(context),
-                    ],
-                  ),
+                    )
+                  ],
+                ),
               ),
               FormTableRow(
                 label: "Time restriction".hardcoded,
@@ -130,38 +161,6 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               ),
               ..._conditionalTimeRestrictions(context),
             ]
-        ),
-      ],
-    );
-  }
-
-  Widget _conditionalReminder(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        const SizedBox(width: 12.0),
-        IntrinsicWidth(
-            child: ReactiveDropdownField(
-              formControl: formViewModel.reminderTimeControl,
-              items: formViewModel.reminderTimeControlOptions.map(
-                      (option) => DropdownMenuItem(
-                    value: option.value,
-                    child: Text(option.label),
-                  )).toList(),
-              isExpanded: false,
-              readOnly: (formViewModel.hasReminder) ? false : true,
-            ),
-        ),
-        const SizedBox(width: 8.0),
-        FormControlLabel(
-          formControl: formViewModel.reminderTimeControl,
-          text: "minutes prior".hardcoded,
-          textStyle: (!formViewModel.hasReminder)
-              ? TextStyle(color: theme.textTheme.bodyText2!.color!.withOpacity(0.5))
-              : null,
-          isClickable: false,
         ),
       ],
     );

@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/domain/questionnaire.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
@@ -25,7 +26,15 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
     required this.study,
     super.delegate,
     super.formData,
-  });
+  }) {
+    hasReminderControl.valueChanges.listen((hasReminder) {
+      if (hasReminder != null && !hasReminder) {
+        reminderTimeControl.markAsDisabled();
+      } else {
+        reminderTimeControl.markAsEnabled();
+      }
+    });
+  }
 
   final Study study;
 
@@ -42,13 +51,13 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
   final FormControl<bool> isTimeRestrictedControl = FormControl(
       validators: [Validators.required], value: false);
   final FormControl<TimeOfDay> restrictedTimeStartControl = FormControl(
-      value: const TimeOfDay(hour: 6, minute: 0));
+      value: const TimeOfDay(hour: 0, minute: 0));
   final FormControl<TimeOfDay> restrictedTimeEndControl = FormControl(
       value: const TimeOfDay(hour: 23, minute: 59));
 
   final FormControl<bool> hasReminderControl = FormControl(
       validators: [Validators.required], value: false);
-  final FormControl<int> reminderTimeControl = FormControl(value: 10);
+  final FormControl<TimeOfDay> reminderTimeControl = FormControl();
 
   final FormArray surveyQuestionsArray = FormArray([],
       validators: [Validators.minLength(1)]);
@@ -101,6 +110,12 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
               )).toList();
       surveyQuestionFormViewModels.reset(viewModels);
     }
+
+    isTimeRestrictedControl.value = data.isTimeRestricted;
+    restrictedTimeStartControl.value = data.restrictedTimeStart?.toTimeOfDay();
+    restrictedTimeEndControl.value = data.restrictedTimeEnd?.toTimeOfDay();
+    hasReminderControl.value = data.hasReminder;
+    reminderTimeControl.value = data.reminderTime?.toTimeOfDay();
   }
 
   @override
@@ -111,6 +126,11 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
       introText: surveyIntroTextControl.value,
       outroText: surveyOutroTextControl.value,
       surveyQuestionsData: surveyQuestionsData,
+      isTimeRestricted: isTimeRestrictedControl.value!, // required
+      restrictedTimeStart: restrictedTimeStartControl.value?.toStudyUTimeOfDay(),
+      restrictedTimeEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
+      hasReminder: hasReminderControl.value!,  // required
+      reminderTime: reminderTimeControl.value?.toStudyUTimeOfDay(),
     );
   }
 
