@@ -34,10 +34,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (state) {
       final loginLocation = state.namedLocation(RouterConfig.login.name!);
+      final signupLocation = state.namedLocation(RouterConfig.signup.name!);
       final resetPasswordLocation = state.namedLocation(RouterConfig.passwordReset.name!);
       final splashLocation = state.namedLocation(RouterConfig.splash.name!);
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
+      final isOnSignupPage = state.subloc == signupLocation;
       final isOnPasswordResetPage = state.subloc == resetPasswordLocation;
       final isOnSplashPage = state.subloc == splashLocation;
 
@@ -71,10 +73,23 @@ final routerProvider = Provider<GoRouter>((ref) {
         return (isOnSplashPage)
             ? null : namedLocForwarded(RouterConfig.splash.name!);
       }
+
       if (!isLoggedIn) {
+        if (from != null && from != state.subloc) {
+          return from;
+        }
+        // todo make this more dynamic
         if (from == RouterConfig.passwordReset.path) {
           return (isOnPasswordResetPage)
               ? null : state.namedLocation(RouterConfig.passwordReset.name!);
+        }
+        if (from == RouterConfig.passwordRecovery.path) {
+          return (state.subloc == state.namedLocation(RouterConfig.passwordRecovery.name!))
+              ? null : state.namedLocation(RouterConfig.passwordRecovery.name!);
+        }
+        if (from == RouterConfig.signup.path) {
+          return (state.subloc == state.namedLocation(RouterConfig.signup.name!))
+              ? null : state.namedLocation(RouterConfig.signup.name!);
         }
 
         // Redirect to login page when not logged in
@@ -90,7 +105,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
         // ...or send them to the default location if they just authenticated
         // and weren't going anywhere
-        if (isOnLoginPage || isOnSplashPage) {
+        if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
           return defaultLocation;
         }
       }

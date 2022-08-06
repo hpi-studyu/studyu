@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
+import 'package:studyu_designer_v2/utils/exceptions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 
@@ -12,6 +13,7 @@ abstract class IAuthRepository extends IAppDelegate {
   User? get currentUser;
   bool get isLoggedIn;
   Stream<User?> watchAuthStateChanges();
+  Future<void> signUp({required String email, required String password});
   Future<void> signInWith({required String email, required String password});
   Future<void> signOut();
   Future<void> resetPasswordForEmail({required String email});
@@ -86,13 +88,19 @@ class AuthRepository implements IAuthRepository {
   Stream<User?> watchAuthStateChanges() => _authStateStreamController.stream;
 
   @override
+  Future<void> signUp({required String email, required String password}) async {
+    final res = await authClient.signUp(email, password);
+    if (res.error != null) {
+      throw StudyUException(res.error!.message);
+    }
+  }
+
+  @override
   Future<void> signInWith(
       {required String email, required String password}) async {
-    final res = await authClient.signIn(
-        email: email, password: password);
+    final res = await authClient.signIn(email: email, password: password);
     if (res.error != null) {
-      // TODO propagate error to controller / UI
-      print("login error");
+      throw StudyUException(res.error!.message);
     }
   }
 
@@ -100,17 +108,15 @@ class AuthRepository implements IAuthRepository {
   Future<void> signOut() async {
     final res = await authClient.signOut();
     if (res.error != null) {
-      // TODO propagate error to controller / UI
-      print("logout error");
+        throw StudyUException(res.error!.message);
     }
   }
 
   @override
   Future<void> resetPasswordForEmail({required String email}) async {
     final res = await authClient.api.resetPasswordForEmail(email);
-    if (res.error != null) {
-      // TODO propagate error to controller / UI
-      print("reset password error");
+      if (res.error != null) {
+        throw StudyUException(res.error!.message);
     }
   }
 

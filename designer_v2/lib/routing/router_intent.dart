@@ -75,6 +75,7 @@ class RoutingIntents {
       }
   );
   static final studyNew = studyEdit(Config.newStudyId);
+  static final signup = RoutingIntent(route: RouterConfig.signup);
   static final passwordReset = RoutingIntent(route: RouterConfig.passwordReset);
   static final error = (Exception error) => RoutingIntent(
     route: RouterConfig.error,

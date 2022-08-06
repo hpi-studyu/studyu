@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
+import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
 import 'package:studyu_designer_v2/features/auth/password_reset_page.dart';
+import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/legacy/designer_page.dart';
@@ -44,6 +46,7 @@ class RouterConfig {
     studyRecruit,
     studyAnalyze,
     login,
+    signup,
     passwordReset,
     splash,
     error
@@ -164,12 +167,32 @@ class RouterConfig {
     )
   );
 
+  static final signup = GoRoute(
+      path: "/signup",
+      name: "signup",
+      pageBuilder: (context, state) => const MaterialPage(
+          child: MainPageScaffold(
+              child: SignupPage()
+          )
+      )
+  );
+
   static final passwordReset = GoRoute(
     path: "/password_reset",
     name: "passwordReset",
       pageBuilder: (context, state) => const MaterialPage(
           child: MainPageScaffold(
               child: PasswordResetPage()
+          )
+      )
+  );
+
+  static final passwordRecovery = GoRoute(
+      path: "/password_recovery",
+      name: "passwordRecovery",
+      pageBuilder: (context, state) => const MaterialPage(
+          child: MainPageScaffold(
+              child: PasswordRecoveryPage()
           )
       )
   );

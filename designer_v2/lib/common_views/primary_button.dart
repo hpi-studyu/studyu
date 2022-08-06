@@ -5,7 +5,7 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   /// If true, a loading indicator is displayed instead of the text
   final bool isLoading;
-  /// Callback to be called when the button is pressd
+  /// Callback to be called when the button is pressed
   final VoidCallback? onPressed;
 
   const PrimaryButton({

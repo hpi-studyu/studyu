@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainPageScaffold extends ConsumerStatefulWidget {
 
@@ -16,6 +17,8 @@ class MainPageScaffold extends ConsumerStatefulWidget {
 }
 
 class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
+  bool formIsValid = false;
+  bool tosAgreement = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,32 +80,34 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
               child: TextButton(
                   onPressed: () => ref.read(routerProvider).dispatch(
                       RoutingIntents.root),
-                  child: Text('StudyU', style: FlutterFlowTheme.of(context).title1)
+                  child: Text('StudyU - Designer', style: FlutterFlowTheme.of(context).title1)
               ),
           ),
           const SizedBox(width: 20),
           Container (
               alignment: Alignment.centerLeft,
-              child: Text('Learn more'.hardcoded,
-                  style: TextStyle(
-                      color: FlutterFlowTheme.of(context).primaryText)
-              )
+              child: InkWell(
+                child: const Text('Learn more'),
+                onTap: () => launchUrl(Uri.parse('https://hpi.de/lippert/projects/studyu.html'.hardcoded)),
+              ),
           ),
           const Spacer(),
           Container (
             alignment: Alignment.centerRight,
-            child: Text('Don\'t have an account?'.hardcoded,
+            child: Text(widget.child.runtimeType.toString() == 'LoginPage' ? 'Don\'t have an account?'.hardcoded : 'Already have an account?'.hardcoded,
               style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
               ),
             ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 10),
           Container (
-              alignment: Alignment.centerRight,
-              child: Text('Sign up here'.hardcoded,
-                style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
-                ),
-              )
+            alignment: Alignment.centerRight,
+            child: TextButton(
+                onPressed: () => widget.child.runtimeType.toString() == 'LoginPage' ? ref.read(routerProvider).dispatch(
+                    RoutingIntents.signup) : ref.read(routerProvider).dispatch(RoutingIntents.root),
+                child: Text(widget.child.runtimeType.toString() == 'LoginPage' ? 'Sign up here'.hardcoded : 'Login here'.hardcoded,
+                    style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
+            ),
           ),
           const SizedBox(width: 40)
         ]
@@ -112,7 +117,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   Widget _bottombar(BuildContext context) {
     return Column(
         children: [
-          Spacer(),
+          const Spacer(),
           Row(
               children: <Widget>[
                 const SizedBox(width: 40),

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
+import 'package:studyu_designer_v2/features/auth/form_controller.dart';
+import 'package:studyu_designer_v2/features/auth/form_widgets.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-import 'package:studyu_designer_v2/flutter_flow/flutter_flow_widgets.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
@@ -16,23 +17,22 @@ class LoginPage extends ConsumerStatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _LoginPageState extends ConsumerState {
   late TextEditingController emailController;
   late TextEditingController passwordController;
-  late bool passwordVisibility;
   late bool rememberMeValue;
-  final formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  late bool isFormValid;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     _loadRememberMe();
 
-    rememberMeValue = true;
+    rememberMeValue = false;
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    passwordVisibility = false;
+    isFormValid = false;
   }
 
   void _handleRememberme() {
@@ -65,52 +65,37 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<String>>(
+      authControllerProvider,
+          (_, state) => state.showResultUI(context),
+    );
     return _formWidget();
   }
 
   Widget _formWidget() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(child: Text('Researcher Login'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
-          const SizedBox(height: 20),
-          _emailWidget(),
-          _passwordWidget(),
-          _rememberMeWidget(),
-          _forgotPassword(),
-          const SizedBox(height: 20),
-          _buttonWidget(),
-        ]
+    return Form(
+        key: _formKey,
+        onChanged: () => setState(() => isFormValid = emailController.text.isNotEmpty && passwordController.text.isNotEmpty),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(child: Text('Login'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
+              const SizedBox(height: 20),
+              TextFormFieldWidget(emailController: emailController),
+              PasswordWidget(passwordController: passwordController),
+              _rememberMeWidget(),
+              _forgotPassword(),
+              const SizedBox(height: 5),
+              buttonWidget(ref, isFormValid, 'Sign In'.hardcoded, formReturnAction),
+            ]
+        )
     );
   }
 
-  Widget _buttonWidget() {
+  void formReturnAction() {
     final authController = ref.watch(authControllerProvider.notifier);
-    return Center(
-        child: Stack(children: <Widget>[
-      FFButtonWidget(
-        onPressed: () {
-          _handleRememberme();
-          authController.signInWith(
-              emailController.text, passwordController.text);
-        },
-        text: 'Sign In'.hardcoded,
-        options: FFButtonOptions(
-          width: 130,
-          height: 40,
-          color: FlutterFlowTheme.of(context).secondaryColor,
-          textStyle: FlutterFlowTheme.of(context).bodyText1.override( // todo fix
-                fontFamily: 'Roboto',
-                color: FlutterFlowTheme.of(context).primaryBackground,
-              ),
-          borderSide: const BorderSide(
-            color: Colors.transparent,
-            width: 1,
-          ),
-          borderRadius: 30.0,
-        ),
-      ),
-    ]));
+    _handleRememberme();
+    authController.signInWith(emailController.text, passwordController.text);
   }
 
   Widget _rememberMeWidget() {
@@ -132,7 +117,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Widget _forgotPassword() {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         child: Container(
             alignment: Alignment.centerLeft,
             child: TextButton(
@@ -142,97 +127,5 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
         )
     );
-  }
-
-  Widget _passwordWidget() {
-    return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                controller: passwordController,
-                onChanged: (_) => (_),
-                autofocus: true,
-                obscureText: !passwordVisibility,
-                decoration: InputDecoration(
-                  labelText: 'Password'.hardcoded,
-                  icon: const Icon(Icons.lock),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  filled: true,
-                  fillColor: FlutterFlowTheme.of(context).lineColor,
-                  suffixIcon: InkWell(
-                    onTap: () => setState(
-                      () => passwordVisibility = !passwordVisibility,
-                    ),
-                    focusNode: FocusNode(skipTraversal: true),
-                    child: Icon(
-                      passwordVisibility
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: const Color(0xFF757575),
-                      size: 22,
-                    ),
-                  ),
-                ),
-                style: FlutterFlowTheme.of(context).bodyText1.override( // todo fix
-                      fontFamily: 'Open Sans',
-                      fontWeight: FontWeight.w300,
-                    ),
-              )
-            ]));
-  }
-
-  Widget _emailWidget() {
-    return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              controller: emailController,
-              onChanged: (_) => (_),
-              autofocus: true,
-              obscureText: false,
-              decoration: InputDecoration(
-                icon: const Icon(Icons.email),
-                labelText: 'Email'.hardcoded,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: const BorderSide(
-                    color: Color(0x00000000),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: const BorderSide(
-                    color: Color(0x00000000),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                filled: true,
-                fillColor: FlutterFlowTheme.of(context).lineColor,
-              ),
-              style: FlutterFlowTheme.of(context).bodyText1.override( // todo fix
-                    fontFamily: 'Open Sans',
-                    fontWeight: FontWeight.w300,
-                  ),
-            )
-          ],
-        ));
   }
 }
