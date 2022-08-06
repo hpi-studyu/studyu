@@ -4,13 +4,10 @@ import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
-import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
-import 'package:studyu_designer_v2/theme.dart';
 
 
 /// Custom scaffold shared between all pages for an individual [Study]

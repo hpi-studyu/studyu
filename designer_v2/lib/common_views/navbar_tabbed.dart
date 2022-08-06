@@ -62,6 +62,12 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
     _tabController.animateTo(selectedTabIndex);
   }
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   void _onSelectTab(int tabIndex) {
     // Navigate to the page associated with the selected tab
     ref.read(routerProvider).dispatch(widget.tabs[tabIndex].intent);
