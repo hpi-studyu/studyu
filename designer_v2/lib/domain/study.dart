@@ -69,3 +69,9 @@ extension ParticipationTypeFormatted on core.Participation {
   }
 }
 
+extension StudyDuplicate on Study {
+  Study exactDuplicate() {
+    return Study.fromJson(toJson());
+  }
+}
+

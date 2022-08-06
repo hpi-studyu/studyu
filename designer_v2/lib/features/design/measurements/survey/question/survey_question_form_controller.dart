@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
@@ -17,7 +16,6 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   SurveyQuestionFormViewModel({
-    required this.study,
     super.formData,
     super.delegate
   }) {
@@ -27,7 +25,6 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
         .listen(_updateFormControls);
   }
 
-  final Study study;
   late final StreamSubscription _questionTypeChanges;
 
   // - Form fields (any question type)

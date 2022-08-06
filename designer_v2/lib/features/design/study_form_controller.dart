@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
@@ -17,31 +19,45 @@ abstract class IStudyFormData {
   factory IStudyFormData.fromStudy(Study study) {
     throw UnimplementedError("Subclass responsibility");
   }
+
+  /// Applies the data stored in [IStudyFormData] to the given [study]
+  /// by mapping the form's schema to the [Study] schema
+  Study apply(Study study);
 }
 
-class StudyFormViewModel extends FormViewModel<Study> {
+class StudyFormViewModel extends FormViewModel<Study>
+    implements IFormViewModelDelegate<MeasurementsFormViewModel> {
   StudyFormViewModel({
     required this.router,
-    required super.formData,
+    required this.studyRepository,
+    required super.formData, // Study
   }) {
-    _formChangesSubscription = form.valueChanges.listen((event) {
-      // TODO: implement autosave if form is valid
-      print("StudyFormViewModel.form.valueChanged");
+    form.valueChanges.listen((event) {
+      print("form updated");
+      print(event);
     });
   }
 
-  late final StreamSubscription _formChangesSubscription;
+  /// On-write copy of the [Study] object managed by the view model
+  Study? studyDirtyCopy;
+
+  /// Reference to the study repository for saving / updating the study
+  final IStudyRepository studyRepository;
+
+  final GoRouter router;
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
-      study: formData!, formData: MeasurementsFormData.fromStudy(formData!), router: router);
+    formData: MeasurementsFormData.fromStudy(formData!),
+    delegate: this,
+    study: formData!,
+    router: router,
+  );
 
   //late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
   //    data: StudyInfoFormData.fromStudy(data!), parent: this);
   //late final EnrollmentFormViewModel enrollmentFormViewModel = EnrollmentFormViewModel(
   //    data: EnrollmentFormData.fromStudy(data!), parent: this
   //);
-
-  final GoRouter router;
 
   @override
   late final FormGroup form = FormGroup({
@@ -65,8 +81,12 @@ class StudyFormViewModel extends FormViewModel<Study> {
 
   @override
   Future save() {
-    // TODO
-    return Future.value(true);
+    if (studyDirtyCopy == null) {
+      return Future.value(null); // nothing to do
+    }
+    // Flush the on-write study copy to the repository & clear it
+    return studyRepository.saveStudy(studyDirtyCopy!)
+        .then((study) => studyDirtyCopy = null);
   }
 
   @override
@@ -74,6 +94,23 @@ class StudyFormViewModel extends FormViewModel<Study> {
     FormMode.create: "TODO create",
     FormMode.edit: "TODO edit",
   };
+
+  _applyAndSaveSubform(IStudyFormData subformData) {
+    studyDirtyCopy ??= formData!.exactDuplicate();
+    subformData.apply(studyDirtyCopy!);
+    save();
+  }
+
+  @override
+  void onCancel(MeasurementsFormViewModel formViewModel, FormMode prevFormMode) {
+    return; // nothing to do
+  }
+
+  @override
+  void onSave(MeasurementsFormViewModel formViewModel, FormMode prevFormMode) {
+    assert(prevFormMode == FormMode.edit);
+    _applyAndSaveSubform(formViewModel.formData!);
+  }
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
@@ -86,8 +123,9 @@ final studyFormViewModelProvider = Provider
   final study = ref.watch(
       studyControllerProvider(studyId).select((state) => state.study));
   return StudyFormViewModel(
-      formData: study.value!,
-      router: ref.watch(routerProvider),
+    router: ref.watch(routerProvider),
+    studyRepository: ref.watch(studyRepositoryProvider),
+    formData: study.value!,
   );
 });
 

@@ -4,8 +4,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -13,21 +13,6 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
-
-
-class MeasurementsFormData implements IStudyFormData {
-  final List<MeasurementSurveyFormData> surveyMeasurements;
-
-  MeasurementsFormData({required this.surveyMeasurements});
-
-  factory MeasurementsFormData.fromStudy(Study study) {
-    return MeasurementsFormData(
-        surveyMeasurements: (study.observations).map(
-            (observation) => MeasurementSurveyFormData.fromDomainModel(
-                observation as QuestionnaireTask)).toList()
-    );
-  }
-}
 
 class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     implements IFormViewModelDelegate<MeasurementSurveyFormViewModel>,
@@ -39,9 +24,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     required this.router,
     super.delegate,
     super.formData,
-  }) {
-    print("MeasurementsFormViewModel.new");
-  }
+  });
 
   final Study study;
   final GoRouter router;
@@ -198,5 +181,6 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     } else if (prevFormMode == FormMode.edit) {
       // nothing to do here
     }
+    super.save();
   }
 }

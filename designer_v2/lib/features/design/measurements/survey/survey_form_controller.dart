@@ -4,7 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model_collection.dart';
-import 'package:studyu_designer_v2/domain/questionnaire.dart';
+import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
@@ -45,8 +45,8 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
   final FormControl<String> surveyTitleControl = FormControl(
       validators: [Validators.required, Validators.minLength(3)],
       value: MeasurementSurveyFormData.kDefaultTitle);
-  final FormControl<String> surveyIntroTextControl = FormControl();
-  final FormControl<String> surveyOutroTextControl = FormControl();
+  final FormControl<String> surveyIntroTextControl = FormControl(value: '');
+  final FormControl<String> surveyOutroTextControl = FormControl(value: '');
 
   final FormControl<bool> isTimeRestrictedControl = FormControl(
       validators: [Validators.required], value: false);
@@ -68,11 +68,6 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
   List<TimeOfDay>? get timeRestriction => (isTimeRestricted &&
       restrictedTimeStartControl.value != null && restrictedTimeEndControl.value != null)
         ? [restrictedTimeStartControl.value!, restrictedTimeEndControl.value!] : null;
-
-  List<FormControlOption<int>> get reminderTimeControlOptions =>
-      [0, 5, 10, 15, 20, 30, 45, 60]
-          .map((minutes) => FormControlOption(minutes, minutes.toString()))
-          .toList();
 
   MeasurementID get measurementId => measurementIdControl.value!;
 
@@ -106,32 +101,32 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
     if (data.surveyQuestionsData != null) {
       final viewModels = data.surveyQuestionsData!.map(
               (data) => SurveyQuestionFormViewModel(
-                  study: study, formData: data, delegate: this
-              )).toList();
+                  formData: data, delegate: this)).toList();
       surveyQuestionFormViewModels.reset(viewModels);
     }
 
-    isTimeRestrictedControl.value = data.isTimeRestricted;
-    restrictedTimeStartControl.value = data.restrictedTimeStart?.toTimeOfDay();
-    restrictedTimeEndControl.value = data.restrictedTimeEnd?.toTimeOfDay();
+    isTimeRestrictedControl.value = data.isTimeLocked;
+    restrictedTimeStartControl.value = data.timeLockStart?.toTimeOfDay();
+    restrictedTimeEndControl.value = data.timeLockEnd?.toTimeOfDay();
     hasReminderControl.value = data.hasReminder;
     reminderTimeControl.value = data.reminderTime?.toTimeOfDay();
   }
 
   @override
   MeasurementSurveyFormData buildFormData() {
-    return MeasurementSurveyFormData(
+    final data = MeasurementSurveyFormData(
       measurementId: measurementId, // required hidden
       title: surveyTitleControl.value!, // required
       introText: surveyIntroTextControl.value,
       outroText: surveyOutroTextControl.value,
       surveyQuestionsData: surveyQuestionsData,
-      isTimeRestricted: isTimeRestrictedControl.value!, // required
-      restrictedTimeStart: restrictedTimeStartControl.value?.toStudyUTimeOfDay(),
-      restrictedTimeEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
+      isTimeLocked: isTimeRestrictedControl.value!, // required
+      timeLockStart: restrictedTimeStartControl.value?.toStudyUTimeOfDay(),
+      timeLockEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
       hasReminder: hasReminderControl.value!,  // required
       reminderTime: reminderTimeControl.value?.toStudyUTimeOfDay(),
     );
+    return data;
   }
 
   String get breadcrumbsTitle {
@@ -167,8 +162,7 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
         onExecute: () {
           // Add a new view model with copied data to the form
           final formViewModel = SurveyQuestionFormViewModel(
-              study: study, formData: model.copy(), delegate: this,
-          );
+            formData: model.copy(), delegate: this);
           surveyQuestionFormViewModels.add(formViewModel);
         },
         isAvailable: isNotReadonly,
@@ -237,7 +231,7 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
       final viewModel = SurveyQuestionFormViewModel(
-          study: study, formData: null, delegate: this);
+          formData: null, delegate: this);
       surveyQuestionFormViewModels.stage(viewModel);
       return viewModel;
     }

@@ -20,6 +20,12 @@ class EnrollmentFormData implements IStudyFormData {
         enrollmentQuestions: []
     );
   }
+
+  @override
+  Study apply(Study study) {
+    // TODO: implement apply
+    throw UnimplementedError();
+  }
 }
 
 class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>

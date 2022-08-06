@@ -1,4 +1,4 @@
-import 'package:studyu_designer_v2/domain/questionnaire.dart';
+import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:uuid/uuid.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -15,9 +15,9 @@ class MeasurementSurveyFormData {
     this.introText,
     this.outroText,
     this.surveyQuestionsData,
-    required this.isTimeRestricted,
-    this.restrictedTimeStart,
-    this.restrictedTimeEnd,
+    required this.isTimeLocked,
+    this.timeLockStart,
+    this.timeLockEnd,
     required this.hasReminder,
     this.reminderTime,
   });
@@ -27,29 +27,52 @@ class MeasurementSurveyFormData {
   final String? introText;
   final String? outroText;
   final List<SurveyQuestionFormData>? surveyQuestionsData;
-  final bool isTimeRestricted;
-  final StudyUTimeOfDay? restrictedTimeStart;
-  final StudyUTimeOfDay? restrictedTimeEnd;
+  final bool isTimeLocked;
+  final StudyUTimeOfDay? timeLockStart;
+  final StudyUTimeOfDay? timeLockEnd;
   final bool hasReminder;
   final StudyUTimeOfDay? reminderTime;
 
   factory MeasurementSurveyFormData.fromDomainModel(
       QuestionnaireTask questionnaireTask) {
     return MeasurementSurveyFormData(
-        measurementId: questionnaireTask.id,
-        title: questionnaireTask.title ?? '',
-        introText: questionnaireTask.header,
-        outroText: questionnaireTask.footer,
-        surveyQuestionsData: questionnaireTask.questions.questions
-            .map((question) => SurveyQuestionFormData.fromDomainModel(question))
-            .toList(),
-        isTimeRestricted: questionnaireTask.schedule.isTimeRestricted,
-        restrictedTimeStart: questionnaireTask.schedule.restrictedTimeStart,
-        restrictedTimeEnd: questionnaireTask.schedule.restrictedTimeEnd,
-        hasReminder: questionnaireTask.schedule.hasReminder,
-        reminderTime: questionnaireTask.schedule.reminderTime,
-
+      measurementId: questionnaireTask.id,
+      title: questionnaireTask.title ?? '',
+      introText: questionnaireTask.header,
+      outroText: questionnaireTask.footer,
+      surveyQuestionsData: questionnaireTask.questions.questions
+          .map((question) => SurveyQuestionFormData.fromDomainModel(question))
+          .toList(),
+      isTimeLocked: questionnaireTask.schedule.isTimeRestricted,
+      timeLockStart: questionnaireTask.schedule.restrictedTimeStart,
+      timeLockEnd: questionnaireTask.schedule.restrictedTimeEnd,
+      hasReminder: questionnaireTask.schedule.hasReminder,
+      reminderTime: questionnaireTask.schedule.reminderTime,
     );
+  }
+
+  QuestionnaireTask toQuestionnaireTask() {
+    final questionnaireTask = QuestionnaireTask();
+    questionnaireTask.id = measurementId;
+    questionnaireTask.title = title;
+    questionnaireTask.header = introText;
+    questionnaireTask.footer = outroText;
+    questionnaireTask.questions.questions = (surveyQuestionsData != null)
+        ? surveyQuestionsData!.map((formData) => formData.toQuestion()).toList()
+        : [];
+    questionnaireTask.schedule.reminders = (!hasReminder || reminderTime == null)
+        ? [] : [reminderTime!];
+    questionnaireTask.schedule.completionPeriods = (!isTimeLocked ||
+        (timeLockStart == null && timeLockEnd == null))
+        ? [CompletionPeriod( // default unrestricted period
+            unlockTime: ScheduleX.unrestrictedTime[0],
+            lockTime: ScheduleX.unrestrictedTime[1]
+          )]
+        : [CompletionPeriod( // user-defined period
+            unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
+            lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1]
+          )];
+    return questionnaireTask;
   }
 
   MeasurementSurveyFormData copy() {
@@ -59,19 +82,11 @@ class MeasurementSurveyFormData {
       introText: introText,
       outroText: outroText,
       surveyQuestionsData: surveyQuestionsData, // TODO: map(copyFrom)
-      isTimeRestricted: isTimeRestricted,
-      restrictedTimeStart: restrictedTimeStart,
-      restrictedTimeEnd: restrictedTimeEnd,
+      isTimeLocked: isTimeLocked,
+      timeLockStart: timeLockStart,
+      timeLockEnd: timeLockEnd,
       hasReminder: hasReminder,
       reminderTime: reminderTime,
     );
   }
-
-// We can't have this because we might produce multiple domain models?
-// Idea: should we provide a function to modify/update/write the study here? (or a on-write copy of the study)?
-/*
-  QuestionnaireTask toDomainModel() {
-    return QuestionnaireTask(
-
-  }*/
 }

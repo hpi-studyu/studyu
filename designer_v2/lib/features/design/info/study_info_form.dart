@@ -15,6 +15,12 @@ class StudyInfoFormData implements IStudyFormData {
         title: study.title ?? '',
     );
   }
+
+  @override
+  Study apply(Study study) {
+    // TODO: implement apply
+    throw UnimplementedError();
+  }
 }
 
 class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {

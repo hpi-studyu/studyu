@@ -39,6 +39,7 @@ abstract class SurveyQuestionFormData {
     return questionTypeFormDataFactories[surveyQuestionType]!(question);
   }
 
+  Question toQuestion();
   SurveyQuestionFormData copy();
 }
 
@@ -65,6 +66,21 @@ class ChoiceQuestionFormData extends SurveyQuestionFormData {
       answerOptions: question.choices.map(
           (choice) => FormControlOption(choice.id, choice.text)).toList()
     );
+  }
+
+  @override
+  Question toQuestion() {
+    final question = ChoiceQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    question.multiple = isMultipleChoice;
+    question.choices = answerOptions.map((option) {
+      final choice =  Choice(option.value);
+      choice.text = option.label;
+      return choice;
+    }).toList();
+    return question;
   }
 
   @override
@@ -110,6 +126,15 @@ class BoolQuestionFormData extends SurveyQuestionFormData {
   }
 
   @override
+  Question toQuestion() {
+    final question = BooleanQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
   BoolQuestionFormData copy() {
     return BoolQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
@@ -136,6 +161,16 @@ class ScaleQuestionFormData extends SurveyQuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
     );
+  }
+
+  @override
+  Question toQuestion() {
+    final question = AnnotatedScaleQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    // TODO: annotations
+    return question;
   }
 
   @override

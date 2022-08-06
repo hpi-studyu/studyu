@@ -8,6 +8,10 @@ extension StudyUTimeOfDayX on StudyUTimeOfDay {
     return true;
   }
 
+  bool equalsTo(StudyUTimeOfDay other) {
+    return hour == other.hour && minute == other.minute;
+  }
+
   TimeOfDay toTimeOfDay() {
     return TimeOfDay(hour: hour, minute: minute);
   }
@@ -24,10 +28,15 @@ extension TimeOfDayX on TimeOfDay {
 }
 
 extension ScheduleX on Schedule {
+  static final unrestrictedTime = [
+    StudyUTimeOfDay(hour: 0, minute: 0),
+    StudyUTimeOfDay(hour: 23, minute: 59),
+  ];
+
   bool get isTimeRestricted => !(completionPeriods.isEmpty ||
       (completionPeriods.length == 1
-          && completionPeriods[0].lockTime.equals(hour: 0, minute: 0)
-          && completionPeriods[0].unlockTime.equals(hour: 23, minute: 59)));
+          && completionPeriods[0].unlockTime.equalsTo(unrestrictedTime[0])
+          && completionPeriods[0].lockTime.equalsTo(unrestrictedTime[1])));
 
   bool get hasReminder => reminders.isNotEmpty;
 
