@@ -45,68 +45,41 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
   Future<void> initStudy() async {
     final model = context.read<AppState>();
-    //String selectedStudyObjectId = await getActiveSubjectId();
     await preview.init();
-    //print('study object initStudy: $preview.selectedStudyObjectId');
-    //print('initStudy');
     if (!mounted) return;
+
     if (preview.containsQueryPair('mode', 'preview')) {
-      // todo handle error on UI level
       if (!await preview.handleAuthorization()) return;
-      //if (!mounted) return;
       model.selectedStudy = preview.study;
 
       // Authentication completed
 
       await preview.runCommands();
-      /*if (ret) {
-        selectedStudyObjectId = await getActiveSubjectId();
-        print('study object after deletion: $selectedStudyObjectId');
-        selectedStudyObjectId = null;
-      }*/
-
-      // Using the user session of the designer for the app preview interferes with the subscribed study of the user
-      // --> WORKAROUND host the preview app version under a separate domain than the actual app!
-      // e.g. normal app runs at app.studyu.health and preview version at preview.app.studyu.health
-      // Preview version can be the same version as the app, since we use ?mode=preview to differentiate
-      // between normal and preview use. The only importance is to have a different domain with different local storage
-      // Thus the same user can also take part in studies on his own device and we do not have to work using anonymous accounts
-
-      // old stuff:
-      // we will use test accounts for study preview that can be deleted after the  study goes live
-      // for this grant this account rights to access to the draft study
-      // to do: send the anonymous account back to the designer and store the data somewhere with the creation data of the study
-      //final success = await anonymousSignUp();
 
       final bool subscribed = await preview.isSubscribed();
       model.activeSubject = preview.subject;
 
       // check if user is subscribed to the currently shown study
       if (subscribed) {
-        //print('subscribed');
         if (!mounted) return;
         context.read<AppState>().previewInit = false;
-        //print('to dashboard');
         Navigator.pushReplacementNamed(context, Routes.dashboard);
         return;
       }
-      //print('unsubscribed');
+
       // user still has to subscribe to the study
       if (!mounted) return;
       context.read<AppState>().previewInit = false;
-      //print('to overview');
       Navigator.pushReplacementNamed(context, Routes.studyOverview);
       return;
+
     } else if (!context.read<AppState>().previewInit) {
       // non preview routes
-      //print('non preview');
       if (preview.selectedStudyObjectId == null) {
         if (isUserLoggedIn()) {
-          //print('push to studySelection');
           Navigator.pushReplacementNamed(context, Routes.studySelection);
           return;
         }
-        //print('push to welcome');
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
@@ -134,16 +107,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         );
       }
       if (!mounted) return;
+
       if (subject != null) {
         model.activeSubject = subject;
         if (!kIsWeb) {
           // Notifications not supported on web
           scheduleStudyNotifications(context);
         }
-        //print('no preview dashboard');
         Navigator.pushReplacementNamed(context, Routes.dashboard);
       } else {
-        //print('no preview welcome');
         Navigator.pushReplacementNamed(context, Routes.welcome);
       }
     }

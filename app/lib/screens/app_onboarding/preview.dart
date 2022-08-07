@@ -12,7 +12,6 @@ class Preview {
 
   Future init() async {
     selectedStudyObjectId = await getActiveSubjectId();
-    //print('study object preview: $selectedStudyObjectId');
   }
 
   Future<bool> handleAuthorization() async {
@@ -23,7 +22,7 @@ class Preview {
     if (recovery.error != null) return false;
 
     study = await SupabaseQuery.getById<Study>(queryParameters['studyid']);
-    // todo allow preview for published studies? Are results visible?
+    // todo are results visible for published studies inside preview?
     if (study == null) return false;
 
     return true;
@@ -32,10 +31,7 @@ class Preview {
   Future<void> runCommands() async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
-      // deleting study progress
-      //print('subject id: $selectedStudyObjectId');
       if (selectedStudyObjectId != null) {
-       // try {
         final StudySubject subject =
         await SupabaseQuery.getById<StudySubject>(
           selectedStudyObjectId,
@@ -47,24 +43,14 @@ class Preview {
         );
         subject.delete();
         deleteActiveStudyReference();
-        //print('successfully deleted');
         selectedStudyObjectId = await getActiveSubjectId();
-        //print('study object after deletion: $selectedStudyObjectId');
         assert (selectedStudyObjectId == null);
-          //selectedStudyObjectId = null;
-          //print("study object this: " + selectedStudyObjectId);
-        /*} catch (e) {
-          print('error with deleting: $e');
-        }*/
       }
     }
   }
 
   Future<bool> isSubscribed() async {
     if (selectedStudyObjectId != null) {
-      //print('Found subject id in shared prefs: $selectedStudyObjectId');
-      // found study subject
-      //try {
       subject = await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
         selectedColumns: [
@@ -73,14 +59,10 @@ class Preview {
           'subject_progress(*)',
         ],
       );
-      //print('equal check: ${subject.studyId} ${study.id}');
       if (subject.studyId == study.id) {
         // user is already subscribed to a study
         return true;
       }
-      /*} catch (e) {
-        print('could not load subject id');
-      }*/
     }
     return false;
   }

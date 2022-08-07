@@ -28,7 +28,8 @@ abstract class PlatformController {
 
 class StudyTestController extends StateNotifier<StudyTestState> {
   String previewSrc = 'https://studyu-app-v2--pr143-dev-designer-v2-prev-6dl0nxo1.web.app/';
-  // String previewSrc = 'https://studyu-app-v2.web.app/';
+  // todo change on merge
+  //String previewSrc = 'https://studyu-app-v2.web.app/';
   // String previewSrc = 'http://localhost:12345/';
 
   final IAuthRepository authRepository;
@@ -46,7 +47,9 @@ class StudyTestController extends StateNotifier<StudyTestState> {
       previewSrc += '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
     } else {
       // todo show modal and add error
-      print("Requirements not satisfied: $missingRequirements");
+      if (kDebugMode) {
+        print("Requirements not satisfied: $missingRequirements");
+      }
     }
     _selectPlatform();
   }
@@ -73,10 +76,7 @@ class StudyTestController extends StateNotifier<StudyTestState> {
       study.observations,
       study.consent,
     ];
-    //print('before: $conditions');
     conditions.removeWhere((element) => _isValid(element));
-    //print('after: $conditions');
-    //print('result: ${conditions.isEmpty}');
     return conditions;
   }
 
