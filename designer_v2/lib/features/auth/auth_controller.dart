@@ -16,7 +16,7 @@ class AuthController extends StateNotifier<AsyncValue<String>> {
     } catch (e) {
       state = AsyncValue.error(e);
     } finally {
-      state = const AsyncValue.data('"Signup successful".hardcoded');
+      state = AsyncValue.data("Signup successful".hardcoded);
     }
   }
 
@@ -31,14 +31,12 @@ class AuthController extends StateNotifier<AsyncValue<String>> {
     }
   }
 
-  Future<void> signOut() async{
+  Future<void> signOut() async {
     try {
       state = const AsyncValue.loading();
       return await authRepository.signOut();
     } catch (e) {
       state = AsyncValue.error(e);
-    } finally {
-      state = const AsyncValue.data('');
     }
   }
 
@@ -46,6 +44,18 @@ class AuthController extends StateNotifier<AsyncValue<String>> {
     try {
       state = const AsyncValue.loading();
       return await authRepository.resetPasswordForEmail(email: email);
+    } catch (e) {
+      state = AsyncValue.error(e);
+    } finally {
+
+      state = AsyncValue.data('Reset password email sent'.hardcoded);
+    }
+  }
+
+  Future<void> updateUser(String newPassword) async {
+    try {
+      state = const AsyncValue.loading();
+      return await authRepository.updateUser(newPassword: newPassword);
     } catch (e) {
       state = AsyncValue.error(e);
     } finally {

@@ -69,24 +69,20 @@ class _LoginPageState extends ConsumerState {
       authControllerProvider,
           (_, state) => state.showResultUI(context),
     );
-    return _formWidget();
-  }
-
-  Widget _formWidget() {
     return Form(
         key: _formKey,
-        onChanged: () => setState(() => isFormValid = emailController.text.isNotEmpty && passwordController.text.isNotEmpty),
+        onChanged: () => setState(() => isFormValid = _formKey.currentState!.validate()),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Center(child: Text('Login'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
               const SizedBox(height: 20),
-              TextFormFieldWidget(emailController: emailController),
+              TextFormFieldWidget(emailController: emailController, validator: FieldValidators.emailValidator),
               PasswordWidget(passwordController: passwordController),
               _rememberMeWidget(),
               _forgotPassword(),
               const SizedBox(height: 5),
-              buttonWidget(ref, isFormValid, 'Sign In'.hardcoded, formReturnAction),
+              ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Sign In'.hardcoded, onPressed: formReturnAction),
             ]
         )
     );
@@ -94,8 +90,8 @@ class _LoginPageState extends ConsumerState {
 
   void formReturnAction() {
     final authController = ref.watch(authControllerProvider.notifier);
-    _handleRememberme();
     authController.signInWith(emailController.text, passwordController.text);
+    _handleRememberme(); // todo only execute if login was successful
   }
 
   Widget _rememberMeWidget() {

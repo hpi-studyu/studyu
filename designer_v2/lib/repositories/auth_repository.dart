@@ -17,6 +17,7 @@ abstract class IAuthRepository extends IAppDelegate {
   Future<void> signInWith({required String email, required String password});
   Future<void> signOut();
   Future<void> resetPasswordForEmail({required String email});
+  Future<void> updateUser({required String newPassword});
   // - Lifecycle
   void dispose();
 }
@@ -114,9 +115,21 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> resetPasswordForEmail({required String email}) async {
-    final res = await authClient.api.resetPasswordForEmail(email);
+    final res = await authClient.api.resetPasswordForEmail(email,);
+    //options: AuthOptions(redirectTo: authRedirectUri));
       if (res.error != null) {
         throw StudyUException(res.error!.message);
+    }
+  }
+
+  @override
+  Future<void> updateUser({required String newPassword}) async {
+    if (session != null) {
+      final res = await authClient.api.updateUser(
+          session!.accessToken, UserAttributes(password: newPassword));
+      if (res.error != null) {
+        throw StudyUException(res.error!.message);
+      }
     }
   }
 

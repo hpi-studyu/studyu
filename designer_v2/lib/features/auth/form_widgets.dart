@@ -8,21 +8,34 @@ import 'auth_controller.dart';
 
 // todo make this file more dynamic with a StudyUForm creator that accepts a list of widgets
 
-// todo make this a Stateless widget
-Widget buttonWidget(WidgetRef ref, bool isFormValid, String buttonText, Function onPressed) {
-  final signupState = ref.watch(authControllerProvider);
-  return Center(
-      child: Stack(children: <Widget>[
-        PrimaryButton(
-          isLoading: signupState.isLoading,
-          onPressed: !signupState.isLoading && isFormValid ?
-              () => onPressed:
-          null,
-          text: buttonText,
-        ),
-      ]
-      )
-  );
+class ButtonWidget extends StatefulWidget {
+  final bool isFormValid;
+  final String buttonText;
+  final Function onPressed;
+  final WidgetRef ref;
+
+  const ButtonWidget({required this.ref, required this.isFormValid, required this.buttonText, required this.onPressed, Key? key}) : super(key: key);
+
+  @override
+  _ButtonWidgetState createState() => _ButtonWidgetState();
+}
+
+class _ButtonWidgetState extends State<ButtonWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final signupState = widget.ref.watch(authControllerProvider);
+    return Center(
+        child: Stack(children: <Widget>[
+          PrimaryButton(
+            isLoading: signupState.isLoading,
+            onPressed: !signupState.isLoading && widget.isFormValid ?
+                () => widget.onPressed() : null,
+            text: widget.buttonText,
+          ),
+        ]
+        )
+    );
+  }
 }
 
 class FieldValidators {
@@ -35,8 +48,13 @@ class FieldValidators {
           .hasMatch(email)) {
         return 'Not a valid email';
       }
-      // check if email is already defined?
       return null;
+  }
+  static String? passwordValidator(String? password) {
+    if (password == null || password.isEmpty || password.length < 6) {
+      return 'Please enter a password with at least 6 characters';
+    }
+    return null;
   }
 }
 
@@ -97,9 +115,10 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
 }
 
 class PasswordWidget extends StatefulWidget {
-  const PasswordWidget({required this.passwordController, Key? key}) : super(key: key);
-
   final TextEditingController passwordController;
+  final String? Function(String?)? validator;
+
+  const PasswordWidget({required this.passwordController, this.validator=FieldValidators.passwordValidator, Key? key}) : super(key: key);
 
   @override
   _PasswordWidgetState createState() => _PasswordWidgetState();
@@ -107,6 +126,19 @@ class PasswordWidget extends StatefulWidget {
 class _PasswordWidgetState extends State<PasswordWidget> {
 
   late bool passwordVisibility;
+
+  @override
+  void initState() {
+    super.initState();
+    passwordVisibility = false;
+  }
+
+  static String? passwordValidatorCustomized(String? password) {
+    if (password == null || password.isEmpty || password.length < 6) {
+      return 'Please enter a password with at least 6 characters';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,12 +152,7 @@ class _PasswordWidgetState extends State<PasswordWidget> {
                 onChanged: (_) => (_),
                 autofocus: true,
                 obscureText: !passwordVisibility,
-                validator: (value) {
-                  if (value == null || value.isEmpty || value.length < 6) {
-                    return 'Please enter a password with at least 6 characters';
-                  }
-                  return null;
-                },
+                validator: widget.validator,
                 decoration: InputDecoration(
                   labelText: 'Password'.hardcoded,
                   icon: const Icon(Icons.lock),
@@ -170,6 +197,8 @@ class _PasswordWidgetState extends State<PasswordWidget> {
                   fontWeight: FontWeight.w300,
                 ),
               )
-            ]));
+            ]
+        )
+    );
   }
 }

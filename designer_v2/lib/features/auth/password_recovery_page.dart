@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
+import 'package:studyu_designer_v2/features/auth/form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/form_widgets.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -13,20 +14,25 @@ class PasswordRecoveryPage extends ConsumerStatefulWidget {
 }
 
 class _PasswordRecoveryPageState extends ConsumerState<PasswordRecoveryPage> {
-  late TextEditingController emailController;
-  late TextEditingController emailConfirmController;
+  late TextEditingController passwordController;
+  late TextEditingController passwordConfirmController;
   late bool isFormValid;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    emailConfirmController = TextEditingController();
+    passwordController = TextEditingController();
+    passwordConfirmController = TextEditingController();
+    isFormValid = false;
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<String>>(
+      authControllerProvider,
+          (_, state) => state.showResultUI(context),
+    );
     final authController = ref.watch(authControllerProvider.notifier);
     return Form(
       key: _formKey,
@@ -36,23 +42,23 @@ class _PasswordRecoveryPageState extends ConsumerState<PasswordRecoveryPage> {
           children: <Widget>[
             Center(child: Text('Choose a new password'.hardcoded, style: FlutterFlowTheme.of(context).title1)),
             const SizedBox(height: 20),
-            TextFormFieldWidget(emailController: emailController, validator: FieldValidators.emailValidator),
-            TextFormFieldWidget(emailController: emailConfirmController, validator: emailConfirmValidator),
+            PasswordWidget(passwordController: passwordController),
+            PasswordWidget(passwordController: passwordConfirmController, validator: passwordConfirmValidator),
             const SizedBox(height: 20),
-            buttonWidget(ref, isFormValid, 'Confirm setting a new password'.hardcoded, () => authController.resetPasswordForEmail(
-                emailController.text)),
+            ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Confirm setting a new password'.hardcoded, onPressed: () => authController.updateUser(passwordController.text)),
           ]
       ),
     );
   }
 
-  String? emailConfirmValidator(String? email) {
-    String? emailVal = FieldValidators.emailValidator(email);
-    if (emailVal != null) {
-      if (email != emailConfirmController.text) {
-        return 'Emails are not the same';
+  String? passwordConfirmValidator(String? password) {
+    String? passwordVal = FieldValidators.passwordValidator(password);
+    if (passwordVal == null) {
+      if (password != passwordController.text) {
+        return 'Passwords have to match';
       }
+      return null;
     }
-    return null;
+    return passwordVal;
   }
 }

@@ -35,13 +35,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (state) {
       final loginLocation = state.namedLocation(RouterConfig.login.name!);
       final signupLocation = state.namedLocation(RouterConfig.signup.name!);
-      final resetPasswordLocation = state.namedLocation(RouterConfig.passwordReset.name!);
       final splashLocation = state.namedLocation(RouterConfig.splash.name!);
+      final passwordRecoveryLocation = state.namedLocation(RouterConfig.passwordRecovery.name!);
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
-      final isOnPasswordResetPage = state.subloc == resetPasswordLocation;
       final isOnSplashPage = state.subloc == splashLocation;
+      final isOnPasswordRecoveryLocation = state.subloc == passwordRecoveryLocation;
+      final isOnStaticPage = RouterConfig.topLevelPublicRoutes.any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
@@ -75,22 +76,70 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       if (!isLoggedIn) {
+        // Redirect to chosen page or null if already on page
+        if (from != null) {
+          print("from: " + from);
+        } else {
+          print("from: null");
+        }
+        print("state.subloc: " + state.subloc);
+
         if (from != null && from != state.subloc) {
-          return from;
+          if (RouterConfig.topLevelPublicRoutes.any((element) => element.path == from) || isOnSplashPage) {
+            print("return from");
+            return from;
+          } else {
+            return null;
+          }
+        } else {
+          if (from == null) {
+            if (isOnLoginPage) {
+              print("isonloginpage: return null");
+              return null;
+            } else {
+              print("!isonloginpage: return login");
+              return namedLocForwarded(RouterConfig.login.name!);
+            }
+          }
+          if (isOnStaticPage) {
+            print("return null");
+            return null;
+          } else {
+            //print("return login");
+            //return namedLocForwarded(RouterConfig.login.name!);
+          }
         }
-        // todo make this more dynamic
-        if (from == RouterConfig.passwordReset.path) {
-          return (isOnPasswordResetPage)
-              ? null : state.namedLocation(RouterConfig.passwordReset.name!);
+
+        if (isOnLoginPage) {
+          print("return null");
+          return null;
+        } else {
+          print("return login page");
+          return namedLocForwarded(RouterConfig.login.name!);
         }
-        if (from == RouterConfig.passwordRecovery.path) {
-          return (state.subloc == state.namedLocation(RouterConfig.passwordRecovery.name!))
-              ? null : state.namedLocation(RouterConfig.passwordRecovery.name!);
-        }
-        if (from == RouterConfig.signup.path) {
-          return (state.subloc == state.namedLocation(RouterConfig.signup.name!))
-              ? null : state.namedLocation(RouterConfig.signup.name!);
-        }
+
+        /*if (from != null) {
+          // we are not redirected by from
+          if (state.subloc != from) {
+            //if (RouterConfig.topLevelStaticRoutes.any((element) => element.name == from)) {
+           //   print("from is part of static routes");
+            if (RouterConfig.topLevelStaticRoutes.any((element) => element.path == from) || isOnSplashPage) {
+              print("return from");
+              return from;
+            } else {
+              print("return null");
+              return null;
+            }
+           // } else {
+          //    print("route is dynamic");
+            //}
+          } else {
+            print("from == state.subloc: return null");
+            if (isOnStaticPage) {
+              return null;
+            }
+          }
+        }*/
 
         // Redirect to login page when not logged in
         return (isOnLoginPage)
@@ -109,8 +158,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           return defaultLocation;
         }
       }
-
-      return null; // don't redirect in all other cases
+      // don't redirect in all other cases
+      return null;
     },
     // Turn off the # in the URLs on the web
     urlPathStrategy: UrlPathStrategy.path,

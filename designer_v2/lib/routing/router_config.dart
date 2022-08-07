@@ -36,8 +36,17 @@ class RouteParams {
 class RouterConfig {
   /// This list is provided to [GoRouter.routes] during instantiation.
   /// See router.dart
-  static final topLevelRoutes = [
+
+  static final topLevelPublicRoutes = [
     root,
+    splash,
+    error,
+    login,
+    signup,
+    passwordReset,
+  ];
+
+  static final topLevelPrivateRoutes = [
     studies,
     study,
     studyEdit,
@@ -45,12 +54,10 @@ class RouterConfig {
     studyMonitor,
     studyRecruit,
     studyAnalyze,
-    login,
-    signup,
-    passwordReset,
-    splash,
-    error
+    passwordRecovery,
   ];
+
+  static final topLevelRoutes = topLevelPublicRoutes + topLevelPrivateRoutes;
 
   static final root = GoRoute(
     path: "/",

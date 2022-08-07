@@ -40,7 +40,22 @@ class _SignupPageState extends ConsumerState<SignupPage> {
       authControllerProvider,
           (_, state) => state.showResultUI(context),
     );
-    return _formWidget();
+    return Form(
+      key: _formKey,
+      onChanged: () => setState(() => isFormValid = _formKey.currentState!.validate() && tosAgreement),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(child: Text('Signup'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
+            const SizedBox(height: 20),
+            TextFormFieldWidget(emailController: emailController, validator: FieldValidators.emailValidator,),
+            PasswordWidget(passwordController: passwordController),
+            _tosWidget(),
+            const SizedBox(height: 20),
+            ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Create Account'.hardcoded, onPressed: formReturnAction),
+          ]
+      ),
+    );
   }
 
   Widget _tosWidget() {
@@ -49,6 +64,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
       onChanged: (newValue) =>
           setState(() {
             tosAgreement = newValue!;
+            isFormValid = _formKey.currentState!.validate() && tosAgreement;
           }),
       title: RichText(
         text: TextSpan(
@@ -72,29 +88,10 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                 ..onTap = () { launchUrl(Uri.parse('https://www13.hpi.uni-potsdam.de/fileadmin/user_upload/fachgebiete/lippert/studyu/StudyU_Designer_privacy_en.pdf'.hardcoded)); },
             ),
             const TextSpan(
-              text: '.',
+              text: ' ', // Prevent clickable area stretching
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _formWidget() {
-    return Form(
-      key: _formKey,
-      onChanged: () => setState(() => isFormValid = _formKey.currentState!.validate() && tosAgreement),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(child: Text('Signup'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
-            const SizedBox(height: 20),
-            TextFormFieldWidget(emailController: emailController),
-            PasswordWidget(passwordController: passwordController),
-            _tosWidget(),
-            const SizedBox(height: 20),
-            buttonWidget(ref, isFormValid, 'Create Account', formReturnAction),
-          ]
       ),
     );
   }

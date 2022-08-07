@@ -7,21 +7,20 @@ typedef VoidAsyncValue = AsyncValue<String>;
 extension AsyncValueUI on VoidAsyncValue {
   bool get isLoading => this is AsyncLoading<void>;
 
-  void showResultUI(BuildContext context) =>
-      whenOrNull(
-        // success
-        data: (successMessage) {
-          if (successMessage.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Success: $successMessage'.hardcoded)),
-            );
-          }
-        },
-        // error
-        error: (error, _) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $error'.hardcoded)),
-          );
-        },
+  void showResultUI(BuildContext context) => whenOrNull(
+    // success
+    data: (successMessage) {
+      if (successMessage.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Success: $successMessage'.hardcoded)),
+        );
+      }
+    },
+    // error
+    error: (error, _) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error'.hardcoded)),
       );
+    },
+  );
 }
