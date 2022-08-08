@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -10,9 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MainPageScaffold extends ConsumerStatefulWidget {
 
+  final String childName;
   final Widget child;
 
-  const MainPageScaffold({required this.child, Key? key}) : super(key: key);
+  const MainPageScaffold({required this.child, Key? key, required this.childName}) : super(key: key);
 
   @override
   _MainPageScaffoldState createState() => _MainPageScaffoldState();
@@ -109,7 +109,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   }
 
   Text? showHeaderPromptText() {
-    if (widget.child.runtimeType.toString() == 'LoginPage') {
+    if (widget.childName == 'login') {
       return Text('Don\'t have an account?'.hardcoded, style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,));
     } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
       return Text('Already have an account?'.hardcoded, style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,));
@@ -119,7 +119,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   }
 
   TextButton? showHeaderPromptLink() {
-    if (widget.child.runtimeType.toString() == 'LoginPage') {
+    if (widget.childName == 'login') {
       return TextButton(
         onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.signup),
         child: Text('Sign up here'.hardcoded, style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),

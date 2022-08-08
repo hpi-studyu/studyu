@@ -169,9 +169,10 @@ class RouterConfig {
   static final login = GoRoute(
     path: "/login",
     name: "login",
-    pageBuilder: (context, state) => const MaterialPage(
+    pageBuilder: (context, state) => MaterialPage(
         child: MainPageScaffold(
-            child: LoginPage()
+            childName: state.name!,
+            child: const LoginPage()
         )
     )
   );
@@ -179,9 +180,10 @@ class RouterConfig {
   static final signup = GoRoute(
       path: "/signup",
       name: "signup",
-      pageBuilder: (context, state) => const MaterialPage(
+      pageBuilder: (context, state) => MaterialPage(
           child: MainPageScaffold(
-              child: SignupPage()
+              childName: state.name!,
+              child: const SignupPage()
           )
       )
   );
@@ -191,7 +193,8 @@ class RouterConfig {
     name: "passwordForgot",
       pageBuilder: (context, state) => MaterialPage(
           child: MainPageScaffold(
-              child: PasswordForgotPage(email: state.extra as String?),
+            childName: state.name!,
+            child: PasswordForgotPage(email: state.extra as String?),
           )
       )
   );
@@ -199,9 +202,10 @@ class RouterConfig {
   static final passwordRecovery = GoRoute(
       path: "/password_recovery",
       name: "passwordRecovery",
-      pageBuilder: (context, state) => const MaterialPage(
+      pageBuilder: (context, state) => MaterialPage(
           child: MainPageScaffold(
-              child: PasswordRecoveryPage()
+              childName: state.name!,
+              child: const PasswordRecoveryPage()
           )
       )
   );
