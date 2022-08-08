@@ -8,17 +8,31 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import 'auth_state.dart';
 import 'form_widgets.dart';
 
-class SignupPage extends ConsumerStatefulWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
   @override
   _SignupPageState createState() => _SignupPageState();
 }
 
-class _SignupPageState extends ConsumerState<SignupPage> {
+class _SignupPageState extends AuthState<SignupPage> {
+  @override
+  Widget build(BuildContext context) {
+    return const PageContent();
+  }
+}
 
+class PageContent extends ConsumerStatefulWidget {
+  const PageContent({Key? key}) : super(key: key);
+
+  @override
+  _PageContentState createState() => _PageContentState();
+}
+
+class _PageContentState extends ConsumerState<PageContent> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late bool isFormValid;
@@ -36,7 +50,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<String>>(
+    ref.listen<AsyncValue<void>>(
       authControllerProvider,
           (_, state) => state.showResultUI(context),
     );
@@ -52,7 +66,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             PasswordWidget(passwordController: passwordController),
             _tosWidget(),
             const SizedBox(height: 20),
-            ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Create Account'.hardcoded, onPressed: formReturnAction),
+            ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Create Account'.hardcoded, onPressed: _formReturnAction),
           ]
       ),
     );
@@ -96,7 +110,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     );
   }
 
-  void formReturnAction() {
+  _formReturnAction() {
     final authController = ref.watch(authControllerProvider.notifier);
     authController.signUp(emailController.text, passwordController.text);
   }

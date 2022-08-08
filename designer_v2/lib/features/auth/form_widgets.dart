@@ -23,12 +23,12 @@ class ButtonWidget extends StatefulWidget {
 class _ButtonWidgetState extends State<ButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    final signupState = widget.ref.watch(authControllerProvider);
+    final state = widget.ref.watch(authControllerProvider);
     return Center(
         child: Stack(children: <Widget>[
           PrimaryButton(
-            isLoading: signupState.isLoading,
-            onPressed: !signupState.isLoading && widget.isFormValid ?
+            isLoading: state.isLoading,
+            onPressed: !state.isLoading && widget.isFormValid ?
                 () => widget.onPressed() : null,
             text: widget.buttonText,
           ),
@@ -41,7 +41,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
 class FieldValidators {
   static String? emailValidator(String? email) {
       if (email == null) {
-        return null;
+        return 'Not a valid email'; //return null;
       }
       if (!RegExp(
           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -133,13 +133,6 @@ class _PasswordWidgetState extends State<PasswordWidget> {
     passwordVisibility = false;
   }
 
-  static String? passwordValidatorCustomized(String? password) {
-    if (password == null || password.isEmpty || password.length < 6) {
-      return 'Please enter a password with at least 6 characters';
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -201,4 +194,10 @@ class _PasswordWidgetState extends State<PasswordWidget> {
         )
     );
   }
+}
+
+formSuccessAction(BuildContext context, String successMessage) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(successMessage)),
+  );
 }

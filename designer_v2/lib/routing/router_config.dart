@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
-import 'package:studyu_designer_v2/features/auth/password_reset_page.dart';
+import 'package:studyu_designer_v2/features/auth/password_forgot_page.dart';
 import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
@@ -34,18 +34,18 @@ class RouteParams {
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConfig {
-  /// This list is provided to [GoRouter.routes] during instantiation.
-  /// See router.dart
 
+  /// Public routes can be accessed without login
   static final topLevelPublicRoutes = [
     root,
     splash,
     error,
     login,
     signup,
-    passwordReset,
+    passwordForgot,
   ];
 
+  /// Private routes can only be accessed after login
   static final topLevelPrivateRoutes = [
     studies,
     study,
@@ -57,6 +57,8 @@ class RouterConfig {
     passwordRecovery,
   ];
 
+  /// This list is provided to [GoRouter.routes] during instantiation.
+  /// See router.dart
   static final topLevelRoutes = topLevelPublicRoutes + topLevelPrivateRoutes;
 
   static final root = GoRoute(
@@ -184,12 +186,12 @@ class RouterConfig {
       )
   );
 
-  static final passwordReset = GoRoute(
-    path: "/password_reset",
-    name: "passwordReset",
-      pageBuilder: (context, state) => const MaterialPage(
+  static final passwordForgot = GoRoute(
+    path: "/forgot_password",
+    name: "passwordForgot",
+      pageBuilder: (context, state) => MaterialPage(
           child: MainPageScaffold(
-              child: PasswordResetPage()
+              child: PasswordForgotPage(email: state.extra as String?),
           )
       )
   );

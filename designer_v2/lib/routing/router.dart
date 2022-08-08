@@ -41,20 +41,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
-      final isOnPasswordRecoveryLocation = state.subloc == passwordRecoveryLocation;
-      final isOnStaticPage = RouterConfig.topLevelPublicRoutes.any((element) => element.path == state.subloc);
+      final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
+      final isOnPublicPage = RouterConfig.topLevelPublicRoutes.any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
+      var allowPasswordReset = authRepository.allowPasswordReset;
       final isInitialized = appController.isInitialized;
 
       // Carry original location through the redirect flow so that we can
-      // redirect the user to where the came from after initialization
+      // redirect the user to where they came from after initialization
       final String? from;
       if (state.queryParams.containsKey('from')) {
         from = state.queryParams['from'];
       } else {
-        if (!(isOnDefaultPage | isOnLoginPage | isOnSplashPage)) {
+        if (!(isOnDefaultPage | isOnSplashPage)) {
           from = state.subloc;
         } else {
           from = null;
@@ -63,7 +64,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Helper to generate routes carrying the 'from' param (if any)
       namedLocForwarded(String name) {
         final Map<String,String> qParams = {};
-        if (from != null && from != '/') {
+        if (from != null && from != '/') { // if (from != null && from != '/' && from != defaultLocation) {
           qParams["from"] = from;
         }
         return state.namedLocation(name, queryParams: qParams);
@@ -75,79 +76,40 @@ final routerProvider = Provider<GoRouter>((ref) {
             ? null : namedLocForwarded(RouterConfig.splash.name!);
       }
 
-      if (!isLoggedIn) {
-        // Redirect to chosen page or null if already on page
-        if (from != null) {
-          print("from: " + from);
-        } else {
-          print("from: null");
-        }
-        print("state.subloc: " + state.subloc);
+      /*print("***NEW ROUTER***");
+      print("subloc: " + state.subloc);
+      print("isOnPublicPage: " + isOnPublicPage.toString());
+      if (from != null) {
+        print("from: $from");
+      } else {
+        print("from: null");
+      }*/
 
-        if (from != null && from != state.subloc) {
-          if (RouterConfig.topLevelPublicRoutes.any((element) => element.path == from) || isOnSplashPage) {
-            print("return from");
-            return from;
-          } else {
-            return null;
-          }
-        } else {
-          if (from == null) {
-            if (isOnLoginPage) {
-              print("isonloginpage: return null");
-              return null;
-            } else {
-              print("!isonloginpage: return login");
-              return namedLocForwarded(RouterConfig.login.name!);
-            }
-          }
-          if (isOnStaticPage) {
-            print("return null");
-            return null;
-          } else {
-            //print("return login");
-            //return namedLocForwarded(RouterConfig.login.name!);
-          }
-        }
-
-        if (isOnLoginPage) {
-          print("return null");
+      // Handle password recovery
+      if (allowPasswordReset) {
+        if (isOnPasswordRecoveryPage) {
+          authRepository.allowPasswordReset = false;
           return null;
         } else {
-          print("return login page");
-          return namedLocForwarded(RouterConfig.login.name!);
+          return namedLocForwarded(RouterConfig.passwordRecovery.name!);
         }
-
-        /*if (from != null) {
-          // we are not redirected by from
-          if (state.subloc != from) {
-            //if (RouterConfig.topLevelStaticRoutes.any((element) => element.name == from)) {
-           //   print("from is part of static routes");
-            if (RouterConfig.topLevelStaticRoutes.any((element) => element.path == from) || isOnSplashPage) {
-              print("return from");
-              return from;
-            } else {
-              print("return null");
-              return null;
-            }
-           // } else {
-          //    print("route is dynamic");
-            //}
-          } else {
-            print("from == state.subloc: return null");
-            if (isOnStaticPage) {
-              return null;
-            }
-          }
-        }*/
-
-        // Redirect to login page when not logged in
-        return (isOnLoginPage)
-            ? null : namedLocForwarded(RouterConfig.login.name!);
       }
 
-      if (isInitialized && isLoggedIn) {
-        // If the app is initialized & user is authenticated, forward to where
+      if (!isLoggedIn) {
+        if (from != null) {  /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
+          // Only allow access to public pages...
+          if (!isOnSplashPage && isOnPublicPage) {
+            return null;
+            // ... else send user to their origin location
+          } else if (from != state.subloc) {
+            return from;
+          }
+        }
+        // Redirect to login page as default
+        return (isOnLoginPage) ? null : namedLocForwarded(RouterConfig.login.name!);
+
+      } else {
+        // If the user is authenticated, forward to where
         // they were going initially...
         if (from != null && from != state.subloc) {
           return from;

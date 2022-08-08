@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -94,24 +96,42 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
           const Spacer(),
           Container (
             alignment: Alignment.centerRight,
-            child: Text(widget.child.runtimeType.toString() == 'LoginPage' ? 'Don\'t have an account?'.hardcoded : 'Already have an account?'.hardcoded,
-              style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,
-              ),
-            ),
+            child: showHeaderPromptText(),
           ),
           const SizedBox(width: 10),
           Container (
             alignment: Alignment.centerRight,
-            child: TextButton(
-                onPressed: () => widget.child.runtimeType.toString() == 'LoginPage' ? ref.read(routerProvider).dispatch(
-                    RoutingIntents.signup) : ref.read(routerProvider).dispatch(RoutingIntents.root),
-                child: Text(widget.child.runtimeType.toString() == 'LoginPage' ? 'Sign up here'.hardcoded : 'Login here'.hardcoded,
-                    style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
-            ),
+            child: showHeaderPromptLink(),
           ),
           const SizedBox(width: 40)
         ]
     );
+  }
+
+  Text? showHeaderPromptText() {
+    if (widget.child.runtimeType.toString() == 'LoginPage') {
+      return Text('Don\'t have an account?'.hardcoded, style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,));
+    } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
+      return Text('Already have an account?'.hardcoded, style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,));
+    } else {
+      return null;
+    }
+  }
+
+  TextButton? showHeaderPromptLink() {
+    if (widget.child.runtimeType.toString() == 'LoginPage') {
+      return TextButton(
+        onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.signup),
+        child: Text('Sign up here'.hardcoded, style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
+      );
+    } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
+      return TextButton(
+        onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
+        child: Text('Login here'.hardcoded, style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
+      );
+    } else {
+      return null;
+    }
   }
 
   Widget _bottombar(BuildContext context) {

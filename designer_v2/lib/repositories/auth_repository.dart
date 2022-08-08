@@ -12,12 +12,13 @@ abstract class IAuthRepository extends IAppDelegate {
   // - Authentication
   User? get currentUser;
   bool get isLoggedIn;
+  late bool allowPasswordReset = false;
   Stream<User?> watchAuthStateChanges();
-  Future<void> signUp({required String email, required String password});
-  Future<void> signInWith({required String email, required String password});
+  Future<bool> signUp({required String email, required String password});
+  Future<bool> signInWith({required String email, required String password});
   Future<void> signOut();
-  Future<void> resetPasswordForEmail({required String email});
-  Future<void> updateUser({required String newPassword});
+  Future<bool> resetPasswordForEmail({required String email});
+  Future<bool> updateUser({required String newPassword});
   // - Lifecycle
   void dispose();
 }
@@ -46,7 +47,8 @@ class AuthRepository implements IAuthRepository {
 
   AuthRepository({
     required this.supabaseClient,
-    required this.sharedPreferences}) {
+    required this.sharedPreferences,
+    }) {
     _registerAuthListener();
   }
 
@@ -56,28 +58,33 @@ class AuthRepository implements IAuthRepository {
     _authSubscription = authClient.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
-        // Update stream with logged in user
+          // Update stream with logged in user
           _authStateStreamController.add(authClient.currentUser);
           _persistSession();
           break;
         case AuthChangeEvent.signedOut:
-        // Send null to indicate that no user is available (logged out)
+          // Send null to indicate that no user is available (logged out)
           _authStateStreamController.add(null);
           _resetPersistedSession();
           break;
         case AuthChangeEvent.userUpdated:
-        // Update stream with new user object
+          // Update stream with new user object
           _authStateStreamController.add(authClient.currentUser);
           _persistSession();
           break;
         case AuthChangeEvent.passwordRecovery:
-          break; // don't care
+          //router.dispatch(RoutingIntents.passwordRecovery);
+          allowPasswordReset = true;
+          break;
         case AuthChangeEvent.tokenRefreshed:
           _persistSession();
           break;
       }
     });
   }
+
+  @override
+  bool allowPasswordReset = false;
 
   @override
   User? get currentUser => _authStateStreamController.value;
@@ -89,48 +96,54 @@ class AuthRepository implements IAuthRepository {
   Stream<User?> watchAuthStateChanges() => _authStateStreamController.stream;
 
   @override
-  Future<void> signUp({required String email, required String password}) async {
+  Future<bool> signUp({required String email, required String password}) async {
     final res = await authClient.signUp(email, password);
     if (res.error != null) {
       throw StudyUException(res.error!.message);
     }
+    return true;
   }
 
   @override
-  Future<void> signInWith(
+  Future<bool> signInWith(
       {required String email, required String password}) async {
     final res = await authClient.signIn(email: email, password: password);
     if (res.error != null) {
       throw StudyUException(res.error!.message);
     }
+    return true;
   }
 
   @override
-  Future<void> signOut() async {
+  Future<bool> signOut() async {
     final res = await authClient.signOut();
     if (res.error != null) {
-        throw StudyUException(res.error!.message);
+      throw StudyUException(res.error!.message);
     }
+    return true;
   }
 
   @override
-  Future<void> resetPasswordForEmail({required String email}) async {
-    final res = await authClient.api.resetPasswordForEmail(email,);
-    //options: AuthOptions(redirectTo: authRedirectUri));
+  Future<bool> resetPasswordForEmail({required String email}) async {
+    final res = await authClient.api.resetPasswordForEmail(email);
+      // options: AuthOptions(redirectTo: authRedirectUri));
       if (res.error != null) {
         throw StudyUException(res.error!.message);
     }
+    return true;
   }
 
   @override
-  Future<void> updateUser({required String newPassword}) async {
+  Future<bool> updateUser({required String newPassword}) async {
     if (session != null) {
       final res = await authClient.api.updateUser(
           session!.accessToken, UserAttributes(password: newPassword));
       if (res.error != null) {
         throw StudyUException(res.error!.message);
       }
+      return true;
     }
+    return false;
   }
 
   Future<void> _persistSession() async {
@@ -180,7 +193,7 @@ class AuthRepository implements IAuthRepository {
 final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
   final authRepository = AuthRepository(
       supabaseClient: ref.watch(supabaseClientProvider),
-      sharedPreferences: ref.watch(sharedPreferencesProvider)
+      sharedPreferences: ref.watch(sharedPreferencesProvider),
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
