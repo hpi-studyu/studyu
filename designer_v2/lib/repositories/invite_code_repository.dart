@@ -53,6 +53,11 @@ class InviteCodeRepository implements IInviteCodeRepository {
 
   @override
   Future<StudyInvite> saveStudyInvite(StudyInvite invite) async {
+    // TODO proper optimistic mutation
+    if (studyRepository.isLocalOnly(invite.studyId)) {
+      final study = studyRepository.getStudy(invite.studyId)!;
+      await studyRepository.saveStudy(study);
+    }
     final savedStudyInvite = await apiClient.saveStudyInvite(invite);
     delegate?.onSavedStudyInvite(savedStudyInvite);
     return savedStudyInvite;
@@ -60,6 +65,7 @@ class InviteCodeRepository implements IInviteCodeRepository {
 
   @override
   Future<void> deleteStudyInvite(StudyInvite invite) async {
+    // TODO proper optimistic mutation
     await apiClient.deleteStudyInvite(invite);
     delegate?.onDeletedStudyInvite(invite);
   }

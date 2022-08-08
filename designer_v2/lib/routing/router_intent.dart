@@ -39,6 +39,12 @@ class RoutingIntents {
         RouteParams.studiesFilter: StudiesFilter.public.toShortString(),
       }
   );
+  static final study = (StudyID studyId) => RoutingIntent(
+      route: RouterConfig.study,
+      params: {
+        RouteParams.studyId: studyId,
+      }
+  );
   static final studyEdit = (StudyID studyId) => RoutingIntent(
       route: RouterConfig.studyEdit,
       params: {

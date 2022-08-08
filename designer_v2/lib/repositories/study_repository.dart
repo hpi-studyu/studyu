@@ -29,7 +29,8 @@ abstract class IStudyRepository extends IInviteCodeRepositoryDelegate
   Stream<Study> watchStudy(StudyID studyId, {fetchOnSubscribe = true});
   Future<List<Study>> fetchUserStudies();
   Stream<List<Study>> watchUserStudies({fetchOnSubscribe = true});
-  Future<void> deleteStudy(String id);
+  Future<void> deleteStudy(StudyID studyId);
+  bool isLocalOnly(StudyID studyId);
   // - Lifecycle
   void dispose();
 }
@@ -58,19 +59,34 @@ class StudyRepository implements IStudyRepository {
   final ProviderRef ref;
 
   /// Last emitted value for the list of studies
+  ///
+  /// Contains both client-side [Study] objects from [_unpersistedNewStudies]
+  /// as well as [Study] objects fetched from the backend
   List<Study> get _studyList {
     return _studiesStreamController.hasValue
         ? _studiesStreamController.value : [];
   }
 
+  /// Collection of client-side [Study] objects that haven't been saved to
+  /// the backend yet
+  final Map<StudyID,Study> _unpersistedNewStudies = {};
+
   @override
   Future<List<Study>> fetchUserStudies() async {
-    return await apiClient.getUserStudies();
+    final studies = await apiClient.getUserStudies();
+    for (final study in studies) {
+      _unmarkAsLocalOnly(study);
+    }
+    return studies;
   }
 
   @override
   Future<Study> fetchStudy(StudyID studyId) async {
+    if (studyId == Config.newModelId) {
+      throw StudyNotFoundException();
+    }
     final study = await apiClient.fetchStudy(studyId);
+    _unmarkAsLocalOnly(study);
     _upsertStudyLocally(study);
     return study;
   }
@@ -78,6 +94,7 @@ class StudyRepository implements IStudyRepository {
   @override
   Future<Study> saveStudy(Study study) async {
     final savedStudy = await apiClient.saveStudy(study);
+    _unmarkAsLocalOnly(savedStudy);
     _upsertStudyLocally(savedStudy);
     return savedStudy;
   }
@@ -85,8 +102,9 @@ class StudyRepository implements IStudyRepository {
   @override
   Future<Study> duplicateStudy(Study study) async {
     final draftCopy = _createCleanDraftCopyFrom(study);
+    // TODO: upsert optimistically here
     final savedCopy = await apiClient.saveStudy(draftCopy);
-    _upsertStudyLocally(savedCopy);
+    assert(draftCopy.id == savedCopy.id);
     return savedCopy;
   }
 
@@ -201,7 +219,19 @@ class StudyRepository implements IStudyRepository {
     final dummy = Study.withId(authRepository.currentUser!.id);
     copy.id = dummy.id;
 
+    _markAsLocalOnly(copy);
+
     return copy;
+  }
+
+  Study _createDraftStudy() {
+    final newDraft = Study.withId(authRepository.currentUser!.id);
+    newDraft.title = "Unnamed study".hardcoded;
+    newDraft.description = "Lorem ipsum".hardcoded;
+
+    _markAsLocalOnly(newDraft);
+
+    return newDraft;
   }
 
   @override
@@ -233,6 +263,13 @@ class StudyRepository implements IStudyRepository {
   /// will be created anyway, but emit a [StudyNotFoundException] error event.
   @override
   Stream<Study> watchStudy(StudyID studyId, {fetchOnSubscribe = true}) {
+    // Handle subscription to new studies that don't exist yet
+    if (studyId == Config.newModelId) {
+      final newStudy = _createDraftStudy();
+      _upsertStudyLocally(newStudy);
+      studyId = newStudy.id; // subscribe to the newly created study
+    }
+
     if (_studyStreamControllers.containsKey(studyId)) {
       return _studyStreamControllers[studyId]!.stream;
     }
@@ -248,9 +285,19 @@ class StudyRepository implements IStudyRepository {
     // the stream transform as a subscription callback and cleans up after
     // itself when it's no longer needed.
     final BehaviorSubject<Study> controller = BehaviorSubject();
-    final subscription = watchUserStudies(fetchOnSubscribe: false).listen(
-            (studies) => controller.add(
-                studies.firstWhere((study) => study.id == studyId)));
+    final subscription = watchUserStudies(fetchOnSubscribe: false)
+        .listen((studies) {
+          Study? subscribedStudy;
+          for (final study in studies) {
+            if (study.id == studyId) {
+              subscribedStudy = study;
+              break;
+            }
+          }
+          if (subscribedStudy != null) {
+            controller.add(subscribedStudy);
+          }
+    });
 
     void discardController() {
       subscription.cancel();
@@ -259,13 +306,29 @@ class StudyRepository implements IStudyRepository {
     }
     controller.onCancel = discardController;
 
-    if (fetchOnSubscribe) {
+    if (fetchOnSubscribe && !isLocalOnly(studyId)) {
       fetchStudy(studyId)
           .then((study) => _upsertStudyLocally(study))
           .catchError((e) => controller.addError(e));
     }
 
     return controller.stream;
+  }
+
+  @override
+  bool isLocalOnly(StudyID studyId) {
+    return _unpersistedNewStudies.containsKey(studyId);
+  }
+
+  void _markAsLocalOnly(Study study) {
+    _unpersistedNewStudies[study.id] = study;
+  }
+
+  void _unmarkAsLocalOnly(Study study) {
+    if (!_unpersistedNewStudies.containsKey(study.id)) {
+      return;
+    }
+    _unpersistedNewStudies.remove(study.id);
   }
 
   /// Updates the client-side list of studies with a new [Study]
@@ -287,18 +350,20 @@ class StudyRepository implements IStudyRepository {
   }
 
   @override
-  Future<void> deleteStudy(String id) async {
+  Future<void> deleteStudy(StudyID studyId) async {
     // Re-emits the latest value added to the stream controller
     // minus the deleted object
     // TODO: proper error handling here
     final studies = [..._studyList];
-    final studyIdx = studies.indexWhere((t) => t.id == id);
+    final studyIdx = studies.indexWhere((t) => t.id == studyId);
     if (studyIdx == -1) {
       throw StudyNotFoundException();
     } else {
       final study = studies[studyIdx];
       try {
-        await apiClient.deleteStudy(study);
+        if (!isLocalOnly(study.id)) {
+          await apiClient.deleteStudy(study);
+        }
         // Update local state
         studies.removeAt(studyIdx);
         _studiesStreamController.add(studies);

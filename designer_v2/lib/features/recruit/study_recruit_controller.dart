@@ -11,14 +11,9 @@ class StudyRecruitController extends StateNotifier<StudyControllerState>
     implements IModelActionProvider<ModelActionType, StudyInvite> {
 
   StudyRecruitController({
-    required this.studyId,
     required this.inviteCodeRepository,
     required this.studyControllerState,
   }) :  super(studyControllerState);
-
-  /// Identifier of the study currently being edited / viewed
-  /// Used to retrieve the [Study] object from the data layer
-  final StudyID studyId;
 
   final IInviteCodeRepository inviteCodeRepository;
 
@@ -46,11 +41,11 @@ class StudyRecruitController extends StateNotifier<StudyControllerState>
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyRecruitController, StudyControllerState, StudyID>((ref, studyId) =>
-    StudyRecruitController(
-      studyId: studyId,
-      inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider),
-      // Bind to parent controller's state & rebuild when it changes
-      studyControllerState: ref.watch(studyControllerProvider(studyId)),
-    )
-);
+    .family<StudyRecruitController, StudyControllerState, StudyID>((ref, studyId) {
+      print("studyRecruitControllerProvider");
+      return StudyRecruitController(
+        inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider),
+        // Bind to parent controller's state & rebuild when it changes
+        studyControllerState: ref.watch(studyControllerProvider(studyId)),
+      );
+});

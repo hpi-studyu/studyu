@@ -1,6 +1,6 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
 class MeasurementsFormData implements IStudyFormData {
   final List<MeasurementSurveyFormData> surveyMeasurements;

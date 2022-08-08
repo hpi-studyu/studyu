@@ -67,7 +67,6 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ),
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
-          print("rebuild button");
           return _retainSizeInAppBar(PrimaryButton(
             text: "Save".hardcoded,
             tooltipDisabled: "Please fill out all fields as required".hardcoded,

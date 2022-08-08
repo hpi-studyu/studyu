@@ -9,21 +9,12 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_fo
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
-
-abstract class IStudyFormData {
-  factory IStudyFormData.fromStudy(Study study) {
-    throw UnimplementedError("Subclass responsibility");
-  }
-
-  /// Applies the data stored in [IStudyFormData] to the given [study]
-  /// by mapping the form's schema to the [Study] schema
-  Study apply(Study study);
-}
 
 class StudyFormViewModel extends FormViewModel<Study>
     implements IFormViewModelDelegate<MeasurementsFormViewModel> {
@@ -32,10 +23,14 @@ class StudyFormViewModel extends FormViewModel<Study>
     required this.studyRepository,
     required super.formData, // Study
   }) {
+    print("StudyFormViewModel.constructor");
+    /*
     form.valueChanges.listen((event) {
       print("form updated");
       print(event);
     });
+
+     */
   }
 
   /// On-write copy of the [Study] object managed by the view model
@@ -101,6 +96,10 @@ class StudyFormViewModel extends FormViewModel<Study>
     save();
   }
 
+  void dispose() {
+    print("StudyFormViewModel.dispose");
+  }
+
   @override
   void onCancel(MeasurementsFormViewModel formViewModel, FormMode prevFormMode) {
     return; // nothing to do
@@ -117,16 +116,14 @@ class StudyFormViewModel extends FormViewModel<Study>
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final studyFormViewModelProvider = Provider
+final studyFormViewModelProvider = Provider.autoDispose
     .family<StudyFormViewModel, StudyID>((ref, studyId) {
-  // Reactively bind to & obtain [StudyController]'s current study
-  final study = ref.watch(
-      studyControllerProvider(studyId).select((state) => state.study));
-  return StudyFormViewModel(
-    router: ref.watch(routerProvider),
-    studyRepository: ref.watch(studyRepositoryProvider),
-    formData: study.value!,
-  );
+      print("studyFormViewModelProvider($studyId)");
+      final studyController = ref.watch(studyControllerProvider(studyId).notifier);
+      ref.onDispose(() {
+        print("studyFormViewModelProvider($studyId).DISPOSE");
+      });
+      return studyController.studyFormViewModel;
 });
 
 /*
@@ -136,7 +133,7 @@ final studyInfoFormViewModelProvider = Provider.autoDispose
 });
  */
 
-final measurementsFormViewModelProvider = Provider
+final measurementsFormViewModelProvider = Provider.autoDispose
     .family<MeasurementsFormViewModel, StudyID>((ref, studyId) {
       return ref.watch(
           studyFormViewModelProvider(studyId)).measurementsFormViewModel;
