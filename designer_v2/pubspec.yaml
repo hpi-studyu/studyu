@@ -41,7 +41,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   modal_side_sheet: ^0.0.1
-  reactive_forms: ^13.0.0
+  reactive_forms: ^14.1.0
   uuid: ^3.0.6
 
 dev_dependencies:
