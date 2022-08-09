@@ -27,22 +27,25 @@ class OptimisticUpdate {
 
   Future<void> execute() async {
     applyOptimistic();
-    if (onUpdate != null) {
-      onUpdate!();
-    }
+    _runUpdateHandlerIfAny();
     try {
       await apply();
+      _runUpdateHandlerIfAny();
     } catch(e, stackTrace) {
       if (onError != null) {
         onError!(e, stackTrace);
       }
       rollback();
-      if (onUpdate != null) {
-        onUpdate!();
-      }
+      _runUpdateHandlerIfAny();
       if (rethrowErrors) {
         rethrow;
       }
+    }
+  }
+
+  void _runUpdateHandlerIfAny() {
+    if (onUpdate != null) {
+      onUpdate!();
     }
   }
 }

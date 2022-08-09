@@ -3,7 +3,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 
 
-class StudyRecruitControllerState extends StudyControllerState {
+class StudyRecruitControllerState extends StudyControllerBaseState {
   const StudyRecruitControllerState({
     super.study,
     this.invites = const AsyncValue.loading(),

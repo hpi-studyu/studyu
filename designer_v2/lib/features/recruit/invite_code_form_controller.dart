@@ -130,6 +130,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final inviteCodeFormViewModelProvider = Provider.autoDispose
     .family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
+      print("inviteCodeFormViewModelProvider(${studyId}");
       // Reactively bind to & obtain [StudyController]'s current study
       final study = ref.watch(
           studyControllerProvider(studyId).select((state) => state.study));

@@ -191,33 +191,6 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     );
 
     return saveOperation.execute().then((_) => get(modelId));
-
-    /*
-    // Cache the model locally if this is the first time we encounter it
-    final modelId = getKey(model);
-    if (!_allModels.containsKey(modelId)) {
-      _upsertLocally(model);
-    }
-
-    WrappedModel<T> wrappedModel = _allModels[modelId]!;
-    wrappedModel.markAsLoading();
-
-    try {
-      final savedModel = await delegate.save(model);
-      wrappedModel = _upsertLocally(savedModel);
-      wrappedModel.markAsSaved();
-    } catch(e, stackTrace) {
-      // Associate error with existing object
-      wrappedModel.markWithError(e);
-      emitError(modelStreamControllers[modelId], e, stackTrace);
-      rethrow;
-    }
-
-    emitUpdate();
-
-    return wrappedModel;
-
-     */
   }
 
   @override
@@ -241,6 +214,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       rollback: () => wrappedModel.isDeleted = false,
       onUpdate: emitUpdate,
       onError: (e, stackTrace) {
+        get(modelId)?.markWithError(e);
         emitError(modelStreamControllers[modelId], e, stackTrace);
       }
     );
@@ -251,19 +225,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   @override
   Future<void> duplicateAndSave(T model) {
     final duplicateModel = delegate.createDuplicate(model);
-    final duplicateModelId = getKey(duplicateModel);
-
-    final duplicateOperation = OptimisticUpdate(
-      applyOptimistic: () {
-        final wrappedModel = _upsertLocally(duplicateModel);
-        wrappedModel.markAsLoading();
-      },
-      apply: () => save(duplicateModel),
-      rollback: () => delete(duplicateModelId),
-      onUpdate: emitUpdate,
-    );
-
-    return duplicateOperation.execute();
+    return save(duplicateModel);
   }
 
   @override

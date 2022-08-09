@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-
-class StudyControllerState extends Equatable {
-  const StudyControllerState({
+class StudyControllerBaseState extends Equatable {
+  const StudyControllerBaseState({
     this.study = const AsyncValue.loading(),
   });
 
@@ -16,10 +16,10 @@ class StudyControllerState extends Equatable {
   /// May be incomplete (for new studies / drafts)
   final AsyncValue<Study> study;
 
-  StudyControllerState copyWith({
+  StudyControllerBaseState copyWith({
     AsyncValue<Study> Function()? study,
   }) {
-    return StudyControllerState(
+    return StudyControllerBaseState(
       study: study != null ? study() : this.study,
     );
   }
@@ -28,6 +28,36 @@ class StudyControllerState extends Equatable {
 
   @override
   List<Object?> get props => [study];
+}
+
+class StudyControllerState extends StudyControllerBaseState {
+  const StudyControllerState({
+    this.studyWithMetadata,
+  });
+
+  final WrappedModel<Study>? studyWithMetadata;
+
+  @override
+  AsyncValue<Study> get study {
+    if (studyWithMetadata == null) {
+      return const AsyncValue.loading();
+    }
+    return studyWithMetadata!.asyncValue;
+  }
+
+  bool get isDirty => studyWithMetadata?.isDirty ?? false;
+  DateTime? get lastSynced => studyWithMetadata?.lastSaved;
+
+  @override
+  StudyControllerState copyWith({
+    WrappedModel<Study>? Function()? studyWithMetadata,
+    AsyncValue<Study> Function()? study,
+  }) {
+    return StudyControllerState(
+      studyWithMetadata: studyWithMetadata != null
+          ? studyWithMetadata() : this.studyWithMetadata,
+    );
+  }
 }
 
 extension StudyControllerStateUnsafeProps on StudyControllerState {

@@ -57,40 +57,53 @@ class StudyController extends StateNotifier<StudyControllerState>
       _studySubscription!.cancel();
     }
     _studySubscription = studyRepository.watch(studyId).listen((wrappedModel) {
-      _onStudyUpdate(wrappedModel.model);
-    },
-        onError: (error) {
-      // TODO: figure out a way to resolve data dependencies for the current page
-      // during app initialization so that we don't need to render the loading state
-      // if the study doesn't exist
+      _onStudyUpdate(wrappedModel);
+    }, onError: (error) {
+      /* TODO: figure out a way to resolve data dependencies for the current page
+          during app initialization so that we don't need to render the loading state
+          if the study doesn't exist
+      */
       if (error is StudyNotFoundException) {
         router.dispatch(RoutingIntents.error(error));
-      } else {
-        state = state.copyWith(
-          study: () => AsyncValue.error(error),
-        );
       }
+      // TODO: improve error handling
     });
   }
 
+  _onStudyUpdate(WrappedModel<Study> study) {
+    print("StudyController._onStudyUpdate");
+    print(study.asyncValue);
+    state = state.copyWith(
+      studyWithMetadata: () => study,
+    );
+
+    _redirectNewToActualStudyID(study.model.id);
+  }
+
+  /*
   _onStudyUpdate(Study study, {autoSave = false}) async {
     state = state.copyWith(
       study: () => AsyncValue.data(study),
     );
     studyFormViewModel.formData = study;
 
+    /*
     if (autoSave) {
       await studyRepository.save(study);
     }
+
+     */
 
     if (study.id != studyId) {
       _redirectToActualStudyID(study.id);
     }
   }
 
+   */
+
   /// Redirect to the study-specific URL to avoid disposing a dirty controller
   /// when building subroutes
-  _redirectToActualStudyID(StudyID actualStudyId) {
+  _redirectNewToActualStudyID(StudyID actualStudyId) {
     if (studyId == Config.newModelId) {
       router.dispatch(RoutingIntents.study(actualStudyId));
     }
@@ -121,8 +134,9 @@ class StudyController extends StateNotifier<StudyControllerState>
 
   @override
   void onStudyUpdate(Study study) {
+    // TODO: remove this later when new designer is done
     print("APP STATE => CONTROLLER");
-    _onStudyUpdate(study, autoSave: true);
+    //_onStudyUpdate(study, autoSave: true);
   }
 }
 

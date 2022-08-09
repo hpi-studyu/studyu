@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
+import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -90,11 +91,20 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
               flex: 4,
               child: AsyncValueWidget(
                 value: state.study,
-                data: (study) => Text(state.titleText,
-                    maxLines: 1,
-                    style: theme.textTheme.titleSmall,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false
+                data: (study) => Row(
+                  children: [
+                    Text(state.titleText,
+                        maxLines: 1,
+                        style: theme.textTheme.titleSmall,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false
+                    ),
+                    SyncIndicator(
+                      state: state.study,
+                      isDirty: state.isDirty,
+                      lastSynced: state.lastSynced,
+                    )
+                  ],
                 ),
                 loading: () => Container(),
                 error: (e, str) => Container(),

@@ -85,6 +85,12 @@ class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInvi
 
     return actions.where((action) => action.isAvailable).toList();
   }
+
+  @override
+  emitUpdate() {
+    print("InviteCodeRepository.emitUpdate");
+    super.emitUpdate();
+  }
 }
 
 class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite> {
@@ -113,8 +119,33 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   @override
   Future<StudyInvite> save(StudyInvite model) async {
     study.invites ??= [];
-    await studyRepository.ensurePersisted(model.studyId);
-    return apiClient.saveStudyInvite(model);
+    final prevInvites = [...study.invites!];
+
+    final saveOperation = OptimisticUpdate(
+      applyOptimistic: () {
+        final inviteIdx = study.invites!.indexWhere((i) => i.code == model.code);
+        if (inviteIdx == -1) { // add new code
+          study.invites!.add(model);
+        } else { // replace existing code
+          study.invites![inviteIdx] = model;
+        }
+      },
+      apply: () async {
+        await studyRepository.ensurePersisted(model.studyId);
+        await apiClient.saveStudyInvite(model);
+      },
+      rollback: () => study.invites = prevInvites,
+      onUpdate: () {
+        print("saveOperation: studyRepository.emitUpdate()");
+        studyRepository.emitUpdate();
+      },
+      rethrowErrors: true,
+    );
+
+    return saveOperation.execute().then((_) => model);
+
+    //await studyRepository.ensurePersisted(model.studyId);
+    //return apiClient.saveStudyInvite(model);
 
     /*
     final prevInvites = [...study.invites!];
@@ -181,6 +212,7 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
 
 final inviteCodeRepositoryProvider = Provider.autoDispose
   .family<IInviteCodeRepository, Study>((ref, study) {
+    print("inviteCodeRepositoryProvider(${study.id}");
     // Initialize repository for a given study
     final repository = InviteCodeRepository(
       study: study,
@@ -191,6 +223,7 @@ final inviteCodeRepositoryProvider = Provider.autoDispose
     );
     // Bind lifecycle to Riverpod
     ref.onDispose(() {
+      print("inviteCodeRepositoryProvider(${study.id}.DISPOSE");
       repository.dispose();
     });
     return repository;

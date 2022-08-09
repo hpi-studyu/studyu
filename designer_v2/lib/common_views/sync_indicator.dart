@@ -46,15 +46,16 @@ class SyncIndicator<T> extends StatelessWidget {
     }
 
     return state.when(
-      data: (data) => dataWidget,
+      data: (data) => (state.isRefreshing)
+          ? Tooltip(
+              message: "Saving changes...".hardcoded,
+              child: const Icon(Icons.sync_rounded),
+          ) : dataWidget,
       error: (error, stackTrace) => Tooltip(
         message: "Changes could not be saved".hardcoded,
         child: const Icon(Icons.sync_problem_outlined),
       ),
-      loading: () => Tooltip(
-        message: "Saving changes...".hardcoded,
-        child: const Icon(Icons.sync_rounded),
-      ),
+      loading: () => Container(), // hide on initial load
     );
   }
 }

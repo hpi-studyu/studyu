@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 
+
 class StudyRecruitController extends StateNotifier<StudyRecruitControllerState>
     implements IModelActionProvider<StudyInvite> {
 
@@ -17,6 +18,7 @@ class StudyRecruitController extends StateNotifier<StudyRecruitControllerState>
     required study,
     required this.inviteCodeRepository,
   }) :  super(StudyRecruitControllerState(study: study)) {
+    print("StudyRecruitController.constructor");
     if (study.hasValue && study.value != null) {
       _subscribeInvites();
     }
