@@ -19,7 +19,7 @@ import 'package:uuid/uuid.dart';
 
 class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyFormData>
     implements IFormViewModelDelegate<SurveyQuestionFormViewModel>,
-        IListActionProvider<ModelActionType, SurveyQuestionFormData>,
+        IListActionProvider<SurveyQuestionFormData>,
         IProviderArgsResolver<SurveyQuestionFormViewModel, SurveyQuestionFormRouteArgs> {
 
   MeasurementSurveyFormViewModel({
@@ -145,7 +145,7 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
   // - IListActionProvider
 
   @override
-  List<ModelAction<ModelActionType>> availableActions(SurveyQuestionFormData model) {
+  List<ModelAction> availableActions(SurveyQuestionFormData model) {
     // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
     final isNotReadonly = formMode != FormMode.readonly;
 
@@ -182,13 +182,13 @@ class MeasurementSurveyFormViewModel extends FormViewModel<MeasurementSurveyForm
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction<ModelActionType>> availablePopupActions(
+  List<ModelAction> availablePopupActions(
       SurveyQuestionFormData model) {
     return availableActions(model).where(
             (action) => action.type != ModelActionType.edit).toList();
   }
 
-  List<ModelAction<ModelActionType>> availableInlineActions(
+  List<ModelAction> availableInlineActions(
       SurveyQuestionFormData model) {
     return availableActions(model).where(
             (action) => action.type == ModelActionType.edit).toList();

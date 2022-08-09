@@ -19,11 +19,11 @@ class ModelAction<T> {
   });
 }
 
-abstract class IModelActionProvider<T,V> {
-  List<ModelAction<T>> availableActions(V model);
+abstract class IModelActionProvider<V> {
+  List<ModelAction> availableActions(V model);
 }
 
-abstract class IListActionProvider<T,V> extends IModelActionProvider<T,V> {
+abstract class IListActionProvider<V> extends IModelActionProvider<V> {
   void onSelectItem(V item);
   void onNewItem();
 }

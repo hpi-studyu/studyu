@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -24,7 +25,7 @@ class StudyController extends StateNotifier<StudyControllerState>
   final StudyID studyId;
 
   /// A subscription for synchronizing state between the repository & controller
-  StreamSubscription<Study>? _studySubscription;
+  StreamSubscription<WrappedModel<Study>>? _studySubscription;
 
   /// The [FormViewModel] that is responsible for displaying & editing the
   /// survey design form. Its lifecycle is bound to the study controller.
@@ -48,7 +49,6 @@ class StudyController extends StateNotifier<StudyControllerState>
     required this.studyRepository,
     required this.router,
   }) : super(const StudyControllerState()) {
-    print("StudyController.constructor");
     _subscribeStudy(studyId);
   }
 
@@ -56,8 +56,9 @@ class StudyController extends StateNotifier<StudyControllerState>
     if (_studySubscription != null) {
       _studySubscription!.cancel();
     }
-    _studySubscription = studyRepository.watchStudy(studyId).listen(
-        _onStudyUpdate,
+    _studySubscription = studyRepository.watch(studyId).listen((wrappedModel) {
+      _onStudyUpdate(wrappedModel.model);
+    },
         onError: (error) {
       // TODO: figure out a way to resolve data dependencies for the current page
       // during app initialization so that we don't need to render the loading state
@@ -79,10 +80,12 @@ class StudyController extends StateNotifier<StudyControllerState>
     studyFormViewModel.formData = study;
 
     if (autoSave) {
-      await studyRepository.saveStudy(study);
+      await studyRepository.save(study);
     }
 
-    _redirectToActualStudyID(study.id);
+    if (study.id != studyId) {
+      _redirectToActualStudyID(study.id);
+    }
   }
 
   /// Redirect to the study-specific URL to avoid disposing a dirty controller
@@ -108,7 +111,8 @@ class StudyController extends StateNotifier<StudyControllerState>
     // filter out edit action since we are already editing the study
     return withIcons(
         studyRepository.availableActions(study).where(
-                (action) => action.type != StudyActionType.edit).toList(),
+                (action) => action.type != StudyActionType.edit)
+            .toList() as List<ModelAction<StudyActionType>>,
         studyActionIcons
     );
   }

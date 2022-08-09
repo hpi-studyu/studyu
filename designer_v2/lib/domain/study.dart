@@ -1,6 +1,7 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
 enum StudyActionType {
   edit,
@@ -69,9 +70,50 @@ extension ParticipationTypeFormatted on core.Participation {
   }
 }
 
-extension StudyDuplicate on Study {
-  Study exactDuplicate() {
-    return Study.fromJson(toJson());
+extension StudyInviteCodeX on Study {
+  StudyInvite? getInvite(String code) {
+    if (invites == null || invites!.isEmpty) {
+      return null;
+    }
+    return invites!.firstWhere((invite) => invite.code == code);
   }
 }
 
+extension StudyDuplicateX on Study {
+  Study exactDuplicate() {
+    return Study.fromJson(toJson());
+  }
+
+  /// Creates a clean copy of the given [study] only containing the
+  /// study protocol / editor data model
+  Study duplicateAsDraft(String userId) {
+    final copy = Study.fromJson(toJson());
+    copy.title = (copy.title ?? '').withDuplicateLabel();
+    copy.userId = userId;
+    copy.published = false;
+    copy.activeSubjectCount = 0;
+    copy.participantCount = 0;
+    copy.endedCount = 0;
+    copy.missedDays = [];
+    copy.resultSharing = ResultSharing.private;
+    copy.results = [];
+    copy.repo = null;
+    copy.invites = null;
+    copy.collaboratorEmails = [];
+
+    // Generate a new random UID
+    final dummy = Study.withId(userId);
+    copy.id = dummy.id;
+
+    return copy;
+  }
+}
+
+class StudyTemplates {
+  static Study emptyDraft(String userId) {
+    final newDraft = Study.withId(userId);
+    newDraft.title = "Unnamed study".hardcoded;
+    newDraft.description = "Lorem ipsum".hardcoded;
+    return newDraft;
+  }
+}

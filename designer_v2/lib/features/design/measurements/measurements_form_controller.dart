@@ -16,7 +16,7 @@ import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     implements IFormViewModelDelegate<MeasurementSurveyFormViewModel>,
-        IListActionProvider<ModelActionType, MeasurementSurveyFormData>,
+        IListActionProvider<MeasurementSurveyFormData>,
         IProviderArgsResolver<MeasurementSurveyFormViewModel, MeasurementFormRouteArgs> {
 
   MeasurementsFormViewModel({
@@ -78,7 +78,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - IListActionProvider
 
   @override
-  List<ModelAction<ModelActionType>> availableActions(MeasurementSurveyFormData model) {
+  List<ModelAction> availableActions(MeasurementSurveyFormData model) {
     // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
     final isNotReadonly = formMode != FormMode.readonly;
 
@@ -118,13 +118,13 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction<ModelActionType>> availablePopupActions(
+  List<ModelAction> availablePopupActions(
       MeasurementSurveyFormData model) {
     return availableActions(model).where(
             (action) => action.type != ModelActionType.edit).toList();
   }
 
-  List<ModelAction<ModelActionType>> availableInlineActions(
+  List<ModelAction> availableInlineActions(
       MeasurementSurveyFormData model) {
     return availableActions(model).where(
             (action) => action.type == ModelActionType.edit).toList();

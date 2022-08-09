@@ -119,7 +119,8 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Future<StudyInvite> save() {
-    return inviteCodeRepository.saveStudyInvite(buildFormData());
+    return inviteCodeRepository.save(buildFormData())
+        .then((wrapped) => wrapped!.model);
   }
 }
 
@@ -132,8 +133,10 @@ final inviteCodeFormViewModelProvider = Provider.autoDispose
       // Reactively bind to & obtain [StudyController]'s current study
       final study = ref.watch(
           studyControllerProvider(studyId).select((state) => state.study));
+      final inviteCodeRepository = ref.watch(
+          inviteCodeRepositoryProvider(study.value!));
+
       return InviteCodeFormViewModel(
-        study: study.value!,
-        inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider),
+        study: study.value!, inviteCodeRepository: inviteCodeRepository,
       );
 });

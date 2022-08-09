@@ -12,7 +12,7 @@ import 'package:studyu_designer_v2/utils/validation.dart';
 
 
 class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
-    implements IListActionProvider<ModelActionType, AbstractControl<String>> {
+    implements IListActionProvider<AbstractControl<String>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   SurveyQuestionFormViewModel({
@@ -167,7 +167,7 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
   };
 
   @override
-  List<ModelAction<ModelActionType>> availableActions(AbstractControl<String> model) {
+  List<ModelAction> availableActions(AbstractControl<String> model) {
     final isNotReadonly = formMode != FormMode.readonly;
 
     final actions = [

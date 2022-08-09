@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
-import 'package:studyu_designer_v2/common_views/container_bounded.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
@@ -25,27 +24,7 @@ class StudyRecruitScreen extends ConsumerWidget {
     final controller = ref.watch(studyRecruitControllerProvider(studyId).notifier);
 
     return AsyncValueWidget<List<StudyInvite>?>(
-      value: state.studyInvites,
-      /*
-      data: (studyInvites) => BoundedContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _inviteCodesSectionHeader(context, ref),
-            const SizedBox(height: 24.0), // spacing between body elements
-            StudyInvitesTable(
-              invites: studyInvites!, // otherwise falls through to [AsyncValueWidget.empty]
-              onSelectInvite: _onSelectInvite(context, ref),
-              getActionsForInvite: controller.availableActions,
-              getInlineActionsForInvite: controller.availableInlineActions,
-              getIntervention: controller.getIntervention,
-            ),
-          ],
-        ),
-      ),
-
-       */
+      value: state.invites,
       data: (studyInvites) => Container(child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

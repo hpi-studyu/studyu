@@ -80,7 +80,7 @@ class StudyFormViewModel extends FormViewModel<Study>
       return Future.value(null); // nothing to do
     }
     // Flush the on-write study copy to the repository & clear it
-    return studyRepository.saveStudy(studyDirtyCopy!)
+    return studyRepository.save(studyDirtyCopy!)
         .then((study) => studyDirtyCopy = null);
   }
 
