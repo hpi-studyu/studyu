@@ -99,6 +99,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         overflow: TextOverflow.ellipsis,
                         softWrap: false
                     ),
+                    const SizedBox(width: 8.0),
                     SyncIndicator(
                       state: state.study,
                       isDirty: state.isDirty,

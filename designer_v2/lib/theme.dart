@@ -242,7 +242,7 @@ class ThemeProvider extends InheritedWidget {
     // TODO: migrate to 2021 term set across the codebase
     // See https://stackoverflow.com/questions/72271461/cannot-mix-2018-and-2021-terms-in-call-to-texttheme-constructor
     return TextTheme(
-      caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.85)), // Form Labels
+      caption: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.85)), // Form Labels
       subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
       bodyText2: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
       bodyText1: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
@@ -284,6 +284,29 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  TooltipThemeData tooltipTheme(ColorScheme colors) {
+    return TooltipThemeData(
+      padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
+      textStyle: textTheme(colors).caption!.copyWith(color: colors.onPrimary),
+      decoration: BoxDecoration(
+        color: colors.secondary.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(2.0),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primaryContainer.withOpacity(0.1),
+            blurRadius: 1,
+            spreadRadius: 2,
+          ),
+          BoxShadow(
+            color: colors.secondary.withOpacity(0.3),
+            blurRadius: 3,
+            spreadRadius: 0,
+          )
+        ]
+      ),
+    );
+  }
+
   ThemeData light([Color? targetColor]) {
     final colorScheme = colors(Brightness.light, targetColor);
     return ThemeData.light().copyWith(
@@ -307,6 +330,7 @@ class ThemeProvider extends InheritedWidget {
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
       checkboxTheme: checkboxTheme(colorScheme),
+      tooltipTheme: tooltipTheme(colorScheme),
       useMaterial3: true,
     );
   }
@@ -331,6 +355,7 @@ class ThemeProvider extends InheritedWidget {
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
       checkboxTheme: checkboxTheme(colorScheme),
+      tooltipTheme: tooltipTheme(colorScheme),
       useMaterial3: true,
     );
   }

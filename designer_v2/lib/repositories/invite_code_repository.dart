@@ -17,19 +17,23 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
 }
 
-class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInviteCodeRepository {
+class InviteCodeRepository extends ModelRepository<StudyInvite>
+    implements IInviteCodeRepository {
   InviteCodeRepository({
-    required this.study,
+    required this.studyId,
     required this.apiClient,
     required this.authRepository,
     required this.studyRepository,
     required this.ref,
   }) : super(InviteCodeRepositoryDelegate(
-      study: study, apiClient: apiClient, studyRepository: studyRepository
+    study: studyRepository.get(studyId)!.model,
+    apiClient: apiClient,
+    studyRepository: studyRepository
   ));
 
   /// The [Study] this repository operates on
-  final Study study;
+  final StudyID studyId;
+  Study get study => studyRepository.get(studyId)!.model;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
   final ProviderRef ref;
@@ -143,38 +147,6 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
     );
 
     return saveOperation.execute().then((_) => model);
-
-    //await studyRepository.ensurePersisted(model.studyId);
-    //return apiClient.saveStudyInvite(model);
-
-    /*
-    final prevInvites = [...study.invites!];
-
-    void upsertStudyInvite() {
-      final inviteIdx = study.invites!.indexWhere((i) => i.code == model.code);
-      if (inviteIdx == -1) { // add new code
-        study.invites!.add(model);
-      } else { // replace existing code
-        study.invites![inviteIdx] = model;
-      }
-    }
-
-    final saveOperation = OptimisticUpdate(
-      applyOptimistic: () {
-        upsertStudyInvite();
-        print("applyOptimistic.end");
-      },
-      apply: () {
-        return apiClient.saveStudyInvite(model);
-      },
-      rollback: () => study.invites = prevInvites,
-      onUpdate: studyRepository.emitUpdate,
-      rethrowErrors: true,
-    );
-
-    return saveOperation.execute().then((_) => model);
-
-     */
   }
 
   @override
@@ -211,11 +183,11 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
 }
 
 final inviteCodeRepositoryProvider = Provider.autoDispose
-  .family<IInviteCodeRepository, Study>((ref, study) {
-    print("inviteCodeRepositoryProvider(${study.id}");
+  .family<IInviteCodeRepository,StudyID>((ref, studyId) {
+    print("inviteCodeRepositoryProvider(${studyId}");
     // Initialize repository for a given study
     final repository = InviteCodeRepository(
-      study: study,
+      studyId: studyId,
       apiClient: ref.watch(apiClientProvider),
       authRepository: ref.watch(authRepositoryProvider),
       studyRepository: ref.watch(studyRepositoryProvider),
@@ -223,7 +195,7 @@ final inviteCodeRepositoryProvider = Provider.autoDispose
     );
     // Bind lifecycle to Riverpod
     ref.onDispose(() {
-      print("inviteCodeRepositoryProvider(${study.id}.DISPOSE");
+      print("inviteCodeRepositoryProvider(${studyId}.DISPOSE");
       repository.dispose();
     });
     return repository;

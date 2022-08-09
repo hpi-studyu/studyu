@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
+//import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 
 enum DesignerPage {
   about,
@@ -50,7 +50,7 @@ class AppState extends ChangeNotifier {
 
   updateDelegate() {
     if (_draftStudy != null) {
-      delegate?.onStudyUpdate(_draftStudy!);
+      //delegate?.onStudyUpdate(_draftStudy!);
     }
   }
 }
@@ -59,7 +59,7 @@ final legacyAppStateProvider = ChangeNotifierProvider.autoDispose
     .family<AppState, StudyID>((ref, studyId) {
   final studyController = ref.watch(studyControllerProvider(studyId).notifier);
   final appState = AppState();
-  appState.delegate = studyController;
+  //appState.delegate = studyController;
   appState._draftStudy = studyController.state.study.value;
 
   return appState;

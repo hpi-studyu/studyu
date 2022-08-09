@@ -1,31 +1,24 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
-import 'package:studyu_designer_v2/features/legacy/designer/app_state.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
+import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
-import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
-
-class StudyController extends StateNotifier<StudyControllerState>
-    implements LegacyAppStateDelegate {
-  /// Identifier of the study currently being edited / viewed
-  /// Used to retrieve the [Study] object from the data layer
-  final StudyID studyId;
-
-  /// A subscription for synchronizing state between the repository & controller
-  StreamSubscription<WrappedModel<Study>>? _studySubscription;
+class StudyController extends StudyBaseController<StudyControllerState> {
+  StudyController({
+    required super.studyId,
+    required super.studyRepository,
+    required super.router,
+  }) : super(const StudyControllerState());
 
   /// The [FormViewModel] that is responsible for displaying & editing the
   /// survey design form. Its lifecycle is bound to the study controller.
@@ -38,68 +31,12 @@ class StudyController extends StateNotifier<StudyControllerState>
       formData: state.study.value!
   );
 
-  /// Reference to the study repository injected via Riverpod
-  final IStudyRepository studyRepository;
-
-  /// Reference to [GoRouter] injected via Riverpod
-  final GoRouter router;
-
-  StudyController({
-    required this.studyId,
-    required this.studyRepository,
-    required this.router,
-  }) : super(const StudyControllerState()) {
-    _subscribeStudy(studyId);
+  @override
+  onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
+    super.onStudySubscriptionUpdate(wrappedModel);
+    final studyId = wrappedModel.model.id;
+    _redirectNewToActualStudyID(studyId);
   }
-
-  _subscribeStudy(StudyID studyId) {
-    if (_studySubscription != null) {
-      _studySubscription!.cancel();
-    }
-    _studySubscription = studyRepository.watch(studyId).listen((wrappedModel) {
-      _onStudyUpdate(wrappedModel);
-    }, onError: (error) {
-      /* TODO: figure out a way to resolve data dependencies for the current page
-          during app initialization so that we don't need to render the loading state
-          if the study doesn't exist
-      */
-      if (error is StudyNotFoundException) {
-        router.dispatch(RoutingIntents.error(error));
-      }
-      // TODO: improve error handling
-    });
-  }
-
-  _onStudyUpdate(WrappedModel<Study> study) {
-    print("StudyController._onStudyUpdate");
-    print(study.asyncValue);
-    state = state.copyWith(
-      studyWithMetadata: () => study,
-    );
-
-    _redirectNewToActualStudyID(study.model.id);
-  }
-
-  /*
-  _onStudyUpdate(Study study, {autoSave = false}) async {
-    state = state.copyWith(
-      study: () => AsyncValue.data(study),
-    );
-    studyFormViewModel.formData = study;
-
-    /*
-    if (autoSave) {
-      await studyRepository.save(study);
-    }
-
-     */
-
-    if (study.id != studyId) {
-      _redirectToActualStudyID(study.id);
-    }
-  }
-
-   */
 
   /// Redirect to the study-specific URL to avoid disposing a dirty controller
   /// when building subroutes
@@ -107,13 +44,6 @@ class StudyController extends StateNotifier<StudyControllerState>
     if (studyId == Config.newModelId) {
       router.dispatch(RoutingIntents.study(actualStudyId));
     }
-  }
-
-  @override
-  dispose() {
-    studyFormViewModel.dispose();
-    _studySubscription?.cancel();
-    super.dispose();
   }
 
   List<ModelAction<StudyActionType>> get studyActions {
@@ -130,26 +60,23 @@ class StudyController extends StateNotifier<StudyControllerState>
     );
   }
 
-  // - LegacyAppStateDelegate
-
   @override
-  void onStudyUpdate(Study study) {
-    // TODO: remove this later when new designer is done
-    print("APP STATE => CONTROLLER");
-    //_onStudyUpdate(study, autoSave: true);
+  dispose() {
+    studyFormViewModel.dispose();
+    super.dispose();
   }
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
-      print("studyControllerProvider($studyId)");
-      ref.onDispose(() {
-        print("studyControllerProvider($studyId).DISPOSE");
-      });
-      return StudyController(
-        studyId: studyId,
-        studyRepository: ref.watch(studyRepositoryProvider),
-        router: ref.watch(routerProvider),
-      );
+  .family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
+    print("studyControllerProvider($studyId)");
+    ref.onDispose(() {
+      print("studyControllerProvider($studyId).DISPOSE");
+    });
+    return StudyController(
+      studyId: studyId,
+      studyRepository: ref.watch(studyRepositoryProvider),
+      router: ref.watch(routerProvider),
+    );
 });

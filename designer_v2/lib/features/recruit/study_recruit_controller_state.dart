@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
-
+import 'package:studyu_designer_v2/features/study/study_base_state.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyRecruitControllerState extends StudyControllerBaseState {
   const StudyRecruitControllerState({
-    super.study,
+    super.studyWithMetadata,
     this.invites = const AsyncValue.loading(),
   });
 
@@ -17,11 +17,12 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
 
   @override
   StudyRecruitControllerState copyWith({
-    AsyncValue<Study> Function()? study,
+    WrappedModel<Study>? Function()? studyWithMetadata,
     AsyncValue<List<StudyInvite>> Function()? invites,
   }) {
     return StudyRecruitControllerState(
-      study: (study != null) ? study() : this.study,
+      studyWithMetadata: (studyWithMetadata != null)
+          ? studyWithMetadata() : this.studyWithMetadata,
       invites: (invites != null) ? invites() : this.invites,
     );
   }
