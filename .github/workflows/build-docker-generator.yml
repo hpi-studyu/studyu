@@ -20,7 +20,11 @@ jobs:
   push_to_registry:
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     steps:
+      - uses: actions/checkout@v2.4.0
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to GHCR
@@ -31,11 +35,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@v0
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
         with:
-          version: 'latest'
-          service_account_key: ${{ secrets.RUN_SA_KEY }}
-          project_id: ${{ secrets.RUN_PROJECT }}
+          workload_identity_provider: 'projects/86865527538/locations/global/workloadIdentityPools/wi-pool/attribute./hpi-studyu/studyu'
+          service_account: 'studyu-service-account@studyu-e37af.iam.gserviceaccount.com'
 
       - name: Configure Docker
         run: |

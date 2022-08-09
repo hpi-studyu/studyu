@@ -156,7 +156,7 @@ class IconIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Theme.of(context).colorScheme.secondary),
       child: Center(
         child: Icon(MdiIcons.fromString(iconName), color: Colors.white),

@@ -94,8 +94,11 @@ class StudyController extends StateNotifier<StudyControllerState>
       return [];
     }
     // filter out edit action since we are already editing the study
-    return withIcons(studyRepository.getAvailableActionsFor(study)
-        .where((action) => action.type != StudyActionType.edit).toList());
+    return withIcons(
+        studyRepository.availableActions(study).where(
+                (action) => action.type != StudyActionType.edit).toList(),
+        studyActionIcons
+    );
   }
 
   // - LegacyAppStateDelegate
@@ -108,7 +111,7 @@ class StudyController extends StateNotifier<StudyControllerState>
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyControllerProvider = StateNotifierProvider.autoDispose
+final studyControllerProvider = StateNotifierProvider
     .family<StudyController, StudyControllerState, StudyID>((ref, studyId) =>
       StudyController(
         studyId: studyId,

@@ -15,7 +15,7 @@ AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
       ..rationale = json['rationale'] as String?
       ..conditional = json['conditional'] == null
           ? null
-          : QuestionConditional.fromJson(
+          : QuestionConditional<num>.fromJson(
               json['conditional'] as Map<String, dynamic>)
       ..minimum = (json['minimum'] as num).toDouble()
       ..maximum = (json['maximum'] as num).toDouble()

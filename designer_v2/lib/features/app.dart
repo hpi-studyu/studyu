@@ -58,6 +58,7 @@ class _AppContentState extends ConsumerState<AppContent> {
     //sourceColor: Color(0xff2a4fda),
     //sourceColor: Color(0xff583aee),
     sourceColor: const Color(0xff4845e5),
+    //sourceColor: const Color(0xff2962ff),
     themeMode: ThemeMode.system,
   ));
 
@@ -70,7 +71,7 @@ class _AppContentState extends ConsumerState<AppContent> {
 
   @override
   Widget build(BuildContext context) {
-    final appRouter = ref.watch(routerProvider);
+    final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) => ThemeProvider(
@@ -79,20 +80,21 @@ class _AppContentState extends ConsumerState<AppContent> {
             settings: settings,
             child: Builder(builder: (context) {
               final themeProvider = ThemeProvider.of(context);
-              final appTheme = themeProvider.light(settings.value.sourceColor);
+              final theme = themeProvider.light(settings.value.sourceColor);
 
               return MaterialApp.router(
                 scaffoldMessengerKey: scaffoldMessengerKey,
                 builder: (context, widget) => NotificationDispatcher(
                     scaffoldMessengerKey: scaffoldMessengerKey,
+                    navigatorKey: router.routerDelegate.navigatorKey,
                     child: widget
                 ),
                 debugShowCheckedModeBanner: Config.isDebugMode,
-                title: 'StudyU Designer'.hardcoded,
-                color: appTheme.colorScheme.surface,
-                theme: appTheme,
-                routeInformationParser: appRouter.routeInformationParser,
-                routerDelegate: appRouter.routerDelegate,
+                title: 'Study Designer'.hardcoded,
+                color: theme.colorScheme.surface,
+                theme: theme,
+                routeInformationParser: router.routeInformationParser,
+                routerDelegate: router.routerDelegate,
                 locale: const Locale('en'),
                 supportedLocales: AppLocalizations.supportedLocales,
                 localizationsDelegates: const [

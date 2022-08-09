@@ -146,7 +146,7 @@ class PerformanceBar extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Container(
+                DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: fullSpectrum,
@@ -160,7 +160,7 @@ class PerformanceBar extends StatelessWidget {
                       child: FractionallySizedBox(
                         alignment: Alignment.centerLeft,
                         widthFactor: progress,
-                        child: Container(
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: colorSamples,

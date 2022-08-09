@@ -38,7 +38,9 @@ class Answer<V> {
       case String:
         return Answer<String>.parseJson(data);
       default:
-        if (value is List<String>) {
+        // todo Why is value List<dynamic> instead of List<String>?
+        if (value is List) {
+          data[keyResponse] = value.map((e) => e.toString()).toList();
           return Answer<List<String>>.parseJson(data);
         } else {
           throw ArgumentError('Unknown answer type: ${value.runtimeType}');

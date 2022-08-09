@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -51,21 +53,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    onPrimary: Theme.of(context).colorScheme.onPrimary,
-                    primary: Theme.of(context).colorScheme.primary,
-                  ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-                  icon: const Icon(Icons.add),
-                  label: Text("New study".hardcoded),
-                  onPressed: controller.onClickNewStudy
+              PrimaryButton(
+                icon: Icons.add,
+                text: "New study".hardcoded,
+                onPressed: controller.onClickNewStudy,
               ),
               Container(width: 32.0),
               SelectableText(state.visibleListTitle,
                   style: theme.textTheme.headline5?.copyWith(
                       fontWeight: FontWeight.bold)),
               Container(width: 32.0),
-
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
@@ -74,7 +71,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             data: (visibleStudies) => StudiesTable(
               studies: visibleStudies,
               onSelectStudy: controller.onSelectStudy,
-              getActionsForStudy: controller.getAvailableActionsForStudy,
+              getActionsForStudy: controller.availableActions,
+            ),
+            empty: () => EmptyBody(
+              icon: Icons.folder_open_rounded,
+              title: 'Nothing here yet'.hardcoded, // TODO: proper empty text
+              description: 'Lorem ipsum dolor sit amet'.hardcoded,
             ),
           )
         ],

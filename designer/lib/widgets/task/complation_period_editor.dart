@@ -50,7 +50,6 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   decoration: const InputDecoration(
                     labelText: 'Unlock time',
                   ),
-                  alwaysUse24HourFormat: true,
                   onChanged: (value) => saveFormChanges(),
                 ),
               ),
@@ -72,7 +71,6 @@ class _CompletionPeriodEditorState extends State<CompletionPeriodEditor> {
                   decoration: const InputDecoration(
                     labelText: 'Lock time',
                   ),
-                  alwaysUse24HourFormat: true,
                   onChanged: (value) => saveFormChanges(),
                 ),
               ),

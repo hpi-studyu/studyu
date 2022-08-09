@@ -4,16 +4,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/services/notification_types.dart';
 
 
 /// A wrapper widgets that is subscribed to the [NotificationService] and
-/// automatically dispatches its [NotificationMessage]s to show a Snackbar.
+/// automatically dispatches its [NotificationIntent]s to show a Snackbar.
 class NotificationDispatcher extends ConsumerStatefulWidget {
   const NotificationDispatcher({
     required this.child,
     this.scaffoldMessengerKey,
+    this.navigatorKey,
     this.snackbarWidth,
-    this.snackbarInnerPadding = 36.0,
+    this.snackbarInnerPadding = 16.0,
     this.snackbarBehavior = SnackBarBehavior.fixed,
     this.snackbarDefaultDuration = 2500,
     Key? key
@@ -22,10 +24,15 @@ class NotificationDispatcher extends ConsumerStatefulWidget {
   /// Pass-through widget that is rendered as is
   final Widget? child;
 
-  /// The global key used for looking up the scaffold reference
+  /// The global key used for looking up the [Scaffold] reference
   /// If not specified explicitly, falls back `ScaffoldMessenger.of(context)`
   /// to look up the closest instance of [ScaffoldMessengerState]
   final GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey;
+
+  /// The global key used for looking up the [Navigator] reference
+  /// If not specified explicitly, falls back `Navigator.of(context)`
+  /// to look up the closest instance of [NavigatorState]
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   final double snackbarInnerPadding;
   final double? snackbarWidth;
@@ -37,8 +44,8 @@ class NotificationDispatcher extends ConsumerStatefulWidget {
 }
 
 class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher> {
-  /// Subscription to a stream of [NotificationMessage]s to be dispatched
-  late final StreamSubscription<NotificationMessage> _subscription;
+  /// Subscription to a stream of [NotificationIntent]s to be dispatched
+  late final StreamSubscription<NotificationIntent> _subscription;
 
   bool _isValidated = false;
 
@@ -52,7 +59,6 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
 
   ScaffoldMessengerState _getMessengerState() {
     final ScaffoldMessengerState messengerState;
-
     try {
       if (widget.scaffoldMessengerKey != null) {
         messengerState = widget.scaffoldMessengerKey!.currentState!;
@@ -67,17 +73,102 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
           "via the scaffoldMessengerKey global key."
       );
     }
-
     return messengerState;
   }
 
-  void _handleNotification(NotificationMessage notification) {
-    final messengerState = _getMessengerState();
-    messengerState.showSnackBar(
-        _buildSnackbar(notification, messengerState));
+  NavigatorState? _getNavigatorState() {
+    final NavigatorState? navigatorState;
+    try {
+      if (widget.navigatorKey != null) {
+        // [NavigatorState] may be null during initial build / validation when
+        // navigator is not initialized yet. As long as there is a valid key
+        // we should be good!
+        navigatorState = widget.navigatorKey!.currentState;
+      } else {
+        navigatorState = Navigator.of(context);
+      }
+    } catch (_) {
+      throw Exception(
+          "NotificationDispatcher context could not obtain reference to "
+          "NavigatorState. Make sure the NotificationDispatcher is placed below "
+          "a Navigator in the widget tree, or provide a reference via the "
+          "navigatorKey global key."
+      );
+    }
+    return navigatorState;
   }
 
-  SnackBar _buildSnackbar(NotificationMessage notification,
+  void _handleNotification(NotificationIntent notification) {
+    switch(notification.type) {
+      case NotificationType.snackbar:
+        final messengerState = _getMessengerState();
+        messengerState.showSnackBar(
+          _buildSnackbar(
+              notification as SnackbarIntent, messengerState)
+        );
+        break;
+      case NotificationType.alert:
+        final navigatorState = _getNavigatorState()!;
+        showDialog(
+          context: navigatorState.context,
+          builder: (BuildContext context) => _buildAlertDialog(
+              notification as AlertIntent, navigatorState)
+        );
+        break;
+      default:
+        throw UnimplementedError(
+            "Failed to handle NotificationIntent of unexpected type.");
+    }
+  }
+
+  AlertDialog _buildAlertDialog(AlertIntent notification,
+      NavigatorState navigatorState) {
+    final textTheme = Theme.of(context).textTheme;
+
+    final List<Widget> actions = [];
+    if (notification.actions != null) {
+      for (final action in notification.actions!) {
+        actions.add(TextButton(
+          onPressed: () {
+            if (notification.dismissOnAction) {
+              // always pop & don't wait for [action.onSelect]
+              navigatorState.pop();
+            }
+            action.onSelect();
+          },
+          child: Text(
+            action.label,
+            style: (action.isDestructive)
+                ? textTheme.labelLarge!.copyWith(color: Colors.redAccent)
+                : textTheme.labelLarge!
+          ),
+        ));
+      }
+    }
+
+    return AlertDialog(
+      title: Text(
+          "⚠️ ${notification.title}",
+          style: textTheme.titleLarge
+      ),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 300,
+          maxWidth: MediaQuery.of(context).size.width * 0.33,
+        ),
+        child: Row(
+          children: [
+            Flexible(
+              child: Text(notification.message)
+            ),
+          ]
+        )
+      ),
+      actions: actions,
+    );
+  }
+
+  SnackBar _buildSnackbar(SnackbarIntent notification,
       ScaffoldMessengerState messengerState) {
     final theme = Theme.of(context);
 
@@ -126,6 +217,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
     // widget is placed correctly in the widget tree
     if (!_isValidated) {
       _getMessengerState();
+      _getNavigatorState();
       // Remember validation for future builds avoiding setState during build
       Future.delayed(const Duration(milliseconds: 0), () =>
           setState(() => _isValidated = true));

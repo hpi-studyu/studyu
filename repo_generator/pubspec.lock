@@ -84,14 +84,14 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.3"
   hotreloader:
     dependency: transitive
     description:
       name: hotreloader
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   http:
     dependency: "direct main"
     description:
@@ -119,7 +119,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.5.0"
+    version: "4.6.0"
   jwt_decode:
     dependency: transitive
     description:
@@ -133,7 +133,7 @@ packages:
       name: lint
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.10.0"
   logging:
     dependency: transitive
     description:
@@ -175,7 +175,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.10+1"
+    version: "0.1.11"
   pretty_json:
     dependency: "direct main"
     description:
@@ -203,7 +203,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.1"
+    version: "1.3.2"
   shelf_hotreload:
     dependency: "direct dev"
     description:
@@ -217,7 +217,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.1"
   stack_trace:
     dependency: transitive
     description:
@@ -259,14 +259,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "3.7.13"
+    version: "3.7.15"
   supabase:
     dependency: "direct main"
     description:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.4+1"
+    version: "0.3.6"
   term_glyph:
     dependency: transitive
     description:
@@ -301,7 +301,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.3.0"
+    version: "9.3.0"
   watcher:
     dependency: transitive
     description:

@@ -34,7 +34,7 @@ class GoRouterDrawerEntry extends DrawerEntry {
 }
 
 class AppDrawer extends ConsumerStatefulWidget {
-  AppDrawer({
+  const AppDrawer({
     required this.title,
     this.width = 250,
     this.leftPaddingEntries = 28.0,
@@ -136,7 +136,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         data: theme.copyWith(splashColor: Colors.transparent), // disable splash
         child: Drawer(
           width: widget.width.toDouble(),
-          backgroundColor: theme.colorScheme.surface,
           child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -210,12 +209,14 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final isSelected = entryIdx == _selectedIdx;
 
     return ListTile(
-      leading: Icon(entry.icon),
-      hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.4),
-      title: Text(entry.title,
-          style: isSelected
-              ? const TextStyle(fontWeight: FontWeight.bold)
-              : null),
+      leading: Icon(entry.icon,
+        size: theme.iconTheme.size! * 1.2,
+      ),
+      //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
+      title: Text(
+          entry.title,
+          style: isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null,
+      ),
       contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
       selected: isSelected,
       onTap: () => entry.onClick(context, ref),

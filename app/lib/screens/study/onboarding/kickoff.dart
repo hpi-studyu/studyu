@@ -67,7 +67,7 @@ class _KickoffScreen extends State<KickoffScreen> {
         leading: Icon(MdiIcons.fromString(subject.study.iconName)),
       ),
       body: Builder(
-        builder: (_context) {
+        builder: (buildContext) {
           return Center(
             child: SingleChildScrollView(
               child: Padding(

@@ -13,6 +13,9 @@ abstract class StudyUApi {
   Future<Study> fetchStudy(StudyID studyId);
   Future<List<Study>> getUserStudies();
   Future<void> deleteStudy(Study study);
+  Future<StudyInvite> saveStudyInvite(StudyInvite invite);
+  Future<StudyInvite> fetchStudyInvite(String code);
+  Future<void> deleteStudyInvite(StudyInvite invite);
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -20,6 +23,9 @@ typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 /// Base class for domain-specific exceptions
 class APIException implements Exception {}
 class StudyNotFoundException extends APIException {}
+class MeasurementNotFoundException extends APIException {}
+class SurveyQuestionNotFoundException extends APIException {}
+class StudyInviteNotFoundException extends APIException {}
 
 class StudyUApiClient extends SupabaseClientDependant
     with SupabaseQueryMixin implements StudyUApi  {
@@ -29,19 +35,20 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   final SupabaseClient supabaseClient;
 
+  static final studyColumns = [
+    '*',
+    'repo(*)',
+    'study_invite!study_invite_studyId_fkey(*)', // TODO: how does this work?
+    'study_participant_count',
+    'study_ended_count',
+    'active_subject_count',
+    'study_missed_days'
+  ];
+
   @override
   Future<List<Study>> getUserStudies() async {
     // TODO: fix Postgres policy for proper multi-tenancy
-    final request = getAll<Study>(
-      selectedColumns: [
-        '*',
-        'repo(*)',
-        'study_participant_count',
-        'study_ended_count',
-        'active_subject_count',
-        'study_missed_days'
-      ],
-    );
+    final request = getAll<Study>(selectedColumns: studyColumns);
     return _awaitGuarded(request);
   }
 
@@ -49,7 +56,7 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<Study> fetchStudy(StudyID studyId) async {
     // uncomment to test loading states
     await Future.delayed(const Duration(seconds: 2));
-    final request = getById<Study>(studyId);
+    final request = getById<Study>(studyId, selectedColumns: studyColumns);
     return _awaitGuarded(request, onError: {
       HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
       HttpStatus.notFound: (e) => throw StudyNotFoundException(),
@@ -77,8 +84,33 @@ class StudyUApiClient extends SupabaseClientDependant
     if (publish) {
       study.published = true;
     }
-    final request = study.save();
+    // Chain a fetch request to make sure we return a complete & updated study
+    final request = study.save().then((study) => fetchStudy(study.id));
     return _awaitGuarded<Study>(request);
+  }
+
+  @override
+  Future<StudyInvite> fetchStudyInvite(String code) async {
+    // uncomment to test loading states
+    //await Future.delayed(const Duration(seconds: 2));
+    final request = getByColumn<StudyInvite>('code', code);
+    return _awaitGuarded(request, onError: {
+      HttpStatus.notAcceptable: (e) => throw StudyInviteNotFoundException(),
+      HttpStatus.notFound: (e) => throw StudyInviteNotFoundException(),
+    });
+  }
+
+  @override
+  Future<StudyInvite> saveStudyInvite(StudyInvite invite) {
+    final request = invite.save(); // upsert will override existing record
+    return _awaitGuarded<StudyInvite>(request);
+  }
+
+  @override
+  Future<void> deleteStudyInvite(StudyInvite invite) async {
+    // Delegate to [SupabaseObjectMethods]
+    final request = invite.delete(); // upsert will override existing record
+    return _awaitGuarded<void>(request); // TODO: any errors here?
   }
 
   /// Helper that tries to complete the given Supabase query [future] while

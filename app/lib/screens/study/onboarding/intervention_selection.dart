@@ -55,7 +55,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: interventions.length,
-      itemBuilder: (_context, index) => Card(
+      itemBuilder: (context, index) => Card(
         child: InterventionCard(
           interventions[index],
           showCheckbox: true,
