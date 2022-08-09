@@ -33,12 +33,13 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     asyncValidatorsDebounceTime: 200,
     touched: true,
   );
-  final codeControlValidationMessages = (control) => {
-    ValidationMessage.required: 'The code must not be empty'.hardcoded,
-    ValidationMessage.minLength: 'The code must have at least 8 characters'.hardcoded,
-    ValidationMessage.maxLength: 'The code must have at most 24 characters'.hardcoded,
-    'inviteCodeAlreadyUsed': 'This code is already in use'.hardcoded,
+  final codeControlValidationMessages = {
+    ValidationMessage.required: (error) => 'The code must not be empty'.hardcoded,
+    ValidationMessage.minLength: (error) => 'The code must have at least 8 characters'.hardcoded,
+    ValidationMessage.maxLength: (error) => 'The code must have at most 24 characters'.hardcoded,
+    'inviteCodeAlreadyUsed': (error) => 'This code is already in use'.hardcoded,
   };
+
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);
   final preconfiguredScheduleTypeControl = FormControl<StudyScheduleType>(
       value: StudyScheduleType.abab);
