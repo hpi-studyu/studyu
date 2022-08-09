@@ -36,7 +36,7 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
                   "The data will be self-reported by participants in one or more "
                   "surveys served via the StudyU app.".hardcoded,
                   style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                      height: 1.3,
+                      height: 1.35,
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85)),
                 ),
                 const SizedBox(height: 32.0),

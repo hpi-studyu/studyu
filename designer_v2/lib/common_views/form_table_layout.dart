@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 /// Factory to construct an [InputDecoration] with an empty helper text
 ///
@@ -49,38 +50,44 @@ class FormTableLayout extends StatelessWidget {
       final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
 
       final tableRow = TableRow(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 14.0, bottom: bottomSpacing),
-              child: Row(
-                  children: [
-                    Text(
-                      row.label,
-                      style: theme.textTheme.caption!.merge(row.labelStyle),
+        children: [
+          Container(
+            padding: EdgeInsets.only(top: 14.0, bottom: bottomSpacing),
+            child: Row(
+              children: [
+                Text(
+                  row.label,
+                  style: theme.textTheme.caption!.merge(row.labelStyle),
+                ),
+                (row.labelHelpText != null)
+                    ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
+                (row.labelHelpText != null)
+                    ? Tooltip(
+                    message: row.labelHelpText,
+                    child: MouseEventsRegion(
+                      builder: (context, states) {
+                        final iconColor = theme.iconTheme.color?.withOpacity(
+                            (states.contains(MaterialState.hovered)) ? 0.5 : 0.3)
+                            ?? theme.colorScheme.onSurface.withOpacity(0.3);
+                        return Icon(
+                          Icons.help_outline_rounded,
+                          size: theme.textTheme.caption!.fontSize! + 2.0,
+                          color: iconColor,
+                        );
+                      },
                     ),
-                    (row.labelHelpText != null)
-                        ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-                    (row.labelHelpText != null)
-                        ? Tooltip(
-                        message: row.labelHelpText,
-                        child: Icon(
-                            Icons.help_outline_rounded,
-                            size: theme.textTheme.caption!.fontSize! + 2.0,
-                            color: theme.iconTheme.color?.withOpacity(0.7)
-                                ?? theme.colorScheme.onSurface.withOpacity(0.7)
-                        )
-                    ) : const SizedBox.shrink(),
-                  ]
-              ),
+                ) : const SizedBox.shrink(),
+              ]
             ),
-            Container(
-              padding: EdgeInsets.only(bottom: bottomSpacing),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: row.input,
-              ),
+          ),
+          Container(
+            padding: EdgeInsets.only(bottom: bottomSpacing),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: row.input,
             ),
-          ]
+          ),
+        ]
       );
       tableRows.add(tableRow);
 

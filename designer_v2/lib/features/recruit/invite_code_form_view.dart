@@ -57,7 +57,7 @@ class InviteCodeFormView extends FormConsumerWidget {
           "settings will override the default schedule defined in your study "
           "design.".hardcoded,
           style: Theme.of(context).textTheme.bodyText2!.copyWith(
-            height: 1.3,
+            height: 1.35,
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85)),
         ),
         const SizedBox(height: 24.0),
