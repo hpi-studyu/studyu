@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/features/main_page_scaffold_controller.dart';
+import 'package:studyu_designer_v2/features/main_page_scaffold_state.dart';
 import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -8,7 +10,6 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainPageScaffold extends ConsumerStatefulWidget {
-
   final String childName;
   final Widget child;
 
@@ -21,10 +22,14 @@ class MainPageScaffold extends ConsumerStatefulWidget {
 class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   bool formIsValid = false;
   bool tosAgreement = false;
+  late MainPageController controller;
+  late MainPageState state;
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    controller = ref.watch(mainPageControllerProvider.notifier);
+    state = ref.watch(mainPageControllerProvider);
     return Scaffold(
         key: widget.key,
         backgroundColor: const Color(0xFFFFFFFF),
@@ -150,10 +155,18 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                 ),
                 const Spacer(),
                 Container (
+                  width: 120, // todo make this dynamic
                   alignment: Alignment.centerRight,
-                  child: Text('Language: English'.hardcoded,
-                    style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
-                    ),
+                  child: DropdownButton(
+                    isExpanded: true,
+                    items: state.dropdownItems,
+                    icon: const Icon(Icons.language),
+                    value: controller.getLocalization,
+                    onChanged: (Localization? newLoc) {
+                        setState(() {
+                          controller.setLocalization(newLoc!);
+                        });
+                      },
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -171,5 +184,4 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
         ]
     );
   }
-
 }
