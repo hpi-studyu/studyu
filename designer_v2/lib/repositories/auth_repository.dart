@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:studyu_designer_v2/utils/exceptions.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 
@@ -125,8 +126,8 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<bool> resetPasswordForEmail({required String email}) async {
-    final res = await authClient.api.resetPasswordForEmail(email);
-      // options: AuthOptions(redirectTo: authRedirectUri));
+    final res = await authClient.api.resetPasswordForEmail(
+        email, options: AuthOptions(redirectTo: authRedirectToUrl));
       if (res.error != null) {
         throw StudyUException(res.error!.message);
     }
