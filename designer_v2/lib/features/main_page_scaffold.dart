@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold_controller.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold_state.dart';
-import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'auth/auth_controller.dart';
+import 'auth/form_controller.dart';
 
 class MainPageScaffold extends ConsumerStatefulWidget {
   final String childName;
@@ -20,16 +23,16 @@ class MainPageScaffold extends ConsumerStatefulWidget {
 }
 
 class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
-  bool formIsValid = false;
-  bool tosAgreement = false;
-  late MainPageController controller;
-  late MainPageState state;
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    controller = ref.watch(mainPageControllerProvider.notifier);
-    state = ref.watch(mainPageControllerProvider);
+
+    ref.listen<AsyncValue<void>>(
+      authControllerProvider,
+          (_, state) => state.showResultUI(context),
+    );
+
     return Scaffold(
         key: widget.key,
         backgroundColor: const Color(0xFFFFFFFF),
@@ -45,20 +48,20 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                         ),
                         SizedBox(
                           height: 1*height/12,
-                          child: _topbar(context),
+                          child: _topbar(),
                         ),
                         SizedBox(
                           height: 2*height/12,
                           child: _title(height),
                         ),
                         SizedBox(
-                          width: 500,
-                          height: 6*height/12,
-                          child: widget.child,
+                            width: 500,
+                            height: 6*height/12,
+                            child: widget.child,
                         ),
                         SizedBox(
                           height: 2.5*height/12,
-                          child: _bottombar(context),
+                          child: _bottombar(),
                         )
                       ]
                   ),
@@ -78,7 +81,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
     );
   }
 
-  Widget _topbar(BuildContext context) {
+  Widget _topbar() {
     return Row(
         children: <Widget>[
           const SizedBox(width: 40),
@@ -87,7 +90,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
               child: TextButton(
                   onPressed: () => ref.read(routerProvider).dispatch(
                       RoutingIntents.root),
-                  child: Text('StudyU - Designer', style: FlutterFlowTheme.of(context).title1)
+                  child: Text('StudyU - Designer', /*style: FlutterFlowTheme.of(context).title1*/)
               ),
           ),
           const SizedBox(width: 20),
@@ -115,9 +118,9 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
 
   Text? showHeaderPromptText() {
     if (widget.childName == 'login') {
-      return Text('Don\'t have an account?'.hardcoded, style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,));
+      return Text('Don\'t have an account?'.hardcoded, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
     } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
-      return Text('Already have an account?'.hardcoded, style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,));
+      return Text('Already have an account?'.hardcoded, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
     } else {
       return null;
     }
@@ -139,7 +142,13 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
     }
   }
 
-  Widget _bottombar(BuildContext context) {
+  Widget _bottombar() {
+    final mainPageState = ref.watch(mainPageControllerProvider);
+    final mainPageController = ref.watch(mainPageControllerProvider.notifier);
+
+    // why is the value not displayed in the field on default state when updated in controller?
+    mainPageController.locForm.control('localization').value ??= mainPageState.defaultLocalization;
+
     return Column(
         children: [
           const Spacer(),
@@ -149,32 +158,31 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                 Container (
                     alignment: Alignment.centerLeft,
                     child: Text('© HPI Digital Health Center 2022'.hardcoded,
-                        style: TextStyle(
-                            color: FlutterFlowTheme.of(context).alternate)
+                        /*style: TextStyle(
+                            color: FlutterFlowTheme.of(context).alternate)*/
                     )
                 ),
                 const Spacer(),
                 Container (
                   width: 120, // todo make this dynamic
                   alignment: Alignment.centerRight,
-                  child: DropdownButton(
-                    isExpanded: true,
-                    items: state.dropdownItems,
-                    icon: const Icon(Icons.language),
-                    value: controller.getLocalization,
-                    onChanged: (Localization? newLoc) {
-                        setState(() {
-                          controller.setLocalization(newLoc!);
-                        });
-                      },
+                  child: ReactiveForm(
+                      formGroup: mainPageController.locForm,
+                      child: ReactiveDropdownField<Localization>(
+                        formControlName: 'localization',
+                        isExpanded: true,
+                        items: mainPageState.dropdownItems,
+                        icon: const Icon(Icons.language),
+                        onChanged: (loc) => locSwitcher(mainPageController, loc),
+                      )
                   ),
                 ),
                 const SizedBox(width: 20),
                 Container (
                     alignment: Alignment.centerRight,
                     child: Text('Imprint'.hardcoded,
-                      style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
-                      ),
+                      /*style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
+                      ),*/
                     )
                 ),
                 const SizedBox(width: 40)
@@ -183,5 +191,10 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
           const SizedBox(height: 20)
         ]
     );
+  }
+
+  locSwitcher(LocalizationController mainPageController, FormControl<Localization> loc) {
+    mainPageController.setLocalization(loc.value!);
+    ref.refresh(localizationProvider);
   }
 }
