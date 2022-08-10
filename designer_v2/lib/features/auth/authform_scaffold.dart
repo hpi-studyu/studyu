@@ -28,7 +28,6 @@ class _AuthFormScaffoldState extends ConsumerState<AuthFormScaffold> {
             builder: (context, form, child) {
               return Column(
                   children: <Widget>[
-                    const SizedBox(height: 100),
                     Container(
                       padding: const EdgeInsets.fromLTRB(180, 50, 180, 50),
                       decoration: BoxDecoration(

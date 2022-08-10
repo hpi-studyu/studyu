@@ -45,24 +45,17 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                   child: Column(
                       children: <Widget>[
                         SizedBox(
-                            height: 0.5*height/12
-                        ),
-                        SizedBox(
-                          height: 1*height/12,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [_topbar(),])
-                        ),
-                        SizedBox(
                           height: 2*height/12,
-                          child: _title(height),
+                          child: _topbar()
                         ),
                           SizedBox(
-                            height: 6*height/12,
-                            child: widget.child,
-                          ),
+                            height: 8*height/12,
+                            child: Column (
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [widget.child],)
+                            ),
                         SizedBox(
-                          height: 2.5*height/12,
+                          height: 2*height/12,
                           child: _bottombar(),
                         )
                       ]
@@ -73,36 +66,31 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
     );
   }
 
-  Widget _title(double height) {
-    return Container(
-        alignment: Alignment.center,
-        child: GestureDetector(
-          onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root), // Image tapped
-          child: Image.asset('assets/images/icon_wide.png', fit: BoxFit.cover),
-        )
-    );
-  }
-
   Widget _topbar() {
-    final theme = Theme.of(context);
     return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
+      //mainAxisSize: MainAxisSize.min,
+      //textBaseline: TextBaseline.alphabetic,
+      //mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const SizedBox(width: 40),
+          const SizedBox(width: 40), // todo make dynamic
           Column(
-              mainAxisSize: MainAxisSize.min,
-              verticalDirection: VerticalDirection.up, // <-- reverse direction
+            //mainAxisAlignment: MainAxisAlignment.end,
+            //mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                Expanded(child: GestureDetector(
+                  onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root), // Image tapped
+                  child: Image.asset('assets/images/icon_wide.png', fit: BoxFit.fitHeight,),
+                ),),
                 TextButton(
                     onPressed: () => ref.read(routerProvider).dispatch(
                         RoutingIntents.root),
-                    child: Text('StudyU - Designer', style: theme.textTheme.headlineMedium /*style: FlutterFlowTheme.of(context).title1*/)
+                    child: Text('Designer', style: Theme.of(context).textTheme.headlineSmall /*style: FlutterFlowTheme.of(context).title1*/)
                 ),
               ]
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 40),
           InkWell(
             child: Text('Learn more'.hardcoded, style: Theme.of(context).textTheme.titleMedium,),
             onTap: () => launchUrl(Uri.parse('https://hpi.de/lippert/projects/studyu.html'.hardcoded)),
