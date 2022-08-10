@@ -7,6 +7,9 @@ import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
+import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
+import 'package:studyu_designer_v2/features/auth/password_forgot_page.dart';
+import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/common_views/study_form_scaffold.dart';
@@ -15,6 +18,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_fo
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
+import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
@@ -42,10 +46,19 @@ class RouteParams {
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConfig {
-  /// This list is provided to [GoRouter.routes] during instantiation.
-  /// See router.dart
-  static final topLevelRoutes = [
+
+  /// Public routes can be accessed without login
+  static final topLevelPublicRoutes = [
     root,
+    splash,
+    error,
+    login,
+    signup,
+    passwordForgot,
+  ];
+
+  /// Private routes can only be accessed after login
+  static final topLevelPrivateRoutes = [
     studies,
     study,
     studyEdit,
@@ -57,10 +70,12 @@ class RouterConfig {
     studyMonitor,
     studyRecruit,
     studyAnalyze,
-    login,
-    splash,
-    error
+    passwordRecovery,
   ];
+
+  /// This list is provided to [GoRouter.routes] during instantiation.
+  /// See router.dart
+  static final topLevelRoutes = topLevelPublicRoutes + topLevelPrivateRoutes;
 
   static final root = GoRoute(
     path: "/",
@@ -281,13 +296,51 @@ class RouterConfig {
   static final splash = GoRoute(
     path: "/splash",
     name: "splash",
-    builder: (context, state) => SplashPage(),
+    builder: (context, state) => const SplashPage(),
   );
 
   static final login = GoRoute(
     path: "/login",
     name: "login",
-    builder: (context, state) => LoginPage(),
+    pageBuilder: (context, state) => MaterialPage(
+        child: MainPageScaffold(
+            childName: state.name!,
+            child: const LoginPage()
+        )
+    )
+  );
+
+  static final signup = GoRoute(
+      path: "/signup",
+      name: "signup",
+      pageBuilder: (context, state) => MaterialPage(
+          child: MainPageScaffold(
+              childName: state.name!,
+              child: const SignupPage()
+          )
+      )
+  );
+
+  static final passwordForgot = GoRoute(
+    path: "/forgot_password",
+    name: "passwordForgot",
+      pageBuilder: (context, state) => MaterialPage(
+          child: MainPageScaffold(
+            childName: state.name!,
+            child: PasswordForgotPage(email: state.extra as String?),
+          )
+      )
+  );
+
+  static final passwordRecovery = GoRoute(
+      path: "/password_recovery",
+      name: "passwordRecovery",
+      pageBuilder: (context, state) => MaterialPage(
+          child: MainPageScaffold(
+              childName: state.name!,
+              child: const PasswordRecoveryPage()
+          )
+      )
   );
 
   static final error = GoRoute(

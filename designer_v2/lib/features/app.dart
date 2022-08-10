@@ -9,17 +9,49 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/services/notification_dispatcher.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'auth/auth_state.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
-class App extends ConsumerStatefulWidget {
+class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
   @override
   _AppState createState() => _AppState();
 }
 
-class _AppState extends ConsumerState<App> {
+class _AppState extends AuthState<App>  {
+
+  @override
+  Widget build(BuildContext context) {
+    return const AppContent();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // todo move this to appController.onAppStart()
+    final uriParameters = SupabaseAuth.instance.parseUriParameters(Uri.base);
+    if (uriParameters.containsKey('access_token') &&
+        uriParameters.containsKey('refresh_token') &&
+        uriParameters.containsKey('expires_in')) {
+      /// Uri.base is a auth redirect link
+      /// Call recoverSessionFromUrl to continue
+      recoverSessionFromUrl(Uri.base);
+    }
+  }
+}
+
+class AppContent extends ConsumerStatefulWidget {
+  const AppContent({Key? key}) : super(key: key);
+
+  @override
+  _AppContentState createState() => _AppContentState();
+}
+
+class _AppContentState extends ConsumerState<AppContent> {
   late final AppController appController;
 
   final settings = ValueNotifier(ThemeSettings(

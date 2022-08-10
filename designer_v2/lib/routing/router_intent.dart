@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_function_declarations_over_variables
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +26,9 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 /// your [RoutingIntent] should be a [RoutingIntentFactory] instead.
 ///
 class RoutingIntents {
+  static final root = RoutingIntent(
+    route: RouterConfig.root,
+  );
   static final studies = RoutingIntent(
       route: RouterConfig.studies,
   );
@@ -108,9 +113,16 @@ class RoutingIntents {
       }
   );
   static final studyNew = studyEdit(Config.newStudyId);
+  static final login = RoutingIntent(route: RouterConfig.login);
+  static final signup = RoutingIntent(route: RouterConfig.signup);
+  static final passwordForgot = (String email) => RoutingIntent(
+    route: RouterConfig.passwordForgot,
+    extra: email,
+  );
+  static final passwordRecovery = RoutingIntent(route: RouterConfig.passwordRecovery);
   static final error = (Exception error) => RoutingIntent(
-      route: RouterConfig.error,
-      extra: error,
+    route: RouterConfig.error,
+    extra: error,
   );
 }
 

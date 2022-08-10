@@ -20,6 +20,8 @@ dependencies:
   shared_preferences: ^2.0.15
   equatable: ^2.0.3
   rxdart: ^0.27.4
+  supabase: ^0.3.6
+  supabase_flutter: ^0.3.3
   # flutterflow deps
   auto_size_text: ^3.0.0
   font_awesome_flutter: ^10.1.0
@@ -50,3 +52,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/
+    - assets/images/
