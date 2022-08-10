@@ -13,8 +13,9 @@ String envFilePath() {
 
 const designerDeepLink = 'https://studyu-designer-v2--pr121-dev-designer-v2-logi-byhmzxke.web.app';
 
-// GoTrue redirectTo strips /#/ from URL, there fore we need to use the default set in supabase
-String? authRedirectToUrl = kIsWeb ? null : designerDeepLink;
+// GoTrue redirectTo strips /#/ from URL, therefore we need to use the default set in supabase
+//String? authRedirectToUrl = kIsWeb ? null : designerDeepLink;
+String authRedirectToUrl = designerDeepLink;
 
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
