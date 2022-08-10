@@ -43,9 +43,11 @@ class _PageContentState extends ConsumerState<PageContent> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
         children: <Widget>[
-          Center(child: Text('Signup'.hardcoded), /*style: FlutterFlowTheme.of(context).title1,)*/),
+          Center(
+              child: Text('Signup'.hardcoded, style: Theme.of(context).textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,)*/)
+          ),
           const SizedBox(height: 20),
           const EmailTextField(),
           const PasswordTextField(),
@@ -70,11 +72,13 @@ class _PageContentState extends ConsumerState<PageContent> {
   }
 
   Widget _tosWidget() {
+    // .hardcoded see below
     return ReactiveCheckboxListTile(
       formControlName: 'termsOfService',
       //onChanged: (val) => authForm.control('termsOfService').value = val.value,
       title: RichText(
         text: TextSpan(
+          style: Theme.of(context).textTheme.titleMedium,
           children: [
             const TextSpan(
               text: 'I have read and accept the ',

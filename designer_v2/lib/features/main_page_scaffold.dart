@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold_controller.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold_state.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/repositories/app_repository.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -48,17 +49,18 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                         ),
                         SizedBox(
                           height: 1*height/12,
-                          child: _topbar(),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [_topbar(),])
                         ),
                         SizedBox(
                           height: 2*height/12,
                           child: _title(height),
                         ),
-                        SizedBox(
-                            width: 500,
+                          SizedBox(
                             height: 6*height/12,
                             child: widget.child,
-                        ),
+                          ),
                         SizedBox(
                           height: 2.5*height/12,
                           child: _bottombar(),
@@ -82,33 +84,35 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   }
 
   Widget _topbar() {
+    final theme = Theme.of(context);
     return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
         children: <Widget>[
           const SizedBox(width: 40),
-          Container (
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                  onPressed: () => ref.read(routerProvider).dispatch(
-                      RoutingIntents.root),
-                  child: Text('StudyU - Designer', /*style: FlutterFlowTheme.of(context).title1*/)
-              ),
+          Column(
+              mainAxisSize: MainAxisSize.min,
+              verticalDirection: VerticalDirection.up, // <-- reverse direction
+              children: [
+                TextButton(
+                    onPressed: () => ref.read(routerProvider).dispatch(
+                        RoutingIntents.root),
+                    child: Text('StudyU - Designer', style: theme.textTheme.headlineMedium /*style: FlutterFlowTheme.of(context).title1*/)
+                ),
+              ]
           ),
           const SizedBox(width: 20),
-          Container (
-              alignment: Alignment.centerLeft,
-              child: InkWell(
-                child: const Text('Learn more'),
-                onTap: () => launchUrl(Uri.parse('https://hpi.de/lippert/projects/studyu.html'.hardcoded)),
-              ),
+          InkWell(
+            child: Text('Learn more'.hardcoded, style: Theme.of(context).textTheme.titleMedium,),
+            onTap: () => launchUrl(Uri.parse('https://hpi.de/lippert/projects/studyu.html'.hardcoded)),
           ),
           const Spacer(),
           Container (
-            alignment: Alignment.centerRight,
             child: showHeaderPromptText(),
           ),
           const SizedBox(width: 10),
           Container (
-            alignment: Alignment.centerRight,
             child: showHeaderPromptLink(),
           ),
           const SizedBox(width: 40)
@@ -118,9 +122,9 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
 
   Text? showHeaderPromptText() {
     if (widget.childName == 'login') {
-      return Text('Don\'t have an account?'.hardcoded, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
+      return Text('Don\'t have an account?'.hardcoded, style: Theme.of(context).textTheme.titleMedium, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
     } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
-      return Text('Already have an account?'.hardcoded, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
+      return Text('Already have an account?'.hardcoded, style: Theme.of(context).textTheme.titleMedium, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
     } else {
       return null;
     }
@@ -130,12 +134,12 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
     if (widget.childName == 'login') {
       return TextButton(
         onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.signup),
-        child: Text('Sign up here'.hardcoded, style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
+        child: Text('Sign up here'.hardcoded, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline)),
       );
     } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
       return TextButton(
         onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
-        child: Text('Login here'.hardcoded, style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
+        child: Text('Login here'.hardcoded, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline)),
       );
     } else {
       return null;
@@ -145,11 +149,12 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   Widget _bottombar() {
     final mainPageState = ref.watch(mainPageControllerProvider);
     final mainPageController = ref.watch(mainPageControllerProvider.notifier);
+    final formGroup = ref.watch(formGroupProvider);
+    final appConfig = ref.watch(appConfigProvider);
 
-    // why is the value not displayed in the field on default state when updated in controller?
-    mainPageController.locForm.control('localization').value ??= mainPageState.defaultLocalization;
+    final loc = Localizations.localeOf(context).languageCode;
 
-    return Column(
+        return Column(
         children: [
           const Spacer(),
           Row(
@@ -164,26 +169,31 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                 ),
                 const Spacer(),
                 Container (
-                  width: 120, // todo make this dynamic
+                  width: 150, // todo make this dynamic
                   alignment: Alignment.centerRight,
                   child: ReactiveForm(
-                      formGroup: mainPageController.locForm,
-                      child: ReactiveDropdownField<Localization>(
+                    formGroup: formGroup,
+                    child: ReactiveFormConsumer(builder: (context, form, child) {
+                      return ReactiveDropdownField<Localization>(
                         formControlName: 'localization',
                         isExpanded: true,
                         items: mainPageState.dropdownItems,
                         icon: const Icon(Icons.language),
-                        onChanged: (loc) => locSwitcher(mainPageController, loc),
-                      )
+                        onChanged: (loc) =>
+                            locSwitcher(mainPageController, loc),
+                      );
+                    }
+                    ),
                   ),
                 ),
                 const SizedBox(width: 20),
                 Container (
-                    alignment: Alignment.centerRight,
-                    child: Text('Imprint'.hardcoded,
-                      /*style: TextStyle(color: FlutterFlowTheme.of(context).alternate,
-                      ),*/
-                    )
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    child: Text('Imprint'.
+                    hardcoded, style: Theme.of(context).textTheme.titleMedium,),
+                    onTap: () => launchUrl(appConfig.maybeWhen(data: (value) => Uri.parse(value.imprint[loc] ?? ""), orElse: () => Uri.parse(''))),
+                  ),
                 ),
                 const SizedBox(width: 40)
               ]

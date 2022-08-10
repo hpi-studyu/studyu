@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+
+// todo use MaterialApp.router locale in app.dart
 
 // Regional indicator symbols based on ISO 3166-1
 enum Regional {
@@ -23,11 +24,6 @@ class Localization {
 
 class LocalizationState {
   final Localization defaultLocalization = Localization.english;
-
-  final locForm = FormGroup({
-    'localization': FormControl<Localization>(
-        validators: [Validators.required]),
-  });
 
   List<DropdownMenuItem<Localization>> get dropdownItems {
     return Localization.values.map((localization) =>

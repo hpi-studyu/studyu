@@ -51,10 +51,10 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
         children: <Widget>[
           Center(
-              child: Text('Forgot Password'.hardcoded, /*style: FlutterFlowTheme.of(context).title1,*/)
+              child: Text('Forgot Password'.hardcoded, style: Theme.of(context).textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,*/)
           ),
           const SizedBox(height: 20),
           const EmailTextField(),
