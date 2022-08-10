@@ -12,6 +12,8 @@ class AppState {
   String inviteCode;
   List<String> preselectedInterventionIds;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
+  bool isPreview = false;
+  bool previewInit = false;
 
   /// Context used for FlutterLocalNotificationsPlugin
   BuildContext context;

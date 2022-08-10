@@ -1,28 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/routing/router.dart';
-import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-class StudyTestScreen extends ConsumerWidget {
+class StudyTestScreen extends ConsumerStatefulWidget {
   const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
 
   final String studyId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StudyTestScreen> createState() => _StudyTestScreen();
+}
+
+class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO error handling Study?
+    final study = ref.watch(studyControllerProvider(widget.studyId)).study.value;
+    final studyTestController = ref.read(studyTestControllerProvider(study!).notifier);
+    final controller = studyTestController.platformController;
+
     return Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Test study: $studyId"),
-          TextButton(
-              onPressed: () => ref.read(routerProvider).dispatch(
-                  RoutingIntents.studyRecruit(studyId)),
-              child: Text("Go to recruit")
-          ),
-        ],
-      )
+        alignment: Alignment.center,
+        child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 150),
+                      Text("This is the preview mode.\nPress reset to "
+                          "remove the test progress and start over again.".hardcoded,
+                          textAlign: TextAlign.center
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton.icon(
+                              icon: const Icon(Icons.restart_alt),
+                              label: Text("Reset".hardcoded),
+                              onPressed: () {
+                                controller.sendCmd("reset");
+                              },
+                            ),
+                            TextButton.icon(
+                                icon: const Icon(Icons.open_in_new_sharp),
+                                label: Text("Open in new tab".hardcoded),
+                                onPressed: () {
+                                  controller.openNewPage();
+                                }
+                            ),
+                          ]
+                      )
+                    ]
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    studyTestController.platformController.scaffold,
+                  ],
+                )
+              ),
+              Expanded(
+                child: Column()
+              )
+            ]
+        )
     );
   }
 }

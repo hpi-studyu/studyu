@@ -5,6 +5,8 @@
   "en": "English",
   "de": "German",
 
+  "study_u": "Study U",
+
   "about_help_title": "About",
   "about_help_body": "Provide potential participants with a insightful title, short description of your study and information on who you are and how they can contact you.",
   "interventions_help_title": "Interventions and Tasks",
@@ -118,10 +120,22 @@
   "hour": "Hour",
   "minute": "Minute",
   "data_source": "Data Source",
-
   "terms_privacy": "Terms of Use & Privacy Policy",
   "terms_read": "Read Terms of Use",
   "privacy_read": "Read Privacy Policy",
   "terms_content": "The terms of use give an overview on the purpose and use of the StudyU Designer. The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the imprint.",
-  "terms_agree": "I have read and agree to the terms of use and the privacy policy"
+  "terms_agree": "I have read and agree to the terms of use and the privacy policy",
+
+  "study_title": "Study Title",
+  "my_studies": "My Study",
+  "shared_with_me": "Shared with me",
+  "study_registry": "Study Registry",
+  "settings": "Settings",
+  "signed_out": "Signed Out",
+  "status": "Status",
+  "enrollment": "Enrollment",
+  "started_at": "Started At",
+  "enrolled": "Enrolled",
+  "active": "Active",
+  "completed": "Completed"
 }

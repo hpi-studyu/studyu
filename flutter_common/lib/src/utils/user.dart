@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 const fakeStudyUEmailDomain = 'fake-studyu-email-domain.com';
-const selectedSubjectIdKey = 'selected_study_object_id';
+String selectedSubjectIdKey = 'selected_study_object_id';
 const userEmailKey = 'user_email';
 const userPasswordKey = 'user_password';
 
@@ -74,4 +74,10 @@ Future<void> deleteLocalData() async {
   await prefs.remove(userEmailKey);
   await prefs.remove(userPasswordKey);
   await prefs.remove(selectedSubjectIdKey);
+}
+
+void modifySelectedSubjectIdKey({required bool preview}) {
+  if (preview) {
+    selectedSubjectIdKey = 'preview_$selectedSubjectIdKey';
+  }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 typedef OnSelectStudyHandler = void Function(Study study);
 
@@ -43,9 +43,6 @@ class _StudiesTableState extends State<StudiesTable> {
 
   /// Static helper row for padding
   late final TableRow paddingRow = _buildPaddingRow();
-
-  /// Static table header row
-  late final TableRow headerRow = _buildHeaderRow();
 
   @override
   void initState() {
@@ -92,7 +89,7 @@ class _StudiesTableState extends State<StudiesTable> {
         },
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
-          headerRow,
+          _buildHeaderRow(context),
           paddingRow,
           paddingRow,
           ..._tableRows(theme)
@@ -144,15 +141,15 @@ class _StudiesTableState extends State<StudiesTable> {
     return rowSpacer;
   }
 
-  TableRow _buildHeaderRow() {
+  TableRow _buildHeaderRow(BuildContext context) {
     final List<String> columns = [
-      'Study Title'.hardcoded,
-      "Status".hardcoded,
-      "Enrollment".hardcoded,
-      "Started At".hardcoded,
-      "Enrolled".hardcoded,
-      "Active".hardcoded,
-      "Completed".hardcoded,
+      AppLocalizations.of(context)!.study_title,
+      AppLocalizations.of(context)!.status,
+      AppLocalizations.of(context)!.enrollment,
+      AppLocalizations.of(context)!.started_at,
+      AppLocalizations.of(context)!.enrolled,
+      AppLocalizations.of(context)!.active,
+      AppLocalizations.of(context)!.completed,
       ""
     ];
     final theme = Theme.of(context);
