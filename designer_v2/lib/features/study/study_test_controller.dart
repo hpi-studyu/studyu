@@ -9,6 +9,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_test_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 abstract class PlatformController {
   final String studyId;
@@ -27,10 +28,7 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = 'https://studyu-designer-v2--pr156-dev-designer-v2-inte-kf9qyo2y.web.app';
-  // todo change on merge
-  //String previewSrc = 'https://studyu-app-v2.web.app/';
-  // String previewSrc = 'http://localhost:12345/';
+  String previewSrc = appDeepLink;
 
   final IAuthRepository authRepository;
   late PlatformController platformController;
