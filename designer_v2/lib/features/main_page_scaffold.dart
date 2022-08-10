@@ -35,7 +35,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
 
     return Scaffold(
         key: widget.key,
-        backgroundColor: const Color(0xFFFFFFFF),
+        //backgroundColor: const Color(0xFFFFFFFF),
         body: SafeArea(
             child: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),

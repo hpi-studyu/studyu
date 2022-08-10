@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_state.dart';
 import 'package:studyu_designer_v2/features/auth/form_controller.dart';
-import 'package:studyu_designer_v2/features/auth/form_widgets.dart';
+import 'package:studyu_designer_v2/features/auth/auth_formfield_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -52,9 +52,9 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
               children: <Widget>[
                 Center(child: Text('Choose a new password'.hardcoded, /*style: FlutterFlowTheme.of(context).title1*/)),
                 const SizedBox(height: 20),
-                const PasswordWidget(),
+                const PasswordTextField(),
                 // todo labelText is .hardcoded
-                const PasswordWidget(formControlName: 'passwordConfirmation', labelText: "Password Confirmation",),
+                const PasswordTextField(formControlName: 'passwordConfirmation', labelText: "Password Confirmation",),
                 const SizedBox(height: 20),
                 ReactiveFormConsumer(
                   builder: (context, formN, child) {

@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_required_state.dart';
 import 'package:studyu_designer_v2/features/auth/form_controller.dart';
-import 'package:studyu_designer_v2/features/auth/form_widgets.dart';
+import 'package:studyu_designer_v2/features/auth/auth_formfield_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -78,8 +78,8 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
           Center(child: Text('Login'
               .hardcoded, /*style: FlutterFlowTheme.of(context).title1,*/)),
           const SizedBox(height: 20),
-          const TextFormFieldWidget(),
-          const PasswordWidget(),
+          const EmailTextField(),
+          const PasswordTextField(),
           _rememberMeWidget(authForm),
           _forgotPassword(authForm),
           const SizedBox(height: 5),

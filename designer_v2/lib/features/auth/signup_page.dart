@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'auth_state.dart';
-import 'form_widgets.dart';
+import 'auth_formfield_views.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -47,10 +47,10 @@ class _PageContentState extends ConsumerState<PageContent> {
         children: <Widget>[
           Center(child: Text('Signup'.hardcoded), /*style: FlutterFlowTheme.of(context).title1,)*/),
           const SizedBox(height: 20),
-          const TextFormFieldWidget(),
-          const PasswordWidget(),
+          const EmailTextField(),
+          const PasswordTextField(),
           // todo labelText is .hardcoded
-          const PasswordWidget(formControlName: 'passwordConfirmation', labelText: "Password Confirmation",),
+          const PasswordTextField(formControlName: 'passwordConfirmation', labelText: "Password Confirmation",),
           _tosWidget(),
           const SizedBox(height: 20),
           ReactiveFormConsumer(
