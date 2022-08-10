@@ -24,6 +24,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     required this.router,
     super.delegate,
     super.formData,
+    super.autosave = true,
   });
 
   final Study study;
@@ -31,10 +32,8 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   // - Form fields
 
-  //FormArray get measurementsArray => surveyMeasurementFormViewModels.formArray;
   final FormArray measurementsArray = FormArray([],
       validators: [Validators.minLength(1)]);
-
   late final surveyMeasurementFormViewModels = FormViewModelCollection<
       MeasurementSurveyFormViewModel, MeasurementSurveyFormData>([], measurementsArray);
 
@@ -53,15 +52,6 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
             study: study, formData: data, delegate: this
         )).toList();
     surveyMeasurementFormViewModels.reset(viewModels);
-
-    /*
-    for (final surveyMeasurement in data.surveyMeasurements) {
-      surveyMeasurementFormViewModels.add(
-          MeasurementSurveyFormViewModel(
-              study: study, formData: surveyMeasurement, delegate: this));
-    }
-
-     */
   }
 
   @override

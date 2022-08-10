@@ -12,6 +12,8 @@ class Config {
   /// Set to 0 to avoid displaying the splash screen any longer than necessary
   /// (may result in the splash screen not being shown at all)
   static const minSplashTime = 500;
+
+  static const formAutosaveDebounce = 3000;
 }
 
 const kPathSeparator = '   /   ';

@@ -12,7 +12,6 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/question/
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 
@@ -24,13 +23,6 @@ class StudyFormViewModel extends FormViewModel<Study>
     required super.formData, // Study
   }) {
     print("StudyFormViewModel.constructor");
-    /*
-    form.valueChanges.listen((event) {
-      print("form updated");
-      print(event);
-    });
-
-     */
   }
 
   /// On-write copy of the [Study] object managed by the view model
@@ -70,18 +62,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   Study buildFormData() {
-    // TODO return updated study
     return formData!;
-  }
-
-  @override
-  Future save() {
-    if (studyDirtyCopy == null) {
-      return Future.value(null); // nothing to do
-    }
-    // Flush the on-write study copy to the repository & clear it
-    return studyRepository.save(studyDirtyCopy!)
-        .then((study) => studyDirtyCopy = null);
   }
 
   @override
@@ -90,14 +71,26 @@ class StudyFormViewModel extends FormViewModel<Study>
     FormMode.edit: "TODO edit",
   };
 
+  Future _flushDirtyStudy() {
+    if (studyDirtyCopy == null) {
+      return Future.value(null); // nothing to do
+    }
+    // Flush the on-write study copy to the repository & clear it
+    return studyRepository.save(studyDirtyCopy!)
+        .then((study) => studyDirtyCopy = null);
+  }
+
   _applyAndSaveSubform(IStudyFormData subformData) {
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
-    save();
+    _flushDirtyStudy();
   }
 
+  @override
   void dispose() {
     print("StudyFormViewModel.dispose");
+    measurementsFormViewModel.dispose();
+    super.dispose();
   }
 
   @override
@@ -117,13 +110,11 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final studyFormViewModelProvider = Provider.autoDispose
-    .family<StudyFormViewModel, StudyID>((ref, studyId) {
-      print("studyFormViewModelProvider($studyId)");
-      final studyController = ref.watch(studyControllerProvider(studyId).notifier);
-      ref.onDispose(() {
-        print("studyFormViewModelProvider($studyId).DISPOSE");
-      });
-      return studyController.studyFormViewModel;
+  .family<StudyFormViewModel, StudyID>((ref, studyId) {
+    print("studyFormViewModelProvider($studyId)");
+    final studyController = ref.watch(studyControllerProvider(studyId).notifier);
+    // Note: the provider will be destroyed immediately
+    return studyController.studyFormViewModel;
 });
 
 /*

@@ -77,7 +77,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
   Widget buildDataWidget(BuildContext context, Set<MaterialState> states) {
     final theme = Theme.of(context);
     final isHovered = states.contains(MaterialState.hovered);
-    double actualOpacity = (widget.state.isRefreshing) ? 0.4 : 0.2;
+    double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
     actualOpacity += (isHovered) ? 0.2 : 0.0;
     final iconColor = theme.iconTheme.color!.withOpacity(actualOpacity);
 
