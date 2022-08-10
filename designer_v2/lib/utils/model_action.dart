@@ -19,13 +19,19 @@ class ModelAction<T> {
   });
 }
 
-abstract class IModelActionProvider<T, V> {
-  List<ModelAction<T>> availableActions(V model);
+abstract class IModelActionProvider<V> {
+  List<ModelAction> availableActions(V model);
+}
+
+abstract class IListActionProvider<V> extends IModelActionProvider<V> {
+  void onSelectItem(V item);
+  void onNewItem();
 }
 
 enum ModelActionType {
   edit,
   delete,
+  duplicate,
   clipboard
 }
 
@@ -37,6 +43,8 @@ extension ModelActionTypeFormatted on ModelActionType {
         return "Edit".hardcoded;
       case ModelActionType.delete:
         return "Delete".hardcoded;
+      case ModelActionType.duplicate:
+        return "Duplicate".hardcoded;
       case ModelActionType.clipboard:
         return "Copy to clipboard".hardcoded;
       default:
@@ -48,6 +56,7 @@ extension ModelActionTypeFormatted on ModelActionType {
 Map<ModelActionType, IconData> modelActionIcons = {
   ModelActionType.edit: Icons.edit_rounded,
   ModelActionType.delete: Icons.delete_rounded,
+  ModelActionType.duplicate: Icons.file_copy_rounded,
   ModelActionType.clipboard: Icons.copy_rounded,
 };
 

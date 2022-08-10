@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
@@ -10,14 +10,11 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:uuid/uuid.dart';
 
-
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({
     required this.study,
     required this.inviteCodeRepository
-  }) : super() {
-    regenerateCode(); // initialize randomly
-  }
+  }) : super();
 
   final Study study;
   final IInviteCodeRepository inviteCodeRepository;
@@ -70,6 +67,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     'interventionB': interventionBControl,
   });
 
+  @override
+  void initControls() {
+    regenerateCode(); // initialize randomly
+  }
+
   // - Validation
 
   Future<Map<String, dynamic>?> _uniqueInviteCode(AbstractControl control) async {
@@ -96,7 +98,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  StudyInvite toData() {
+  StudyInvite buildFormData() {
     return StudyInvite(
       codeControl.value!,
       study.id,
@@ -105,7 +107,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  void fromData(StudyInvite data) {
+  void setControlsFrom(StudyInvite data) {
     codeControl.value = data.code;
     isPreconfiguredScheduleControl.value = data.hasPreconfiguredSchedule;
     if (data.hasPreconfiguredSchedule) {
@@ -115,8 +117,9 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 
   @override
-  Future<StudyInvite> save() {
-    return inviteCodeRepository.saveStudyInvite(toData());
+  Future<StudyInvite> save({updateState = true}) {
+    return inviteCodeRepository.save(buildFormData())
+        .then((wrapped) => wrapped!.model);
   }
 }
 
@@ -125,13 +128,15 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final inviteCodeFormViewModelProvider = Provider.autoDispose
-    .family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
-      // Reactively bind to & obtain [StudyController]'s current study
-      final study = ref.watch(
-          studyControllerProvider(studyId).select((state) => state.study));
-      return InviteCodeFormViewModel(
-        study: study.value!,
-        inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider),
-      );
-});
+  .family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
+    print("inviteCodeFormViewModelProvider(${studyId}");
+    // Reactively bind to & obtain [StudyController]'s current study
+    final study = ref.watch(
+        studyControllerProvider(studyId).select((state) => state.study));
+    final inviteCodeRepository = ref.watch(
+        inviteCodeRepositoryProvider(studyId));
 
+    return InviteCodeFormViewModel(
+      study: study.value!, inviteCodeRepository: inviteCodeRepository,
+    );
+});
