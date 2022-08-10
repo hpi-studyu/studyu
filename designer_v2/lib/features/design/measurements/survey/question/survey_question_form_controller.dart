@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';

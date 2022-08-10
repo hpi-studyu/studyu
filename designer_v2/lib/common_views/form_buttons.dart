@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
-import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// A cancel / dismiss button for use with [FormScaffold] [showFormSideSheet)

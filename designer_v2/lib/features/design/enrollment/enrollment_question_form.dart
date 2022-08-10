@@ -1,7 +1,7 @@
 import 'package:reactive_forms/src/models/models.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form.dart';
-import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class EnrollmentQuestionFormData {

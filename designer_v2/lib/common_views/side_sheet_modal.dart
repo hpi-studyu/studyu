@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
-import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 
 /// Displays a Material Side Sheet transitioned from Right side of the screen.
 ///

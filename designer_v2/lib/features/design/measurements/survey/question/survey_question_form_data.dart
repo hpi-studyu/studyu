@@ -1,5 +1,5 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
