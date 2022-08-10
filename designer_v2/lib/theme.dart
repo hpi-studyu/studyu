@@ -125,7 +125,7 @@ class ThemeProvider extends InheritedWidget {
   SnackBarThemeData snackBarThemeData(ColorScheme colors) {
     return SnackBarThemeData(
       actionTextColor: colors.onPrimary,
-      backgroundColor: colors.primaryVariant,
+      backgroundColor: colors.primaryContainer,
       elevation: 1,
     );
   }
@@ -260,9 +260,7 @@ class ThemeProvider extends InheritedWidget {
   }
 
   DrawerThemeData drawerTheme(ColorScheme colors) {
-    return DrawerThemeData(
-      backgroundColor: Colors.white,
-    );
+    return const DrawerThemeData(backgroundColor: Colors.white,);
   }
 
   IconThemeData iconTheme(ColorScheme colors) {

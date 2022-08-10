@@ -5,23 +5,21 @@ import 'package:studyu_designer_v2/features/main_page_scaffold_state.dart';
 
 class LocalizationController extends StateNotifier<LocalizationState> {
   LocalizationController({this.sharedLoc}) : super(LocalizationState());
-
   init() {
-    print(sharedLoc ?? "Null");
     // Initialize localization with shared_pref value or set default
     setLocalization(sharedLoc ?? state.defaultLocalization);
-    print("Set localization to: " + getLocalization.displayName);
+    print("Set localization to: ${getLocalization!.displayName}");
   }
 
   final Localization? sharedLoc;
 
   static const String locPrefKey = 'lang';
 
-  final locForm = FormGroup({
+  Localization? get getLocalization => locForm.control('localization').value;
+
+  static final locForm = FormGroup({
     'localization': FormControl<Localization>(validators: [Validators.required]),
   });
-
-  Localization get getLocalization => locForm.control('localization').value;
 
   setLocalization(Localization newLoc) {
     locForm.control('localization').value = newLoc;
@@ -31,9 +29,10 @@ class LocalizationController extends StateNotifier<LocalizationState> {
   // async?
   _saveLocalization() {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(locPrefKey, getLocalization.regional.name);
+      prefs.setString(locPrefKey, getLocalization!.regional.name);
     });
   }
+
 }
 
 final localizationProvider = FutureProvider<Localization?>((_) async => SharedPreferences.getInstance().then((prefs) {
@@ -50,6 +49,10 @@ final localizationProvider = FutureProvider<Localization?>((_) async => SharedPr
     return null;
   }
 }));
+
+final formGroupProvider = Provider<FormGroup>((ref) {
+    return LocalizationController.locForm;
+});
 
 final mainPageControllerProvider = StateNotifierProvider.autoDispose<LocalizationController, LocalizationState>((ref) {
   final prefLocalization = ref.watch(localizationProvider);

@@ -27,10 +27,17 @@ class _AuthFormScaffoldState extends ConsumerState<AuthFormScaffold> {
             key: formKey,
             builder: (context, form, child) {
               return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const SizedBox(height: 100),
-                    Expanded(child: widget.children),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(180, 50, 180, 50),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      width: 800,
+                      child: widget.children,
+                    ),
                   ]
               );
             }

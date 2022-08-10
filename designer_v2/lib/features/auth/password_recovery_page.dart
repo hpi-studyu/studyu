@@ -45,7 +45,7 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
         children: <Widget>[
           Column(
               mainAxisAlignment: MainAxisAlignment.center,

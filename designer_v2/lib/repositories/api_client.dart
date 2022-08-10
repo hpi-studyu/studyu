@@ -16,6 +16,7 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
+  Future<AppConfig> fetchAppConfig();
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -111,6 +112,12 @@ class StudyUApiClient extends SupabaseClientDependant
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
     return _awaitGuarded<void>(request); // TODO: any errors here?
+  }
+
+  @override
+  Future<AppConfig> fetchAppConfig() async {
+    final request = AppConfig.getAppConfig();
+    return _awaitGuarded(request);
   }
 
   /// Helper that tries to complete the given Supabase query [future] while
