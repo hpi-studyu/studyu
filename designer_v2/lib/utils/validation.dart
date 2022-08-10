@@ -52,8 +52,22 @@ class CountWhereValidator<T> extends Validator<T> {
   }
 }
 
+// todo replace this with reactive forms validator
+class FieldValidators {
+  static String? emailValidator(String? email) {
+    if (email == null) {
+      return 'Not a valid email'; //return null;
+    }
+    if (!RegExp(Patterns.emailFormatString).hasMatch(email)) {
+      return 'Not a valid email';
+    }
+    return null;
+  }
+}
+
 class Patterns {
   /// Regex pattern for hh:mm time format (with or without leading zero)
   //static const timeFormatString = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$';
   static const timeFormatString = r'^[ab]$';
+  static const emailFormatString = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 }

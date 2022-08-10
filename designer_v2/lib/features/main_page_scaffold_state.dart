@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 // Regional indicator symbols based on ISO 3166-1
 enum Regional {
@@ -20,18 +21,24 @@ class Localization {
   static List<Localization> get values => [english, german, quenya];
 }
 
-class MainPageState {
+class LocalizationState {
   final Localization defaultLocalization = Localization.english;
-  late Localization selectedLocalization;
 
-  List<DropdownMenuItem<Localization>> get dropdownItems{
+  final locForm = FormGroup({
+    'localization': FormControl<Localization>(
+        validators: [Validators.required]),
+  });
+
+  List<DropdownMenuItem<Localization>> get dropdownItems {
     return Localization.values.map((localization) =>
-        DropdownMenuItem(value: localization, child: Text('${_emojiFlag(localization.regional.name)} ${localization.displayName}'), )
+        DropdownMenuItem(value: localization,
+          child: Text('${_emojiFlag(localization.regional.name)} ${localization
+              .displayName}'),)
     ).toList();
   }
 
   // Emoji flag sequences
-  String _emojiFlag(String country) {
+  static String _emojiFlag(String country) {
     country = country.toUpperCase();
 
     int flagOffset = 0x1F1E6;

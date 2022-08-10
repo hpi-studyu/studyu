@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_state.dart';
 import 'package:studyu_designer_v2/features/auth/form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/form_widgets.dart';
-import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-
-import '../../routing/router.dart';
-import '../../routing/router_intent.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/utils/validation.dart';
 
 class PasswordForgotPage extends StatefulWidget {
   final String? email;
@@ -34,53 +35,51 @@ class PasswordForgotPageContent extends ConsumerStatefulWidget {
 }
 
 class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageContent> {
-  late TextEditingController emailController;
-  late bool isFormValid;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late AuthController authController;
+  late FormGroup authForm;
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    if (widget.email != null) {
-      if (FieldValidators.emailValidator(widget.email) == null) {
-        emailController.text = widget.email!;
-        isFormValid = true;
-      } else {
-        isFormValid = false;
-      }
-    } else {
-      isFormValid = false;
+    authController = ref.read(authControllerProvider.notifier);
+    authForm = ref.read(authFormControlProvider('forgotPassword'))!;
+    // todo use formcontrol validator
+    if (widget.email != null && FieldValidators.emailValidator(widget.email) == null) {
+        authForm.control('email').value = widget.email!;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<void>>(
-      authControllerProvider,
-          (_, state) => state.showResultUI(context),
-    );
-    return Form(
-      key: _formKey,
-      onChanged: () => setState(() => isFormValid = _formKey.currentState!.validate()),
-      child:  Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(child: Text('Forgot Password'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
-            const SizedBox(height: 20),
-            TextFormFieldWidget(emailController: emailController, validator: FieldValidators.emailValidator,),
-            const SizedBox(height: 20),
-            ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Forgot Password'.hardcoded, onPressed: _formReturnAction),
-            const SizedBox(height: 20),
-            _backButton(),
-          ]
-      ),
+    return ListView(
+        children: <Widget>[
+          Center(
+              child: Text('Forgot Password'.hardcoded, /*style: FlutterFlowTheme.of(context).title1,*/)
+          ),
+          const SizedBox(height: 20),
+          const TextFormFieldWidget(),
+          const SizedBox(height: 20),
+          ReactiveFormConsumer(
+            builder: (context, formN, child) {
+              final authState = ref.watch(authControllerProvider);
+              return PrimaryButton(
+                icon: Icons.question_mark,
+                text: 'Forgot Password'.hardcoded,
+                isLoading: authState.isLoading,
+                onPressed: authForm.valid ? _formReturnAction : null,
+                tooltipDisabled: 'All fields must be filled out',
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          _backButton(),
+        ]
     );
   }
 
   Future<void> _formReturnAction() async {
     final authController = ref.watch(authControllerProvider.notifier);
-    final success = await authController.resetPasswordForEmail(emailController.text);
+    final success = await authController.resetPasswordForEmail(authForm.control('email').value);
     if (mounted) {
       if (success) {
         formSuccessAction(context, 'Check your email for a password reset link!'.hardcoded);
@@ -96,7 +95,7 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
           child: TextButton(
               onPressed: () => ref.read(routerProvider).dispatch(
                   RoutingIntents.login),
-              child: Text("Back to login".hardcoded, style: FlutterFlowTheme.of(context).bodyText2)
+              child: Text("Back to login".hardcoded, /*style: FlutterFlowTheme.of(context).bodyText2*/)
           ),
         )
     );

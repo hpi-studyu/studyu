@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/features/auth/form_controller.dart';
-import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 
 import 'auth_state.dart';
@@ -33,53 +33,46 @@ class PageContent extends ConsumerStatefulWidget {
 }
 
 class _PageContentState extends ConsumerState<PageContent> {
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
-  late bool isFormValid;
-  late bool tosAgreement;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late FormGroup authForm;
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    tosAgreement = false;
-    isFormValid = false;
+    authForm = ref.read(authFormControlProvider('signup'))!;
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<void>>(
-      authControllerProvider,
-          (_, state) => state.showResultUI(context),
-    );
-    return Form(
-      key: _formKey,
-      onChanged: () => setState(() => isFormValid = _formKey.currentState!.validate() && tosAgreement),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(child: Text('Signup'.hardcoded, style: FlutterFlowTheme.of(context).title1,)),
-            const SizedBox(height: 20),
-            TextFormFieldWidget(emailController: emailController, validator: FieldValidators.emailValidator,),
-            PasswordWidget(passwordController: passwordController),
-            _tosWidget(),
-            const SizedBox(height: 20),
-            ButtonWidget(ref: ref, isFormValid: isFormValid, buttonText: 'Create Account'.hardcoded, onPressed: _formReturnAction),
-          ]
-      ),
+    return ListView(
+        children: <Widget>[
+          Center(child: Text('Signup'.hardcoded), /*style: FlutterFlowTheme.of(context).title1,)*/),
+          const SizedBox(height: 20),
+          const TextFormFieldWidget(),
+          const PasswordWidget(),
+          // todo labelText is .hardcoded
+          const PasswordWidget(formControlName: 'passwordConfirmation', labelText: "Password Confirmation",),
+          _tosWidget(),
+          const SizedBox(height: 20),
+          ReactiveFormConsumer(
+            builder: (context, formN, child) {
+              final authState = ref.watch(authControllerProvider);
+              return PrimaryButton(
+                icon: Icons.add,
+                text: 'Create Account'.hardcoded,
+                isLoading: authState.isLoading,
+                onPressed: authForm.valid ? _formReturnAction : null,
+                tooltipDisabled: authForm.control('termsOfService').value ? 'All fields must be filled out' : 'Terms of use and privacy policy need to be accepted',
+              );
+            },
+          ),
+        ]
     );
   }
 
   Widget _tosWidget() {
-    return CheckboxListTile(
-      value: tosAgreement,
-      onChanged: (newValue) =>
-          setState(() {
-            tosAgreement = newValue!;
-            isFormValid = _formKey.currentState!.validate() && tosAgreement;
-          }),
+    return ReactiveCheckboxListTile(
+      formControlName: 'termsOfService',
+      //onChanged: (val) => authForm.control('termsOfService').value = val.value,
       title: RichText(
         text: TextSpan(
           children: [
@@ -110,8 +103,9 @@ class _PageContentState extends ConsumerState<PageContent> {
     );
   }
 
+  // todo use async?
   _formReturnAction() {
     final authController = ref.watch(authControllerProvider.notifier);
-    authController.signUp(emailController.text, passwordController.text);
+    authController.signUp(authForm.control('email').value, authForm.control('password').value);
   }
 }

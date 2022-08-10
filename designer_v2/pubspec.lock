@@ -15,13 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
-  auto_size_text:
-    dependency: "direct main"
-    description:
-      name: auto_size_text
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -92,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
-  easy_debounce:
-    dependency: "direct main"
-    description:
-      name: easy_debounce
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2+1"
   equatable:
     dependency: "direct main"
     description:
@@ -252,13 +238,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  font_awesome_flutter:
-    dependency: "direct main"
-    description:
-      name: font_awesome_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "10.1.0"
   form_builder_extra_fields:
     dependency: "direct main"
     description:
@@ -294,13 +273,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
-  google_fonts:
-    dependency: "direct main"
-    description:
-      name: google_fonts
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1"
   gotrue:
     dependency: transitive
     description:
@@ -344,7 +316,7 @@ packages:
     source: hosted
     version: "3.2.0"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -364,13 +336,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.0"
-  json_path:
-    dependency: "direct main"
-    description:
-      name: json_path
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.1"
   jwt_decode:
     dependency: transitive
     description:
@@ -441,13 +406,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  page_transition:
-    dependency: "direct main"
-    description:
-      name: page_transition
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.9"
   path:
     dependency: transitive
     description:
@@ -567,13 +525,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.15"
-  rfc_6901:
-    dependency: transitive
-    description:
-      name: rfc_6901
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   riverpod:
     dependency: transitive
     description:
@@ -740,13 +691,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.9"
-  timeago:
-    dependency: "direct main"
-    description:
-      name: timeago
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.2"
   typed_data:
     dependency: transitive
     description:
@@ -783,7 +727,7 @@ packages:
     source: hosted
     version: "2.0.4"
   url_launcher:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"
