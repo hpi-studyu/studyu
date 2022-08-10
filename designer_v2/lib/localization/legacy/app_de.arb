@@ -100,6 +100,12 @@
   "hour": "Stunde",
   "minute": "Minute",
   "data_source": "Datenquelle",
+  "signed_out": "Abgemeldet",
+  "terms_privacy": "Nutzungsbedingungen & Datenschutzbestimmung",
+  "terms_read": "Nutzungsbedingungen lesen",
+  "privacy_read": "Datenschutzbestimmung lesen",
+  "terms_content": "Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung des StudyU Designers. Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.",
+  "terms_agree": "Ich habe die Nutzungsbedingungen und die Datenschutzbestimmung gelesen und bin damit einverstanden",
 
   "study_title": "Studienname",
   "my_studies": "Meine Studien",
@@ -111,11 +117,5 @@
   "started_at": "Gestartet am",
   "enrolled": "Angemeldet",
   "active": "Aktiv",
-  "completed": "Abgeschlossen",
-  "signed_out": "Abgemeldet",
-  "terms_privacy": "Nutzungsbedingungen & Datenschutzbestimmung",
-  "terms_read": "Nutzungsbedingungen lesen",
-  "privacy_read": "Datenschutzbestimmung lesen",
-  "terms_content": "Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung des StudyU Designers. Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.",
-  "terms_agree": "Ich habe die Nutzungsbedingungen und die Datenschutzbestimmung gelesen und bin damit einverstanden"
+  "completed": "Abgeschlossen"
 }

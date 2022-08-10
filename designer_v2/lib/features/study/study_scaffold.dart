@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
@@ -182,7 +181,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold>
         value: state.study,
         data: (study) => widget.child,
       ),
-      drawer: AppDrawer(title: AppLocalizations.of(context)!.study_u),
+      drawer: AppDrawer(title: 'StudyU'.hardcoded),
     );
   }
 }

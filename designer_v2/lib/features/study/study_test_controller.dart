@@ -151,26 +151,32 @@ class MobileController extends PlatformController {
 
   @override
   void sendCmd(String command) {
+    throw UnimplementedError();
   }
 
   @override
   void openNewPage() {
+    throw UnimplementedError();
   }
 
   @override
   void refresh() {
+    throw UnimplementedError();
   }
 
   @override
   void registerViews() {
+    throw UnimplementedError();
   }
 
   @override
   void listen() {
+    throw UnimplementedError();
   }
 
   @override
   void send(String message) {
+    throw UnimplementedError();
   }
 }
 
