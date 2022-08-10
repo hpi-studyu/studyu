@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/legacy/designer_page.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
-import 'package:studyu_designer_v2/features/study/study_recruit_page.dart';
+import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';

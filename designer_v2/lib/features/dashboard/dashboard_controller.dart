@@ -14,7 +14,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import 'dashboard_state.dart';
 
-class DashboardController extends StateNotifier<DashboardState> {
+class DashboardController extends StateNotifier<DashboardState>
+    implements IModelActionProvider<StudyActionType, Study> {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -60,8 +61,10 @@ class DashboardController extends StateNotifier<DashboardState> {
     router.dispatch(RoutingIntents.studyNew);
   }
 
-  List<ModelAction<StudyActionType>> getAvailableActionsForStudy(Study study) {
-    return withIcons(studyRepository.getAvailableActionsFor(study));
+  @override
+  List<ModelAction<StudyActionType>> availableActions(Study model) {
+    return withIcons(
+        studyRepository.availableActions(model), studyActionIcons);
   }
 
   @override

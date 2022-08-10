@@ -3,6 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
+class ThemeConfig {
+  static const double kMaxContentWidth = 1200.0;
+}
+
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
   const NoAnimationPageTransitionsBuilder();
 
@@ -146,6 +150,89 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  SwitchThemeData switchTheme(ColorScheme colors) {
+    return SwitchThemeData(
+      thumbColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          if (states.contains(MaterialState.disabled)) {
+            return colors.primary.withOpacity(0.6);
+          }
+          return colors.primary;
+        }
+        if (states.contains(MaterialState.disabled)) {
+          return Colors.white.withOpacity(0.6);
+        }
+        return Colors.white;
+      }),
+      trackColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          if (states.contains(MaterialState.disabled)) {
+            return colors.primary.withOpacity(0.5*0.6);
+          }
+          return colors.primary.withOpacity(0.5);
+        }
+        if (states.contains(MaterialState.disabled)) {
+          return colors.onSurface.withOpacity(0.3*0.6);
+        }
+        return colors.onSurface.withOpacity(0.3);
+      }),
+    );
+  }
+
+  InputDecorationTheme inputDecorationTheme(ColorScheme colors) {
+    return InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
+      hoverColor: Colors.white,
+      isDense: true,
+      //contentPadding: EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.surfaceVariant.withOpacity(0.6),
+          width: 1.0,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.surfaceVariant.withOpacity(0.8),
+          width: 1.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.primary,
+          width: 1.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.error,
+          width: 1.0,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(5),
+        borderSide: BorderSide(
+          color: colors.error,
+          width: 1.0,
+        ),
+      ),
+    );
+  }
+
+  TextTheme textTheme(ColorScheme colors) {
+    // TODO: migrate to 2021 term set across the codebase
+    // See https://stackoverflow.com/questions/72271461/cannot-mix-2018-and-2021-terms-in-call-to-texttheme-constructor
+    return TextTheme(
+      caption: TextStyle(fontSize: 13.0, color: colors.onSurface.withOpacity(0.8)), // Form Labels
+      subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
+    );
+  }
+
   NavigationRailThemeData navigationRailTheme(ColorScheme colors) {
     return const NavigationRailThemeData();
   }
@@ -173,6 +260,9 @@ class ThemeProvider extends InheritedWidget {
       scaffoldBackgroundColor: colorScheme.background,
       splashColor: colorScheme.primary.withOpacity(0.3),
       highlightColor: colorScheme.primaryContainer.withOpacity(0.4),
+      inputDecorationTheme: inputDecorationTheme(colorScheme),
+      switchTheme: switchTheme(colorScheme),
+      textTheme: textTheme(colorScheme),
       useMaterial3: true,
     );
   }
@@ -192,6 +282,9 @@ class ThemeProvider extends InheritedWidget {
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
+      inputDecorationTheme: inputDecorationTheme(colorScheme),
+      switchTheme: switchTheme(colorScheme),
+      textTheme: textTheme(colorScheme),
       useMaterial3: true,
     );
   }

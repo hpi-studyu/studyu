@@ -15,7 +15,7 @@ class NotificationDispatcher extends ConsumerStatefulWidget {
     this.scaffoldMessengerKey,
     this.navigatorKey,
     this.snackbarWidth,
-    this.snackbarInnerPadding = 36.0,
+    this.snackbarInnerPadding = 16.0,
     this.snackbarBehavior = SnackBarBehavior.fixed,
     this.snackbarDefaultDuration = 2500,
     Key? key

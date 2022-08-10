@@ -12,9 +12,9 @@ class DashboardScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null, // default app bar not suitable for our layout
-      body: FixedSideScrollBodyLayout(
-        sideDrawerWidget: AppDrawer(title: 'StudyU'.hardcoded),
-        mainContentWidget: body,
+      body: TwoColumnLayoutLeftFixedBodyScroll(
+        leftWidget: AppDrawer(title: 'StudyU'.hardcoded),
+        bodyWidget: body,
         ),
       );
   }
