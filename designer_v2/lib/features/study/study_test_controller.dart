@@ -27,7 +27,7 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = 'https://studyu-app-v2--pr143-dev-designer-v2-prev-6dl0nxo1.web.app/';
+  String previewSrc = 'https://studyu-designer-v2--pr156-dev-designer-v2-inte-kf9qyo2y.web.app';
   // todo change on merge
   //String previewSrc = 'https://studyu-app-v2.web.app/';
   // String previewSrc = 'http://localhost:12345/';
