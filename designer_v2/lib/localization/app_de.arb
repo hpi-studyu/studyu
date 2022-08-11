@@ -120,5 +120,6 @@
   "completed": "Abgeschlossen",
 
   "signup": "Account erstellen",
-  "login": "Anmelden"
+  "login": "Anmelden",
+  "my_studies": "Meine Studien"
 }
