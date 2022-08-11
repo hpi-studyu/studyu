@@ -79,8 +79,12 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
     final authController = ref.read(authControllerProvider.notifier);
     final success = await authController.signInWith(
         authForm.control('email').value, authForm.control('password').value);
-    if (success) {
-      _setRememberMe();
+    if (authForm.control('rememberMe').value) {
+      if (success) {
+        _setRememberMe();
+      }
+    } else {
+      _delRememberMe();
     }
   }
 
@@ -90,6 +94,15 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
       prefs.setBool("rememberMe", authForm.control('rememberMe').value);
       prefs.setString('email', authForm.control('email').value);
       prefs.setString('password', authForm.control('password').value);
+    },
+    );
+  }
+
+  void _delRememberMe() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.remove("rememberMe");
+      prefs.remove("email");
+      prefs.remove("password");
     },
     );
   }
@@ -113,16 +126,11 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
 
   Widget _rememberMeWidget(FormGroup authForm) {
     // change background color: https://stackoverflow.com/questions/64590691/how-to-fill-color-inside-of-checkbox-in-flutter
-    // todo this does not seem to inherit theme
+    // todo does not seem to inherit theme
     return ReactiveCheckboxListTile(
         formControlName: 'rememberMe',
-        //onChanged: (val) => authForm.control('rememberMe').value = val.value,
         title: Text(
           'Remember me'.hardcoded, style: theme.textTheme.titleLarge,
-          /*style: FlutterFlowTheme.of(context).subtitle2.override(
-            fontFamily: 'Roboto',
-            color: const Color(0xFF7B8995),
-          ),*/
         ),
     );
   }
