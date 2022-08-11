@@ -7,7 +7,7 @@ class Contact {
   String organization = '';
   String? institutionalReviewBoard = '';
   String? institutionalReviewBoardNumber = '';
-  String researchers = '';
+  String? researchers = '';
   String email = '';
   String website = '';
   String phone = '';

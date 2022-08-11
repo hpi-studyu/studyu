@@ -20,16 +20,9 @@ dependencies:
   shared_preferences: ^2.0.15
   equatable: ^2.0.3
   rxdart: ^0.27.4
-  # flutterflow deps
-  auto_size_text: ^3.0.0
-  font_awesome_flutter: ^10.1.0
-  google_fonts: ^3.0.1
-  intl: ^0.17.0
-  json_path: ^0.4.1
-  timeago: ^3.2.2
-  url_launcher: ^6.1.4
-  page_transition: ^2.0.9
-  easy_debounce: ^2.0.2+1
+  supabase: ^0.3.6
+  supabase_flutter: ^0.3.3
+  url_launcher: ^6.1.5
   # legacy compatibility (remove later)
   flutter_form_builder: ^7.3.1
   provider: ^6.0.3
@@ -39,7 +32,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   modal_side_sheet: ^0.0.1
-  reactive_forms: ^13.0.0
+  reactive_forms: ^14.1.0
   uuid: ^3.0.6
 
 dev_dependencies:
@@ -50,3 +43,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/
+    - assets/images/

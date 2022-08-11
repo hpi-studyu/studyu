@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'dashboard_state.dart';
 
 class DashboardController extends StateNotifier<DashboardState>
-    implements IModelActionProvider<StudyActionType, Study> {
+    implements IModelActionProvider<Study> {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -24,7 +24,7 @@ class DashboardController extends StateNotifier<DashboardState>
   final GoRouter router;
 
   /// A subscription for synchronizing state between the repository & controller
-  StreamSubscription<List<Study>>? _studiesSubscription;
+  StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
 
   DashboardController({
     required this.studyRepository,
@@ -36,10 +36,11 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 
   _subscribeStudies() {
-    _studiesSubscription = studyRepository.watchUserStudies().listen((studies) {
+    _studiesSubscription = studyRepository.watchAll().listen((wrappedModels) {
       // Update the controller's state when new studies are available in the repository
+      final studies = wrappedModels.map((study) => study.model).toList();
       state = state.copyWith(
-          studies: () => AsyncValue.data(studies)
+          studies: () => AsyncValue.data(studies),
       );
     }, onError: (error) {
       state = state.copyWith(
@@ -62,7 +63,7 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 
   @override
-  List<ModelAction<StudyActionType>> availableActions(Study model) {
+  List<ModelAction> availableActions(Study model) {
     return withIcons(
         studyRepository.availableActions(model), studyActionIcons);
   }

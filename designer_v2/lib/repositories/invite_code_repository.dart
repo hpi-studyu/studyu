@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -9,37 +11,41 @@ import 'package:studyu_designer_v2/services/clipboard.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
+import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
-abstract class IInviteCodeRepository
-    implements IModelActionProvider<ModelActionType, StudyInvite> {
-  // - StudyInvite
-  Future<StudyInvite> saveStudyInvite(StudyInvite invite);
-  Future<void> deleteStudyInvite(StudyInvite invite);
+abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
-  List<ModelAction<ModelActionType>> availableActions(StudyInvite invite);
-  // - Lifecycle
-  void dispose();
 }
 
-abstract class IInviteCodeRepositoryDelegate {
-  onDeletedStudyInvite(StudyInvite invite);
-  onSavedStudyInvite(StudyInvite invite);
-}
-
-class InviteCodeRepository implements IInviteCodeRepository {
+class InviteCodeRepository extends ModelRepository<StudyInvite>
+    implements IInviteCodeRepository {
   InviteCodeRepository({
+    required this.studyId,
     required this.apiClient,
-    required this.studyRepository,
     required this.authRepository,
+    required this.studyRepository,
     required this.ref,
-  }) : delegate = studyRepository;
+  }) : super(InviteCodeRepositoryDelegate(
+    study: studyRepository.get(studyId)!.model,
+    apiClient: apiClient,
+    studyRepository: studyRepository
+  ));
 
-  final StudyUApi apiClient;
-  final IStudyRepository studyRepository;
-  final IAuthRepository authRepository;
-  final IInviteCodeRepositoryDelegate? delegate;
+  /// The [Study] this repository operates on
+  final StudyID studyId;
+  Study get study => studyRepository.get(studyId)!.model;
+
   /// Reference to Riverpod's context to resolve dependencies in callbacks
   final ProviderRef ref;
+
+  final StudyUApi apiClient;
+  final IAuthRepository authRepository;
+  final IStudyRepository studyRepository;
+
+  @override
+  ModelID getKey(StudyInvite model) {
+    return model.code;
+  }
 
   @override
   Future<bool> isCodeAlreadyUsed(String code) async {
@@ -52,31 +58,13 @@ class InviteCodeRepository implements IInviteCodeRepository {
   }
 
   @override
-  Future<StudyInvite> saveStudyInvite(StudyInvite invite) async {
-    final savedStudyInvite = await apiClient.saveStudyInvite(invite);
-    delegate?.onSavedStudyInvite(savedStudyInvite);
-    return savedStudyInvite;
-  }
-
-  @override
-  Future<void> deleteStudyInvite(StudyInvite invite) async {
-    await apiClient.deleteStudyInvite(invite);
-    delegate?.onDeletedStudyInvite(invite);
-  }
-
-  @override
-  List<ModelAction<ModelActionType>> availableActions(StudyInvite invite) {
-    final study = studyRepository.getStudy(invite.studyId);
-    if (study == null) {
-      return [];
-    }
-
+  List<ModelAction> availableActions(StudyInvite model) {
     final actions = [
       ModelAction(
         type: ModelActionType.clipboard,
         label: ModelActionType.clipboard.string,
         onExecute: () => {
-          ref.read(clipboardServiceProvider).copy(invite.code)
+          ref.read(clipboardServiceProvider).copy(model.code)
             .then((value) => ref.read(notificationServiceProvider)
               .show(Notifications.inviteCodeClipped))
         },
@@ -85,9 +73,9 @@ class InviteCodeRepository implements IInviteCodeRepository {
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
         onExecute: () {
-          return deleteStudyInvite(invite)
+          return delete(getKey(model))
               .then((value) => ref.read(routerProvider).dispatch(
-                  RoutingIntents.studyRecruit(invite.studyId)))
+                  RoutingIntents.studyRecruit(model.studyId)))
               .then((value) => Future.delayed(
                   const Duration(milliseconds: 200),
                   () => ref.read(notificationServiceProvider).show(
@@ -103,21 +91,112 @@ class InviteCodeRepository implements IInviteCodeRepository {
   }
 
   @override
-  void dispose() {
-    return;
+  emitUpdate() {
+    print("InviteCodeRepository.emitUpdate");
+    super.emitUpdate();
   }
 }
 
-final inviteCodeRepositoryProvider = Provider<IInviteCodeRepository>((ref) {
-  final repository = InviteCodeRepository(
-    apiClient: ref.watch(apiClientProvider),
-    studyRepository: ref.watch(studyRepositoryProvider),
-    authRepository: ref.watch(authRepositoryProvider),
-    ref: ref,
-  );
-  // Bind lifecycle to Riverpod
-  ref.onDispose(() {
-    repository.dispose();
+class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite> {
+  InviteCodeRepositoryDelegate({
+    required this.study,
+    required this.apiClient,
+    required this.studyRepository,
   });
-  return repository;
+
+  final Study study;
+  final StudyUApi apiClient;
+  final IStudyRepository studyRepository;
+
+  @override
+  Future<StudyInvite> fetch(ModelID modelId) {
+    // Read directly from the study instead of fetching from the network
+    return Future.value(study.getInvite(modelId));
+  }
+
+  @override
+  Future<List<StudyInvite>> fetchAll() {
+    // Read directly from the study instead of fetching from the network
+    return Future.value(study.invites ?? []);
+  }
+
+  @override
+  Future<StudyInvite> save(StudyInvite model) async {
+    study.invites ??= [];
+    final prevInvites = [...study.invites!];
+
+    final saveOperation = OptimisticUpdate(
+      applyOptimistic: () {
+        final inviteIdx = study.invites!.indexWhere((i) => i.code == model.code);
+        if (inviteIdx == -1) { // add new code
+          study.invites!.add(model);
+        } else { // replace existing code
+          study.invites![inviteIdx] = model;
+        }
+      },
+      apply: () async {
+        await studyRepository.ensurePersisted(model.studyId);
+        await apiClient.saveStudyInvite(model);
+      },
+      rollback: () => study.invites = prevInvites,
+      onUpdate: () {
+        print("saveOperation: studyRepository.emitUpdate()");
+        studyRepository.emitUpdate();
+      },
+      rethrowErrors: true,
+    );
+
+    return saveOperation.execute().then((_) => model);
+  }
+
+  @override
+  Future<void> delete(StudyInvite model) {
+    assert(study.invites != null);
+    assert(study.invites!.isNotEmpty);
+
+    final prevInvites = [...study.invites!];
+    final deleteOperation = OptimisticUpdate(
+      applyOptimistic: () => study.invites!.remove(model),
+      apply: () => apiClient.deleteStudyInvite(model),
+      rollback: () => study.invites = prevInvites,
+      onUpdate: studyRepository.emitUpdate,
+      rethrowErrors: true,
+    );
+
+    return deleteOperation.execute();
+  }
+
+  @override
+  onError(Object error, StackTrace? stackTrace) {
+    return; // TODO
+  }
+
+  @override
+  StudyInvite createDuplicate(StudyInvite model) {
+    throw UnimplementedError(); // not available
+  }
+
+  @override
+  StudyInvite createNewInstance() {
+    throw UnimplementedError(); // not available
+  }
+}
+
+final inviteCodeRepositoryProvider = Provider.autoDispose
+  .family<IInviteCodeRepository,StudyID>((ref, studyId) {
+    print("inviteCodeRepositoryProvider(${studyId}");
+    // Initialize repository for a given study
+    final repository = InviteCodeRepository(
+      studyId: studyId,
+      apiClient: ref.watch(apiClientProvider),
+      authRepository: ref.watch(authRepositoryProvider),
+      studyRepository: ref.watch(studyRepositoryProvider),
+      ref: ref,
+    );
+    // Bind lifecycle to Riverpod
+    ref.onDispose(() {
+      print("inviteCodeRepositoryProvider(${studyId}.DISPOSE");
+      repository.dispose();
+    });
+    return repository;
 });

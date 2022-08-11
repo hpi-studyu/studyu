@@ -34,22 +34,28 @@ final routerProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (state) {
       final loginLocation = state.namedLocation(RouterConfig.login.name!);
+      final signupLocation = state.namedLocation(RouterConfig.signup.name!);
       final splashLocation = state.namedLocation(RouterConfig.splash.name!);
+      final passwordRecoveryLocation = state.namedLocation(RouterConfig.passwordRecovery.name!);
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
+      final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
+      final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
+      final isOnPublicPage = RouterConfig.topLevelPublicRoutes.any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
+      var allowPasswordReset = authRepository.allowPasswordReset;
       final isInitialized = appController.isInitialized;
 
       // Carry original location through the redirect flow so that we can
-      // redirect the user to where the came from after initialization
+      // redirect the user to where they came from after initialization
       final String? from;
       if (state.queryParams.containsKey('from')) {
         from = state.queryParams['from'];
       } else {
-        if (!(isOnDefaultPage | isOnLoginPage | isOnSplashPage)) {
+        if (!(isOnDefaultPage | isOnSplashPage)) {
           from = state.subloc;
         } else {
           from = null;
@@ -58,7 +64,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Helper to generate routes carrying the 'from' param (if any)
       namedLocForwarded(String name) {
         final Map<String,String> qParams = {};
-        if (from != null) {
+        if (from != null && from != '/') { // if (from != null && from != '/' && from != defaultLocation) {
           qParams["from"] = from;
         }
         return state.namedLocation(name, queryParams: qParams);
@@ -69,26 +75,53 @@ final routerProvider = Provider<GoRouter>((ref) {
         return (isOnSplashPage)
             ? null : namedLocForwarded(RouterConfig.splash.name!);
       }
-      if (!isLoggedIn) {
-        // Redirect to login page when not logged in
-        return (isOnLoginPage)
-            ? null : namedLocForwarded(RouterConfig.login.name!);
+
+      /*print("***NEW ROUTER***");
+      print("subloc: " + state.subloc);
+      print("isOnPublicPage: " + isOnPublicPage.toString());
+      if (from != null) {
+        print("from: $from");
+      } else {
+        print("from: null");
+      }*/
+
+      // Handle password recovery
+      if (allowPasswordReset) {
+        if (isOnPasswordRecoveryPage) {
+          authRepository.allowPasswordReset = false;
+          return null;
+        } else {
+          return namedLocForwarded(RouterConfig.passwordRecovery.name!);
+        }
       }
 
-      if (isInitialized && isLoggedIn) {
-        // If the app is initialized & user is authenticated, forward to where
+      if (!isLoggedIn) {
+        if (from != null) {  /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
+          // Only allow access to public pages...
+          if (!isOnSplashPage && isOnPublicPage) {
+            return null;
+            // ... else send user to their origin location
+          } else if (from != state.subloc) {
+            return from;
+          }
+        }
+        // Redirect to login page as default
+        return (isOnLoginPage) ? null : namedLocForwarded(RouterConfig.login.name!);
+
+      } else {
+        // If the user is authenticated, forward to where
         // they were going initially...
         if (from != null && from != state.subloc) {
           return from;
         }
         // ...or send them to the default location if they just authenticated
         // and weren't going anywhere
-        if (isOnLoginPage || isOnSplashPage) {
+        if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
           return defaultLocation;
         }
       }
-
-      return null; // don't redirect in all other cases
+      // don't redirect in all other cases
+      return null;
     },
     // Turn off the # in the URLs on the web
     urlPathStrategy: UrlPathStrategy.path,

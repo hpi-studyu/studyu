@@ -1,230 +1,151 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
-import 'package:studyu_designer_v2/flutter_flow/flutter_flow_theme.dart';
-import 'package:studyu_designer_v2/flutter_flow/flutter_flow_widgets.dart';
+import 'package:studyu_designer_v2/features/auth/auth_formfield_views.dart';
+import 'package:studyu_designer_v2/features/auth/auth_required_state.dart';
+import 'package:studyu_designer_v2/features/auth/form_controller.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-
-// Example of a login page exported with flutterflow
-
-class LoginPage extends ConsumerStatefulWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
-  late bool passwordVisibility;
-  final formKey = GlobalKey<FormState>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+class _LoginPageState extends AuthRequiredState<LoginPage>  {
+  @override
+  Widget build(BuildContext context) {
+    return const LoginPageContent();
+  }
+}
+
+class LoginPageContent extends ConsumerStatefulWidget {
+  const LoginPageContent({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageContentState createState() => _LoginPageContentState();
+}
+
+class _LoginPageContentState extends ConsumerState<LoginPageContent> {
+  late ThemeData theme;
+
+  late FormGroup authForm;
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    passwordVisibility = false;
+    authForm = ref.read(authFormControlProvider('login'))!;
+    _loadRememberMe();
   }
 
   @override
   Widget build(BuildContext context) {
-    //final theme = Theme.of(context); // todo needs to be replaced with flutterflow
-    final authController = ref.watch(authControllerProvider.notifier);
-
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'StudyU Designer V2',
-          style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
-              ),
-        ),
-        actions: [],
-        centerTitle: false,
-        elevation: 2,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                    width: 400,
-                    height: 500,
-                    decoration: BoxDecoration(),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                      ),
-                      child: Align(
-                        alignment: AlignmentDirectional(-0.1, -0.1),
-                        child: Form(
-                          key: formKey,
-                          autovalidateMode: AutovalidateMode.disabled,
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 100, 0, 0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0, 0),
-                                  child: Text(
-                                    'Login',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1
-                                        .override(
-                                          fontFamily: 'Open Sans',
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryColor,
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  ),
-                                ),
-                                TextFormField(
-                                  controller: emailController,
-                                  onChanged: (_) => (_),
-                                  autofocus: true,
-                                  obscureText: false,
-                                  decoration: InputDecoration(
-                                    labelText: 'Email',
-                                    hintText: 'Email',
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                ),
-                                TextFormField(
-                                  controller: passwordController,
-                                  onChanged: (_) => (_),
-                                  autofocus: true,
-                                  obscureText: !passwordVisibility,
-                                  decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    hintText: '[Some hint text...]',
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0x00000000),
-                                        width: 1,
-                                      ),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(4.0),
-                                        topRight: Radius.circular(4.0),
-                                      ),
-                                    ),
-                                    suffixIcon: InkWell(
-                                      onTap: () => setState(
-                                        () => passwordVisibility =
-                                            !passwordVisibility,
-                                      ),
-                                      focusNode: FocusNode(skipTraversal: true),
-                                      child: Icon(
-                                        passwordVisibility
-                                            ? Icons.visibility_outlined
-                                            : Icons.visibility_off_outlined,
-                                        color: Color(0xFF757575),
-                                        size: 22,
-                                      ),
-                                    ),
-                                  ),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyText1
-                                      .override(
-                                        fontFamily: 'Open Sans',
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional(-0.05, 23.03),
-                                  child: FFButtonWidget(
-                                    onPressed: () {
-                                      print('Button pressed ...');
-                                      authController.signInWith(
-                                          emailController.text,
-                                          passwordController.text);
-                                    },
-                                    text: 'Login',
-                                    options: FFButtonOptions(
-                                      width: 130,
-                                      height: 40,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryColor,
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Open Sans',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                      borderSide: BorderSide(
-                                        color: Colors.transparent,
-                                        width: 1,
-                                      ),
-                                      borderRadius: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+    theme = Theme.of(context);
+    return Column(
+        children: <Widget>[
+          Center(child: Text(tr.login, style: theme.textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,*/)),
+          const SizedBox(height: 20),
+          const EmailTextField(),
+          const PasswordTextField(),
+          _rememberMeWidget(authForm),
+          _forgotPassword(authForm),
+          const SizedBox(height: 5),
+          ReactiveFormConsumer(
+            builder: (context, form, child) {
+              // TODO Loading indicator on the button does not appear after design merge
+              // todo also page loading after submitting looks weird
+              final authState = ref.watch(authControllerProvider);
+              return PrimaryButton(
+                icon: Icons.login,
+                text: tr.signin,
+                isLoading: authState.isLoading,
+                onPressed: authForm.valid ? _formReturnAction : null,
+                tooltipDisabled: 'All fields must be filled out',
+              );
+            },
           ),
+        ]
+    );
+  }
+
+  _formReturnAction() async {
+    final authController = ref.read(authControllerProvider.notifier);
+    final success = await authController.signInWith(
+        authForm.control('email').value, authForm.control('password').value);
+    if (authForm.control('rememberMe').value) {
+      if (success) {
+        _setRememberMe();
+      }
+    } else {
+      _delRememberMe();
+    }
+  }
+
+  // todo move all rememberme stuff to form_controller and add a provider
+  void _setRememberMe() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool("rememberMe", authForm.control('rememberMe').value);
+      prefs.setString('email', authForm.control('email').value);
+      prefs.setString('password', authForm.control('password').value);
+    },
+    );
+  }
+
+  void _delRememberMe() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.remove("rememberMe");
+      prefs.remove("email");
+      prefs.remove("password");
+    },
+    );
+  }
+
+  void _loadRememberMe() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString("email");
+      final password = prefs.getString("password");
+      final rememberMe = prefs.getBool("rememberMe") ?? false;
+      if (rememberMe) {
+        authForm.control('rememberMe').value = true;
+        authForm.control('email').value = email ?? "";
+        authForm.control('password').value = password ?? "";
+      }
+    } catch (e) {
+      authForm.control('email').value = "";
+      authForm.control('password').value = "";
+    }
+  }
+
+  Widget _rememberMeWidget(FormGroup authForm) {
+    // change background color: https://stackoverflow.com/questions/64590691/how-to-fill-color-inside-of-checkbox-in-flutter
+    // todo does not seem to inherit theme
+    return ReactiveCheckboxListTile(
+        formControlName: 'rememberMe',
+        title: Text(
+          'Remember me'.hardcoded, style: theme.textTheme.titleLarge,
         ),
-      ),
+    );
+  }
+
+  Widget _forgotPassword(FormGroup authForm) {
+    return Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        child: Container(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+                onPressed: () => ref.read(routerProvider).dispatch(
+                    RoutingIntents.passwordForgot(authForm.control('email').value)),
+                child: Text("Forgot your password?".hardcoded, /*style: FlutterFlowTheme.of(context).bodyText2*/)
+            ),
+        )
     );
   }
 }
