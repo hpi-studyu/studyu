@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -54,7 +55,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<GoRouterDrawerEntry>> topEntries = [
     [
       GoRouterDrawerEntry(
-        title: 'My Studies'.hardcoded,
+        title: tr.my_studies,
         icon: Icons.folder_copy_rounded,
         intent: RoutingIntents.studies,
       ),

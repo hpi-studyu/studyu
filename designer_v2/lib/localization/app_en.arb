@@ -142,5 +142,6 @@
 
   "signup": "Signup",
   "signin": "Sign In",
-  "login": "Login"
+  "login": "Login",
+  "my_studies": "My Studies"
 }
