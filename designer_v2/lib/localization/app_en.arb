@@ -137,5 +137,10 @@
   "started_at": "Started At",
   "enrolled": "Enrolled",
   "active": "Active",
-  "completed": "Completed"
+  "completed": "Completed",
+
+
+  "signup": "Signup",
+  "signin": "Sign In",
+  "login": "Login"
 }

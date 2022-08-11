@@ -117,5 +117,8 @@
   "started_at": "Gestartet am",
   "enrolled": "Angemeldet",
   "active": "Aktiv",
-  "completed": "Abgeschlossen"
+  "completed": "Abgeschlossen",
+
+  "signup": "Account erstellen",
+  "login": "Anmelden"
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -8,8 +9,8 @@ import 'package:studyu_designer_v2/features/auth/form_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'auth_state.dart';
 import 'auth_formfield_views.dart';
+import 'auth_state.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class _PageContentState extends ConsumerState<PageContent> {
     return Column(
         children: <Widget>[
           Center(
-              child: Text('Signup'.hardcoded, style: Theme.of(context).textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,)*/)
+              child: Text(AppLocalizations.of(context)!.signup, style: Theme.of(context).textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,)*/)
           ),
           const SizedBox(height: 20),
           const EmailTextField(),

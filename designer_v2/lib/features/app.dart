@@ -1,14 +1,15 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/services/notification_dispatcher.dart';
 import 'package:studyu_designer_v2/theme.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'auth/auth_state.dart';
@@ -71,6 +72,7 @@ class _AppContentState extends ConsumerState<AppContent> {
 
   @override
   Widget build(BuildContext context) {
+    Locale locale = ref.watch(localeProvider);
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(
@@ -81,7 +83,6 @@ class _AppContentState extends ConsumerState<AppContent> {
             child: Builder(builder: (context) {
               final themeProvider = ThemeProvider.of(context);
               final theme = themeProvider.light(settings.value.sourceColor);
-
               return MaterialApp.router(
                 scaffoldMessengerKey: scaffoldMessengerKey,
                 builder: (context, widget) => NotificationDispatcher(
@@ -95,7 +96,7 @@ class _AppContentState extends ConsumerState<AppContent> {
                 theme: theme,
                 routeInformationParser: router.routeInformationParser,
                 routerDelegate: router.routerDelegate,
-                locale: const Locale('en'),
+                locale: locale,
                 supportedLocales: AppLocalizations.supportedLocales,
                 localizationsDelegates: const [
                   ...AppLocalizations.localizationsDelegates,

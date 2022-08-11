@@ -1,7 +1,14 @@
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+
 
 class Config {
   static const isDebugMode = true;
+
+  static const defaultLocale = {'en', 'US'};
+
+  static const supportedLocales = {
+    'en': 'US',
+    'de': 'DE',
+  };
 
   /// Default id for new studies that haven't been saved yet
   static const newStudyId = 'new';

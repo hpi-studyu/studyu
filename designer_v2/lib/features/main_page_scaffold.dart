@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/features/main_page_scaffold_controller.dart';
-import 'package:studyu_designer_v2/features/main_page_scaffold_state.dart';
+import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/app_repository.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -24,6 +25,12 @@ class MainPageScaffold extends ConsumerStatefulWidget {
 }
 
 class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(localeStateProvider.notifier).initLocale();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,14 +142,13 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
   }
 
   Widget _bottombar() {
-    final mainPageState = ref.watch(mainPageControllerProvider);
-    final mainPageController = ref.watch(mainPageControllerProvider.notifier);
-    final formGroup = ref.watch(formGroupProvider);
     final appConfig = ref.watch(appConfigProvider);
+    final locale = ref.watch(localeProvider);
+    final localeState = ref.watch(localeStateProvider.notifier);
 
-    final loc = Localizations.localeOf(context).languageCode;
+    final locForm = FormGroup({'localization': FormControl<Locale>(value: locale, validators: [Validators.required]),});
 
-        return Column(
+    return Column(
         children: [
           const Spacer(),
           Row(
@@ -160,15 +166,14 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                   width: 150, // todo make this dynamic
                   alignment: Alignment.centerRight,
                   child: ReactiveForm(
-                    formGroup: formGroup,
+                    formGroup: locForm,
                     child: ReactiveFormConsumer(builder: (context, form, child) {
-                      return ReactiveDropdownField<Localization>(
+                      return ReactiveDropdownField<Locale>(
                         formControlName: 'localization',
                         isExpanded: true,
-                        items: mainPageState.dropdownItems,
+                        items: dropdownItems(),
                         icon: const Icon(Icons.language),
-                        onChanged: (loc) =>
-                            locSwitcher(mainPageController, loc),
+                        onChanged: (loc) => localeState.setLocale(loc.value!),
                       );
                     }
                     ),
@@ -180,7 +185,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                   child: InkWell(
                     child: Text('Imprint'.
                     hardcoded, style: Theme.of(context).textTheme.titleMedium,),
-                    onTap: () => launchUrl(appConfig.maybeWhen(data: (value) => Uri.parse(value.imprint[loc] ?? ""), orElse: () => Uri.parse(''))),
+                    onTap: () => launchUrl(appConfig.maybeWhen(data: (value) => Uri.parse(value.imprint[locale.languageCode] ?? ""), orElse: () => Uri.parse(''))),
                   ),
                 ),
                 const SizedBox(width: 40)
@@ -191,8 +196,32 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
     );
   }
 
-  locSwitcher(LocalizationController mainPageController, FormControl<Localization> loc) {
-    mainPageController.setLocalization(loc.value!);
-    ref.refresh(localizationProvider);
+  static List<DropdownMenuItem<Locale>> dropdownItems() {
+    List<DropdownMenuItem<Locale>> itemList = [];
+    Config.supportedLocales.forEach((languageCode, countryCode) {
+      final locale = Locale(languageCode, countryCode);
+      itemList.add(
+          DropdownMenuItem(value: locale,
+            child: Text(
+                '${_emojiFlag(countryCode)} '
+                '${translateLocaleName(locale: locale)}'
+            ),
+          )
+      );
+    }
+    );
+    return itemList;
+  }
+  // Emoji flag sequences
+  static String _emojiFlag(String country) {
+    country = country.toUpperCase();
+
+    int flagOffset = 0x1F1E6;
+    int asciiOffset = 0x41;
+
+    int firstChar = country.codeUnitAt(0) - asciiOffset + flagOffset;
+    int secondChar = country.codeUnitAt(1) - asciiOffset + flagOffset;
+
+    return String.fromCharCode(firstChar) + String.fromCharCode(secondChar);
   }
 }
