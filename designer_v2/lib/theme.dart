@@ -125,7 +125,7 @@ class ThemeProvider extends InheritedWidget {
   SnackBarThemeData snackBarThemeData(ColorScheme colors) {
     return SnackBarThemeData(
       actionTextColor: colors.onPrimary,
-      backgroundColor: colors.primaryContainer,
+      backgroundColor: colors.primary,
       elevation: 1,
     );
   }
@@ -197,6 +197,7 @@ class ThemeProvider extends InheritedWidget {
       filled: true,
       fillColor: Colors.white,
       hoverColor: Colors.white,
+      focusColor: Colors.white,
       isDense: true,
       //constraints: BoxConstraints(maxHeight: 40.0),
       //contentPadding: EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
