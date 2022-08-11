@@ -1,5 +1,6 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
 

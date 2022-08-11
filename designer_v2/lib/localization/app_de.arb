@@ -118,7 +118,9 @@
   "enrolled": "Angemeldet",
   "active": "Aktiv",
   "completed": "Abgeschlossen",
-
   "signup": "Account erstellen",
-  "login": "Anmelden"
+  "login": "Anmelden",
+  "go_back_home": "Bitte zum Anfang zurückkehren",
+  "loading": "Wird geladen",
+  "study_u_designer": "Study U Designer"
 }

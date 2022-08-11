@@ -138,9 +138,10 @@
   "enrolled": "Enrolled",
   "active": "Active",
   "completed": "Completed",
-
-
   "signup": "Signup",
   "signin": "Sign In",
-  "login": "Login"
+  "login": "Login",
+  "go_back_home": "Go back home",
+  "loading": "Loading...",
+  "study_u_designer": "Study U Designer"
 }
