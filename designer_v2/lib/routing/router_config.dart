@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
 import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
-import 'package:studyu_designer_v2/features/design/common_views/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_preview_view.dart';

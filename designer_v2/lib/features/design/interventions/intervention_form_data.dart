@@ -11,12 +11,14 @@ class InterventionFormData extends IFormData {
     required this.title,
     this.description,
     this.tasksData,
+    this.iconName
   });
 
   final InterventionID interventionId;
   final String title;
   final String? description;
   final List<InterventionTaskFormData>? tasksData;
+  final String? iconName;
 
   @override
   FormDataID get id => interventionId;
@@ -30,6 +32,7 @@ class InterventionFormData extends IFormData {
           .map((task) =>
               InterventionTaskFormData.fromDomainModel(task as CheckmarkTask))
           .toList(),
+      iconName: intervention.icon,
     );
   }
 
@@ -39,6 +42,7 @@ class InterventionFormData extends IFormData {
     intervention.tasks = (tasksData != null)
         ? tasksData!.map((formData) => formData.toTask()).toList()
         : [];
+    intervention.icon = iconName ?? '';
     return intervention;
   }
 
@@ -49,6 +53,7 @@ class InterventionFormData extends IFormData {
       title: title.withDuplicateLabel(),
       description: description,
       tasksData: tasksData?.map((formData) => formData.copy()).toList(),
+      iconName: iconName,
     );
   }
 }

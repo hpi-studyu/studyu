@@ -1,5 +1,6 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
@@ -36,6 +37,7 @@ class InterventionFormViewModel
       validators: [Validators.required], value: const Uuid().v4()); // hidden
   final FormControl<String> interventionTitleControl =
       FormControl(validators: [Validators.required, Validators.minLength(3)]);
+  final FormControl<IconOption> interventionIconControl = FormControl(value: null);
   final FormControl<String> interventionDescriptionControl =
       FormControl(value: '');
 
@@ -54,6 +56,7 @@ class InterventionFormViewModel
     'interventionTitle': interventionTitleControl,
     'interventionDescription': interventionDescriptionControl,
     'interventionTasks': interventionTasksArray,
+    'interventionIcon': interventionIconControl,
   });
 
   @override
@@ -61,6 +64,7 @@ class InterventionFormViewModel
     interventionIdControl.value = data.interventionId;
     interventionTitleControl.value = data.title;
     interventionDescriptionControl.value = data.description ?? '';
+    interventionIconControl.value = IconOption(data.iconName ?? '');
 
     if (data.tasksData != null) {
       final viewModels = data.tasksData!.map((data) => InterventionTaskFormViewModel(formData: data, delegate: this)).toList();
@@ -75,6 +79,7 @@ class InterventionFormViewModel
       title: interventionTitleControl.value!, // required
       description: interventionDescriptionControl.value,
       tasksData: tasksCollection.formData,
+      iconName: interventionIconControl.value?.name,
     );
     return data;
   }

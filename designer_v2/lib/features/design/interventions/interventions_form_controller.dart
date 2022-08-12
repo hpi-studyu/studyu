@@ -26,7 +26,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     required this.router,
     super.delegate,
     super.formData,
-    super.autosave = false,
+    super.autosave = true,
   });
 
   final Study study;

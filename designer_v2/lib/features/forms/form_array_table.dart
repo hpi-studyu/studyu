@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
+typedef WidgetBuilderAt<T> = Widget Function(BuildContext context, T item, int rowIdx);
 
 class FormArrayTable<T> extends StatelessWidget {
   const FormArrayTable(
@@ -15,6 +16,7 @@ class FormArrayTable<T> extends StatelessWidget {
       required this.onNewItem,
       required this.onNewItemLabel,
       required this.rowTitle,
+      this.rowPrefix,
       this.sectionTitle,
       this.sectionTitleDivider = true,
       this.emptyIcon,
@@ -37,6 +39,8 @@ class FormArrayTable<T> extends StatelessWidget {
   final String? emptyDescription;
 
   final bool? sectionTitleDivider;
+
+  final WidgetBuilderAt<T>? rowPrefix;
 
   static final List<StandardTableColumn> columns = [
     const StandardTableColumn(
@@ -68,7 +72,7 @@ class FormArrayTable<T> extends StatelessWidget {
                   FormTableRow(
                       label: sectionTitle!,
                       input: Container(),
-                      labelStyle: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold))
+                      labelStyle: Theme.of(context).textTheme.headline6)
                 ])
           : const SizedBox.shrink(),
       trailingWidget: _newItemButton(),
@@ -97,6 +101,7 @@ class FormArrayTable<T> extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
+            (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
             Text(
               rowTitle(item),
               style: tableTextStyleSecondary.copyWith(

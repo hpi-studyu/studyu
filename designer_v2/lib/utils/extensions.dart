@@ -14,9 +14,10 @@ extension StringX on String {
     return toLowerCase().replaceAll(' ', '_');
   }
 
-  String withDuplicateLabel({label=kDuplicateLabel}) {
+  String withDuplicateLabel({label = kDuplicateLabel}) {
     final regexStr = r"\((?:" + label + r")\s*(\d*)\)$";
-    final suffixFactory = (n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
+    final suffixFactory =
+        (n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
     final regex = RegExp(regexStr);
 
     Iterable<RegExpMatch> matches = regex.allMatches(this);
@@ -24,13 +25,39 @@ extension StringX on String {
     if (matches.isNotEmpty) {
       final matchedSuffix = matches.last;
       final matchedIncrement = matchedSuffix.group(1);
-      final currentIncrement = (matchedIncrement == null
-          || matchedIncrement == '') ? 0 : int.parse(matchedIncrement);
-      final strWithoutLabel = replaceRange(
-          matchedSuffix.start, matchedSuffix.end, '').trim();
+      final currentIncrement =
+          (matchedIncrement == null || matchedIncrement == '')
+              ? 0
+              : int.parse(matchedIncrement);
+      final strWithoutLabel =
+          replaceRange(matchedSuffix.start, matchedSuffix.end, '').trim();
       return "$strWithoutLabel ${suffixFactory(currentIncrement + 1)}";
     }
     return "${this} ${suffixFactory(0)}";
+  }
+
+  List<String> get alphabet {
+    return [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o'
+    ];
+  }
+
+  String alphabetLetterFrom(int idx) {
+    return alphabet[idx % alphabet.length];
   }
 }
 

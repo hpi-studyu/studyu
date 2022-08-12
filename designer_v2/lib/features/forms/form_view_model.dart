@@ -139,6 +139,7 @@ abstract class FormViewModel<T> {
   }
 
   Future save() {
+    print(form.errors);
     if (!form.valid) {
       throw FormInvalidException();
     }

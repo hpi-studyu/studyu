@@ -4,7 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
-import 'package:studyu_designer_v2/features/design/common_views/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_view.dart';
