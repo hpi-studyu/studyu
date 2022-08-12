@@ -43,17 +43,6 @@ abstract class FormViewModel<T> {
   set formData(T? formData) => _setFormData(formData);
   T? _formData;
 
-  final bool autosave;
-
-  final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
-
-  /// Map that stores the default enabled/disabled state for each control in
-  /// the [form]
-  final Map<String, bool> _defaultControlStates = {};
-
-  final List<StreamSubscription> _immediateFormChildrenSubscriptions = [];
-  Debouncer? _immediateFormChildrenListenerDebouncer;
-
   FormMode get formMode => _formMode;
   set formMode(FormMode mode) {
     _formMode = mode;
@@ -61,16 +50,28 @@ abstract class FormViewModel<T> {
   }
   FormMode _formMode;
 
-  String get title => titles[formMode] ?? "[Missing title]";
-  bool get isValid => form.valid;
+  final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
 
-  _setFormData(T? formData, {emitUpdate = true}) {
+  final bool autosave;
+
+  final List<StreamSubscription> _immediateFormChildrenSubscriptions = [];
+  Debouncer? _immediateFormChildrenListenerDebouncer;
+
+  /// Flag indicating whether the form is currently being autosaved
+  ///
+  /// Needed to prevent an infinite loop when updating the form & its controls
+  /// when saving
+  bool _isAutosaving = false;
+
+  /// Map that stores the default enabled/disabled state for each control in
+  /// the [form]
+  final Map<String, bool> _defaultControlStates = {};
+
+  _setFormData(T? formData) {
     _formData = formData;
     if (formData != null) {
       setControlsFrom(formData); // update [form] controls automatically
-      if (emitUpdate) {
-        form.updateValueAndValidity();
-      }
+      form.updateValueAndValidity();
     }
   }
 
@@ -115,16 +116,17 @@ abstract class FormViewModel<T> {
     }
   }
 
-  _restoreControlsFromFormData({emitUpdate = true}) {
+  _restoreControlsFromFormData() {
     if (formData != null) {
       setControlsFrom(formData!);
     } else {
       initControls();
     }
-    if (emitUpdate) {
-      form.updateValueAndValidity();
-    }
+    form.updateValueAndValidity();
   }
+
+  String get title => titles[formMode] ?? "[Missing title]";
+  bool get isValid => form.valid;
 
   void edit(T formData) {
     this.formData = formData;
@@ -136,7 +138,7 @@ abstract class FormViewModel<T> {
     formMode = FormMode.readonly;
   }
 
-  Future save({updateState = true}) {
+  Future save() {
     if (!form.valid) {
       throw FormInvalidException();
     }
@@ -144,9 +146,7 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    if (updateState) {
-      formData = buildFormData();
-    }
+    formData = buildFormData();
     delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
@@ -154,7 +154,7 @@ abstract class FormViewModel<T> {
       formMode = FormMode.edit;
     }
 
-    return Future.value(null);
+    return Future.value(true);
   }
 
   Future<void> cancel() {
@@ -169,9 +169,15 @@ abstract class FormViewModel<T> {
       return;
     }
     listenToImmediateFormChildren((control) {
+      // Prevent infinite loop from the update that is emitted during save
+      // which would retrigger the listener
+      if (_isAutosaving) {
+        _isAutosaving = false;
+        return;
+      }
       if (form.valid) {
-        // don't update internal state to avoid infinite loop
-        save(updateState: false);
+        _isAutosaving = true;
+        save();
       }
     }, debounce: debounce);
   }
