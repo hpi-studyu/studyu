@@ -25,6 +25,8 @@ class APIException implements Exception {}
 class StudyNotFoundException extends APIException {}
 class MeasurementNotFoundException extends APIException {}
 class SurveyQuestionNotFoundException extends APIException {}
+class InterventionNotFoundException extends APIException {}
+class InterventionTaskNotFoundException extends APIException {}
 class StudyInviteNotFoundException extends APIException {}
 
 class StudyUApiClient extends SupabaseClientDependant

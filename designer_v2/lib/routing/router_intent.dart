@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -72,6 +73,14 @@ class RoutingIntents {
       route: RouterConfig.studyEditInterventions,
       params: {
         RouteParams.studyId: studyId,
+      }
+  );
+  static final studyEditIntervention =
+      (StudyID studyId, InterventionID interventionId) => RoutingIntent(
+      route: RouterConfig.studyEditIntervention,
+      params: {
+        RouteParams.studyId: studyId,
+        RouteParams.interventionId: interventionId,
       }
   );
   static final studyEditMeasurements = (StudyID studyId) => RoutingIntent(

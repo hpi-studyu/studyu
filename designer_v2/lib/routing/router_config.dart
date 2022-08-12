@@ -4,8 +4,10 @@ import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/auth/authform_scaffold.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/features/auth/password_forgot_page.dart';
@@ -14,11 +16,16 @@ import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/common_views/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_preview_view.dart';
+import 'package:studyu_designer_v2/features/design/interventions/interventions_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
@@ -37,6 +44,7 @@ class RouteParams {
   static const studiesFilter = 'filter';
   static const studyId = 'studyId';
   static const measurementId = 'measurementId';
+  static const interventionId = 'interventionId';
 }
 
 /// The route configuration passed to [GoRouter] during instantiation.
@@ -172,9 +180,38 @@ class RouterConfig {
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.interventions(studyId),
-              body: StudyEditScreen(studyId),
+              body: StudyDesignInterventionsFormView(studyId),
               layoutType: SingleColumnLayoutType.split,
         ));
+      },
+      routes: [studyEditIntervention],
+  );
+
+  static final studyEditIntervention = GoRoute(
+      path: ":${RouteParams.interventionId}",
+      name: "studyEditIntervention",
+      pageBuilder: (context, state) {
+        final routeArgs = InterventionFormRouteArgs(
+            studyId: state.params[RouteParams.studyId]!,
+            interventionId: state.params[RouteParams.interventionId]!
+        );
+        return MaterialPage(
+            child: StudyFormScaffold<InterventionFormViewModel>(
+              studyId: routeArgs.studyId,
+              formViewModelBuilder: (ref) => ref.read(
+                  interventionFormViewModelProvider(routeArgs)
+              ),
+              formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+                leftWidget: InterventionFormView(formViewModel: formViewModel),
+                rightWidget: InterventionPreview(routeArgs: routeArgs),
+                flexLeft: 7,
+                flexRight: 8,
+                scrollLeft: true,
+                scrollRight: false,
+                paddingRight: null,
+              ),
+            )
+        );
       }
   );
 
@@ -370,7 +407,10 @@ class RouterConfig {
 // - Route Args
 
 class MeasurementFormRouteArgs {
-  MeasurementFormRouteArgs({required this.studyId, required this.measurementId});
+  MeasurementFormRouteArgs({
+    required this.studyId,
+    required this.measurementId
+  });
 
   final StudyID studyId;
   final MeasurementID measurementId;
@@ -384,4 +424,24 @@ class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs {
   });
 
   final QuestionID questionId;
+}
+
+class InterventionFormRouteArgs {
+  InterventionFormRouteArgs({
+    required this.studyId,
+    required this.interventionId
+  });
+
+  final StudyID studyId;
+  final InterventionID interventionId;
+}
+
+class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
+  InterventionTaskFormRouteArgs({
+    required super.studyId,
+    required super.interventionId,
+    required this.taskId
+  });
+
+  final TaskID taskId;
 }

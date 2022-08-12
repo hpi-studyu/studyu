@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,19 +11,16 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
-
-class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
+class SurveyQuestionFormViewModel
+    extends ManagedFormViewModel<SurveyQuestionFormData>
     implements IListActionProvider<AbstractControl<String>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
-  SurveyQuestionFormViewModel({
-    super.formData,
-    super.delegate
-  }) {
+  SurveyQuestionFormViewModel({super.formData, super.delegate}) {
     // Keep the form in sync with the selected question type
     _updateFormControls(questionType);
-    _questionTypeChanges = questionTypeControl.valueChanges
-        .listen(_updateFormControls);
+    _questionTypeChanges =
+        questionTypeControl.valueChanges.listen(_updateFormControls);
   }
 
   late final StreamSubscription _questionTypeChanges;
@@ -33,8 +31,8 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
       validators: [Validators.required], value: const Uuid().v4()); // hidden
   final FormControl<SurveyQuestionType> questionTypeControl = FormControl(
       validators: [Validators.required], value: defaultQuestionType);
-  final FormControl<String> questionTextControl = FormControl(
-      validators: [Validators.required]);
+  final FormControl<String> questionTextControl =
+      FormControl(validators: [Validators.required]);
   final FormControl<String> questionInfoTextControl = FormControl();
 
   QuestionID get questionId => questionIdControl.value!;
@@ -42,7 +40,8 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
 
   List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
       SurveyQuestionFormData.questionTypeFormDataFactories.keys
-          .map((questionType) => FormControlOption(questionType, questionType.string))
+          .map((questionType) =>
+              FormControlOption(questionType, questionType.string))
           .toList();
 
   late final Map<String, AbstractControl> _questionBaseControls = {
@@ -54,15 +53,15 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
 
   // - Form fields (question type-specific)
 
-  final FormControl<bool> isMultipleChoiceControl = FormControl(
-      validators: [Validators.required], value: false);
-  final FormArray<String> answerOptionsArray = FormArray([],
-    validators: [
-      CountWhereValidator<String>((value) => value != null && value.isNotEmpty,
-          minCount: 2, maxCount: 10).validate
-    ]
-  );
-  List<AbstractControl<String>> get answerOptionsControls => answerOptionsArray.controls;
+  final FormControl<bool> isMultipleChoiceControl =
+      FormControl(validators: [Validators.required], value: false);
+  final FormArray<String> answerOptionsArray = FormArray([], validators: [
+    CountWhereValidator<String>((value) => value != null && value.isNotEmpty,
+            minCount: 2, maxCount: 10)
+        .validate
+  ]);
+  List<AbstractControl<String>> get answerOptionsControls =>
+      answerOptionsArray.controls;
 
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
     SurveyQuestionType.bool: FormGroup({}),
@@ -119,8 +118,8 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
         // Unfortunately needed because of how [FormArray.updateValue] is implemented
         // Note: `formArray.value = []` does not remove any controls!
         answerOptionsArray.clear();
-        answerOptionsArray.value = data.answerOptions.map(
-                (option) => option.label).toList();
+        answerOptionsArray.value =
+            data.answerOptions.map((option) => option.label).toList();
         break;
       case SurveyQuestionType.scale:
         break;
@@ -144,9 +143,10 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!, // required
-          answerOptions: answerOptionsArray.value!  // required
+          answerOptions: answerOptionsArray.value! // required
               .where((optionStr) => optionStr != null && optionStr.isNotEmpty)
-              .map((optionStr) => FormControlOption<String>(optionStr!.asId(), optionStr))
+              .map((optionStr) =>
+                  FormControlOption<String>(optionStr!.asId(), optionStr))
               .toList(),
         );
       case SurveyQuestionType.scale:
@@ -161,10 +161,10 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: "New Survey Question".hardcoded,
-    FormMode.edit: "Edit Survey Question".hardcoded,
-    FormMode.readonly: "View Survey Question".hardcoded,
-  };
+        FormMode.create: "New Survey Question".hardcoded,
+        FormMode.edit: "Edit Survey Question".hardcoded,
+        FormMode.readonly: "View Survey Question".hardcoded,
+      };
 
   @override
   List<ModelAction> availableActions(AbstractControl<String> model) {
@@ -194,5 +194,11 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
   @override
   void onSelectItem(AbstractControl<String> item) {
     return; // no-op
+  }
+
+  @override
+  SurveyQuestionFormViewModel createDuplicate() {
+    return SurveyQuestionFormViewModel(
+        delegate: delegate, formData: formData?.copy());
   }
 }

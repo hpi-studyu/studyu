@@ -17,9 +17,17 @@ class StudyInfoFormData implements IStudyFormData {
   }
 
   @override
+  String get id => throw UnimplementedError();
+
+  @override
   Study apply(Study study) {
     // TODO: implement apply
     throw UnimplementedError();
+  }
+
+  @override
+  StudyInfoFormData copy() {
+    throw UnimplementedError(); // not needed for top-level form data
   }
 }
 

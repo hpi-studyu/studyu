@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
@@ -16,7 +18,7 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 
 
 class StudyFormViewModel extends FormViewModel<Study>
-    implements IFormViewModelDelegate<MeasurementsFormViewModel> {
+    implements IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
@@ -35,6 +37,13 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
     formData: MeasurementsFormData.fromStudy(formData!),
+    delegate: this,
+    study: formData!,
+    router: router,
+  );
+
+  late final InterventionsFormViewModel interventionsFormViewModel = InterventionsFormViewModel(
+    formData: InterventionsFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
     router: router,
@@ -94,12 +103,12 @@ class StudyFormViewModel extends FormViewModel<Study>
   }
 
   @override
-  void onCancel(MeasurementsFormViewModel formViewModel, FormMode prevFormMode) {
+  void onCancel(FormViewModel formViewModel, FormMode prevFormMode) {
     return; // nothing to do
   }
 
   @override
-  void onSave(MeasurementsFormViewModel formViewModel, FormMode prevFormMode) {
+  void onSave(FormViewModel formViewModel, FormMode prevFormMode) {
     assert(prevFormMode == FormMode.edit);
     _applyAndSaveSubform(formViewModel.formData!);
   }
@@ -120,15 +129,17 @@ final studyFormViewModelProvider = Provider.autoDispose
 /*
 final studyInfoFormViewModelProvider = Provider.autoDispose
     .family<StudyInfoFormViewModel, StudyID>((ref, studyId) {
-  return ref.watch(studyFormViewModelProvider(studyId)).studyInfoFormViewModel;
+  return ref.watch(studyFormViewMod99elProvider(studyId)).studyInfoFormViewModel;
 });
  */
 
 final measurementsFormViewModelProvider = Provider.autoDispose
     .family<MeasurementsFormViewModel, StudyID>((ref, studyId) {
-      return ref.watch(
-          studyFormViewModelProvider(studyId)).measurementsFormViewModel;
+  return ref.watch(
+      studyFormViewModelProvider(studyId)).measurementsFormViewModel;
 });
+
+
 
 final surveyFormViewModelProvider = Provider.autoDispose
     .family<MeasurementSurveyFormViewModel,MeasurementFormRouteArgs>((ref, args) {

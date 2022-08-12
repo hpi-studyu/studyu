@@ -60,8 +60,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               Container(width: 32.0),
               SelectableText(state.visibleListTitle,
-                  style: theme.textTheme.headline5?.copyWith(
-                      fontWeight: FontWeight.bold)),
+                  style: theme.textTheme.headline4),
               Container(width: 32.0),
             ],
           ),
