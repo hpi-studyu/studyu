@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
 import 'package:studyu_designer_v2/features/design/common_views/form_array_table.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_view.dart';
@@ -60,13 +58,13 @@ class MeasurementSurveyFormView extends ConsumerWidget {
             return ReactiveFormArray(
               formArray: formViewModel.surveyQuestionsArray,
               builder: (context, formArray, child) {
-                return FormArrayTable<SurveyQuestionFormData>(
-                  items: formViewModel.surveyQuestionsData,
-                  onSelectItem: (item) => _onSelectItem(item, context, ref),
-                  getActionsAt: (item, _) => formViewModel.availablePopupActions(item),
+                return FormArrayTable<SurveyQuestionFormViewModel>(
+                  items: formViewModel.surveyQuestionModels,
+                  onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
+                  getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                   onNewItem: () => _onNewItem(context, ref),
-                  onNewItemLabel: 'Add question',
-                  rowTitle: (data) => data.questionText,
+                  onNewItemLabel: 'Add question'.hardcoded,
+                  rowTitle: (viewModel) => viewModel.formData?.questionText ?? 'Missing item title'.hardcoded,
                   sectionTitle: "Questions".hardcoded,
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle: "No questions defined".hardcoded,
@@ -237,7 +235,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
-  _onSelectItem(SurveyQuestionFormData item, BuildContext context, WidgetRef ref) {
+  _onSelectItem(SurveyQuestionFormViewModel item, BuildContext context, WidgetRef ref) {
     final routeArgs = formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }

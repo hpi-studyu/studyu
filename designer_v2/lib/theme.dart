@@ -247,6 +247,12 @@ class ThemeProvider extends InheritedWidget {
       subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
       bodyText2: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
       bodyText1: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
+      headline6: TextStyle(fontSize: 15.0, color: colors.onSurface, fontWeight: FontWeight.bold), // TextInput
+      headline5: TextStyle(fontSize: 18.0, color: colors.onSurface, fontWeight: FontWeight.bold), // TextInput
+      headline4: TextStyle(fontSize: 22.0, color: colors.onSurface, fontWeight: FontWeight.bold), // TextInput
+      headline3: TextStyle(fontSize: 28.0, color: colors.onSurface, fontWeight: FontWeight.bold), // TextInput
+      headline2: TextStyle(fontSize: 36.0, color: colors.onSurface, fontWeight: FontWeight.bold), // TextInput
+      headline1: TextStyle(fontSize: 48.0, color: colors.onSurface, fontWeight: FontWeight.bold), // TextInput
     );
   }
 

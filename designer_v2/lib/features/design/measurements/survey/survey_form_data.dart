@@ -1,4 +1,5 @@
 import 'package:studyu_designer_v2/domain/schedule.dart';
+import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:uuid/uuid.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -6,7 +7,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/question/
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class MeasurementSurveyFormData {
+class MeasurementSurveyFormData extends IFormData {
   static final kDefaultTitle = "Unnamed survey".hardcoded;
 
   MeasurementSurveyFormData({
@@ -32,6 +33,9 @@ class MeasurementSurveyFormData {
   final StudyUTimeOfDay? timeLockEnd;
   final bool hasReminder;
   final StudyUTimeOfDay? reminderTime;
+
+  @override
+  FormDataID get id => measurementId;
 
   factory MeasurementSurveyFormData.fromDomainModel(
       QuestionnaireTask questionnaireTask) {
@@ -75,6 +79,7 @@ class MeasurementSurveyFormData {
     return questionnaireTask;
   }
 
+  @override
   MeasurementSurveyFormData copy() {
     return MeasurementSurveyFormData(
       measurementId: const Uuid().v4(), // always regenerate id

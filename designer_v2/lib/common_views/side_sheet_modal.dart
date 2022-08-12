@@ -187,7 +187,8 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(title, style: theme.textTheme.headline6),
+                  Text(title, style: theme.textTheme.headline5!
+                      .copyWith(fontWeight: FontWeight.normal)),
                   Wrap(spacing: 8.0, children: actionButtons),
                 ],
               ),

@@ -13,6 +13,9 @@ class EnrollmentFormData implements IStudyFormData {
     required this.enrollmentQuestions
   });
 
+  @override
+  String get id => throw UnimplementedError();
+
   factory EnrollmentFormData.fromStudy(Study study) {
     return EnrollmentFormData(
         enrollmentType: study.participation,
@@ -24,6 +27,11 @@ class EnrollmentFormData implements IStudyFormData {
   Study apply(Study study) {
     // TODO: implement apply
     throw UnimplementedError();
+  }
+
+  @override
+  EnrollmentFormData copy() {
+    throw UnimplementedError(); // not needed for top-level form data
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
@@ -8,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 typedef SurveyQuestionFormDataFactory = SurveyQuestionFormData Function(Question question);
 
-abstract class SurveyQuestionFormData {
+abstract class SurveyQuestionFormData implements IFormData {
   static Map<SurveyQuestionType,SurveyQuestionFormDataFactory> questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question) =>
         ScaleQuestionFormData.fromDomainModel(question),
@@ -30,6 +31,9 @@ abstract class SurveyQuestionFormData {
   final String? questionInfoText;
   final SurveyQuestionType questionType;
 
+  @override
+  String get id => questionId;
+
   factory SurveyQuestionFormData.fromDomainModel(Question question) {
     final surveyQuestionType = SurveyQuestionType.of(question);
     if (!questionTypeFormDataFactories.containsKey(surveyQuestionType)) {
@@ -39,8 +43,10 @@ abstract class SurveyQuestionFormData {
     return questionTypeFormDataFactories[surveyQuestionType]!(question);
   }
 
-  Question toQuestion();
-  SurveyQuestionFormData copy();
+  Question toQuestion(); // subclass responsibility
+
+  @override
+  SurveyQuestionFormData copy(); // subclass responsibility
 }
 
 class ChoiceQuestionFormData extends SurveyQuestionFormData {

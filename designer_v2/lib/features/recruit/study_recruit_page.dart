@@ -56,8 +56,7 @@ class StudyRecruitScreen extends ConsumerWidget {
     return Row(
       children: [
         SelectableText("Access Codes".hardcoded,
-            style: Theme.of(context).textTheme.headline6?.copyWith(
-                fontWeight: FontWeight.bold)),
+            style: Theme.of(context).textTheme.headline5),
         Container(width: 32.0),
         _newInviteCodeButton(context, ref),
         Container(width: 32.0),
