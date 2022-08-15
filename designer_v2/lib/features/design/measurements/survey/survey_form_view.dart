@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
@@ -39,6 +39,12 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 labelHelpText: "TODO Intro text help text".hardcoded,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyIntroTextControl,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 5,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      hintText: "e.g. welcome & introduce participants to the survey".hardcoded
+                  ),
                 ),
               ),
               FormTableRow(
@@ -46,6 +52,12 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 labelHelpText: "TODO Outro text help text".hardcoded,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyOutroTextControl,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 5,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      hintText: "e.g. thank participants for completing the survey".hardcoded
+                  ),
                 ),
               ),
             ]
@@ -75,159 +87,9 @@ class MeasurementSurveyFormView extends ConsumerWidget {
           }
         ),
         const SizedBox(height: 28.0),
-        ReactiveFormConsumer(
-          builder: (context, form, child) {
-            return _scheduleSection(context);
-          }
-        )
+        ScheduleControls(formViewModel: formViewModel),
       ],
     );
-  }
-
-  Widget _scheduleSection(BuildContext context) {
-    //formViewModel.reminderTimeControl.markAsDisabled();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FormTableLayout(
-            rows: [
-              FormTableRow(
-                label: "Scheduling".hardcoded,
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                input: Container(),
-              ),
-            ]
-        ),
-        const Divider(),
-        const SizedBox(height: 12.0),
-        FormTableLayout(
-            rows: [
-              FormTableRow(
-                label: "App reminder".hardcoded,
-                labelHelpText: "TODO reminder notification help text".hardcoded,
-                input: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    ReactiveCheckbox(
-                      formControl: formViewModel.hasReminderControl,
-                    ),
-                    const SizedBox(width: 3.0),
-                    FormControlLabel(
-                      formControl: formViewModel.hasReminderControl,
-                      text: "Send notification ".hardcoded
-                    ),
-                    const SizedBox(width: 8.0),
-                    Opacity(
-                      opacity: (formViewModel.hasReminder) ? 1 : 0.5,
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          IntrinsicWidth(
-                              child: ReactiveTimePicker(
-                                formControl: formViewModel.reminderTimeControl,
-                                initialEntryMode: TimePickerEntryMode.input,
-                                builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                                  return ReactiveTextField(
-                                    formControl: formViewModel.reminderTimeControl,
-                                    decoration: InputDecoration(
-                                      hintText: "hh:mm".hardcoded,
-                                      suffixIcon: Material(
-                                          color: Colors.transparent,
-                                          child: IconButton(
-                                            splashRadius: 18.0,
-                                            onPressed: picker.showPicker,
-                                            icon: const Icon(Icons.access_time),
-                                          )
-                                      )
-                                    ),
-                                  );
-                                },
-                              )
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              FormTableRow(
-                label: "Time restriction".hardcoded,
-                labelHelpText: "TODO Time restriction help text".hardcoded,
-                input: ReactiveSwitch(
-                  formControl: formViewModel.isTimeRestrictedControl,
-                ),
-              ),
-              ..._conditionalTimeRestrictions(context),
-            ]
-        ),
-      ],
-    );
-  }
-
-  List<FormTableRow> _conditionalTimeRestrictions(BuildContext context) {
-    if (!formViewModel.isTimeRestricted) {
-      return [];
-    }
-    return [
-      FormTableRow(
-        label: " ",
-        input: Row(
-          children: [
-            Flexible(
-                child: ReactiveTimePicker(
-                  formControl: formViewModel.restrictedTimeStartControl,
-                  initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                    return ReactiveTextField(
-                      formControl: formViewModel.restrictedTimeStartControl,
-                      decoration: (formViewModel.restrictedTimeStartControl.enabled)
-                          ? InputDecoration(
-                          labelText: "From".hardcoded,
-                          helperText: "",
-                          hintText: "hh:mm".hardcoded,
-                          suffixIcon: Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                splashRadius: 18.0,
-                                onPressed: picker.showPicker,
-                                icon: const Icon(Icons.access_time),
-                              )
-                          )
-                      ) : const InputDecoration(),
-                    );
-                  },
-                )
-            ),
-            const SizedBox(width: 10.0),
-            Flexible(
-                child: ReactiveTimePicker(
-                  formControl: formViewModel.restrictedTimeEndControl,
-                  initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                    return ReactiveTextField(
-                      formControl: formViewModel.restrictedTimeEndControl,
-                      decoration: (formViewModel.restrictedTimeEndControl.enabled)
-                          ? InputDecoration(
-                          labelText: "To".hardcoded,
-                          helperText: "",
-                          hintText: "hh:mm".hardcoded,
-                          suffixIcon: Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                splashRadius: 18.0,
-                                onPressed: picker.showPicker,
-                                icon: const Icon(Icons.access_time),
-                              )
-                          )
-                      ) : const InputDecoration(),
-                    );
-                  },
-                )
-            ),
-          ],
-        )
-      ),
-    ];
   }
 
   _onNewItem(BuildContext context, WidgetRef ref) {

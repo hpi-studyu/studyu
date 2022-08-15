@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
@@ -15,7 +16,9 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
+
 class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
+    with StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
@@ -36,13 +39,14 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   final FormArray interventionsArray =
       FormArray([], validators: [Validators.minLength(1)]);
-  late final interventionsCollection = FormViewModelCollection<
-      InterventionFormViewModel, InterventionFormData>([], interventionsArray);
+  late final interventionsCollection =
+      FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
+          [], interventionsArray);
 
   @override
   late final FormGroup form = FormGroup({
     'interventions': interventionsArray,
-    // TODO: phase schedule
+    ...studyScheduleControls
   });
 
   @override
@@ -52,12 +56,14 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
             study: study, formData: data, delegate: this))
         .toList();
     interventionsCollection.reset(viewModels);
+    setStudyScheduleControlsFrom(data.studyScheduleData);
   }
 
   @override
   InterventionsFormData buildFormData() {
     return InterventionsFormData(
       interventionsData: interventionsCollection.formData,
+      studyScheduleData: buildStudyScheduleFormData(),
     );
   }
 
@@ -70,18 +76,17 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   List<ModelAction> availableActions(InterventionFormViewModel model) {
     // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
     final isReadonly = formMode == FormMode.readonly;
-    final actions = interventionsCollection.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = interventionsCollection.availableActions(model,
+        onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availablePopupActions(
-      InterventionFormViewModel model) {
+  List<ModelAction> availablePopupActions(InterventionFormViewModel model) {
     final actions = interventionsCollection.availablePopupActions(model);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(
-      InterventionFormViewModel model) {
+  List<ModelAction> availableInlineActions(InterventionFormViewModel model) {
     final actions = interventionsCollection.availableInlineActions(model);
     return withIcons(actions, modelActionIcons);
   }
@@ -90,8 +95,8 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   void onSelectItem(InterventionFormViewModel item) {
     final studyId = study.id;
     final interventionId = item.interventionId;
-    router
-        .dispatch(RoutingIntents.studyEditIntervention(studyId, interventionId));
+    router.dispatch(
+        RoutingIntents.studyEditIntervention(studyId, interventionId));
   }
 
   @override
@@ -126,14 +131,12 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   // - IFormViewModelDelegate
 
   @override
-  void onCancel(
-      InterventionFormViewModel formViewModel, FormMode formMode) {
+  void onCancel(InterventionFormViewModel formViewModel, FormMode formMode) {
     return; // no-op
   }
 
   @override
-  void onSave(
-      InterventionFormViewModel formViewModel, FormMode prevFormMode) {
+  void onSave(InterventionFormViewModel formViewModel, FormMode prevFormMode) {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       interventionsCollection.commit(formViewModel);

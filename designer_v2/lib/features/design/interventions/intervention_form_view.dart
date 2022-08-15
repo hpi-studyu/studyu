@@ -54,17 +54,17 @@ class InterventionFormView extends ConsumerWidget {
                 "TODO Intervention task description help text".hardcoded,
             input: ReactiveTextField(
               formControl: formViewModel.interventionDescriptionControl,
+              keyboardType: TextInputType.multiline,
+              minLines: 5,
+              maxLines: 5,
+              decoration: InputDecoration(
+                  hintText: "Describe the intervention phase to your study participants".hardcoded
+              ),
             ),
           ),
         ]),
         const SizedBox(height: 28.0),
-        FormTableLayout(rows: [
-          FormTableRow(
-              label: "Treatments".hardcoded,
-              input: Container(),
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold))
-        ]),
-        const Divider(),
+        FormSectionHeader(title: "Treatments".hardcoded),
         const SizedBox(height: 6.0),
         TextParagraph(
             text: "You can define one or more tasks that your participants should "

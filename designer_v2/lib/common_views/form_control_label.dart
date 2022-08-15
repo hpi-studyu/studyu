@@ -31,6 +31,9 @@ class FormControlLabel extends StatelessWidget {
         );
       },
       onTap: (!isClickable) ? null : () {
+        if (!formControl.enabled) {
+          return;
+        }
         if (formControl is AbstractControl<bool>) {
           // Auto-toggle boolean controls
           formControl.value = (formControl.value != null)

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule_controls_mixin.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
@@ -17,8 +17,10 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+
 class MeasurementSurveyFormViewModel
     extends ManagedFormViewModel<MeasurementSurveyFormData>
+    with WithScheduleControls
     implements
         IFormViewModelDelegate<SurveyQuestionFormViewModel>,
         IListActionProvider<SurveyQuestionFormViewModel>,
@@ -50,28 +52,8 @@ class MeasurementSurveyFormViewModel
   final FormControl<String> surveyIntroTextControl = FormControl(value: '');
   final FormControl<String> surveyOutroTextControl = FormControl(value: '');
 
-  final FormControl<bool> isTimeRestrictedControl =
-      FormControl(validators: [Validators.required], value: false);
-  final FormControl<TimeOfDay> restrictedTimeStartControl =
-      FormControl(value: const TimeOfDay(hour: 0, minute: 0));
-  final FormControl<TimeOfDay> restrictedTimeEndControl =
-      FormControl(value: const TimeOfDay(hour: 23, minute: 59));
-
-  final FormControl<bool> hasReminderControl =
-      FormControl(validators: [Validators.required], value: false);
-  final FormControl<TimeOfDay> reminderTimeControl = FormControl();
-
   final FormArray surveyQuestionsArray =
       FormArray([], validators: [Validators.minLength(1)]);
-
-  bool get hasReminder => hasReminderControl.value!;
-  bool get isTimeRestricted => isTimeRestrictedControl.value!;
-
-  List<TimeOfDay>? get timeRestriction => (isTimeRestricted &&
-          restrictedTimeStartControl.value != null &&
-          restrictedTimeEndControl.value != null)
-      ? [restrictedTimeStartControl.value!, restrictedTimeEndControl.value!]
-      : null;
 
   MeasurementID get measurementId => measurementIdControl.value!;
 
@@ -89,11 +71,7 @@ class MeasurementSurveyFormViewModel
     'surveyIntroText': surveyIntroTextControl,
     'surveyOutroText': surveyOutroTextControl,
     'surveyQuestions': surveyQuestionsArray,
-    'isTimeRestricted': isTimeRestrictedControl,
-    'restrictedTimeStart': restrictedTimeStartControl,
-    'restrictedTimeEnd': restrictedTimeEndControl,
-    'hasReminder': hasReminderControl,
-    'reminderTime': reminderTimeControl,
+    ...scheduleFormControls,
   });
 
   @override
@@ -111,11 +89,7 @@ class MeasurementSurveyFormViewModel
       surveyQuestionFormViewModels.reset(viewModels);
     }
 
-    isTimeRestrictedControl.value = data.isTimeLocked;
-    restrictedTimeStartControl.value = data.timeLockStart?.toTimeOfDay();
-    restrictedTimeEndControl.value = data.timeLockEnd?.toTimeOfDay();
-    hasReminderControl.value = data.hasReminder;
-    reminderTimeControl.value = data.reminderTime?.toTimeOfDay();
+    setScheduleControlsFrom(data);
   }
 
   @override

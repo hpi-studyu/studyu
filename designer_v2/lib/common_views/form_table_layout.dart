@@ -52,7 +52,7 @@ class FormTableLayout extends StatelessWidget {
       final tableRow = TableRow(
         children: [
           Container(
-            padding: EdgeInsets.only(top: 14.0, bottom: bottomSpacing),
+            padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing),
             child: Row(
               children: [
                 Text(
@@ -104,6 +104,28 @@ class FormTableLayout extends StatelessWidget {
     return Table(
       columnWidths: columnWidths,
       children: tableRows,
+    );
+  }
+}
+
+class FormSectionHeader extends StatelessWidget {
+  const FormSectionHeader({required this.title, Key? key}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        FormTableLayout(rows: [
+          FormTableRow(
+            label: title,
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            input: Container(),
+          ),
+        ]),
+        const Divider(),
+      ],
     );
   }
 }

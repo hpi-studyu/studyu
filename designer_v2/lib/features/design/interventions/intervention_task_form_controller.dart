@@ -1,13 +1,16 @@
 import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule_controls_mixin.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class InterventionTaskFormViewModel
-    extends ManagedFormViewModel<InterventionTaskFormData> {
+    extends ManagedFormViewModel<InterventionTaskFormData>
+    with WithScheduleControls {
   InterventionTaskFormViewModel({super.formData, super.delegate});
 
   // - Form fields
@@ -17,6 +20,7 @@ class InterventionTaskFormViewModel
   final FormControl<String> taskTitleControl =
       FormControl(validators: [Validators.required]);
   final FormControl<String> taskDescriptionControl = FormControl();
+  final FormControl<bool> markAsCompletedControl = FormControl(); // not yet supported
 
   TaskID get taskId => taskIdControl.value!;
 
@@ -25,7 +29,8 @@ class InterventionTaskFormViewModel
     'taskId': taskIdControl, // hidden
     'taskTitle': taskTitleControl,
     'taskDescription': taskDescriptionControl,
-    // TODO scheduling
+    'markAsCompleted': markAsCompletedControl, // TODO: figure out how to disable this
+    ...scheduleFormControls
   });
 
   @override
@@ -33,6 +38,7 @@ class InterventionTaskFormViewModel
     taskIdControl.value = data.taskId;
     taskTitleControl.value = data.taskTitle;
     taskDescriptionControl.value = data.taskDescription;
+    setScheduleControlsFrom(data);
   }
 
   @override
@@ -41,6 +47,11 @@ class InterventionTaskFormViewModel
       taskId: taskId,
       taskTitle: taskTitleControl.value!, // required
       taskDescription: taskDescriptionControl.value,
+      isTimeLocked: isTimeRestrictedControl.value!, // required
+      timeLockStart: restrictedTimeStartControl.value?.toStudyUTimeOfDay(),
+      timeLockEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
+      hasReminder: hasReminderControl.value!, // required
+      reminderTime: reminderTimeControl.value?.toStudyUTimeOfDay(),
     );
   }
 

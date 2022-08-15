@@ -4,9 +4,10 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/container_bounded.dart';
-import 'package:studyu_designer_v2/common_views/icon_picker.dart';
+import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -46,7 +47,7 @@ class StudyDesignInterventionsFormView extends ConsumerWidget {
                             "are free to choose any two interventions to compare "
                             "when they begin the study."
                         .hardcoded),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 8.0),
                 const Hyperlink(
                     icon: Icons.north_east_rounded,
                     text: "Learn more about N-of-1 trial designs",
@@ -91,6 +92,12 @@ class StudyDesignInterventionsFormView extends ConsumerWidget {
                     },
                   );
                 }),
+                const SizedBox(height: 24.0),
+                const SizedBox(height: 12.0),
+                FormSectionHeader(title: "Crossover schedule".hardcoded),
+                const SizedBox(height: 12.0),
+                // TODO study schedule illustration
+                StudyScheduleFormView(formViewModel: formViewModel),
               ],
             ),
           ),

@@ -1,13 +1,16 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
 class InterventionsFormData implements IStudyFormData {
-  InterventionsFormData({required this.interventionsData});
+  InterventionsFormData({
+    required this.interventionsData,
+    required this.studyScheduleData
+  });
 
   final List<InterventionFormData> interventionsData;
-  // TODO phase scheduling
+  final StudyScheduleFormData studyScheduleData;
 
   @override
   String get id =>
@@ -19,6 +22,7 @@ class InterventionsFormData implements IStudyFormData {
           .map((intervention) =>
               InterventionFormData.fromDomainModel(intervention))
           .toList(),
+      studyScheduleData: StudyScheduleFormData.fromDomainModel(study.schedule),
     );
   }
 
@@ -27,6 +31,9 @@ class InterventionsFormData implements IStudyFormData {
     final List<Intervention> interventions =
         interventionsData.map((formData) => formData.toIntervention()).toList();
     study.interventions = interventions;
+
+    studyScheduleData.apply(study);
+
     return study;
   }
 

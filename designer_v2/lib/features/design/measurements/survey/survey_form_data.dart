@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/question/
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class MeasurementSurveyFormData extends IFormData {
+class MeasurementSurveyFormData extends IFormDataWithSchedule {
   static final kDefaultTitle = "Unnamed survey".hardcoded;
 
   MeasurementSurveyFormData({
@@ -16,11 +16,11 @@ class MeasurementSurveyFormData extends IFormData {
     this.introText,
     this.outroText,
     this.surveyQuestionsData,
-    required this.isTimeLocked,
-    this.timeLockStart,
-    this.timeLockEnd,
-    required this.hasReminder,
-    this.reminderTime,
+    required super.isTimeLocked,
+    super.timeLockStart,
+    super.timeLockEnd,
+    required super.hasReminder,
+    super.reminderTime,
   });
 
   final MeasurementID measurementId;
@@ -28,11 +28,6 @@ class MeasurementSurveyFormData extends IFormData {
   final String? introText;
   final String? outroText;
   final List<SurveyQuestionFormData>? surveyQuestionsData;
-  final bool isTimeLocked;
-  final StudyUTimeOfDay? timeLockStart;
-  final StudyUTimeOfDay? timeLockEnd;
-  final bool hasReminder;
-  final StudyUTimeOfDay? reminderTime;
 
   @override
   FormDataID get id => measurementId;
@@ -64,18 +59,7 @@ class MeasurementSurveyFormData extends IFormData {
     questionnaireTask.questions.questions = (surveyQuestionsData != null)
         ? surveyQuestionsData!.map((formData) => formData.toQuestion()).toList()
         : [];
-    questionnaireTask.schedule.reminders = (!hasReminder || reminderTime == null)
-        ? [] : [reminderTime!];
-    questionnaireTask.schedule.completionPeriods = (!isTimeLocked ||
-        (timeLockStart == null && timeLockEnd == null))
-        ? [CompletionPeriod( // default unrestricted period
-            unlockTime: ScheduleX.unrestrictedTime[0],
-            lockTime: ScheduleX.unrestrictedTime[1]
-          )]
-        : [CompletionPeriod( // user-defined period
-            unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
-            lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1]
-          )];
+    questionnaireTask.schedule = toSchedule();
     return questionnaireTask;
   }
 
