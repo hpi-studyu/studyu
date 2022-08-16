@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/app_state.dart';
@@ -79,13 +78,15 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
             const SizedBox(height: 16),
+            /* todo why is this here?
             RetryFutureBuilder<Study>(
               tryFunction: () => SupabaseQuery.getById<Study>(study.id),
               successBuilder: (BuildContext context, Study study) {
                 context.read<AppState>().selectedStudy = study;
                 return StudyDetailsView(study: study);
               },
-            ),
+            ), */
+            StudyDetailsView(study: study),
           ],
         ),
       ),

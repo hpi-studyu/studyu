@@ -130,7 +130,6 @@ class Study extends SupabaseObjectFunctions<Study> {
         await env.client
             .from(tableName)
             .select()
-            .eq('participation', 'open')
             .execute(),
       );
 
