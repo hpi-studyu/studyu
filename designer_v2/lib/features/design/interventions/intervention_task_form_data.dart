@@ -1,6 +1,7 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/domain/task.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 

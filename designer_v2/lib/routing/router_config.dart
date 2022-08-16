@@ -15,6 +15,7 @@ import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
 import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
@@ -161,7 +162,7 @@ class RouterConfig {
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.enrollment(studyId),
-              body: StudyEditScreen(studyId),
+              body: StudyDesignEnrollmentFormView(studyId),
               layoutType: SingleColumnLayoutType.split,
         ));
       }
@@ -406,41 +407,62 @@ class RouterConfig {
 
 // - Route Args
 
-class MeasurementFormRouteArgs {
-  MeasurementFormRouteArgs({
-    required this.studyId,
-    required this.measurementId
-  });
-
+abstract class StudyFormRouteArgs {
+  StudyFormRouteArgs({required this.studyId});
   final StudyID studyId;
-  final MeasurementID measurementId;
 }
 
-class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs {
-  SurveyQuestionFormRouteArgs({
+abstract class QuestionFormRouteArgs extends StudyFormRouteArgs {
+  QuestionFormRouteArgs({
+    required this.questionId,
     required super.studyId,
-    required super.measurementId,
-    required this.questionId
   });
 
   final QuestionID questionId;
 }
 
-class InterventionFormRouteArgs {
-  InterventionFormRouteArgs({
-    required this.studyId,
-    required this.interventionId
+class ScreenerQuestionFormRouteArgs extends QuestionFormRouteArgs {
+  ScreenerQuestionFormRouteArgs({
+    required super.questionId,
+    required super.studyId,
+  });
+}
+
+class MeasurementFormRouteArgs extends StudyFormRouteArgs {
+  MeasurementFormRouteArgs({
+    required this.measurementId,
+    required super.studyId,
   });
 
-  final StudyID studyId;
+  final MeasurementID measurementId;
+}
+
+class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs
+    implements QuestionFormRouteArgs {
+  SurveyQuestionFormRouteArgs({
+    required this.questionId,
+    required super.studyId,
+    required super.measurementId,
+  });
+
+  @override
+  final QuestionID questionId;
+}
+
+class InterventionFormRouteArgs extends StudyFormRouteArgs {
+  InterventionFormRouteArgs({
+    required this.interventionId,
+    required super.studyId,
+  });
+
   final InterventionID interventionId;
 }
 
 class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
   InterventionTaskFormRouteArgs({
+    required this.taskId,
     required super.studyId,
     required super.interventionId,
-    required this.taskId
   });
 
   final TaskID taskId;

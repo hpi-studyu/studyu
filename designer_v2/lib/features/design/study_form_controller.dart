@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -10,7 +12,7 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -34,6 +36,13 @@ class StudyFormViewModel extends FormViewModel<Study>
   final IStudyRepository studyRepository;
 
   final GoRouter router;
+
+  late final EnrollmentFormViewModel enrollmentFormViewModel = EnrollmentFormViewModel(
+    formData: EnrollmentFormData.fromStudy(formData!),
+    delegate: this,
+    study: formData!,
+    router: router,
+  );
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
     formData: MeasurementsFormData.fromStudy(formData!),
@@ -148,7 +157,7 @@ final surveyFormViewModelProvider = Provider.autoDispose
 });
 
 final surveyQuestionFormViewModelProvider = Provider.autoDispose
-    .family<SurveyQuestionFormViewModel,SurveyQuestionFormRouteArgs>((ref, args) {
+    .family<QuestionFormViewModel,SurveyQuestionFormRouteArgs>((ref, args) {
       final owner = ref.watch(surveyFormViewModelProvider(args));
       return owner.provide(args);
 });

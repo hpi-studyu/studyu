@@ -289,6 +289,22 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
+  RadioThemeData radioTheme(ColorScheme colors) {
+    return RadioThemeData(
+      splashRadius: 18.0,
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return colors.primary.withOpacity(0.9);
+        }
+        return null;
+      }),
+    );
+  }
+
   TooltipThemeData tooltipTheme(ColorScheme colors) {
     return TooltipThemeData(
       padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
@@ -335,6 +351,7 @@ class ThemeProvider extends InheritedWidget {
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
       checkboxTheme: checkboxTheme(colorScheme),
+      radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
       useMaterial3: true,
     );
@@ -360,6 +377,7 @@ class ThemeProvider extends InheritedWidget {
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
       checkboxTheme: checkboxTheme(colorScheme),
+      radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
       useMaterial3: true,
     );

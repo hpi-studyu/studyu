@@ -77,3 +77,18 @@ extension DateTimeAgoX on DateTime {
     }
   }
 }
+
+typedef ListElementFactory<E> = E Function();
+
+extension ListX<E> on List<E> {
+  List<E> separatedBy(ListElementFactory<E> separatorBuilder) {
+    final List<E> results = [];
+    for (var i = 0; i < length; i++) {
+      results.add(this[i]);
+      if (i != length - 1) {
+        results.add(separatorBuilder());
+      }
+    }
+    return results;
+  }
+}

@@ -14,6 +14,7 @@ class Hyperlink extends StatefulWidget {
       this.visitedStyle,
       this.icon,
       this.iconSize,
+      this.neverVisited = false,
       Key? key})
       : super(key: key);
 
@@ -31,6 +32,8 @@ class Hyperlink extends StatefulWidget {
   final IconData? icon;
   final double? iconSize;
 
+  final bool neverVisited;
+
   @override
   State<Hyperlink> createState() => _HyperlinkState();
 }
@@ -46,7 +49,9 @@ class _HyperlinkState extends State<Hyperlink> {
       final isHovered = states.contains(MaterialState.hovered);
 
       final hoverColor = widget.hoverColor ?? widget.linkColor;
-      final visitedColor = widget.visitedColor ?? widget.linkColor;
+      final visitedColor = (widget.neverVisited)
+          ? widget.linkColor
+          : (widget.visitedColor ?? widget.linkColor);
       final actualColor = isVisited
           ? visitedColor
           : isHovered
@@ -66,14 +71,12 @@ class _HyperlinkState extends State<Hyperlink> {
       final textWidget = Text(widget.text, style: actualStyle);
 
       if (widget.icon != null) {
-        return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(widget.icon,
-                  color: actualColor,
-                  size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
-              const SizedBox(width: 2.0),
-              textWidget
+        return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Icon(widget.icon,
+              color: actualColor,
+              size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
+          const SizedBox(width: 2.0),
+          textWidget
         ]);
       }
 

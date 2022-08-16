@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 
 class TextParagraph extends StatelessWidget {
-  const TextParagraph({required this.text, Key? key}) : super(key: key);
+  const TextParagraph({
+    required this.text,
+    this.style,
+    this.selectable = true,
+    Key? key
+  }) : super(key: key);
 
   final String text;
+  final TextStyle? style;
+  final bool selectable;
 
   @override
   Widget build(BuildContext context) {
-    return SelectableText(
-      text,
-      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-        height: 1.35,
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
-    );
+    final theme = Theme.of(context);
+    final textStyle = theme.textTheme.bodyText2!
+        .copyWith(
+            height: 1.35, color: theme.colorScheme.onSurface.withOpacity(0.75))
+        .merge(style);
+
+    if (!selectable) {
+      return Text(text, style: textStyle);
+    }
+    return SelectableText(text, style: textStyle);
   }
 }

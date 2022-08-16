@@ -1,0 +1,36 @@
+import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
+import 'package:studyu_designer_v2/features/forms/form_data.dart';
+
+class QuestionnaireFormData implements IFormData {
+  QuestionnaireFormData({this.questionsData});
+
+  final List<QuestionFormData>? questionsData;
+
+  factory QuestionnaireFormData.fromDomainModel(
+      StudyUQuestionnaire questionnaire) {
+    return QuestionnaireFormData(
+      questionsData: questionnaire.questions
+          .map((question) => QuestionFormData.fromDomainModel(question))
+          .toList(),
+    );
+  }
+
+  StudyUQuestionnaire toQuestionnaire() {
+    final questionnaire = StudyUQuestionnaire();
+    questionnaire.questions = (questionsData != null)
+        ? questionsData!.map((formData) => formData.toQuestion()).toList()
+        : [];
+    return questionnaire;
+  }
+
+  @override
+  QuestionnaireFormData copy() {
+    return QuestionnaireFormData(
+      questionsData: questionsData?.map((formData) => formData.copy()).toList(),
+    );
+  }
+
+  @override
+  FormDataID get id => throw UnimplementedError(); // not available
+}

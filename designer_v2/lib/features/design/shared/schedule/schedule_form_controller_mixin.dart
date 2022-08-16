@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 
 mixin WithScheduleControls {
   final FormControl<bool> isTimeRestrictedControl =
@@ -23,6 +26,8 @@ mixin WithScheduleControls {
       ? [restrictedTimeStartControl.value!, restrictedTimeEndControl.value!]
       : null;
 
+  StreamSubscription? _reminderControlStream;
+
   late final scheduleFormControls = {
     'isTimeRestricted': isTimeRestrictedControl,
     'restrictedTimeStart': restrictedTimeStartControl,
@@ -37,5 +42,18 @@ mixin WithScheduleControls {
     restrictedTimeEndControl.value = data.timeLockEnd?.toTimeOfDay();
     hasReminderControl.value = data.hasReminder;
     reminderTimeControl.value = data.reminderTime?.toTimeOfDay();
+    _initReminderControl();
+  }
+
+  _initReminderControl() {
+    _reminderControlStream?.cancel();
+    _reminderControlStream =
+        hasReminderControl.valueChanges.listen((hasReminder) {
+      if (hasReminder != null && !hasReminder) {
+        reminderTimeControl.markAsDisabled();
+      } else {
+        reminderTimeControl.markAsEnabled();
+      }
+    });
   }
 }

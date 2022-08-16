@@ -3,7 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/schedule_controls_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class InterventionTaskFormView extends StatelessWidget {

@@ -6,7 +6,8 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
-typedef WidgetBuilderAt<T> = Widget Function(BuildContext context, T item, int rowIdx);
+typedef WidgetBuilderAt<T> = Widget Function(
+    BuildContext context, T item, int rowIdx);
 
 class FormArrayTable<T> extends StatelessWidget {
   const FormArrayTable(
@@ -17,13 +18,16 @@ class FormArrayTable<T> extends StatelessWidget {
       required this.onNewItemLabel,
       required this.rowTitle,
       this.rowPrefix,
+      this.leadingWidget,
       this.sectionTitle,
       this.sectionTitleDivider = true,
       this.emptyIcon,
       this.emptyTitle,
       this.emptyDescription,
       Key? key})
-      : super(key: key);
+      : assert(sectionTitle == null || leadingWidget == null,
+            "Cannot specify both sectionTitle and leadingWidget"),
+        super(key: key);
 
   final List<T> items;
   final OnSelectHandler<T> onSelectItem;
@@ -42,6 +46,8 @@ class FormArrayTable<T> extends StatelessWidget {
 
   final WidgetBuilderAt<T>? rowPrefix;
 
+  final Widget? leadingWidget;
+
   static final List<StandardTableColumn> columns = [
     const StandardTableColumn(
         label: '', // don't care (showTableHeader=false)
@@ -53,6 +59,23 @@ class FormArrayTable<T> extends StatelessWidget {
     final hasEmptyWidget =
         emptyIcon != null || emptyTitle != null || emptyDescription != null;
 
+    Widget? leading;
+    if (leadingWidget != null) {
+      leading = leadingWidget;
+    } else if (sectionTitle != null) {
+      leading = FormTableLayout(
+          rowDivider: (sectionTitleDivider ?? false)
+              ? const Divider()
+              : const SizedBox.shrink(),
+          rows: [
+            FormTableRow(
+                label: sectionTitle!,
+                input: Container(),
+                labelStyle: Theme.of(context).textTheme.headline6)
+          ]
+      );
+    }
+
     return StandardTable<T>(
       items: items,
       columns: columns,
@@ -63,18 +86,7 @@ class FormArrayTable<T> extends StatelessWidget {
       rowSpacing: 5.0,
       minRowHeight: 40.0,
       showTableHeader: false,
-      leadingWidget: (sectionTitle != null)
-          ? FormTableLayout(
-              rowDivider: (sectionTitleDivider ?? false)
-                  ? const Divider()
-                  : const SizedBox.shrink(),
-              rows: [
-                  FormTableRow(
-                      label: sectionTitle!,
-                      input: Container(),
-                      labelStyle: Theme.of(context).textTheme.headline6)
-                ])
-          : const SizedBox.shrink(),
+      leadingWidget: leading ?? const SizedBox.shrink(),
       trailingWidget: _newItemButton(),
       emptyWidget: (hasEmptyWidget)
           ? Padding(
@@ -101,7 +113,9 @@ class FormArrayTable<T> extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
+            (rowPrefix != null)
+                ? rowPrefix!(context, item, rowIdx)
+                : const SizedBox.shrink(),
             Text(
               rowTitle(item),
               style: tableTextStyleSecondary.copyWith(

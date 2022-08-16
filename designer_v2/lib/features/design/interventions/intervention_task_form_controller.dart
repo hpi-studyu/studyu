@@ -1,6 +1,6 @@
 import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/schedule_controls_mixin.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';

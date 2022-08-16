@@ -5,18 +5,18 @@ import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
-class SurveyQuestionFormViewModel
-    extends ManagedFormViewModel<SurveyQuestionFormData>
+class QuestionFormViewModel
+    extends ManagedFormViewModel<QuestionFormData>
     implements IListActionProvider<AbstractControl<String>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
-  SurveyQuestionFormViewModel({super.formData, super.delegate}) {
+  QuestionFormViewModel({super.formData, super.delegate}) {
     // Keep the form in sync with the selected question type
     _updateFormControls(questionType);
     _questionTypeChanges =
@@ -39,7 +39,7 @@ class SurveyQuestionFormViewModel
   SurveyQuestionType get questionType => questionTypeControl.value!;
 
   List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
-      SurveyQuestionFormData.questionTypeFormDataFactories.keys
+      QuestionFormData.questionTypeFormDataFactories.keys
           .map((questionType) =>
               FormControlOption(questionType, questionType.string))
           .toList();
@@ -101,7 +101,7 @@ class SurveyQuestionFormViewModel
   }
 
   @override
-  void setControlsFrom(SurveyQuestionFormData data) {
+  void setControlsFrom(QuestionFormData data) {
     // Shared controls
     questionIdControl.value = data.questionId;
     questionTextControl.value = data.questionText;
@@ -127,7 +127,7 @@ class SurveyQuestionFormViewModel
   }
 
   @override
-  SurveyQuestionFormData buildFormData() {
+  QuestionFormData buildFormData() {
     switch (questionType) {
       case SurveyQuestionType.bool:
         return BoolQuestionFormData(
@@ -161,10 +161,10 @@ class SurveyQuestionFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: "New Survey Question".hardcoded,
-        FormMode.edit: "Edit Survey Question".hardcoded,
-        FormMode.readonly: "View Survey Question".hardcoded,
-      };
+    FormMode.create: "New Question".hardcoded,
+    FormMode.edit: "Edit Question".hardcoded,
+    FormMode.readonly: "View Question".hardcoded,
+  };
 
   @override
   List<ModelAction> availableActions(AbstractControl<String> model) {
@@ -197,8 +197,8 @@ class SurveyQuestionFormViewModel
   }
 
   @override
-  SurveyQuestionFormViewModel createDuplicate() {
-    return SurveyQuestionFormViewModel(
+  QuestionFormViewModel createDuplicate() {
+    return QuestionFormViewModel(
         delegate: delegate, formData: formData?.copy());
   }
 }

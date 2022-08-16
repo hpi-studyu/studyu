@@ -24,7 +24,7 @@ typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 class APIException implements Exception {}
 class StudyNotFoundException extends APIException {}
 class MeasurementNotFoundException extends APIException {}
-class SurveyQuestionNotFoundException extends APIException {}
+class QuestionNotFoundException extends APIException {}
 class InterventionNotFoundException extends APIException {}
 class InterventionTaskNotFoundException extends APIException {}
 class StudyInviteNotFoundException extends APIException {}

@@ -2,14 +2,14 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
-typedef SurveyQuestionFormDataFactory = SurveyQuestionFormData Function(Question question);
+typedef SurveyQuestionFormDataFactory = QuestionFormData Function(Question question);
 
-abstract class SurveyQuestionFormData implements IFormData {
+abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType,SurveyQuestionFormDataFactory> questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question) =>
         ScaleQuestionFormData.fromDomainModel(question),
@@ -19,7 +19,7 @@ abstract class SurveyQuestionFormData implements IFormData {
         ChoiceQuestionFormData.fromDomainModel(question as ChoiceQuestion),
   };
 
-  SurveyQuestionFormData({
+  QuestionFormData({
     required this.questionId,
     required this.questionText,
     required this.questionType,
@@ -31,10 +31,12 @@ abstract class SurveyQuestionFormData implements IFormData {
   final String? questionInfoText;
   final SurveyQuestionType questionType;
 
+  // TODO final EligibilityCriterion? eligibilityCriterion;
+
   @override
   String get id => questionId;
 
-  factory SurveyQuestionFormData.fromDomainModel(Question question) {
+  factory QuestionFormData.fromDomainModel(Question question) {
     final surveyQuestionType = SurveyQuestionType.of(question);
     if (!questionTypeFormDataFactories.containsKey(surveyQuestionType)) {
       throw Exception("Failed to create SurveyQuestionFormData for unknown "
@@ -46,10 +48,10 @@ abstract class SurveyQuestionFormData implements IFormData {
   Question toQuestion(); // subclass responsibility
 
   @override
-  SurveyQuestionFormData copy(); // subclass responsibility
+  QuestionFormData copy(); // subclass responsibility
 }
 
-class ChoiceQuestionFormData extends SurveyQuestionFormData {
+class ChoiceQuestionFormData extends QuestionFormData {
   ChoiceQuestionFormData({
     required super.questionId,
     required super.questionText,
@@ -90,7 +92,7 @@ class ChoiceQuestionFormData extends SurveyQuestionFormData {
   }
 
   @override
-  SurveyQuestionFormData copy() {
+  QuestionFormData copy() {
     return ChoiceQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
       questionType: questionType,
@@ -108,7 +110,7 @@ BoolQuestionFormData
 options: Option(id, label, value, validator?)
   validators: Any (qualify), None (disqualify)
  */
-class BoolQuestionFormData extends SurveyQuestionFormData {
+class BoolQuestionFormData extends QuestionFormData {
   BoolQuestionFormData({
     required super.questionId,
     required super.questionText,
@@ -152,7 +154,7 @@ class BoolQuestionFormData extends SurveyQuestionFormData {
 }
 
 // TODO: placeholder (currently blocked waiting for designs)
-class ScaleQuestionFormData extends SurveyQuestionFormData {
+class ScaleQuestionFormData extends QuestionFormData {
   ScaleQuestionFormData({
     required super.questionId,
     required super.questionText,
@@ -180,7 +182,7 @@ class ScaleQuestionFormData extends SurveyQuestionFormData {
   }
 
   @override
-  SurveyQuestionFormData copy() {
+  QuestionFormData copy() {
     return ScaleQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
       questionType: questionType,

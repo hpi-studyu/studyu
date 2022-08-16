@@ -53,7 +53,7 @@ class StudyDesignNav {
   );
   static final enrollment = (studyId) => NavbarTab(
       index: 1,
-      title: "Enrollment".hardcoded,
+      title: "Participation".hardcoded,
       intent: RoutingIntents.studyEditEnrollment(studyId)
   );
   static final interventions = (studyId) => NavbarTab(

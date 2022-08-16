@@ -1,9 +1,10 @@
 import 'package:studyu_designer_v2/domain/schedule.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:uuid/uuid.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
@@ -15,19 +16,19 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
     required this.title,
     this.introText,
     this.outroText,
-    this.surveyQuestionsData,
     required super.isTimeLocked,
     super.timeLockStart,
     super.timeLockEnd,
     required super.hasReminder,
     super.reminderTime,
+    required this.questionnaireFormData,
   });
 
   final MeasurementID measurementId;
   final String title;
   final String? introText;
   final String? outroText;
-  final List<SurveyQuestionFormData>? surveyQuestionsData;
+  final QuestionnaireFormData questionnaireFormData;
 
   @override
   FormDataID get id => measurementId;
@@ -39,9 +40,8 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
       title: questionnaireTask.title ?? '',
       introText: questionnaireTask.header,
       outroText: questionnaireTask.footer,
-      surveyQuestionsData: questionnaireTask.questions.questions
-          .map((question) => SurveyQuestionFormData.fromDomainModel(question))
-          .toList(),
+      questionnaireFormData:
+          QuestionnaireFormData.fromDomainModel(questionnaireTask.questions),
       isTimeLocked: questionnaireTask.schedule.isTimeRestricted,
       timeLockStart: questionnaireTask.schedule.restrictedTimeStart,
       timeLockEnd: questionnaireTask.schedule.restrictedTimeEnd,
@@ -56,9 +56,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
     questionnaireTask.title = title;
     questionnaireTask.header = introText;
     questionnaireTask.footer = outroText;
-    questionnaireTask.questions.questions = (surveyQuestionsData != null)
-        ? surveyQuestionsData!.map((formData) => formData.toQuestion()).toList()
-        : [];
+    questionnaireTask.questions = questionnaireFormData.toQuestionnaire();
     questionnaireTask.schedule = toSchedule();
     return questionnaireTask;
   }
@@ -70,7 +68,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
       title: title.withDuplicateLabel(),
       introText: introText,
       outroText: outroText,
-      surveyQuestionsData: surveyQuestionsData, // TODO: map(copyFrom)
+      questionnaireFormData: questionnaireFormData.copy(),
       isTimeLocked: isTimeLocked,
       timeLockStart: timeLockStart,
       timeLockEnd: timeLockEnd,

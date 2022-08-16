@@ -20,8 +20,9 @@ abstract class IFormViewModelDelegate<T extends FormViewModel> {
 class FormControlOption<T> {
   final T value;
   final String label;
+  final String? description;
 
-  FormControlOption(this.value, this.label);
+  FormControlOption(this.value, this.label, {this.description});
 }
 
 typedef FormControlUpdateCallback = void Function(AbstractControl control);

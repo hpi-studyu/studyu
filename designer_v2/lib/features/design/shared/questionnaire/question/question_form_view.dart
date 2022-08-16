@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/bool_question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/choice_question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/scale_question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]
@@ -15,7 +15,7 @@ class SurveyQuestionFormView extends FormConsumerWidget {
     Key? key
   }) : super(key: key);
 
-  final SurveyQuestionFormViewModel formViewModel;
+  final QuestionFormViewModel formViewModel;
 
   @override
   Widget build(BuildContext context, FormGroup form) {

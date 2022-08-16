@@ -28,6 +28,7 @@ class FormControlLabel extends StatelessWidget {
               fontSize: theme.textTheme.bodyText2!.fontSize! * 0.9,
               height: theme.textTheme.labelMedium!.height,
             ).merge(textStyle),
+          overflow: TextOverflow.clip,
         );
       },
       onTap: (!isClickable) ? null : () {

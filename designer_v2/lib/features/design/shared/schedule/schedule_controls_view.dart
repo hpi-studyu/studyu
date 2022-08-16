@@ -3,7 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/features/design/shared/schedule_controls_mixin.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class ScheduleControls extends FormConsumerWidget {
