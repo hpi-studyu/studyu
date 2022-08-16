@@ -1,5 +1,3 @@
-
-
 class Config {
   static const isDebugMode = true;
 

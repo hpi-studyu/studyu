@@ -6,7 +6,9 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/features/auth/form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/repositories/app_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'auth_formfield_views.dart';
@@ -73,7 +75,9 @@ class _PageContentState extends ConsumerState<PageContent> {
   }
 
   Widget _tosWidget() {
-    // .hardcoded see below
+    final appConfig = ref.watch(appConfigProvider);
+    final locale = ref.watch(localeProvider);
+    appConfig.maybeWhen(data: (value) => print(value.contact), orElse: () => print("null"));
     return ReactiveCheckboxListTile(
       formControlName: 'termsOfService',
       //onChanged: (val) => authForm.control('termsOfService').value = val.value,
@@ -88,7 +92,7 @@ class _PageContentState extends ConsumerState<PageContent> {
               text: 'terms of use',
               style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
               recognizer: TapGestureRecognizer()
-                ..onTap = () { launchUrl(Uri.parse('https://www13.hpi.uni-potsdam.de/fileadmin/user_upload/fachgebiete/lippert/studyu/StudyU_Designer_terms_en.pdf'.hardcoded)); },
+                ..onTap = () { launchUrl(appConfig.maybeWhen(data: (value) => Uri.parse(value.designerTerms[locale.languageCode] ?? ""), orElse: () => Uri.parse(''))); },
             ),
             const TextSpan(
               text: ' and ',
@@ -97,7 +101,7 @@ class _PageContentState extends ConsumerState<PageContent> {
               text: 'privacy policy',
               style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
               recognizer: TapGestureRecognizer()
-                ..onTap = () { launchUrl(Uri.parse('https://www13.hpi.uni-potsdam.de/fileadmin/user_upload/fachgebiete/lippert/studyu/StudyU_Designer_privacy_en.pdf'.hardcoded)); },
+                ..onTap = () { launchUrl(appConfig.maybeWhen(data: (value) => Uri.parse(value.designerPrivacy[locale.languageCode] ?? ""), orElse: () => Uri.parse(''))); },
             ),
             const TextSpan(
               text: ' ', // Prevent clickable area stretching
