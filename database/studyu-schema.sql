@@ -74,7 +74,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.study (
-    id uuid DEFAULT extensions.uuid_generate_v4() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     contact jsonb NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
@@ -112,7 +112,7 @@ COMMENT ON COLUMN public.study.user_id IS 'UserId of study creator';
 --
 
 CREATE TABLE public.study_subject (
-    id uuid DEFAULT extensions.uuid_generate_v4() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     study_id uuid NOT NULL,
     user_id uuid NOT NULL,
     started_at timestamp with time zone DEFAULT now(),
