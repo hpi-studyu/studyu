@@ -4,18 +4,21 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 class StudyInfoFormData implements IStudyFormData {
   StudyInfoFormData({
     required this.title,
-    required this.description,
+    this.description,
     required this.contactInfoFormData,
+    required this.iconName,
   });
 
   final String title;
   final String? description;
+  final String iconName;
   final StudyContactInfoFormData contactInfoFormData;
 
   factory StudyInfoFormData.fromStudy(Study study) {
     return StudyInfoFormData(
       title: study.title ?? '',
       description: study.description ?? '',
+      iconName: study.iconName,
       contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
     );
   }
@@ -24,6 +27,7 @@ class StudyInfoFormData implements IStudyFormData {
   Study apply(Study study) {
     study.title = title;
     study.description = description;
+    study.iconName = iconName;
     contactInfoFormData.apply(study);
     return study;
   }
