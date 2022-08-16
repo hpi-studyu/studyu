@@ -52,8 +52,8 @@ class FormTableLayout extends StatelessWidget {
       final tableRow = TableRow(
         children: [
           Container(
-            padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing),
-            child: Row(
+            padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing, right: 8.0),
+            child: Wrap(
               children: [
                 Text(
                   row.label,

@@ -17,11 +17,12 @@ extension ParticipationFormatted on Participation {
   String get description {
     switch (this) {
       case Participation.open:
-        return "Your study will be open to all StudyU users for enrollment as "
+        return "Your study will be open for enrollment to all users of the StudyU platform as "
             "long as they match your screening criteria, if any.".hardcoded;
       case Participation.invite:
         return "Only select participants will be able to enroll in your study "
-            "using a designated access code.".hardcoded;
+            "using a designated access code. Choose this option if you have a "
+            "preselected pool of participants.".hardcoded;
       default:
         return "[Invalid Participation]";
     }

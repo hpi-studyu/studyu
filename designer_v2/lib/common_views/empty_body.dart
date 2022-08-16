@@ -36,7 +36,7 @@ class EmptyBody extends StatelessWidget {
           (description != null) ? SelectableText(description!,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyText2!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8))
+                color: theme.colorScheme.onSurface.withOpacity(0.75))
           ) : const SizedBox.shrink(),
           (button != null) ?
             Padding(

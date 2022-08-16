@@ -5,18 +5,17 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
+import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:studyu_designer_v2/routing/router_config.dart';
 
 
 class StudyFormViewModel extends FormViewModel<Study>
@@ -36,6 +35,12 @@ class StudyFormViewModel extends FormViewModel<Study>
   final IStudyRepository studyRepository;
 
   final GoRouter router;
+
+  late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
+    formData: StudyInfoFormData.fromStudy(formData!),
+    delegate: this,
+    study: formData!,
+  );
 
   late final EnrollmentFormViewModel enrollmentFormViewModel = EnrollmentFormViewModel(
     formData: EnrollmentFormData.fromStudy(formData!),
@@ -58,24 +63,17 @@ class StudyFormViewModel extends FormViewModel<Study>
     router: router,
   );
 
-  //late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
-  //    data: StudyInfoFormData.fromStudy(data!), parent: this);
-  //late final EnrollmentFormViewModel enrollmentFormViewModel = EnrollmentFormViewModel(
-  //    data: EnrollmentFormData.fromStudy(data!), parent: this
-  //);
-
   @override
   late final FormGroup form = FormGroup({
-    //'info': studyInfoFormViewModel.form,
-    //'enrollment': enrollmentFormViewModel.form,
+    'info': studyInfoFormViewModel.form,
+    'enrollment': enrollmentFormViewModel.form,
     'measurements': measurementsFormViewModel.form,
+    'interventions': interventionsFormViewModel.form,
   });
 
   @override
   void setControlsFrom(Study data) {
-    //studyInfoFormViewModel.fromData(StudyInfoFormData.fromStudy(data));
-    //enrollmentFormViewModel.fromData(EnrollmentFormData.fromStudy(data));
-    measurementsFormViewModel.setControlsFrom(MeasurementsFormData.fromStudy(data));
+    return; // subforms manage their own controls
   }
 
   @override
@@ -84,10 +82,27 @@ class StudyFormViewModel extends FormViewModel<Study>
   }
 
   @override
-  Map<FormMode, String> get titles => {
-    FormMode.create: "TODO create",
-    FormMode.edit: "TODO edit",
-  };
+  Map<FormMode, String> get titles => throw UnimplementedError(); // unused
+
+  @override
+  void dispose() {
+    studyInfoFormViewModel.dispose();
+    enrollmentFormViewModel.dispose();
+    interventionsFormViewModel.dispose();
+    measurementsFormViewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void onCancel(FormViewModel formViewModel, FormMode prevFormMode) {
+    return; // nothing to do
+  }
+
+  @override
+  void onSave(FormViewModel formViewModel, FormMode prevFormMode) {
+    assert(prevFormMode == FormMode.edit);
+    _applyAndSaveSubform(formViewModel.formData!);
+  }
 
   Future _flushDirtyStudy() {
     if (studyDirtyCopy == null) {
@@ -103,24 +118,6 @@ class StudyFormViewModel extends FormViewModel<Study>
     subformData.apply(studyDirtyCopy!);
     _flushDirtyStudy();
   }
-
-  @override
-  void dispose() {
-    print("StudyFormViewModel.dispose");
-    measurementsFormViewModel.dispose();
-    super.dispose();
-  }
-
-  @override
-  void onCancel(FormViewModel formViewModel, FormMode prevFormMode) {
-    return; // nothing to do
-  }
-
-  @override
-  void onSave(FormViewModel formViewModel, FormMode prevFormMode) {
-    assert(prevFormMode == FormMode.edit);
-    _applyAndSaveSubform(formViewModel.formData!);
-  }
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
@@ -133,31 +130,4 @@ final studyFormViewModelProvider = Provider.autoDispose
     final studyController = ref.watch(studyControllerProvider(studyId).notifier);
     // Note: the provider will be destroyed immediately
     return studyController.studyFormViewModel;
-});
-
-/*
-final studyInfoFormViewModelProvider = Provider.autoDispose
-    .family<StudyInfoFormViewModel, StudyID>((ref, studyId) {
-  return ref.watch(studyFormViewMod99elProvider(studyId)).studyInfoFormViewModel;
-});
- */
-
-final measurementsFormViewModelProvider = Provider.autoDispose
-    .family<MeasurementsFormViewModel, StudyID>((ref, studyId) {
-  return ref.watch(
-      studyFormViewModelProvider(studyId)).measurementsFormViewModel;
-});
-
-
-
-final surveyFormViewModelProvider = Provider.autoDispose
-    .family<MeasurementSurveyFormViewModel,MeasurementFormRouteArgs>((ref, args) {
-      final owner = ref.watch(measurementsFormViewModelProvider(args.studyId));
-      return owner.provide(args);
-});
-
-final surveyQuestionFormViewModelProvider = Provider.autoDispose
-    .family<QuestionFormViewModel,SurveyQuestionFormRouteArgs>((ref, args) {
-      final owner = ref.watch(surveyFormViewModelProvider(args));
-      return owner.provide(args);
 });

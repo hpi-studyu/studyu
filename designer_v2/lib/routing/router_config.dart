@@ -16,6 +16,7 @@ import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
+import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
@@ -25,12 +26,10 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
-import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
 import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
@@ -143,7 +142,7 @@ class RouterConfig {
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.info(studyId),
-              body: StudyEditScreen(studyId),
+              body: StudyDesignInfoFormView(studyId),
               layoutType: SingleColumnLayoutType.split,
         ));
       }
