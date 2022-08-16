@@ -140,9 +140,10 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             label: Text(AppLocalizations.of(context).next),
             onPressed: () async {
               final res = await Supabase.instance.client
-                  .rpc('get_study_from_invite', params: {'invite_code': _controller.text})
-                  .single()
-                  .execute();
+                  .rpc('get_study_from_invite',
+                  params: {'invite_code': _controller.text},
+              ).single().execute();
+
               if (res.error != null) {
                 print(res.error.message);
                 setState(() {
