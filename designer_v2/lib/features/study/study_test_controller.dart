@@ -18,7 +18,7 @@ abstract class PlatformController {
 
   PlatformController(this.previewSrc, this.studyId);
 
-  void registerViews();
+  void registerViews(Key key);
   void sendCmd(String command);
   void refresh();
   void listen();
@@ -32,22 +32,20 @@ class StudyTestController extends StateNotifier<StudyTestState> {
   final IAuthRepository authRepository;
   late PlatformController platformController;
   late String previewSrc;
+  late Map<String, dynamic> missingRequirements;
 
   StudyTestController({
     required this.study,
     required this.authRepository,
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
-    List<dynamic> missingRequirements = _missingRequirements();
     previewSrc = "$appDeepLink?";
+    _missingRequirements();
     if (missingRequirements.isEmpty) {
       // requirements satisfied
       String sessionStr = authRepository.session?.persistSessionString ?? '';
       previewSrc += '&mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
     } else {
-      // todo show modal and add error
-      if (kDebugMode) {
-        print("Requirements not satisfied: $missingRequirements");
-      }
+      previewSrc = '';
     }
     _selectPlatform();
   }
@@ -65,17 +63,19 @@ class StudyTestController extends StateNotifier<StudyTestState> {
   // Check if the study satisfies the requirements to be previewed
   // Todo we might also include this check before publishing a study
   _missingRequirements() {
-    List<dynamic> conditions = [
-      study.title,
-      study.description,
-      study.interventions,
-      study.hasEligibilityCheck,
-      study.eligibilityCriteria,
-      study.observations,
-      study.consent,
-    ];
-    conditions.removeWhere((element) => _isValid(element));
-    return conditions;
+    // todo how about:
+    // study.hasEligibilityCheck,
+    // study.eligibilityCriteria,
+
+    // .hardcoded
+    missingRequirements = {
+      'Title': study.title,
+      'Description': study.description,
+      'Interventions': study.interventions,
+      'Observations': study.observations,
+      //'Consent': study.consent,
+    };
+    missingRequirements.removeWhere((title, element) => _isValid(element));
   }
 
   _isValid(dynamic val) {
@@ -88,35 +88,37 @@ class StudyTestController extends StateNotifier<StudyTestState> {
 }
 
 class WebController extends PlatformController {
+  late html.IFrameElement iFrameElement;
+
   WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
-    registerViews();
-    scaffold = WebScaffold(previewSrc, studyId);
+    final key = UniqueKey();
+    registerViews(key);
+    scaffold = WebScaffold(previewSrc, studyId, key: key);
   }
 
+
   @override
-  void registerViews() {
+  void registerViews(Key key) {
+    iFrameElement = html.IFrameElement()
+      ..id = 'studyu_app_preview'
+      ..src = previewSrc
+      ..style.border = 'none';
+
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
-        studyId,
-        (int viewId) => html.IFrameElement()
-          ..id = 'studyu_app_preview'
-          ..src = previewSrc
-          ..style.border = 'none'
+        '$studyId$key',
+        (int viewId) => iFrameElement
     );
   }
 
   @override
   void sendCmd(String command) {
-    html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
-    as html.IFrameElement;
     String localPreviewSrc = "$previewSrc&cmd=$command";
     iFrameElement.src = localPreviewSrc;
   }
 
   @override
   void refresh() {
-    html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
-    as html.IFrameElement;
     iFrameElement.src = previewSrc;
   }
 
@@ -134,10 +136,9 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    html.IFrameElement frame = html.document.getElementById("studyu_app_preview")
-        as html.IFrameElement;
+    //html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
     // For debug purposes: postMessage(message, '*')
-    frame.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
+    iFrameElement.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
   }
 }
 
@@ -163,7 +164,7 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void registerViews() {
+  void registerViews(Key key) {
     throw UnimplementedError();
   }
 
