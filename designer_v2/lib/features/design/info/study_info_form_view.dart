@@ -34,6 +34,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
               const SizedBox(height: 32.0),
               FormTableLayout(rows: [
                 FormTableRow(
+                  control: formViewModel.titleControl,
                   label: "Title".hardcoded,
                   labelHelpText: "TODO Study title help text".hardcoded,
                   input: Row(
@@ -59,6 +60,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   ),
                 ),
                 FormTableRow(
+                  control: formViewModel.descriptionControl,
                   label: "Description".hardcoded,
                   labelHelpText: "TODO Study description text help text".hardcoded,
                   input: ReactiveTextField(
@@ -71,7 +73,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     ),
                   ),
                 ),
-              ]),
+              ], columnWidths: const {
+                0: FixedColumnWidth(185.0),
+                1: FlexColumnWidth(),
+              }),
               const SizedBox(height: 24.0),
               FormSectionHeader(title: "Contact information".hardcoded),
               const SizedBox(height: 12.0),
@@ -84,48 +89,58 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
               const SizedBox(height: 32.0),
               FormTableLayout(rows: [
                 FormTableRow(
+                  control: formViewModel.organizationControl,
                   label: "Responsible organization".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.organizationControl,
                   ),
                 ),
                 FormTableRow(
+                  control: formViewModel.institutionalReviewBoardControl,
                   label: "Institutional Review Board".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.institutionalReviewBoardControl,
                   ),
                 ),
                 FormTableRow(
-                  label: "Institutional Review Board Protocol Number".hardcoded,
+                  control: formViewModel.institutionalReviewBoardNumberControl,
+                  label: "Institutional Review Board\nProtocol Number".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.institutionalReviewBoardNumberControl,
                   ),
                 ),
                 FormTableRow(
-                  label: "Responsible researcher(s)".hardcoded,
+                  control: formViewModel.researchersControl,
+                  label: "Responsible\nresearcher(s)".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.researchersControl,
                   ),
                 ),
                 FormTableRow(
+                  control: formViewModel.websiteControl,
                   label: "Website".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.websiteControl,
                   ),
                 ),
                 FormTableRow(
+                  control: formViewModel.emailControl,
                   label: "Email".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.emailControl,
                   ),
                 ),
                 FormTableRow(
+                  control: formViewModel.phoneControl,
                   label: "Phone".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
                   ),
                 ),
-              ]),
+              ], columnWidths: const {
+                0: FixedColumnWidth(185.0),
+                1: FlexColumnWidth(),
+              }),
             ],
           ),
         );

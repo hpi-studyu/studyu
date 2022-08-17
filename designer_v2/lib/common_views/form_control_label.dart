@@ -19,6 +19,9 @@ class FormControlLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final stateColorStyle = (formControl.disabled)
+        ? TextStyle(color: theme.disabledColor)
+        : null;
 
     return MouseEventsRegion(
       builder: (context, states) {
@@ -27,14 +30,11 @@ class FormControlLabel extends StatelessWidget {
             style: theme.textTheme.bodyText2!.copyWith(
               fontSize: theme.textTheme.bodyText2!.fontSize! * 0.9,
               height: theme.textTheme.labelMedium!.height,
-            ).merge(textStyle),
+            ).merge(textStyle).merge(stateColorStyle),
           overflow: TextOverflow.clip,
         );
       },
-      onTap: (!isClickable) ? null : () {
-        if (!formControl.enabled) {
-          return;
-        }
+      onTap: (!isClickable || formControl.disabled) ? null : () {
         if (formControl is AbstractControl<bool>) {
           // Auto-toggle boolean controls
           formControl.value = (formControl.value != null)

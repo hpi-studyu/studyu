@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -18,7 +19,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     required super.studyId,
     required super.studyRepository,
     required super.router,
+    required this.authRepository,
   }) : super(const StudyControllerState());
+
+  final IAuthRepository authRepository;
 
   /// The [FormViewModel] that is responsible for displaying & editing the
   /// survey design form. Its lifecycle is bound to the study controller.
@@ -28,7 +32,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   late final StudyFormViewModel studyFormViewModel = StudyFormViewModel(
       router: router,
       studyRepository: studyRepository,
-      formData: state.study.value!
+      authRepository: authRepository,
+      formData: state.study.value!,
   );
 
   @override
@@ -77,6 +82,7 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
     return StudyController(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
+      authRepository: ref.watch(authRepositoryProvider),
       router: ref.watch(routerProvider),
     );
 });

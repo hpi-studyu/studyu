@@ -2,6 +2,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 enum StudyActionType {
   edit,
@@ -22,13 +23,17 @@ enum StudyStatus {
 typedef StudyID = String;
 typedef MeasurementID = String;
 
-extension StudyWithStatus on core.Study {
+extension StudyStatusX on core.Study {
   StudyStatus get status {
     // TODO: missing a flag to indicate a study has been completed & participation is closed
     if (published) {
       return StudyStatus.running;
     }
     return StudyStatus.draft;
+  }
+
+  bool isReadonly(sb.User user) {
+    return status != StudyStatus.draft || !canEdit(user);
   }
 }
 

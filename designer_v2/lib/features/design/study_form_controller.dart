@@ -15,6 +15,7 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 
 
@@ -23,18 +24,23 @@ class StudyFormViewModel extends FormViewModel<Study>
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
+    required this.authRepository,
     required super.formData, // Study
   }) {
-    print("StudyFormViewModel.constructor");
+    if (isStudyReadonly) {
+      read();
+    }
   }
 
   /// On-write copy of the [Study] object managed by the view model
   Study? studyDirtyCopy;
 
-  /// Reference to the study repository for saving / updating the study
   final IStudyRepository studyRepository;
-
+  final IAuthRepository authRepository;
   final GoRouter router;
+
+  bool get isStudyReadonly =>
+      formData?.isReadonly(authRepository.currentUser!) ?? false;
 
   late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
     formData: StudyInfoFormData.fromStudy(formData!),
@@ -70,6 +76,16 @@ class StudyFormViewModel extends FormViewModel<Study>
     'measurements': measurementsFormViewModel.form,
     'interventions': interventionsFormViewModel.form,
   });
+
+  @override
+  void read([Study? formData]) {
+    // Put all subforms into readonly mode
+    studyInfoFormViewModel.read();
+    enrollmentFormViewModel.read();
+    measurementsFormViewModel.read();
+    interventionsFormViewModel.read();
+    super.read(formData);
+  }
 
   @override
   void setControlsFrom(Study data) {

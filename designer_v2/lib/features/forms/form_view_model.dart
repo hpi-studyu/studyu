@@ -51,6 +51,8 @@ abstract class FormViewModel<T> {
   }
   FormMode _formMode;
 
+  bool get isReadonly => formMode == FormMode.readonly;
+
   final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
 
   final bool autosave;
@@ -129,18 +131,14 @@ abstract class FormViewModel<T> {
   String get title => titles[formMode] ?? "[Missing title]";
   bool get isValid => form.valid;
 
-  void edit(T formData) {
-    this.formData = formData;
-    formMode = FormMode.edit;
-  }
-
-  void read(T formData) {
-    this.formData = formData;
+  void read([T? formData]) {
+    if (formData != null) {
+      this.formData = formData;
+    }
     formMode = FormMode.readonly;
   }
 
   Future save() {
-    print(form.errors);
     if (!form.valid) {
       throw FormInvalidException();
     }

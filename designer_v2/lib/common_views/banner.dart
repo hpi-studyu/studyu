@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Interface for widgets that render an optional banner
-abstract class IBannerProvider {
-  Widget? banner(BuildContext context);
+abstract class IWithBanner {
+  Widget? banner(BuildContext context, WidgetRef ref);
 }
 
 enum BannerStyle { warning, info, error }
 
 class BannerBox extends StatelessWidget {
   const BannerBox({
-    required this.text,
+    required this.body,
     required this.style,
-    this.padding = const EdgeInsets.symmetric(vertical: 24.0, horizontal: 48.0),
+    this.padding = const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
     this.prefixIcon,
+    this.noPrefix = false,
     Key? key}) : super(key: key);
 
-  final IconData? prefixIcon;
-  final String text;
+  final Widget? prefixIcon;
+  final Widget body;
   final BannerStyle style;
   final EdgeInsets? padding;
+  final bool noPrefix;
 
   @override
   Widget build(BuildContext context) {
-    final bannerColor = _getBackgroundColor(Theme.of(context));
+    final theme = Theme.of(context);
+    final bannerColor = _getBackgroundColor(theme);
+    final icon = prefixIcon ?? Icon(
+      _getDefaultIcon(),
+      size: (theme.iconTheme.size ?? 14.0) * 1.25,
+      color: theme.iconTheme.color,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -31,12 +40,13 @@ class BannerBox extends StatelessWidget {
       ),
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SelectableText(text),
-            ],
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            (noPrefix) ? const SizedBox.shrink() : icon,
+            (noPrefix) ? const SizedBox.shrink() : const SizedBox(width: 24.0),
+            body,
+          ],
         )
       )
     );
@@ -53,6 +63,18 @@ class BannerBox extends StatelessWidget {
         return theme.colorScheme.errorContainer;
       default:
         return theme.colorScheme.primary;
+    }
+  }
+
+  IconData _getDefaultIcon() {
+    // TODO custom ThemeData extension with banner theme
+    switch (style) {
+      case BannerStyle.info:
+        return Icons.info_rounded;
+      case BannerStyle.warning:
+        return Icons.warning_rounded;
+      case BannerStyle.error:
+        return Icons.error_rounded;
     }
   }
 }

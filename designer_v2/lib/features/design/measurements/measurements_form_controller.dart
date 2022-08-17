@@ -47,6 +47,12 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   });
 
   @override
+  void read([MeasurementsFormData? formData]) {
+    surveyMeasurementFormViewModels.read();
+    super.read(formData);
+  }
+
+  @override
   void setControlsFrom(MeasurementsFormData data) {
     final viewModels = data.surveyMeasurements.map(
             (data) => MeasurementSurveyFormViewModel(
@@ -70,21 +76,22 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   List<ModelAction> availableActions(MeasurementSurveyFormViewModel model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isReadonly = formMode == FormMode.readonly;
-    final actions = surveyMeasurementFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = surveyMeasurementFormViewModels.availableActions(model,
+        onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(
       MeasurementSurveyFormViewModel model) {
-    final actions = surveyMeasurementFormViewModels.availablePopupActions(model);
+    final actions = surveyMeasurementFormViewModels.availablePopupActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(
       MeasurementSurveyFormViewModel model) {
-    final actions = surveyMeasurementFormViewModels.availableInlineActions(model);
+    final actions = surveyMeasurementFormViewModels.availableInlineActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 

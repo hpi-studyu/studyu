@@ -1,74 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-
-/// Factory to construct an [InputDecoration] with an empty helper text
-///
-/// This prevents the height of the widget it is applied to from changing,
-/// otherwise [TextField] will grow in height when displaying an error text.
-class NullHelperDecoration extends InputDecoration {
-  const NullHelperDecoration() : super(helperText: "");
-}
 
 class FormTableRow {
   final String label;
   final TextStyle? labelStyle;
   final String? labelHelpText;
   final Widget input;
+  final AbstractControl? control;
 
   FormTableRow({
     required this.label,
     required this.input,
     this.labelStyle,
     this.labelHelpText,
+    this.control,
   });
 }
 
 /// Renders a list of [FormTableRow]s in a two-column tabular layout
 class FormTableLayout extends StatelessWidget {
-  const FormTableLayout({
-    required this.rows,
-    this.columnWidths = const {
-      0: FixedColumnWidth(160.0),
-      1: FlexColumnWidth(),
-    },
-    this.rowDivider,
-    Key? key
-  }) : super(key: key);
+  const FormTableLayout(
+      {required this.rows,
+      this.columnWidths = const {
+        0: FixedColumnWidth(160.0),
+        1: FlexColumnWidth(),
+      },
+      this.rowDivider,
+      Key? key})
+      : super(key: key);
 
   final List<FormTableRow> rows;
-  final Map<int,TableColumnWidth> columnWidths;
+  final Map<int, TableColumnWidth> columnWidths;
   final Widget? rowDivider;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Flutter uses "theme.textTheme.subtitle1" for input fields by default
+    final inputTextTheme = theme.textTheme.subtitle1!;
+
     final List<TableRow> tableRows = [];
 
     for (var i = 0; i < rows.length; i++) {
       final row = rows[i];
-      final isTrailing = i == rows.length-1;
+      final isTrailing = i == rows.length - 1;
       final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
 
-      final tableRow = TableRow(
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing, right: 8.0),
-            child: Wrap(
-              children: [
-                Text(
-                  row.label,
-                  style: theme.textTheme.caption!.merge(row.labelStyle),
-                ),
-                (row.labelHelpText != null)
-                    ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-                (row.labelHelpText != null)
-                    ? Tooltip(
+      final stateColorStyle = (row.control != null && row.control!.disabled)
+          ? TextStyle(color: theme.disabledColor)
+          : null;
+
+      final tableRow = TableRow(children: [
+        Container(
+          padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing, right: 8.0),
+          child: Wrap(children: [
+            Text(
+              row.label,
+              style: theme.textTheme.caption!.merge(row.labelStyle),
+            ),
+            (row.labelHelpText != null)
+                ? const SizedBox(width: 8.0)
+                : const SizedBox.shrink(),
+            (row.labelHelpText != null)
+                ? Tooltip(
                     message: row.labelHelpText,
                     child: MouseEventsRegion(
                       builder: (context, states) {
                         final iconColor = theme.iconTheme.color?.withOpacity(
-                            (states.contains(MaterialState.hovered)) ? 0.5 : 0.3)
-                            ?? theme.colorScheme.onSurface.withOpacity(0.3);
+                                (states.contains(MaterialState.hovered))
+                                    ? 0.5
+                                    : 0.3) ??
+                            theme.colorScheme.onSurface.withOpacity(0.3);
                         return Icon(
                           Icons.help_outline_rounded,
                           size: theme.textTheme.caption!.fontSize! + 2.0,
@@ -76,28 +79,29 @@ class FormTableLayout extends StatelessWidget {
                         );
                       },
                     ),
-                ) : const SizedBox.shrink(),
-              ]
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(bottom: bottomSpacing),
-            child: Align(
-              alignment: Alignment.topLeft,
+                  )
+                : const SizedBox.shrink(),
+          ]),
+        ),
+        Container(
+          padding: EdgeInsets.only(bottom: bottomSpacing),
+          child: Align(
+            alignment: Alignment.topLeft,
+            // Unfortunately need to override the theme here as a workaround to
+            // change the text color for disabled controls
+            child: Theme(
+              data: theme.copyWith(
+                  textTheme: TextTheme(
+                      subtitle1: inputTextTheme.merge(stateColorStyle))),
               child: row.input,
             ),
           ),
-        ]
-      );
+        ),
+      ]);
       tableRows.add(tableRow);
 
       if (rowDivider != null) {
-        tableRows.add(TableRow(
-          children: [
-            rowDivider!,
-            rowDivider!
-          ]
-        ));
+        tableRows.add(TableRow(children: [rowDivider!, rowDivider!]));
       }
     }
 

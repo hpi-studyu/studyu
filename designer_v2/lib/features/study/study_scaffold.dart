@@ -152,7 +152,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         data: (study) => SingleColumnLayout.fromType(
           type: widget.layoutType ?? SingleColumnLayoutType.stretched,
           body: widget.body,
-          header: widget.body.banner(context),
+          header: widget.body.banner(context, ref),
           context: context,
         ),
       ),

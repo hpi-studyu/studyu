@@ -94,27 +94,29 @@ class MeasurementSurveyFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: breadcrumbsTitle,
-        FormMode.edit: breadcrumbsTitle,
-      };
+    FormMode.create: breadcrumbsTitle,
+    FormMode.readonly: breadcrumbsTitle,
+    FormMode.edit: breadcrumbsTitle,
+  };
 
   // - IListActionProvider
 
   @override
   List<ModelAction> availableActions(QuestionFormViewModel model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isReadonly = formMode == FormMode.readonly;
-    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(model,
+        onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model);
+    final actions = questionFormViewModels.availablePopupActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model);
+    final actions = questionFormViewModels.availableInlineActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 

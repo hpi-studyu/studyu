@@ -48,14 +48,14 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
     return actions;
   }
 
-  List<ModelAction> availablePopupActions(T formViewModel) {
-    return availableActions(formViewModel)
+  List<ModelAction> availablePopupActions(T formViewModel, {isReadOnly = false}) {
+    return availableActions(formViewModel, isReadOnly: isReadOnly)
         .where((action) => action.type != ModelActionType.edit)
         .toList();
   }
 
-  List<ModelAction> availableInlineActions(T formViewModel) {
-    return availableActions(formViewModel)
+  List<ModelAction> availableInlineActions(T formViewModel, {isReadOnly = false}) {
+    return availableActions(formViewModel, isReadOnly: isReadOnly)
         .where((action) => action.type == ModelActionType.edit)
         .toList();
   }

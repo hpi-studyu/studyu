@@ -281,7 +281,15 @@ class ThemeProvider extends InheritedWidget {
   CheckboxThemeData checkboxTheme(ColorScheme colors) {
     return CheckboxThemeData(
       splashRadius: 18.0,
-      fillColor: MaterialStateColor.resolveWith((states) => colors.primary.withOpacity(0.9)),
+      fillColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          if (states.contains(MaterialState.disabled)) {
+            return colors.primary.withOpacity(0.5 * 1.0);
+          }
+          return colors.primary.withOpacity(1.0);
+        }
+        return Colors.transparent;
+      }),
       side: BorderSide(
         color: colors.secondary.withOpacity(0.2),
         width: 1.5,
@@ -353,6 +361,7 @@ class ThemeProvider extends InheritedWidget {
       checkboxTheme: checkboxTheme(colorScheme),
       radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
+      disabledColor: colorScheme.onSurface.withOpacity(0.5),
       useMaterial3: true,
     );
   }
@@ -379,6 +388,7 @@ class ThemeProvider extends InheritedWidget {
       checkboxTheme: checkboxTheme(colorScheme),
       radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
+      disabledColor: colorScheme.onSurface.withOpacity(0.5),
       useMaterial3: true,
     );
   }

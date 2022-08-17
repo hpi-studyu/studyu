@@ -95,6 +95,7 @@ class InterventionFormViewModel
   @override
   Map<FormMode, String> get titles => {
     FormMode.create: breadcrumbsTitle,
+    FormMode.readonly: breadcrumbsTitle,
     FormMode.edit: breadcrumbsTitle,
   };
 
@@ -102,20 +103,20 @@ class InterventionFormViewModel
 
   @override
   List<ModelAction> availableActions(InterventionTaskFormViewModel model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isReadonly = formMode == FormMode.readonly;
     final actions = tasksCollection.availableActions(model,
         onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(InterventionTaskFormViewModel model) {
-    final actions = tasksCollection.availablePopupActions(model);
+    final actions = tasksCollection.availablePopupActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(InterventionTaskFormViewModel model) {
-    final actions = tasksCollection.availableInlineActions(model);
+    final actions = tasksCollection.availableInlineActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 

@@ -45,6 +45,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                       formArray: formViewModel.measurementsArray,
                       builder: (context, formArray, child) {
                         return FormArrayTable<MeasurementSurveyFormViewModel>(
+                          control: formViewModel.measurementsArray,
                           items: formViewModel.measurementViewModels,
                           onSelectItem: formViewModel.onSelectItem,
                           getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),

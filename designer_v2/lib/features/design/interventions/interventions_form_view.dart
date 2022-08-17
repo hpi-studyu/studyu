@@ -52,7 +52,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                     url:
                         "https://example.com/" // TODO replace link with actual content
                     ),
-                const SizedBox(height: 24.0),
+                const SizedBox(height: 32.0),
                 ReactiveFormConsumer(
                     // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
                     // By default, ReactiveFormArray only updates when adding/removing controls
@@ -61,6 +61,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                     formArray: formViewModel.interventionsArray,
                     builder: (context, formArray, child) {
                       return FormArrayTable<InterventionFormViewModel>(
+                        control: formViewModel.interventionsArray,
                         items: formViewModel
                             .interventionsCollection.formViewModels,
                         onSelectItem: formViewModel.onSelectItem,
@@ -91,7 +92,6 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                   );
                 }),
                 const SizedBox(height: 24.0),
-                const SizedBox(height: 12.0),
                 FormSectionHeader(title: "Crossover schedule".hardcoded),
                 const SizedBox(height: 12.0),
                 // TODO study schedule illustration

@@ -112,4 +112,10 @@ class FormViewModelCollection<T extends ManagedFormViewModel<D>,
 
     formArray.updateValueAndValidity();
   }
+
+  void read() {
+    for (final formViewModel in formViewModels) {
+      formViewModel.read();
+    }
+  }
 }

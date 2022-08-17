@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
@@ -10,29 +11,33 @@ typedef WidgetBuilderAt<T> = Widget Function(
     BuildContext context, T item, int rowIdx);
 
 class FormArrayTable<T> extends StatelessWidget {
-  const FormArrayTable(
-      {required this.items,
-      required this.onSelectItem,
-      required this.getActionsAt,
-      required this.onNewItem,
-      required this.onNewItemLabel,
-      required this.rowTitle,
-      this.rowPrefix,
-      this.leadingWidget,
-      this.sectionTitle,
-      this.sectionTitleDivider = true,
-      this.emptyIcon,
-      this.emptyTitle,
-      this.emptyDescription,
-      Key? key})
+  const FormArrayTable({
+    required this.control,
+    required this.items,
+    required this.onSelectItem,
+    required this.getActionsAt,
+    this.onNewItem,
+    required this.onNewItemLabel,
+    required this.rowTitle,
+    this.rowPrefix,
+    this.leadingWidget,
+    this.sectionTitle,
+    this.sectionTitleDivider = true,
+    this.emptyIcon,
+    this.emptyTitle,
+    this.emptyDescription,
+    Key? key
+  })
       : assert(sectionTitle == null || leadingWidget == null,
             "Cannot specify both sectionTitle and leadingWidget"),
         super(key: key);
 
+  final AbstractControl control;
+
   final List<T> items;
   final OnSelectHandler<T> onSelectItem;
   final ActionsProviderAt<T> getActionsAt;
-  final VoidCallback onNewItem;
+  final VoidCallback? onNewItem;
   final FormArrayTableRowLabelProvider<T> rowTitle;
 
   final String onNewItemLabel;
@@ -130,6 +135,9 @@ class FormArrayTable<T> extends StatelessWidget {
   }
 
   Widget _newItemButton() {
+    if (control.disabled) {
+      return const SizedBox.shrink();
+    }
     return PrimaryButton(
       icon: Icons.add,
       text: onNewItemLabel,

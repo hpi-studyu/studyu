@@ -67,20 +67,20 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   List<ModelAction> availableActions(QuestionFormViewModel model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isReadonly = formMode == FormMode.readonly;
     final actions = questionFormViewModels.availableActions(model,
         onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model);
+    final actions = questionFormViewModels.availablePopupActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model);
+    final actions = questionFormViewModels.availableInlineActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 

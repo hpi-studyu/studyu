@@ -70,24 +70,30 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   @override
   Map<FormMode, String> get titles => throw UnimplementedError(); // no title
 
+  @override
+  void read([InterventionsFormData? formData]) {
+    interventionsCollection.read();
+    super.read(formData);
+  }
+
   // - IListActionProvider
 
   @override
   List<ModelAction> availableActions(InterventionFormViewModel model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isReadonly = formMode == FormMode.readonly;
     final actions = interventionsCollection.availableActions(model,
         onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availablePopupActions(model);
+    final actions = interventionsCollection.availablePopupActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availableInlineActions(model);
+    final actions = interventionsCollection.availableInlineActions(
+        model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 

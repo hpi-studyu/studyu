@@ -27,6 +27,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
+                control: formViewModel.surveyTitleControl,
                 label: "Survey title".hardcoded,
                 //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 labelHelpText: "TODO Survey title help text".hardcoded,
@@ -35,6 +36,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.surveyIntroTextControl,
                 label: "Intro text".hardcoded,
                 labelHelpText: "TODO Intro text help text".hardcoded,
                 input: ReactiveTextField(
@@ -48,6 +50,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.surveyOutroTextControl,
                 label: "Outro text".hardcoded,
                 labelHelpText: "TODO Outro text help text".hardcoded,
                 input: ReactiveTextField(
@@ -71,6 +74,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               formArray: formViewModel.questionsArray,
               builder: (context, formArray, child) {
                 return FormArrayTable<QuestionFormViewModel>(
+                  control: formViewModel.questionsArray,
                   items: formViewModel.questionModels,
                   onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
                   getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),

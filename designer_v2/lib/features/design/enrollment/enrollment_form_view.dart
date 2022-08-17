@@ -46,28 +46,33 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
               const SizedBox(height: 32.0),
               FormTableLayout(rows: [
                 FormTableRow(
-                    label: "Recruiting".hardcoded,
-                    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                    input: Column(
-                      children: formViewModel.enrollmentTypeControlOptions
-                          .map((option) => ReactiveRadioListTile<Participation>(
-                                formControl:
-                                    formViewModel.enrollmentTypeControl,
-                                value: option.value,
-                                title: Text(option.label),
-                                subtitle: (option.description) != null
-                                    ? TextParagraph(
-                                        text: option.description!,
-                                        selectable: false,
-                                        style: TextStyle(
-                                            color: theme.colorScheme.onSurface
-                                                .withOpacity(0.6)))
-                                    : null,
-                              ) as Widget)
-                          .toList()
-                          .separatedBy(() => const SizedBox(height: 8.0)),
-                    )),
-              ]),
+                  control: formViewModel.enrollmentTypeControl,
+                  label: "Recruiting".hardcoded,
+                  labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  input: Column(
+                    children: formViewModel.enrollmentTypeControlOptions
+                        .map((option) => ReactiveRadioListTile<Participation>(
+                            formControl:
+                                formViewModel.enrollmentTypeControl,
+                            value: option.value,
+                            title: Text(option.label),
+                            subtitle: (option.description) != null
+                                ? TextParagraph(
+                                    text: option.description!,
+                                    selectable: false,
+                                    style: TextStyle(
+                                        color: theme.colorScheme.onSurface
+                                            .withOpacity(0.6)))
+                                : null,
+                          ) as Widget)
+                        .toList()
+                        .separatedBy(() => const SizedBox(height: 8.0)),
+                  )),
+              ], columnWidths: const {
+                  0: FixedColumnWidth(140.0),
+                  1: FlexColumnWidth(),
+                },
+              ),
               const SizedBox(height: 24.0),
               ReactiveFormConsumer(
                   // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
@@ -77,6 +82,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
                     return FormArrayTable<QuestionFormViewModel>(
+                      control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
                         final routeArgs =
@@ -100,11 +106,13 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                             "Screening criteria".hardcoded,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          TextButton.icon(
-                              onPressed: formViewModel.testScreener,
-                              icon: const Icon(Icons.play_circle_fill),
-                              label: Text("Test screener".hardcoded),
-                          )
+                          (formViewModel.questionsArray.disabled)
+                            ? const SizedBox.shrink()
+                            : TextButton.icon(
+                                onPressed: formViewModel.testScreener,
+                                icon: const Icon(Icons.play_circle_fill),
+                                label: Text("Test screener".hardcoded),
+                            )
                         ],
                       ),
                       //emptyIcon: Icons.content_paste_off_rounded,

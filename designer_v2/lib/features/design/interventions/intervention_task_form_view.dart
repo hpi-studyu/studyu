@@ -19,6 +19,7 @@ class InterventionTaskFormView extends StatelessWidget {
       children: [
         FormTableLayout(rows: [
           FormTableRow(
+            control: formViewModel.taskTitleControl,
             label: "Title".hardcoded,
             labelHelpText: "TODO Intervention title text help text".hardcoded,
             input: ReactiveTextField(
@@ -26,6 +27,7 @@ class InterventionTaskFormView extends StatelessWidget {
             ),
           ),
           FormTableRow(
+            control: formViewModel.taskDescriptionControl,
             label: "Description".hardcoded,
             labelHelpText:
                 "TODO Intervention description text help text".hardcoded,

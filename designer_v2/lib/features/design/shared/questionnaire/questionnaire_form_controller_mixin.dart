@@ -44,6 +44,12 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
     );
   }
 
+  @override
+  void read([T? formData]) {
+    questionFormViewModels.read();
+    super.read(formData);
+  }
+
   // - IFormViewModelDelegate<QuestionFormViewModel>
 
   /// Flag indicating whether the [FormViewModel] implementing this mixin

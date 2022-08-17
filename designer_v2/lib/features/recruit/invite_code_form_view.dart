@@ -23,6 +23,7 @@ class InviteCodeFormView extends FormConsumerWidget {
             label: "Code".hardcoded,
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             labelHelpText: "TODO Access code help text".hardcoded,
+            control: formViewModel.codeControl,
             input: ReactiveTextField(
               formControl: formViewModel.codeControl,
               validationMessages: formViewModel.codeControlValidationMessages,
