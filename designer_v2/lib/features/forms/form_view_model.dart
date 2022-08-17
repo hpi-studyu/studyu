@@ -174,18 +174,17 @@ abstract class FormViewModel<T> {
       // Prevent infinite loop from the update that is emitted during save
       // which would retrigger the listener
       if (_isAutosaving) {
-        _isAutosaving = false;
         return;
       }
       if (form.valid) {
         _isAutosaving = true;
-        save();
+        save().then((_) => _isAutosaving = false);
       }
     }, debounce: debounce);
   }
 
   void listenToImmediateFormChildren(FormControlUpdateCallback callback,
-      {int debounce = 5000}) {
+      {int debounce = 1500}) {
     // Initialize debounce helper if needed
     if (debounce != 0) {
       _immediateFormChildrenListenerDebouncer ??= Debouncer(milliseconds: debounce);
