@@ -187,6 +187,5 @@ final studyTestControllerProvider = StateNotifierProvider.autoDispose
           study: study!,
           authRepository: ref.watch(authRepositoryProvider),
         );
-
     }
 );
