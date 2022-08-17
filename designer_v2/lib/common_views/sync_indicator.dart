@@ -95,7 +95,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
       );
     } else if (!widget.isDirty && widget.lastSynced == null) {
       dataWidget = Tooltip(
-        message: "All changes saved".hardcoded,
+        message: "No changes to be saved".hardcoded,
         //message: "Any changes will be saved automatically.".hardcoded,
         child: Icon(Icons.check_circle_rounded,
           size: widget.iconSize,
