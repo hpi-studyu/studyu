@@ -7,6 +7,9 @@ class WebScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // todo make dynamic width should be half the size of height or height double the width
+    // final height = MediaQuery.of(context).size.height;
+    // final width = MediaQuery.of(context).size.width;
     return SizedBox(
       height: 600,
       width: 300,
@@ -14,7 +17,7 @@ class WebScaffold extends StatelessWidget {
         children: <Widget>[
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(25)),
-            child: HtmlElementView(key: UniqueKey(), viewType: studyId),
+            child: HtmlElementView(key: key, viewType: '$studyId$key'),
           ),
           Container(
             decoration: BoxDecoration(
