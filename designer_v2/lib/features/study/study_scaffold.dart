@@ -64,7 +64,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             color: theme.scaffoldBackgroundColor.withOpacity(0.15),
             child: Row(
               children: [
-                const SizedBox(width: 12),
+                const SizedBox(width: 35.0),
                 Container(
                   constraints: const BoxConstraints(maxWidth: 550),
                   child: TabbedNavbar(
