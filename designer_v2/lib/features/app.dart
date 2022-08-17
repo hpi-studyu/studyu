@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -73,6 +74,7 @@ class _AppContentState extends ConsumerState<AppContent> {
   @override
   Widget build(BuildContext context) {
     Locale locale = ref.watch(localeProvider);
+    AppTranslation.init(ref);
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(

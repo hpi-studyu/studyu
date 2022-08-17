@@ -23,10 +23,10 @@ final supportedLocalesProvider = Provider<List<Locale>>((_) {
 
 /// Locale Provider
 /// Provides the current locale, and automatically updates when the locale changes.
-final localeProvider = Provider.autoDispose<Locale>((ref) {
+final localeProvider = Provider<Locale>((ref) {
   return ref.watch(localeStateProvider).locale;
 });
 
-final localeStateProvider = StateNotifierProvider.autoDispose<LocaleStateNotifier, LocaleState>(
+final localeStateProvider = StateNotifierProvider<LocaleStateNotifier, LocaleState>(
         (ref) => LocaleStateNotifier(ref)
 );
