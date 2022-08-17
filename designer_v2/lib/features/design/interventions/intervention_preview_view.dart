@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class InterventionPreview extends StatelessWidget {
@@ -18,10 +19,7 @@ class InterventionPreview extends StatelessWidget {
         Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: const Center(
-                // TODO: implement InterventionPreview widget
-                child: Text("[TODO InterventionPreview]")
-              ),
+              child: StudyTestScreen(routeArgs.studyId),
             )
         )
       ],

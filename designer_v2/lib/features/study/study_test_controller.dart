@@ -71,8 +71,8 @@ class StudyTestController extends StateNotifier<StudyTestState> {
     missingRequirements = {
       'Title': study.title,
       'Description': study.description,
-      'Interventions': study.interventions,
-      'Observations': study.observations,
+      //'Interventions': study.interventions,
+      //'Observations': study.observations,
       //'Consent': study.consent,
     };
     missingRequirements.removeWhere((title, element) => _isValid(element));

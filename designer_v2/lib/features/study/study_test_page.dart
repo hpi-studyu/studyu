@@ -26,7 +26,7 @@ class StudyTestScreen extends StudyPageWidget {
             width: 10,
             height: 50,
             child: OverflowBox(
-              minWidth: MediaQuery.of(context).size.width,
+              minWidth: 0,
               minHeight: 0.0,
               maxWidth: double.infinity,
               maxHeight: double.infinity,
@@ -45,6 +45,7 @@ class StudyTestScreen extends StudyPageWidget {
                         "This study cannot be previewed, unless the following fields are set: ${studyTestController.missingRequirements.keys}".hardcoded,
                         textAlign: TextAlign.left,
                       ),
+                      const SizedBox(width: 50),
                     ]
                 ),
               ),
