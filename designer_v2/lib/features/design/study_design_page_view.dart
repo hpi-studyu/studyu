@@ -11,7 +11,7 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.read(studyFormViewModelProvider(studyId));
+    final viewModel = ref.watch(studyFormViewModelProvider(studyId));
 
     if (viewModel.isStudyReadonly) {
       return BannerBox(
@@ -21,7 +21,7 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextParagraph(
-              text: "This study is read-only and cannot be edited.".hardcoded,
+              text: "This study cannot be edited.".hardcoded,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             TextParagraph(
@@ -31,7 +31,7 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
             ),
           ]
         ),
-        style: BannerStyle.info
+        style: BannerStyle.warning
       );
     }
 
