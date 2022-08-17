@@ -102,3 +102,7 @@ Contrary to most recommendations, we commit those generated files to Git. This i
 
 We are using [Supabase](https://supabase.com/) as a Backend-as-a-Service provider.
 Supabase provides different backend services such as a database, API, authentication, storage service all based around PostgreSQL and other FOSS.
+
+### Local setup
+
+StudyU and Supabase can also be hosted locally via Docker. More information on this [can be found here](docker/).
