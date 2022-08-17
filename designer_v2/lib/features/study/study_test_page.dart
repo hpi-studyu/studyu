@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -11,80 +12,65 @@ class StudyTestScreen extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO error handling Study?
-    final study = ref.watch(studyControllerProvider(studyId)).study.value;
-    final studyTestController = ref.read(studyTestControllerProvider(study!).notifier);
-    final controller = studyTestController.platformController;
-    bool missingRequirements = studyTestController.missingRequirements.isNotEmpty;
+    final state = ref.watch(studyTestControllerProvider(studyId));
+    final frameController = ref.watch(studyTestPlatformControllerProvider(studyId));
 
-    return ListView (
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (missingRequirements) ... [
-          SizedBox(
-            width: 10,
-            height: 50,
-            child: OverflowBox(
-              minWidth: 0,
-              minHeight: 0.0,
-              maxWidth: double.infinity,
-              maxHeight: double.infinity,
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFE99C),
-                  border: Border.all(width: 3, color: const Color(0xFFFFC808)),
-                ),
-                child: Row(
-                    children: [
-                      const SizedBox(width: 50),
-                      const Icon(Icons.info),
-                      const SizedBox(width: 10),
-                      Text(
-                        "This study cannot be previewed, unless the following fields are set: ${studyTestController.missingRequirements.keys}".hardcoded,
-                        textAlign: TextAlign.left,
-                      ),
-                      const SizedBox(width: 50),
-                    ]
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20,),
-        ],
-        Column(
+        frameController!.frameWidget,
+        const SizedBox(height: 24.0),
+        Text("This is the preview mode.\nPress reset to "
+            "remove the test progress and start over again.".hardcoded,
+            textAlign: TextAlign.center
+        ),
+        const SizedBox(height: 12.0),
+        Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              controller.scaffold,
-              const SizedBox(height: 20),
-              Text("This is the preview mode.\nPress reset to "
-                  "remove the test progress and start over again.".hardcoded,
-                  textAlign: TextAlign.center
+              TextButton.icon(
+                icon: const Icon(Icons.restart_alt),
+                label: Text("Reset".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.sendCmd("reset");
+                },
               ),
-              const SizedBox(height: 10),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton.icon(
-                      icon: const Icon(Icons.restart_alt),
-                      label: Text("Reset".hardcoded),
-                      onPressed: () {
-                        missingRequirements ? null : controller.sendCmd("reset");
-                      },
-                    ),
-                    TextButton.icon(
-                        icon: const Icon(Icons.open_in_new_sharp),
-                        label: Text("Open in new tab".hardcoded),
-                        onPressed: () {
-                          missingRequirements ? null : controller.openNewPage();
-                        }
-                    ),
-                  ]
+              TextButton.icon(
+                  icon: const Icon(Icons.open_in_new_sharp),
+                  label: Text("Open in new tab".hardcoded),
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.openNewPage();
+                  },
               ),
-            ],
-          ),
-        ]
+            ]
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget? banner(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(studyTestControllerProvider(studyId));
+
+    if (state.canTest) {
+      return null;
+    }
+
+    return BannerBox(
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextParagraph(
+                text: "Study cannot be tested yet".hardcoded,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextParagraph(
+                text: "Please make sure the following fields are set: ${state.missingRequirements!.keys}".hardcoded
+              ),
+            ]
+        ),
+        style: BannerStyle.warning
     );
   }
 }

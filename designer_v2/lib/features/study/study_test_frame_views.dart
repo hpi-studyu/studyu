@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class WebScaffold extends StatelessWidget {
+class WebFrame extends StatelessWidget {
   final String previewSrc;
   final String studyId;
-  const WebScaffold(this.previewSrc, this.studyId, {Key? key}) : super(key: key);
+  const WebFrame(this.previewSrc, this.studyId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,8 @@ class WebScaffold extends StatelessWidget {
   }
 }
 
-class MobileScaffold extends StatelessWidget {
-  const MobileScaffold({Key? key}) : super(key: key);
+class MobileFrame extends StatelessWidget {
+  const MobileFrame({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +45,8 @@ class MobileScaffold extends StatelessWidget {
   }
 }
 
-class DesktopScaffold extends StatelessWidget {
-  const DesktopScaffold({Key? key}) : super(key: key);
+class DesktopFrame extends StatelessWidget {
+  const DesktopFrame({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

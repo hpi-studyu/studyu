@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyControllerBaseState extends Equatable {
@@ -35,4 +36,8 @@ class StudyControllerBaseState extends Equatable {
 
   @override
   List<Object?> get props => [study];
+}
+
+extension StudyControllerBaseStateUnsafeProps on StudyControllerBaseState {
+  StudyID get studyId => study.value!.id;
 }
