@@ -58,8 +58,8 @@ class _SyncIndicatorState extends State<SyncIndicator>
 
   @override
   void dispose() {
-    super.dispose();
     _animationController.dispose();
+    super.dispose();
   }
 
   @override

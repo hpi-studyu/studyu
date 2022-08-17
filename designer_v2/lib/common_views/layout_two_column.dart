@@ -84,6 +84,13 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
   final ScrollController _scrollControllerRight = ScrollController();
 
   @override
+  void dispose() {
+    _scrollControllerLeft.dispose();
+    _scrollControllerRight.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget leftWidget = widget.leftWidget;
     Widget rightWidget = widget.rightWidget;
