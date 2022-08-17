@@ -45,7 +45,10 @@ class BannerBox extends StatelessWidget {
           children: [
             (noPrefix) ? const SizedBox.shrink() : icon,
             (noPrefix) ? const SizedBox.shrink() : const SizedBox(width: 24.0),
-            body,
+            Opacity(
+              opacity: 0.85,
+              child: body,
+            )
           ],
         )
       )
@@ -58,7 +61,7 @@ class BannerBox extends StatelessWidget {
       case BannerStyle.info:
         return theme.colorScheme.secondaryContainer;
       case BannerStyle.warning:
-        return const Color(0xfff6e29c);
+        return const Color(0xFFFFC808);
       case BannerStyle.error:
         return theme.colorScheme.errorContainer;
       default:
