@@ -123,13 +123,6 @@ class StudyDesignInfoFormView extends ConsumerWidget {
                 ),
                 FormTableRow(
                   label: "Phone".hardcoded,
-                  input: ReactivePhoneFormField<PhoneNumber>(
-                    formControlName: 'input',
-                    focusNode: FocusNode(),
-                  ),
-                ),
-                FormTableRow(
-                  label: "Phone".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
                   ),

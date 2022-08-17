@@ -150,8 +150,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       body: AsyncValueWidget(
         value: state.study,
         data: (study) => SingleColumnLayout.fromType(
-            type: widget.layoutType ?? SingleColumnLayoutType.stretched,
-            body: widget.body
+          type: widget.layoutType ?? SingleColumnLayoutType.stretched,
+          body: widget.body,
+          context: context,
         ),
       ),
       drawer: widget.drawer,

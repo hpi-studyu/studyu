@@ -25,7 +25,7 @@ class StudyRecruitScreen extends ConsumerWidget {
 
     return AsyncValueWidget<List<StudyInvite>?>(
       value: state.invites,
-      data: (studyInvites) => Container(child: Column(
+      data: (studyInvites) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -39,7 +39,7 @@ class StudyRecruitScreen extends ConsumerWidget {
             getIntervention: controller.getIntervention,
           ),
         ],
-      )),
+      ),
       empty: () => Padding(
         padding: const EdgeInsets.only(top: 24),
         child: EmptyBody(

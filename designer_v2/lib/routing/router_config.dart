@@ -16,6 +16,7 @@ import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
+import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
@@ -136,6 +137,23 @@ class RouterConfig {
         final studyId = state.params[RouteParams.studyId]!;
         return MaterialPage(
             key: RouterKeys.studyKey,
+            /*
+            child: StudyPageScaffold<StudyInfoFormViewModel>(
+              studyId: studyId,
+              formViewModelBuilder: (ref) => ref.read(
+                  studyInfoFormViewModelProvider(studyId)
+              ),
+              formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+                leftWidget: MeasurementSurveyFormView(formViewModel: formViewModel),
+                rightWidget: SurveyPreview(routeArgs: routeArgs),
+                flexLeft: 7,
+                flexRight: 8,
+                scrollLeft: true,
+                scrollRight: false,
+                paddingRight: null,
+              ),
+            )
+            */
             child: StudyScaffold(
               studyId: studyId,
               tabs: StudyNav.tabs(studyId),
@@ -143,8 +161,9 @@ class RouterConfig {
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.info(studyId),
               body: StudyDesignInfoFormView(studyId),
-              layoutType: SingleColumnLayoutType.split,
-        ));
+              layoutType: SingleColumnLayoutType.boundedNarrow,
+            )
+        );
       }
   );
 
@@ -162,7 +181,7 @@ class RouterConfig {
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.enrollment(studyId),
               body: StudyDesignEnrollmentFormView(studyId),
-              layoutType: SingleColumnLayoutType.split,
+              layoutType: SingleColumnLayoutType.boundedNarrow,
         ));
       }
   );
@@ -181,7 +200,7 @@ class RouterConfig {
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.interventions(studyId),
               body: StudyDesignInterventionsFormView(studyId),
-              layoutType: SingleColumnLayoutType.split,
+              layoutType: SingleColumnLayoutType.boundedNarrow,
         ));
       },
       routes: [studyEditIntervention],
@@ -229,7 +248,7 @@ class RouterConfig {
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.measurements(studyId),
               body: StudyDesignMeasurementsFormView(studyId),
-              layoutType: SingleColumnLayoutType.split,
+              layoutType: SingleColumnLayoutType.boundedNarrow,
         ));
       },
       routes: [studyEditMeasurement]
@@ -292,7 +311,7 @@ class RouterConfig {
               tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.recruit(studyId),
               body: StudyRecruitScreen(studyId),
-              layoutType: SingleColumnLayoutType.bounded,
+              layoutType: SingleColumnLayoutType.boundedWide,
         ));
       }
   );
@@ -309,7 +328,7 @@ class RouterConfig {
               tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.monitor(studyId),
               body: StudyMonitorScreen(studyId),
-              layoutType: SingleColumnLayoutType.bounded,
+              layoutType: SingleColumnLayoutType.boundedWide,
         ));
       }
   );
@@ -326,7 +345,7 @@ class RouterConfig {
               tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.analyze(studyId),
               body: StudyAnalyzeScreen(studyId),
-              layoutType: SingleColumnLayoutType.bounded,
+              layoutType: SingleColumnLayoutType.boundedWide,
         ));
       }
   );

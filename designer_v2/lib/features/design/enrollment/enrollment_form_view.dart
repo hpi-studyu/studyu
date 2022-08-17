@@ -110,7 +110,7 @@ class StudyDesignEnrollmentFormView extends ConsumerWidget {
                         ],
                       ),
                       //emptyIcon: Icons.content_paste_off_rounded,
-                      emptyTitle: "No screener questions defined".hardcoded,
+                      emptyTitle: "No screening criteria".hardcoded,
                       emptyDescription:
                           "Optional screener questions can help determine whether a potential participant is qualified to participate in your study."
                               .hardcoded,
