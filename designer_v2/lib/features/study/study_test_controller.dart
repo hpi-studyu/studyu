@@ -28,21 +28,21 @@ abstract class PlatformController {
 }
 
 class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = appDeepLink;
-
+  final Study study;
   final IAuthRepository authRepository;
   late PlatformController platformController;
-  final Study study;
+  late String previewSrc;
 
   StudyTestController({
     required this.study,
     required this.authRepository,
   }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
     List<dynamic> missingRequirements = _missingRequirements();
+    previewSrc = "$appDeepLink?";
     if (missingRequirements.isEmpty) {
       // requirements satisfied
       String sessionStr = authRepository.session?.persistSessionString ?? '';
-      previewSrc += '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
+      previewSrc += '&mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
     } else {
       // todo show modal and add error
       if (kDebugMode) {
