@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-class StudyTestScreen extends ConsumerStatefulWidget {
-  const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
-
-  final String studyId;
+class StudyTestScreen extends StudyPageWidget {
+  const StudyTestScreen(studyId, {Key? key})
+      : super(studyId, key: key);
 
   @override
-  ConsumerState<StudyTestScreen> createState() => _StudyTestScreen();
-}
-
-class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // TODO error handling Study?
-    final study = ref.watch(studyControllerProvider(widget.studyId)).study.value;
+    final study = ref.watch(studyControllerProvider(studyId)).study.value;
     final studyTestController = ref.read(studyTestControllerProvider(study!).notifier);
     final controller = studyTestController.platformController;
 
@@ -59,15 +54,15 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
                 ),
               ),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    studyTestController.platformController.scaffold,
-                  ],
-                )
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      studyTestController.platformController.scaffold,
+                    ],
+                  )
               ),
               Expanded(
-                child: Column()
+                  child: Column()
               )
             ]
         )

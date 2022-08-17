@@ -6,15 +6,13 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-class StudyDesignInfoFormView extends ConsumerWidget {
-  const StudyDesignInfoFormView(this.studyId, {Key? key})
-      : super(key: key);
-
-  final String studyId;
+class StudyDesignInfoFormView extends StudyDesignPageWidget {
+  const StudyDesignInfoFormView(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

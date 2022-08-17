@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
-
+import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 
 /// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends ConsumerStatefulWidget {
@@ -36,7 +36,7 @@ class StudyScaffold extends ConsumerStatefulWidget {
   final NavbarTab? selectedTabSubnav;
 
   /// The widget to be rendered as the main page body
-  final Widget body;
+  final StudyPageWidget body;
 
   final Widget? drawer;
   final bool disableActions;
@@ -152,6 +152,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         data: (study) => SingleColumnLayout.fromType(
           type: widget.layoutType ?? SingleColumnLayoutType.stretched,
           body: widget.body,
+          header: widget.body.banner(context),
           context: context,
         ),
       ),

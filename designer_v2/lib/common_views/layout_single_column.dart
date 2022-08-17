@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -22,6 +20,8 @@ class SingleColumnLayout extends StatefulWidget {
 
   const SingleColumnLayout({
     required this.body,
+    this.header,
+    this.stickyHeader = false,
     this.constraints = defaultConstraints,
     this.scroll = true,
     this.padding = TwoColumnLayout.defaultContentPadding,
@@ -29,6 +29,8 @@ class SingleColumnLayout extends StatefulWidget {
   }) : super(key: key);
 
   final Widget body;
+  final Widget? header;
+  final bool stickyHeader;
   final BoxConstraints? constraints;
   final bool scroll;
   final EdgeInsets? padding;
@@ -36,21 +38,31 @@ class SingleColumnLayout extends StatefulWidget {
   static fromType({
     required SingleColumnLayoutType type,
     required Widget body,
-    required BuildContext context
+    required BuildContext context,
+    Widget? header,
   }) {
     switch (type) {
       case SingleColumnLayoutType.split:
         final screenSize = MediaQuery.of(context).size;
-        return SingleColumnLayout(body: body, constraints: BoxConstraints(
-          minWidth: min(ThemeConfig.kMinContentWidth, screenSize.width * 0.5),
-          maxWidth: min(ThemeConfig.kMaxContentWidth, screenSize.width * 0.5),
+        return SingleColumnLayout(
+          body: body,
+          header: header,
+          constraints: BoxConstraints(
+            minWidth: min(ThemeConfig.kMinContentWidth, screenSize.width * 0.5),
+            maxWidth: min(ThemeConfig.kMaxContentWidth, screenSize.width * 0.5),
         ));
       case SingleColumnLayoutType.stretched:
-        return SingleColumnLayout(body: body, constraints: null);
+        return SingleColumnLayout(
+            body: body, header: header, constraints: null
+        );
       case SingleColumnLayoutType.boundedWide:
-        return SingleColumnLayout(body: body, constraints: defaultConstraints);
+        return SingleColumnLayout(
+            body: body, header: header, constraints: defaultConstraints
+        );
       case SingleColumnLayoutType.boundedNarrow:
-        return SingleColumnLayout(body: body, constraints: defaultConstraintsNarrow);
+        return SingleColumnLayout(
+            body: body, header: header,constraints: defaultConstraintsNarrow
+        );
     }
   }
 
@@ -89,14 +101,47 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       ],
     );
 
-    if (widget.scroll) {
+    Widget decorateScroll(Widget child) {
       return Scrollbar(
         thumbVisibility: true,
         controller: _scrollController,
         child: SingleChildScrollView(
             controller: _scrollController,
-            child: body
-      ));
+            child: child
+        )
+      );
+    }
+
+    if (widget.stickyHeader) {
+      if (widget.scroll) {
+        body = decorateScroll(body);
+      }
+      if (widget.header != null) {
+        body = Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            widget.header!,
+            Flexible(
+              child: body,
+            )
+          ],
+        );
+      }
+    } else { // non-sticky header
+      if (widget.header != null) {
+        body = Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            widget.header!,
+            body,
+          ],
+        );
+      }
+      if (widget.scroll) {
+        body = decorateScroll(body);
+      }
     }
 
     return body;

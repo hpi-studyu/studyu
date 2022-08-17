@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -15,11 +16,8 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class StudyDesignEnrollmentFormView extends ConsumerWidget {
-  const StudyDesignEnrollmentFormView(this.studyId, {Key? key})
-      : super(key: key);
-
-  final String studyId;
+class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
+  const StudyDesignEnrollmentFormView(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -9,14 +9,13 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 typedef InterventionProvider = Intervention? Function(String id);
 
-class StudyRecruitScreen extends ConsumerWidget {
-  const StudyRecruitScreen(this.studyId, {Key? key}) : super(key: key);
-
-  final String studyId;
+class StudyRecruitScreen extends StudyPageWidget {
+  const StudyRecruitScreen(studyId, {Key? key}) : super(studyId, key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
