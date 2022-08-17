@@ -158,7 +158,9 @@ abstract class FormViewModel<T> {
   }
 
   Future<void> cancel() {
-    _restoreControlsFromFormData();
+    if (formMode != FormMode.readonly) {
+      _restoreControlsFromFormData();
+    }
     delegate?.onCancel(this, formMode);
 
     return Future.value(null);
