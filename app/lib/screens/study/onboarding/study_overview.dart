@@ -78,14 +78,6 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
               child: Material(child: StudyTile.fromStudy(study: study)),
             ),
             const SizedBox(height: 16),
-            /* todo why is this here?
-            RetryFutureBuilder<Study>(
-              tryFunction: () => SupabaseQuery.getById<Study>(study.id),
-              successBuilder: (BuildContext context, Study study) {
-                context.read<AppState>().selectedStudy = study;
-                return StudyDetailsView(study: study);
-              },
-            ), */
             StudyDetailsView(study: study),
           ],
         ),

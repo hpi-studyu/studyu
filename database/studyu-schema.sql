@@ -416,6 +416,22 @@ $$;
 ALTER FUNCTION public.can_edit(user_id uuid, study_param public.study) OWNER TO supabase_admin;
 
 --
+-- Name: is_subject_of(uuid, public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) RETURNS boolean
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM study_subject
+    WHERE study_subject.user_id = _user_id AND study_subject.study_id = _study_id
+  )
+$$;
+
+
+ALTER FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) OWNER TO supabase_admin;
+
+--
 -- Name: get_study_from_invite(text); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
@@ -429,6 +445,22 @@ $$;
 
 
 ALTER FUNCTION public.get_study_from_invite(invite_code text) OWNER TO supabase_admin;
+
+--
+-- Name: get_study_record_from_invite(text); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS Study
+    LANGUAGE sql IMMUTABLE SECURITY DEFINER AS $$
+    SELECT * FROM study WHERE study.id = (
+        SELECT study_invite.study_id
+        FROM study_invite
+        WHERE invite_code = study_invite.code
+   );
+$$;
+
+
+ALTER FUNCTION public.get_study_record_from_invite(invite_code text) OWNER TO supabase_admin;
 
 --
 -- Name: handle_new_user(); Type: FUNCTION; Schema: public; Owner: supabase_admin
@@ -747,6 +779,12 @@ CREATE POLICY "Editors can see their study subjects progress" ON public.subject_
 
 CREATE POLICY "Everybody can view (published and open) studies" ON public.study FOR SELECT USING ((published = true) AND (participation = 'open'::public.participation));
 
+
+--
+-- Name: study Study subjects can view their joined study; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (is_study_subject_of(auth.uid(), id));
 
 --
 -- Name: study_subject Invite code needs to be valid (not possible in the app); Type: POLICY; Schema: public; Owner: supabase_admin
