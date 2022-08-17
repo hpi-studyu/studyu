@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -42,9 +41,9 @@ class StudyTestControllerState extends StudyControllerBaseState {
       'Title': study.title,
       'Description': study.description,
       // TODO: define/discuss requirements for testing
-      //'Interventions': study.interventions,
-      //'Observations': study.observations,
-      //'Consent': study.consent,
+      'Interventions': study.interventions,
+      'Observations': study.observations,
+      // 'Consent': study.questionnaire.questions,
       // maybe: study.hasEligibilityCheck,
       // maybe:study.eligibilityCriteria,
     };
