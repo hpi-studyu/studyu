@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -63,27 +64,27 @@ class StudyTestController extends StateNotifier<StudyTestState> {
   // Check if the study satisfies the requirements to be previewed
   // Todo we might also include this check before publishing a study
   _missingRequirements() {
-    // todo how about:
-    // study.hasEligibilityCheck,
-    // study.eligibilityCriteria,
-
     // .hardcoded
     missingRequirements = {
       'Title': study.title,
       'Description': study.description,
-      //'Interventions': study.interventions,
-      //'Observations': study.observations,
-      //'Consent': study.consent,
+      'Interventions': study.interventions,
+      'Observations': study.observations,
+      'Consent': study.questionnaire.questions,
     };
-    missingRequirements.removeWhere((title, element) => _isValid(element));
+    missingRequirements.removeWhere((title, element) {
+      //print(title + " ***** " + element.toString());
+      var valid = _isValid(element);
+      //print(valid);
+      return valid;
+    });
   }
 
-  _isValid(dynamic val) {
-    if (val is bool) {
-      return val;
+  _isValid(dynamic element) {
+    if (element is bool) {
+      return element;
     }
-    // todo check for custom class and throw error
-    return val?.isNotEmpty ?? false;
+    return element?.isNotEmpty ?? false;
   }
 }
 
@@ -136,7 +137,7 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    //html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
+    // html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
     // For debug purposes: postMessage(message, '*')
     iFrameElement.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
   }
@@ -180,9 +181,12 @@ class MobileController extends PlatformController {
 }
 
 final studyTestControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyTestController, StudyTestState, Study>(
-        (ref, study) => StudyTestController(
-          study: study,
+    .family<StudyTestController, StudyTestState, String>((ref, studyId) {
+          final study = ref.watch(studyControllerProvider(studyId)).study.value;
+          return StudyTestController(
+          study: study!,
           authRepository: ref.watch(authRepositoryProvider),
-        )
+        );
+
+    }
 );

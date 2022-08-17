@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/features/study/study_page_view.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
-class StudyTestScreen extends StudyPageWidget {
+class StudyTestScreen extends StudyDesignPageWidget {
   const StudyTestScreen(studyId, {Key? key})
       : super(studyId, key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO error handling Study?
-    final study = ref.watch(studyControllerProvider(studyId)).study.value;
-    final studyTestController = ref.read(studyTestControllerProvider(study!).notifier);
+    final studyTestController = ref.read(studyTestControllerProvider(studyId).notifier);
     final controller = studyTestController.platformController;
     bool missingRequirements = studyTestController.missingRequirements.isNotEmpty;
 
@@ -22,34 +22,23 @@ class StudyTestScreen extends StudyPageWidget {
       shrinkWrap: true,
       children: [
         if (missingRequirements) ... [
-          SizedBox(
-            width: 10,
-            height: 50,
-            child: OverflowBox(
-              minWidth: 0,
-              minHeight: 0.0,
-              maxWidth: double.infinity,
-              maxHeight: double.infinity,
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFE99C),
-                  border: Border.all(width: 3, color: const Color(0xFFFFC808)),
-                ),
-                child: Row(
-                    children: [
-                      const SizedBox(width: 50),
-                      const Icon(Icons.info),
-                      const SizedBox(width: 10),
-                      Text(
-                        "This study cannot be previewed, unless the following fields are set: ${studyTestController.missingRequirements.keys}".hardcoded,
-                        textAlign: TextAlign.left,
-                      ),
-                      const SizedBox(width: 50),
-                    ]
-                ),
+          BannerBox(
+              noPrefix: false,
+              prefixIcon: const Icon(Icons.info),
+              body: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextParagraph(
+                      text: "This study cannot be previewed!".hardcoded,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextParagraph(
+                        text: "The preview is not available until the following study information is specified: ${studyTestController.missingRequirements.keys}".hardcoded
+                    ),
+                  ]
               ),
-            ),
+              style: BannerStyle.warning
           ),
           const SizedBox(height: 20,),
         ],

@@ -19,8 +19,8 @@ class InterventionPreview extends StatelessWidget {
         Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: StudyTestScreen(routeArgs.studyId),
-            )
+              child: Column( children: [ const SizedBox(height: 50), StudyTestScreen(routeArgs.studyId) ],)
+            ),
         )
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class SurveyPreview extends StatelessWidget {
@@ -18,11 +19,8 @@ class SurveyPreview extends StatelessWidget {
         Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: const Center(
-                // TODO: implement SurveyPreview widget
-                child: Text("[TODO SurveyPreview]")
-              ),
-            )
+              child: Column( children: [ const SizedBox(height: 50), StudyTestScreen(routeArgs.studyId) ],),
+            ),
         )
       ],
     );
