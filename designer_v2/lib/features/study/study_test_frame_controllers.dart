@@ -14,6 +14,7 @@ abstract class PlatformController {
   PlatformController(this.previewSrc, this.studyId);
 
   void registerViews(Key key);
+  void navigatePage(String page);
   void sendCmd(String command);
   void refresh();
   void listen();
@@ -24,11 +25,13 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late html.IFrameElement iFrameElement;
+  late String lastSrc;
 
   WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
     final key = UniqueKey();
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
+    lastSrc = previewSrc;
   }
 
   @override
@@ -46,14 +49,23 @@ class WebController extends PlatformController {
   }
 
   @override
+  void navigatePage(String page) {
+    modifySrc("$previewSrc&route=$page");
+  }
+
+  @override
   void sendCmd(String command) {
-    String localPreviewSrc = "$previewSrc&cmd=$command";
-    iFrameElement.src = localPreviewSrc;
+    modifySrc("$previewSrc&cmd=$command");
   }
 
   @override
   void refresh() {
-    iFrameElement.src = previewSrc;
+    modifySrc(previewSrc);
+  }
+
+  void modifySrc(String newSrc) {
+    lastSrc = newSrc;
+    iFrameElement.src = lastSrc;
   }
 
   @override
@@ -65,6 +77,9 @@ class WebController extends PlatformController {
   void listen() {
     html.window.onMessage.listen((event) {
       var data = event.data;
+      if (data == 'routeFinished') {
+        modifySrc(lastSrc);
+      }
     });
   }
 
@@ -109,6 +124,11 @@ class MobileController extends PlatformController {
 
   @override
   void send(String message) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void navigatePage(String page) {
     throw UnimplementedError();
   }
 }

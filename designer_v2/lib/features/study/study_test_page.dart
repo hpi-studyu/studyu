@@ -24,7 +24,8 @@ class StudyTestScreen extends StudyPageWidget {
         ref.watch(studyTestPlatformControllerProvider(studyId));
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
 
-    load().then((value) => value ? null : showHelp(ref));
+    frameController?.listen();
+    load().then((hasHelped) => !hasHelped ? showHelp(ref) : null);
 
     final frameControls = Column(
       children: [
@@ -36,6 +37,13 @@ class StudyTestScreen extends StudyPageWidget {
             textAlign: TextAlign.center),
         const SizedBox(height: 12.0),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          TextButton.icon(
+            icon: const Icon(Icons.restart_alt),
+            label: Text("debug GOTO eligibilityCheck".hardcoded),
+            onPressed: (!state.canTest) ? null : () {
+              frameController.navigatePage("eligibilityCheck");
+            },
+          ),
           TextButton.icon(
             icon: const Icon(Icons.restart_alt),
             label: Text("Reset".hardcoded),
@@ -53,6 +61,11 @@ class StudyTestScreen extends StudyPageWidget {
                 : () {
                     frameController!.openNewPage();
                   },
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.help),
+            label: Text("How does this work?".hardcoded),
+            onPressed: () => showHelp(ref),
           ),
         ]),
       ],
@@ -82,7 +95,6 @@ class StudyTestScreen extends StudyPageWidget {
     if (!formViewModel.form.hasErrors) {
       return null;
     }
-
     return BannerBox(
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
