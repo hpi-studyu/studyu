@@ -76,8 +76,6 @@ Future<void> deleteLocalData() async {
   await prefs.remove(selectedSubjectIdKey);
 }
 
-void modifySelectedSubjectIdKey({required bool preview}) {
-  if (preview) {
+void previewSubjectIdKey() {
     selectedSubjectIdKey = 'preview_$selectedSubjectIdKey';
-  }
 }

@@ -19,7 +19,8 @@ class StudyTestScreen extends StudyPageWidget {
     final state = ref.watch(studyTestControllerProvider(studyId));
     final frameController = ref.watch(studyTestPlatformControllerProvider(studyId));
 
-    load().then((value) => value ? null : showHelp(ref));
+    frameController?.listen();
+    load().then((hasHelped) => !hasHelped ? showHelp(ref) : null);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -36,6 +37,13 @@ class StudyTestScreen extends StudyPageWidget {
             children: [
               TextButton.icon(
                 icon: const Icon(Icons.restart_alt),
+                label: Text("debug GOTO eligibilityCheck".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigatePage("eligibilityCheck");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.restart_alt),
                 label: Text("Reset".hardcoded),
                 onPressed: (!state.canTest) ? null : () {
                   frameController.sendCmd("reset");
@@ -47,6 +55,11 @@ class StudyTestScreen extends StudyPageWidget {
                   onPressed: (!state.canTest) ? null : () {
                     frameController.openNewPage();
                   },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.help),
+                label: Text("How does this work?".hardcoded),
+                onPressed: () => showHelp(ref),
               ),
             ]
         ),
