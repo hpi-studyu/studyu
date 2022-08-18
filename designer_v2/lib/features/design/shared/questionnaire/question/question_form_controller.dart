@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
@@ -11,12 +13,14 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
-class QuestionFormViewModel
-    extends ManagedFormViewModel<QuestionFormData>
+class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     implements IListActionProvider<AbstractControl<String>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
-  QuestionFormViewModel({super.formData, super.delegate}) {
+  QuestionFormViewModel(
+      {super.formData,
+      super.delegate,
+      super.validationSet = StudyFormValidationSet.draft}) {
     // Keep the form in sync with the selected question type
     _updateFormControls(questionType);
     _questionTypeChanges =
@@ -72,6 +76,13 @@ class QuestionFormViewModel
     SurveyQuestionType.scale: FormGroup({
       // TODO implement SurveyQuestionType.scale controls
     }),
+  };
+
+  @override
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
   };
 
   /// The form containing the controls for the currently selected
@@ -161,10 +172,10 @@ class QuestionFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: "New Question".hardcoded,
-    FormMode.edit: "Edit Question".hardcoded,
-    FormMode.readonly: "View Question".hardcoded,
-  };
+        FormMode.create: "New Question".hardcoded,
+        FormMode.edit: "Edit Question".hardcoded,
+        FormMode.readonly: "View Question".hardcoded,
+      };
 
   @override
   List<ModelAction> availableActions(AbstractControl<String> model) {
@@ -199,6 +210,8 @@ class QuestionFormViewModel
   @override
   QuestionFormViewModel createDuplicate() {
     return QuestionFormViewModel(
-        delegate: delegate, formData: formData?.copy());
+        delegate: delegate,
+        formData: formData?.copy(),
+        validationSet: validationSet);
   }
 }

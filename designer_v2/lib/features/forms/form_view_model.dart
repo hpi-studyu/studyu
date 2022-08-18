@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
 
 enum FormMode {
@@ -11,6 +12,10 @@ enum FormMode {
 }
 
 class FormInvalidException implements Exception {}
+class FormConfigException implements Exception {
+  FormConfigException([this.message]);
+  final String? message;
+}
 
 abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onSave(T formViewModel, FormMode prevFormMode);
@@ -28,11 +33,18 @@ class FormControlOption<T> {
 typedef FormControlUpdateCallback = void Function(AbstractControl control);
 
 abstract class FormViewModel<T> {
-  FormViewModel({formData, this.delegate, this.autosave = false}) :
+  FormViewModel({
+    formData,
+    this.delegate,
+    validationSet,
+    this.autosave = false,
+  }) :  _validationSet = validationSet,
         _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
+    _setControlValidators(validationSet);
     _restoreControlsFromFormData();
     _formModeUpdated();
+
     if (autosave) {
       // Push to event queue to avoid listening to update events
       // triggered synchronously during initialization
@@ -52,6 +64,19 @@ abstract class FormViewModel<T> {
   FormMode _formMode;
 
   bool get isReadonly => formMode == FormMode.readonly;
+
+  /// Enum that determines which [FormValidationConfig] should be selected
+  /// from the [validationConfig] and applied to the [form].
+  ///
+  /// If null, the [AbstractControl]s contained in the [form] will be validated
+  /// using their default configuration. Otherwise, the default configuration
+  /// is discarded & replaced by the respective [FormValidationConfig].
+  FormValidationSetEnum? get validationSet => _validationSet;
+  FormValidationSetEnum? _validationSet;
+  set validationSet(FormValidationSetEnum? validationSet) {
+    _validationSet = validationSet;
+    _setControlValidators(validationSet);
+  }
 
   final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
 
@@ -125,6 +150,41 @@ abstract class FormViewModel<T> {
     } else {
       initControls();
     }
+    form.updateValueAndValidity();
+  }
+
+  void _setControlValidators(FormValidationSetEnum? validationSet) {
+    if (validationSet == null) {
+      return; // retain default form validators
+    }
+    final formValidationConfig = validationConfig[validationSet];
+    if (formValidationConfig == null) {
+      throw FormConfigException(
+          "Failed to lookup FormValidationConfig for key: $validationSet");
+    }
+
+    // Build index control => config
+    final Map<AbstractControl, FormControlValidation> controlConfigs = {};
+    for (final controlValidationConfig in formValidationConfig) {
+      final existingConfig = controlConfigs[controlValidationConfig.control];
+      final mergedConfig = controlValidationConfig.merge(existingConfig);
+      controlConfigs[controlValidationConfig.control] = mergedConfig;
+    }
+
+    // Apply control-specific config (if any) for each control in the form
+    for (final control in form.controls.values) {
+      if (!controlConfigs.containsKey(control)) {
+        continue;
+      }
+      // Update control
+      final controlValidationConfig = controlConfigs[control]!;
+      control.setValidators(controlValidationConfig.validators);
+      if (controlValidationConfig.asyncValidators != null) {
+        control.setAsyncValidators(controlValidationConfig.asyncValidators!);
+      }
+      control.validationMessages = controlValidationConfig.validationMessages;
+    }
+
     form.updateValueAndValidity();
   }
 
@@ -223,6 +283,13 @@ abstract class FormViewModel<T> {
 
   FormGroup get form;
   Map<FormMode, String> get titles;
+
+  /// The available set of validation configurations for the [form] managed
+  /// by this view model.
+  ///
+  /// One of the [FormValidationConfig]s is chosen at runtime based on the
+  /// current [validationSet] and applied to the [form].
+  FormValidationConfigSet get validationConfig => {};
 
   /// Initialize the values of all [FormControl]s in the [form]
   void setControlsFrom(T data);

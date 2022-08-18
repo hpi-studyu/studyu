@@ -9,6 +9,8 @@ import 'package:studyu_designer_v2/features/design/info/study_info_form_controll
 import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
@@ -26,6 +28,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     required this.studyRepository,
     required this.authRepository,
     required super.formData, // Study
+    super.validationSet = StudyFormValidationSet.draft,
   }) {
     if (isStudyReadonly) {
       read();
@@ -46,6 +49,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     formData: StudyInfoFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
+    validationSet: validationSet,
   );
 
   late final EnrollmentFormViewModel enrollmentFormViewModel = EnrollmentFormViewModel(
@@ -53,6 +57,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     delegate: this,
     study: formData!,
     router: router,
+    validationSet: validationSet,
   );
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
@@ -60,6 +65,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     delegate: this,
     study: formData!,
     router: router,
+    validationSet: validationSet,
   );
 
   late final InterventionsFormViewModel interventionsFormViewModel = InterventionsFormViewModel(
@@ -67,7 +73,15 @@ class StudyFormViewModel extends FormViewModel<Study>
     delegate: this,
     study: formData!,
     router: router,
+    validationSet: validationSet,
   );
+
+  @override
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   late final FormGroup form = FormGroup({

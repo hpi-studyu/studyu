@@ -13,9 +13,8 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
     implements
         IFormViewModelDelegate<QuestionFormViewModel>,
         IProviderArgsResolver<QuestionFormViewModel, QuestionFormRouteArgs> {
-
-  late final FormArray questionsArray = FormArray(
-      [], validators: questionsArrayValidators);
+  late final FormArray questionsArray =
+      FormArray([], validators: questionsArrayValidators);
   late final questionFormViewModels =
       FormViewModelCollection<QuestionFormViewModel, QuestionFormData>(
           [], questionsArray);
@@ -32,7 +31,8 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   void setQuestionnaireControlsFrom(QuestionnaireFormData data) {
     if (data.questionsData != null) {
       final viewModels = data.questionsData!
-          .map((data) => QuestionFormViewModel(formData: data, delegate: this))
+          .map((data) => QuestionFormViewModel(
+              formData: data, delegate: this, validationSet: validationSet))
           .toList();
       questionFormViewModels.reset(viewModels);
     }
@@ -81,7 +81,8 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
     if (args.questionId.isNewId) {
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
-      final viewModel = QuestionFormViewModel(formData: null, delegate: this);
+      final viewModel = QuestionFormViewModel(
+          formData: null, delegate: this, validationSet: validationSet);
       questionFormViewModels.stage(viewModel);
       return viewModel;
     }

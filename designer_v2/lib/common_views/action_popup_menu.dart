@@ -18,6 +18,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
     this.triggerIconColorHover,
     this.disableSplashEffect = false,
     this.hideOnEmpty = true,
+    this.enabled = true,
     Key? key
   }) : super(key: key);
 
@@ -30,6 +31,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
   final Axis orientation;
   final double? elevation;
   final double? splashRadius;
+  final bool enabled;
   final PopupMenuPosition position;
 
   @override
@@ -70,6 +72,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
           size: triggerIconSize,
           color: (isHovered) ? iconColorHover : iconColorDefault
       ),
+      enabled: enabled,
       elevation: elevation,
       splashRadius: splashRadius,
       position: position,

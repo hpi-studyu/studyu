@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
@@ -30,7 +31,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             children: <Widget>[
               TextParagraph(
                   text: "Provide general information about your study for "
-                      "participants as well as other researchers and clinicians.".hardcoded),
+                          "participants as well as other researchers and clinicians."
+                      .hardcoded),
               const SizedBox(height: 32.0),
               FormTableLayout(rows: [
                 FormTableRow(
@@ -41,10 +43,11 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     children: [
                       // TODO: responsive layout (input field gets too small)
                       Expanded(
-                        child: ReactiveTextField(
-                          formControl: formViewModel.titleControl,
-                        )
-                      ),
+                          child: ReactiveTextField(
+                        formControl: formViewModel.titleControl,
+                        validationMessages:
+                            formViewModel.titleControl.validationMessages,
+                      )),
                       ReactiveFormConsumer(builder: (context, form, child) {
                         return (formViewModel.iconControl.value != null)
                             ? const SizedBox(width: 4.0)
@@ -54,6 +57,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         child: ReactiveIconPicker(
                           formControl: formViewModel.iconControl,
                           iconOptions: IconPack.material,
+                          validationMessages:
+                              formViewModel.iconControl.validationMessages,
                         ),
                       )
                     ],
@@ -62,15 +67,19 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 FormTableRow(
                   control: formViewModel.descriptionControl,
                   label: "Description".hardcoded,
-                  labelHelpText: "TODO Study description text help text".hardcoded,
+                  labelHelpText:
+                      "TODO Study description text help text".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.descriptionControl,
+                    validationMessages:
+                        formViewModel.descriptionControl.validationMessages,
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,
                     decoration: InputDecoration(
-                        hintText: "Give a short summary of your study to participants".hardcoded
-                    ),
+                        hintText:
+                            "Give a short summary of your study to participants"
+                                .hardcoded),
                   ),
                 ),
               ], columnWidths: const {
@@ -82,10 +91,11 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
               const SizedBox(height: 12.0),
               TextParagraph(
                   text: "Participants will be able to contact you "
-                      "via the StudyU app using this information. Other clinicians "
-                      "or researchers will only be able to contact you if you "
-                      "agree to publish your study to the study repository."
-                      "".hardcoded),
+                          "via the StudyU app using this information. Other clinicians "
+                          "or researchers will only be able to contact you if you "
+                          "agree to publish your study to the study repository."
+                          ""
+                      .hardcoded),
               const SizedBox(height: 32.0),
               FormTableLayout(rows: [
                 FormTableRow(
@@ -93,20 +103,29 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Responsible organization".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.organizationControl,
+                    validationMessages:
+                        formViewModel.organizationControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
-                  control: formViewModel.institutionalReviewBoardControl,
+                  control: formViewModel.reviewBoardControl,
                   label: "Institutional Review Board".hardcoded,
                   input: ReactiveTextField(
-                    formControl: formViewModel.institutionalReviewBoardControl,
+                    formControl: formViewModel.reviewBoardControl,
+                    validationMessages: formViewModel
+                        .reviewBoardControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
-                  control: formViewModel.institutionalReviewBoardNumberControl,
-                  label: "Institutional Review Board\nProtocol Number".hardcoded,
+                  control: formViewModel.reviewBoardNumberControl,
+                  label:
+                      "Institutional Review Board\nProtocol Number".hardcoded,
                   input: ReactiveTextField(
-                    formControl: formViewModel.institutionalReviewBoardNumberControl,
+                    formControl:
+                        formViewModel.reviewBoardNumberControl,
+                    validationMessages: formViewModel
+                        .reviewBoardNumberControl
+                        .validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -114,6 +133,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Responsible\nresearcher(s)".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.researchersControl,
+                    validationMessages:
+                        formViewModel.researchersControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -121,6 +142,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Website".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.websiteControl,
+                    validationMessages:
+                        formViewModel.websiteControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -128,6 +151,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Email".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.emailControl,
+                    validationMessages:
+                        formViewModel.emailControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -135,10 +160,12 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Phone".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
+                    validationMessages:
+                        formViewModel.phoneControl.validationMessages,
                   ),
                 ),
               ], columnWidths: const {
-                0: FixedColumnWidth(185.0),
+                0: FixedColumnWidth(180.0),
                 1: FlexColumnWidth(),
               }),
             ],

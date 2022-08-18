@@ -1,5 +1,5 @@
 class Config {
-  static const isDebugMode = true;
+  static const isDebugMode = false;
 
   static const defaultLocale = {'en', 'US'};
 

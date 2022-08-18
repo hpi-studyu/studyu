@@ -9,6 +9,11 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 // - Study Info
@@ -73,4 +78,42 @@ final surveyQuestionFormViewModelProvider = Provider.autoDispose
     .family<QuestionFormViewModel,SurveyQuestionFormRouteArgs>((ref, args) {
   final owner = ref.watch(surveyFormViewModelProvider(args));
   return owner.provide(args);
+});
+
+// - Validators
+
+/// Provides the [StudyFormViewModel] for validation purposes with
+/// a [StudyFormValidationSet.publish]
+final studyPublishValidatorProvider = Provider.autoDispose
+    .family<StudyFormViewModel, StudyID>((ref, studyId) {
+  final state = ref.watch(studyControllerProvider(studyId));
+  final formViewModel = StudyFormViewModel(
+    router: ref.watch(routerProvider),
+    studyRepository: ref.watch(studyRepositoryProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    formData: state.study.value,
+    validationSet: StudyFormValidationSet.publish,
+  );
+  ref.onDispose(() {
+    formViewModel.dispose();
+  });
+  return formViewModel;
+});
+
+/// Provides the [StudyFormViewModel] for validation purposes with
+/// a [StudyFormValidationSet.test]
+final studyTestValidatorProvider = Provider.autoDispose
+    .family<StudyFormViewModel, StudyID>((ref, studyId) {
+  final state = ref.watch(studyControllerProvider(studyId));
+  final formViewModel = StudyFormViewModel(
+    router: ref.watch(routerProvider),
+    studyRepository: ref.watch(studyRepositoryProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    formData: state.study.value,
+    validationSet: StudyFormValidationSet.test,
+  );
+  ref.onDispose(() {
+    formViewModel.dispose();
+  });
+  return formViewModel;
 });

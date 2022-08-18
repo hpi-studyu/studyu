@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_data.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
@@ -27,6 +29,7 @@ class InterventionFormViewModel
     required this.study,
     super.delegate,
     super.formData,
+    super.validationSet = StudyFormValidationSet.draft,
   });
 
   final Study study;
@@ -37,7 +40,8 @@ class InterventionFormViewModel
       validators: [Validators.required], value: const Uuid().v4()); // hidden
   final FormControl<String> interventionTitleControl =
       FormControl(validators: [Validators.required, Validators.minLength(3)]);
-  final FormControl<IconOption> interventionIconControl = FormControl(value: null);
+  final FormControl<IconOption> interventionIconControl =
+      FormControl(value: null);
   final FormControl<String> interventionDescriptionControl =
       FormControl(value: '');
 
@@ -49,6 +53,13 @@ class InterventionFormViewModel
       InterventionTaskFormData>([], interventionTasksArray);
 
   InterventionID get interventionId => interventionIdControl.value!;
+
+  @override
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -67,7 +78,13 @@ class InterventionFormViewModel
     interventionIconControl.value = IconOption(data.iconName ?? '');
 
     if (data.tasksData != null) {
-      final viewModels = data.tasksData!.map((data) => InterventionTaskFormViewModel(formData: data, delegate: this)).toList();
+      final viewModels = data.tasksData!
+          .map((data) => InterventionTaskFormViewModel(
+                formData: data,
+                delegate: this,
+                validationSet: validationSet,
+              ))
+          .toList();
       tasksCollection.reset(viewModels);
     }
   }
@@ -85,19 +102,16 @@ class InterventionFormViewModel
   }
 
   String get breadcrumbsTitle {
-    final components = [
-      study.title,
-      formData?.title ?? ''
-    ];
+    final components = [study.title, formData?.title ?? ''];
     return components.join(kPathSeparator);
   }
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: breadcrumbsTitle,
-    FormMode.readonly: breadcrumbsTitle,
-    FormMode.edit: breadcrumbsTitle,
-  };
+        FormMode.create: breadcrumbsTitle,
+        FormMode.readonly: breadcrumbsTitle,
+        FormMode.edit: breadcrumbsTitle,
+      };
 
   // - IListActionProvider
 
@@ -109,14 +123,15 @@ class InterventionFormViewModel
   }
 
   List<ModelAction> availablePopupActions(InterventionTaskFormViewModel model) {
-    final actions = tasksCollection.availablePopupActions(
-        model, isReadOnly: isReadonly);
+    final actions =
+        tasksCollection.availablePopupActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(InterventionTaskFormViewModel model) {
-    final actions = tasksCollection.availableInlineActions(
-        model, isReadOnly: isReadonly);
+  List<ModelAction> availableInlineActions(
+      InterventionTaskFormViewModel model) {
+    final actions =
+        tasksCollection.availableInlineActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -158,12 +173,17 @@ class InterventionFormViewModel
     if (args.taskId.isNewId) {
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
-      final viewModel = InterventionTaskFormViewModel(formData: null, delegate: this);
+      final viewModel = InterventionTaskFormViewModel(
+        formData: null,
+        delegate: this,
+        validationSet: validationSet,
+      );
       tasksCollection.stage(viewModel);
       return viewModel;
     }
 
-    final viewModel = tasksCollection.findWhere((vm) => vm.taskId == args.taskId);
+    final viewModel =
+        tasksCollection.findWhere((vm) => vm.taskId == args.taskId);
     if (viewModel == null) {
       throw InterventionTaskNotFoundException(); // TODO handle 404 not found
     }
@@ -195,6 +215,9 @@ class InterventionFormViewModel
   @override
   InterventionFormViewModel createDuplicate() {
     return InterventionFormViewModel(
-        study: study, delegate: delegate, formData: formData?.copy());
+        study: study,
+        delegate: delegate,
+        formData: formData?.copy(),
+        validationSet: validationSet);
   }
 }

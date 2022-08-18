@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -25,6 +27,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     super.delegate,
     super.formData,
     super.autosave = true,
+    super.validationSet = StudyFormValidationSet.draft,
   }) {
     // automatically save when a managed child view model is saved
     propagateOnSave = true;
@@ -41,6 +44,13 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       Participation.values
           .map((v) => FormControlOption(v, v.string, description: v.description))
           .toList();
+
+  @override
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   FormGroup get form => FormGroup(

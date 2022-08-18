@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
@@ -63,6 +64,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
             .toList() as List<ModelAction<StudyActionType>>,
         studyActionIcons
     );
+  }
+
+  publishStudy() {
+    print("TODO show publish modal");
   }
 
   @override

@@ -1,30 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends ConsumerStatefulWidget {
-  const StudyScaffold({
-    this.studyId = Config.newStudyId,
-    required this.body,
-    this.layoutType,
-    this.tabs,
-    this.tabsSubnav,
-    this.selectedTab,
-    this.selectedTabSubnav,
-    this.drawer = const AppDrawer(title: 'StudyU'),
-    this.disableActions = false,
-    Key? key
-  }) : super(key: key);
+  const StudyScaffold(
+      {this.studyId = Config.newStudyId,
+      required this.body,
+      this.layoutType,
+      this.tabs,
+      this.tabsSubnav,
+      this.selectedTab,
+      this.selectedTabSubnav,
+      this.drawer = const AppDrawer(title: 'StudyU'),
+      this.disableActions = false,
+      this.actionsSpacing = 8.0,
+      this.actionsPadding = 12.0,
+      Key? key})
+      : super(key: key);
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
@@ -39,7 +47,10 @@ class StudyScaffold extends ConsumerStatefulWidget {
   final StudyPageWidget body;
 
   final Widget? drawer;
+
   final bool disableActions;
+  final double actionsSpacing;
+  final double actionsPadding;
 
   final SingleColumnLayoutType? layoutType;
 
@@ -52,30 +63,32 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final state = ref.watch(studyControllerProvider(widget.studyId));
-    final controller = ref.watch(studyControllerProvider(widget.studyId).notifier);
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyId).notifier);
 
     return Scaffold(
       appBar: AppBar(
         iconTheme: theme.iconTheme.copyWith(size: theme.iconTheme.size! * 1.2),
-        bottom: (widget.tabsSubnav != null) ? PreferredSize(
-          preferredSize: const Size.fromHeight(50.0),
-          child: Container(
-            //color: theme.colorScheme.primary.withOpacity(0.05),
-            color: theme.scaffoldBackgroundColor.withOpacity(0.15),
-            child: Row(
-              children: [
-                const SizedBox(width: 35.0),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 550),
-                  child: TabbedNavbar(
-                    tabs: widget.tabsSubnav!,
-                    selectedTab: widget.selectedTabSubnav,
-                    indicator: const BoxDecoration(),
-                  ),
-                )
-              ],
-            )
-          )) : null,
+        bottom: (widget.tabsSubnav != null)
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(50.0),
+                child: Container(
+                    //color: theme.colorScheme.primary.withOpacity(0.05),
+                    color: theme.scaffoldBackgroundColor.withOpacity(0.15),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 35.0),
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 550),
+                          child: TabbedNavbar(
+                            tabs: widget.tabsSubnav!,
+                            selectedTab: widget.selectedTabSubnav,
+                            indicator: const BoxDecoration(),
+                          ),
+                        )
+                      ],
+                    )))
+            : null,
         title: Row(
           children: [
             // Use the title widget slot to render both the title and a
@@ -97,8 +110,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         maxLines: 1,
                         style: theme.textTheme.titleSmall,
                         overflow: TextOverflow.ellipsis,
-                        softWrap: false
-                    ),
+                        softWrap: false),
                     const SizedBox(width: 8.0),
                     SyncIndicator(
                       state: state.study,
@@ -113,39 +125,43 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             ),
             Flexible(
               flex: 5,
-              child: (widget.tabs != null) ? Container(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: TabbedNavbar(
-                  tabs: widget.tabs!,
-                  selectedTab: widget.selectedTab,
-                ),
-              ) : Container(),
+              child: (widget.tabs != null)
+                  ? Container(
+                      constraints: const BoxConstraints(maxWidth: 420),
+                      child: TabbedNavbar(
+                        tabs: widget.tabs!,
+                        selectedTab: widget.selectedTab,
+                      ),
+                    )
+                  : Container(),
             ),
           ],
         ),
         //backgroundColor: theme.colorScheme.primaryContainer.withOpacity(0.5),
-        actions: (widget.disableActions) ? null : [
-          Container(
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-            child: AsyncValueWidget(
-              value: state.study,
-              data: (study) => Text(state.statusText,
-                  maxLines: 1,
-                  style: theme.textTheme.titleSmall,
-                  overflow: TextOverflow.clip,
-                  softWrap: false
-              ),
-              loading: () => Container(),
-              error: (e, str) => Container(),
-            ),
-          ),
-          ActionPopUpMenuButton(
-            actions: controller.studyActions,
-            orientation: Axis.vertical,
-            hideOnEmpty: false,
-          ),
-        ],
+        actions: (widget.disableActions)
+            ? null
+            : [
+                AsyncValueWidget(
+                  value: state.study,
+                  data: (study) => Row(
+                    children: withSpacing(
+                      actionButtons(context),
+                      spacing: widget.actionsSpacing,
+                      paddingStart: widget.actionsPadding,
+                      paddingEnd: widget.actionsPadding,
+                    ),
+                  ),
+                  loading: () => Container(), // TODO: loading skeleton
+                  error: (e, str) => Container(),
+                ),
+                ActionPopUpMenuButton(
+                  actions: controller.studyActions,
+                  orientation: Axis.vertical,
+                  enabled:
+                      state.study.hasValue, // disable while study is loading
+                  hideOnEmpty: false,
+                ),
+              ],
       ),
       body: AsyncValueWidget(
         value: state.study,
@@ -158,5 +174,36 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       ),
       drawer: widget.drawer,
     );
+  }
+
+  /// Note: This is not save to call until [StudyControllerState.study] is
+  /// fully loaded (i.e. use inside of [AsyncValueWidget])
+  List<Widget> actionButtons(BuildContext context) {
+    final state = ref.watch(studyControllerProvider(widget.studyId));
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyId).notifier);
+
+    List<Widget> actionButtons = [];
+
+    if (state.isPublishVisible) {
+      final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final publishButton = ReactiveForm(
+        formGroup: formViewModel.form,
+        child: ReactiveFormConsumer(
+            // enable re-rendering based on form validation status
+            builder: (context, form, child) {
+          return retainSizeInAppBar(PrimaryButton(
+            text: "Launch".hardcoded,
+            tooltipDisabled: "Please fill out all fields as required:".hardcoded
+                + "\n\n" + form.validationErrorSummary,
+            icon: null,
+            onPressed: (formViewModel.isValid) ? controller.publishStudy : null,
+          ));
+        }),
+      );
+      actionButtons.add(publishButton);
+    }
+
+    return actionButtons;
   }
 }
