@@ -55,10 +55,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         print(preview.selectedRoute);
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
-            print("ELIGIBILITY");
             // if we remove the await, we can push multiple times. warning: do not run in while(true)
             final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
-            print("ELIGIBILITY FINISHED ");
             //if (!mounted) return;
             //print("STILL MOUNTED");
             // todo either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
@@ -72,9 +70,9 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           // we need to create a fake activeSubject (and maybe also unsubscribe a user if he is already subscribed)
           model.activeSubject = await preview.createFakeSubject();
           if (!mounted) return;
-            //final consentGiven = Navigator.pushReplacementNamed(context, Routes.consent,);
-            final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
-            print("CONSENT GIVEN: " + consentGiven.toString());
+          //final consentGiven = Navigator.pushReplacementNamed(context, Routes.consent,);
+          final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+          html.window.parent.postMessage("routeFinished", '*');
           return;
         }
 

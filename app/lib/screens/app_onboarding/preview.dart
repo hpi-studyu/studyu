@@ -15,7 +15,6 @@ class Preview {
 
   void handleQueries() {
     selectedRoute = getSelectedRoute();
-    print('selected Route: $selectedRoute');
   }
 
   Future init() async {

@@ -38,8 +38,8 @@ class StudyTestScreen extends StudyPageWidget {
         const SizedBox(height: 12.0),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextButton.icon(
-            icon: const Icon(Icons.restart_alt),
-            label: Text("debug GOTO eligibilityCheck".hardcoded),
+            icon: const Icon(Icons.arrow_forward),
+            label: Text("eligibilityCheck".hardcoded),
             onPressed: (!state.canTest) ? null : () {
               frameController.navigatePage("eligibilityCheck");
             },
@@ -60,6 +60,40 @@ class StudyTestScreen extends StudyPageWidget {
                 ? null
                 : () {
                     frameController!.openNewPage();
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: Text("eligibilityCheck".hardcoded),
+              onPressed: (!state.canTest) ? null : () {
+                frameController.navigatePage("eligibilityCheck");
+              },
+            ),
+            TextButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: Text("consent".hardcoded),
+              onPressed: (!state.canTest) ? null : () {
+                frameController.navigatePage("consent");
+              },
+            ),
+          ],
+        ),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.restart_alt),
+                label: Text("Reset".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.sendCmd("reset");
+                },
+              ),
+              TextButton.icon(
+                  icon: const Icon(Icons.open_in_new_sharp),
+                  label: Text("Open in new tab".hardcoded),
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.openNewPage();
                   },
           ),
           TextButton.icon(
