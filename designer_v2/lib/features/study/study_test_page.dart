@@ -90,8 +90,7 @@ class StudyTestScreen extends StudyPageWidget {
           children: [
             TextParagraph(
               text: "The preview is unavailable until you update the "
-                      "following information as required:"
-                  .hardcoded,
+                      "following information:".hardcoded,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             ReactiveForm(
