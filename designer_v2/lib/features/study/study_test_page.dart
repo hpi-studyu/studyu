@@ -33,15 +33,27 @@ class StudyTestScreen extends StudyPageWidget {
         ),
         const SizedBox(height: 12.0),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: Text("eligibilityCheck".hardcoded),
+              onPressed: (!state.canTest) ? null : () {
+                frameController.navigatePage("eligibilityCheck");
+              },
+            ),
+            TextButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: Text("consent".hardcoded),
+              onPressed: (!state.canTest) ? null : () {
+                frameController.navigatePage("consent");
+              },
+            ),
+          ],
+        ),
+        Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton.icon(
-                icon: const Icon(Icons.restart_alt),
-                label: Text("debug GOTO eligibilityCheck".hardcoded),
-                onPressed: (!state.canTest) ? null : () {
-                  frameController.navigatePage("eligibilityCheck");
-                },
-              ),
               TextButton.icon(
                 icon: const Icon(Icons.restart_alt),
                 label: Text("Reset".hardcoded),
