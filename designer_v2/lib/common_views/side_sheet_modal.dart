@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 /// Displays a Material Side Sheet transitioned from Right side of the screen.
 ///
@@ -221,7 +222,7 @@ showFormSideSheet<T extends FormViewModel>({
   required FormViewBuilder<T> formViewBuilder,
   List<Widget>? actionButtons,
   width = 560,
-  barrierColor = const Color(0xA8FFFFFF),
+  barrierColor,
   barrierDismissible = true,
   ignoreAppBar = false,
   bodyPaddingVertical = 32.0,
@@ -237,6 +238,8 @@ showFormSideSheet<T extends FormViewModel>({
       child: widget,
     );
   }
+
+  barrierColor ??= ThemeConfig.modalBarrierColor(Theme.of(context));
 
   return showDefaultSideSheet(
     context: context,

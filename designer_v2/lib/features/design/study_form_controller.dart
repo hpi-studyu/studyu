@@ -19,6 +19,7 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 
 
 class StudyFormViewModel extends FormViewModel<Study>
@@ -150,14 +151,23 @@ class StudyFormViewModel extends FormViewModel<Study>
   }
 }
 
-/// Use the [family] modifier to provide a controller parametrized by [StudyID]
+/// Provides the the [FormViewModel] that is responsible for displaying &
+/// editing the survey design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final studyFormViewModelProvider = Provider.autoDispose
-  .family<StudyFormViewModel, StudyID>((ref, studyId) {
-    print("studyFormViewModelProvider($studyId)");
-    final studyController = ref.watch(studyControllerProvider(studyId).notifier);
-    // Note: the provider will be destroyed immediately
-    return studyController.studyFormViewModel;
+    .family<StudyFormViewModel, StudyID>((ref, studyId) {
+    print("studyFormViewModelProvider");
+  final state = ref.watch(studyControllerProvider(studyId));
+  final formViewModel = StudyFormViewModel(
+    router: ref.watch(routerProvider),
+    studyRepository: ref.watch(studyRepositoryProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    formData: state.study.value,
+  );
+  ref.onDispose(() {
+    print("studyFormViewModelProvider.DISPOSE");
+  });
+  return formViewModel;
 });

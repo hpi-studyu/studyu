@@ -16,8 +16,6 @@ class TextParagraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyle = theme.textTheme.bodyText2!
-        .copyWith(
-            height: 1.35, color: theme.colorScheme.onSurface.withOpacity(0.75))
         .merge(style);
 
     if (!selectable) {

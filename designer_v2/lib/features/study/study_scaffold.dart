@@ -12,6 +12,7 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
@@ -179,11 +180,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   /// Note: This is not save to call until [StudyControllerState.study] is
   /// fully loaded (i.e. use inside of [AsyncValueWidget])
   List<Widget> actionButtons(BuildContext context) {
-    final state = ref.watch(studyControllerProvider(widget.studyId));
-    final controller =
-        ref.watch(studyControllerProvider(widget.studyId).notifier);
-
     List<Widget> actionButtons = [];
+
+    final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
       final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyId));
@@ -197,7 +196,8 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             tooltipDisabled: "Please fill out all fields as required:".hardcoded
                 + "\n\n" + form.validationErrorSummary,
             icon: null,
-            onPressed: (formViewModel.isValid) ? controller.publishStudy : null,
+            enabled: formViewModel.isValid,
+            onPressed: () => showPublishDialog(context, widget.studyId),
           ));
         }),
       );

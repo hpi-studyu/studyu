@@ -65,7 +65,7 @@ class StudyTestScreen extends StudyPageWidget {
           ReactiveForm(
               formGroup: formViewModel.form,
               child: ReactiveFormConsumer(builder: (context, form, child) {
-                if (!formViewModel.form.valid) {
+                if (formViewModel.form.hasErrors) {
                   return const DisabledFrame();
                 }
                 return Column(
@@ -79,7 +79,7 @@ class StudyTestScreen extends StudyPageWidget {
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
-    if (formViewModel.isValid) {
+    if (!formViewModel.form.hasErrors) {
       return null;
     }
 

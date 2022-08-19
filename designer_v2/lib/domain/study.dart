@@ -114,6 +114,26 @@ extension StudyDuplicateX on Study {
   }
 }
 
+extension StudyPublishX on Study {
+  Study asNewlyPublished() {
+    final copy = Study.fromJson(toJson());
+
+    copy.published = true;
+    copy.activeSubjectCount = 0;
+    copy.participantCount = 0;
+    copy.endedCount = 0;
+    copy.missedDays = [];
+    copy.results = [];
+
+    return copy;
+  }
+}
+
+extension StudyRegistryX on Study {
+  bool get publishedToRegistry => false; // TODO add to core.Study
+  bool get publishedToRegistryResults => resultSharing == ResultSharing.public;
+}
+
 class StudyTemplates {
   static Study emptyDraft(String userId) {
     final newDraft = Study.withId(userId);

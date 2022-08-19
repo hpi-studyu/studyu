@@ -16,7 +16,6 @@ import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
-import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
@@ -30,6 +29,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_pr
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
+import 'package:studyu_designer_v2/features/study/settings/study_settings_page.dart';
 import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
@@ -80,6 +80,7 @@ class RouterConfig {
     studyMonitor,
     studyRecruit,
     studyAnalyze,
+    studySettings,
     passwordRecovery,
   ];
 
@@ -347,6 +348,23 @@ class RouterConfig {
               body: StudyAnalyzeScreen(studyId),
               layoutType: SingleColumnLayoutType.boundedWide,
         ));
+      }
+  );
+
+  static final studySettings = GoRoute(
+      path: "/studies/:${RouteParams.studyId}/settings",
+      name: "studySettings",
+      pageBuilder: (context, state) {
+        final studyId = state.params[RouteParams.studyId]!;
+        return MaterialPage(
+            key: RouterKeys.studyKey,
+            child: StudyScaffold(
+              studyId: studyId,
+              tabs: StudyNav.tabs(studyId),
+              body: StudySettingsPage(studyId),
+              layoutType: SingleColumnLayoutType.boundedWide,
+            )
+        );
       }
   );
 

@@ -48,10 +48,15 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       throw ModelNotFoundException();
     }
 
+    final publishedCopy = study.asNewlyPublished();
+
     final publishOperation = OptimisticUpdate(
-      applyOptimistic: () => study.published = true,
-      apply: () => save(study),
-      rollback: () => study.published = false,
+      applyOptimistic: () => {}, // nothing to do here
+      apply: () async {
+        await save(publishedCopy, runOptimistically: false);
+        // TODO clear study subjects + progress
+      },
+      rollback: () { }, // nothing to do here
       onUpdate: () => emitUpdate(),
       onError: (e, stackTrace) {
         emitError(modelStreamControllers[study.id], e, stackTrace);

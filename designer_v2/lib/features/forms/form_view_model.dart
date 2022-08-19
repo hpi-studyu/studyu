@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 enum FormMode {
   create,
@@ -48,7 +49,7 @@ abstract class FormViewModel<T> {
     if (autosave) {
       // Push to event queue to avoid listening to update events
       // triggered synchronously during initialization
-      Future.delayed(const Duration(milliseconds: 0), enableAutosave);
+      runAsync(enableAutosave);
     }
   }
 

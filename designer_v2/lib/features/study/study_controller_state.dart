@@ -12,6 +12,8 @@ class StudyControllerState extends StudyControllerBaseState {
   bool get isPublishVisible =>
       studyWithMetadata?.model.status == StudyStatus.draft;
 
+  bool get isPublished => study.value != null && study.value!.published;
+
   @override
   StudyControllerState copyWith({
     WrappedModel<Study>? Function()? studyWithMetadata

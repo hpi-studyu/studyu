@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({required this.filter, Key? key}) : super(key: key);
@@ -34,8 +35,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void didUpdateWidget(DashboardScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.filter != widget.filter) {
-      Future.delayed(const Duration(milliseconds: 0),
-          () => controller.setStudiesFilter(widget.filter));
+      runAsync(() => controller.setStudiesFilter(widget.filter));
     }
   }
 

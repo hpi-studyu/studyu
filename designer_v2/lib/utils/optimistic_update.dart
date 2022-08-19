@@ -12,6 +12,7 @@ class OptimisticUpdate {
     this.onUpdate,
     this.onError,
     this.rethrowErrors = false,
+    this.runOptimistically = true,
   });
 
   final VoidCallback applyOptimistic;
@@ -25,8 +26,13 @@ class OptimisticUpdate {
 
   final bool rethrowErrors;
 
+  /// Flag indicating whether the optimistic update should be run
+  final bool runOptimistically;
+
   Future<void> execute() async {
-    applyOptimistic();
+    if (runOptimistically) {
+      applyOptimistic();
+    }
     _runUpdateHandlerIfAny();
     try {
       await apply();

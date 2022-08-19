@@ -5,3 +5,4 @@ typedef JsonList = List<dynamic>;
 typedef VoidCallback = void Function();
 typedef VoidCallbackOn<T> = void Function(T target);
 
+typedef FutureFactory<T> = Future<T> Function();

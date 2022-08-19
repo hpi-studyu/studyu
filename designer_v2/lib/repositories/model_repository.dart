@@ -160,7 +160,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   }
 
   @override
-  Future<WrappedModel<T>?> save(T model) {
+  Future<WrappedModel<T>?> save(T model, {runOptimistically = true}) {
     final modelId = getKey(model);
     final prevModel = get(modelId)?.model;
 
@@ -188,13 +188,14 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         emitError(modelStreamControllers[modelId], e, stackTrace);
       },
       rethrowErrors: true,
+      runOptimistically: runOptimistically,
     );
 
     return saveOperation.execute().then((_) => get(modelId));
   }
 
   @override
-  Future<void> delete(ModelID modelId) async {
+  Future<void> delete(ModelID modelId, {runOptimistically = true}) async {
     final wrappedModel = get(modelId);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -216,7 +217,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       onError: (e, stackTrace) {
         get(modelId)?.markWithError(e);
         emitError(modelStreamControllers[modelId], e, stackTrace);
-      }
+      },
+      runOptimistically: runOptimistically,
     );
 
     return deleteOperation.execute();

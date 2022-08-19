@@ -109,8 +109,7 @@ class FormArrayTable<T> extends StatelessWidget {
   List<Widget> _buildRow(
       BuildContext context, T item, int rowIdx, Set<MaterialState> states) {
     final theme = Theme.of(context);
-    final tableTextStyleSecondary =
-        theme.textTheme.bodyText1!.copyWith(color: theme.colorScheme.secondary);
+    final tableTextStyleSecondary = theme.textTheme.bodyText1!;
 
     return [
       SingleChildScrollView(
