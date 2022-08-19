@@ -9,6 +9,20 @@ class ThemeConfig {
 
   static Color modalBarrierColor(ThemeData theme) =>
       theme.colorScheme.secondary.withOpacity(0.4);
+
+  static TextStyle bodyTextMuted(ThemeData theme) =>
+      TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: theme.colorScheme.onSurface.withOpacity(0.5)
+      );
+
+  static TextStyle bodyTextBackground(ThemeData theme) =>
+      TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: theme.colorScheme.onSurface.withOpacity(0.25)
+      );
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -248,6 +262,7 @@ class ThemeProvider extends InheritedWidget {
     final headlineColor = colors.onSurfaceVariant;
 
     return TextTheme(
+      button: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
       caption: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.85)), // Form Labels
       subtitle1: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // TextInput
       bodyText1: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)),

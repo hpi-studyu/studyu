@@ -52,9 +52,22 @@ extension StudyStatusFormatted on StudyStatus {
       case StudyStatus.draft:
         return "Draft".hardcoded;
       case StudyStatus.running:
-        return "Running".hardcoded;
+        return "Live".hardcoded;
       case StudyStatus.closed:
         return "Closed".hardcoded;
+      default:
+        return "[Invalid StudyStatus]";
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case StudyStatus.draft:
+        return "This study is still being drafted.".hardcoded;
+      case StudyStatus.running:
+        return "This study is currently under way.".hardcoded;
+      case StudyStatus.closed:
+        return "This study has been completed.".hardcoded;
       default:
         return "[Invalid StudyStatus]";
     }

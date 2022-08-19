@@ -42,7 +42,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
       Participation.values
-          .map((v) => FormControlOption(v, v.string, description: v.description))
+          .map((v) => FormControlOption(v, v.string, description: v.designDescription))
           .toList();
 
   @override

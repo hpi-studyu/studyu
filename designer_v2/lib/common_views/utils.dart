@@ -28,3 +28,12 @@ Widget retainSizeInAppBar(Widget widget) {
     children: [widget],
   );
 }
+
+extension ColorX on Color {
+  /// Returns a new color that matches this color with the alpha channel
+  /// multiplied by [alphaScaleFactor] (ranging from 0 to 1).
+  Color faded(double alphaScaleFactor) {
+    assert(alphaScaleFactor >= 0.0 && alphaScaleFactor <= 1.0);
+    return withAlpha((alphaScaleFactor * alpha).round());
+  }
+}

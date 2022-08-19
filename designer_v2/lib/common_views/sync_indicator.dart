@@ -87,7 +87,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
       dataWidget = Tooltip(
         message: "All changes saved".hardcoded + "\n\n"
             + "Last saved:".hardcoded + " "
-            + widget.lastSynced!.toTimeAgoString(),
+            + widget.lastSynced!.toTimeAgoStringPrecise(),
         child: Icon(Icons.check_circle_rounded,
           size: widget.iconSize,
           color: iconColor,

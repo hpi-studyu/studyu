@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/features/study/settings/study_settings_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
@@ -16,6 +17,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
+    final state = ref.watch(studyControllerProvider(studyId));
     final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
 
     final theme = Theme.of(context);
@@ -36,22 +38,20 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       children: [
                         RichText(
                           text: TextSpan(
-                            text: 'You are creating a'.hardcoded,
+                            text: 'The study you are creating is'.hardcoded,
                             children: [
                               const TextSpan(text: ' '),
                               TextSpan(
-                                  text: 'private, invitation-based'.hardcoded,
-                                  style: const TextStyle(fontWeight: FontWeight.bold)),
-                              const TextSpan(text: ' '),
-                              TextSpan(text: 'study'.hardcoded),
+                                text: state.studyParticipation!.asAdjective,
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               const TextSpan(text: '.'),
                             ],
                           ),
                         ),
                         const SizedBox(height: 4.0),
                         SelectableText(
-                            "Once launched, you can enroll selected participants by "
-                                "sending them an acess code.".hardcoded,
+                            state.studyParticipation!.launchDescription,
                             style: TextStyle(
                                 color: theme.colorScheme.onSurface.withOpacity(0.6),
                                 fontStyle: FontStyle.italic)
@@ -59,6 +59,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       ],
                     )
                 ),
+                const SizedBox(width: 4.0),
                 TextButton(
                   onPressed: () {
                     Navigator.maybePop(context)
@@ -101,14 +102,14 @@ class PublishConfirmationDialog extends StudyPageWidget {
                     const SizedBox(width: 8.0),
                     Flexible(
                         child: FormControlLabel(
-                            formControl: formViewModel.isPublishedToRegistryControl,
-                            text: "To facilitate collaboration among researchers & "
-                                "clinicians, I agree that the my study will be published "
-                                "to the StudyU study registry for others. "
-                                "(Other researchers & clinicians will be able to contact "
-                                "you and review the study design, but they won't "
-                                "be able to access participation or result data unless "
-                                "shared explicitly)".hardcoded
+                          formControl: formViewModel.isPublishedToRegistryControl,
+                          text: "To facilitate collaboration among researchers & "
+                              "clinicians, I agree that the my study will be published "
+                              "to the StudyU study registry for others. "
+                              "(Other researchers & clinicians will be able to contact "
+                              "you and review the study design, but they won't "
+                              "be able to access participation or result data unless "
+                              "shared explicitly)".hardcoded
                         )
                     )
                   ],
@@ -126,8 +127,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
           //.whenComplete(() => Navigator.maybePop(context)),
         ),
       ],
-      maxWidth: 600,
-      minWidth: 450,
+      maxWidth: 650,
+      minWidth: 550,
     );
   }
 }

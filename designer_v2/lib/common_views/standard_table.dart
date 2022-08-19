@@ -21,10 +21,12 @@ enum StandardTableStyle {
 class StandardTableColumn {
   const StandardTableColumn({
     required this.label,
+    this.tooltip,
     this.columnWidth = const FlexColumnWidth(),
   });
 
   final String label;
+  final String? tooltip;
   final TableColumnWidth columnWidth;
 }
 
@@ -243,10 +245,14 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
               (isLeadingTrailing) ? 2*widget.cellSpacing : widget.cellSpacing,
               widget.cellSpacing
           ),
-          child: SelectableText(columns[i].label,
-              style: theme.textTheme.caption!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
-              )
+          child: Text(
+            columns[i].label,
+            overflow: TextOverflow.visible,
+            maxLines: 1,
+            softWrap: false,
+            style: theme.textTheme.caption!.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.8),
+            ),
           )
       ));
     }
@@ -311,6 +317,17 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
           : styledCell;
     }
 
+    Widget applyColumnConfiguration(Widget cellWidget, StandardTableColumn column) {
+      if (column.tooltip != null) {
+        cellWidget = Tooltip(
+          message: column.tooltip!,
+          child: cellWidget,
+        );
+      }
+
+      return cellWidget;
+    }
+
     final List<Widget> rawCells = widget.buildCellsAt(
         context, item, rowIdx, states);
 
@@ -326,14 +343,16 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       final isTrailing = i == rawCells.length-1;
       //final disableOnTap = (widget.trailingActionsAt != null && isTrailing)
       //    ? true : false;
+      final cellColumnConfig = widget.columns[i];
 
-      dataCells.add(
-        decorateCell(
-          rawCells[i],
-          isLeading: isLeading,
-          isTrailing: isTrailing,
-          disableOnTap: false)
+      Widget cell = rawCells[i];
+      cell = decorateCell(cell,
+        isLeading: isLeading,
+        isTrailing: isTrailing,
+        disableOnTap: false,
       );
+      cell = applyColumnConfiguration(cell, cellColumnConfig);
+      dataCells.add(cell);
     }
 
     return (widget.rowStyle == StandardTableStyle.material) ? TableRow(

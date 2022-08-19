@@ -20,18 +20,21 @@ class PublishSuccessDialog extends StudyPageWidget {
         children: [
           const SizedBox(height: 24.0),
           EmptyBody(
-            leading: Text(
-                "\u{1f389}",
+            leading: Text("\u{1f389}",
                 style: theme.textTheme.headline1?.copyWith(
                   fontSize: (theme.textTheme.headline1?.fontSize ?? 48.0) * 1.5,
                 )),
             title: "Your study is live!".hardcoded,
-            description: "Next, you can start inviting and enrolling your participants to the StudyU app.".hardcoded,
+            description:
+                "Next, you can start inviting and enrolling your participants in the StudyU app."
+                    .hardcoded,
           ),
+          const SizedBox(height: 12.0),
         ],
       ),
       actionButtons: [
-        Expanded(child: Column(
+        Expanded(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PrimaryButton(
@@ -40,10 +43,16 @@ class PublishSuccessDialog extends StudyPageWidget {
                   .whenComplete(() => controller.onAddParticipants()),
             ),
             const SizedBox(height: 8.0),
-            TextButton(
-              child: Text("Skip for now".hardcoded),
-              onPressed: () => Navigator.maybePop(context),
-            ),
+            Opacity(
+              opacity: 0.75,
+              child: TextButton(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                  child: Text("Skip for now".hardcoded),
+                ),
+                onPressed: () => Navigator.maybePop(context),
+              ),
+            )
           ],
         ))
       ],

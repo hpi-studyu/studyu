@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/badge.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -16,6 +18,7 @@ import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
+import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// Custom scaffold shared between all pages for an individual [Study]
@@ -145,12 +148,21 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                 AsyncValueWidget(
                   value: state.study,
                   data: (study) => Row(
-                    children: withSpacing(
-                      actionButtons(context),
-                      spacing: widget.actionsSpacing,
-                      paddingStart: widget.actionsPadding,
-                      paddingEnd: widget.actionsPadding,
-                    ),
+                    children: [
+                      (state.isStatusBadgeVisible)
+                          ? StudyStatusBadge(
+                              status: state.studyStatus,
+                              participation: state.studyParticipation,
+                              showPrefixIcon: true,
+                            )
+                          : const SizedBox.shrink(),
+                      ...withSpacing(
+                        actionButtons(context),
+                        spacing: widget.actionsSpacing,
+                        paddingStart: widget.actionsPadding,
+                        paddingEnd: widget.actionsPadding,
+                      ),
+                    ].map((widget) => retainSizeInAppBar(widget)).toList(),
                   ),
                   loading: () => Container(), // TODO: loading skeleton
                   error: (e, str) => Container(),
@@ -185,20 +197,23 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
-      final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final formViewModel =
+          ref.watch(studyPublishValidatorProvider(widget.studyId));
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
             // enable re-rendering based on form validation status
             builder: (context, form, child) {
-          return retainSizeInAppBar(PrimaryButton(
+          return PrimaryButton(
             text: "Launch".hardcoded,
-            tooltipDisabled: "Please fill out all fields as required:".hardcoded
-                + "\n\n" + form.validationErrorSummary,
+            tooltipDisabled:
+                "Please fill out all fields as required:".hardcoded +
+                    "\n\n" +
+                    form.validationErrorSummary,
             icon: null,
             enabled: formViewModel.isValid,
             onPressed: () => showPublishDialog(context, widget.studyId),
-          ));
+          );
         }),
       );
       actionButtons.add(publishButton);

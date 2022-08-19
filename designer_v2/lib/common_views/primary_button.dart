@@ -33,8 +33,8 @@ class PrimaryButton extends StatefulWidget {
 
   final FutureFactory? onPressedFuture;
 
-  bool get isDisabled => !enabled ||
-      (onPressed == null && onPressedFuture == null);
+  bool get isDisabled =>
+      !enabled || (onPressed == null && onPressedFuture == null);
 
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -51,8 +51,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       primary: Theme.of(context).colorScheme.primary,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 
-    final tooltipMessage = (!widget.isDisabled)
-        ? widget.tooltip : widget.tooltipDisabled;
+    final tooltipMessage =
+        (!widget.isDisabled) ? widget.tooltip : widget.tooltipDisabled;
 
     onButtonPressed() {
       widget.onPressed?.call();
@@ -63,37 +63,31 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       }
     }
 
-    FutureBuilder _trackedFutureBuilder({
-      required WidgetBuilder whenComplete,
-      required WidgetBuilder otherwise
-    }) {
+    FutureBuilder _trackedFutureBuilder(
+        {required WidgetBuilder whenComplete,
+        required WidgetBuilder otherwise}) {
       return FutureBuilder(
-        future: trackedFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return whenComplete(context);
-          }
-          return otherwise(context);
-        }
-      );
+          future: trackedFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return whenComplete(context);
+            }
+            return otherwise(context);
+          });
     }
 
-    final loadingIndicator = Container(
-        constraints: BoxConstraints(
-          maxWidth:
-          theme.iconTheme.size ?? theme.textTheme.button?.fontSize ?? 14.0,
-          maxHeight:
-          theme.iconTheme.size ?? theme.textTheme.button?.fontSize ?? 14.0,
-        ),
-        child: const Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2.0,
-              ),
+    final loadingIndicator = Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+        child: SizedBox(
+          width: theme.iconTheme.size ?? 14.0,
+          height: theme.iconTheme.size ?? 14.0,
+          child: const CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2.0,
           ),
         ),
+      ),
     );
 
     if (widget.icon != null) {
@@ -128,7 +122,6 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                       Text(widget.text, textAlign: TextAlign.center),
                   otherwise: (context) => loadingIndicator,
                 ),
-        )
-    );
+        ));
   }
 }

@@ -224,7 +224,7 @@ showFormSideSheet<T extends FormViewModel>({
   width = 560,
   barrierColor,
   barrierDismissible = true,
-  ignoreAppBar = false,
+  ignoreAppBar = true,
   bodyPaddingVertical = 32.0,
   bodyPaddingHorizontal = 48.0,
 }) {

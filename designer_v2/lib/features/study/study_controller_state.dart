@@ -1,7 +1,6 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyControllerState extends StudyControllerBaseState {
@@ -13,6 +12,12 @@ class StudyControllerState extends StudyControllerBaseState {
       studyWithMetadata?.model.status == StudyStatus.draft;
 
   bool get isPublished => study.value != null && study.value!.published;
+
+  StudyStatus? get studyStatus => study.value?.status;
+  Participation? get studyParticipation => study.value?.participation;
+
+  bool get isStatusBadgeVisible => studyStatus != null &&
+      studyStatus != StudyStatus.draft;
 
   @override
   StudyControllerState copyWith({
@@ -29,5 +34,4 @@ extension StudyControllerStateUnsafeProps on StudyControllerState {
   /// Make sure to only access these in an [AsyncWidget] so that [study.value]
   /// is available
   String get titleText => study.value!.title ?? "";
-  String get statusText => "Status: ${study.value!.status.string}".hardcoded;
 }
