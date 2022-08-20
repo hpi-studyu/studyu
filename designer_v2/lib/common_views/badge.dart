@@ -9,6 +9,7 @@ class Badge extends StatelessWidget {
       this.icon = Icons.circle_rounded,
       this.color,
       this.borderRadius = 12.0,
+      this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       this.type = BadgeType.plain,
       Key? key})
       : super(key: key);
@@ -18,6 +19,7 @@ class Badge extends StatelessWidget {
   final double borderRadius;
   final String label;
   final BadgeType type;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class Badge extends StatelessWidget {
           border: Border.all(color: _getBorderColor(theme)),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+          padding: padding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

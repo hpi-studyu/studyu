@@ -33,7 +33,7 @@ class StudiesTable extends StatelessWidget {
     StandardTableColumn(
         label: 'Participation'.hardcoded,
         columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
+            const MaxColumnWidth(FixedColumnWidth(120), IntrinsicColumnWidth())),
     StandardTableColumn(
       label: 'Created'.hardcoded,
       columnWidth: const FlexColumnWidth(1.3),

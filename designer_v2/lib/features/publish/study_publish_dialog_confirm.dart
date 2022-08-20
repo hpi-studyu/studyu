@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/study/settings/study_settings_form_c
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 class PublishConfirmationDialog extends StudyPageWidget {
   const PublishConfirmationDialog(super.studyId, {Key? key}) : super(key: key);
@@ -52,24 +53,25 @@ class PublishConfirmationDialog extends StudyPageWidget {
                         const SizedBox(height: 4.0),
                         SelectableText(
                             state.studyParticipation!.launchDescription,
-                            style: TextStyle(
-                                color: theme.colorScheme.onSurface.withOpacity(0.6),
-                                fontStyle: FontStyle.italic)
+                            style: ThemeConfig.bodyTextMuted(theme).copyWith(
+                              fontStyle: FontStyle.italic,
+                            ),
                         ),
                       ],
                     )
                 ),
                 const SizedBox(width: 4.0),
-                TextButton(
-                  onPressed: () {
-                    Navigator.maybePop(context)
-                        .then((_) => controller.onChangeStudyParticipation());
-                  },
-                  child: Center(
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-                          child: Text("Change\nparticipation".hardcoded, textAlign: TextAlign.center,)
-                      )
+                Opacity(
+                  opacity: 0.75,
+                  child: TextButton(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                      child: Text("Change\nparticipation".hardcoded, textAlign: TextAlign.center,),
+                    ),
+                    onPressed: () {
+                      Navigator.maybePop(context)
+                          .then((_) => controller.onChangeStudyParticipation());
+                    },
                   ),
                 ),
               ]
@@ -89,7 +91,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
           ),
           const SizedBox(height: 32.0),
           Container(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.05),
+            color: ThemeConfig.containerColor(theme),
             child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
                 child: Row(

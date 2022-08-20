@@ -31,7 +31,7 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
             ),
           ]
         ),
-        style: BannerStyle.warning
+        style: BannerStyle.info
       );
     }
 

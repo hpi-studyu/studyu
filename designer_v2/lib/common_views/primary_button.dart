@@ -11,6 +11,7 @@ class PrimaryButton extends StatefulWidget {
     this.onPressed,
     this.onPressedFuture,
     this.enabled = true,
+    this.showLoadingEarliestAfterMs = 100,
     Key? key,
   }) : super(key: key);
 
@@ -22,6 +23,7 @@ class PrimaryButton extends StatefulWidget {
 
   /// If true, a loading indicator is displayed instead of the text
   final bool isLoading;
+  final int showLoadingEarliestAfterMs;
 
   /// Callback to be called when the button is pressed
   final VoidCallback? onPressed;
@@ -57,71 +59,108 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     onButtonPressed() {
       widget.onPressed?.call();
       if (widget.onPressedFuture != null) {
-        setState(() {
-          trackedFuture = widget.onPressedFuture!();
-        });
+        final future = widget.onPressedFuture!()
+            .whenComplete(() => trackedFuture = Future.value(null));
+        Future.delayed(
+          Duration(milliseconds: widget.showLoadingEarliestAfterMs),
+          () => setState(() {
+            trackedFuture = future;
+          }),
+        );
       }
     }
 
-    FutureBuilder _trackedFutureBuilder(
-        {required WidgetBuilder whenComplete,
-        required WidgetBuilder otherwise}) {
+    FutureBuilder _trackedFutureBuilder({
+      required WidgetBuilder otherwise,
+      required WidgetBuilder whenActive,
+    }) {
       return FutureBuilder(
-          future: trackedFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return whenComplete(context);
-            }
-            return otherwise(context);
-          });
+        future: trackedFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            return whenActive(context);
+          }
+          return otherwise(context);
+        },
+      );
     }
 
-    final loadingIndicator = Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-        child: SizedBox(
-          width: theme.iconTheme.size ?? 14.0,
-          height: theme.iconTheme.size ?? 14.0,
-          child: const CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2.0,
-          ),
+    Widget _visibilityDuringLoading(WidgetBuilder child, {visible = true}) {
+      final loadingAlpha = visible ? 1.0 : 0.0;
+      return _trackedFutureBuilder(
+        whenActive: (context) => Opacity(
+          opacity: loadingAlpha,
+          child: child(context),
+        ),
+        otherwise: (context) => Opacity(
+          opacity: (widget.isLoading) ? loadingAlpha : (1 - loadingAlpha),
+          child: child(context),
+        ),
+      );
+    }
+
+    final loadingIndicator = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+      child: SizedBox(
+        width: theme.iconTheme.size ?? 14.0,
+        height: theme.iconTheme.size ?? 14.0,
+        child: const CircularProgressIndicator(
+          color: Colors.white,
+          strokeWidth: 2.0,
         ),
       ),
     );
 
+    Widget stackWithLoadingIndicator(Widget child) {
+      return IntrinsicWidth(
+        child: Stack(
+          children: [
+            Center(
+              child: child,
+            ),
+            IgnorePointer(
+              child: _visibilityDuringLoading(
+                (context) => Center(child: loadingIndicator),
+                visible: true,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (widget.icon != null) {
       return Tooltip(
-          message: tooltipMessage,
-          child: ElevatedButton.icon(
+        message: tooltipMessage,
+        child: stackWithLoadingIndicator(
+          ElevatedButton.icon(
             style: primaryStyle,
             onPressed: (widget.isDisabled) ? null : onButtonPressed,
-            icon: widget.isLoading
-                ? const SizedBox.shrink()
-                : _trackedFutureBuilder(
-                    whenComplete: (context) => Icon(widget.icon),
-                    otherwise: (context) => const SizedBox.shrink(),
-                  ),
-            label: _trackedFutureBuilder(
-              whenComplete: (context) =>
-                  Text(widget.text, textAlign: TextAlign.center),
-              otherwise: (context) => loadingIndicator,
+            icon: _visibilityDuringLoading(
+              (context) => Icon(widget.icon),
+              visible: false,
             ),
-          ));
+            label: _visibilityDuringLoading(
+              (context) => Text(widget.text, textAlign: TextAlign.center),
+              visible: false,
+            ),
+          ),
+        ),
+      );
     }
 
     return Tooltip(
-        message: tooltipMessage,
-        child: ElevatedButton(
+      message: tooltipMessage,
+      child: stackWithLoadingIndicator(
+        ElevatedButton(
           style: primaryStyle,
           onPressed: (widget.isDisabled) ? null : onButtonPressed,
-          child: widget.isLoading
-              ? loadingIndicator
-              : _trackedFutureBuilder(
-                  whenComplete: (context) =>
-                      Text(widget.text, textAlign: TextAlign.center),
-                  otherwise: (context) => loadingIndicator,
-                ),
-        ));
+          child: _visibilityDuringLoading(
+            (context) => Text(widget.text, textAlign: TextAlign.center),
+            visible: false,
+          ),
+        ),
+      ),
+    );
   }
 }
