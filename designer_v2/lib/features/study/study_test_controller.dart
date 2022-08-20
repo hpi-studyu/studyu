@@ -35,7 +35,7 @@ final studyTestControllerProvider = StateNotifierProvider.autoDispose
 });
 
 final studyTestPlatformControllerProvider = Provider.autoDispose
-    .family<PlatformController?, StudyID>((ref, studyId) {
+    .family<PlatformController, StudyID>((ref, studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
 
   PlatformController platformController;

@@ -18,7 +18,7 @@ class StudyParticipationBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tooltipMessage = (participation.description ?? '').trim();
+    final tooltipMessage = (participation.description).trim();
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty) {
