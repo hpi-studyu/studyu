@@ -10,6 +10,11 @@ class TaskScreen extends StatefulWidget {
   final Task task;
   final String taskId;
 
+  static MaterialPageRoute<TaskScreen> routeFor({@required Task task, @required String taskId}) => MaterialPageRoute(
+    builder: (_) => TaskScreen(task: task, taskId: taskId),
+    settings: const RouteSettings(name: '/observation0'),
+  );
+
   const TaskScreen({@required this.task, this.taskId, Key key}) : super(key: key);
 
   @override

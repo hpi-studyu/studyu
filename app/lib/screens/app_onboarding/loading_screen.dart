@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -41,9 +42,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     final preview = Preview(widget.queryParameters ?? {});
 
     if (preview.containsQueryPair('mode', 'preview')) {
-
       model.isPreview = true;
-
       await preview.init();
 
       // Authorize
@@ -52,7 +51,9 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       await preview.runCommands();
       if (preview.hasRoute()) {
-        print(preview.selectedRoute);
+        print("has route: " + preview.selectedRoute);
+
+        // ELIGIBILITY CHECK
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
             // if we remove the await, we can push multiple times. warning: do not run in while(true)
@@ -65,6 +66,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             return;
         }
 
+        // INTERVENTION SELECTION
+        if (preview.selectedRoute == Routes.interventionSelection) {
+          if (!mounted) return;
+          final interventionSelected = await Navigator.pushNamed(context, Routes.interventionSelection);
+          html.window.parent.postMessage("routeFinished", '*');
+          return;
+        }
+
+        // CONSENT
         if (preview.selectedRoute == Routes.consent) {
           // user should (must?) not be subscribed to a study to view the consent
           // we need to create a fake activeSubject (and maybe also unsubscribe a user if he is already subscribed)
@@ -76,16 +86,52 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
+        // GET SUBJECT
         // check if a study subscription is necessary
-        if (preview.selectedRoute == Routes.dashboard /*|| preview.selectedRoute == Routes.questionnaire*/) {
-          if (await preview.isSubscribed()) {
-            model.activeSubject = preview.subject;
-          } else {
-            model.activeSubject = await preview.createFakeSubject();
-          }
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(context, Routes.dashboard);
+        //if (preview.selectedRoute == Routes.dashboard || preview.selectedRoute == Routes.task0) {
+        if (await preview.isSubscribed()) {
+          model.activeSubject = preview.subject;
+        } else {
+          model.activeSubject = await preview.createFakeSubject();
+          // print(model.activeSubject.toJson().toString());
+          // print(model.activeSubject.study.observations.first.toString());
         }
+
+        // DASHBOARD
+        if (preview.selectedRoute == Routes.dashboard) {
+          if (!mounted) return;
+          await Navigator.pushReplacementNamed(context, Routes.dashboard);
+          html.window.parent.postMessage("routeFinished", '*');
+          return;
+        }
+
+        // OBSERVATION [i]
+        if (preview.selectedRoute == '/observation') {
+          if (!mounted) return;
+          // taskId = model.activeSubject.study.observations.first.id
+          final tasks = <Task>[
+            ...model.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
+          ];
+          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
+          //Navigator.pushReplacementNamed(context, Routes.task0);
+          html.window.parent.postMessage("routeFinished", '*');
+          return;
+        }
+
+        // INTERVENTION [i]
+        if (preview.selectedRoute == '/intervention') {
+          if (!mounted) return;
+          final tasks = <Task>[
+            ...model.activeSubject.selectedInterventions
+                .map((intervention) => intervention.tasks.where((task) => task.id == preview.extra))
+                .expand((task) => task)
+                .toList()
+          ];
+          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
+          html.window.parent.postMessage("routeFinished", '*');
+          return;
+        }
+        //}
       } else {
         if (!mounted) return;
         if (isUserLoggedIn()) {

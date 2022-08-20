@@ -12,14 +12,13 @@ class InterventionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: provide InterventionPreviewController based on routeArgs
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: Column( children: [ const SizedBox(height: 50), StudyTestScreen(routeArgs.studyId) ],)
+              child: Column( children: [ const SizedBox(height: 50), StudyTestScreen(routeArgs.studyId, routeArgs: routeArgs) ],)
             ),
         )
       ],

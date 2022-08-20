@@ -14,7 +14,7 @@ abstract class PlatformController {
   PlatformController(this.previewSrc, this.studyId);
 
   void registerViews(Key key);
-  void navigatePage(String page);
+  void navigatePage(String page, {String? extra});
   void sendCmd(String command);
   void refresh();
   void listen();
@@ -49,8 +49,12 @@ class WebController extends PlatformController {
   }
 
   @override
-  void navigatePage(String page) {
-    modifySrc("$previewSrc&route=$page");
+  void navigatePage(String page, {String? extra}) {
+    if (extra != null) {
+      modifySrc("$previewSrc&route=$page&extra=$extra");
+    } else {
+      modifySrc("$previewSrc&route=$page");
+    }
   }
 
   @override
@@ -128,7 +132,7 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void navigatePage(String page) {
+  void navigatePage(String page, {String? extra}) {
     throw UnimplementedError();
   }
 }

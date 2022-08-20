@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Preview {
   final Map<String, String> queryParameters;
   String selectedRoute;
+  String extra;
   bool hasRoute() => selectedRoute != null && selectedRoute.isNotEmpty;
   Study study;
   String selectedStudyObjectId;
@@ -15,6 +16,7 @@ class Preview {
 
   void handleQueries() {
     selectedRoute = getSelectedRoute();
+    extra = queryParameters['extra'];
   }
 
   Future init() async {
@@ -82,15 +84,17 @@ class Preview {
         switch (queryParameters[k]) {
           case 'consent':
             return Routes.consent;
-          case 'eligibilityCheck':
+          case 'eligibilityCheck': // this should include questionnaire and eligibility_criteria
             return '/eligibilityCheck';
-          case 'dashboard':
-            return Routes.dashboard;
           case 'interventionSelection':
             return Routes.interventionSelection;
           case 'questionnaire':
             return Routes.questionnaire;
-        }
+          case 'dashboard':
+            return Routes.dashboard;
+          case 'observation':
+            return '/observation'; // task_overview, task_box, taskscreen
+  }
       }
     }
     return null;
@@ -146,9 +150,7 @@ class Preview {
       // No need to select interventions if there are only 2 or less
       subject = StudySubject.fromStudy(
         study,
-        Supabase.instance.client.auth
-            .user()
-            .id,
+        Supabase.instance.client.auth.user().id,
         study.interventions.map((i) => i.id).toList(),
         null,
       );
@@ -157,13 +159,12 @@ class Preview {
       //Navigator.pushNamed(context, Routes.interventionSelection);
       subject = StudySubject.fromStudy(
         study,
-        Supabase.instance.client.auth
-            .user()
-            .id,
+        Supabase.instance.client.auth.user().id,
         // for now just take the first two
-        study.interventions.map((i) => i.id).toList().sublist(0, 1),
+        study.interventions.map((i) => i.id).toList().sublist(0, 2),
         null, // no invite code
       );
+      subject.startedAt = DateTime.now();
     }
     return subject;
   }
