@@ -10,6 +10,9 @@ class ThemeConfig {
   static Color modalBarrierColor(ThemeData theme) =>
       theme.colorScheme.secondary.withOpacity(0.4);
 
+  static Color containerColor(ThemeData theme) =>
+      theme.colorScheme.secondaryContainer.withOpacity(0.3);
+
   static TextStyle bodyTextMuted(ThemeData theme) =>
       TextStyle(
           fontSize: 14.0,

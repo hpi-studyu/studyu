@@ -18,7 +18,7 @@ class StudyParticipationBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final tooltipMessage = (participation.description).trim();
+    final tooltipMessage = participation.description;
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty) {
@@ -37,6 +37,7 @@ class StudyParticipationBadge extends StatelessWidget {
           color: colorScheme.primary.withOpacity(0.8),
           type: type,
           icon: showPrefixIcon ? Icons.people_rounded : null,
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0)
         ));
       case Participation.invite:
         return inTooltip(Badge(
@@ -44,6 +45,7 @@ class StudyParticipationBadge extends StatelessWidget {
           color: colorScheme.onPrimaryContainer.withOpacity(0.6),
           type: type,
           icon: showPrefixIcon ? Icons.lock_rounded : null,
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
         ));
         return const SizedBox.shrink();
     }

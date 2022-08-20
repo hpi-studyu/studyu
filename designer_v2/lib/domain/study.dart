@@ -65,7 +65,7 @@ extension StudyStatusFormatted on StudyStatus {
       case StudyStatus.draft:
         return "This study is still being drafted.".hardcoded;
       case StudyStatus.running:
-        return "This study is currently under way.".hardcoded;
+        return "This study is currently in progress.".hardcoded;
       case StudyStatus.closed:
         return "This study has been completed.".hardcoded;
       default:

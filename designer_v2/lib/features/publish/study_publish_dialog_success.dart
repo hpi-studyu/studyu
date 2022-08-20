@@ -47,7 +47,7 @@ class PublishSuccessDialog extends StudyPageWidget {
               opacity: 0.75,
               child: TextButton(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                   child: Text("Skip for now".hardcoded),
                 ),
                 onPressed: () => Navigator.maybePop(context),

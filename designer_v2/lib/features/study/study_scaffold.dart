@@ -104,22 +104,27 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             // is stacked behind the app bar, we'd have to manually manage
             // responsive layout conflicts (the tabbed control would be overlaid
             // by the app bar widgets).
-            Expanded(
+            Expanded(//s
               flex: 4,
               child: AsyncValueWidget(
                 value: state.study,
                 data: (study) => Row(
                   children: [
-                    Text(state.titleText,
+                    Flexible(
+                      child: Text(state.titleText,
                         maxLines: 1,
                         style: theme.textTheme.titleSmall,
                         overflow: TextOverflow.ellipsis,
-                        softWrap: false),
+                        softWrap: false,
+                      ),
+                    ),
                     const SizedBox(width: 8.0),
-                    SyncIndicator(
-                      state: state.study,
-                      isDirty: state.isDirty,
-                      lastSynced: state.lastSynced,
+                    IntrinsicWidth(
+                      child: SyncIndicator(
+                        state: state.study,
+                        isDirty: state.isDirty,
+                        lastSynced: state.lastSynced,
+                      ),
                     )
                   ],
                 ),
@@ -182,6 +187,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           type: widget.layoutType ?? SingleColumnLayoutType.stretched,
           body: widget.body,
           header: widget.body.banner(context, ref),
+          //stickyHeader: true,
           context: context,
         ),
       ),

@@ -4,7 +4,10 @@ import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 enum SingleColumnLayoutType {
-  boundedWide, boundedNarrow, stretched, split,
+  boundedWide,
+  boundedNarrow,
+  stretched,
+  split,
 }
 
 class SingleColumnLayout extends StatefulWidget {
@@ -14,8 +17,8 @@ class SingleColumnLayout extends StatefulWidget {
   );
 
   static const defaultConstraintsNarrow = BoxConstraints(
-    minWidth: 8/12 * ThemeConfig.kMinContentWidth,
-    maxWidth: 8/12 * ThemeConfig.kMaxContentWidth,
+    minWidth: 8 / 12 * ThemeConfig.kMinContentWidth,
+    maxWidth: 8 / 12 * ThemeConfig.kMaxContentWidth,
   );
 
   const SingleColumnLayout({
@@ -25,7 +28,7 @@ class SingleColumnLayout extends StatefulWidget {
     this.constraints = defaultConstraints,
     this.scroll = true,
     this.padding = TwoColumnLayout.defaultContentPadding,
-    Key? key
+    Key? key,
   }) : super(key: key);
 
   final Widget body;
@@ -39,6 +42,7 @@ class SingleColumnLayout extends StatefulWidget {
     required SingleColumnLayoutType type,
     required Widget body,
     required BuildContext context,
+    stickyHeader = false,
     Widget? header,
   }) {
     switch (type) {
@@ -47,21 +51,38 @@ class SingleColumnLayout extends StatefulWidget {
         return SingleColumnLayout(
           body: body,
           header: header,
+          stickyHeader: stickyHeader,
           constraints: BoxConstraints(
-            minWidth: min(ThemeConfig.kMinContentWidth, screenSize.width * 0.5),
-            maxWidth: min(ThemeConfig.kMaxContentWidth, screenSize.width * 0.5),
-        ));
+            minWidth: min(
+              ThemeConfig.kMinContentWidth,
+              screenSize.width * 0.5,
+            ),
+            maxWidth: min(
+              ThemeConfig.kMaxContentWidth,
+              screenSize.width * 0.5,
+            ),
+          ),
+        );
       case SingleColumnLayoutType.stretched:
         return SingleColumnLayout(
-            body: body, header: header, constraints: null
+          body: body,
+          header: header,
+          stickyHeader: stickyHeader,
+          constraints: null,
         );
       case SingleColumnLayoutType.boundedWide:
         return SingleColumnLayout(
-            body: body, header: header, constraints: defaultConstraints
+          body: body,
+          header: header,
+          stickyHeader: stickyHeader,
+          constraints: defaultConstraints,
         );
       case SingleColumnLayoutType.boundedNarrow:
         return SingleColumnLayout(
-            body: body, header: header,constraints: defaultConstraintsNarrow
+          body: body,
+          header: header,
+          stickyHeader: stickyHeader,
+          constraints: defaultConstraintsNarrow,
         );
     }
   }
@@ -93,11 +114,11 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
     body = Row(
       children: [
         Flexible(
-            child: Container(
-              constraints: widget.constraints,
-              child: body,
-            )
-        )
+          child: Container(
+            constraints: widget.constraints,
+            child: body,
+          ),
+        ),
       ],
     );
 
@@ -105,10 +126,8 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       return Scrollbar(
         thumbVisibility: true,
         controller: _scrollController,
-        child: SingleChildScrollView(
-            controller: _scrollController,
-            child: child
-        )
+        child:
+            SingleChildScrollView(controller: _scrollController, child: child),
       );
     }
 
@@ -124,11 +143,12 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
             widget.header!,
             Flexible(
               child: body,
-            )
+            ),
           ],
         );
       }
-    } else { // non-sticky header
+    } else {
+      // non-sticky header
       if (widget.header != null) {
         body = Column(
           mainAxisAlignment: MainAxisAlignment.start,
