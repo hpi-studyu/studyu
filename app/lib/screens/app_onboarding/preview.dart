@@ -147,7 +147,7 @@ class Preview {
     }*/
   }*/
 
-  Future<StudySubject> createFakeSubject() async {
+  Future<StudySubject> createFakeSubject([String extra]) async {
     if (study.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
       subject = StudySubject.fromStudy(
@@ -159,11 +159,23 @@ class Preview {
     } else {
       // we need to let the user choose interventions
       //Navigator.pushNamed(context, Routes.interventionSelection);
+      final interventionList = study.interventions.map((i) => i.id).toList();
+      List<String> newInterventionList = [];
+      // If we have a specific intervention we want to show, select this one and another one
+      if (selectedRoute == '/intervention' && extra != null) {
+        final String intId = interventionList.firstWhere((id) => id == extra);
+        newInterventionList..add(intId)..add(
+            interventionList.firstWhere((id) => id != intId),
+        );
+        assert (newInterventionList.length == 2);
+      } else {
+        newInterventionList = interventionList.sublist(0, 2);
+      }
       subject = StudySubject.fromStudy(
         study,
         Supabase.instance.client.auth.user().id,
         // for now just take the first two
-        study.interventions.map((i) => i.id).toList().sublist(0, 2),
+        newInterventionList,
         null, // no invite code
       );
       subject.startedAt = DateTime.now();

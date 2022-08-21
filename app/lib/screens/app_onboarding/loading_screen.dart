@@ -77,27 +77,27 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
+        // GET SUBJECT
+        // check if a study subscription is necessary
+        //if (preview.selectedRoute == Routes.dashboard || preview.selectedRoute == Routes.task0) {
+        //if (await preview.isSubscribed() && preview.selectedRoute != '/observation' && preview.selectedRoute != '/intervention') {
+        //  model.activeSubject = preview.subject;
+        //} else {
+        model.activeSubject = await preview.createFakeSubject(preview.extra);
+          // print(model.activeSubject.toJson().toString());
+          // print(model.activeSubject.study.observations.first.toString());
+        //}
+
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
           // user should (must?) not be subscribed to a study to view the consent
           // we need to create a fake activeSubject (and maybe also unsubscribe a user if he is already subscribed)
-          model.activeSubject = await preview.createFakeSubject();
+          //model.activeSubject = await preview.createFakeSubject();
           if (!mounted) return;
           //final consentGiven = Navigator.pushReplacementNamed(context, Routes.consent,);
           final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
           html.window.parent.postMessage("routeFinished", '*');
           return;
-        }
-
-        // GET SUBJECT
-        // check if a study subscription is necessary
-        //if (preview.selectedRoute == Routes.dashboard || preview.selectedRoute == Routes.task0) {
-        if (await preview.isSubscribed() && preview.selectedRoute != '/observation' && preview.selectedRoute != '/intervention') {
-          model.activeSubject = preview.subject;
-        } else {
-          model.activeSubject = await preview.createFakeSubject();
-          // print(model.activeSubject.toJson().toString());
-          // print(model.activeSubject.study.observations.first.toString());
         }
 
         // DASHBOARD
@@ -110,7 +110,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
-          if (!mounted) return;
           print("getting tasks for observation");
           print(model.selectedStudy.observations.first.id);
           // taskId = model.activeSubject.study.observations.first.id
@@ -118,6 +117,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             ...model.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
           print("observation with tasks: " + tasks.first.toString());
+          if (!mounted) return;
           final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
           print("FINISHED OBSERVATION");
           //Navigator.pushReplacementNamed(context, Routes.task0);
@@ -128,7 +128,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           print("getting tasks for intervention");
-          if (!mounted) return;
           /*for (var element in model.activeSubject.selectedInterventions) {
             print(element);
           }*/
@@ -138,11 +137,11 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
                 .expand((task) => task)
                 .toList()
           ];*/
-          final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
-          print("intervention with tasks: " + tasks.toString());
+          //final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
+          //print("intervention with tasks: " + tasks.toString());
           //final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
           model.selectedStudy.schedule.includeBaseline = false;
-          int skipdays = 0;
+          /*int skipdays = 0;
           for (var progress in model.activeSubject.progress) {
             if (progress.interventionId != preview.extra) {
               skipdays++;
@@ -152,19 +151,22 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           if (skipdays > 0) {
             print("larger than 0");
             await model.activeSubject.setStartDateBackBy(days: skipdays);
-          }
-            await Navigator.pushReplacementNamed(context, Routes.dashboard);
-            print("FINISHED INTERVENTION");
-            html.window.parent.postMessage("routeFinished", '*');
-            return;
-          }
+          }*/
+          if (!mounted) return;
+          await Navigator.pushReplacementNamed(context, Routes.dashboard);
+          print("FINISHED INTERVENTION");
+          html.window.parent.postMessage("routeFinished", '*');
+          return;
+        }
         //}
       } else {
         if (!mounted) return;
         if (isUserLoggedIn()) {
+          print("Return to studyOverview");
           Navigator.pushReplacementNamed(context, Routes.studyOverview);
           return;
         }
+        print("Return to welcome");
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
