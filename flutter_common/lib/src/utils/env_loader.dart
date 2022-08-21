@@ -11,7 +11,9 @@ String envFilePath() {
   return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
 }
 
-const appDeepLink = 'https://studyu-app-v2.web.app';
+//const appDeepLink = 'https://studyu-app-v2.web.app';
+const appDeepLink = 'https://studyu-app-v2--pr159-dev-designer-v2-sele-ur17z57l.web.app';
+//const appDeepLink = 'http://localhost:12345/';
 const designerDeepLink = 'https://studyu-designer-v2.web.app';
 
 // GoTrue redirectTo strips /#/ from URL, therefore we need to use the default set in supabase
