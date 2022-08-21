@@ -75,13 +75,6 @@ class StudyTestScreen extends StudyPageWidget {
                 frameController.navigatePage("dashboard");
               },
             ),
-            TextButton.icon(
-              icon: const Icon(Icons.arrow_forward),
-              label: Text("observation0".hardcoded),
-              onPressed: (!state.canTest) ? null : () {
-                frameController.navigatePage("observation0");
-              },
-            ),
           ],
         ),
         Row(

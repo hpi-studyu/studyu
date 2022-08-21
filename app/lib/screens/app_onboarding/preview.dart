@@ -92,8 +92,10 @@ class Preview {
             return Routes.questionnaire;
           case 'dashboard':
             return Routes.dashboard;
+          case 'intervention':
+            return '/intervention';
           case 'observation':
-            return '/observation'; // task_overview, task_box, taskscreen
+            return '/observation';
   }
       }
     }

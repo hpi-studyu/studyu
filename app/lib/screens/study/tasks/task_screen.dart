@@ -12,7 +12,7 @@ class TaskScreen extends StatefulWidget {
 
   static MaterialPageRoute<TaskScreen> routeFor({@required Task task, @required String taskId}) => MaterialPageRoute(
     builder: (_) => TaskScreen(task: task, taskId: taskId),
-    settings: const RouteSettings(name: '/observation0'),
+    settings: const RouteSettings(name: '/taskscreen'), // todo is this needed somewhere?
   );
 
   const TaskScreen({@required this.task, this.taskId, Key key}) : super(key: key);
@@ -66,6 +66,7 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    print("we are ins tasks with " + widget.taskId + " " + widget.task.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.task.title),

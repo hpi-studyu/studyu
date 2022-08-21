@@ -41,14 +41,16 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
   Future<void> initStudy() async {
     final model = context.read<AppState>();
     final preview = Preview(widget.queryParameters ?? {});
-
+    // print("INIT STUDY");
     if (preview.containsQueryPair('mode', 'preview')) {
+      // print("INIT PREVIEW");
       model.isPreview = true;
       await preview.init();
 
       // Authorize
       if (!await preview.handleAuthorization()) return;
       model.selectedStudy = preview.study;
+      print("Got study: " + model.selectedStudy.toString());
 
       await preview.runCommands();
       if (preview.hasRoute()) {
@@ -61,7 +63,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
             //if (!mounted) return;
             //print("STILL MOUNTED");
-            // todo either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
+            // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
             // todo move webcontent to other class
             html.window.parent.postMessage("routeFinished", '*');
             return;
@@ -109,11 +111,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
           if (!mounted) return;
+          print("getting tasks for observation");
+          print(model.selectedStudy.observations.first.id);
           // taskId = model.activeSubject.study.observations.first.id
           final tasks = <Task>[
             ...model.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
+          print("observation with tasks: " + tasks.first.toString());
           final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
+          print("FINISHED OBSERVATION");
           //Navigator.pushReplacementNamed(context, Routes.task0);
           html.window.parent.postMessage("routeFinished", '*');
           return;
@@ -122,13 +128,24 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           if (!mounted) return;
-          final tasks = <Task>[
+          print("getting tasks for intervention");
+          for (var element in model.activeSubject.selectedInterventions) {
+            print(element);
+          }
+          /*final tasks = <Task>[
             ...model.activeSubject.selectedInterventions
                 .map((intervention) => intervention.tasks.where((task) => task.id == preview.extra))
                 .expand((task) => task)
                 .toList()
-          ];
+          ];*/
+          //final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
+          final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
+          /*final tasks = <Task>[
+            ...model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).toList(),
+          ];*/
+          print("intervention with tasks: " + tasks.toString());
           final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
+          print("FINISHED INTERVENTION");
           html.window.parent.postMessage("routeFinished", '*');
           return;
         }
