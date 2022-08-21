@@ -92,7 +92,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // GET SUBJECT
         // check if a study subscription is necessary
         //if (preview.selectedRoute == Routes.dashboard || preview.selectedRoute == Routes.task0) {
-        if (await preview.isSubscribed()) {
+        if (await preview.isSubscribed() && preview.selectedRoute != '/observation' && preview.selectedRoute != '/intervention') {
           model.activeSubject = preview.subject;
         } else {
           model.activeSubject = await preview.createFakeSubject();
@@ -127,28 +127,37 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
-          if (!mounted) return;
           print("getting tasks for intervention");
-          for (var element in model.activeSubject.selectedInterventions) {
+          if (!mounted) return;
+          /*for (var element in model.activeSubject.selectedInterventions) {
             print(element);
-          }
+          }*/
           /*final tasks = <Task>[
             ...model.activeSubject.selectedInterventions
                 .map((intervention) => intervention.tasks.where((task) => task.id == preview.extra))
                 .expand((task) => task)
                 .toList()
           ];*/
-          //final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
           final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
-          /*final tasks = <Task>[
-            ...model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).toList(),
-          ];*/
           print("intervention with tasks: " + tasks.toString());
-          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
-          print("FINISHED INTERVENTION");
-          html.window.parent.postMessage("routeFinished", '*');
-          return;
-        }
+          //final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
+          model.selectedStudy.schedule.includeBaseline = false;
+          int skipdays = 0;
+          for (var progress in model.activeSubject.progress) {
+            if (progress.interventionId != preview.extra) {
+              skipdays++;
+            }
+          }
+          print("going back : " + skipdays.toString());
+          if (skipdays > 0) {
+            print("larger than 0");
+            await model.activeSubject.setStartDateBackBy(days: skipdays);
+          }
+            await Navigator.pushReplacementNamed(context, Routes.dashboard);
+            print("FINISHED INTERVENTION");
+            html.window.parent.postMessage("routeFinished", '*');
+            return;
+          }
         //}
       } else {
         if (!mounted) return;
