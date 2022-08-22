@@ -3,6 +3,8 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum StudyActionType {
   edit,
@@ -46,11 +48,11 @@ extension StudyStatusFormatted on StudyStatus {
   String get string {
     switch (this) {
       case StudyStatus.draft:
-        return "Draft".hardcoded;
+        return tr.drafts;
       case StudyStatus.running:
-        return "Running".hardcoded;
+        return tr.running;
       case StudyStatus.closed:
-        return "Closed".hardcoded;
+        return tr.closed;
       default:
         return "[Invalid StudyStatus]";
     }
@@ -62,9 +64,9 @@ extension ParticipationTypeFormatted on core.Participation {
   String get value {
     switch (this) {
       case core.Participation.invite:
-        return "Invite".hardcoded;
+        return tr.invite;
       case core.Participation.open:
-        return "Open".hardcoded;
+        return tr.open;
       default:
         return "[Invalid ParticipationFormatted]";
     }
@@ -113,8 +115,8 @@ extension StudyDuplicateX on Study {
 class StudyTemplates {
   static Study emptyDraft(String userId) {
     final newDraft = Study.withId(userId);
-    newDraft.title = "Unnamed study".hardcoded;
-    newDraft.description = "Lorem ipsum".hardcoded;
+    newDraft.title = tr.unnamed_Study;
+    newDraft.description = tr.lorem_ipsum;
     return newDraft;
   }
 }

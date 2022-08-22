@@ -130,7 +130,7 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
     return ReactiveCheckboxListTile(
         formControlName: 'rememberMe',
         title: Text(
-          'Remember me'.hardcoded, style: theme.textTheme.titleLarge,
+          tr.remember_me, style: theme.textTheme.titleLarge,
         ),
     );
   }
@@ -143,7 +143,7 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
             child: TextButton(
                 onPressed: () => ref.read(routerProvider).dispatch(
                     RoutingIntents.passwordForgot(authForm.control('email').value)),
-                child: Text("Forgot your password?".hardcoded, /*style: FlutterFlowTheme.of(context).bodyText2*/)
+                child: Text(tr.forgot_password, /*style: FlutterFlowTheme.of(context).bodyText2*/)
             ),
         )
     );

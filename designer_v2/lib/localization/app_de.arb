@@ -122,5 +122,23 @@
   "login": "Anmelden",
   "go_back_home": "Bitte zum Anfang zurückkehren",
   "loading": "Wird geladen",
-  "study_u_designer": "Study U Designer"
+  "study_u_designer": "Study U Designer",
+
+  "drafts": "Entwurf",
+  "running": "laufend",
+  "remember_me": "Zugangsdaten speichern",
+  "forgot_password": "Passwort vergessen?",
+  "cancel": "Abbrechen",
+  "closed": "geschlossen",
+  "invite": "Einladung",
+  "open": "offen",
+  "unnamed_Study": "unbenannte Studie",
+  "lorem_ipsum": "Lorem Ipsum",
+  "edit": "bearbeiten",
+  "copy_draft": "Entwurf duplizieren",
+  "add collaborator": "Bearbeiter hinzufügen",
+  "recruit_participants": "PatientInnen rekrutieren",
+  "export_results": "Ergebnisse exportieren"
+
+
 }

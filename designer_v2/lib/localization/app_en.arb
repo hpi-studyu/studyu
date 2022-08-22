@@ -143,5 +143,21 @@
   "login": "Login",
   "go_back_home": "Go back home",
   "loading": "Loading...",
-  "study_u_designer": "Study U Designer"
+  "study_u_designer": "Study U Designer",
+
+  "drafts": "draft",
+  "remember_me": "remember me",
+  "forgot_password": "Forgot your password?",
+  "cancel": "cancel",
+  "running": "running",
+  "closed": "closed",
+  "invite": "invite",
+  "open": "open",
+  "unnamed_Study": "unnamed study",
+  "lorem_ipsum": "Lorem Ipsum",
+  "edit": "edit",
+  "copy_draft": "copy draft",
+  "add_collaborator": "add collaborator",
+  "recruit_participants": "recruit participants",
+  "export_results": "export results"
 }

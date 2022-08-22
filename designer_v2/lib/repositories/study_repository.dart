@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -13,6 +12,7 @@ import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> publish(Study study);
@@ -77,7 +77,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     final actions = [
       ModelAction(
         type: StudyActionType.edit,
-        label: "Edit".hardcoded,
+        label: tr.edit,
         onExecute: () {
           ref.read(routerProvider)
               .dispatch(RoutingIntents.studyEdit(study.id));
@@ -87,7 +87,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       ),
       ModelAction(
         type: StudyActionType.duplicate,
-        label: "Copy draft".hardcoded,
+        label: tr.copy_draft,
         onExecute: () {
           return duplicateAndSave(study)
               .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
@@ -96,7 +96,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       ),
       ModelAction(
         type: StudyActionType.addCollaborator,
-        label: "Add collaborator".hardcoded,
+        label: tr.add_collaborator,
         onExecute: () {
           // TODO open modal to add collaborator
           print("Adding collaborator: ${study.title ?? ''}");
@@ -105,7 +105,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       ),
       ModelAction(
         type: StudyActionType.recruit,
-        label: "Recruit participants".hardcoded,
+        label: tr.recruit_participants,
         onExecute: () {
           ref.read(routerProvider)
               .dispatch(RoutingIntents.studyRecruit(study.id));
@@ -115,7 +115,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       ),
       ModelAction(
         type: StudyActionType.export,
-        label: "Export results".hardcoded,
+        label: tr.export_results,
         onExecute: () {
           // TODO trigger download of results
           print("Export results: ${study.title ?? ''}");
@@ -127,13 +127,13 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       ),
       ModelAction(
         type: StudyActionType.delete,
-        label: "Delete".hardcoded,
+        label: tr.delete,
         onExecute: () {
           return ref.read(notificationServiceProvider).show(
             Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
             actions: [
               NotificationAction(
-                label: "Delete".hardcoded,
+                label: tr.delete,
                 onSelect: onDeleteCallback,
                 isDestructive: true
               ),
