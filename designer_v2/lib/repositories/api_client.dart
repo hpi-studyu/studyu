@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_subject.dart';
+import 'package:studyu_designer_v2/domain/subject_progress.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:supabase/src/supabase.dart';
@@ -15,6 +17,12 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
+  Future<List<StudySubject>> deleteParticipants(
+      Study study, List<StudySubject> participants);
+  /*
+  Future<List<SubjectProgress>> deleteStudyProgress(
+      Study study, List<SubjectProgress> records);
+   */
   Future<AppConfig> fetchAppConfig();
 }
 
@@ -60,13 +68,42 @@ class StudyUApiClient extends SupabaseClientDependant
   static final studyWithParticipantActivityColumns = [
     ...studyColumns,
     'study_subject!study_subject_studyId_fkey(*)',
-    'study_progress(*)',
+    'study_progress_export(*)',
   ];
 
   final int testDelayMilliseconds;
 
   @override
-  Future<List<Study>> getUserStudies({withParticipantActivity = false}) async {
+  Future<List<StudySubject>> deleteParticipants(
+      Study study, List<StudySubject> participants) async {
+    await _testDelay();
+    if (participants.isEmpty) {
+      return Future.value([]);
+    }
+    final selectionCriteria = participants.first.foreignKey(study);
+    final request = deleteAll<StudySubject>(selectionCriteria);
+    return _awaitGuarded(request);
+  }
+
+  /*
+  @override
+  Future<List<SubjectProgress>> deleteStudyProgress(
+      Study study, List<SubjectProgress> records) async {
+    await _testDelay();
+    if (records.isEmpty) {
+      return Future.value([]);
+    }
+    final selectionCriteria = records
+        .map((record) => {...record.primaryKeys, ...record.foreignKey(study)})
+        .toList();
+    final request = deleteAll<SubjectProgress>(selectionCriteria);
+    return _awaitGuarded(request);
+    return Future.value([]);
+  }
+   */
+
+  @override
+  Future<List<Study>> getUserStudies({withParticipantActivity = true}) async {
     await _testDelay();
     // TODO: fix Postgres policy for proper multi-tenancy
     final columns = (withParticipantActivity)
@@ -78,7 +115,7 @@ class StudyUApiClient extends SupabaseClientDependant
 
   @override
   Future<Study> fetchStudy(StudyID studyId,
-      {withParticipantActivity = false}) async {
+      {withParticipantActivity = true}) async {
     await _testDelay();
     final columns = (withParticipantActivity)
         ? studyWithParticipantActivityColumns

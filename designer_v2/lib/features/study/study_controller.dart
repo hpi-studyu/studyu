@@ -1,11 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
-import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
-import 'package:studyu_designer_v2/features/study/settings/study_settings_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
@@ -15,20 +13,33 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyController extends StudyBaseController<StudyControllerState> {
   StudyController({
     required super.studyId,
     required super.studyRepository,
+    required super.currentUser,
     required super.router,
-    required this.authRepository,
     required this.notificationService,
-  }) : super(const StudyControllerState());
+    //required this.ref,
+  }) : super(StudyControllerState(currentUser: currentUser)) {
+    /*
+    studyEventsSubscription =
+        studyRepository.watchChanges(studyId).listen((event) {
+      if (event is StudyLaunched) {
+        final testController =
+            ref.read(studyTestPlatformControllerProvider(studyId));
+        testController?.reset();
+        print("study launched");
+      }
+    });
+     */
+  }
 
-  final IAuthRepository authRepository;
   final INotificationService notificationService;
+  //late final StreamSubscription<ModelEvent<Study>> studyEventsSubscription;
+  //final Ref ref;
 
   @override
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
@@ -60,9 +71,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   }
 
   Future<void> publishStudy() {
-    return studyRepository
-        .publish(state.study.value!)
-        .then((_) => null); // TODO: save study repository form view model setting
+    // TODO: save study repository form view model setting
+    return studyRepository.launch(state.study.value!);
   }
 
   void onChangeStudyParticipation() {
@@ -71,6 +81,12 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 
   void onAddParticipants() {
     router.dispatch(RoutingIntents.studyRecruit(studyId));
+  }
+
+  @override
+  dispose() {
+    //studyEventsSubscription.cancel();
+    super.dispose();
   }
 }
 
@@ -81,9 +97,10 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
   final controller = StudyController(
     studyId: studyId,
     studyRepository: ref.watch(studyRepositoryProvider),
-    authRepository: ref.watch(authRepositoryProvider),
+    currentUser: ref.watch(currentUserProvider),
     router: ref.watch(routerProvider),
     notificationService: ref.watch(notificationServiceProvider),
+    //ref: ref,
   );
   ref.onDispose(() {
     print("studyControllerProvider($studyId).DISPOSE");

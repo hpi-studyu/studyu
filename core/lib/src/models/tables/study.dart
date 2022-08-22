@@ -98,6 +98,7 @@ class Study extends SupabaseObjectFunctions<Study> {
           .toList();
     }
     List? participantsProgress = json['study_progress'] as List?;
+    participantsProgress = json['study_progress_export'] as List?;
     participantsProgress ??= json['subject_progress'] as List?;
     if (participantsProgress != null) {
       study.participantsProgress = participantsProgress

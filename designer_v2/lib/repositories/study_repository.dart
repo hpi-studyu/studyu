@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_export.dart';
+import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_repository_events.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -13,19 +16,22 @@ import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 abstract class IStudyRepository implements ModelRepository<Study> {
-  Future<void> publish(Study study);
+  Future<void> launch(Study study);
+  Future<void> deleteParticipants(Study study);
+//Future<void> deleteProgress(Study study);
 }
 
-class StudyRepository extends ModelRepository<Study> implements IStudyRepository {
+class StudyRepository extends ModelRepository<Study>
+    implements IStudyRepository {
   StudyRepository({
     required this.apiClient,
     required this.authRepository,
     required this.ref,
   }) : super(StudyRepositoryDelegate(
-      apiClient: apiClient, authRepository: authRepository
-  ));
+            apiClient: apiClient, authRepository: authRepository));
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -42,7 +48,59 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
   }
 
   @override
-  Future<void> publish(Study study) async {
+  Future<void> deleteParticipants(Study study) async {
+    final wrappedModel = get(study.id);
+    if (wrappedModel == null) {
+      throw ModelNotFoundException();
+    }
+
+    final List<StudySubject> participants = [...(study.participants ?? [])];
+
+    final deleteParticipantsOperation = OptimisticUpdate(
+      applyOptimistic: () => study.participants = [],
+      apply: () async {
+        await apiClient.deleteParticipants(study, participants);
+        upsertLocally(study);
+      },
+      rollback: () => study.participants = participants,
+      onUpdate: () => emitUpdate(),
+      onError: (e, stackTrace) {
+        get(study.id)?.markWithError(e);
+        emitError(modelStreamControllers[study.id], e, stackTrace);
+      },
+      rethrowErrors: true,
+    );
+
+    return deleteParticipantsOperation.execute();
+  }
+
+  /*
+  @override
+  Future<void> deleteProgress(Study study) async {
+    final wrappedModel = get(study.id);
+    if (wrappedModel == null) {
+      throw ModelNotFoundException();
+    }
+
+    final List<SubjectProgress> progressRecords = [
+      ...(study.participantsProgress ?? [])
+    ];
+
+    final deleteStudyProgressOperation = OptimisticUpdate(
+        applyOptimistic: () => study.participantsProgress = [],
+        apply: () => apiClient.deleteStudyProgress(study, progressRecords),
+        rollback: () => study.participantsProgress = progressRecords,
+        onUpdate: () => emitUpdate(),
+        onError: (e, stackTrace) {
+          emitError(modelStreamControllers[study.id], e, stackTrace);
+        });
+
+    return deleteStudyProgressOperation.execute();
+  }
+   */
+
+  @override
+  Future<void> launch(Study study) async {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -51,17 +109,27 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     final publishedCopy = study.asNewlyPublished();
 
     final publishOperation = OptimisticUpdate(
-      applyOptimistic: () => {}, // nothing to do here
-      apply: () async {
-        await save(publishedCopy, runOptimistically: false);
-        // TODO clear study subjects + progress
-      },
-      rollback: () { }, // nothing to do here
-      onUpdate: () => emitUpdate(),
-      onError: (e, stackTrace) {
-        emitError(modelStreamControllers[study.id], e, stackTrace);
-      }
-    );
+        applyOptimistic: () => {}, // nothing to do here
+        apply: () => save(publishedCopy, runOptimistically: false),
+        /*apply: () async {
+          /*
+          return deleteParticipants(study)
+              .then((_) => save(publishedCopy, runOptimistically: false))
+              .then(emitModelEvent(StudyLaunched(study.id, study)));
+
+           */
+          print("launching");
+          await deleteParticipants(study); // cascade deletes progress records
+          print("deleted participants");
+          await save(publishedCopy, runOptimistically: false);
+          print("saved");
+          emitModelEvent(StudyLaunched(study.id, study));
+        },*/
+        rollback: () {}, // nothing to do here
+        onUpdate: () => emitUpdate(),
+        onError: (e, stackTrace) {
+          emitError(modelStreamControllers[study.id], e, stackTrace);
+        });
 
     return publishOperation.execute();
   }
@@ -70,12 +138,13 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
   List<ModelAction<StudyActionType>> availableActions(Study study) {
     Future<void> onDeleteCallback() {
       return delete(study.id)
-        .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies))
-        .then((value) => Future.delayed(
-            const Duration(milliseconds: 200),
-            () => ref.read(notificationServiceProvider).show(
-                Notifications.studyDeleted)
-        ));
+          .then((value) =>
+              ref.read(routerProvider).dispatch(RoutingIntents.studies))
+          .then((value) => Future.delayed(
+              const Duration(milliseconds: 200),
+              () => ref
+                  .read(notificationServiceProvider)
+                  .show(Notifications.studyDeleted)));
     }
 
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
@@ -84,18 +153,17 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.edit,
         label: "Edit".hardcoded,
         onExecute: () {
-          ref.read(routerProvider)
-              .dispatch(RoutingIntents.studyEdit(study.id));
+          ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(study.id));
         },
-        isAvailable: study.isOwner(authRepository.currentUser!)
-            && study.status == StudyStatus.draft,
+        isAvailable: study.isOwner(authRepository.currentUser!) &&
+            study.status == StudyStatus.draft,
       ),
       ModelAction(
         type: StudyActionType.duplicate,
         label: "Copy draft".hardcoded,
         onExecute: () {
-          return duplicateAndSave(study)
-              .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(study).then((value) =>
+              ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
         isAvailable: study.isOwner(authRepository.currentUser!),
       ),
@@ -112,43 +180,38 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.recruit,
         label: "Recruit participants".hardcoded,
         onExecute: () {
-          ref.read(routerProvider)
+          ref
+              .read(routerProvider)
               .dispatch(RoutingIntents.studyRecruit(study.id));
         },
-        isAvailable: study.isOwner(authRepository.currentUser!)
-            && study.status == StudyStatus.running,
+        isAvailable: study.isOwner(authRepository.currentUser!) &&
+            study.status == StudyStatus.running,
       ),
       ModelAction(
         type: StudyActionType.export,
-        label: "Export results".hardcoded,
+        label: "Export results data".hardcoded,
         onExecute: () {
-          // TODO trigger download of results
-          print("Export results: ${study.title ?? ''}");
+          runAsync(() => study.exportData.downloadAsZip());
         },
-        isAvailable: study.results.isNotEmpty
-            && (study.isOwner(authRepository.currentUser!) ||
-                study.isEditor(authRepository.currentUser!) ||
-                study.resultSharing == ResultSharing.public),
+        isAvailable: study.canExport(authRepository.currentUser!),
       ),
       ModelAction(
-        type: StudyActionType.delete,
-        label: "Delete".hardcoded,
-        onExecute: () {
-          return ref.read(notificationServiceProvider).show(
-            Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-            actions: [
-              NotificationAction(
-                label: "Delete".hardcoded,
-                onSelect: onDeleteCallback,
-                isDestructive: true
-              ),
-            ]
-          );
-        },
-        isAvailable: study.isOwner(authRepository.currentUser!)
-            && !study.published,
-        isDestructive: true
-      ),
+          type: StudyActionType.delete,
+          label: "Delete".hardcoded,
+          onExecute: () {
+            return ref.read(notificationServiceProvider).show(
+                Notifications
+                    .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+                actions: [
+                  NotificationAction(
+                      label: "Delete".hardcoded,
+                      onSelect: onDeleteCallback,
+                      isDestructive: true),
+                ]);
+          },
+          isAvailable:
+              study.isOwner(authRepository.currentUser!) && !study.published,
+          isDestructive: true),
     ];
 
     return actions.where((action) => action.isAvailable).toList();
@@ -156,8 +219,8 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
 }
 
 class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
-  StudyRepositoryDelegate({
-    required this.apiClient, required this.authRepository});
+  StudyRepositoryDelegate(
+      {required this.apiClient, required this.authRepository});
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -200,19 +263,13 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
 final studyRepositoryProvider = Provider<IStudyRepository>((ref) {
   final studyRepository = StudyRepository(
-      apiClient: ref.watch(apiClientProvider),
-      authRepository: ref.watch(authRepositoryProvider),
-      ref: ref,
+    apiClient: ref.watch(apiClientProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    ref: ref,
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
     studyRepository.dispose();
   });
   return studyRepository;
-});
-
-final studyProvider = StreamProvider.autoDispose
-    .family<WrappedModel<Study>, StudyID>((ref, studyId) {
-  final studyRepository = ref.watch(studyRepositoryProvider);
-  return studyRepository.watch(studyId);
 });

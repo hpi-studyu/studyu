@@ -5,6 +5,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudyTestControllerState extends StudyControllerBaseState {
   const StudyTestControllerState({
+    required super.currentUser,
     super.studyWithMetadata,
     this.serializedSession = '',
   });
@@ -64,6 +65,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
       serializedSession: (serializedSession != null)
           ? serializedSession()
           : this.serializedSession,
+      currentUser: currentUser,
     );
   }
 

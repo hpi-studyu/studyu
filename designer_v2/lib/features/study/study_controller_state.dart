@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyControllerState extends StudyControllerBaseState {
   const StudyControllerState({
+    required super.currentUser,
     super.studyWithMetadata,
   });
 
@@ -26,6 +27,7 @@ class StudyControllerState extends StudyControllerBaseState {
     return StudyControllerState(
       studyWithMetadata: studyWithMetadata != null
           ? studyWithMetadata() : this.studyWithMetadata,
+      currentUser: currentUser,
     );
   }
 }
