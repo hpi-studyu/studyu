@@ -11,13 +11,6 @@ String envFilePath() {
   return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
 }
 
-const appDeepLink = 'https://studyu-app-v2.web.app';
-const designerDeepLink = 'https://studyu-designer-v2.web.app';
-
-// GoTrue redirectTo strips /#/ from URL, therefore we need to use the default set in supabase
-//String? authRedirectToUrl = kIsWeb ? null : designerDeepLink;
-String authRedirectToUrl = designerDeepLink;
-
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
   final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL'];
@@ -34,5 +27,7 @@ Future<void> loadEnv() async {
     envAppUrl: dotenv.env['STUDYU_APP_URL'],
     envProjectGeneratorUrl: dotenv.env['STUDYU_PROJECT_GENERATOR_URL'],
     supabaseClient: Supabase.instance.client,
+    envAppDeepLink: dotenv.env['STUDYU_APP_DEEPLINK_URL'],
+    envDesignerDeepLink: dotenv.env['STUDYU_DESIGNER_DEEPLINK_URL'],
   );
 }

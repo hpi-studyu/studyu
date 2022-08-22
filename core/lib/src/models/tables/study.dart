@@ -10,6 +10,8 @@ import '../models.dart';
 
 part 'study.g.dart';
 
+enum StudyStatus { draft, running, closed }
+
 enum Participation { open, invite }
 
 enum ResultSharing { public, private, organization }
@@ -201,5 +203,23 @@ class Study extends SupabaseObjectFunctions<Study> {
           .toList(growable: false))
     ];
     return const ListToCsvConverter().convert(resultsTable);
+  }
+
+  // - Status
+
+  StudyStatus get status {
+    if (published) {
+      return StudyStatus.running;
+    }
+    return StudyStatus.draft;
+  }
+
+  bool get isDraft => status == StudyStatus.draft;
+  bool get isRunning => status == StudyStatus.running;
+  // TODO: missing flag to indicate that study is completed & enrollment closed
+  bool get isClosed => false;
+
+  bool isReadonly(User user) {
+    return status != StudyStatus.draft || !canEdit(user);
   }
 }

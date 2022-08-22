@@ -22,9 +22,12 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
-    final activeStudy = context.read<AppState>().activeSubject;
+    final state = context.read<AppState>();
+    final activeStudy = state.activeSubject;
     try {
-      await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
+      if (state.trackParticipantProgress) {
+        await activeStudy.addResult<bool>(taskId: widget.task.id, result: true);
+      }
       if (!mounted) return;
       Navigator.pop(context, true);
     } on PostgrestError {
