@@ -183,3 +183,18 @@ class StudyTemplates {
     return newDraft;
   }
 }
+
+extension StudyParticipantCountX on Study {
+  int getParticipantCountForInvite(StudyInvite invite) {
+    if (participants?.isEmpty ?? true) {
+      return 0;
+    }
+    int count = 0;
+    for (final participant in participants!) {
+      if (participant.inviteCode == invite.code) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+}

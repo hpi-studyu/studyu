@@ -32,10 +32,11 @@ class StudyRecruitScreen extends StudyPageWidget {
           const SizedBox(height: 24.0), // spacing between body elements
           StudyInvitesTable(
             invites: studyInvites!, // otherwise falls through to [AsyncValueWidget.empty]
-            onSelectInvite: _onSelectInvite(context, ref),
-            getActionsForInvite: controller.availableActions,
-            getInlineActionsForInvite: controller.availableInlineActions,
+            onSelect: _onSelectInvite(context, ref),
+            getActions: controller.availableActions,
+            getInlineActions: controller.availableInlineActions,
             getIntervention: controller.getIntervention,
+            getParticipantCountForInvite: controller.getParticipantCountForInvite,
           ),
         ],
       ),
