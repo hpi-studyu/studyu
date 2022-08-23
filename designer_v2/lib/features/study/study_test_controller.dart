@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
-import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
+import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -58,16 +58,6 @@ final studyTestPlatformControllerProvider = Provider.autoDispose
   } else {
     // Desktop and Web
     platformController = WebController(state.appUrl, testArgs.studyId);
-  }
-
-  if (testArgs.routeArgs is InterventionFormRouteArgs ) {
-    final extra = testArgs.routeArgs as InterventionFormRouteArgs;
-    print("NAVIGATE TO INTERVENTION");
-    platformController.navigatePage('intervention', extra: extra.interventionId);
-  } else if (testArgs.routeArgs is MeasurementFormRouteArgs) {
-    final extra = testArgs.routeArgs as MeasurementFormRouteArgs;
-    print("NAVIGATE TO OBSERVATION");
-    platformController.navigatePage('observation', extra: extra.measurementId);
   }
 
   ref.onDispose(() {

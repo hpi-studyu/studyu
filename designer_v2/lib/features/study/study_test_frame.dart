@@ -26,6 +26,16 @@ class PreviewFrame extends StudyPageWidget {
     final PlatformController frameController = frameController_ ?? ref.watch(studyTestPlatformControllerProvider(testArgs));
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
 
+    if (testArgs.routeArgs is InterventionFormRouteArgs ) {
+      final extra = testArgs.routeArgs as InterventionFormRouteArgs;
+      print("NAVIGATE TO INTERVENTION");
+      frameController.navigate(page: 'intervention', extra: extra.interventionId);
+    } else if (testArgs.routeArgs is MeasurementFormRouteArgs) {
+      final extra = testArgs.routeArgs as MeasurementFormRouteArgs;
+      print("NAVIGATE TO OBSERVATION");
+      frameController.navigate(page: 'observation', extra: extra.measurementId);
+    }
+
     frameController.listen();
 
     return Row(

@@ -6,17 +6,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 
+class RouteInformation {
+  late String? route;
+  late String? extra;
+  late String? cmd;
+
+  RouteInformation();
+}
+
 abstract class PlatformController {
   final String studyId;
   final String previewSrc;
+  late RouteInformation routeInformation;
   late Widget frameWidget;
 
   PlatformController(this.previewSrc, this.studyId);
 
   void registerViews(Key key);
-  void navigatePage(String page, {String? extra});
-  void sendCmd(String command);
-  void refresh();
+  void navigate({String? page, String? extra, String? cmd});
+  void refresh({String? cmd});
   void listen();
   void send(String message);
 
@@ -25,13 +33,12 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late html.IFrameElement iFrameElement;
-  late String lastSrc;
 
   WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
     final key = UniqueKey();
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
-    lastSrc = previewSrc;
+    routeInformation = RouteInformation();
   }
 
   @override
@@ -49,31 +56,28 @@ class WebController extends PlatformController {
   }
 
   @override
-  void navigatePage(String page, {String? extra}) {
+  void navigate({String? page, String? extra, String? cmd}) {
+    String newPrev = previewSrc;
+    if (page != null) {
+      routeInformation.route = page;
+      newPrev = "$newPrev&route=$page";
+    }
     if (extra != null) {
-      modifySrc("$previewSrc&route=$page&extra=$extra");
-    } else {
-      modifySrc("$previewSrc&route=$page");
+      routeInformation.extra = extra;
+      newPrev = "$newPrev&extra=$extra";
     }
+    if (cmd != null) {
+      routeInformation.cmd = cmd;
+      newPrev = "$newPrev&cmd=$cmd";
+    }
+    print("*********NAVIGATE TO: $cmd $newPrev");
+
+    iFrameElement.src = newPrev;
   }
 
   @override
-  void sendCmd(String command) {
-    modifySrc("$previewSrc&cmd=$command");
-  }
-
-  @override
-  void refresh() {
-    modifySrc(previewSrc);
-  }
-
-  void modifySrc(String newSrc) {
-    if (iFrameElement.src != newSrc) {
-      lastSrc = newSrc;
-      iFrameElement.src = lastSrc;
-    } else {
-      print("DID NOT LOAD: " + newSrc + iFrameElement.src.toString());
-    }
+  void refresh({String? cmd}) {
+    navigate(page: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
   }
 
   @override
@@ -86,7 +90,7 @@ class WebController extends PlatformController {
     html.window.onMessage.listen((event) {
       var data = event.data;
       if (data == 'routeFinished') {
-        modifySrc(lastSrc);
+        refresh();
       }
     });
   }
@@ -106,17 +110,12 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void sendCmd(String command) {
-    throw UnimplementedError();
-  }
-
-  @override
   void openNewPage() {
     throw UnimplementedError();
   }
 
   @override
-  void refresh() {
+  void refresh({String? cmd}) {
     throw UnimplementedError();
   }
 
@@ -136,7 +135,8 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void navigatePage(String page, {String? extra}) {
+  void navigate({String? page, String? extra, String? cmd}) {
     throw UnimplementedError();
   }
+
 }

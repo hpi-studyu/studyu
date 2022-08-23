@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyu_designer_v2/common_views/banner.dart';
-import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
-import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
-import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
-import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
-import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -47,28 +38,28 @@ class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/
                 icon: const Icon(Icons.arrow_forward),
                 label: Text("eligibilityCheck".hardcoded), // questionnaire?
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.navigatePage("eligibilityCheck");
+                  frameController.navigate(page: "eligibilityCheck");
                 },
               ),
               TextButton.icon(
                 icon: const Icon(Icons.arrow_forward),
                 label: Text("interventionSelection".hardcoded),
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.navigatePage("interventionSelection");
+                  frameController.navigate(page: "interventionSelection");
                 },
               ),
               TextButton.icon(
                 icon: const Icon(Icons.arrow_forward),
                 label: Text("consent".hardcoded),
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.navigatePage("consent");
+                  frameController.navigate(page: "consent");
                 },
               ),
               TextButton.icon(
                 icon: const Icon(Icons.arrow_forward),
                 label: Text("dashboard".hardcoded),
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.navigatePage("dashboard");
+                  frameController.navigate(page: "dashboard");
                 },
               ),
             ],

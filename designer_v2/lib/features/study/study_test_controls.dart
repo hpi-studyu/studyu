@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -31,7 +30,7 @@ class FrameControlsWidget extends ConsumerWidget {
                 icon: const Icon(Icons.restart_alt),
                 label: Text("Reset".hardcoded),
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.sendCmd("reset");
+                  frameController.refresh(cmd: "reset");
                 },
               ),
               TextButton.icon(
@@ -46,7 +45,8 @@ class FrameControlsWidget extends ConsumerWidget {
                 label: Text("How does this work?".hardcoded),
                 onPressed: () => showHelp(ref),
               ),*/
-            ]);
+            ]
+    );
   }
 }
 
