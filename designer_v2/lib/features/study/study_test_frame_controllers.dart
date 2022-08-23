@@ -71,8 +71,11 @@ class WebController extends PlatformController {
       newPrev = "$newPrev&cmd=$cmd";
     }
     print("*********NAVIGATE TO: $cmd $newPrev");
-
-    iFrameElement.src = newPrev;
+    if (iFrameElement.src != newPrev) {
+      iFrameElement.src = newPrev;
+    } else {
+      print("Same link detected");
+    }
   }
 
   @override

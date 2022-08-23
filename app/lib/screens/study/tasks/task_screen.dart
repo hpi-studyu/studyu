@@ -66,7 +66,6 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    print("we are ins tasks with " + widget.taskId + " " + widget.task.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.task.title),
