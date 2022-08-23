@@ -23,7 +23,7 @@ class PreviewFrame extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final StudyTestControllerState state = state_ ?? ref.watch(studyTestControllerProvider(studyId));
-    final PlatformController frameController = frameController_ ?? ref.watch(studyTestPlatformControllerProvider(testArgs));
+    final PlatformController frameController = frameController_ ?? ref.watch(studyTestPlatformControllerProvider(testArgs))!;
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
 
     if (testArgs.routeArgs is InterventionFormRouteArgs ) {

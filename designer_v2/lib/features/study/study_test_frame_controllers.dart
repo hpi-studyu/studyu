@@ -28,10 +28,6 @@ abstract class PlatformController {
   void listen();
   void send(String message);
   void openNewPage() {}
-
-  void reset() {
-    sendCmd("reset");
-  }
 }
 
 class WebController extends PlatformController {
