@@ -18,11 +18,9 @@ jobs:
       - name: Install melos
         run: dart pub global activate melos
       - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Set build environment"
-        run: ENV=.env.staging
+        run: melos bootstrapgit st
       - name: "Build Web"
-        run: melos run build:web --no-select
+        run: ENV=.env.staging; melos run build:web --no-select
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
