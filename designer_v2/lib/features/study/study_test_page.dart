@@ -21,7 +21,7 @@ class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/
     final frameController = ref.watch(
         studyTestPlatformControllerProvider(testArgs));
 
-    load().then((hasHelped) => !hasHelped ? showHelp(ref) : null);
+    load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
     return Column(
         children: [
@@ -89,10 +89,9 @@ class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/
     return false;
   }
 
-  showHelp(WidgetRef ref) {
-    ref
-        .read(notificationServiceProvider)
-        .show(Notifications.welcomeTestMode, actions: [
+  showHelp(WidgetRef ref, BuildContext context) {
+    ref.read(notificationServiceProvider).show(
+        Notifications.welcomeTestMode(context), actions: [
       NotificationAction(
           label: "Got it!".hardcoded,
           onSelect: Future.value,

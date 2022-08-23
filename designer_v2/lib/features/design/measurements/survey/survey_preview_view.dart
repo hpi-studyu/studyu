@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
-import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class SurveyPreview extends StatelessWidget {
