@@ -66,6 +66,12 @@ class Study extends SupabaseObjectFunctions<Study> {
   List<StudyInvite>? invites;
 
   @JsonKey(ignore: true)
+  List<StudySubject>? participants;
+
+  @JsonKey(ignore: true)
+  List<SubjectProgress>? participantsProgress;
+
+  @JsonKey(ignore: true)
   DateTime? createdAt;
 
   Study(this.id, this.userId);
@@ -83,6 +89,20 @@ class Study extends SupabaseObjectFunctions<Study> {
     if (invites != null) {
       study.invites = invites
           .map((json) => StudyInvite.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+    final List? participants = json['study_subject'] as List?;
+    if (participants != null) {
+      study.participants = participants
+          .map((json) => StudySubject.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+    List? participantsProgress = json['study_progress'] as List?;
+    participantsProgress = json['study_progress_export'] as List?;
+    participantsProgress ??= json['subject_progress'] as List?;
+    if (participantsProgress != null) {
+      study.participantsProgress = participantsProgress
+          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
           .toList();
     }
     final int? participantCount = json['study_participant_count'] as int?;

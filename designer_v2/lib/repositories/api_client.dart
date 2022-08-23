@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_subject.dart';
+import 'package:studyu_designer_v2/domain/subject_progress.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:supabase/src/supabase.dart';
@@ -15,6 +17,12 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
+  Future<List<StudySubject>> deleteParticipants(
+      Study study, List<StudySubject> participants);
+  /*
+  Future<List<SubjectProgress>> deleteStudyProgress(
+      Study study, List<SubjectProgress> records);
+   */
   Future<AppConfig> fetchAppConfig();
 }
 
@@ -22,15 +30,22 @@ typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
 
 /// Base class for domain-specific exceptions
 class APIException implements Exception {}
+
 class StudyNotFoundException extends APIException {}
+
 class MeasurementNotFoundException extends APIException {}
+
 class QuestionNotFoundException extends APIException {}
+
 class InterventionNotFoundException extends APIException {}
+
 class InterventionTaskNotFoundException extends APIException {}
+
 class StudyInviteNotFoundException extends APIException {}
 
 class StudyUApiClient extends SupabaseClientDependant
-    with SupabaseQueryMixin implements StudyUApi  {
+    with SupabaseQueryMixin
+    implements StudyUApi {
   StudyUApiClient({
     required this.supabaseClient,
     this.testDelayMilliseconds = 2000,
@@ -43,27 +58,69 @@ class StudyUApiClient extends SupabaseClientDependant
   static final studyColumns = [
     '*',
     'repo(*)',
-    'study_invite!study_invite_studyId_fkey(*)', // TODO: how does this work?
+    'study_invite!study_invite_studyId_fkey(*)',
     'study_participant_count',
     'study_ended_count',
     'active_subject_count',
     'study_missed_days'
   ];
 
+  static final studyWithParticipantActivityColumns = [
+    ...studyColumns,
+    'study_subject!study_subject_studyId_fkey(*)',
+    'study_progress_export(*)',
+  ];
+
   final int testDelayMilliseconds;
 
   @override
-  Future<List<Study>> getUserStudies() async {
+  Future<List<StudySubject>> deleteParticipants(
+      Study study, List<StudySubject> participants) async {
+    await _testDelay();
+    if (participants.isEmpty) {
+      return Future.value([]);
+    }
+    final selectionCriteria = participants.first.foreignKey(study);
+    final request = deleteAll<StudySubject>(selectionCriteria);
+    return _awaitGuarded(request);
+  }
+
+  /*
+  @override
+  Future<List<SubjectProgress>> deleteStudyProgress(
+      Study study, List<SubjectProgress> records) async {
+    await _testDelay();
+    if (records.isEmpty) {
+      return Future.value([]);
+    }
+    final selectionCriteria = records
+        .map((record) => {...record.primaryKeys, ...record.foreignKey(study)})
+        .toList();
+    final request = deleteAll<SubjectProgress>(selectionCriteria);
+    return _awaitGuarded(request);
+    return Future.value([]);
+  }
+   */
+
+  @override
+  Future<List<Study>> getUserStudies({withParticipantActivity = true}) async {
     await _testDelay();
     // TODO: fix Postgres policy for proper multi-tenancy
-    final request = getAll<Study>(selectedColumns: studyColumns);
+    final columns = (withParticipantActivity)
+        ? studyWithParticipantActivityColumns
+        : studyColumns;
+    final request = getAll<Study>(selectedColumns: columns);
     return _awaitGuarded(request);
   }
 
   @override
-  Future<Study> fetchStudy(StudyID studyId) async {
+  Future<Study> fetchStudy(StudyID studyId,
+      {withParticipantActivity = true}) async {
     await _testDelay();
-    final request = getById<Study>(studyId, selectedColumns: studyColumns);
+    final columns = (withParticipantActivity)
+        ? studyWithParticipantActivityColumns
+        : studyColumns;
+    final request = getById<Study>(studyId, selectedColumns: columns);
     return _awaitGuarded(request, onError: {
       HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
       HttpStatus.notFound: (e) => throw StudyNotFoundException(),
@@ -82,7 +139,7 @@ class StudyUApiClient extends SupabaseClientDependant
   Future<Study> saveStudy(Study study) async {
     await _testDelay();
     // Chain a fetch request to make sure we return a complete & updated study
-    final request = study.save();//.then((study) => fetchStudy(study.id));
+    final request = study.save(); //.then((study) => fetchStudy(study.id));
     return _awaitGuarded<Study>(request);
   }
 
@@ -124,8 +181,8 @@ class StudyUApiClient extends SupabaseClientDependant
   /// domain-specific exception that bubbles up to the data layer.
   ///
   /// Raises a generic [APIException] for errors that cannot be handled.
-  Future<T> _awaitGuarded<T>(Future<T> future, {
-    Map<int, SupabaseQueryExceptionHandler>? onError}) async {
+  Future<T> _awaitGuarded<T>(Future<T> future,
+      {Map<int, SupabaseQueryExceptionHandler>? onError}) async {
     try {
       final result = await future;
       return result;
@@ -154,5 +211,5 @@ class StudyUApiClient extends SupabaseClientDependant
 }
 
 final apiClientProvider = Provider<StudyUApi>((ref) => StudyUApiClient(
-  supabaseClient: ref.watch(supabaseClientProvider),
-));
+      supabaseClient: ref.watch(supabaseClientProvider),
+    ));

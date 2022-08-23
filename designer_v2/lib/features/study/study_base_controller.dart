@@ -9,12 +9,14 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudyBaseController<T extends StudyControllerBaseState> extends StateNotifier<T> {
   StudyBaseController(T state, {
     required this.studyId,
     required this.studyRepository,
     required this.router,
+    required currentUser,
   }) : super(state) {
     subscribeStudy(studyId);
   }

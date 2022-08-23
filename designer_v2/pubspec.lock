@@ -2,12 +2,12 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   archive:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.0"
+    version: "3.3.1"
   async:
     dependency: transitive
     description:
@@ -58,7 +58,7 @@ packages:
     source: hosted
     version: "3.0.2"
   csv:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: csv
       url: "https://pub.dartlang.org"
@@ -392,13 +392,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  modal_side_sheet:
-    dependency: "direct main"
-    description:
-      name: modal_side_sheet
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   nested:
     dependency: transitive
     description:

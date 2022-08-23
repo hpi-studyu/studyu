@@ -14,11 +14,7 @@ enum StudyActionType {
 }
 
 // TODO: Add status field to core package domain model
-enum StudyStatus {
-  draft,
-  running,
-  closed
-}
+enum StudyStatus { draft, running, closed }
 
 typedef StudyID = String;
 typedef MeasurementID = String;
@@ -41,7 +37,10 @@ typedef InterventionProvider = Intervention? Function(String id);
 
 extension StudyHelpers on core.Study {
   Intervention? getIntervention(String id) {
-    return interventions.firstWhere((i) => i.id == id);
+    if (id == Study.baselineID) {
+      return Intervention(Study.baselineID, 'Baseline');
+    }
+    return interventions.firstWhereOrNull((i) => i.id == id);
   }
 }
 
@@ -99,24 +98,21 @@ extension StudyInviteCodeX on Study {
 
 extension StudyDuplicateX on Study {
   Study exactDuplicate() {
-    return Study.fromJson(toJson());
+    final copy = Study.fromJson(toJson());
+    copy.copyJsonIgnoredAttributes(from: this, createdAt: true);
+    return copy;
   }
 
   /// Creates a clean copy of the given [study] only containing the
   /// study protocol / editor data model
   Study duplicateAsDraft(String userId) {
     final copy = Study.fromJson(toJson());
+    copy.resetJsonIgnoredAttributes();
     copy.title = (copy.title ?? '').withDuplicateLabel();
     copy.userId = userId;
     copy.published = false;
-    copy.activeSubjectCount = 0;
-    copy.participantCount = 0;
-    copy.endedCount = 0;
-    copy.missedDays = [];
     copy.resultSharing = ResultSharing.private;
     copy.results = [];
-    copy.repo = null;
-    copy.invites = null;
     copy.collaboratorEmails = [];
 
     // Generate a new random UID
@@ -125,20 +121,52 @@ extension StudyDuplicateX on Study {
 
     return copy;
   }
-}
 
-extension StudyPublishX on Study {
   Study asNewlyPublished() {
     final copy = Study.fromJson(toJson());
-
+    copy.copyJsonIgnoredAttributes(from: this, createdAt: true);
+    copy.resetParticipantData();
     copy.published = true;
-    copy.activeSubjectCount = 0;
-    copy.participantCount = 0;
-    copy.endedCount = 0;
-    copy.missedDays = [];
-    copy.results = [];
-
     return copy;
+  }
+
+  Study copyJsonIgnoredAttributes({required Study from, createdAt = false}) {
+    participantCount = from.participantCount;
+    activeSubjectCount = from.activeSubjectCount;
+    endedCount = from.endedCount;
+    missedDays = from.missedDays;
+    repo = from.repo;
+    invites = from.invites;
+    participants = from.participants;
+    participantsProgress = from.participantsProgress;
+    if (createdAt) {
+      this.createdAt = from.createdAt;
+    }
+    return this;
+  }
+
+  Study resetJsonIgnoredAttributes() {
+    participantCount = 0;
+    activeSubjectCount = 0;
+    endedCount = 0;
+    missedDays = [];
+    repo = null;
+    invites = [];
+    participants = [];
+    participantsProgress = [];
+    createdAt = null;
+    return this;
+  }
+
+  Study resetParticipantData() {
+    participantCount = 0;
+    activeSubjectCount = 0;
+    endedCount = 0;
+    missedDays = [];
+    results = [];
+    participants = [];
+    participantsProgress = [];
+    return this;
   }
 }
 
@@ -153,5 +181,20 @@ class StudyTemplates {
     newDraft.title = "Unnamed study".hardcoded;
     newDraft.description = "Lorem ipsum".hardcoded;
     return newDraft;
+  }
+}
+
+extension StudyParticipantCountX on Study {
+  int getParticipantCountForInvite(StudyInvite invite) {
+    if (participants?.isEmpty ?? true) {
+      return 0;
+    }
+    int count = 0;
+    for (final participant in participants!) {
+      if (participant.inviteCode == invite.code) {
+        count += 1;
+      }
+    }
+    return count;
   }
 }

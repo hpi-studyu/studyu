@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyRecruitControllerState extends StudyControllerBaseState {
   const StudyRecruitControllerState({
+    required super.currentUser,
     super.studyWithMetadata,
     this.invites = const AsyncValue.loading(),
   });
@@ -24,6 +25,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       studyWithMetadata: (studyWithMetadata != null)
           ? studyWithMetadata() : this.studyWithMetadata,
       invites: (invites != null) ? invites() : this.invites,
+      currentUser: currentUser,
     );
   }
 

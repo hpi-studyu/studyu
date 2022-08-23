@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -16,9 +17,10 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
   StudyRecruitController({
     required super.studyId,
     required super.studyRepository,
+    required super.currentUser,
     required super.router,
     required this.inviteCodeRepository,
-  }) : super(const StudyRecruitControllerState()) {
+  }) : super(StudyRecruitControllerState(currentUser: currentUser)) {
     print("StudyRecruitController.constructor");
     _subscribeInvites();
   }
@@ -43,6 +45,10 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
   Intervention? getIntervention(String interventionId) {
     return state.study.value!.getIntervention(interventionId);
+  }
+
+  int getParticipantCountForInvite(StudyInvite invite) {
+    return state.study.value!.getParticipantCountForInvite(invite);
   }
 
   // - IModelActionProvider
@@ -74,6 +80,7 @@ final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
     return StudyRecruitController(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
+      currentUser: ref.watch(currentUserProvider),
       router: ref.watch(routerProvider),
       inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
     );

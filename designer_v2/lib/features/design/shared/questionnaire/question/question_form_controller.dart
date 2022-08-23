@@ -157,7 +157,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           answerOptions: answerOptionsArray.value! // required
               .where((optionStr) => optionStr != null && optionStr.isNotEmpty)
               .map((optionStr) =>
-                  FormControlOption<String>(optionStr!.asId(), optionStr))
+                  FormControlOption<String>(optionStr!.toKey(), optionStr))
               .toList(),
         );
       case SurveyQuestionType.scale:

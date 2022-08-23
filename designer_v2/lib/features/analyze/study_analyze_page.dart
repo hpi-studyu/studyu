@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/common_views/form_control_label.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/common_views/under_construction.dart';
 import 'package:studyu_designer_v2/features/analyze/study_analyze_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
@@ -13,10 +13,40 @@ class StudyAnalyzeScreen extends StudyPageWidget {
   const StudyAnalyzeScreen(studyId, {Key? key}) : super(studyId, key: key);
 
   @override
+  Widget? banner(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(studyAnalyzeControllerProvider(studyId));
+
+    if (state.isDraft) {
+      return BannerBox(
+          noPrefix: true,
+          body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextParagraph(
+                  text: "Because this study has not been launched yet, this page is "
+                      "currently based on the data generated during study "
+                      "testing.".hardcoded,
+                ),
+                TextParagraph(
+                    text: "The data on this page will be reset once you launch "
+                        "the study with real participants.".hardcoded
+                ),
+              ]
+          ),
+          style: BannerStyle.info
+      );
+    }
+
+    return null;
+  }
+
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final controller =
         ref.watch(studyAnalyzeControllerProvider(studyId).notifier);
+    final state = ref.watch(studyAnalyzeControllerProvider(studyId));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,44 +60,21 @@ class StudyAnalyzeScreen extends StudyPageWidget {
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                SelectableText("Want to run your own analysis?".hardcoded),
-                const SizedBox(width: 48.0),
+                SelectableText("Want to run your own analysis?".hardcoded,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 24.0),
                 PrimaryButton(
-                  text: "Export as".hardcoded,
+                  text: "Export data".hardcoded,
                   icon: Icons.download_rounded,
+                  enabled: state.canExport,
+                  tooltipDisabled: state.exportDisabledReason,
                   onPressedFuture: () => controller.onExport(),
                 ),
-                const SizedBox(width: 12.0),
-                Wrap(
-                    children: controller.fileTypeControlOptions
-                        .map(
-                          (option) => IntrinsicWidth(
-                        child: Row(
-                          children: [
-                            ReactiveRadio<FileType>(
-                              formControl: controller.fileTypeControl,
-                              value: option.value,
-                            ),
-                            const SizedBox(width: 2.0),
-                            FormControlLabel(
-                              formControl: controller.fileTypeControl,
-                              text: option.label,
-                              onClick: (formControl) =>
-                              formControl.value = option.value,
-                            ),
-                            const SizedBox(width: 8.0),
-                          ],
-                        ),
-                      ),
-                    )
-                        .toList()),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 32.0),
-        SelectableText("Outcome measures by intervention".hardcoded,
-            style: Theme.of(context).textTheme.headline5),
         const SizedBox(height: 32.0),
         Container(
           width: 800,
