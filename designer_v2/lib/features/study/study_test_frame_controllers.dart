@@ -68,8 +68,12 @@ class WebController extends PlatformController {
   }
 
   void modifySrc(String newSrc) {
-    lastSrc = newSrc;
-    iFrameElement.src = lastSrc;
+    if (iFrameElement.src != newSrc) {
+      lastSrc = newSrc;
+      iFrameElement.src = lastSrc;
+    } else {
+      print("DID NOT LOAD: " + newSrc + iFrameElement.src.toString());
+    }
   }
 
   @override

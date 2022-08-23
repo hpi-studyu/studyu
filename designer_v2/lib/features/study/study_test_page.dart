@@ -8,6 +8,10 @@ import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
+import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
+import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -15,138 +19,61 @@ import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 
-class StudyTestScreen extends StudyPageWidget {
+class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/ {
   final StudyFormRouteArgs? routeArgs;
   const StudyTestScreen(studyId, {this.routeArgs, Key? key}) : super(studyId, key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final testArgs = TestArgs(studyId, routeArgs);
     final state = ref.watch(studyTestControllerProvider(studyId));
-    final frameController = ref.watch(studyTestPlatformControllerProvider(studyId));
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
-
-    frameController.listen();
-
-    if (routeArgs is InterventionFormRouteArgs ) {
-      final ifra = routeArgs as InterventionFormRouteArgs;
-      frameController.navigatePage('intervention', extra: ifra.interventionId);
-    } else if (routeArgs is MeasurementFormRouteArgs) {
-      final mfra = routeArgs as MeasurementFormRouteArgs;
-      frameController.navigatePage('observation', extra: mfra.measurementId);
-    }
+    final frameController = ref.watch(
+        studyTestPlatformControllerProvider(testArgs));
 
     load().then((hasHelped) => !hasHelped ? showHelp(ref) : null);
 
-    final frameControls = Column(
-      children: [
-        const SizedBox(height: 24.0),
-        Text("This is the preview mode.\nPress reset to "
-            "remove the test progress and start over again."
-            .hardcoded, textAlign: TextAlign.center),
-        const SizedBox(height: 12.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton.icon(
-              icon: const Icon(Icons.arrow_forward),
-              label: Text("eligibilityCheck".hardcoded), // questionnaire?
-              onPressed: (!state.canTest) ? null : () {
-                frameController.navigatePage("eligibilityCheck");
-              },
-            ),
-            TextButton.icon(
-              icon: const Icon(Icons.arrow_forward),
-              label: Text("interventionSelection".hardcoded),
-              onPressed: (!state.canTest) ? null : () {
-                frameController.navigatePage("interventionSelection");
-              },
-            ),
-            TextButton.icon(
-              icon: const Icon(Icons.arrow_forward),
-              label: Text("consent".hardcoded),
-              onPressed: (!state.canTest) ? null : () {
-                frameController.navigatePage("consent");
-              },
-            ),
-            TextButton.icon(
-              icon: const Icon(Icons.arrow_forward),
-              label: Text("dashboard".hardcoded),
-              onPressed: (!state.canTest) ? null : () {
-                frameController.navigatePage("dashboard");
-              },
-            ),
-          ],
-        ),
-        Row(
+    return Column(
+        children: [
+          PreviewFrame(testArgs, frameController_: frameController, state_: state),
+          const SizedBox(height: 24.0),
+          Text("This is the preview mode.\nPress reset to "
+              "remove the test progress and start over again."
+              .hardcoded, textAlign: TextAlign.center),
+          const SizedBox(height: 12.0),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton.icon(
-                icon: const Icon(Icons.restart_alt),
-                label: Text("Reset".hardcoded),
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("eligibilityCheck".hardcoded), // questionnaire?
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.sendCmd("reset");
+                  frameController.navigatePage("eligibilityCheck");
                 },
               ),
               TextButton.icon(
-                icon: const Icon(Icons.open_in_new_sharp),
-                label: Text("Open in new tab".hardcoded),
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("interventionSelection".hardcoded),
                 onPressed: (!state.canTest) ? null : () {
-                  frameController.openNewPage();
+                  frameController.navigatePage("interventionSelection");
                 },
               ),
               TextButton.icon(
-                icon: const Icon(Icons.help),
-                label: Text("How does this work?".hardcoded),
-                onPressed: () => showHelp(ref),
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("consent".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigatePage("consent");
+                },
               ),
-            ]),
-      ],
-    );
-
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(builder: (context, form, child) {
-                if (formViewModel.form.hasErrors) {
-                  return const DisabledFrame();
-                }
-                return Column(
-                  children: [frameController.frameWidget, frameControls],
-                );
-              })
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("dashboard".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigatePage("dashboard");
+                },
+              ),
+            ],
           ),
         ]
-    );
-  }
-
-  @override
-  Widget? banner(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
-    if (!formViewModel.form.hasErrors) {
-      return null;
-    }
-    return BannerBox(
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextParagraph(
-              text: "The preview is unavailable until you update the "
-                  "following information:".hardcoded,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            ReactiveForm(
-                formGroup: formViewModel.form,
-                child: ReactiveFormConsumer(builder: (context, form, child) {
-                  return TextParagraph(
-                    text: form.validationErrorSummary,
-                  );
-                })),
-          ]),
-      style: BannerStyle.warning,
     );
   }
 

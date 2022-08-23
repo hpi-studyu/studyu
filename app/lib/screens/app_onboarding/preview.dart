@@ -169,17 +169,17 @@ class Preview {
         );
         assert (newInterventionList.length == 2);
       } else {
+        // just take the first two
         newInterventionList = interventionList.sublist(0, 2);
       }
       subject = StudySubject.fromStudy(
         study,
         Supabase.instance.client.auth.user().id,
-        // for now just take the first two
         newInterventionList,
         null, // no invite code
       );
-      subject.startedAt = DateTime.now();
     }
+    subject.startedAt = DateTime.now();
     return subject;
   }
 }

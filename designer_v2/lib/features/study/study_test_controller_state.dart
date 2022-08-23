@@ -17,7 +17,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
     if (!canTest || !study.hasValue) {
       return '';
     }
-    String appUrl = "$appDeepLink";
+    String appUrl = appDeepLink;
     appUrl += "?mode=preview&session=${Uri.encodeComponent(serializedSession)}";
     appUrl += "&studyid=$studyId";
     return appUrl;
