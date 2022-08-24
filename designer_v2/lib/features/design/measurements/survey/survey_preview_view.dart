@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
@@ -19,7 +18,7 @@ class SurveyPreview extends StatelessWidget {
         Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: Column( children: [ const SizedBox(height: 50), PreviewFrame(TestArgs(routeArgs.studyId, routeArgs)) ],),
+              child: Column( children: [ const SizedBox(height: 50), PreviewFrame(routeArgs.studyId, routeArgs: routeArgs) ],),
             ),
         )
       ],

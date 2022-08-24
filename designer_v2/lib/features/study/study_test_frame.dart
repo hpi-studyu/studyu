@@ -14,26 +14,30 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
+// todo make this immutable?
 class PreviewFrame extends StudyPageWidget {
-  final PlatformController? frameController_;
-  final StudyTestControllerState? state_;
-  final TestArgs testArgs;
-  PreviewFrame(this.testArgs, { this.frameController_, this.state_, Key? key}) : super(testArgs.studyId, key: key);
+  late PlatformController? frameController;
+  late StudyTestControllerState? state;
+  final StudyFormRouteArgs? routeArgs;
+  PreviewFrame(studyId, {this.routeArgs, this.frameController, this.state, Key? key}) : super(studyId, key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final StudyTestControllerState state = state_ ?? ref.watch(studyTestControllerProvider(studyId));
-    final PlatformController frameController = frameController_ ?? ref.watch(studyTestPlatformControllerProvider(testArgs))!;
+    state ??= ref.watch(studyTestControllerProvider(studyId));
+    frameController ??= ref.watch(studyTestPlatformControllerProvider(studyId));
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+    //measurementsFormViewModelProvider
+    String formType = 'default';
 
-    if (testArgs.routeArgs is InterventionFormRouteArgs ) {
-      final extra = testArgs.routeArgs as InterventionFormRouteArgs;
-      print("NAVIGATE TO INTERVENTION");
-      frameController.navigate(page: 'intervention', extra: extra.interventionId);
-    } else if (testArgs.routeArgs is MeasurementFormRouteArgs) {
-      final extra = testArgs.routeArgs as MeasurementFormRouteArgs;
-      print("NAVIGATE TO OBSERVATION");
-      frameController.navigate(page: 'observation', extra: extra.measurementId);
+    // todo refactor this
+    if (routeArgs is InterventionFormRouteArgs ) {
+      final extra = routeArgs as InterventionFormRouteArgs;
+      formType = 'intervention';
+      frameController!.navigate(page: formType, extra: extra.interventionId);
+    } else if (routeArgs is MeasurementFormRouteArgs) {
+      final extra = routeArgs as MeasurementFormRouteArgs;
+      formType = 'observation';
+      frameController!.navigate(page: formType, extra: extra.measurementId);
     }
 
     frameController.listen();
@@ -49,7 +53,7 @@ class PreviewFrame extends StudyPageWidget {
                   return const DisabledFrame();
                 }
                 return Column(
-                  children: [frameController.frameWidget, FrameControlsWidget(frameController, state)],
+                  children: [frameController!.frameWidget, FrameControlsWidget(frameController!, state!)],
                 );
               })
           ),

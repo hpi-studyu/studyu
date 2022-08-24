@@ -75,8 +75,8 @@ class WebController extends PlatformController {
     } else {
       routeInformation.cmd = null;
     }
-    print("*********NAVIGATE TO: $cmd $newPrev");
     if (iFrameElement.src != newPrev) {
+      print("*********NAVIGATE TO: $newPrev");
       iFrameElement.src = newPrev;
     } else {
       print("Same link detected");
@@ -155,5 +155,6 @@ class MobileController extends PlatformController {
   void navigate({String? page, String? extra, String? cmd}) {
     throw UnimplementedError();
   }
+}
 
 }

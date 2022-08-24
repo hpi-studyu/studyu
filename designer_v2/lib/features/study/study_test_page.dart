@@ -16,16 +16,15 @@ class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final testArgs = TestArgs(studyId, routeArgs);
     final state = ref.watch(studyTestControllerProvider(studyId));
     final frameController = ref.watch(
-        studyTestPlatformControllerProvider(testArgs));
+        studyTestPlatformControllerProvider(studyId));
 
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
     return Column(
         children: [
-          PreviewFrame(testArgs, frameController_: frameController, state_: state),
+          PreviewFrame(studyId, routeArgs: routeArgs, frameController: frameController, state: state),
           const SizedBox(height: 24.0),
           Text("This is the preview mode.\nPress reset to "
               "remove the test progress and start over again."

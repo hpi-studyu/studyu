@@ -8,7 +8,6 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
-import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class StudyTestController extends StudyBaseController<StudyTestControllerState> {
   StudyTestController({
@@ -49,16 +48,9 @@ final studyTestControllerProvider = StateNotifierProvider
   return controller;
 });
 
-class TestArgs {
-  final String studyId;
-  final StudyFormRouteArgs? routeArgs;
-
-  TestArgs(this.studyId, this.routeArgs);
-}
-
 final studyTestPlatformControllerProvider = Provider
-    .family<PlatformController?, TestArgs>((ref, testArgs) {
-  final state = ref.watch(studyTestControllerProvider(testArgs.studyId));
+    .family<PlatformController?, StudyID>((ref, studyId) {
+  final state = ref.watch(studyTestControllerProvider(studyId));
 
   PlatformController platformController;
   if (!kIsWeb) {
@@ -67,7 +59,7 @@ final studyTestPlatformControllerProvider = Provider
         "The StudyU designer only support the web platform".hardcoded);
   } else {
     // Desktop and Web
-    platformController = WebController(state.appUrl, testArgs.studyId);
+    platformController = WebController(state.appUrl, studyId);
   }
 
   return platformController;
