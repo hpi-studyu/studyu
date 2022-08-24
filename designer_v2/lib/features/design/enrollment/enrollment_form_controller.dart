@@ -3,15 +3,20 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/participation.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
+import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
@@ -36,30 +41,59 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   final Study study;
   final GoRouter router;
 
+  late final consentItemDelegate = EnrollmentFormConsentItemDelegate(
+    formViewModels: consentItemFormViewModels,
+    owner: this,
+    validationSet: super.validationSet,
+  );
+
   // - Form fields
 
   final FormControl<Participation> enrollmentTypeControl = FormControl();
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
       Participation.values
-          .map((v) => FormControlOption(v, v.string, description: v.designDescription))
+          .map((v) =>
+              FormControlOption(v, v.string, description: v.designDescription))
           .toList();
+
+  late final FormArray consentItemArray = FormArray([]);
+  late final FormViewModelCollection<ConsentItemFormViewModel,
+          ConsentItemFormData> consentItemFormViewModels =
+      FormViewModelCollection([], consentItemArray);
+
+  List<ConsentItemFormViewModel> get consentItemModels =>
+      consentItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
-  };
+        StudyFormValidationSet.draft: [], // TODO
+        StudyFormValidationSet.publish: [], // TODO
+        StudyFormValidationSet.test: [], // TODO
+      };
 
   @override
-  FormGroup get form => FormGroup(
-      {'enrollmentType': enrollmentTypeControl, ...questionnaireControls});
+  FormGroup get form => FormGroup({
+        'enrollmentType': enrollmentTypeControl,
+        'consentItems': consentItemArray,
+        ...questionnaireControls,
+      });
 
   @override
   void setControlsFrom(EnrollmentFormData data) {
     enrollmentTypeControl.value = data.enrollmentType;
     setQuestionnaireControlsFrom(data.questionnaireFormData);
+
+    if (data.consentItemsFormData != null) {
+      final viewModels = data.consentItemsFormData!
+          .map((data) => ConsentItemFormViewModel(
+                formData: data,
+                delegate: consentItemDelegate,
+                validationSet: validationSet,
+              ))
+          .toList();
+      consentItemFormViewModels.reset(viewModels);
+    }
   }
 
   @override
@@ -67,11 +101,19 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     return EnrollmentFormData(
       enrollmentType: enrollmentTypeControl.value!,
       questionnaireFormData: buildQuestionnaireFormData(),
+      consentItemsFormData: consentItemFormViewModels.formData,
     );
   }
 
   @override
   Map<FormMode, String> get titles => throw UnimplementedError(); // no title
+
+  @override
+  void read([EnrollmentFormData? formData]) {
+    questionFormViewModels.read();
+    consentItemFormViewModels.read();
+    super.read(formData);
+  }
 
   // - IListActionProvider
 
@@ -83,14 +125,14 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(
-        model, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availablePopupActions(model,
+        isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(
-        model, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableInlineActions(model,
+        isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -106,14 +148,14 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   // TODO: get rid of this after refactoring sidesheet to route (inject from router)
 
-  ScreenerQuestionFormRouteArgs buildNewFormRouteArgs() {
+  ScreenerQuestionFormRouteArgs buildNewScreenerQuestionFormRouteArgs() {
     return ScreenerQuestionFormRouteArgs(
       studyId: study.id,
       questionId: Config.newModelId,
     );
   }
 
-  ScreenerQuestionFormRouteArgs buildFormRouteArgs(
+  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(
       QuestionFormViewModel model) {
     return ScreenerQuestionFormRouteArgs(
       studyId: study.id,
@@ -121,7 +163,81 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     );
   }
 
+  ConsentItemFormRouteArgs buildNewConsentItemFormRouteArgs() {
+    return ConsentItemFormRouteArgs(
+      studyId: study.id,
+      consentId: Config.newModelId,
+    );
+  }
+
+  ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(
+      ConsentItemFormViewModel model) {
+    return ConsentItemFormRouteArgs(
+      studyId: study.id,
+      consentId: model.consentId,
+    );
+  }
+
   testScreener() {
     router.dispatch(RoutingIntents.studyTest(study.id));
+  }
+}
+
+class EnrollmentFormConsentItemDelegate
+    implements
+        IFormViewModelDelegate<ConsentItemFormViewModel>,
+        IProviderArgsResolver<ConsentItemFormViewModel,
+            ConsentItemFormRouteArgs> {
+  EnrollmentFormConsentItemDelegate({
+    required this.formViewModels,
+    required this.owner,
+    this.validationSet,
+    this.propagateOnSave = true,
+  });
+
+  final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData>
+      formViewModels;
+  final EnrollmentFormViewModel owner;
+  final bool propagateOnSave;
+  final FormValidationSetEnum? validationSet;
+
+  @override
+  void onCancel(ConsentItemFormViewModel formViewModel, FormMode prevFormMode) {
+    return; // no-op
+  }
+
+  @override
+  void onSave(ConsentItemFormViewModel formViewModel, FormMode prevFormMode) {
+    if (prevFormMode == FormMode.create) {
+      // Save the managed viewmodel that was eagerly added in [provide]
+      formViewModels.commit(formViewModel);
+    } else if (prevFormMode == FormMode.edit) {
+      // nothing to do here
+    }
+    if (propagateOnSave) {
+      owner.save();
+    }
+  }
+
+  @override
+  ConsentItemFormViewModel provide(ConsentItemFormRouteArgs args) {
+    if (args.consentId.isNewId) {
+      // Eagerly add the managed viewmodel in case it needs to be [provide]d
+      // to a child controller
+      final viewModel = ConsentItemFormViewModel(
+        formData: null,
+        delegate: this,
+        validationSet: validationSet,
+      );
+      formViewModels.stage(viewModel);
+      return viewModel;
+    }
+
+    final viewModel =
+        formViewModels.findWhere((vm) => vm.consentId == args.consentId);
+    if (viewModel == null) {
+      throw ConsentItemNotFoundException(); // TODO handle 404 not found
+    }
+    return viewModel;
   }
 }

@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/domain/consent.dart';
 import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -432,6 +433,15 @@ class ScreenerQuestionFormRouteArgs extends QuestionFormRouteArgs {
     required super.questionId,
     required super.studyId,
   });
+}
+
+class ConsentItemFormRouteArgs extends StudyFormRouteArgs {
+  ConsentItemFormRouteArgs({
+    required super.studyId,
+    required this.consentId,
+  });
+
+  final ConsentID consentId;
 }
 
 class MeasurementFormRouteArgs extends StudyFormRouteArgs {

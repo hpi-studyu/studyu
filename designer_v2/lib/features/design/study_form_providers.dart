@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
@@ -36,6 +37,12 @@ final screenerQuestionFormViewModelProvider = Provider.autoDispose
     .family<QuestionFormViewModel, ScreenerQuestionFormRouteArgs>((ref, args) {
   final owner = ref.watch(enrollmentFormViewModelProvider(args.studyId));
   return owner.provide(args);
+});
+
+final consentItemFormViewModelProvider = Provider.autoDispose
+    .family<ConsentItemFormViewModel, ConsentItemFormRouteArgs>((ref, args) {
+  final owner = ref.watch(enrollmentFormViewModelProvider(args.studyId));
+  return owner.consentItemDelegate.provide(args);
 });
 
 // - Interventions

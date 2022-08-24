@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
@@ -75,6 +77,55 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
               ),
               const SizedBox(height: 24.0),
               ReactiveFormConsumer(
+                // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
+                // By default, ReactiveFormArray only updates when adding/removing controls
+                  builder: (context, form, child) {
+                    return ReactiveFormArray(
+                      formArray: formViewModel.consentItemArray,
+                      builder: (context, formArray, child) {
+                        return FormArrayTable<ConsentItemFormViewModel>(
+                          control: formViewModel.consentItemArray,
+                          items: formViewModel.consentItemModels,
+                          onSelectItem: (viewModel) {
+                            final routeArgs =
+                            formViewModel.buildConsentItemFormRouteArgs(viewModel);
+                            _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
+                          },
+                          getActionsAt: (viewModel, _) => [],
+                          onNewItem: () {
+                            final routeArgs = formViewModel.buildNewConsentItemFormRouteArgs();
+                            _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
+                          },
+                          onNewItemLabel: 'Add consent text'.hardcoded,
+                          rowTitle: (viewModel) => viewModel.formData?.title ??
+                              'Missing item title'.hardcoded,
+                          leadingWidget: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Participant consent".hardcoded,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              (formViewModel.questionsArray.disabled)
+                                  ? const SizedBox.shrink()
+                                  : TextButton.icon(
+                                onPressed: formViewModel.testScreener,
+                                icon: const Icon(Icons.play_circle_fill),
+                                label: Text("Test participant consent".hardcoded),
+                              )
+                            ],
+                          ),
+                          //emptyIcon: Icons.content_paste_off_rounded,
+                          emptyTitle: "No terms of consent".hardcoded,
+                          emptyDescription:
+                          "Specify one or more texts that participants have to consent to when enrolling in your study via the StudyU app."
+                              .hardcoded,
+                        );
+                      },
+                    );
+                  }),
+              const SizedBox(height: 24.0),
+              ReactiveFormConsumer(
                   // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
                   // By default, ReactiveFormArray only updates when adding/removing controls
                   builder: (context, form, child) {
@@ -86,14 +137,14 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
                         final routeArgs =
-                            formViewModel.buildFormRouteArgs(viewModel);
-                        _showSidesheetWithArgs(routeArgs, context, ref);
+                            formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
+                        _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
                       getActionsAt: (viewModel, _) =>
                           formViewModel.availablePopupActions(viewModel),
                       onNewItem: () {
-                        final routeArgs = formViewModel.buildNewFormRouteArgs();
-                        _showSidesheetWithArgs(routeArgs, context, ref);
+                        final routeArgs = formViewModel.buildNewScreenerQuestionFormRouteArgs();
+                        _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
                       onNewItemLabel: 'Add screener question'.hardcoded,
                       rowTitle: (viewModel) =>
@@ -118,7 +169,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       //emptyIcon: Icons.content_paste_off_rounded,
                       emptyTitle: "No screening criteria".hardcoded,
                       emptyDescription:
-                          "Optional screener questions can help determine whether a potential participant is qualified to participate in your study."
+                          "Optional screener questions can help determine whether a potential participant is qualified to participate in the study."
                               .hardcoded,
                     );
                   },
@@ -132,7 +183,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-  _showSidesheetWithArgs(ScreenerQuestionFormRouteArgs routeArgs,
+  _showScreenerQuestionSidesheetWithArgs(ScreenerQuestionFormRouteArgs routeArgs,
       BuildContext context, WidgetRef ref) {
     final surveyQuestionFormViewModel =
         ref.read(screenerQuestionFormViewModelProvider(routeArgs));
@@ -141,6 +192,19 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
       formViewModel: surveyQuestionFormViewModel,
       formViewBuilder: (formViewModel) =>
           SurveyQuestionFormView(formViewModel: formViewModel),
+      ignoreAppBar: true,
+    );
+  }
+
+  // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
+  _showConsentItemSidesheetWithArgs(ConsentItemFormRouteArgs routeArgs,
+      BuildContext context, WidgetRef ref) {
+    final formViewModel = ref.read(consentItemFormViewModelProvider(routeArgs));
+    showFormSideSheet<ConsentItemFormViewModel>(
+      context: context,
+      formViewModel: formViewModel,
+      formViewBuilder: (formViewModel) =>
+          ConsentItemFormView(formViewModel: formViewModel),
       ignoreAppBar: true,
     );
   }
