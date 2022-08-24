@@ -7,10 +7,15 @@ class UnderConstruction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyBody(
-      icon: Icons.construction_rounded,
-      title: "Under construction".hardcoded,
-      description: "We are still busy working on this part, check back soon!".hardcoded,
+    return Opacity(
+        opacity: 0.7,
+        child: EmptyBody(
+          icon: Icons.construction_rounded,
+          title: "Under construction".hardcoded,
+          description:
+              "We are still busy working on this part, check back soon!"
+                  .hardcoded,
+        )
     );
   }
 }

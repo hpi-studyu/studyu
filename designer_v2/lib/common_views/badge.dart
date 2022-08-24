@@ -6,12 +6,14 @@ enum BadgeType { filled, outlined, outlineFill, plain }
 class Badge extends StatelessWidget {
   const Badge(
       {required this.label,
+        this.labelStyle,
       this.icon = Icons.circle_rounded,
+      this.iconSize,
       this.color,
       this.borderRadius = 12.0,
       this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       this.type = BadgeType.plain,
-      Key? key})
+      Key? key,})
       : super(key: key);
 
   final IconData? icon;
@@ -20,6 +22,8 @@ class Badge extends StatelessWidget {
   final String label;
   final BadgeType type;
   final EdgeInsets padding;
+  final double? iconSize;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,7 @@ class Badge extends StatelessWidget {
               (icon != null)
                   ? Icon(
                       icon,
-                      size: (theme.iconTheme.size ?? 14.0) * 0.8,
+                      size: iconSize ?? ((theme.iconTheme.size ?? 14.0) * 0.8),
                       color: _getLabelColor(theme)?.faded(0.65),
                     )
                   : const SizedBox.shrink(),
@@ -62,7 +66,7 @@ class Badge extends StatelessWidget {
                   fontSize: (theme.textTheme.caption?.fontSize ?? 14.0) * 0.95,
                   color: _getLabelColor(theme),
                   fontWeight: FontWeight.bold,
-                ),
+                ).merge(labelStyle),
               ),
             ],
           ),

@@ -30,6 +30,27 @@ class DismissButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
+    return KeyboardListener(
+        focusNode: FocusNode(),
+        autofocus: true,
+        onKeyEvent: (key) {
+          if (key.logicalKey.keyLabel == "Escape") {
+            Navigator.maybePop(context);
+          }
+        },
+        child: SecondaryButton(
+          text: text ?? "Cancel".hardcoded,
+          icon: null,
+          //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+          onPressed: () {
+            if (onPressed != null) {
+              onPressed!();
+            } else {
+              Navigator.maybePop(context);
+            }
+          },
+        )
+    );
     return SecondaryButton(
       text: text ?? "Cancel".hardcoded,
       icon: null,
@@ -62,12 +83,12 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
             text: "Save".hardcoded,
             tooltipDisabled: "Please fill out all fields as required".hardcoded,
             icon: null,
-            onPressed: (formViewModel.isValid) ?
-                () => formViewModel.save().then(
-                  // Close the form (side sheet or scaffold route) if future
-                  // completed successfully
-                  (value) => Navigator.maybePop(context).then((_) => print(formViewModel.isValid))
-                ) : null,
+            onPressedFuture: (formViewModel.isValid) ?
+              () => formViewModel.save().then(
+                // Close the form (side sheet or scaffold route) if future
+                // completed successfully
+                (value) => Navigator.maybePop(context)
+              ) : null,
           ));
         }
     ),

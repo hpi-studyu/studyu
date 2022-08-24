@@ -47,6 +47,10 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
     return state.study.value!.getIntervention(interventionId);
   }
 
+  int getParticipantCountForInvite(StudyInvite invite) {
+    return state.study.value!.getParticipantCountForInvite(invite);
+  }
+
   // - IModelActionProvider
 
   @override

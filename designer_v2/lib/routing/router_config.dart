@@ -29,13 +29,14 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_pr
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
-import 'package:studyu_designer_v2/features/study/settings/study_settings_page.dart';
+import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
 import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
+import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:studyu_designer_v2/routing/router_navbars.dart';
+import 'package:studyu_designer_v2/routing/router_utils.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
@@ -138,26 +139,8 @@ class RouterConfig {
         final studyId = state.params[RouteParams.studyId]!;
         return MaterialPage(
             key: RouterKeys.studyKey,
-            /*
-            child: StudyPageScaffold<StudyInfoFormViewModel>(
-              studyId: studyId,
-              formViewModelBuilder: (ref) => ref.read(
-                  studyInfoFormViewModelProvider(studyId)
-              ),
-              formViewBuilder: (formViewModel) => TwoColumnLayout.split(
-                leftWidget: MeasurementSurveyFormView(formViewModel: formViewModel),
-                rightWidget: SurveyPreview(routeArgs: routeArgs),
-                flexLeft: 7,
-                flexRight: 8,
-                scrollLeft: true,
-                scrollRight: false,
-                paddingRight: null,
-              ),
-            )
-            */
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.info(studyId),
@@ -165,7 +148,7 @@ class RouterConfig {
               layoutType: SingleColumnLayoutType.boundedNarrow,
             )
         );
-      }
+      },
   );
 
   static final studyEditEnrollment = GoRoute(
@@ -177,7 +160,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.enrollment(studyId),
@@ -196,7 +178,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.interventions(studyId),
@@ -244,7 +225,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.measurements(studyId),
@@ -292,7 +272,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.test(studyId),
               body: StudyTestScreen(studyId),
               layoutType: SingleColumnLayoutType.stretched,
@@ -309,7 +288,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.recruit(studyId),
               body: StudyRecruitScreen(studyId),
               layoutType: SingleColumnLayoutType.boundedWide,
@@ -326,7 +304,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.monitor(studyId),
               body: StudyMonitorScreen(studyId),
               layoutType: SingleColumnLayoutType.boundedWide,
@@ -343,7 +320,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.analyze(studyId),
               body: StudyAnalyzeScreen(studyId),
               layoutType: SingleColumnLayoutType.boundedWide,
@@ -356,14 +332,8 @@ class RouterConfig {
       name: "studySettings",
       pageBuilder: (context, state) {
         final studyId = state.params[RouteParams.studyId]!;
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
-              body: StudySettingsPage(studyId),
-              layoutType: SingleColumnLayoutType.boundedWide,
-            )
+        return buildModalTransitionPage(context, state,
+          StudySettingsDialog(studyId),
         );
       }
   );

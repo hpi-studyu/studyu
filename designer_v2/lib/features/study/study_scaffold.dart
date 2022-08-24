@@ -3,40 +3,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
-import 'package:studyu_designer_v2/common_views/badge.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
+import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 /// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends ConsumerStatefulWidget {
-  const StudyScaffold(
-      {this.studyId = Config.newStudyId,
-      required this.body,
-      this.layoutType,
-      this.tabs,
-      this.tabsSubnav,
-      this.selectedTab,
-      this.selectedTabSubnav,
-      this.drawer = const AppDrawer(title: 'StudyU'),
-      this.disableActions = false,
-      this.actionsSpacing = 8.0,
-      this.actionsPadding = 12.0,
-      Key? key})
-      : super(key: key);
+  const StudyScaffold({
+    this.studyId = Config.newStudyId,
+    required this.body,
+    this.layoutType,
+    this.tabs,
+    this.tabsSubnav,
+    this.selectedTab,
+    this.selectedTabSubnav,
+    this.drawer = const AppDrawer(title: 'StudyU'),
+    this.disableActions = false,
+    this.actionsSpacing = 2.0,
+    this.actionsPadding = 4.0,
+    this.appbarHeight = 56.0,
+    this.appbarSubnavHeight = 44.0,
+    Key? key,
+  }) : super(key: key);
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
@@ -58,6 +60,9 @@ class StudyScaffold extends ConsumerStatefulWidget {
 
   final SingleColumnLayoutType? layoutType;
 
+  final double appbarHeight;
+  final double appbarSubnavHeight;
+
   @override
   ConsumerState<StudyScaffold> createState() => _StudyScaffoldState();
 }
@@ -70,12 +75,14 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     final controller =
         ref.watch(studyControllerProvider(widget.studyId).notifier);
 
+    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyId, state);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: theme.iconTheme.copyWith(size: theme.iconTheme.size! * 1.2),
         bottom: (widget.tabsSubnav != null)
             ? PreferredSize(
-                preferredSize: const Size.fromHeight(50.0),
+                preferredSize: Size(double.infinity, widget.appbarSubnavHeight),
                 child: Container(
                     //color: theme.colorScheme.primary.withOpacity(0.05),
                     color: theme.scaffoldBackgroundColor.withOpacity(0.15),
@@ -87,12 +94,14 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                           child: TabbedNavbar(
                             tabs: widget.tabsSubnav!,
                             selectedTab: widget.selectedTabSubnav,
+                            height: widget.appbarSubnavHeight,
                             indicator: const BoxDecoration(),
                           ),
                         )
                       ],
                     )))
             : null,
+        toolbarHeight: widget.appbarHeight,
         title: Row(
           children: [
             // Use the title widget slot to render both the title and a
@@ -104,14 +113,15 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             // is stacked behind the app bar, we'd have to manually manage
             // responsive layout conflicts (the tabbed control would be overlaid
             // by the app bar widgets).
-            Expanded(//s
+            Expanded(
               flex: 4,
               child: AsyncValueWidget(
                 value: state.study,
                 data: (study) => Row(
                   children: [
                     Flexible(
-                      child: Text(state.titleText,
+                      child: Text(
+                        state.titleText,
                         maxLines: 1,
                         style: theme.textTheme.titleSmall,
                         overflow: TextOverflow.ellipsis,
@@ -134,15 +144,14 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             ),
             Flexible(
               flex: 5,
-              child: (widget.tabs != null)
-                  ? Container(
-                      constraints: const BoxConstraints(maxWidth: 420),
-                      child: TabbedNavbar(
-                        tabs: widget.tabs!,
-                        selectedTab: widget.selectedTab,
-                      ),
-                    )
-                  : Container(),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: TabbedNavbar(
+                  tabs: tabs,
+                  selectedTab: widget.selectedTab,
+                  height: widget.appbarHeight,
+                ),
+              ),
             ),
           ],
         ),
@@ -154,15 +163,20 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   value: state.study,
                   data: (study) => Row(
                     children: [
-                      (state.isStatusBadgeVisible)
-                          ? StudyStatusBadge(
-                              status: state.studyStatus,
-                              participation: state.studyParticipation,
-                              showPrefixIcon: true,
-                            )
-                          : const SizedBox.shrink(),
                       ...withSpacing(
-                        actionButtons(context),
+                        [
+                          (state.isStatusBadgeVisible)
+                              ? StudyStatusBadge(
+                                  status: state.studyStatus,
+                                  participation: state.studyParticipation,
+                                  showPrefixIcon: true,
+                                )
+                              : const SizedBox.shrink(),
+                          (state.isStatusBadgeVisible)
+                              ? const SizedBox(width: 12.0)
+                              : const SizedBox.shrink(),
+                          ...actionButtons(context),
+                        ],
                         spacing: widget.actionsSpacing,
                         paddingStart: widget.actionsPadding,
                         paddingEnd: widget.actionsPadding,
@@ -171,13 +185,6 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   ),
                   loading: () => Container(), // TODO: loading skeleton
                   error: (e, str) => Container(),
-                ),
-                ActionPopUpMenuButton(
-                  actions: controller.studyActions,
-                  orientation: Axis.vertical,
-                  enabled:
-                      state.study.hasValue, // disable while study is loading
-                  hideOnEmpty: false,
                 ),
               ],
       ),
@@ -200,6 +207,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   List<Widget> actionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
 
+    final theme = Theme.of(context);
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyId).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
@@ -223,7 +233,26 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         }),
       );
       actionButtons.add(publishButton);
+      actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
+
+    if (state.isSettingsEnabled) {
+      actionButtons.add(IconButton(
+        onPressed: controller.onSettingsPressed,
+        icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
+        color: theme.iconTheme.color?.faded(0.8),
+        splashRadius: ThemeConfig.iconSplashRadius(theme),
+      ));
+    }
+
+    actionButtons.add(
+      ActionPopUpMenuButton(
+        actions: controller.studyActions,
+        orientation: Axis.vertical,
+        enabled: state.study.hasValue, // disable while study is loading
+        hideOnEmpty: false,
+      ),
+    );
 
     return actionButtons;
   }

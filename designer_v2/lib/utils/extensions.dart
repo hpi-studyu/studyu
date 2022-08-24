@@ -113,9 +113,9 @@ extension DateTimeAgoX on DateTime {
       }
     } else if (diff.inSeconds >= 1 && inSeconds) {
       if (diff.inSeconds == 1) {
-        return '${diff.inSeconds} minute ago'.hardcoded;
+        return '${diff.inSeconds} second ago'.hardcoded;
       } else {
-        return '${diff.inSeconds} minutes ago'.hardcoded;
+        return '${diff.inSeconds} seconds ago'.hardcoded;
       }
     } else {
       return 'just now'.hardcoded;

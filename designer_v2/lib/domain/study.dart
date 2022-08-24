@@ -9,7 +9,7 @@ enum StudyActionType {
   addCollaborator,
   recruit,
   export,
-  delete
+  delete,
 }
 
 typedef StudyID = String;
@@ -96,6 +96,7 @@ extension StudyDuplicateX on Study {
     copy.resultSharing = ResultSharing.private;
     copy.results = [];
     copy.collaboratorEmails = [];
+    copy.createdAt = DateTime.now();
 
     // Generate a new random UID
     final dummy = Study.withId(userId);
@@ -153,7 +154,7 @@ extension StudyDuplicateX on Study {
 }
 
 extension StudyRegistryX on Study {
-  bool get publishedToRegistry => false; // TODO add to core.Study
+  bool get publishedToRegistry => registryPublished;
   bool get publishedToRegistryResults => resultSharing == ResultSharing.public;
 }
 
@@ -163,5 +164,38 @@ class StudyTemplates {
     newDraft.title = "Unnamed study".hardcoded;
     newDraft.description = "Lorem ipsum".hardcoded;
     return newDraft;
+  }
+}
+
+extension StudyParticipantCountX on Study {
+  int getParticipantCountForInvite(StudyInvite invite) {
+    if (participants?.isEmpty ?? true) {
+      return 0;
+    }
+    int count = 0;
+    for (final participant in participants!) {
+      if (participant.inviteCode == invite.code) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+}
+
+extension StudyPermissionsX on Study {
+  bool canEditDraft(sb.User user) {
+    return status == StudyStatus.draft && canEdit(user);
+  }
+
+  bool canCopy(sb.User user) {
+    return canEdit(user) || registryPublished;
+  }
+
+  bool canDelete(sb.User user) {
+    return isOwner(user) && !published;
+  }
+
+  bool canChangeSettings(sb.User user) {
+    return isOwner(user);
   }
 }

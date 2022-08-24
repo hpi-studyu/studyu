@@ -3,7 +3,7 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 
 enum NotificationType {
-  snackbar, alert
+  snackbar, alert, custom
 }
 
 /// Base class for notifications that are dispatched via [NotificationService]
@@ -69,7 +69,7 @@ class SnackbarIntent extends NotificationIntent {
   final int? duration;
 }
 
-/// Encapsulates a call to [showDialog]
+/// Encapsulates a call to [showDialog] using an alert-style widget
 class AlertIntent extends NotificationIntent {
   static NotificationAction cancelAction = NotificationAction(
       label: "Cancel".hardcoded,

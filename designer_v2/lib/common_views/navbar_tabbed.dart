@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 class NavbarTab {
   NavbarTab({
     required this.title,
     required this.intent,
-    required this.index
+    required this.index,
+    this.enabled = true,
   });
 
   /// The text displayed as the tab's title
@@ -17,6 +22,8 @@ class NavbarTab {
   final RoutingIntent intent;
 
   final int index;
+
+  final bool enabled;
 }
 
 class TabbedNavbar extends ConsumerStatefulWidget {
@@ -24,39 +31,75 @@ class TabbedNavbar extends ConsumerStatefulWidget {
     required this.tabs,
     this.selectedTab,
     this.indicator,
-    Key? key
+    this.height,
+    Key? key,
   }) : super(key: key);
 
   final List<NavbarTab> tabs;
   final NavbarTab? selectedTab;
   final BoxDecoration? indicator;
+  final double? height;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TabbedNavbarState();
 }
 
 class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
-    with TickerProviderStateMixin {
-
+    with TickerProviderStateMixin
+    implements Listenable {
   /// A [TabController] that has its index synced to the currently selected
   /// tab provided by the widget. The widget's parameter may be injected e.g.
   /// via a router
   late final TabController _tabController;
 
-  int get selectedTabIndex => widget.selectedTab?.index ?? widget.tabs[0].index;
+  late int _selectedTabIndex =
+      widget.selectedTab?.index ?? _findFirstEnabledTabIndex();
+  int get selectedTabIndex => _selectedTabIndex;
+  set selectedTabIndex(int idx) {
+    final tab = widget.tabs[idx];
+    final prevIdx = _selectedTabIndex;
+    final int newIdx;
+    if (!tab.enabled) {
+      // prevent selecting disabled tabs
+      newIdx = _findFirstEnabledTabIndex();
+    } else {
+      newIdx = tab.index;
+    }
+    _selectedTabIndex = newIdx;
+
+    if (prevIdx != newIdx) {
+      for (final listener in onTabChangedListeners) {
+        listener();
+      }
+    }
+  }
+
+  NavbarTab get selectedTab => widget.tabs[selectedTabIndex];
+
+  /// Registered listeners that are called immediately when changing the
+  /// currently selected tab
+  ///
+  /// Note: [TabController.addListener] default listeners are only called
+  /// after the animation has completed
+  List<VoidCallback> onTabChangedListeners = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-        length: widget.tabs.length,
-        vsync: this);
+    _tabController = TabController(length: widget.tabs.length, vsync: this);
     _tabController.index = selectedTabIndex;
+    addListener(navigateToTabRoute);
+  }
+
+  revalidateTabSelection() {
+    final currentIdx = selectedTabIndex;
+    selectedTabIndex = currentIdx;
   }
 
   @override
   void didUpdateWidget(TabbedNavbar oldWidget) {
     super.didUpdateWidget(oldWidget);
+    revalidateTabSelection();
     // Sync up the tab controller when a new widget is created
     // (e.g. by navigating to a different page)
     _tabController.animateTo(selectedTabIndex);
@@ -65,24 +108,100 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
   @override
   void dispose() {
     _tabController.dispose();
+    //_tabController.removeListener(resetDisabledTab);
     super.dispose();
   }
 
+  @override
+  void addListener(VoidCallback listener) {
+    onTabChangedListeners.add(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    onTabChangedListeners.remove(listener);
+  }
+
+  void navigateToTabRoute() {
+    if (!selectedTab.enabled) {
+      return;
+    }
+    runAsync(() => ref.read(routerProvider).dispatch(selectedTab.intent));
+  }
+
   void _onSelectTab(int tabIndex) {
-    // Navigate to the page associated with the selected tab
-    ref.read(routerProvider).dispatch(widget.tabs[tabIndex].intent);
+    setState(() {
+      selectedTabIndex = tabIndex;
+    });
+  }
+
+  int _findFirstEnabledTabIndex() {
+    for (final t in widget.tabs) {
+      if (t.enabled) {
+        return t.index;
+      }
+    }
+    throw Exception("Must provide at least one non-disabled tab.");
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TabBar(
-      unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),
-      unselectedLabelStyle: theme.textTheme.labelLarge,
-      indicator: widget.indicator ?? theme.tabBarTheme.indicator,
-      controller: _tabController,
-      tabs: widget.tabs.map((e) => Tab(text: e.title)).toList(),
-      onTap: _onSelectTab,
+    final indicatorSize = (theme.tabBarTheme.indicator as BoxDecoration)
+            .border
+            ?.dimensions
+            .vertical ??
+        0.0;
+
+    decorateIfDisabled({required Widget tabContent, required NavbarTab tab}) {
+      if (tab.enabled) {
+        return tabContent;
+      }
+      return Tooltip(
+        message: "This page is disabled.".hardcoded,
+        child: MouseEventsRegion(
+            builder: (context, state) => tabContent,
+            cursor: SystemMouseCursors.basic),
+      );
+    }
+
+    return Theme(
+      data: theme.copyWith(splashColor: Colors.transparent),
+      child: TabBar(
+        labelPadding: EdgeInsets.zero,
+        unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),
+        unselectedLabelStyle: theme.textTheme.labelLarge,
+        indicator: widget.indicator ?? theme.tabBarTheme.indicator,
+        controller: _tabController,
+        tabs: widget.tabs
+            .map(
+              (t) => decorateIfDisabled(
+                  tabContent: Container(
+                    decoration: (!t.enabled)
+                        ? const BoxDecoration(
+                            color: Colors.white,
+                            /*border: Border(
+                            bottom: BorderSide(width: indicatorSize * 2, color: Colors.red),
+                          )
+                       */
+                          )
+                        : null,
+                    height: (widget.height != null)
+                        ? widget.height! - indicatorSize
+                        : null,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(t.title,
+                          style: (!t.enabled)
+                              ? TextStyle(color: theme.disabledColor.faded(0.5))
+                              : null),
+                    ),
+                  ),
+                  tab: t),
+            )
+            .toList(),
+        onTap: _onSelectTab,
+      ),
     );
   }
 }

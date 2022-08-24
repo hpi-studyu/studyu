@@ -80,6 +80,7 @@ CREATE TABLE public.study (
     description text NOT NULL,
     icon_name text NOT NULL,
     published boolean DEFAULT false NOT NULL,
+    registry_published boolean DEFAULT false NOT NULL,
     questionnaire jsonb NOT NULL,
     eligibility_criteria jsonb NOT NULL,
     observations jsonb NOT NULL,
