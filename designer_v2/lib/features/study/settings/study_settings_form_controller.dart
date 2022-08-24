@@ -5,20 +5,27 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
-// TODO save results
-// TODO figure out study registry visibility
 class StudySettingsFormViewModel extends FormViewModel<Study> {
   StudySettingsFormViewModel({
     required this.studyRepository,
-    required super.formData, // Study
-    //super.autosave = true,
-  });
+    required this.study,
+  }) : super(formData: study.value) {
+    // defer registering listeners so that controls can be initialized properly
+    runAsync(keepControlsSynced);
+  }
 
+  final AsyncValue<Study> study;
   final IStudyRepository studyRepository;
 
-  final FormControl<bool> isPublishedToRegistryControl = FormControl();
-  final FormControl<bool> isPublishedToRegistryResultsControl = FormControl();
+  static const defaultPublishedToRegistry = true;
+  static const defaultPublishedToRegistryResults = false;
+
+  final FormControl<bool> isPublishedToRegistryControl =
+      FormControl(value: defaultPublishedToRegistry);
+  final FormControl<bool> isPublishedToRegistryResultsControl =
+      FormControl(value: defaultPublishedToRegistryResults);
 
   @override
   late final FormGroup form = FormGroup({
@@ -28,19 +35,53 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 
   @override
   void setControlsFrom(Study data) {
-    // TODO figure out registry visibility, how does it work now?
     isPublishedToRegistryControl.value = data.publishedToRegistry;
     isPublishedToRegistryResultsControl.value = data.publishedToRegistryResults;
   }
 
   @override
   Study buildFormData() {
-    return formData!;
+    final study = formData!.exactDuplicate();
+
+    study.registryPublished = isPublishedToRegistryControl.value!;
+    study.resultSharing = (isPublishedToRegistryResultsControl.value!)
+        ? ResultSharing.public
+        : ResultSharing.private;
+
+    return study;
+  }
+
+  keepControlsSynced() {
+    // sync controls so that results cannot be published without publishing
+    // the study design itself
+    isPublishedToRegistryControl.valueChanges.listen((value) {
+      if (value == false) {
+        isPublishedToRegistryResultsControl.value = false;
+      }
+    });
+    isPublishedToRegistryResultsControl.valueChanges.listen((value) {
+      if (value == true) {
+        isPublishedToRegistryControl.value = true;
+      }
+    });
+  }
+
+  @override
+  Future save() {
+    final study = buildFormData();
+    return studyRepository.save(study);
   }
 
   @override
   Map<FormMode, String> get titles => throw UnimplementedError(); // unused
+
+  setLaunchDefaults() {
+    isPublishedToRegistryControl.value = defaultPublishedToRegistry;
+    isPublishedToRegistryResultsControl.value =
+        defaultPublishedToRegistryResults;
+  }
 }
+
 /// Provides the [FormViewModel] responsible for managing the study settings.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
@@ -50,7 +91,7 @@ final studySettingsFormViewModelProvider = Provider.autoDispose
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),
-    formData: state.study.value!,
+    study: state.study,
   );
   ref.onDispose(() {
     print("studySettingsFormViewModelProvider.DISPOSE");

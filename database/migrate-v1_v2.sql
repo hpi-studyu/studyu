@@ -22,6 +22,18 @@ CREATE VIEW public.study_progress_export AS
     public.subject_progress
   WHERE (study_subject.id = subject_progress.subject_id);
 
+
+--
+-- Name: study; Type: VIEW; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE public.study
+  ADD IF NOT EXISTS registry_published boolean DEFAULT false NOT NULL;
+
+UPDATE public.study
+    SET registry_published = true
+    WHERE result_sharing = 'public';
+
 -- ============================ ROW LEVEL SECURITY POLICIES ======================================
 
 --

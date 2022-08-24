@@ -18,20 +18,22 @@ class EnrolledBadge extends StatelessWidget {
 
     if (enrolledCount == 0) {
       return Tooltip(
-          message:
-              "Nobody has enrolled in the study with this key yet.".hardcoded,
-          child: Badge(
-            icon: null,
-            label: "-",
-            color: mutedTextStyle.color,
-          ),
+        message:
+            "Nobody has enrolled in the study with this code yet".hardcoded,
+        child: Badge(
+          icon: null,
+          label: "-",
+          color: mutedTextStyle.color,
+        ),
       );
     }
 
     return Tooltip(
-        message:
-            "$enrolledCount participant(s) enrolled in the study using this key"
-                .hardcoded,
+        message: (enrolledCount == 1)
+            ? "$enrolledCount participant is enrolled in the study with this code"
+            .hardcoded
+            : "$enrolledCount participants are enrolled in the study with this code"
+            .hardcoded,
         child: Badge(
           icon: Icons.check_circle_rounded,
           iconSize: theme.iconTheme.size,

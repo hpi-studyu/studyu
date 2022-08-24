@@ -26,6 +26,8 @@ class ThemeConfig {
           height: 1.35,
           color: theme.colorScheme.onSurface.withOpacity(0.25)
       );
+
+  static double iconSplashRadius(ThemeData theme) => 24.0;
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {

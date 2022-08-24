@@ -198,6 +198,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       },
       rethrowErrors: true,
       runOptimistically: runOptimistically,
+      completeFutureOptimistically: runOptimistically,
     );
 
     return saveOperation.execute().then((_) => get(modelId));
@@ -232,6 +233,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         emitError(modelStreamControllers[modelId], e, stackTrace);
       },
       runOptimistically: runOptimistically,
+      completeFutureOptimistically: runOptimistically,
     );
 
     return deleteOperation.execute();

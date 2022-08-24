@@ -46,6 +46,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   late List<StudyResult> results = [];
   @JsonKey(name: 'collaborator_emails')
   late List<String> collaboratorEmails = [];
+  @JsonKey(name: 'registry_published')
+  late bool registryPublished = false;
 
   @JsonKey(name: 'fhir_questionnaire')
   Questionnaire? fhirQuestionnaire;

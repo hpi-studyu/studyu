@@ -60,6 +60,10 @@ class StudyControllerState extends StudyControllerBaseState
       (study.value != null &&
           (study.value!.canEdit(super.currentUser) ||
               study.value!.publishedToRegistryResults));
+
+  @override
+  get isSettingsEnabled =>
+      study.value != null && study.value!.canChangeSettings(super.currentUser!);
 }
 
 extension StudyControllerStateUnsafeProps on StudyControllerState {

@@ -19,6 +19,7 @@ import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 /// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends ConsumerStatefulWidget {
@@ -32,8 +33,8 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.selectedTabSubnav,
     this.drawer = const AppDrawer(title: 'StudyU'),
     this.disableActions = false,
-    this.actionsSpacing = 8.0,
-    this.actionsPadding = 12.0,
+    this.actionsSpacing = 2.0,
+    this.actionsPadding = 4.0,
     this.appbarHeight = 56.0,
     this.appbarSubnavHeight = 44.0,
     Key? key,
@@ -162,15 +163,20 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   value: state.study,
                   data: (study) => Row(
                     children: [
-                      (state.isStatusBadgeVisible)
-                          ? StudyStatusBadge(
-                              status: state.studyStatus,
-                              participation: state.studyParticipation,
-                              showPrefixIcon: true,
-                            )
-                          : const SizedBox.shrink(),
                       ...withSpacing(
-                        actionButtons(context),
+                        [
+                          (state.isStatusBadgeVisible)
+                              ? StudyStatusBadge(
+                                  status: state.studyStatus,
+                                  participation: state.studyParticipation,
+                                  showPrefixIcon: true,
+                                )
+                              : const SizedBox.shrink(),
+                          (state.isStatusBadgeVisible)
+                              ? const SizedBox(width: 12.0)
+                              : const SizedBox.shrink(),
+                          ...actionButtons(context),
+                        ],
                         spacing: widget.actionsSpacing,
                         paddingStart: widget.actionsPadding,
                         paddingEnd: widget.actionsPadding,
@@ -179,13 +185,6 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   ),
                   loading: () => Container(), // TODO: loading skeleton
                   error: (e, str) => Container(),
-                ),
-                ActionPopUpMenuButton(
-                  actions: controller.studyActions,
-                  orientation: Axis.vertical,
-                  enabled:
-                      state.study.hasValue, // disable while study is loading
-                  hideOnEmpty: false,
                 ),
               ],
       ),
@@ -208,6 +207,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   List<Widget> actionButtons(BuildContext context) {
     List<Widget> actionButtons = [];
 
+    final theme = Theme.of(context);
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyId).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
@@ -231,7 +233,26 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         }),
       );
       actionButtons.add(publishButton);
+      actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
+
+    if (state.isSettingsEnabled) {
+      actionButtons.add(IconButton(
+        onPressed: controller.onSettingsPressed,
+        icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
+        color: theme.iconTheme.color?.faded(0.8),
+        splashRadius: ThemeConfig.iconSplashRadius(theme),
+      ));
+    }
+
+    actionButtons.add(
+      ActionPopUpMenuButton(
+        actions: controller.studyActions,
+        orientation: Axis.vertical,
+        enabled: state.study.hasValue, // disable while study is loading
+        hideOnEmpty: false,
+      ),
+    );
 
     return actionButtons;
   }

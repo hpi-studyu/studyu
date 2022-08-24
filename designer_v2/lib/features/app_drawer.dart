@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -10,9 +11,15 @@ import 'package:studyu_designer_v2/routing/router_utils.dart';
 typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
 class DrawerEntry {
-  const DrawerEntry({required this.title, this.icon, this.onSelected});
+  const DrawerEntry({
+    required this.title,
+    this.icon,
+    this.onSelected,
+    this.helpText,
+  });
   final String title;
   final IconData? icon;
+  final String? helpText;
   final OnEntrySelectedCallback? onSelected;
 
   void onClick(BuildContext context, WidgetRef ref) {
@@ -24,7 +31,11 @@ class DrawerEntry {
 
 class GoRouterDrawerEntry extends DrawerEntry {
   const GoRouterDrawerEntry({
-    required super.title, required this.intent, super.icon});
+    required super.title,
+    super.icon,
+    super.helpText,
+    required this.intent,
+  });
   final RoutingIntent intent;
 
   @override
@@ -39,7 +50,7 @@ class AppDrawer extends ConsumerStatefulWidget {
     required this.title,
     this.width = 250,
     this.leftPaddingEntries = 28.0,
-    Key? key
+    Key? key,
   }) : super(key: key);
 
   final String title;
@@ -62,14 +73,19 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       GoRouterDrawerEntry(
         title: 'Shared With Me'.hardcoded,
         icon: Icons.folder_shared_rounded,
-        intent: RoutingIntents.studiesShared
+        intent: RoutingIntents.studiesShared,
       ),
     ],
     [
       GoRouterDrawerEntry(
         title: 'Study Registry'.hardcoded,
         icon: Icons.public,
-        intent: RoutingIntents.publicRegistry
+        intent: RoutingIntents.publicRegistry,
+        helpText: "The study registry is a public collection of studies "
+                "conducted on the StudyU \nplatform. In the spirit of "
+                "open science, it fosters collaboration & transparency "
+                "\namong all researchers & clinicians on the platform."
+            .hardcoded,
       ),
     ]
   ];
@@ -86,13 +102,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
           ref.read(authControllerProvider.notifier).signOut();
-        }
+        },
       ),
     ],
   ];
 
-  List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries]
-      .expand((e) => e).toList();
+  List<DrawerEntry> get allEntries =>
+      [...topEntries, ...bottomEntries].expand((e) => e).toList();
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
@@ -115,10 +131,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   int _getCurrentRouteIndex() {
     final currentRouteSettings = readCurrentRouteSettingsFrom(context);
     final idx = allEntries.indexWhere((e) {
-        if (e is! GoRouterDrawerEntry) {
-          return false;
-        }
-        return e.intent.matches(currentRouteSettings);
+      if (e is! GoRouterDrawerEntry) {
+        return false;
+      }
+      return e.intent.matches(currentRouteSettings);
     });
     return idx;
   }
@@ -134,37 +150,35 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final theme = Theme.of(context);
 
     return Theme(
-        data: theme.copyWith(splashColor: Colors.transparent), // disable splash
-        child: Drawer(
-          width: widget.width.toDouble(),
-          child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: ListTileTheme(
-                    selectedColor: theme.colorScheme.primary,
-                    selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
-                    child: ListView(
-                      // Important: Remove any padding from the ListView.
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: false,
-                      children: [
-                        _buildLogo(context),
-                        ..._buildTopMenuItems(context),
-                      ],
-                    ),
-                  ),
+      data: theme.copyWith(splashColor: Colors.transparent), // disable splash
+      child: Drawer(
+        width: widget.width.toDouble(),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: ListTileTheme(
+                selectedColor: theme.colorScheme.primary,
+                selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
+                child: ListView(
+                  // Important: Remove any padding from the ListView.
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: false,
+                  children: [
+                    _buildLogo(context),
+                    ..._buildTopMenuItems(context),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0),
-                  child: Column(
-                      children: _buildBottomMenuItems(context)
-                  ),
-                )
-              ]
-          )
-      )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: Column(children: _buildBottomMenuItems(context)),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -175,8 +189,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       padding: EdgeInsets.all(widget.leftPaddingEntries),
       child: SelectableText(
         widget.title,
-        style: textTheme.headline5
-            ?.copyWith(fontWeight: FontWeight.bold),
+        style: textTheme.headline5?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -193,7 +206,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       widgets.add(const SizedBox(height: 8));
     }
     // Slice off the last section divider
-    return widgets.sublist(0, widgets.length-3);
+    return widgets.sublist(0, widgets.length - 3);
   }
 
   List<Widget> _buildTopMenuItems(BuildContext context) {
@@ -210,13 +223,24 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final isSelected = entryIdx == _selectedIdx;
 
     return ListTile(
-      leading: Icon(entry.icon,
+      trailing: (entry.helpText != null)
+          ? IntrinsicWidth(
+              child: Row(
+                children: [
+                  HelpIcon(tooltipText: entry.helpText),
+                  const SizedBox(width: 24.0),
+                ],
+              ),
+            )
+          : null,
+      leading: Icon(
+        entry.icon,
         size: theme.iconTheme.size! * 1.2,
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(
-          entry.title,
-          style: isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null,
+        entry.title,
+        style: isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null,
       ),
       contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
       selected: isSelected,

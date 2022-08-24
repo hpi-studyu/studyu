@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class FormTableRow {
@@ -20,15 +21,15 @@ class FormTableRow {
 
 /// Renders a list of [FormTableRow]s in a two-column tabular layout
 class FormTableLayout extends StatelessWidget {
-  const FormTableLayout(
-      {required this.rows,
-      this.columnWidths = const {
-        0: FixedColumnWidth(160.0),
-        1: FlexColumnWidth(),
-      },
-      this.rowDivider,
-      Key? key})
-      : super(key: key);
+  const FormTableLayout({
+    required this.rows,
+    this.columnWidths = const {
+      0: FixedColumnWidth(160.0),
+      1: FlexColumnWidth(),
+    },
+    this.rowDivider,
+    Key? key,
+  }) : super(key: key);
 
   final List<FormTableRow> rows;
   final Map<int, TableColumnWidth> columnWidths;
@@ -63,22 +64,9 @@ class FormTableLayout extends StatelessWidget {
                 ? const SizedBox(width: 8.0)
                 : const SizedBox.shrink(),
             (row.labelHelpText != null)
-                ? Tooltip(
-                    message: row.labelHelpText,
-                    child: MouseEventsRegion(
-                      builder: (context, states) {
-                        final iconColor = theme.iconTheme.color?.withOpacity(
-                                (states.contains(MaterialState.hovered))
-                                    ? 0.5
-                                    : 0.3) ??
-                            theme.colorScheme.onSurface.withOpacity(0.3);
-                        return Icon(
-                          Icons.help_outline_rounded,
-                          size: theme.textTheme.caption!.fontSize! + 2.0,
-                          color: iconColor,
-                        );
-                      },
-                    ),
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 2.0),
+                    child: HelpIcon(tooltipText: row.labelHelpText),
                   )
                 : const SizedBox.shrink(),
           ]),
