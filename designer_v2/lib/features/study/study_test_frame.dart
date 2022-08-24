@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
@@ -29,16 +33,34 @@ class PreviewFrame extends StudyPageWidget {
     //measurementsFormViewModelProvider
     String formType = 'default';
 
-    // todo refactor this
     if (routeArgs is InterventionFormRouteArgs ) {
-      final extra = routeArgs as InterventionFormRouteArgs;
       formType = 'intervention';
-      frameController!.navigate(page: formType, extra: extra.interventionId);
+      frameController!.navigate(page: formType, extra: (routeArgs as InterventionFormRouteArgs).interventionId);
     } else if (routeArgs is MeasurementFormRouteArgs) {
-      final extra = routeArgs as MeasurementFormRouteArgs;
       formType = 'observation';
-      frameController!.navigate(page: formType, extra: extra.measurementId);
+      frameController!.navigate(page: formType, extra: (routeArgs as MeasurementFormRouteArgs).measurementId);
     }
+
+    final formViewModelCurrent = ref.read(studyFormViewModelProvider(studyId));
+    formViewModelCurrent.form.valueChanges.listen((event) {
+      // event is a FormGroup from StudyFormViewModel.form containing the updated values
+      print("Event: $event");
+
+      // formViewModelCurrent.buildFormData() returns the old data
+      print("Designer: ${formViewModelCurrent.buildFormData().toJson()}");
+
+      final formViewModelTemp = StudyFormViewModel(
+        router: formViewModelCurrent.router,
+        studyRepository: formViewModelCurrent.studyRepository,
+        authRepository: formViewModelCurrent.authRepository,
+        formData: ref.watch(studyControllerProvider(studyId)).study.value,
+      );
+      formViewModelTemp.form.value = event;
+      // still old values :(
+      final formJson = jsonEncode(formViewModelTemp.buildFormData().toJson());
+      print("Designer3: $formJson");
+      frameController!.send(formJson);
+    });
 
     frameController!.listen();
 

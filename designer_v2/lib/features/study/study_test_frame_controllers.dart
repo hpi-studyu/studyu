@@ -114,9 +114,12 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    //html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
-    // For debug purposes: postMessage(message, '*')
-    iFrameElement.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
+   // For debug purposes: postMessage(message, '*')
+    //iFrameElement.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
+    //iFrameElement.contentWindow?.postMessage(message, '*');
+    // todo refactor
+    html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
+    frame.contentWindow?.postMessage(message, '*');
   }
 }
 
@@ -156,3 +159,9 @@ class MobileController extends PlatformController {
     throw UnimplementedError();
   }
 }
+
+/*class MessageData {
+  final String title;
+  final String message;
+  MessageData(this.title, this.message);
+}*/

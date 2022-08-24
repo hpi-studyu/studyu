@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -6,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
-import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -53,6 +53,17 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       print("Got study: " + model.selectedStudy.toString());
 
       await preview.runCommands();
+      print("init listener");
+
+      html.window.onMessage.listen((event) {
+        final message = event.data as String;
+        final messageContent = jsonDecode(message) as Map<String, dynamic>;
+        //if (messageContent['intervention'] != null) {
+        //  print(messageContent['intervention']);
+          model.selectedStudy = Study.fromJson(messageContent);
+          print("App:" + messageContent.toString());
+        //}
+      });
       if (preview.hasRoute()) {
         print("has route: " + preview.selectedRoute);
 
@@ -61,10 +72,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           if (!mounted) return;
             // if we remove the await, we can push multiple times. warning: do not run in while(true)
             final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
-            //if (!mounted) return;
-            //print("STILL MOUNTED");
             // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
-            // todo move webcontent to other class
+            // todo refactor webcontent
             html.window.parent.postMessage("routeFinished", '*');
             return;
         }
@@ -77,24 +86,11 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
-        // GET SUBJECT
-        // check if a study subscription is necessary
-        //if (preview.selectedRoute == Routes.dashboard || preview.selectedRoute == Routes.task0) {
-        //if (await preview.isSubscribed() && preview.selectedRoute != '/observation' && preview.selectedRoute != '/intervention') {
-        //  model.activeSubject = preview.subject;
-        //} else {
         model.activeSubject = await preview.createFakeSubject(preview.extra);
-          // print(model.activeSubject.toJson().toString());
-          // print(model.activeSubject.study.observations.first.toString());
-        //}
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
-          // user should (must?) not be subscribed to a study to view the consent
-          // we need to create a fake activeSubject (and maybe also unsubscribe a user if he is already subscribed)
-          //model.activeSubject = await preview.createFakeSubject();
           if (!mounted) return;
-          //final consentGiven = Navigator.pushReplacementNamed(context, Routes.consent,);
           final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
           html.window.parent.postMessage("routeFinished", '*');
           return;
@@ -112,7 +108,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         if (preview.selectedRoute == '/observation') {
           print("getting tasks for observation");
           print(model.selectedStudy.observations.first.id);
-          // taskId = model.activeSubject.study.observations.first.id
           final tasks = <Task>[
             ...model.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
@@ -120,7 +115,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           if (!mounted) return;
           final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
           print("FINISHED OBSERVATION");
-          //Navigator.pushReplacementNamed(context, Routes.task0);
           html.window.parent.postMessage("routeFinished", '*');
           return;
         }
@@ -128,30 +122,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           print("getting tasks for intervention");
-          /*for (var element in model.activeSubject.selectedInterventions) {
-            print(element);
-          }*/
-          /*final tasks = <Task>[
-            ...model.activeSubject.selectedInterventions
-                .map((intervention) => intervention.tasks.where((task) => task.id == preview.extra))
-                .expand((task) => task)
-                .toList()
-          ];*/
-          //final tasks = model.activeSubject.selectedInterventions.where((intervention) => intervention.id == preview.extra).first.tasks;
-          //print("intervention with tasks: " + tasks.toString());
-          //final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
           model.selectedStudy.schedule.includeBaseline = false;
-          /*int skipdays = 0;
-          for (var progress in model.activeSubject.progress) {
-            if (progress.interventionId != preview.extra) {
-              skipdays++;
-            }
-          }
-          print("going back : " + skipdays.toString());
-          if (skipdays > 0) {
-            print("larger than 0");
-            await model.activeSubject.setStartDateBackBy(days: skipdays);
-          }*/
           if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
           print("FINISHED INTERVENTION");
@@ -175,7 +146,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     // todo is this necessary to run?
     if (!mounted) return;
     if (context.read<AppState>().isPreview) {
-      //print("isPreview true");
       previewSubjectIdKey();
     }
 

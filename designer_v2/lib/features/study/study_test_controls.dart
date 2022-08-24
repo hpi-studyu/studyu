@@ -3,18 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-/*
-class FrameControls {
 
-  Widget previewControls(WidgetRef ref, StudyTestControllerState state, PlatformController frameController) {
-
-  }
-}*/
-
-// todo move this either to stuy_test_fame_views or do something like PreviewWidget(
-// routeArgs,
-// frameControls: (PlatformController frameController, WidgetRef ref) => Column(...);
-// )
+// todo move this either to study_test_fame_views or do something like PreviewWidget(
 class FrameControlsWidget extends ConsumerWidget {
   final PlatformController frameController;
   final StudyTestControllerState state;
@@ -44,21 +34,3 @@ class FrameControlsWidget extends ConsumerWidget {
     );
   }
 }
-
-/*class FrameControlsWidget extends ConsumerStatefulWidget {
-  final String studyId;
-  final Widget controls;
-
-  const FrameControlsWidget(this.studyId, this.controls, {Key? key}) : super(key: key);
-
-  @override
-  _FrameControlsState createState() => _FrameControlsState();
-}
-
-class _FrameControlsState extends ConsumerState<FrameControlsWidget> {
-
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-}*/
