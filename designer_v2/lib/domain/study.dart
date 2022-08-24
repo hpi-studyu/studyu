@@ -2,6 +2,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 enum StudyActionType {
   edit,
