@@ -114,6 +114,7 @@ extension StudyDuplicateX on Study {
     copy.resultSharing = ResultSharing.private;
     copy.results = [];
     copy.collaboratorEmails = [];
+    copy.createdAt = DateTime.now();
 
     // Generate a new random UID
     final dummy = Study.withId(userId);
