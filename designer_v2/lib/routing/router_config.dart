@@ -29,13 +29,14 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_pr
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
-import 'package:studyu_designer_v2/features/study/settings/study_settings_page.dart';
+import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
 import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/routing/router_utils.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
@@ -147,7 +148,7 @@ class RouterConfig {
               layoutType: SingleColumnLayoutType.boundedNarrow,
             )
         );
-      }
+      },
   );
 
   static final studyEditEnrollment = GoRoute(
@@ -331,13 +332,8 @@ class RouterConfig {
       name: "studySettings",
       pageBuilder: (context, state) {
         final studyId = state.params[RouteParams.studyId]!;
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              body: StudySettingsPage(studyId),
-              layoutType: SingleColumnLayoutType.boundedWide,
-            )
+        return buildModalTransitionPage(context, state,
+          StudySettingsDialog(studyId),
         );
       }
   );

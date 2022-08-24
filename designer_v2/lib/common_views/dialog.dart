@@ -83,32 +83,31 @@ class StandardDialog extends StatelessWidget {
             height: height,
             child: IntrinsicHeight(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  padding.left,
-                  padding.top,
-                  padding.right,
-                  padding.bottom,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    (titleWidget != null)
-                        ? titleWidget
-                        : const SizedBox.shrink(),
-                    (titleWidget != null)
-                        ? SizedBox(height: padding.top * 3 / 4)
-                        : const SizedBox.shrink(),
-                    Flexible(
-                      child: SingleChildScrollView(child: body),
-                    ),
-                    SizedBox(height: padding.bottom * 3 / 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: withSpacing(actionButtons, spacing: 8.0),
-                    ),
-                  ],
-                ),
-              ),
+                  padding: EdgeInsets.fromLTRB(
+                    padding.left,
+                    padding.top,
+                    padding.right,
+                    padding.bottom,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      (titleWidget != null)
+                          ? titleWidget
+                          : const SizedBox.shrink(),
+                      (titleWidget != null)
+                          ? SizedBox(height: padding.top * 3 / 4)
+                          : const SizedBox.shrink(),
+                      Expanded(
+                        child: SingleChildScrollView(child: body),
+                      ),
+                      SizedBox(height: padding.bottom * 3 / 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: withSpacing(actionButtons, spacing: 8.0),
+                      ),
+                    ],
+                  )),
             ),
           ),
         ),

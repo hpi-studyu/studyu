@@ -8,7 +8,6 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
-import 'package:studyu_designer_v2/repositories/study_repository_events.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -74,31 +73,6 @@ class StudyRepository extends ModelRepository<Study>
     return deleteParticipantsOperation.execute();
   }
 
-  /*
-  @override
-  Future<void> deleteProgress(Study study) async {
-    final wrappedModel = get(study.id);
-    if (wrappedModel == null) {
-      throw ModelNotFoundException();
-    }
-
-    final List<SubjectProgress> progressRecords = [
-      ...(study.participantsProgress ?? [])
-    ];
-
-    final deleteStudyProgressOperation = OptimisticUpdate(
-        applyOptimistic: () => study.participantsProgress = [],
-        apply: () => apiClient.deleteStudyProgress(study, progressRecords),
-        rollback: () => study.participantsProgress = progressRecords,
-        onUpdate: () => emitUpdate(),
-        onError: (e, stackTrace) {
-          emitError(modelStreamControllers[study.id], e, stackTrace);
-        });
-
-    return deleteStudyProgressOperation.execute();
-  }
-   */
-
   @override
   Future<void> launch(Study study) async {
     final wrappedModel = get(study.id);
@@ -111,31 +85,18 @@ class StudyRepository extends ModelRepository<Study>
     final publishOperation = OptimisticUpdate(
         applyOptimistic: () => {}, // nothing to do here
         apply: () => save(publishedCopy, runOptimistically: false),
-        /*apply: () async {
-          /*
-          return deleteParticipants(study)
-              .then((_) => save(publishedCopy, runOptimistically: false))
-              .then(emitModelEvent(StudyLaunched(study.id, study)));
-
-           */
-          print("launching");
-          await deleteParticipants(study); // cascade deletes progress records
-          print("deleted participants");
-          await save(publishedCopy, runOptimistically: false);
-          print("saved");
-          emitModelEvent(StudyLaunched(study.id, study));
-        },*/
         rollback: () {}, // nothing to do here
         onUpdate: () => emitUpdate(),
         onError: (e, stackTrace) {
           emitError(modelStreamControllers[study.id], e, stackTrace);
-        });
+        },
+    );
 
     return publishOperation.execute();
   }
 
   @override
-  List<ModelAction<StudyActionType>> availableActions(Study study) {
+  List<ModelAction> availableActions(Study study) {
     Future<void> onDeleteCallback() {
       return delete(study.id)
           .then((value) =>
@@ -147,6 +108,8 @@ class StudyRepository extends ModelRepository<Study>
                   .show(Notifications.studyDeleted)));
     }
 
+    final currentUser = authRepository.currentUser!;
+
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
       ModelAction(
@@ -155,45 +118,44 @@ class StudyRepository extends ModelRepository<Study>
         onExecute: () {
           ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(study.id));
         },
-        isAvailable: study.isOwner(authRepository.currentUser!) &&
-            study.status == StudyStatus.draft,
+        isAvailable: study.canEditDraft(currentUser),
       ),
-      ModelAction(
+      ModelAction( // same as "Copy" but for non-drafts
         type: StudyActionType.duplicate,
-        label: "Copy draft".hardcoded,
+        label: "Copy as draft".hardcoded,
         onExecute: () {
           return duplicateAndSave(study).then((value) =>
               ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
-        isAvailable: study.isOwner(authRepository.currentUser!),
+        isAvailable: study.status != StudyStatus.draft && study.canCopy(currentUser),
       ),
+      ModelAction(
+        type: StudyActionType.duplicate,
+        label: "Copy".hardcoded,
+        onExecute: () {
+          return duplicateAndSave(study).then((value) =>
+              ref.read(routerProvider).dispatch(RoutingIntents.studies));
+        },
+        isAvailable: study.status == StudyStatus.draft && study.canCopy(currentUser),
+      ),
+      /*
+      TODO re-implement this properly
       ModelAction(
         type: StudyActionType.addCollaborator,
         label: "Add collaborator".hardcoded,
         onExecute: () {
-          // TODO open modal to add collaborator
           print("Adding collaborator: ${study.title ?? ''}");
         },
         isAvailable: study.isOwner(authRepository.currentUser!),
       ),
-      ModelAction(
-        type: StudyActionType.recruit,
-        label: "Recruit participants".hardcoded,
-        onExecute: () {
-          ref
-              .read(routerProvider)
-              .dispatch(RoutingIntents.studyRecruit(study.id));
-        },
-        isAvailable: study.isOwner(authRepository.currentUser!) &&
-            study.status == StudyStatus.running,
-      ),
+       */
       ModelAction(
         type: StudyActionType.export,
-        label: "Export results data".hardcoded,
+        label: "Export results".hardcoded,
         onExecute: () {
           runAsync(() => study.exportData.downloadAsZip());
         },
-        isAvailable: study.canExport(authRepository.currentUser!),
+        isAvailable: study.canExport(currentUser),
       ),
       ModelAction(
           type: StudyActionType.delete,
@@ -209,9 +171,9 @@ class StudyRepository extends ModelRepository<Study>
                       isDestructive: true),
                 ]);
           },
-          isAvailable:
-              study.isOwner(authRepository.currentUser!) && !study.published,
-          isDestructive: true),
+          isAvailable: study.canDelete(currentUser),
+          isDestructive: true,
+      ),
     ];
 
     return actions.where((action) => action.isAvailable).toList();

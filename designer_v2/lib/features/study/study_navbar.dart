@@ -9,6 +9,7 @@ abstract class IStudyNavViewModel {
   bool get isRecruitTabEnabled;
   bool get isMonitorTabEnabled;
   bool get isAnalyzeTabEnabled;
+  bool get isSettingsEnabled;
 }
 
 class StudyNav {

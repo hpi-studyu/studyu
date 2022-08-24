@@ -1,3 +1,5 @@
+import 'package:studyu_designer_v2/utils/performance.dart';
+
 typedef VoidCallback = void Function();
 typedef VoidFutureCallback = Future<void> Function();
 typedef ErrorCallback = void Function(Object error, StackTrace? stackTrace);
@@ -13,6 +15,7 @@ class OptimisticUpdate {
     this.onError,
     this.rethrowErrors = false,
     this.runOptimistically = true,
+    this.completeFutureOptimistically = true,
   });
 
   final VoidCallback applyOptimistic;
@@ -29,13 +32,19 @@ class OptimisticUpdate {
   /// Flag indicating whether the optimistic update should be run
   final bool runOptimistically;
 
+  final bool completeFutureOptimistically;
+
   Future<void> execute() async {
     if (runOptimistically) {
       applyOptimistic();
     }
     _runUpdateHandlerIfAny();
     try {
-      await apply();
+      if (completeFutureOptimistically) {
+        runAsync(apply);
+      } else {
+        await apply();
+      }
       _runUpdateHandlerIfAny();
     } catch(e, stackTrace) {
       if (onError != null) {

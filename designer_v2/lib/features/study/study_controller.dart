@@ -56,7 +56,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
   }
 
-  List<ModelAction<StudyActionType>> get studyActions {
+  List<ModelAction> get studyActions {
     final study = state.study.value;
     if (study == null) {
       return [];
@@ -66,13 +66,14 @@ class StudyController extends StudyBaseController<StudyControllerState> {
         studyRepository
             .availableActions(study)
             .where((action) => action.type != StudyActionType.edit)
-            .toList() as List<ModelAction<StudyActionType>>,
+            .toList() as List<ModelAction>,
         studyActionIcons);
   }
 
-  Future<void> publishStudy() {
-    // TODO: save study repository form view model setting
-    return studyRepository.launch(state.study.value!);
+  Future publishStudy({toRegistry = false}) {
+    final study = state.study.value!;
+    study.registryPublished = toRegistry;
+    return studyRepository.launch(study);
   }
 
   void onChangeStudyParticipation() {
@@ -81,6 +82,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 
   void onAddParticipants() {
     router.dispatch(RoutingIntents.studyRecruit(studyId));
+  }
+
+  void onSettingsPressed() {
+    router.dispatch(RoutingIntents.studySettings(studyId));
   }
 
   @override

@@ -20,6 +20,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
     final state = ref.watch(studyControllerProvider(studyId));
     final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
+    formViewModel.setLaunchDefaults();
 
     final theme = Theme.of(context);
 
@@ -90,34 +91,39 @@ class PublishConfirmationDialog extends StudyPageWidget {
               style: const TextStyle(fontWeight: FontWeight.bold)
           ),
           const SizedBox(height: 32.0),
-          Container(
-            color: ThemeConfig.containerColor(theme),
-            child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ReactiveCheckbox(
-                      formControl: formViewModel.isPublishedToRegistryControl,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Flexible(
-                        child: FormControlLabel(
+          ReactiveForm(
+            formGroup: formViewModel.form,
+            child: ReactiveFormConsumer(builder: (context, form, child) {
+              return Container(
+                color: ThemeConfig.containerColor(theme),
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ReactiveCheckbox(
                           formControl: formViewModel.isPublishedToRegistryControl,
-                          text: "To facilitate collaboration among researchers & "
-                              "clinicians, I agree that the my study will be published "
-                              "to the StudyU study registry for others. "
-                              "(Other researchers & clinicians will be able to contact "
-                              "you and review the study design, but they won't "
-                              "be able to access participation or result data unless "
-                              "shared explicitly)".hardcoded
+                        ),
+                        const SizedBox(width: 8.0),
+                        Flexible(
+                            child: FormControlLabel(
+                                formControl: formViewModel.isPublishedToRegistryControl,
+                                text: "To facilitate collaboration among researchers & "
+                                    "clinicians, I agree that the my study will be published "
+                                    "to the StudyU study registry for others. "
+                                    "(Other researchers & clinicians will be able to contact "
+                                    "you and review the study design, but they won't "
+                                    "be able to access participation or result data unless "
+                                    "shared explicitly)".hardcoded
+                            )
                         )
+                      ],
                     )
-                  ],
-                )
-            ),
-          )
+                ),
+              );
+            }),
+          ),
         ],
       ),
       actionButtons: [
@@ -125,7 +131,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
         PrimaryButton(
             text: "Launch".hardcoded,
             icon: null,
-            onPressedFuture: () => controller.publishStudy()
+            onPressedFuture: () => controller.publishStudy(
+                toRegistry: formViewModel.isPublishedToRegistryControl.value)
           //.whenComplete(() => Navigator.maybePop(context)),
         ),
       ],

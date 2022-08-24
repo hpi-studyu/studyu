@@ -10,7 +10,7 @@ enum StudyActionType {
   addCollaborator,
   recruit,
   export,
-  delete
+  delete,
 }
 
 // TODO: Add status field to core package domain model
@@ -171,7 +171,7 @@ extension StudyDuplicateX on Study {
 }
 
 extension StudyRegistryX on Study {
-  bool get publishedToRegistry => false; // TODO add to core.Study
+  bool get publishedToRegistry => registryPublished;
   bool get publishedToRegistryResults => resultSharing == ResultSharing.public;
 }
 
@@ -196,5 +196,23 @@ extension StudyParticipantCountX on Study {
       }
     }
     return count;
+  }
+}
+
+extension StudyPermissionsX on Study {
+  bool canEditDraft(sb.User user) {
+    return status == StudyStatus.draft && canEdit(user);
+  }
+
+  bool canCopy(sb.User user) {
+    return canEdit(user) || registryPublished;
+  }
+
+  bool canDelete(sb.User user) {
+    return isOwner(user) && !published;
+  }
+
+  bool canChangeSettings(sb.User user) {
+    return isOwner(user);
   }
 }
