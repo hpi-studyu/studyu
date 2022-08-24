@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -50,12 +51,22 @@ class AppDrawer extends ConsumerStatefulWidget {
     required this.title,
     this.width = 250,
     this.leftPaddingEntries = 28.0,
+    this.logoPaddingVertical = 24.0,
+    this.logoPaddingHorizontal = 48.0,
+    this.logoMaxHeight = 30,
+    this.logoSectionMinHeight = 110,
+    this.logoSectionMaxHeight = double.infinity,
     Key? key,
   }) : super(key: key);
 
   final String title;
   final int width;
   final double leftPaddingEntries;
+  final double logoPaddingVertical;
+  final double logoPaddingHorizontal;
+  final double logoMaxHeight;
+  final double logoSectionMinHeight;
+  final double logoSectionMaxHeight;
 
   @override
   _AppDrawerState createState() => _AppDrawerState();
@@ -185,6 +196,31 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   Widget _buildLogo(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
+    return Container(
+        constraints: BoxConstraints(minHeight: widget.logoSectionMinHeight, maxHeight: widget.logoSectionMaxHeight),
+        child: Container(
+          constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: widget.logoPaddingHorizontal, vertical: widget.logoPaddingVertical),
+            child: GestureDetector(
+              onTap: () => ref
+                  .read(routerProvider)
+                  .dispatch(RoutingIntents.root),
+              child: Container(
+                foregroundDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                  backgroundBlendMode: BlendMode.color,
+                ),
+                child: Image.asset(
+                  'assets/images/icon_wide.png',
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ),
+          ),
+        ),
+    );
+
     return Padding(
       padding: EdgeInsets.all(widget.leftPaddingEntries),
       child: SelectableText(
@@ -236,6 +272,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       leading: Icon(
         entry.icon,
         size: theme.iconTheme.size! * 1.2,
+        color: (isSelected) ? null : theme.iconTheme.color!.faded(0.75),
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(
