@@ -167,6 +167,7 @@ final studyFormViewModelProvider = Provider.autoDispose
     formData: state.study.value,
   );
   ref.onDispose(() {
+    formViewModel.dispose();
     print("studyFormViewModelProvider.DISPOSE");
   });
   return formViewModel;

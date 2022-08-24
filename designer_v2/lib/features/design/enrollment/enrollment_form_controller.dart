@@ -42,19 +42,22 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
       Participation.values
-          .map((v) => FormControlOption(v, v.string, description: v.designDescription))
+          .map((v) =>
+              FormControlOption(v, v.string, description: v.designDescription))
           .toList();
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
-  };
+        StudyFormValidationSet.draft: [], // TODO
+        StudyFormValidationSet.publish: [], // TODO
+        StudyFormValidationSet.test: [], // TODO
+      };
 
   @override
-  FormGroup get form => FormGroup(
-      {'enrollmentType': enrollmentTypeControl, ...questionnaireControls});
+  late final FormGroup form = FormGroup({
+    'enrollmentType': enrollmentTypeControl,
+    ...questionnaireControls,
+  });
 
   @override
   void setControlsFrom(EnrollmentFormData data) {
@@ -83,14 +86,14 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(
-        model, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availablePopupActions(model,
+        isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(
-        model, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableInlineActions(model,
+        isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
