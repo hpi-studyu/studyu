@@ -22,6 +22,9 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
+    if (context.read<AppState>().isPreview) {
+      return;
+    }
     final activeStudy = context.read<AppState>().activeSubject;
     try {
       await activeStudy.addResult<T>(taskId: widget.task.id, result: response);

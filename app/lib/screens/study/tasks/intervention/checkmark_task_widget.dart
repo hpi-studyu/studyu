@@ -19,6 +19,9 @@ class CheckmarkTaskWidget extends StatefulWidget {
 class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
   Future<void> _handleCompletion(BuildContext context, Future<void> animation) async {
     final model = context.read<AppState>();
+    if (model.isPreview) {
+      return;
+    }
     final activeStudy = model.activeSubject;
     try {
       await activeStudy.addResult<bool>(taskId: widget.task.id, result: true);
