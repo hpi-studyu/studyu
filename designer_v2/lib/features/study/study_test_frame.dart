@@ -40,7 +40,7 @@ class PreviewFrame extends StudyPageWidget {
       frameController!.navigate(page: formType, extra: extra.measurementId);
     }
 
-    frameController.listen();
+    frameController!.listen();
 
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,

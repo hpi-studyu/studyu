@@ -156,5 +156,3 @@ class MobileController extends PlatformController {
     throw UnimplementedError();
   }
 }
-
-}
