@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 
 class RouteInformation {
-  late String? route;
-  late String? extra;
-  late String? cmd;
+  String? route;
+  String? extra;
+  String? cmd;
 
-  RouteInformation();
+  RouteInformation(this.route, this.extra, this.cmd);
 }
 
 abstract class PlatformController {
@@ -37,7 +37,7 @@ class WebController extends PlatformController {
     final key = UniqueKey();
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
-    routeInformation = RouteInformation();
+    routeInformation = RouteInformation(null, null, null);
   }
 
   @override
@@ -60,14 +60,20 @@ class WebController extends PlatformController {
     if (page != null) {
       routeInformation.route = page;
       newPrev = "$newPrev&route=$page";
+    } else {
+      routeInformation.route = null;
     }
     if (extra != null) {
       routeInformation.extra = extra;
       newPrev = "$newPrev&extra=$extra";
+    } else {
+      routeInformation.extra = null;
     }
     if (cmd != null) {
       routeInformation.cmd = cmd;
       newPrev = "$newPrev&cmd=$cmd";
+    } else {
+      routeInformation.cmd = null;
     }
     print("*********NAVIGATE TO: $cmd $newPrev");
     if (iFrameElement.src != newPrev) {
@@ -79,7 +85,16 @@ class WebController extends PlatformController {
 
   @override
   void refresh({String? cmd}) {
-    navigate(page: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
+    if (routeInformation.route != null) {
+      if (routeInformation.extra != null) {
+        navigate(page: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
+        return;
+      }
+      navigate(page: routeInformation.route, cmd: cmd);
+      return;
+    }
+    navigate(cmd: cmd);
+    return;
   }
 
   @override

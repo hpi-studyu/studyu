@@ -40,11 +40,6 @@ class FrameControlsWidget extends ConsumerWidget {
                   frameController.openNewPage();
                 },
               ),
-              /*TextButton.icon(
-                icon: const Icon(Icons.help),
-                label: Text("How does this work?".hardcoded),
-                onPressed: () => showHelp(ref),
-              ),*/
             ]
     );
   }

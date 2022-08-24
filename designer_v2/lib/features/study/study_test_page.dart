@@ -36,6 +36,13 @@ class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/
             children: [
               TextButton.icon(
                 icon: const Icon(Icons.arrow_forward),
+                label: Text("study overview".hardcoded), // questionnaire?
+                onPressed: (!state.canTest) ? null : () {
+                  frameController!.navigate();
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
                 label: Text("eligibilityCheck".hardcoded), // questionnaire?
                 onPressed: (!state.canTest) ? null : () {
                   frameController!.navigate(page: "eligibilityCheck");
@@ -61,6 +68,16 @@ class StudyTestScreen extends StudyPageWidget /*implements FrameControlsWidget*/
                 onPressed: (!state.canTest) ? null : () {
                   frameController!.navigate(page: "dashboard");
                 },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.help),
+                label: Text("How does this work?".hardcoded),
+                onPressed: () => showHelp(ref, context),
               ),
             ],
           ),
