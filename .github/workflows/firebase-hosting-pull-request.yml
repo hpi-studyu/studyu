@@ -17,10 +17,12 @@ jobs:
         run: flutter config --enable-web
       - name: Install melos
         run: dart pub global activate melos
+      - name: "Set environment"
+        run: echo "ENV=.env.staging" >> $GITHUB_ENV
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Web"
-        run: ENV=.env.staging; melos run build:web --no-select
+        run: melos run build:web --no-select
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
