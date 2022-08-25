@@ -77,7 +77,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
         ),
         const SizedBox(height: 32.0),
         Container(
-          width: 800,
+          width: double.infinity,
           color: theme.colorScheme.secondary.withOpacity(0.03),
           height: 300,
           child: const Center(

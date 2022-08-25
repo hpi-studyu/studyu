@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:studyu_core/env.dart' as env;
 
 enum DesignerPage {
   about,
@@ -156,7 +156,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> signInWithProvider(Provider provider, String scopes) async {
     await Supabase.instance.client.auth
-        .signInWithProvider(provider, options: AuthOptions(scopes: scopes, redirectTo: authRedirectToUrl));
+        .signInWithProvider(provider, options: AuthOptions(scopes: scopes, redirectTo: env.authRedirectToUrl));
   }
 
   Future<void> signOut() async {

@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
@@ -35,11 +37,19 @@ class IconPack {
   }
 }
 
-class IconOption {
+class IconOption extends Equatable {
   const IconOption(this.name, [this.icon]);
+
   final String name;
   final IconData? icon;
+
   bool get isEmpty => name == '';
+
+  @override
+  List<Object?> get props => [name];
+
+  String toJson() => name;
+  static IconOption fromJson(String json) => IconOption(json);
 }
 
 class ReactiveIconPicker
@@ -219,19 +229,25 @@ Future<void> showIconPickerDialog(
   IconOption? iconPicked = await showDialog(
     context: context,
     builder: (BuildContext context) {
+      final theme = Theme.of(context);
       final dialogWidth = MediaQuery.of(context).size.width * 0.4;
       final dialogHeight = MediaQuery.of(context).size.height * 0.4;
 
-      /// TODO: revisit modal design across the app
-      return AlertDialog(
-          title: Text('Pick an icon'.hardcoded,
-              style: Theme.of(context).textTheme.headline5),
-          content: SizedBox(
+      return StandardDialog(
+          body: SizedBox(
             width: max(dialogWidth, minWidth),
             height: max(dialogHeight, minHeight),
             child: IconPickerGallery(
                 iconOptions: iconOptions, iconSize: galleryIconSize ?? 48.0),
-          ));
+          ),
+          title: SelectableText(
+            "Pick an icon".hardcoded,
+            style: theme.textTheme.headline5?.copyWith(
+              fontWeight: FontWeight.normal,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          )
+      );
     },
   );
 

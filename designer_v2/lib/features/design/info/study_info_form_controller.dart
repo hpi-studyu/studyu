@@ -34,7 +34,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> phoneControl = FormControl();
 
   @override
-  FormGroup get form => FormGroup({
+  late final FormGroup form = FormGroup({
     'title': titleControl,
     'icon': iconControl,
     'description': descriptionControl,

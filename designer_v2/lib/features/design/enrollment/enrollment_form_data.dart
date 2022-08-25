@@ -1,4 +1,5 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
@@ -8,16 +9,22 @@ class EnrollmentFormData implements IStudyFormData {
   EnrollmentFormData({
     required this.enrollmentType,
     required this.questionnaireFormData,
+    this.consentItemsFormData,
   });
 
   final Participation enrollmentType;
   final QuestionnaireFormData questionnaireFormData;
+  final List<ConsentItemFormData>? consentItemsFormData;
 
   factory EnrollmentFormData.fromStudy(Study study) {
     return EnrollmentFormData(
       enrollmentType: study.participation,
       questionnaireFormData:
           QuestionnaireFormData.fromDomainModel(study.questionnaire),
+      consentItemsFormData: study.consent
+          .map(
+              (consentItem) => ConsentItemFormData.fromDomainModel(consentItem))
+          .toList(),
     );
   }
 
@@ -25,12 +32,18 @@ class EnrollmentFormData implements IStudyFormData {
   Study apply(Study study) {
     study.participation = enrollmentType;
     study.questionnaire = questionnaireFormData.toQuestionnaire();
+    study.consent = (consentItemsFormData != null)
+        ? consentItemsFormData!
+            .map((formData) => formData.toConsentItem())
+            .toList()
+        : [];
     // TODO study.eligibilityCriteria (= questions.map((s) => s.eligibilityCriterion))
     return study;
   }
 
   @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
+  String get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 
   @override
   EnrollmentFormData copy() {

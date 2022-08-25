@@ -21,6 +21,13 @@ import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
+abstract class IStudyAppBarViewModel
+    implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
+  bool get isSyncIndicatorVisible;
+  bool get isStatusBadgeVisible;
+  bool get isPublishVisible;
+}
+
 /// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends ConsumerStatefulWidget {
   const StudyScaffold({
@@ -128,14 +135,18 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
-                    const SizedBox(width: 8.0),
-                    IntrinsicWidth(
-                      child: SyncIndicator(
-                        state: state.study,
-                        isDirty: state.isDirty,
-                        lastSynced: state.lastSynced,
-                      ),
-                    )
+                    (state.isSyncIndicatorVisible)
+                        ? const SizedBox(width: 8.0)
+                        : const SizedBox.shrink(),
+                    (state.isSyncIndicatorVisible)
+                        ? IntrinsicWidth(
+                            child: SyncIndicator(
+                              state: state.syncState,
+                              isDirty: state.isDirty,
+                              lastSynced: state.lastSynced,
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
                 loading: () => Container(),

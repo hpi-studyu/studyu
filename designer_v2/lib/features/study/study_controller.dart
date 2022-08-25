@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -9,6 +8,7 @@ import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -22,24 +22,33 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     required super.currentUser,
     required super.router,
     required this.notificationService,
-    //required this.ref,
   }) : super(StudyControllerState(currentUser: currentUser)) {
-    /*
-    studyEventsSubscription =
-        studyRepository.watchChanges(studyId).listen((event) {
-      if (event is StudyLaunched) {
-        final testController =
-            ref.read(studyTestPlatformControllerProvider(studyId));
-        testController?.reset();
-        print("study launched");
-      }
-    });
-     */
+    syncStudyStatus();
   }
 
   final INotificationService notificationService;
-  //late final StreamSubscription<ModelEvent<Study>> studyEventsSubscription;
-  //final Ref ref;
+  StreamSubscription<ModelEvent<Study>>? studyEventsSubscription;
+
+  syncStudyStatus() {
+    if (studyEventsSubscription != null) {
+      studyEventsSubscription?.cancel();
+    }
+    studyEventsSubscription =
+        studyRepository.watchChanges(studyId).listen((event) {
+      if (event is IsSaving) {
+        state = state.copyWith(
+          syncState: const AsyncValue.loading(),
+          isDirty: state.isDirty,
+        );
+      } else if (event is IsSaved) {
+        state = state.copyWith(
+          syncState: const AsyncValue.data(null),
+          lastSynced: DateTime.now(),
+          isDirty: false,
+        );
+      }
+    });
+  }
 
   @override
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
@@ -90,7 +99,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 
   @override
   dispose() {
-    //studyEventsSubscription.cancel();
+    studyEventsSubscription?.cancel();
     super.dispose();
   }
 }
@@ -107,6 +116,9 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
     notificationService: ref.watch(notificationServiceProvider),
     //ref: ref,
   );
+  controller.addListener((state) {
+    print("studyController.state updated");
+  });
   ref.onDispose(() {
     print("studyControllerProvider($studyId).DISPOSE");
   });

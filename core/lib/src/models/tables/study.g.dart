@@ -63,7 +63,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['user_id'] = instance.userId;
-  val['participation'] = _$ParticipationEnumMap[instance.participation]!;
+  val['participation'] = instance.participation.toJson();
   val['result_sharing'] = _$ResultSharingEnumMap[instance.resultSharing]!;
   val['contact'] = instance.contact.toJson();
   val['icon_name'] = instance.iconName;

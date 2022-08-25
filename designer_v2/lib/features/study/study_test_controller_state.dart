@@ -1,7 +1,7 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:studyu_core/env.dart' as env;
 
 class StudyTestControllerState extends StudyControllerBaseState {
   const StudyTestControllerState({
@@ -18,7 +18,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
     if (!canTest || !study.hasValue) {
       return '';
     }
-    String appUrl = appDeepLink;
+    String appUrl = env.appDeepLink;
     appUrl += "?mode=preview&session=${Uri.encodeComponent(serializedSession)}";
     appUrl += "&studyid=$studyId";
     return appUrl;
@@ -55,16 +55,12 @@ class StudyTestControllerState extends StudyControllerBaseState {
 
   @override
   StudyTestControllerState copyWith({
-    WrappedModel<Study>? Function()? studyWithMetadata,
-    String Function()? serializedSession,
+    WrappedModel<Study>? studyWithMetadata,
+    String? serializedSession,
   }) {
     return StudyTestControllerState(
-      studyWithMetadata: (studyWithMetadata != null)
-          ? studyWithMetadata()
-          : this.studyWithMetadata,
-      serializedSession: (serializedSession != null)
-          ? serializedSession()
-          : this.serializedSession,
+      studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
+      serializedSession: serializedSession ?? this.serializedSession,
       currentUser: currentUser,
     );
   }
@@ -72,5 +68,5 @@ class StudyTestControllerState extends StudyControllerBaseState {
   // - Equatable
 
   @override
-  List<Object?> get props => [serializedSession];
+  List<Object?> get props => [...super.props, serializedSession];
 }
