@@ -28,10 +28,25 @@ class ConsentItemFormViewModel
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
+    StudyFormValidationSet.draft: [titleRequired, descriptionRequired],
+    StudyFormValidationSet.publish: [titleRequired, descriptionRequired],
+    StudyFormValidationSet.test: [titleRequired, descriptionRequired],
   };
+
+  get titleRequired => FormControlValidation(
+      control: titleControl,
+      validators: [Validators.required],
+      validationMessages: {
+        ValidationMessage.required: (error) => 'You must provide a title for your participant consent'.hardcoded,
+      }
+  );
+  get descriptionRequired => FormControlValidation(
+      control: descriptionControl,
+      validators: [Validators.required],
+      validationMessages: {
+        ValidationMessage.required: (error) => 'The text for your participant consent must not be empty'.hardcoded,
+      }
+  );
 
   @override
   late final FormGroup form = FormGroup({

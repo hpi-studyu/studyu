@@ -94,7 +94,7 @@ class IconPicker extends StatelessWidget {
       this.onSelect,
       this.isDisabled = false,
       this.focusNode,
-      Key? key})
+      Key? key,})
       : super(key: key);
 
   final List<IconOption> iconOptions;
