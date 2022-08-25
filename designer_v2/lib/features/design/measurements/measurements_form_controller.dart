@@ -2,11 +2,14 @@ import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -15,16 +18,18 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
-    implements IFormViewModelDelegate<MeasurementSurveyFormViewModel>,
-        IListActionProvider<MeasurementSurveyFormData>,
-        IProviderArgsResolver<MeasurementSurveyFormViewModel, MeasurementFormRouteArgs> {
-
+    implements
+        IFormViewModelDelegate<MeasurementSurveyFormViewModel>,
+        IListActionProvider<MeasurementSurveyFormViewModel>,
+        IProviderArgsResolver<MeasurementSurveyFormViewModel,
+            MeasurementFormRouteArgs> {
   MeasurementsFormViewModel({
     required this.study,
     required this.router,
     super.delegate,
     super.formData,
     super.autosave = true,
+    super.validationSet = StudyFormValidationSet.draft,
   });
 
   final Study study;
@@ -32,13 +37,21 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   // - Form fields
 
-  final FormArray measurementsArray = FormArray([],
-      validators: [Validators.minLength(1)]);
+  final FormArray measurementsArray =
+      FormArray([], validators: [Validators.minLength(1)]);
   late final surveyMeasurementFormViewModels = FormViewModelCollection<
-      MeasurementSurveyFormViewModel, MeasurementSurveyFormData>([], measurementsArray);
+      MeasurementSurveyFormViewModel,
+      MeasurementSurveyFormData>([], measurementsArray);
 
-  List<MeasurementSurveyFormData> get measurementsData =>
-      surveyMeasurementFormViewModels.formData;
+  List<MeasurementSurveyFormViewModel> get measurementViewModels =>
+      surveyMeasurementFormViewModels.formViewModels;
+
+  @override
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -46,11 +59,21 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   });
 
   @override
+  void read([MeasurementsFormData? formData]) {
+    surveyMeasurementFormViewModels.read();
+    super.read(formData);
+  }
+
+  @override
   void setControlsFrom(MeasurementsFormData data) {
-    final viewModels = data.surveyMeasurements.map(
-            (data) => MeasurementSurveyFormViewModel(
-            study: study, formData: data, delegate: this
-        )).toList();
+    final viewModels = data.surveyMeasurements
+        .map((data) => MeasurementSurveyFormViewModel(
+              study: study,
+              formData: data,
+              delegate: this,
+              validationSet: validationSet,
+            ))
+        .toList();
     surveyMeasurementFormViewModels.reset(viewModels);
   }
 
@@ -68,71 +91,39 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - IListActionProvider
 
   @override
-  List<ModelAction> availableActions(MeasurementSurveyFormData model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isNotReadonly = formMode != FormMode.readonly;
-
-    final actions = [
-      ModelAction(
-        type: ModelActionType.edit,
-        label: ModelActionType.edit.string,
-        onExecute: () => onSelectItem(model),
-        isAvailable: isNotReadonly,
-      ),
-      ModelAction(
-        type: ModelActionType.duplicate,
-        label: ModelActionType.duplicate.string,
-        onExecute: () {
-          // Add a new view model with copied data to the form
-          final formViewModel = MeasurementSurveyFormViewModel(
-            study: study,
-            formData: model.copy(),
-            delegate: this,
-          );
-          surveyMeasurementFormViewModels.add(formViewModel);
-        },
-        isAvailable: isNotReadonly,
-      ),
-      ModelAction(
-        type: ModelActionType.delete,
-        label: ModelActionType.delete.string,
-        isDestructive: true,
-        onExecute: () {
-          surveyMeasurementFormViewModels.removeWhere(
-                  (vm) => vm.formData!.measurementId == model.measurementId);
-        },
-        isAvailable: isNotReadonly,
-      ),
-    ].where((action) => action.isAvailable).toList();
-
+  List<ModelAction> availableActions(MeasurementSurveyFormViewModel model) {
+    final actions = surveyMeasurementFormViewModels.availableActions(model,
+        onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(
-      MeasurementSurveyFormData model) {
-    return availableActions(model).where(
-            (action) => action.type != ModelActionType.edit).toList();
+      MeasurementSurveyFormViewModel model) {
+    final actions = surveyMeasurementFormViewModels.availablePopupActions(model,
+        isReadOnly: isReadonly);
+    return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(
-      MeasurementSurveyFormData model) {
-    return availableActions(model).where(
-            (action) => action.type == ModelActionType.edit).toList();
+      MeasurementSurveyFormViewModel model) {
+    final actions = surveyMeasurementFormViewModels
+        .availableInlineActions(model, isReadOnly: isReadonly);
+    return withIcons(actions, modelActionIcons);
   }
 
   @override
-  void onSelectItem(MeasurementSurveyFormData item) {
+  void onSelectItem(MeasurementSurveyFormViewModel item) {
     final studyId = study.id;
     final measurementId = item.measurementId;
-    router.dispatch(RoutingIntents.studyEditMeasurement(studyId, measurementId));
+    router
+        .dispatch(RoutingIntents.studyEditMeasurement(studyId, measurementId));
   }
 
   @override
   void onNewItem() {
     final studyId = study.id;
     router.dispatch(
-        RoutingIntents.studyEditMeasurement(studyId, Config.newModelId)
-    );
+        RoutingIntents.studyEditMeasurement(studyId, Config.newModelId));
   }
 
   // - IProviderArgsResolver
@@ -143,13 +134,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
       final viewModel = MeasurementSurveyFormViewModel(
-          study: study, formData: null, delegate: this);
+        study: study,
+        formData: null,
+        delegate: this,
+        validationSet: validationSet,
+      );
       surveyMeasurementFormViewModels.stage(viewModel);
       return viewModel;
     }
 
-    final viewModel = surveyMeasurementFormViewModels.findWhere(
-            (vm) => vm.measurementId == args.measurementId);
+    final viewModel = surveyMeasurementFormViewModels
+        .findWhere((vm) => vm.measurementId == args.measurementId);
     if (viewModel == null) {
       throw MeasurementNotFoundException(); // TODO handle 404 not found
     }
@@ -159,12 +154,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - IFormViewModelDelegate
 
   @override
-  void onCancel(MeasurementSurveyFormViewModel formViewModel, FormMode formMode) {
+  void onCancel(
+      MeasurementSurveyFormViewModel formViewModel, FormMode formMode) {
     return; // no-op
   }
 
   @override
-  void onSave(MeasurementSurveyFormViewModel formViewModel, FormMode prevFormMode) {
+  void onSave(
+      MeasurementSurveyFormViewModel formViewModel, FormMode prevFormMode) {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       surveyMeasurementFormViewModels.commit(formViewModel);

@@ -33,7 +33,7 @@ enum ModelActionType {
   edit,
   delete,
   duplicate,
-  clipboard
+  clipboard,
 }
 
 /// Provides a human-readable translation of the model action type

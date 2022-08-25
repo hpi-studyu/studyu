@@ -1,187 +1,65 @@
-import 'dart:html' as html;
-import 'dart:js' as js;
-import 'dart:ui' as ui;
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/study/study_test_scaffold.dart';
-import 'package:studyu_designer_v2/features/study/study_test_state.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
+import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 
-abstract class PlatformController {
-  final String studyId;
-  final String previewSrc;
-  late Widget scaffold;
-
-  PlatformController(this.previewSrc, this.studyId);
-
-  void registerViews();
-  void sendCmd(String command);
-  void refresh();
-  void listen();
-  void send(String message);
-
-  void openNewPage() {}
-}
-
-class StudyTestController extends StateNotifier<StudyTestState> {
-  String previewSrc = appDeepLink;
-
-  final IAuthRepository authRepository;
-  late PlatformController platformController;
-  final Study study;
-
+class StudyTestController extends StudyBaseController<StudyTestControllerState> {
   StudyTestController({
-    required this.study,
+    required super.studyId,
+    required super.studyRepository,
+    required super.currentUser,
+    required super.router,
     required this.authRepository,
-  }) : super(StudyTestState(currentUser: authRepository.currentUser!)) {
-    List<dynamic> missingRequirements = _missingRequirements();
-    if (missingRequirements.isEmpty) {
-      // requirements satisfied
-      String sessionStr = authRepository.session?.persistSessionString ?? '';
-      previewSrc += '?mode=preview&session=${Uri.encodeComponent(sessionStr)}&studyid=${study.id}';
-    } else {
-      // todo show modal and add error
-      if (kDebugMode) {
-        print("Requirements not satisfied: $missingRequirements");
-      }
-    }
-    _selectPlatform();
-  }
-
-  _selectPlatform() {
-    if (!kIsWeb) {
-      // Mobile could be built with the webview_flutter package
-      platformController = MobileController(previewSrc, study.id);
-    } else {
-      // Desktop and Web
-      platformController = WebController(previewSrc, study.id);
-    }
-  }
-
-  // Check if the study satisfies the requirements to be previewed
-  // Todo we might also include this check before publishing a study
-  _missingRequirements() {
-    List<dynamic> conditions = [
-      study.title,
-      study.description,
-      study.interventions,
-      study.hasEligibilityCheck,
-      study.eligibilityCriteria,
-      study.observations,
-      study.consent,
-    ];
-    conditions.removeWhere((element) => _isValid(element));
-    return conditions;
-  }
-
-  _isValid(dynamic val) {
-    if (val is bool) {
-      return val;
-    }
-    // todo check for custom class and throw error
-    return val?.isNotEmpty ?? false;
-  }
-}
-
-class WebController extends PlatformController {
-  WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
-    registerViews();
-    scaffold = WebScaffold(previewSrc, studyId);
-  }
-
-  @override
-  void registerViews() {
-    // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory(
-        studyId,
-        (int viewId) => html.IFrameElement()
-          ..id = 'studyu_app_preview'
-          ..src = previewSrc
-          ..style.border = 'none'
+  }) : super(StudyTestControllerState(currentUser: currentUser)) {
+    state = state.copyWith(
+      serializedSession: authRepository.session?.persistSessionString ?? ''
     );
   }
 
-  @override
-  void sendCmd(String command) {
-    html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
-    as html.IFrameElement;
-    String localPreviewSrc = "$previewSrc&cmd=$command";
-    iFrameElement.src = localPreviewSrc;
-  }
-
-  @override
-  void refresh() {
-    html.IFrameElement iFrameElement = html.document.getElementById("studyu_app_preview")
-    as html.IFrameElement;
-    iFrameElement.src = previewSrc;
-  }
-
-  @override
-  void openNewPage() {
-    js.context.callMethod('open', [previewSrc]);
-  }
-
-  @override
-  void listen() {
-    html.window.onMessage.listen((event) {
-      var data = event.data;
-    });
-  }
-
-  @override
-  void send(String message) {
-    html.IFrameElement frame = html.document.getElementById("studyu_app_preview")
-        as html.IFrameElement;
-    // For debug purposes: postMessage(message, '*')
-    frame.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
-  }
+  final IAuthRepository authRepository;
 }
 
-// Mostly unfinished, since we only support Desktop for now
-class MobileController extends PlatformController {
-  MobileController(String previewSrc, studyId) : super(previewSrc, studyId) {
-    scaffold = const MobileScaffold();
+/// Use the [family] modifier to provide a controller parametrized by [StudyID]
+final studyTestControllerProvider = StateNotifierProvider
+    .family<StudyTestController, StudyTestControllerState, StudyID>((ref, studyId) {
+  final studyRepository = ref.watch(studyRepositoryProvider);
+  final controller = StudyTestController(
+    studyId: studyId,
+    studyRepository: studyRepository,
+    currentUser: ref.watch(currentUserProvider),
+    router: ref.watch(routerProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+  );
+  ref.onDispose(() {
+    // Reload the study after disposing the test controller so that any
+    // data changes resulting from testing are reflected in the study for
+    // other parts of the app (e.g. test data that was generated)
+    //
+    // Ideally, we would stream changes from the backend/database directly,
+    // but this is a sufficient workaround for now
+    studyRepository.fetch(studyId);
+  });
+  return controller;
+});
+
+final studyTestPlatformControllerProvider = Provider
+    .family<PlatformController?, StudyID>((ref, studyId) {
+  final state = ref.watch(studyTestControllerProvider(studyId));
+
+  PlatformController platformController;
+  if (!kIsWeb) {
+    throw Exception(
+        "The StudyU designer only support the web platform".hardcoded);
+  } else {
+    // Desktop and Web
+    platformController = WebController(state.appUrl, studyId);
   }
 
-  @override
-  void sendCmd(String command) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void openNewPage() {
-    throw UnimplementedError();
-  }
-
-  @override
-  void refresh() {
-    throw UnimplementedError();
-  }
-
-  @override
-  void registerViews() {
-    throw UnimplementedError();
-  }
-
-  @override
-  void listen() {
-    throw UnimplementedError();
-  }
-
-  @override
-  void send(String message) {
-    throw UnimplementedError();
-  }
-}
-
-final studyTestControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyTestController, StudyTestState, Study>(
-        (ref, study) => StudyTestController(
-          study: study,
-          authRepository: ref.watch(authRepositoryProvider),
-        )
-);
+  return platformController;
+});

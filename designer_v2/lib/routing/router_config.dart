@@ -4,8 +4,11 @@ import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/domain/consent.dart';
+import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/auth/authform_scaffold.dart';
 import 'package:studyu_designer_v2/features/auth/login_page.dart';
 import 'package:studyu_designer_v2/features/auth/password_forgot_page.dart';
@@ -13,21 +16,28 @@ import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
 import 'package:studyu_designer_v2/features/auth/signup_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
-import 'package:studyu_designer_v2/features/design/common_views/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
+import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
+import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_preview_view.dart';
+import 'package:studyu_designer_v2/features/design/interventions/interventions_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
-import 'package:studyu_designer_v2/features/study/study_analyze_page.dart';
-import 'package:studyu_designer_v2/features/study/study_edit_page.dart';
-import 'package:studyu_designer_v2/features/study/study_monitor_page.dart';
+import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
+import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
+import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
+import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:studyu_designer_v2/routing/router_navbars.dart';
+import 'package:studyu_designer_v2/routing/router_utils.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
@@ -37,6 +47,7 @@ class RouteParams {
   static const studiesFilter = 'filter';
   static const studyId = 'studyId';
   static const measurementId = 'measurementId';
+  static const interventionId = 'interventionId';
 }
 
 /// The route configuration passed to [GoRouter] during instantiation.
@@ -71,6 +82,7 @@ class RouterConfig {
     studyMonitor,
     studyRecruit,
     studyAnalyze,
+    studySettings,
     passwordRecovery,
   ];
 
@@ -130,14 +142,14 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.info(studyId),
-              body: StudyEditScreen(studyId),
-              layoutType: SingleColumnLayoutType.split,
-        ));
-      }
+              body: StudyDesignInfoFormView(studyId),
+              layoutType: SingleColumnLayoutType.boundedNarrow,
+            )
+        );
+      },
   );
 
   static final studyEditEnrollment = GoRoute(
@@ -149,12 +161,11 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.enrollment(studyId),
-              body: StudyEditScreen(studyId),
-              layoutType: SingleColumnLayoutType.split,
+              body: StudyDesignEnrollmentFormView(studyId),
+              layoutType: SingleColumnLayoutType.boundedNarrow,
         ));
       }
   );
@@ -168,13 +179,41 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.interventions(studyId),
-              body: StudyEditScreen(studyId),
-              layoutType: SingleColumnLayoutType.split,
+              body: StudyDesignInterventionsFormView(studyId),
+              layoutType: SingleColumnLayoutType.boundedNarrow,
         ));
+      },
+      routes: [studyEditIntervention],
+  );
+
+  static final studyEditIntervention = GoRoute(
+      path: ":${RouteParams.interventionId}",
+      name: "studyEditIntervention",
+      pageBuilder: (context, state) {
+        final routeArgs = InterventionFormRouteArgs(
+            studyId: state.params[RouteParams.studyId]!,
+            interventionId: state.params[RouteParams.interventionId]!
+        );
+        return MaterialPage(
+            child: StudyFormScaffold<InterventionFormViewModel>(
+              studyId: routeArgs.studyId,
+              formViewModelBuilder: (ref) => ref.read(
+                  interventionFormViewModelProvider(routeArgs)
+              ),
+              formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+                leftWidget: InterventionFormView(formViewModel: formViewModel),
+                rightWidget: InterventionPreview(routeArgs: routeArgs),
+                flexLeft: 7,
+                flexRight: 8,
+                scrollLeft: true,
+                scrollRight: false,
+                paddingRight: null,
+              ),
+            )
+        );
       }
   );
 
@@ -187,12 +226,11 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
               selectedTabSubnav: StudyDesignNav.measurements(studyId),
               body: StudyDesignMeasurementsFormView(studyId),
-              layoutType: SingleColumnLayoutType.split,
+              layoutType: SingleColumnLayoutType.boundedNarrow,
         ));
       },
       routes: [studyEditMeasurement]
@@ -235,7 +273,6 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.test(studyId),
               body: StudyTestScreen(studyId),
               layoutType: SingleColumnLayoutType.stretched,
@@ -252,10 +289,9 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.recruit(studyId),
               body: StudyRecruitScreen(studyId),
-              layoutType: SingleColumnLayoutType.bounded,
+              layoutType: SingleColumnLayoutType.boundedWide,
         ));
       }
   );
@@ -269,10 +305,9 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.monitor(studyId),
               body: StudyMonitorScreen(studyId),
-              layoutType: SingleColumnLayoutType.bounded,
+              layoutType: SingleColumnLayoutType.boundedWide,
         ));
       }
   );
@@ -286,11 +321,21 @@ class RouterConfig {
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
-              tabs: StudyNav.tabs(studyId),
               selectedTab: StudyNav.analyze(studyId),
               body: StudyAnalyzeScreen(studyId),
-              layoutType: SingleColumnLayoutType.bounded,
+              layoutType: SingleColumnLayoutType.boundedWide,
         ));
+      }
+  );
+
+  static final studySettings = GoRoute(
+      path: "/studies/:${RouteParams.studyId}/settings",
+      name: "studySettings",
+      pageBuilder: (context, state) {
+        final studyId = state.params[RouteParams.studyId]!;
+        return buildModalTransitionPage(context, state,
+          StudySettingsDialog(studyId),
+        );
       }
   );
 
@@ -369,19 +414,72 @@ class RouterConfig {
 
 // - Route Args
 
-class MeasurementFormRouteArgs {
-  MeasurementFormRouteArgs({required this.studyId, required this.measurementId});
-
+abstract class StudyFormRouteArgs {
+  StudyFormRouteArgs({required this.studyId});
   final StudyID studyId;
-  final MeasurementID measurementId;
 }
 
-class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs {
-  SurveyQuestionFormRouteArgs({
+abstract class QuestionFormRouteArgs extends StudyFormRouteArgs {
+  QuestionFormRouteArgs({
+    required this.questionId,
     required super.studyId,
-    required super.measurementId,
-    required this.questionId
   });
 
   final QuestionID questionId;
+}
+
+class ScreenerQuestionFormRouteArgs extends QuestionFormRouteArgs {
+  ScreenerQuestionFormRouteArgs({
+    required super.questionId,
+    required super.studyId,
+  });
+}
+
+class ConsentItemFormRouteArgs extends StudyFormRouteArgs {
+  ConsentItemFormRouteArgs({
+    required super.studyId,
+    required this.consentId,
+  });
+
+  final ConsentID consentId;
+}
+
+class MeasurementFormRouteArgs extends StudyFormRouteArgs {
+  MeasurementFormRouteArgs({
+    required this.measurementId,
+    required super.studyId,
+  });
+
+  final MeasurementID measurementId;
+}
+
+class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs
+    implements QuestionFormRouteArgs {
+  SurveyQuestionFormRouteArgs({
+    required this.questionId,
+    required super.studyId,
+    required super.measurementId,
+  });
+
+  @override
+  final QuestionID questionId;
+}
+
+class InterventionFormRouteArgs extends StudyFormRouteArgs {
+  InterventionFormRouteArgs({
+    required this.interventionId,
+    required super.studyId,
+  });
+
+  final InterventionID interventionId;
+}
+
+class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
+  InterventionTaskFormRouteArgs({
+    required this.taskId,
+    required super.studyId,
+    required super.interventionId,
+  });
+
+  final TaskID taskId;
 }

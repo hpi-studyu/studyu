@@ -1,7 +1,5 @@
-
-
 class Config {
-  static const isDebugMode = true;
+  static const isDebugMode = false;
 
   static const defaultLocale = {'en', 'US'};
 
@@ -20,7 +18,7 @@ class Config {
   /// (may result in the splash screen not being shown at all)
   static const minSplashTime = 500;
 
-  static const formAutosaveDebounce = 3000;
+  static const formAutosaveDebounce = 1500;
 }
 
 const kPathSeparator = '   /   ';

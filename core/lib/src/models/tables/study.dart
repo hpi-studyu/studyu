@@ -10,9 +10,20 @@ import '../models.dart';
 
 part 'study.g.dart';
 
-enum Participation { open, invite }
+enum Participation {
+  open,
+  invite;
 
-enum ResultSharing { public, private, organization }
+  String toJson() => name;
+  static Participation fromJson(String json) => values.byName(json);
+}
+
+enum ResultSharing {
+  public, private, organization;
+
+  String toJson() => name;
+  static ResultSharing fromJson(String json) => values.byName(json);
+}
 
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study> {
@@ -46,6 +57,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   late List<StudyResult> results = [];
   @JsonKey(name: 'collaborator_emails')
   late List<String> collaboratorEmails = [];
+  @JsonKey(name: 'registry_published')
+  late bool registryPublished = false;
 
   @JsonKey(name: 'fhir_questionnaire')
   Questionnaire? fhirQuestionnaire;
@@ -66,6 +79,12 @@ class Study extends SupabaseObjectFunctions<Study> {
   List<StudyInvite>? invites;
 
   @JsonKey(ignore: true)
+  List<StudySubject>? participants;
+
+  @JsonKey(ignore: true)
+  List<SubjectProgress>? participantsProgress;
+
+  @JsonKey(ignore: true)
   DateTime? createdAt;
 
   Study(this.id, this.userId);
@@ -83,6 +102,20 @@ class Study extends SupabaseObjectFunctions<Study> {
     if (invites != null) {
       study.invites = invites
           .map((json) => StudyInvite.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+    final List? participants = json['study_subject'] as List?;
+    if (participants != null) {
+      study.participants = participants
+          .map((json) => StudySubject.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+    List? participantsProgress = json['study_progress'] as List?;
+    participantsProgress = json['study_progress_export'] as List?;
+    participantsProgress ??= json['subject_progress'] as List?;
+    if (participantsProgress != null) {
+      study.participantsProgress = participantsProgress
+          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
           .toList();
     }
     final int? participantCount = json['study_participant_count'] as int?;

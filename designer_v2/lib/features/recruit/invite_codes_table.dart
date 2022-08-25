@@ -2,107 +2,103 @@ import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
+import 'package:studyu_designer_v2/common_views/badge.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/recruit/enrolled_badge.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/theme.dart';
+
+typedef ParticipantCountProvider = int Function(StudyInvite invite);
 
 class StudyInvitesTable extends StatelessWidget {
   const StudyInvitesTable({
     required this.invites,
-    required this.onSelectInvite,
+    required this.onSelect,
+    required this.getInlineActions,
+    required this.getActions,
     required this.getIntervention,
-    required this.getInlineActionsForInvite,
-    required this.getActionsForInvite,
-    Key? key
+    required this.getParticipantCountForInvite,
+    Key? key,
   }) : super(key: key);
 
   final List<StudyInvite> invites;
-  final OnSelectHandler<StudyInvite> onSelectInvite;
+  final OnSelectHandler<StudyInvite> onSelect;
+  final ActionsProviderFor<StudyInvite> getActions;
+  final ActionsProviderFor<StudyInvite> getInlineActions;
+
   final InterventionProvider getIntervention;
-  final ActionsProviderFor<StudyInvite> getActionsForInvite;
-  final ActionsProviderFor<StudyInvite> getInlineActionsForInvite;
+  final ParticipantCountProvider getParticipantCountForInvite;
 
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
-        label: '#'.hardcoded,
-        columnWidth: const FixedColumnWidth(60)),
+        label: '#'.hardcoded, columnWidth: const FixedColumnWidth(60)),
     StandardTableColumn(
         label: tr.code,
-        columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(200), FlexColumnWidth(1.6))),
+        columnWidth:
+            const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
     StandardTableColumn(
-        label: tr.enrolled,
-        columnWidth: const FixedColumnWidth(100)),
+        label: tr.enrolled, columnWidth: const FixedColumnWidth(100)),
     StandardTableColumn(
         label: tr.intervention_a,
-        columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(150), FlexColumnWidth(1))),
+        columnWidth:
+            const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
     StandardTableColumn(
         label: tr.intervention_b,
-        columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(150), FlexColumnWidth(1))),
-    StandardTableColumn(
-        label: '',
-        columnWidth: const FixedColumnWidth(60)
-    ),
+        columnWidth:
+            const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
+    //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
   ];
 
   @override
   Widget build(BuildContext context) {
     return StandardTable<StudyInvite>(
-        items: invites,
-        columns: columns,
-        onSelectItem: onSelectInvite,
-        buildCellsAt: _buildRow,
-        cellSpacing: 10.0,
-        rowSpacing: 5.0,
-        minRowHeight: 30.0,
+      items: invites,
+      columns: columns,
+      onSelectItem: onSelect,
+      buildCellsAt: _buildRow,
+      trailingActionsAt: (item, _) => getActions(item),
+      cellSpacing: 10.0,
+      rowSpacing: 5.0,
+      minRowHeight: 30.0,
     );
   }
 
-  List<Widget> _buildRow(
-      BuildContext context,
-      StudyInvite item,
-      int rowIdx,
-      Set<MaterialState> states
-  ) {
+  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx,
+      Set<MaterialState> states) {
     final theme = Theme.of(context);
-    final tableTextStylePrimary = theme.textTheme.bodyText1;
-    final tableTextSecondaryColor = theme.colorScheme.secondary;
-    final tableTextStyleSecondary = tableTextStylePrimary!.copyWith(
-        color: tableTextSecondaryColor);
-    final tableTextStyleTertiary = tableTextStylePrimary.copyWith(
-        color: tableTextSecondaryColor.withOpacity(0.5));
+    final mutedTextStyle = ThemeConfig.bodyTextBackground(theme);
 
     Intervention? interventionA;
     Intervention? interventionB;
 
-    if (item.preselectedInterventionIds != null
-        && item.preselectedInterventionIds!.isNotEmpty) {
+    if (item.preselectedInterventionIds != null &&
+        item.preselectedInterventionIds!.isNotEmpty) {
       interventionA = getIntervention(item.preselectedInterventionIds![0]);
       interventionB = getIntervention(item.preselectedInterventionIds![1]);
     }
 
     Widget buildInterventionCell(Intervention? intervention) {
-      return (intervention != null) ?
-        Text(
-          intervention.name ?? '',
-          style: tableTextStyleSecondary,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          softWrap: false,
-        ) : Text(
-          tr.default_string,
-          style: tableTextStyleTertiary,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          softWrap: false,
-        );
+      return (intervention != null)
+          ? Text(intervention.name ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            )
+          : Text(
+              tr.default_string,
+              style: mutedTextStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            );
     }
 
+    final participantCount = getParticipantCountForInvite(item);
+
     return [
-      Text(rowIdx.toString(), style: tableTextStyleTertiary),
+      Text(rowIdx.toString(), style: mutedTextStyle),
       SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
@@ -110,29 +106,19 @@ class StudyInvitesTable extends StatelessWidget {
           children: [
             Text(
               item.code,
-              style: tableTextStyleSecondary.copyWith(
+              style: const TextStyle(
                 overflow: TextOverflow.ellipsis,
               ),
               maxLines: 1,
             ),
-            ActionMenuInline(actions: getInlineActionsForInvite(item))
+            // TODO: support inline actions in standard table widget
+            ActionMenuInline(actions: getInlineActions(item))
           ],
         ),
       ),
-      Text('[TODO]', style: tableTextStyleSecondary), // TODO
+      EnrolledBadge(enrolledCount: participantCount),
       buildInterventionCell(interventionA),
       buildInterventionCell(interventionB),
-      Align(
-        alignment: Alignment.centerRight,
-        child: ActionPopUpMenuButton(
-          actions: getActionsForInvite(item),
-          orientation: Axis.horizontal,
-          triggerIconColor: tableTextSecondaryColor.withOpacity(0.8),
-          triggerIconColorHover: theme.colorScheme.primary,
-          disableSplashEffect: true,
-          position: PopupMenuPosition.over,
-        ),
-      )
     ];
   }
 }

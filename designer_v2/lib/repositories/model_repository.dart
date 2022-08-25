@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
+import 'package:studyu_designer_v2/utils/behaviour_subject.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
@@ -67,6 +69,8 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   Future<void> duplicateAndSave(T model);
   Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true});
   Stream<List<WrappedModel<T>>> watchAll({fetchOnSubscribe = true});
+  Stream<ModelEvent<T>> watchChanges(ModelID modelId);
+  Stream<ModelEvent<T>> watchAllChanges();
   Future<WrappedModel<T>?> ensurePersisted(ModelID modelId);
   void dispose();
 }
@@ -90,9 +94,11 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
 
   /// Stream controller for broadcasting all models stored in the repository
   final BehaviorSubject<List<WrappedModel<T>>> _allModelsStreamController = BehaviorSubject();
+  final BehaviorSubject<ModelEvent<T>> _allModelEventsStreamController = BehaviorSubject();
 
   /// Stream controllers for subscriptions on individual models of type [T]
   final Map<ModelID, BehaviorSubject<WrappedModel<T>>> modelStreamControllers = {};
+  final Map<ModelID, BehaviorSubject<ModelEvent<T>>> modelEventsStreamControllers = {};
 
   /// Collection of all models of type [T]
   ///
@@ -116,7 +122,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     List<WrappedModel<T>> wrappedModels = [];
     try {
       final models = await delegate.fetchAll();
-      wrappedModels = _upsertAllLocally(models);
+      wrappedModels = upsertAllLocally(models);
       for (final wrappedModel in wrappedModels) {
         wrappedModel.markAsFetched();
       }
@@ -142,8 +148,9 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     late final WrappedModel<T>? wrappedModel;
     try {
       final model = await delegate.fetch(modelId);
-      wrappedModel = _upsertLocally(model);
+      wrappedModel = upsertLocally(model);
       wrappedModel.markAsFetched();
+      emitModelEvent(IsFetched(modelId, model));
     } catch(e, stackTrace) {
       // Associate error with existing object if possible, otherwise bubble up
       if (existingWrappedModel != null) {
@@ -160,19 +167,21 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   }
 
   @override
-  Future<WrappedModel<T>?> save(T model) {
+  Future<WrappedModel<T>?> save(T model, {runOptimistically = true}) {
     final modelId = getKey(model);
     final prevModel = get(modelId)?.model;
 
     final saveOperation = OptimisticUpdate(
       applyOptimistic: () {
-        final wrappedModel = _upsertLocally(model);
+        final wrappedModel = upsertLocally(model);
         wrappedModel.markAsLoading();
       },
       apply: () async {
+        emitModelEvent(IsSaving(modelId, model));
         final savedModel = await delegate.save(model);
-        final wrappedModel = _upsertLocally(savedModel);
+        final wrappedModel = upsertLocally(savedModel);
         wrappedModel.markAsSaved();
+        emitModelEvent(IsSaved(modelId, model));
       },
       rollback: () {
         if (prevModel == null) { // didn't exist previously
@@ -188,13 +197,15 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         emitError(modelStreamControllers[modelId], e, stackTrace);
       },
       rethrowErrors: true,
+      runOptimistically: runOptimistically,
+      completeFutureOptimistically: runOptimistically,
     );
 
     return saveOperation.execute().then((_) => get(modelId));
   }
 
   @override
-  Future<void> delete(ModelID modelId) async {
+  Future<void> delete(ModelID modelId, {runOptimistically = true}) async {
     final wrappedModel = get(modelId);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -204,19 +215,25 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
 
     final deleteOperation = OptimisticUpdate(
       applyOptimistic: () => wrappedModel.isDeleted = true,
-      apply: () {
+      apply: () async {
+        final model = wrappedModel.model;
         if (!wrappedModel.isLocalOnly) {
-          return delegate.delete(wrappedModel.model);
+          await delegate.delete(model);
         }
         // Model already flagged as deleted, free it for garbage collection
-        return Future(() => _allModels.remove(modelId));
+        if (_allModels.containsKey(modelId)) {
+          _allModels.remove(modelId);
+        }
+        await emitModelEvent(IsDeleted(modelId, model));
       },
       rollback: () => wrappedModel.isDeleted = false,
       onUpdate: emitUpdate,
       onError: (e, stackTrace) {
         get(modelId)?.markWithError(e);
         emitError(modelStreamControllers[modelId], e, stackTrace);
-      }
+      },
+      runOptimistically: runOptimistically,
+      completeFutureOptimistically: runOptimistically,
     );
 
     return deleteOperation.execute();
@@ -247,26 +264,84 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   /// If the requested [ModelId] is not available, the stream will be created
   /// anyway, but emit a [ModelNotFoundException] error event.
   @override
-  Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true}) {
+  Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true, emitLastEvent = true}) {
     WrappedModel<T>? wrappedModel;
 
     if (modelId == Config.newModelId) {
       // Create new model to subscribe to
       final newModel = delegate.createNewInstance();
-      wrappedModel = _upsertLocally(newModel, emitUpdate: true);
+      wrappedModel = upsertLocally(newModel, emitUpdate: true);
       modelId = getKey(newModel); // subscribe to the newly created study
     } else {
       // Subscribe to existing model (may not be fetched yet)
       wrappedModel = get(modelId, strict: !fetchOnSubscribe);
     }
 
-    // Reuse existing stream if any
-    if (modelStreamControllers.containsKey(modelId)) {
-      return modelStreamControllers[modelId]!.stream;
+    WrappedModel<T>? selectModel(List<WrappedModel<T>> event) {
+      for (final wrappedModel in event) {
+        if (getKey(wrappedModel.model) == modelId) {
+          return wrappedModel;
+        }
+      }
+      return null;
     }
 
-    // Construct a transformed stream that selects the corresponding study from
-    // the stream of all studies.
+    final modelController = _buildModelSpecificController(
+      modelId,
+      _allModelsStreamController,
+      modelStreamControllers,
+      selectModel
+    );
+
+    if (fetchOnSubscribe) {
+      if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
+        fetch(modelId).catchError((e) {
+          if (!modelController.isClosed) {
+            modelController.addError(e);
+          }
+          return e;
+        });
+      }
+    }
+
+    return modelController.stream;
+  }
+
+  @override
+  Stream<ModelEvent<T>> watchAllChanges() {
+    return _allModelEventsStreamController.stream;
+  }
+
+  @override
+  Stream<ModelEvent<T>> watchChanges(ModelID modelId) {
+    ModelEvent<T>? selectModelChangeEvent(ModelEvent<T> event) {
+      if (event.modelId == modelId) {
+        return event;
+      }
+      return null;
+    }
+    final modelEventsController = _buildModelSpecificController(
+      modelId,
+      _allModelEventsStreamController,
+      modelEventsStreamControllers,
+      selectModelChangeEvent
+    );
+    return modelEventsController.stream;
+  }
+
+  _buildModelSpecificController<A, M>(
+      ModelID modelId,
+      BehaviorSubject<A> allController,
+      Map<ModelID, BehaviorSubject<M>> modelSpecificControllers,
+      M? Function(A) selectReduceEvent,
+    ) {
+    // Reuse existing stream if any
+    if (modelSpecificControllers.containsKey(modelId)) {
+      return modelSpecificControllers[modelId]!.stream;
+    }
+
+    // Construct a transformed stream that selects the corresponding object of
+    // type [A] from the stream of all objects.
     //
     // It would be convenient to use a simple stream transform like .map here,
     // but this doesn't give us a way to send error events (e.g. from network
@@ -275,44 +350,25 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     // Hence, we need to create a new controller here that implements
     // the stream transform as a subscription callback and cleans up after
     // itself when it's no longer needed.
-    final BehaviorSubject<WrappedModel<T>> controller = BehaviorSubject();
+    final BehaviorSubject<M> modelSpecificController = BehaviorSubject();
 
-    final subscription = watchAll(fetchOnSubscribe: false).listen((wrappedModels) {
-      WrappedModel<T>? subscribedModel;
-      for (final wrappedModel in wrappedModels) {
-        if (getKey(wrappedModel.model) == modelId) {
-          subscribedModel = wrappedModel;
-          break;
-        }
-      }
-      if (subscribedModel != null) {
-        if (!controller.isClosed) {
-          controller.add(subscribedModel);
+    final subscription = allController.stream.listen((event) {
+      final M? outputEvent = selectReduceEvent(event);
+      if (outputEvent != null) {
+        if (!modelSpecificController.isClosed) {
+          modelSpecificController.add(outputEvent);
         }
       }
     });
-
-    void discardController() {
+    modelSpecificController.onCancel = () {
       subscription.cancel();
-      controller.close();
-      modelStreamControllers.remove(modelId);
-    }
-    controller.onCancel = discardController;
+      modelSpecificController.close();
+      modelSpecificControllers.remove(modelId);
+    };
 
-    if (fetchOnSubscribe) {
-      if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
-        fetch(modelId).catchError((e) {
-          if (!controller.isClosed) {
-            controller.addError(e);
-          }
-          return e;
-        });
-      }
-    }
+    modelSpecificControllers[modelId] = modelSpecificController;
 
-    modelStreamControllers[modelId] = controller;
-
-    return controller.stream;
+    return modelSpecificController;
   }
 
   @override
@@ -324,7 +380,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     return Future.value(wrappedModel);
   }
 
-  WrappedModel<T> _upsertLocally(T newModel, {emitUpdate = false}) {
+  WrappedModel<T> upsertLocally(T newModel, {emitUpdate = false}) {
     final newModelId = getKey(newModel);
     if (_allModels.containsKey(newModelId)) {
       // Model already exists, replace with the new object
@@ -340,10 +396,10 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     return _allModels[newModelId]!;
   }
 
-  List<WrappedModel<T>> _upsertAllLocally(List<T> newModels, {emitUpdate = false}) {
+  List<WrappedModel<T>> upsertAllLocally(List<T> newModels, {emitUpdate = false}) {
     List<WrappedModel<T>> wrappedModels = [];
     for (final newModel in newModels) {
-      final wrapped = _upsertLocally(newModel, emitUpdate: false);
+      final wrapped = upsertLocally(newModel, emitUpdate: false);
       wrappedModels.add(wrapped);
     }
     if (emitUpdate) {
@@ -358,6 +414,12 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         // Filter out models marked as deleted
           _allModels.values.where((model) => !model.isDeleted).toList()
       );
+    }
+  }
+
+  emitModelEvent(ModelEvent<T> event) {
+    if (!_allModelEventsStreamController.isClosed) {
+      _allModelEventsStreamController.add(event);
     }
   }
 

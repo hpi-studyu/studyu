@@ -40,11 +40,23 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   StudySubject(this.id, this.studyId, this.userId, this.selectedInterventionIds);
 
-  factory StudySubject.fromJson(Map<String, dynamic> json) => _$StudySubjectFromJson(json)
-    ..study = Study.fromJson(json['study'] as Map<String, dynamic>)
-    ..progress = (json['subject_progress'] as List? ?? [])
-        .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
-        .toList();
+  factory StudySubject.fromJson(Map<String, dynamic> json) {
+    final subject = _$StudySubjectFromJson(json);
+
+    final Map<String, dynamic>? study = json['study'] as Map<String, dynamic>?;
+    if (study != null) {
+      subject.study = Study.fromJson(study);
+    }
+
+    final List? progress = json['subject_progress'] as List?;
+    if (progress != null) {
+      subject.progress = progress
+          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
+          .toList();
+    }
+
+    return subject;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);

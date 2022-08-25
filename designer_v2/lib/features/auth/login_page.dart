@@ -66,7 +66,8 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
                 icon: Icons.login,
                 text: tr.signin,
                 isLoading: authState.isLoading,
-                onPressed: authForm.valid ? _formReturnAction : null,
+                enabled: authForm.valid,
+                onPressedFuture: () => _formReturnAction(),
                 tooltipDisabled: 'All fields must be filled out',
               );
             },
@@ -75,7 +76,7 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
     );
   }
 
-  _formReturnAction() async {
+  Future<void> _formReturnAction() async {
     final authController = ref.read(authControllerProvider.notifier);
     final success = await authController.signInWith(
         authForm.control('email').value, authForm.control('password').value);

@@ -24,6 +24,9 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   String resultType;
   Result result;
 
+  @JsonKey(ignore: true)
+  DateTime? startedAt;
+
   SubjectProgress({
     required this.subjectId,
     required this.interventionId,
@@ -32,13 +35,23 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
     required this.result,
   });
 
-  factory SubjectProgress.fromJson(Map<String, dynamic> json) => _$SubjectProgressFromJson(json);
+  factory SubjectProgress.fromJson(Map<String, dynamic> json) {
+    final progress = _$SubjectProgressFromJson(json);
+
+    final String? startedAt = json['started_at'] as String?;
+    if (startedAt != null) {
+      progress.startedAt = DateTime.parse(startedAt);
+    }
+
+    return progress;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$SubjectProgressToJson(this);
 
   SubjectProgress setStartDateBackBy({required int days}) {
     completedAt = completedAt!.subtract(Duration(days: days));
+    startedAt = startedAt?.subtract(Duration(days: days));
     return this;
   }
 }

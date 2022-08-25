@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/utils/time_of_day.dart';
 
 extension StudyUTimeOfDayX on StudyUTimeOfDay {
   bool equals({required int hour, required int minute}) {
@@ -12,8 +13,8 @@ extension StudyUTimeOfDayX on StudyUTimeOfDay {
     return hour == other.hour && minute == other.minute;
   }
 
-  TimeOfDay toTimeOfDay() {
-    return TimeOfDay(hour: hour, minute: minute);
+  Time toTime() {
+    return Time(hour: hour, minute: minute);
   }
 
   StudyUTimeOfDay fromTimeOfDay(TimeOfDay time) {
@@ -34,9 +35,9 @@ extension ScheduleX on Schedule {
   ];
 
   bool get isTimeRestricted => !(completionPeriods.isEmpty ||
-      (completionPeriods.length == 1
-          && completionPeriods[0].unlockTime.equalsTo(unrestrictedTime[0])
-          && completionPeriods[0].lockTime.equalsTo(unrestrictedTime[1])));
+      (completionPeriods.length == 1 &&
+          completionPeriods[0].unlockTime.equalsTo(unrestrictedTime[0]) &&
+          completionPeriods[0].lockTime.equalsTo(unrestrictedTime[1])));
 
   bool get hasReminder => reminders.isNotEmpty;
 

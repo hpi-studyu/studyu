@@ -6,6 +6,28 @@ import 'package:material_color_utilities/material_color_utilities.dart';
 class ThemeConfig {
   static const double kMinContentWidth = 600.0;
   static const double kMaxContentWidth = 1264.0;
+
+  static Color modalBarrierColor(ThemeData theme) =>
+      theme.colorScheme.secondary.withOpacity(0.4);
+
+  static Color containerColor(ThemeData theme) =>
+      theme.colorScheme.secondaryContainer.withOpacity(0.3);
+
+  static TextStyle bodyTextMuted(ThemeData theme) =>
+      TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: theme.colorScheme.onSurface.withOpacity(0.5)
+      );
+
+  static TextStyle bodyTextBackground(ThemeData theme) =>
+      TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: theme.colorScheme.onSurface.withOpacity(0.25)
+      );
+
+  static double iconSplashRadius(ThemeData theme) => 24.0;
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -110,7 +132,7 @@ class ThemeProvider extends InheritedWidget {
       backgroundColor: Colors.white,
       foregroundColor: colors.onSurface,
       surfaceTintColor: Colors.white,
-      shadowColor: colors.primaryContainer.withOpacity(0.4),
+      shadowColor: colors.primaryContainer.withOpacity(0.3),
       /*
       shape: Border(
           bottom: BorderSide(
@@ -125,7 +147,7 @@ class ThemeProvider extends InheritedWidget {
   SnackBarThemeData snackBarThemeData(ColorScheme colors) {
     return SnackBarThemeData(
       actionTextColor: colors.onPrimary,
-      backgroundColor: colors.primaryContainer,
+      backgroundColor: colors.primary,
       elevation: 1,
     );
   }
@@ -197,6 +219,7 @@ class ThemeProvider extends InheritedWidget {
       filled: true,
       fillColor: Colors.white,
       hoverColor: Colors.white,
+      focusColor: Colors.white,
       isDense: true,
       //constraints: BoxConstraints(maxHeight: 40.0),
       //contentPadding: EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
@@ -241,11 +264,20 @@ class ThemeProvider extends InheritedWidget {
   TextTheme textTheme(ColorScheme colors) {
     // TODO: migrate to 2021 term set across the codebase
     // See https://stackoverflow.com/questions/72271461/cannot-mix-2018-and-2021-terms-in-call-to-texttheme-constructor
+    final headlineColor = colors.onSurfaceVariant;
+
     return TextTheme(
-      caption: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.85)), // Form Labels
-      subtitle1: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)), // TextInput
-      bodyText2: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
-      bodyText1: TextStyle(fontSize: 14.0, color: colors.onSurface), // TextInput
+      button: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
+      caption: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.85)), // Form Labels
+      subtitle1: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // TextInput
+      bodyText1: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)),
+      bodyText2: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.75)),
+      headline6: TextStyle(fontSize: 14.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline5: TextStyle(fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline4: TextStyle(fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline3: TextStyle(fontSize: 28.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline2: TextStyle(fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline1: TextStyle(fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
     );
   }
 
@@ -274,11 +306,35 @@ class ThemeProvider extends InheritedWidget {
   CheckboxThemeData checkboxTheme(ColorScheme colors) {
     return CheckboxThemeData(
       splashRadius: 18.0,
-      fillColor: MaterialStateColor.resolveWith((states) => colors.primary.withOpacity(0.9)),
+      fillColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          if (states.contains(MaterialState.disabled)) {
+            return colors.primary.withOpacity(0.5 * 1.0);
+          }
+          return colors.primary.withOpacity(1.0);
+        }
+        return Colors.transparent;
+      }),
       side: BorderSide(
         color: colors.secondary.withOpacity(0.2),
         width: 1.5,
       ),
+    );
+  }
+
+  RadioThemeData radioTheme(ColorScheme colors) {
+    return RadioThemeData(
+      splashRadius: 18.0,
+      fillColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return colors.primary.withOpacity(0.9);
+        }
+        return null;
+      }),
     );
   }
 
@@ -328,7 +384,10 @@ class ThemeProvider extends InheritedWidget {
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
       checkboxTheme: checkboxTheme(colorScheme),
+      radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
+      disabledColor: colorScheme.onSurface.withOpacity(0.5),
+      shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
       useMaterial3: true,
     );
   }
@@ -353,7 +412,10 @@ class ThemeProvider extends InheritedWidget {
       textTheme: textTheme(colorScheme),
       iconTheme: iconTheme(colorScheme),
       checkboxTheme: checkboxTheme(colorScheme),
+      radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
+      disabledColor: colorScheme.onSurface.withOpacity(0.5),
+      shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
       useMaterial3: true,
     );
   }

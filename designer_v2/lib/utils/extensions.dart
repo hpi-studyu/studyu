@@ -11,13 +11,14 @@ extension EnumX on Enum {
 extension StringX on String {
   bool get isNewId => this == Config.newModelId;
 
-  String asId() {
+  String toKey() {
     return toLowerCase().replaceAll(' ', '_');
   }
 
-  String withDuplicateLabel({label=kDuplicateLabel}) {
+  String withDuplicateLabel({label = kDuplicateLabel}) {
     final regexStr = r"\((?:" + label + r")\s*(\d*)\)$";
-    final suffixFactory = (n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
+    final suffixFactory =
+        (n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
     final regex = RegExp(regexStr);
 
     Iterable<RegExpMatch> matches = regex.allMatches(this);
@@ -25,29 +26,132 @@ extension StringX on String {
     if (matches.isNotEmpty) {
       final matchedSuffix = matches.last;
       final matchedIncrement = matchedSuffix.group(1);
-      final currentIncrement = (matchedIncrement == null
-          || matchedIncrement == '') ? 0 : int.parse(matchedIncrement);
-      final strWithoutLabel = replaceRange(
-          matchedSuffix.start, matchedSuffix.end, '').trim();
+      final currentIncrement =
+          (matchedIncrement == null || matchedIncrement == '')
+              ? 0
+              : int.parse(matchedIncrement);
+      final strWithoutLabel =
+          replaceRange(matchedSuffix.start, matchedSuffix.end, '').trim();
       return "$strWithoutLabel ${suffixFactory(currentIncrement + 1)}";
     }
     return "${this} ${suffixFactory(0)}";
   }
+
+  List<String> get alphabet {
+    return [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o'
+    ];
+  }
+
+  String alphabetLetterFrom(int idx) {
+    return alphabet[idx % alphabet.length];
+  }
+
+  String ensureSuffix(String suffix) {
+    if (!endsWith(suffix)) {
+      return this + suffix;
+    }
+    return this;
+  }
+}
+
+extension DurationX on Duration {
+  int get daysPerMonth => 30;
+  int get daysPerYear => 365;
+  int get microsecondsPerMonth => Duration.microsecondsPerDay * daysPerMonth;
+  int get microsecondsPerYear => Duration.microsecondsPerDay * daysPerYear;
+  int get inMonths => inMicroseconds ~/ microsecondsPerMonth;
+  int get inYears => inMicroseconds ~/ microsecondsPerYear;
 }
 
 extension DateTimeAgoX on DateTime {
-  String toTimeAgoString() {
+  String _timeAgoFormatted({inSeconds = true}) {
     Duration diff = DateTime.now().difference(this);
-    if (diff.inDays >= 1) {
-      return '${diff.inDays} tr.days_ago' ;
+
+    if (diff.inYears >= 1) {
+      if (diff.inYears == 1) {
+        return ${diff.inYears} + ${tr.year_ago};
+      } else {
+        return ${diff.inYears} + ${tr.years_ago};
+      }
+    } else if (diff.inMonths >= 1) {
+      if (diff.inMonths == 1) {
+        return ${diff.inMonths} + ${tr.month_ago};
+      } else {
+        return ${diff.inMonths} + ${tr.months_ago};
+      }
+    } else if (diff.inDays >= 1) {
+      if (diff.inDays == 1) {
+        return ${diff.inDays} + ${tr.day_ago};
+      } else {
+        return ${diff.inDays} + ${tr.days_ago};
+      }
     } else if (diff.inHours >= 1) {
-      return '${diff.inHours} tr.hours_ago';
+      if (diff.inHours == 1) {
+        return ${diff.inHours} + ${tr.hour_ago};
+      } else {
+        return ${diff.inHours} + ${tr.hours_ago};
+      }
     } else if (diff.inMinutes >= 1) {
-      return '${diff.inMinutes} tr.minutes_ago';
-    } else if (diff.inSeconds >= 1) {
-      return '${diff.inSeconds} tr.seconds_ago';
+      if (diff.inMinutes == 1) {
+        return ${diff.inMinutes} + ${tr.minute_ago};
+      } else {
+        return ${diff.inMinutes} + ${tr.minutes_ago};
+      }
+    } else if (diff.inSeconds >= 1 && inSeconds) {
+      if (diff.inSeconds == 1) {
+        return ${diff.inSeconds} + ${tr.second_ago};
+      } else {
+        return ${diff.inSeconds} + ${tr.seconds_ago};
+      }
     } else {
       return tr.just_now;
     }
+  }
+
+  String toTimeAgoString() {
+    return _timeAgoFormatted(inSeconds: false);
+  }
+
+  String toTimeAgoStringPrecise() {
+    return _timeAgoFormatted(inSeconds: true);
+  }
+}
+
+typedef ListElementFactory<E> = E Function();
+
+extension ListX<E> on List<E> {
+  List<E> separatedBy(ListElementFactory<E> separatorBuilder) {
+    final List<E> results = [];
+    for (var i = 0; i < length; i++) {
+      results.add(this[i]);
+      if (i != length - 1) {
+        results.add(separatorBuilder());
+      }
+    }
+    return results;
+  }
+}
+
+extension FirstWhereOrNullExtension<E> on Iterable<E> {
+  E? firstWhereOrNull(bool Function(E) test) {
+    for (E element in this) {
+      if (test(element)) return element;
+    }
+    return null;
   }
 }

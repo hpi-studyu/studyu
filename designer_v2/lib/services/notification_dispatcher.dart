@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -147,22 +148,25 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
     }
 
     return AlertDialog(
-      title: Text(
-          "⚠️ ${notification.title}",
-          style: textTheme.titleLarge
+      title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(notification.icon),
+            Text("️ ${notification.title}", style: textTheme.titleLarge),
+          ]
       ),
       content: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 300,
-          maxWidth: MediaQuery.of(context).size.width * 0.33,
-        ),
-        child: Row(
-          children: [
-            Flexible(
-              child: Text(notification.message)
-            ),
-          ]
-        )
+          constraints: BoxConstraints(
+            minWidth: 300,
+            maxWidth: MediaQuery.of(context).size.width * 0.33,
+          ),
+          child: Row(
+              children: [
+                Flexible(
+                    child: Text(notification.message)
+                ),
+              ]
+          )
       ),
       actions: actions,
     );

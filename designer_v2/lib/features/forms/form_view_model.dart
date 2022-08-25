@@ -1,8 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:async/async.dart';
+import 'package:equatable/equatable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:studyu_designer_v2/utils/typings.dart';
 
 enum FormMode {
   create,
@@ -11,48 +17,53 @@ enum FormMode {
 }
 
 class FormInvalidException implements Exception {}
+class FormConfigException implements Exception {
+  FormConfigException([this.message]);
+  final String? message;
+}
 
 abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onSave(T formViewModel, FormMode prevFormMode);
   void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
-class FormControlOption<T> {
+class FormControlOption<T> extends Equatable {
   final T value;
   final String label;
+  final String? description;
 
-  FormControlOption(this.value, this.label);
+  const FormControlOption(this.value, this.label, {this.description});
+
+  @override
+  List<Object?> get props => [value, label, description];
 }
 
 typedef FormControlUpdateCallback = void Function(AbstractControl control);
 
 abstract class FormViewModel<T> {
-  FormViewModel({formData, this.delegate, this.autosave = false}) :
+  FormViewModel({
+    formData,
+    this.delegate,
+    validationSet,
+    this.autosave = false,
+  }) :  _validationSet = validationSet,
         _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
+    _setControlValidators(validationSet);
+    _setFormData(formData);
     _restoreControlsFromFormData();
     _formModeUpdated();
+
     if (autosave) {
       // Push to event queue to avoid listening to update events
       // triggered synchronously during initialization
-      Future.delayed(const Duration(milliseconds: 0), enableAutosave);
+      runAsync(enableAutosave);
     }
   }
 
   T? get formData => _formData;
   set formData(T? formData) => _setFormData(formData);
   T? _formData;
-
-  final bool autosave;
-
-  final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
-
-  /// Map that stores the default enabled/disabled state for each control in
-  /// the [form]
-  final Map<String, bool> _defaultControlStates = {};
-
-  final List<StreamSubscription> _immediateFormChildrenSubscriptions = [];
-  Debouncer? _immediateFormChildrenListenerDebouncer;
 
   FormMode get formMode => _formMode;
   set formMode(FormMode mode) {
@@ -61,17 +72,52 @@ abstract class FormViewModel<T> {
   }
   FormMode _formMode;
 
-  String get title => titles[formMode] ?? "[Missing title]";
-  bool get isValid => form.valid;
+  bool get isReadonly => formMode == FormMode.readonly;
 
-  _setFormData(T? formData, {emitUpdate = true}) {
+  /// Enum that determines which [FormValidationConfig] should be selected
+  /// from the [validationConfig] and applied to the [form].
+  ///
+  /// If null, the [AbstractControl]s contained in the [form] will be validated
+  /// using their default configuration. Otherwise, the default configuration
+  /// is discarded & replaced by the respective [FormValidationConfig].
+  FormValidationSetEnum? get validationSet => _validationSet;
+  FormValidationSetEnum? _validationSet;
+  set validationSet(FormValidationSetEnum? validationSet) {
+    _validationSet = validationSet;
+    _setControlValidators(validationSet);
+  }
+
+  final IFormViewModelDelegate<FormViewModel<dynamic>>? delegate;
+
+  final bool autosave;
+
+  final List<StreamSubscription> _immediateFormChildrenSubscriptions = [];
+  Debouncer? _immediateFormChildrenListenerDebouncer;
+
+  CancelableOperation? _autosaveOperation;
+
+  /// Map that stores the default enabled/disabled state for each control in
+  /// the [form]
+  final Map<String, bool> _defaultControlStates = {};
+
+  /// Flag indicating whether the current [form] data is different from
+  /// the most recently set [formData]
+  ///
+  /// Note: [AbstractControl.dirty] does not work reliably when the [form]'s
+  /// values are initialized in [setControlsFrom] (controls that are set
+  /// programmatically are incorrectly marked as dirty without any user input)
+  bool get isDirty => jsonEncode(prevFormValue) != jsonEncode(form.value);
+
+  /// The [form]'s JSON value after initializing the controls with [formData]
+  JsonMap? prevFormValue;
+
+  _setFormData(T? formData) {
     _formData = formData;
     if (formData != null) {
       setControlsFrom(formData); // update [form] controls automatically
-      if (emitUpdate) {
-        form.updateValueAndValidity();
-      }
+      form.updateValueAndValidity();
     }
+    prevFormValue = {...form.value};
   }
 
   _saveControlStates() {
@@ -115,28 +161,61 @@ abstract class FormViewModel<T> {
     }
   }
 
-  _restoreControlsFromFormData({emitUpdate = true}) {
+  _restoreControlsFromFormData() {
     if (formData != null) {
       setControlsFrom(formData!);
     } else {
       initControls();
     }
-    if (emitUpdate) {
-      form.updateValueAndValidity();
+    form.updateValueAndValidity();
+  }
+
+  void _setControlValidators(FormValidationSetEnum? validationSet) {
+    if (validationSet == null) {
+      return; // retain default form validators
     }
+    final formValidationConfig = validationConfig[validationSet];
+    if (formValidationConfig == null) {
+      throw FormConfigException(
+          "Failed to lookup FormValidationConfig for key: $validationSet");
+    }
+
+    // Build index control => config
+    final Map<AbstractControl, FormControlValidation> controlConfigs = {};
+    for (final controlValidationConfig in formValidationConfig) {
+      final existingConfig = controlConfigs[controlValidationConfig.control];
+      final mergedConfig = controlValidationConfig.merge(existingConfig);
+      controlConfigs[controlValidationConfig.control] = mergedConfig;
+    }
+
+    // Apply control-specific config (if any) for each control in the form
+    for (final control in form.controls.values) {
+      if (!controlConfigs.containsKey(control)) {
+        continue;
+      }
+      // Update control
+      final controlValidationConfig = controlConfigs[control]!;
+      control.setValidators(controlValidationConfig.validators);
+      if (controlValidationConfig.asyncValidators != null) {
+        control.setAsyncValidators(controlValidationConfig.asyncValidators!);
+      }
+      control.validationMessages = controlValidationConfig.validationMessages;
+    }
+
+    form.updateValueAndValidity();
   }
 
-  void edit(T formData) {
-    this.formData = formData;
-    formMode = FormMode.edit;
-  }
+  String get title => titles[formMode] ?? "[Missing title]";
+  bool get isValid => form.valid;
 
-  void read(T formData) {
-    this.formData = formData;
+  void read([T? formData]) {
+    if (formData != null) {
+      this.formData = formData;
+    }
     formMode = FormMode.readonly;
   }
 
-  Future save({updateState = true}) {
+  Future save() {
     if (!form.valid) {
       throw FormInvalidException();
     }
@@ -144,8 +223,20 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    if (updateState) {
-      formData = buildFormData();
+
+    if (isDirty) {
+      final currentFormData = buildFormData();
+      // Reinitialize the viewmodel with the [form]'s current data, resulting
+      // in an update to the [form] controls from calling [_setFormData]
+      // and [setControlsFrom] internally
+      formData = currentFormData;
+    } else {
+      // Do nothing - this is important!
+      // Otherwise we may enter an infinite loop from calling [_setFormData]
+      // and [setControlsFrom] internally. Calling [setControlsFrom] may result
+      // in update events emitted by the reactive controls as their values are
+      // re-initialized, which re-triggers the valueChanges stream subscription
+      // used for autosaving (entering the infinite loop)
     }
     delegate?.onSave(this, prevFormMode);
 
@@ -154,33 +245,40 @@ abstract class FormViewModel<T> {
       formMode = FormMode.edit;
     }
 
-    return Future.value(null);
+    return Future.value(true);
   }
 
   Future<void> cancel() {
-    _restoreControlsFromFormData();
+    if (formMode != FormMode.readonly) {
+      _restoreControlsFromFormData();
+    }
     delegate?.onCancel(this, formMode);
 
     return Future.value(null);
   }
 
-  void enableAutosave({int debounce = Config.formAutosaveDebounce}) {
+  void enableAutosave({
+    int debounce = Config.formAutosaveDebounce,
+    onlyValid = true,
+  }) {
     if (_immediateFormChildrenSubscriptions.isNotEmpty) {
       return;
     }
     listenToImmediateFormChildren((control) {
-      if (form.valid) {
-        // don't update internal state to avoid infinite loop
-        save(updateState: false);
+      if (onlyValid && form.valid) {
+        _autosaveOperation = CancelableOperation.fromFuture(
+          save(),
+        );
       }
     }, debounce: debounce);
   }
 
   void listenToImmediateFormChildren(FormControlUpdateCallback callback,
-      {int debounce = 5000}) {
+      {int debounce = 1500}) {
     // Initialize debounce helper if needed
     if (debounce != 0) {
-      _immediateFormChildrenListenerDebouncer ??= Debouncer(milliseconds: debounce);
+      _immediateFormChildrenListenerDebouncer ??= Debouncer(
+          milliseconds: debounce, leading: false);
     }
 
     for (final control in form.controls.values) {
@@ -207,15 +305,23 @@ abstract class FormViewModel<T> {
 
   void dispose() {
     _immediateFormChildrenListenerDebouncer?.dispose();
-    for (final subscription in _immediateFormChildrenSubscriptions) {
-      subscription.cancel();
-    }
+    _autosaveOperation?.cancel();
+    /*for (final subscription in _immediateFormChildrenSubscriptions) {
+      subscription.pause();
+    }*/
   }
 
   // - Subclass responsibility
 
   FormGroup get form;
   Map<FormMode, String> get titles;
+
+  /// The available set of validation configurations for the [form] managed
+  /// by this view model.
+  ///
+  /// One of the [FormValidationConfig]s is chosen at runtime based on the
+  /// current [validationSet] and applied to the [form].
+  FormValidationConfigSet get validationConfig => {};
 
   /// Initialize the values of all [FormControl]s in the [form]
   void setControlsFrom(T data);

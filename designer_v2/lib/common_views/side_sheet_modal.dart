@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 /// Displays a Material Side Sheet transitioned from Right side of the screen.
 ///
@@ -79,7 +81,7 @@ Future<T?> showModalSideSheet<T extends Object?>(
     {required BuildContext context,
       required Widget body,
       bool barrierDismissible = false,
-      Color barrierColor = const Color(0x80000000),
+      Color? barrierColor,
       double? width,
       double elevation = 8.0,
       Duration transitionDuration = const Duration(milliseconds: 300),
@@ -106,7 +108,7 @@ Future<T?> showModalSideSheet<T extends Object?>(
   assert(!barrierDismissible || barrierLabel != null);
   return showGeneralDialog(
     barrierDismissible: barrierDismissible,
-    barrierColor: barrierColor,
+    barrierColor: barrierColor ?? ThemeConfig.modalBarrierColor(Theme.of(context)),
     transitionDuration: transitionDuration,
     barrierLabel: barrierLabel,
     useRootNavigator: useRootNavigator,
@@ -143,8 +145,6 @@ Future<T?> showModalSideSheet<T extends Object?>(
   );
 }
 
-typedef WidgetDecorator = Widget Function(Widget widget);
-
 Future<T?> showDefaultSideSheet<T extends Object?>({
     required BuildContext context,
     required String title,
@@ -152,7 +152,7 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
     required List<Widget> actionButtons,
     WidgetDecorator? wrapBody,
     width = 560,
-    barrierColor = const Color(0xA8FFFFFF),
+    barrierColor,
     barrierDismissible = true,
     ignoreAppBar = false,
     withCloseControll = false,
@@ -187,7 +187,8 @@ Future<T?> showDefaultSideSheet<T extends Object?>({
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(title, style: theme.textTheme.headline6),
+                  Text(title, style: theme.textTheme.headline5!
+                      .copyWith(fontWeight: FontWeight.normal)),
                   Wrap(spacing: 8.0, children: actionButtons),
                 ],
               ),
@@ -220,9 +221,9 @@ showFormSideSheet<T extends FormViewModel>({
   required FormViewBuilder<T> formViewBuilder,
   List<Widget>? actionButtons,
   width = 560,
-  barrierColor = const Color(0xA8FFFFFF),
+  barrierColor,
   barrierDismissible = true,
-  ignoreAppBar = false,
+  ignoreAppBar = true,
   bodyPaddingVertical = 32.0,
   bodyPaddingHorizontal = 48.0,
 }) {
@@ -236,6 +237,8 @@ showFormSideSheet<T extends FormViewModel>({
       child: widget,
     );
   }
+
+  barrierColor ??= ThemeConfig.modalBarrierColor(Theme.of(context));
 
   return showDefaultSideSheet(
     context: context,

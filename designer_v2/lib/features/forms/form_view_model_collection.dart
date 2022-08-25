@@ -1,16 +1,26 @@
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 
-typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> = bool Function(T formViewModel);
+/// Parent class for [FormViewModel]s that are managed in a [FormViewModelCollection]
+abstract class ManagedFormViewModel<T> extends FormViewModel<T> {
+  ManagedFormViewModel(
+      {super.delegate, super.formData, super.autosave, super.validationSet});
+  ManagedFormViewModel<T> createDuplicate();
+}
+
+typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> = bool
+    Function(T formViewModel);
 
 class FormViewModelNotFoundException implements Exception {}
 
-/// Wrapper around a list of [FormViewModel]s where each [FormViewModel.form]
+/// Wrapper around a list of [ManagedFormViewModel]s where each [FormViewModel.form]
 /// corresponds to a [FormGroup] in a [FormArray] & is automatically synchronized
 ///
 /// Enables reactive re-rendering of forms containing a [FormArray] that is
 /// derived from a list of [FormViewModel]s
-class FormViewModelCollection<T extends FormViewModel, D> {
+class FormViewModelCollection<T extends ManagedFormViewModel<D>,
+    D extends IFormData> {
   FormViewModelCollection(this.formViewModels, this.formArray);
 
   List<T> formViewModels;
@@ -26,8 +36,8 @@ class FormViewModelCollection<T extends FormViewModel, D> {
 
   List<T> get retrievableViewModels => [...formViewModels, ...stagedViewModels];
 
-  List<D> get formData => formViewModels.map(
-          (vm) => vm.buildFormData() as D).toList();
+  List<D> get formData =>
+      formViewModels.map((vm) => vm.buildFormData() as D).toList();
 
   void add(T formViewModel) {
     if (formViewModels.contains(formViewModel)) {
@@ -102,5 +112,11 @@ class FormViewModelCollection<T extends FormViewModel, D> {
     }
 
     formArray.updateValueAndValidity();
+  }
+
+  void read() {
+    for (final formViewModel in formViewModels) {
+      formViewModel.read();
+    }
   }
 }

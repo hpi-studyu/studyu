@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
-import 'package:studyu_designer_v2/features/design/common_views/form_array_table.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -30,6 +28,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
+                control: formViewModel.surveyTitleControl,
                 label: tr.survey_title,
                 //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 labelHelpText: tr.survey_help_text,
@@ -38,17 +37,31 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.surveyIntroTextControl,
                 label: tr.intro_text,
                 labelHelpText: tr.intro_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyIntroTextControl,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 5,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      hintText: "e.g. welcome & introduce participants to the survey".hardcoded
+                  ),
                 ),
               ),
               FormTableRow(
+                control: formViewModel.surveyOutroTextControl,
                 label: tr.outro_text,
                 labelHelpText: tr.outro_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyOutroTextControl,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 5,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                      hintText: "e.g. thank participants for completing the survey".hardcoded
+                  ),
                 ),
               ),
             ]
@@ -59,15 +72,16 @@ class MeasurementSurveyFormView extends ConsumerWidget {
           // By default, ReactiveFormArray only updates when adding/removing controls
           builder: (context, form, child) {
             return ReactiveFormArray(
-              formArray: formViewModel.surveyQuestionsArray,
+              formArray: formViewModel.questionsArray,
               builder: (context, formArray, child) {
-                return FormArrayTable<SurveyQuestionFormData>(
-                  items: formViewModel.surveyQuestionsData,
-                  onSelectItem: (item) => _onSelectItem(item, context, ref),
-                  getActionsAt: (item, _) => formViewModel.availablePopupActions(item),
+                return FormArrayTable<QuestionFormViewModel>(
+                  control: formViewModel.questionsArray,
+                  items: formViewModel.questionModels,
+                  onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
+                  getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                   onNewItem: () => _onNewItem(context, ref),
-                  onNewItemLabel: 'Add question',
-                  rowTitle: (data) => data.questionText,
+                  onNewItemLabel: 'Add question'.hardcoded,
+                  rowTitle: (viewModel) => viewModel.formData?.questionText ?? 'Missing item title'.hardcoded,
                   sectionTitle: tr.questions,
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle: tr.no_questions,
@@ -78,159 +92,9 @@ class MeasurementSurveyFormView extends ConsumerWidget {
           }
         ),
         const SizedBox(height: 28.0),
-        ReactiveFormConsumer(
-          builder: (context, form, child) {
-            return _scheduleSection(context);
-          }
-        )
+        ScheduleControls(formViewModel: formViewModel),
       ],
     );
-  }
-
-  Widget _scheduleSection(BuildContext context) {
-    //formViewModel.reminderTimeControl.markAsDisabled();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FormTableLayout(
-            rows: [
-              FormTableRow(
-                label: tr.sheduling,
-                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                input: Container(),
-              ),
-            ]
-        ),
-        const Divider(),
-        const SizedBox(height: 12.0),
-        FormTableLayout(
-            rows: [
-              FormTableRow(
-                label: tr.app_reminder,
-                labelHelpText: tr.app_reminder_helptext,
-                input: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    ReactiveCheckbox(
-                      formControl: formViewModel.hasReminderControl,
-                    ),
-                    const SizedBox(width: 3.0),
-                    FormControlLabel(
-                      formControl: formViewModel.hasReminderControl,
-                      text: tr.send_notification
-                    ),
-                    const SizedBox(width: 8.0),
-                    Opacity(
-                      opacity: (formViewModel.hasReminder) ? 1 : 0.5,
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          IntrinsicWidth(
-                              child: ReactiveTimePicker(
-                                formControl: formViewModel.reminderTimeControl,
-                                initialEntryMode: TimePickerEntryMode.input,
-                                builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                                  return ReactiveTextField(
-                                    formControl: formViewModel.reminderTimeControl,
-                                    decoration: InputDecoration(
-                                      hintText: tr.hh_mm,
-                                      suffixIcon: Material(
-                                          color: Colors.transparent,
-                                          child: IconButton(
-                                            splashRadius: 18.0,
-                                            onPressed: picker.showPicker,
-                                            icon: const Icon(Icons.access_time),
-                                          )
-                                      )
-                                    ),
-                                  );
-                                },
-                              )
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              FormTableRow(
-                label: tr.time_restriction,
-                labelHelpText: tr.time_rescrition_notification_text,
-                input: ReactiveSwitch(
-                  formControl: formViewModel.isTimeRestrictedControl,
-                ),
-              ),
-              ..._conditionalTimeRestrictions(context),
-            ]
-        ),
-      ],
-    );
-  }
-
-  List<FormTableRow> _conditionalTimeRestrictions(BuildContext context) {
-    if (!formViewModel.isTimeRestricted) {
-      return [];
-    }
-    return [
-      FormTableRow(
-        label: " ",
-        input: Row(
-          children: [
-            Flexible(
-                child: ReactiveTimePicker(
-                  formControl: formViewModel.restrictedTimeStartControl,
-                  initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                    return ReactiveTextField(
-                      formControl: formViewModel.restrictedTimeStartControl,
-                      decoration: (formViewModel.restrictedTimeStartControl.enabled)
-                          ? InputDecoration(
-                          labelText: tr.from,
-                          helperText: "",
-                          hintText: tr.hh_mm,
-                          suffixIcon: Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                splashRadius: 18.0,
-                                onPressed: picker.showPicker,
-                                icon: const Icon(Icons.access_time),
-                              )
-                          )
-                      ) : const InputDecoration(),
-                    );
-                  },
-                )
-            ),
-            const SizedBox(width: 10.0),
-            Flexible(
-                child: ReactiveTimePicker(
-                  formControl: formViewModel.restrictedTimeEndControl,
-                  initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                    return ReactiveTextField(
-                      formControl: formViewModel.restrictedTimeEndControl,
-                      decoration: (formViewModel.restrictedTimeEndControl.enabled)
-                          ? InputDecoration(
-                          labelText: tr.to,
-                          helperText: "",
-                          hintText: tr.hh_mm,
-                          suffixIcon: Material(
-                              color: Colors.transparent,
-                              child: IconButton(
-                                splashRadius: 18.0,
-                                onPressed: picker.showPicker,
-                                icon: const Icon(Icons.access_time),
-                              )
-                          )
-                      ) : const InputDecoration(),
-                    );
-                  },
-                )
-            ),
-          ],
-        )
-      ),
-    ];
   }
 
   _onNewItem(BuildContext context, WidgetRef ref) {
@@ -238,7 +102,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
-  _onSelectItem(SurveyQuestionFormData item, BuildContext context, WidgetRef ref) {
+  _onSelectItem(QuestionFormViewModel item, BuildContext context, WidgetRef ref) {
     final routeArgs = formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
@@ -251,7 +115,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
   {
     final surveyQuestionFormViewModel = ref.read(
         surveyQuestionFormViewModelProvider(routeArgs));
-    showFormSideSheet<SurveyQuestionFormViewModel>(
+    showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
       formViewBuilder: (formViewModel) => SurveyQuestionFormView(

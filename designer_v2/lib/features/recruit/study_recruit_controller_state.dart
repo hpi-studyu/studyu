@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyRecruitControllerState extends StudyControllerBaseState {
   const StudyRecruitControllerState({
+    required super.currentUser,
     super.studyWithMetadata,
     this.invites = const AsyncValue.loading(),
   });
@@ -17,18 +18,18 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
 
   @override
   StudyRecruitControllerState copyWith({
-    WrappedModel<Study>? Function()? studyWithMetadata,
-    AsyncValue<List<StudyInvite>> Function()? invites,
+    WrappedModel<Study>? studyWithMetadata,
+    AsyncValue<List<StudyInvite>>? invites,
   }) {
     return StudyRecruitControllerState(
-      studyWithMetadata: (studyWithMetadata != null)
-          ? studyWithMetadata() : this.studyWithMetadata,
-      invites: (invites != null) ? invites() : this.invites,
+      studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
+      invites: invites ?? this.invites,
+      currentUser: super.currentUser,
     );
   }
 
   // - Equatable
 
   @override
-  List<Object?> get props => [invites];
+  List<Object?> get props => [...super.props, invites];
 }

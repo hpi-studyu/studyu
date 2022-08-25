@@ -5,7 +5,7 @@
   "en": "Englisch",
   "de": "Deutsch",
 
-  "study_u": "Study U",
+  "study_u": "StudyU",
 
   "create_new_study": "Neue Studie anlegen",
   "contact_details": "Kontaktdaten",
@@ -125,7 +125,7 @@
   "study_u_designer": "Study U Designer",
 
   "drafts": "Entwurf",
-  "running": "laufend",
+  "live": "Laufend",
   "remember_me": "Zugangsdaten speichern",
   "forgot_password_question": "Passwort vergessen?",
   "cancel": "Abbrechen",
@@ -158,7 +158,7 @@
   "changes_could_not_be_saved": "Änderungen könnten verloren gehen.",
   "all_changes_saved": "Alle Änderungen gespeichert.",
   "last_saved": "Zuletzt gespeichert:",
-  "unsaved_changes": "es gibt nicht gespeicherte Änderungen",
+  "unsaved_changes": "Es gibt nicht gespeicherte Änderungen",
   "saving_changes": "Änderungen werden gespeichert...",
   "copy_to_clipboard": "In Zwischenablage kopiert",
   "duplicate": "Duplizieren",
@@ -169,7 +169,7 @@
   "hours_ago": "Stunde(n) her",
   "minutes_ago": "Minute(n) her",
   "seconds_ago": "Sekunde(n) her",
-  "just_now": "gerade eben",
+  "just_now": "Gerade eben",
   "design": "Design",
   "test": "Test",
   "recruit": "Recruit",
@@ -251,5 +251,4 @@
   "new_screener_question": "Neue Berechtigungsfrage",
   "edit_screener_question": "Berechtigungsfrage bearbeiten",
   "study_U": "StudyU"
-
 }

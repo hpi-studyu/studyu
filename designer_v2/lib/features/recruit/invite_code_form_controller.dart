@@ -42,8 +42,8 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   };
 
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);
-  final preconfiguredScheduleTypeControl = FormControl<StudyScheduleType>(
-      value: StudyScheduleType.abab);
+  final preconfiguredScheduleTypeControl = FormControl<PhaseSequence>(
+      value: PhaseSequence.alternating);
   final interventionAControl = FormControl<String>();
   final interventionBControl = FormControl<String>();
 
@@ -51,8 +51,8 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
       study.interventions.map((intervention) =>
           FormControlOption(intervention.id, intervention.name!)).toList();
 
-  List<FormControlOption<StudyScheduleType>> get preconfiguredScheduleTypeOptions => [
-    FormControlOption(StudyScheduleType.abab, StudyScheduleType.abab.string)
+  List<FormControlOption<PhaseSequence>> get preconfiguredScheduleTypeOptions => [
+    FormControlOption(PhaseSequence.alternating, PhaseSequence.alternating.string)
   ];
 
   bool get isPreconfiguredSchedule => isPreconfiguredScheduleControl.value!;

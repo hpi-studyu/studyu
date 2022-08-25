@@ -3,6 +3,7 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,20 +13,16 @@ enum StudyActionType {
   addCollaborator,
   recruit,
   export,
-  delete
+  delete,
 }
 
 // TODO: Add status field to core package domain model
-enum StudyStatus {
-  draft,
-  running,
-  closed
-}
+enum StudyStatus { draft, running, closed }
 
 typedef StudyID = String;
 typedef MeasurementID = String;
 
-extension StudyWithStatus on core.Study {
+extension StudyStatusX on core.Study {
   StudyStatus get status {
     // TODO: missing a flag to indicate a study has been completed & participation is closed
     if (published) {
@@ -33,13 +30,20 @@ extension StudyWithStatus on core.Study {
     }
     return StudyStatus.draft;
   }
+
+  bool isReadonly(sb.User user) {
+    return status != StudyStatus.draft || !canEdit(user);
+  }
 }
 
 typedef InterventionProvider = Intervention? Function(String id);
 
 extension StudyHelpers on core.Study {
   Intervention? getIntervention(String id) {
-    return interventions.firstWhere((i) => i.id == id);
+    if (id == Study.baselineID) {
+      return Intervention(Study.baselineID, 'Baseline');
+    }
+    return interventions.firstWhereOrNull((i) => i.id == id);
   }
 }
 
@@ -50,9 +54,22 @@ extension StudyStatusFormatted on StudyStatus {
       case StudyStatus.draft:
         return tr.drafts;
       case StudyStatus.running:
-        return tr.running;
+        return "Live".hardcoded;
       case StudyStatus.closed:
         return tr.closed;
+      default:
+        return "[Invalid StudyStatus]";
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case StudyStatus.draft:
+        return "This study is still being drafted.".hardcoded;
+      case StudyStatus.running:
+        return "This study is currently in progress.".hardcoded;
+      case StudyStatus.closed:
+        return "This study has been completed.".hardcoded;
       default:
         return "[Invalid StudyStatus]";
     }
@@ -84,25 +101,23 @@ extension StudyInviteCodeX on Study {
 
 extension StudyDuplicateX on Study {
   Study exactDuplicate() {
-    return Study.fromJson(toJson());
+    final copy = Study.fromJson(toJson());
+    copy.copyJsonIgnoredAttributes(from: this, createdAt: true);
+    return copy;
   }
 
   /// Creates a clean copy of the given [study] only containing the
   /// study protocol / editor data model
   Study duplicateAsDraft(String userId) {
     final copy = Study.fromJson(toJson());
+    copy.resetJsonIgnoredAttributes();
     copy.title = (copy.title ?? '').withDuplicateLabel();
     copy.userId = userId;
     copy.published = false;
-    copy.activeSubjectCount = 0;
-    copy.participantCount = 0;
-    copy.endedCount = 0;
-    copy.missedDays = [];
     copy.resultSharing = ResultSharing.private;
     copy.results = [];
-    copy.repo = null;
-    copy.invites = null;
     copy.collaboratorEmails = [];
+    copy.createdAt = DateTime.now();
 
     // Generate a new random UID
     final dummy = Study.withId(userId);
@@ -110,6 +125,58 @@ extension StudyDuplicateX on Study {
 
     return copy;
   }
+
+  Study asNewlyPublished() {
+    final copy = Study.fromJson(toJson());
+    copy.copyJsonIgnoredAttributes(from: this, createdAt: true);
+    copy.resetParticipantData();
+    copy.published = true;
+    return copy;
+  }
+
+  Study copyJsonIgnoredAttributes({required Study from, createdAt = false}) {
+    participantCount = from.participantCount;
+    activeSubjectCount = from.activeSubjectCount;
+    endedCount = from.endedCount;
+    missedDays = from.missedDays;
+    repo = from.repo;
+    invites = from.invites;
+    participants = from.participants;
+    participantsProgress = from.participantsProgress;
+    if (createdAt) {
+      this.createdAt = from.createdAt;
+    }
+    return this;
+  }
+
+  Study resetJsonIgnoredAttributes() {
+    participantCount = 0;
+    activeSubjectCount = 0;
+    endedCount = 0;
+    missedDays = [];
+    repo = null;
+    invites = [];
+    participants = [];
+    participantsProgress = [];
+    createdAt = null;
+    return this;
+  }
+
+  Study resetParticipantData() {
+    participantCount = 0;
+    activeSubjectCount = 0;
+    endedCount = 0;
+    missedDays = [];
+    results = [];
+    participants = [];
+    participantsProgress = [];
+    return this;
+  }
+}
+
+extension StudyRegistryX on Study {
+  bool get publishedToRegistry => registryPublished;
+  bool get publishedToRegistryResults => resultSharing == ResultSharing.public;
 }
 
 class StudyTemplates {
@@ -118,5 +185,38 @@ class StudyTemplates {
     newDraft.title = tr.unnamed_Study;
     newDraft.description = tr.lorem_ipsum;
     return newDraft;
+  }
+}
+
+extension StudyParticipantCountX on Study {
+  int getParticipantCountForInvite(StudyInvite invite) {
+    if (participants?.isEmpty ?? true) {
+      return 0;
+    }
+    int count = 0;
+    for (final participant in participants!) {
+      if (participant.inviteCode == invite.code) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+}
+
+extension StudyPermissionsX on Study {
+  bool canEditDraft(sb.User user) {
+    return status == StudyStatus.draft && canEdit(user);
+  }
+
+  bool canCopy(sb.User user) {
+    return canEdit(user) || registryPublished;
+  }
+
+  bool canDelete(sb.User user) {
+    return isOwner(user) && !published;
+  }
+
+  bool canChangeSettings(sb.User user) {
+    return isOwner(user);
   }
 }
