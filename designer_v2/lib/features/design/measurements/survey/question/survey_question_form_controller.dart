@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/question/
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 
 class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
@@ -161,9 +162,9 @@ class SurveyQuestionFormViewModel extends FormViewModel<SurveyQuestionFormData>
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: "New Survey Question".hardcoded,
-    FormMode.edit: "Edit Survey Question".hardcoded,
-    FormMode.readonly: "View Survey Question".hardcoded,
+    FormMode.create: tr.new_survey_question,
+    FormMode.edit: tr.edit_survey_question,
+    FormMode.readonly: tr.view_survey_question,
   };
 
   @override

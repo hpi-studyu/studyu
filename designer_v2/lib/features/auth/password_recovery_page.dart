@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/auth/auth_formfield_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class PasswordRecoveryPage extends StatefulWidget {
   const PasswordRecoveryPage({Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
           Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Center(child: Text('Choose a new password'.hardcoded, /*style: FlutterFlowTheme.of(context).title1*/)),
+                Center(child: Text(tr.choose_a_new_password, /*style: FlutterFlowTheme.of(context).title1*/)),
                 const SizedBox(height: 20),
                 const PasswordTextField(),
                 // todo labelText is .hardcoded
@@ -61,7 +62,7 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
                     final authState = ref.watch(authControllerProvider);
                     return PrimaryButton(
                       icon: Icons.send,
-                      text: 'Confirm setting a new password'.hardcoded,
+                      text: tr.confirm_new_password,
                       isLoading: authState.isLoading,
                       onPressed: authForm.valid ? _formReturnAction : null,
                       tooltipDisabled: 'All fields must be filled out',
@@ -84,7 +85,7 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
           child: TextButton(
               onPressed: () => ref.read(routerProvider).dispatch(
                   RoutingIntents.studies),
-              child: Text("Go to study overview".hardcoded, /*style: FlutterFlowTheme.of(context).bodyText2*/)
+              child: Text(tr.go_to_study_overview, /*style: FlutterFlowTheme.of(context).bodyText2*/)
           ),
         )
     );
@@ -95,7 +96,7 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
     final success = await authController.updateUser(authForm.control('password').value);
     if (mounted) {
       if (success) {
-        formSuccessAction(context, 'Password was reset successfully'.hardcoded);
+        formSuccessAction(context, tr.password_reset_success);
         // todo create rememberme provider
         SharedPreferences prefs = await SharedPreferences.getInstance();
         final rememberMe = prefs.getBool("remember_me") ?? false;

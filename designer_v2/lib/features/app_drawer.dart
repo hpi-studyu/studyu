@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
@@ -54,19 +54,19 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<GoRouterDrawerEntry>> topEntries = [
     [
       GoRouterDrawerEntry(
-        title: 'My Studies'.hardcoded,
+        title: tr.my_studies,
         icon: Icons.folder_copy_rounded,
         intent: RoutingIntents.studies,
       ),
       GoRouterDrawerEntry(
-        title: 'Shared With Me'.hardcoded,
+        title: tr.shared_with_me,
         icon: Icons.folder_shared_rounded,
         intent: RoutingIntents.studiesShared
       ),
     ],
     [
       GoRouterDrawerEntry(
-        title: 'Study Registry'.hardcoded,
+        title: tr.study_registry,
         icon: Icons.public,
         intent: RoutingIntents.publicRegistry
       ),
@@ -77,11 +77,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<DrawerEntry>> bottomEntries = [
     [
       DrawerEntry(
-        title: 'Settings'.hardcoded,
+        title: tr.settings,
         icon: Icons.settings_rounded,
       ),
       DrawerEntry(
-        title: 'Sign out'.hardcoded,
+        title: tr.signed_out,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
           ref.read(authControllerProvider.notifier).signOut();

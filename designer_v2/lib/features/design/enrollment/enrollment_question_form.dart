@@ -3,6 +3,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class EnrollmentQuestionFormData {
   EnrollmentQuestionFormData({required this.question, this.eligibilityCriterion});
@@ -48,7 +49,7 @@ class EnrollmentQuestionFormViewModel extends FormViewModel<EnrollmentQuestionFo
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: "New Screener Question".hardcoded,
-    FormMode.edit: "Edit Screener Question".hardcoded,
+    FormMode.create: tr.new_screener_question,
+    FormMode.edit: tr.edit_screener_question,
   };
 }

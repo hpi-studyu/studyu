@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/question/
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class MeasurementSurveyFormView extends ConsumerWidget {
   const MeasurementSurveyFormView({
@@ -29,23 +30,23 @@ class MeasurementSurveyFormView extends ConsumerWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
-                label: "Survey title".hardcoded,
+                label: tr.survey_title,
                 //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                labelHelpText: "TODO Survey title help text".hardcoded,
+                labelHelpText: tr.survey_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyTitleControl,
                 ),
               ),
               FormTableRow(
-                label: "Intro text".hardcoded,
-                labelHelpText: "TODO Intro text help text".hardcoded,
+                label: tr.intro_text,
+                labelHelpText: tr.intro_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyIntroTextControl,
                 ),
               ),
               FormTableRow(
-                label: "Outro text".hardcoded,
-                labelHelpText: "TODO Outro text help text".hardcoded,
+                label: tr.outro_text,
+                labelHelpText: tr.outro_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyOutroTextControl,
                 ),
@@ -67,10 +68,10 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   onNewItem: () => _onNewItem(context, ref),
                   onNewItemLabel: 'Add question',
                   rowTitle: (data) => data.questionText,
-                  sectionTitle: "Questions".hardcoded,
+                  sectionTitle: tr.questions,
                   emptyIcon: Icons.content_paste_off_rounded,
-                  emptyTitle: "No questions defined".hardcoded,
-                  emptyDescription: "You need to define at least one question to determine the effect of your intervention(s).".hardcoded,
+                  emptyTitle: tr.no_questions,
+                  emptyDescription: tr.no_questions_defined_text,
                 );
               },
             );
@@ -94,7 +95,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
-                label: "Scheduling".hardcoded,
+                label: tr.sheduling,
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 input: Container(),
               ),
@@ -105,8 +106,8 @@ class MeasurementSurveyFormView extends ConsumerWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
-                label: "App reminder".hardcoded,
-                labelHelpText: "TODO reminder notification help text".hardcoded,
+                label: tr.app_reminder,
+                labelHelpText: tr.app_reminder_helptext,
                 input: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
@@ -116,7 +117,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                     const SizedBox(width: 3.0),
                     FormControlLabel(
                       formControl: formViewModel.hasReminderControl,
-                      text: "Send notification ".hardcoded
+                      text: tr.send_notification
                     ),
                     const SizedBox(width: 8.0),
                     Opacity(
@@ -132,7 +133,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                                   return ReactiveTextField(
                                     formControl: formViewModel.reminderTimeControl,
                                     decoration: InputDecoration(
-                                      hintText: "hh:mm".hardcoded,
+                                      hintText: tr.hh_mm,
                                       suffixIcon: Material(
                                           color: Colors.transparent,
                                           child: IconButton(
@@ -153,8 +154,8 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 ),
               ),
               FormTableRow(
-                label: "Time restriction".hardcoded,
-                labelHelpText: "TODO Time restriction help text".hardcoded,
+                label: tr.time_restriction,
+                labelHelpText: tr.time_rescrition_notification_text,
                 input: ReactiveSwitch(
                   formControl: formViewModel.isTimeRestrictedControl,
                 ),
@@ -184,9 +185,9 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                       formControl: formViewModel.restrictedTimeStartControl,
                       decoration: (formViewModel.restrictedTimeStartControl.enabled)
                           ? InputDecoration(
-                          labelText: "From".hardcoded,
+                          labelText: tr.from,
                           helperText: "",
-                          hintText: "hh:mm".hardcoded,
+                          hintText: tr.hh_mm,
                           suffixIcon: Material(
                               color: Colors.transparent,
                               child: IconButton(
@@ -210,9 +211,9 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                       formControl: formViewModel.restrictedTimeEndControl,
                       decoration: (formViewModel.restrictedTimeEndControl.enabled)
                           ? InputDecoration(
-                          labelText: "To".hardcoded,
+                          labelText: tr.to,
                           helperText: "",
-                          hintText: "hh:mm".hardcoded,
+                          hintText: tr.hh_mm,
                           suffixIcon: Material(
                               color: Colors.transparent,
                               child: IconButton(

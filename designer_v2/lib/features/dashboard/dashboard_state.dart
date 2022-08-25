@@ -4,7 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
@@ -68,13 +68,13 @@ extension DashboardStateSafeViewProps on DashboardState {
   String get visibleListTitle {
     switch(studiesFilter) {
       case StudiesFilter.public:
-        return "Study registry".hardcoded;
+        return tr.study_registry;
       case StudiesFilter.owned:
-        return "My studies".hardcoded;
+        return tr.my_studies;
       case StudiesFilter.shared:
-        return "Shared with me".hardcoded;
+        return tr.shared_with_me;
       case StudiesFilter.all:
-        return "All studies".hardcoded;
+        return tr.all_studies;
     }
   }
 }

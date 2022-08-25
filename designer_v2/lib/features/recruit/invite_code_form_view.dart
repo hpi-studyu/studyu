@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class InviteCodeFormView extends FormConsumerWidget {
   const InviteCodeFormView({
@@ -22,9 +23,9 @@ class InviteCodeFormView extends FormConsumerWidget {
         FormTableLayout(
           rows: [
             FormTableRow(
-              label: "Code".hardcoded,
+              label: tr.code,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              labelHelpText: "TODO Access code help text".hardcoded,
+              labelHelpText: tr.access_code_help_text,
               input: ReactiveTextField(
                 formControl: formViewModel.codeControl,
                 validationMessages: formViewModel.codeControlValidationMessages,
@@ -43,7 +44,7 @@ class InviteCodeFormView extends FormConsumerWidget {
               ),
             ),
             FormTableRow(
-              label: "Predefined Schedule".hardcoded,
+              label: tr.predefined_schedule,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               input: ReactiveSwitch(
                 formControl: formViewModel.isPreconfiguredScheduleControl,
@@ -52,10 +53,7 @@ class InviteCodeFormView extends FormConsumerWidget {
           ]
         ),
         Text(
-          "You can predefine the phases & interventions for any participant "
-          "who joins your study via this access code. If enabled, these "
-          "settings will override the default schedule defined in your study "
-          "design.".hardcoded,
+          tr.predefined_schedule_help_text,
           style: Theme.of(context).textTheme.bodyText2!.copyWith(
             height: 1.35,
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85)),
@@ -77,7 +75,7 @@ class InviteCodeFormView extends FormConsumerWidget {
 
     return [
       FormTableRow(
-        label: "Schedule".hardcoded,
+        label: tr.schedule,
         input: ReactiveDropdownField<StudyScheduleType>(
           formControl: formViewModel.preconfiguredScheduleTypeControl,
           //decoration: const NullHelperDecoration(),
@@ -90,10 +88,10 @@ class InviteCodeFormView extends FormConsumerWidget {
         ),
       ),
       FormTableRow(
-        label: "Intervention A".hardcoded,
+        label: tr.intervention_a,
         input: ReactiveDropdownField<String>(
           formControl: formViewModel.interventionAControl,
-          hint: Text('Select intervention...'.hardcoded),
+          hint: Text(tr.selection_intervention),
           //decoration: const NullHelperDecoration(),
           items: formViewModel.interventionControlOptions.map(
                   (option) => DropdownMenuItem(
@@ -103,10 +101,10 @@ class InviteCodeFormView extends FormConsumerWidget {
         ),
       ),
       FormTableRow(
-        label: "Intervention B".hardcoded,
+        label: tr.intervention_b,
         input: ReactiveDropdownField<String>(
           formControl: formViewModel.interventionBControl,
-          hint: Text('Select intervention...'.hardcoded),
+          hint: Text(tr.selection_intervention),
           //decoration: const NullHelperDecoration(),
           items: formViewModel.interventionControlOptions.map(
                   (option) => DropdownMenuItem(

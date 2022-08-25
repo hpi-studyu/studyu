@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 typedef InterventionProvider = Intervention? Function(String id);
 
@@ -44,8 +45,8 @@ class StudyRecruitScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(top: 24),
         child: EmptyBody(
           icon: Icons.link_off_rounded,
-          title: "You haven't invited anyone yet".hardcoded,
-          description: "Add participants to your study via access codes.".hardcoded,
+          title: tr.no_invitation_yet_notification,
+          description: tr.no_invitation_yet_help_text,
           button: _newInviteCodeButton(context, ref)
         ),
       )
@@ -55,7 +56,7 @@ class StudyRecruitScreen extends ConsumerWidget {
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        SelectableText("Access Codes".hardcoded,
+        SelectableText(tr.access_codes ,
             style: Theme.of(context).textTheme.headline6?.copyWith(
                 fontWeight: FontWeight.bold)),
         Container(width: 32.0),
@@ -68,7 +69,7 @@ class StudyRecruitScreen extends ConsumerWidget {
   Widget _newInviteCodeButton(BuildContext context, WidgetRef ref) {
     return PrimaryButton(
       icon: Icons.add,
-      text: "New code".hardcoded,
+      text: tr.new_code,
       onPressed: () {
         final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyId));
         showFormSideSheet<InviteCodeFormViewModel>(

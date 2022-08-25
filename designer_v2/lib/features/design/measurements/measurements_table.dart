@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 // TODO simplify table further (where each column definition has a cell builder (standard text or custom widget))
 class MeasurementsTable extends StatelessWidget {
@@ -23,7 +23,7 @@ class MeasurementsTable extends StatelessWidget {
 
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
-        label: 'Title'.hardcoded,
+        label: tr.title,
         columnWidth: const FlexColumnWidth()
     ),
   ];
@@ -40,7 +40,7 @@ class MeasurementsTable extends StatelessWidget {
       rowSpacing: 5.0,
       minRowHeight: 40.0,
       showTableHeader: false,
-      leadingWidget: SelectableText("Surveys".hardcoded,
+      leadingWidget: SelectableText(tr.surveys,
           style: Theme.of(context).textTheme.bodyText1?.copyWith(
               fontWeight: FontWeight.bold)),
       trailingWidget: _newItemButton(),
@@ -48,8 +48,8 @@ class MeasurementsTable extends StatelessWidget {
         padding: const EdgeInsets.only(top: 24),
         child: EmptyBody(
           icon: Icons.content_paste_off_rounded,
-          title: "No survey defined".hardcoded,
-          description: "You need to define at least one survey to determine the effect of your intervention(s).".hardcoded,
+          title: tr.no_surveys_defined,
+          description: tr.no_surveys_defined_help_text,
           button: _newItemButton()
         ),
       ),
@@ -88,7 +88,7 @@ class MeasurementsTable extends StatelessWidget {
   Widget _newItemButton() {
     return PrimaryButton(
       icon: Icons.add,
-      text: "Add survey".hardcoded,
+      text: tr.add_survey,
       onPressed: onNewItem,
     );
   }

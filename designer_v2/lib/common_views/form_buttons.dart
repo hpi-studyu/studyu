@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 /// A cancel / dismiss button for use with [FormScaffold] [showFormSideSheet)
 /// Heavily inspired by [CloseButton]
@@ -30,7 +31,7 @@ class DismissButton extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
     return SecondaryButton(
-      text: text ?? "Cancel".hardcoded,
+      text: text ?? tr.cancel,
       icon: null,
       //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
       onPressed: () {
@@ -68,8 +69,8 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
           return _retainSizeInAppBar(PrimaryButton(
-            text: "Save".hardcoded,
-            tooltipDisabled: "Please fill out all fields as required".hardcoded,
+            text: tr.save,
+            tooltipDisabled: tr.please_fill_out_all_fields_as_required,
             icon: null,
             onPressed: (formViewModel.isValid) ?
                 () => formViewModel.save().then(
@@ -86,7 +87,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
           return _retainSizeInAppBar(DismissButton(
-            text: "Close".hardcoded,
+            text: tr.close,
             onPressed: () =>
                 formViewModel.cancel().then(
                         (_) => Navigator.maybePop(context)),

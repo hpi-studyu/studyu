@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 import 'auth/auth_controller.dart';
 import 'auth/form_controller.dart';
@@ -99,7 +100,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
           ),
           const SizedBox(width: 40),
           InkWell(
-            child: Text('Learn more'.hardcoded, style: Theme.of(context).textTheme.titleMedium,),
+            child: Text(tr.learn_more, style: Theme.of(context).textTheme.titleMedium,),
             onTap: () => launchUrl(Uri.parse('https://hpi.de/lippert/projects/studyu.html'.hardcoded)),
           ),
           const Spacer(),
@@ -117,9 +118,9 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
 
   Text? showHeaderPromptText() {
     if (widget.childName == 'login') {
-      return Text('Don\'t have an account?'.hardcoded, style: Theme.of(context).textTheme.titleMedium, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
+      return Text(tr.no_account_yet, style: Theme.of(context).textTheme.titleMedium, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
     } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
-      return Text('Already have an account?'.hardcoded, style: Theme.of(context).textTheme.titleMedium, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
+      return Text(tr.an_account_yet, style: Theme.of(context).textTheme.titleMedium, /*style: TextStyle(color: FlutterFlowTheme.of(context).primaryText,)*/);
     } else {
       return null;
     }
@@ -129,12 +130,12 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
     if (widget.childName == 'login') {
       return TextButton(
         onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.signup),
-        child: Text('Sign up here'.hardcoded, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline)),
+        child: Text(tr.sign_up_here, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline)),
       );
     } else if (!ref.watch(authRepositoryProvider).isLoggedIn) {
       return TextButton(
         onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
-        child: Text('Login here'.hardcoded, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline)),
+        child: Text(tr.login_here, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline)),
       );
     } else {
       return null;
@@ -156,7 +157,7 @@ class _MainPageScaffoldState extends ConsumerState<MainPageScaffold> {
                 const SizedBox(width: 40),
                 Container (
                     alignment: Alignment.centerLeft,
-                    child: Text('© HPI Digital Health Center 2022'.hardcoded,
+                    child: Text(tr.hpi_dhc,
                         /*style: TextStyle(
                             color: FlutterFlowTheme.of(context).alternate)*/
                     )

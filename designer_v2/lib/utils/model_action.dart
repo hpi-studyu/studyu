@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ModelAction<T> {
   final T type;
@@ -40,13 +41,13 @@ extension ModelActionTypeFormatted on ModelActionType {
   String get string {
     switch (this) {
       case ModelActionType.edit:
-        return "Edit".hardcoded;
+        return tr.edit;
       case ModelActionType.delete:
-        return "Delete".hardcoded;
+        return tr.delete;
       case ModelActionType.duplicate:
-        return "Duplicate".hardcoded;
+        return tr.duplicate;
       case ModelActionType.clipboard:
-        return "Copy to clipboard".hardcoded;
+        return tr.copy_to_clipboard;
       default:
         return "[Invalid ModelActionType]";
     }

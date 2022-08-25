@@ -143,7 +143,7 @@ class _LoginPageContentState extends ConsumerState<LoginPageContent> {
             child: TextButton(
                 onPressed: () => ref.read(routerProvider).dispatch(
                     RoutingIntents.passwordForgot(authForm.control('email').value)),
-                child: Text(tr.forgot_password, /*style: FlutterFlowTheme.of(context).bodyText2*/)
+                child: Text(tr.forgot_password_question, /*style: FlutterFlowTheme.of(context).bodyText2*/)
             ),
         )
     );

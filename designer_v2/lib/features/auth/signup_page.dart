@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/auth/form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 import 'auth_formfield_views.dart';
 import 'auth_state.dart';
@@ -61,7 +62,7 @@ class _PageContentState extends ConsumerState<PageContent> {
               final authState = ref.watch(authControllerProvider);
               return PrimaryButton(
                 icon: Icons.add,
-                text: 'Create Account'.hardcoded,
+                text: tr.create_account,
                 isLoading: authState.isLoading,
                 onPressed: authForm.valid ? _formReturnAction : null,
                 tooltipDisabled: authForm.control('termsOfService').value ? 'All fields must be filled out' : 'Terms of use and privacy policy need to be accepted',

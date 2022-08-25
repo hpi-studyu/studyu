@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class PasswordForgotPage extends StatefulWidget {
   final String? email;
@@ -54,7 +55,7 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
     return Column(
         children: <Widget>[
           Center(
-              child: Text('Forgot Password'.hardcoded, style: Theme.of(context).textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,*/)
+              child: Text(tr.forgot_password, style: Theme.of(context).textTheme.headlineLarge /*style: FlutterFlowTheme.of(context).title1,*/)
           ),
           const SizedBox(height: 20),
           const EmailTextField(),
@@ -64,7 +65,7 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
               final authState = ref.watch(authControllerProvider);
               return PrimaryButton(
                 icon: Icons.question_mark,
-                text: 'Forgot Password'.hardcoded,
+                text: tr.forgot_password,
                 isLoading: authState.isLoading,
                 onPressed: authForm.valid ? _formReturnAction : null,
                 tooltipDisabled: 'All fields must be filled out',
@@ -82,7 +83,7 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
     final success = await authController.resetPasswordForEmail(authForm.control('email').value);
     if (mounted) {
       if (success) {
-        formSuccessAction(context, 'Check your email for a password reset link!'.hardcoded);
+        formSuccessAction(context, tr.email_reset_link_notifier);
       }
     }
   }
@@ -95,7 +96,7 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
           child: TextButton(
               onPressed: () => ref.read(routerProvider).dispatch(
                   RoutingIntents.login),
-              child: Text("Back to login".hardcoded, /*style: FlutterFlowTheme.of(context).bodyText2*/)
+              child: Text(tr.back_to_login, /*style: FlutterFlowTheme.of(context).bodyText2*/)
           ),
         )
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class EmailTextField extends StatefulWidget {
   const EmailTextField({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
               obscureText: false,
               decoration: InputDecoration(
                 icon: const Icon(Icons.email),
-                labelText: 'Email'.hardcoded,
+                labelText: tr.email,
               ),
             )
           ],

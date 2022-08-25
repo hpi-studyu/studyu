@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 
 // TODO needs finished concept/design
 class ChoiceQuestionFormView extends StatelessWidget {
@@ -24,18 +26,18 @@ class ChoiceQuestionFormView extends StatelessWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
-                label: "Text".hardcoded,
+                label: tr.text,
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                labelHelpText: "TODO Question text help text".hardcoded,
+                labelHelpText: tr.text_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.questionTextControl,
                   decoration: InputDecoration(
-                    hintText: "Type your question".hardcoded,
+                    hintText: tr.type_your_question,
                   ),
                 ),
               ),
               FormTableRow(
-                label: "Type".hardcoded,
+                label: tr.type,
                 input: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
                   //decoration: const NullHelperDecoration(),
@@ -76,7 +78,7 @@ class ChoiceQuestionFormView extends StatelessWidget {
               disableRowInteractions: true,
               trailingWidget: TextButton(
                 onPressed: formViewModel.onNewItem,
-                child: Text("+ Add answer option".hardcoded),
+                child: Text(tr.add_answer_option),
               ),
               trailingWidgetSpacing: 0,
             );
@@ -88,8 +90,8 @@ class ChoiceQuestionFormView extends StatelessWidget {
         FormTableLayout(
           rows: [
             FormTableRow(
-              label: "Multiple selection".hardcoded,
-              labelHelpText: "TODO Multiple selection help text".hardcoded,
+              label: tr.multiple_selection,
+              labelHelpText: tr.multiple_selection_help_text,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               input: ReactiveSwitch(
                 formControl: formViewModel.isMultipleChoiceControl,
@@ -121,7 +123,7 @@ class ChoiceQuestionFormView extends StatelessWidget {
       ReactiveTextField(
         formControl: formControl,
         decoration: InputDecoration(
-          hintText: "Option".hardcoded,
+          hintText: tr.option,
         ),
       ),
     ];

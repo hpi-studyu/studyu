@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 
 class StudyTestScreen extends ConsumerStatefulWidget {
   const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
@@ -31,8 +32,7 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 150),
-                      Text("This is the preview mode.\nPress reset to "
-                          "remove the test progress and start over again.".hardcoded,
+                      Text(tr.this_preview_mode+ tr.press_reset,
                           textAlign: TextAlign.center
                       ),
                       const SizedBox(height: 10),
@@ -41,14 +41,14 @@ class _StudyTestScreen extends ConsumerState<StudyTestScreen> {
                           children: [
                             TextButton.icon(
                               icon: const Icon(Icons.restart_alt),
-                              label: Text("Reset".hardcoded),
+                              label: Text(tr.reset),
                               onPressed: () {
                                 controller.sendCmd("reset");
                               },
                             ),
                             TextButton.icon(
                                 icon: const Icon(Icons.open_in_new_sharp),
-                                label: Text("Open in new tab".hardcoded),
+                                label: Text(tr.open_in_tab),
                                 onPressed: () {
                                   controller.openNewPage();
                                 }

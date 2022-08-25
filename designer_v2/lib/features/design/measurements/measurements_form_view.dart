@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/common_views/container_bounded.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyDesignMeasurementsFormView extends ConsumerWidget {
   const StudyDesignMeasurementsFormView(this.studyId, {Key? key}) : super(key: key);
@@ -31,10 +31,7 @@ class StudyDesignMeasurementsFormView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SelectableText(
-                  "Define the data you want to gather from participants to "
-                  "evaluate the effect of your interventions & for additional context. "
-                  "The data will be self-reported by participants in one or more "
-                  "surveys served via the StudyU app.".hardcoded,
+                tr.help_text_study,
                   style: Theme.of(context).textTheme.bodyText2!.copyWith(
                       height: 1.35,
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85)),

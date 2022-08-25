@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_type.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 // TODO needs finished concept/design
 class BoolQuestionFormView extends StatelessWidget {
@@ -21,15 +22,15 @@ class BoolQuestionFormView extends StatelessWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
-                label: "Text".hardcoded,
+                label: tr.text,
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                labelHelpText: "TODO Question text help text".hardcoded,
+                labelHelpText: tr.question_text_help_text,
                 input: ReactiveTextField(
                   formControl: formViewModel.questionTextControl,
                 ),
               ),
               FormTableRow(
-                label: "Type".hardcoded,
+                label: tr.type,
                 input: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
                   decoration: const NullHelperDecoration(),

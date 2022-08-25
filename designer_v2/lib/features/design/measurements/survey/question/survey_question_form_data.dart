@@ -5,6 +5,8 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/question/
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 
 typedef SurveyQuestionFormDataFactory = SurveyQuestionFormData Function(Question question);
 
@@ -112,8 +114,8 @@ class BoolQuestionFormData extends SurveyQuestionFormData {
 
   final List<FormControlOption> answerOptions = [
     // Fixed list of options
-    FormControlOption("yes", "Yes".hardcoded),
-    FormControlOption("no", "No".hardcoded),
+    FormControlOption("yes", tr.yes),
+    FormControlOption("no", tr.no),
   ];
 
   factory BoolQuestionFormData.fromDomainModel(BooleanQuestion question) {

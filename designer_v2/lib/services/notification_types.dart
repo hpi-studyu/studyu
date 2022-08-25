@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 enum NotificationType {
   snackbar, alert
@@ -72,7 +73,7 @@ class SnackbarIntent extends NotificationIntent {
 /// Encapsulates a call to [showDialog]
 class AlertIntent extends NotificationIntent {
   static NotificationAction cancelAction = NotificationAction(
-      label: "Cancel".hardcoded,
+      label: tr.cancel,
       onSelect: () => Future.value(),
   );
 

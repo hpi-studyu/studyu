@@ -6,9 +6,10 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:uuid/uuid.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({
@@ -21,8 +22,8 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Map<FormMode,String> get titles => {
-    FormMode.create: "New Access Code".hardcoded,
-    FormMode.readonly: "Access Code".hardcoded,
+    FormMode.create: tr.new_access_code,
+    FormMode.readonly: tr.access_code
   };
 
   // - Form Fields
@@ -34,10 +35,10 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     touched: true,
   );
   final codeControlValidationMessages = {
-    ValidationMessage.required: (error) => 'The code must not be empty'.hardcoded,
-    ValidationMessage.minLength: (error) => 'The code must have at least 8 characters'.hardcoded,
-    ValidationMessage.maxLength: (error) => 'The code must have at most 24 characters'.hardcoded,
-    'inviteCodeAlreadyUsed': (error) => 'This code is already in use'.hardcoded,
+    ValidationMessage.required: (error) => tr.empty_code,
+    ValidationMessage.minLength: (error) => tr.least_characters,
+    ValidationMessage.maxLength: (error) => tr.most_characters,
+    'inviteCodeAlreadyUsed': (error) => tr.code_already_in_use,
   };
 
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);

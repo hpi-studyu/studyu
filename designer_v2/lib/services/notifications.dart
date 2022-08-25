@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class Notifications {
   static final studyDeleted = SnackbarIntent(
-    message: "Study was deleted from your account".hardcoded,
+    message: tr.study_deleted,
   );
   static final inviteCodeDeleted = SnackbarIntent(
-    message: "Access code deleted".hardcoded,
+    message: tr.access_code_deleted,
   );
   static final inviteCodeClipped = SnackbarIntent(
-    message: "Access code copied".hardcoded,
+    message: tr.access_code_copied,
   );
   static final studyDeleteConfirmation = AlertIntent(
-    title: "Permanently delete?".hardcoded,
-    message: "Are you sure you want to delete this study? You will "
-          "permanently lose the study and all data that has been "
-          "collected.".hardcoded,
+    title: tr.permanently_delete,
+    message: tr.delete_study_question,
     icon: Icons.delete_rounded,
     actions: [NotificationDefaultActions.cancel]
   );
@@ -24,7 +23,7 @@ class Notifications {
 
 class NotificationDefaultActions {
   static final cancel = NotificationAction(
-    label: "Cancel".hardcoded,
+    label: tr.cancel,
     onSelect: () => Future.value(),
   );
 }

@@ -1,4 +1,5 @@
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 
 enum StudyScheduleType {
   abab,
@@ -9,7 +10,7 @@ extension StudyScheduleTypeFormatted on StudyScheduleType {
   String get string {
     switch (this) {
       case StudyScheduleType.abab:
-        return "Alternating (AB AB)".hardcoded;
+        return tr.alternating_abab;
       default:
         return "[Invalid StudyScheduleType]";
     }

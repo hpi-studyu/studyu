@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyInvitesTable extends StatelessWidget {
   const StudyInvitesTable({
@@ -27,18 +28,18 @@ class StudyInvitesTable extends StatelessWidget {
         label: '#'.hardcoded,
         columnWidth: const FixedColumnWidth(60)),
     StandardTableColumn(
-        label: 'Code'.hardcoded,
+        label: tr.code,
         columnWidth: const MaxColumnWidth(
             FixedColumnWidth(200), FlexColumnWidth(1.6))),
     StandardTableColumn(
-        label: 'Enrolled'.hardcoded,
+        label: tr.enrolled,
         columnWidth: const FixedColumnWidth(100)),
     StandardTableColumn(
-        label: 'Intervention A'.hardcoded,
+        label: tr.intervention_a,
         columnWidth: const MaxColumnWidth(
             FixedColumnWidth(150), FlexColumnWidth(1))),
     StandardTableColumn(
-        label: 'Intervention B'.hardcoded,
+        label: tr.intervention_b,
         columnWidth: const MaxColumnWidth(
             FixedColumnWidth(150), FlexColumnWidth(1))),
     StandardTableColumn(
@@ -92,7 +93,7 @@ class StudyInvitesTable extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           softWrap: false,
         ) : Text(
-          'Default'.hardcoded,
+          tr.default_string,
           style: tableTextStyleTertiary,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
