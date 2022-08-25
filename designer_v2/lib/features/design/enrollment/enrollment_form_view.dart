@@ -183,8 +183,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       sectionDescription: "Provide the terms that participants have to "
                               "consent to when enrolling in your study via the "
                               "StudyU app. You may choose not to add any terms here "
-                              "if you get the participants' consent through another "
-                              "method before recruiting them to your study on StudyU."
+                              "if you obtain your participants' consent by some other method"
+                              " before recruiting them to your study on StudyU."
                           .hardcoded,
                       onNewItemLabel: 'Add consent text'.hardcoded,
                       rowTitle: (viewModel) =>
