@@ -55,16 +55,12 @@ class StudyTestControllerState extends StudyControllerBaseState {
 
   @override
   StudyTestControllerState copyWith({
-    WrappedModel<Study>? Function()? studyWithMetadata,
-    String Function()? serializedSession,
+    WrappedModel<Study>? studyWithMetadata,
+    String? serializedSession,
   }) {
     return StudyTestControllerState(
-      studyWithMetadata: (studyWithMetadata != null)
-          ? studyWithMetadata()
-          : this.studyWithMetadata,
-      serializedSession: (serializedSession != null)
-          ? serializedSession()
-          : this.serializedSession,
+      studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
+      serializedSession: serializedSession ?? this.serializedSession,
       currentUser: currentUser,
     );
   }
@@ -72,5 +68,5 @@ class StudyTestControllerState extends StudyControllerBaseState {
   // - Equatable
 
   @override
-  List<Object?> get props => [serializedSession];
+  List<Object?> get props => [...super.props, serializedSession];
 }

@@ -10,11 +10,26 @@ import '../models.dart';
 
 part 'study.g.dart';
 
-enum StudyStatus { draft, running, closed }
+enum StudyStatus {
+  draft, running, closed;
 
-enum Participation { open, invite }
+  String toJson() => name;
+  static StudyStatus fromJson(String json) => values.byName(json);
+}
 
-enum ResultSharing { public, private, organization }
+enum Participation {
+  open, invite;
+
+  String toJson() => name;
+  static Participation fromJson(String json) => values.byName(json);
+}
+
+enum ResultSharing {
+  public, private, organization;
+
+  String toJson() => name;
+  static ResultSharing fromJson(String json) => values.byName(json);
+}
 
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study> {

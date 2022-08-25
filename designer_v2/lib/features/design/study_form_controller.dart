@@ -23,7 +23,8 @@ import 'package:studyu_designer_v2/routing/router.dart';
 
 
 class StudyFormViewModel extends FormViewModel<Study>
-    implements IFormViewModelDelegate<FormViewModel> {
+    implements
+        IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
@@ -158,7 +159,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final studyFormViewModelProvider = Provider.autoDispose
     .family<StudyFormViewModel, StudyID>((ref, studyId) {
-    print("studyFormViewModelProvider");
+  print("studyFormViewModelProvider");
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudyFormViewModel(
     router: ref.watch(routerProvider),
@@ -166,8 +167,11 @@ final studyFormViewModelProvider = Provider.autoDispose
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
   );
+
   ref.onDispose(() {
+    formViewModel.dispose();
     print("studyFormViewModelProvider.DISPOSE");
   });
+
   return formViewModel;
 });

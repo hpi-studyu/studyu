@@ -4,6 +4,11 @@ import 'package:studyu_designer_v2/common_views/badge.dart';
 import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 
+abstract class IStudyStatusBadgeViewModel {
+  Participation? get studyParticipation;
+  StudyStatus? get studyStatus;
+}
+
 class StudyStatusBadge extends StatelessWidget {
   const StudyStatusBadge(
       {required this.status,

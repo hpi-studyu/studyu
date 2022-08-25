@@ -18,7 +18,7 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
     required this.authRepository,
   }) : super(StudyTestControllerState(currentUser: currentUser)) {
     state = state.copyWith(
-      serializedSession: () => authRepository.session?.persistSessionString ?? ''
+      serializedSession: authRepository.session?.persistSessionString ?? ''
     );
   }
 

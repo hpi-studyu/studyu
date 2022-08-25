@@ -5,6 +5,12 @@ import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
+abstract class ISyncIndicatorViewModel {
+  AsyncValue get syncState;
+  bool get isDirty;
+  DateTime? get lastSynced;
+}
+
 class SyncIndicator<T> extends StatefulWidget {
   const SyncIndicator({
     required this.state,
@@ -12,7 +18,7 @@ class SyncIndicator<T> extends StatefulWidget {
     this.lastSynced,
     this.animationDuration = 1500,
     this.iconSize = 15.0,
-    Key? key
+    Key? key,
   }) : super(key: key);
 
   final AsyncValue<T> state;
@@ -30,7 +36,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
   late final AnimationController _animationController;
   late final Animation<double> _animation;
 
-  bool get shouldAnimate => widget.state.isRefreshing;
+  bool get shouldAnimate => widget.state.isLoading || widget.state.isRefreshing;
 
   @override
   void initState() {
@@ -65,16 +71,16 @@ class _SyncIndicatorState extends State<SyncIndicator>
   @override
   Widget build(BuildContext context) {
     return widget.state.when(
-      data: (data) => MouseEventsRegion(builder: buildDataWidget),
+      data: (data) => MouseEventsRegion(builder: buildIndicator),
       error: (error, stackTrace) => Tooltip(
         message: "Changes could not be saved".hardcoded,
         child: Icon(Icons.sync_problem_outlined, size: widget.iconSize),
       ),
-      loading: () => Container(), // hide on initial load
+      loading: () => MouseEventsRegion(builder: buildIndicator),
     );
   }
 
-  Widget buildDataWidget(BuildContext context, Set<MaterialState> states) {
+  Widget buildIndicator(BuildContext context, Set<MaterialState> states) {
     final theme = Theme.of(context);
     final isHovered = states.contains(MaterialState.hovered);
     double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
@@ -85,10 +91,13 @@ class _SyncIndicatorState extends State<SyncIndicator>
 
     if (!widget.isDirty && widget.lastSynced != null) {
       dataWidget = Tooltip(
-        message: "All changes saved".hardcoded + "\n\n"
-            + "Last saved:".hardcoded + " "
-            + widget.lastSynced!.toTimeAgoStringPrecise(),
-        child: Icon(Icons.check_circle_rounded,
+        message: "All changes saved".hardcoded +
+            "\n\n" +
+            "Last saved:".hardcoded +
+            " " +
+            widget.lastSynced!.toTimeAgoStringPrecise(),
+        child: Icon(
+          Icons.check_circle_rounded,
           size: widget.iconSize,
           color: iconColor,
         ),
@@ -97,15 +106,18 @@ class _SyncIndicatorState extends State<SyncIndicator>
       dataWidget = Tooltip(
         message: "No changes to be saved".hardcoded,
         //message: "Any changes will be saved automatically.".hardcoded,
-        child: Icon(Icons.check_circle_rounded,
+        child: Icon(
+          Icons.check_circle_rounded,
           size: widget.iconSize,
           color: iconColor,
         ),
       );
-    } else { // isDirty
+    } else {
+      // isDirty
       dataWidget = Tooltip(
         message: "There are unsaved changes".hardcoded,
-        child: Icon(Icons.sync_disabled_rounded,
+        child: Icon(
+          Icons.sync_disabled_rounded,
           size: widget.iconSize,
           color: iconColor,
         ),
@@ -116,13 +128,14 @@ class _SyncIndicatorState extends State<SyncIndicator>
       message: "Saving changes...".hardcoded,
       child: RotationTransition(
         turns: _animation,
-        child: Icon(Icons.sync_rounded,
+        child: Icon(
+          Icons.sync_rounded,
           size: widget.iconSize + 1,
           color: iconColor,
         ),
       ),
     );
 
-    return (widget.state.isRefreshing) ? refreshingWidget : dataWidget;
+    return (shouldAnimate) ? refreshingWidget : dataWidget;
   }
 }

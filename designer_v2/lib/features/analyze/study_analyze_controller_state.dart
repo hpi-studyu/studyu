@@ -16,11 +16,10 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
 
   @override
   StudyAnalyzeControllerState copyWith({
-    WrappedModel<Study>? Function()? studyWithMetadata,
+    WrappedModel<Study>? studyWithMetadata,
   }) {
     return StudyAnalyzeControllerState(
-      studyWithMetadata: (studyWithMetadata != null)
-          ? studyWithMetadata() : this.studyWithMetadata,
+      studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       currentUser: currentUser,
     );
   }
@@ -28,5 +27,5 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
   // - Equatable
 
   @override
-  List<Object?> get props => [canExport];
+  List<Object?> get props => [...super.props, canExport];
 }

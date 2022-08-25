@@ -28,15 +28,11 @@ class StudyControllerBaseState extends Equatable {
 
   bool get isDraft => study.value?.status == StudyStatus.draft;
 
-  bool get isDirty => studyWithMetadata?.isDirty ?? false;
-  DateTime? get lastSynced => studyWithMetadata?.lastSaved;
-
   StudyControllerBaseState copyWith({
-    WrappedModel<Study>? Function()? studyWithMetadata
+    WrappedModel<Study>? studyWithMetadata
   }) {
     return StudyControllerBaseState(
-      studyWithMetadata: studyWithMetadata != null
-          ? studyWithMetadata() : this.studyWithMetadata,
+      studyWithMetadata: studyWithMetadata ?? this.studyWithMetadata,
       currentUser: currentUser,
     );
   }

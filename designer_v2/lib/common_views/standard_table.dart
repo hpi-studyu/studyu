@@ -3,6 +3,7 @@ import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef OnSelectHandler<T> = void Function(T item);
@@ -48,10 +49,11 @@ class StandardTable<T> extends StatefulWidget {
     this.rowSpacing = 9.0,
     this.minRowHeight = 50.0,
     this.showTableHeader = true,
+    this.tableWrapper,
     this.leadingWidget,
     this.trailingWidget,
-    this.leadingWidgetSpacing = 18.0,
-    this.trailingWidgetSpacing = 18.0,
+    this.leadingWidgetSpacing = 12.0,
+    this.trailingWidgetSpacing = 8.0,
     this.emptyWidget,
     this.rowStyle = StandardTableStyle.material,
     this.disableRowInteractions = false,
@@ -74,6 +76,8 @@ class StandardTable<T> extends StatefulWidget {
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
   final StandardTableColumn trailingActionsColumn;
+
+  final WidgetDecorator? tableWrapper;
 
   final double cellSpacing;
   final double rowSpacing;
@@ -157,7 +161,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
         ? [headerRow, paddingRow, paddingRow] : [];
     final tableDataRows = _tableRows(theme);
 
-    final tableWidget = Table(
+    Widget tableWidget = Table(
         columnWidths: columnWidths,
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
@@ -165,6 +169,10 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
           ...tableDataRows
         ]
     );
+    if (widget.tableWrapper != null) {
+      tableWidget = widget.tableWrapper!(tableWidget);
+    }
+
     final isTableVisible = !(tableHeaderRows.isEmpty && tableDataRows.isEmpty);
 
     if (tableDataRows.isEmpty && widget.emptyWidget != null) {
@@ -187,6 +195,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
         ],
       );
     }
+
     return tableWidget;
   }
 

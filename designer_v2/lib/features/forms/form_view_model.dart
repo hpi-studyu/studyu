@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:async/async.dart';
+import 'package:equatable/equatable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:studyu_designer_v2/utils/typings.dart';
 
 enum FormMode {
   create,
@@ -23,12 +27,15 @@ abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
-class FormControlOption<T> {
+class FormControlOption<T> extends Equatable {
   final T value;
   final String label;
   final String? description;
 
-  FormControlOption(this.value, this.label, {this.description});
+  const FormControlOption(this.value, this.label, {this.description});
+
+  @override
+  List<Object?> get props => [value, label, description];
 }
 
 typedef FormControlUpdateCallback = void Function(AbstractControl control);
@@ -43,6 +50,7 @@ abstract class FormViewModel<T> {
         _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
     _setControlValidators(validationSet);
+    _setFormData(formData);
     _restoreControlsFromFormData();
     _formModeUpdated();
 
@@ -86,15 +94,22 @@ abstract class FormViewModel<T> {
   final List<StreamSubscription> _immediateFormChildrenSubscriptions = [];
   Debouncer? _immediateFormChildrenListenerDebouncer;
 
-  /// Flag indicating whether the form is currently being autosaved
-  ///
-  /// Needed to prevent an infinite loop when updating the form & its controls
-  /// when saving
-  bool _isAutosaving = false;
+  CancelableOperation? _autosaveOperation;
 
   /// Map that stores the default enabled/disabled state for each control in
   /// the [form]
   final Map<String, bool> _defaultControlStates = {};
+
+  /// Flag indicating whether the current [form] data is different from
+  /// the most recently set [formData]
+  ///
+  /// Note: [AbstractControl.dirty] does not work reliably when the [form]'s
+  /// values are initialized in [setControlsFrom] (controls that are set
+  /// programmatically are incorrectly marked as dirty without any user input)
+  bool get isDirty => jsonEncode(prevFormValue) != jsonEncode(form.value);
+
+  /// The [form]'s JSON value after initializing the controls with [formData]
+  JsonMap? prevFormValue;
 
   _setFormData(T? formData) {
     _formData = formData;
@@ -102,6 +117,7 @@ abstract class FormViewModel<T> {
       setControlsFrom(formData); // update [form] controls automatically
       form.updateValueAndValidity();
     }
+    prevFormValue = {...form.value};
   }
 
   _saveControlStates() {
@@ -207,7 +223,21 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    formData = buildFormData();
+
+    if (isDirty) {
+      final currentFormData = buildFormData();
+      // Reinitialize the viewmodel with the [form]'s current data, resulting
+      // in an update to the [form] controls from calling [_setFormData]
+      // and [setControlsFrom] internally
+      formData = currentFormData;
+    } else {
+      // Do nothing - this is important!
+      // Otherwise we may enter an infinite loop from calling [_setFormData]
+      // and [setControlsFrom] internally. Calling [setControlsFrom] may result
+      // in update events emitted by the reactive controls as their values are
+      // re-initialized, which re-triggers the valueChanges stream subscription
+      // used for autosaving (entering the infinite loop)
+    }
     delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
@@ -227,19 +257,18 @@ abstract class FormViewModel<T> {
     return Future.value(null);
   }
 
-  void enableAutosave({int debounce = Config.formAutosaveDebounce}) {
+  void enableAutosave({
+    int debounce = Config.formAutosaveDebounce,
+    onlyValid = true,
+  }) {
     if (_immediateFormChildrenSubscriptions.isNotEmpty) {
       return;
     }
     listenToImmediateFormChildren((control) {
-      // Prevent infinite loop from the update that is emitted during save
-      // which would retrigger the listener
-      if (_isAutosaving) {
-        return;
-      }
-      if (form.valid) {
-        _isAutosaving = true;
-        save().then((_) => _isAutosaving = false);
+      if (onlyValid && form.valid) {
+        _autosaveOperation = CancelableOperation.fromFuture(
+          save(),
+        );
       }
     }, debounce: debounce);
   }
@@ -248,7 +277,8 @@ abstract class FormViewModel<T> {
       {int debounce = 1500}) {
     // Initialize debounce helper if needed
     if (debounce != 0) {
-      _immediateFormChildrenListenerDebouncer ??= Debouncer(milliseconds: debounce);
+      _immediateFormChildrenListenerDebouncer ??= Debouncer(
+          milliseconds: debounce, leading: false);
     }
 
     for (final control in form.controls.values) {
@@ -275,9 +305,10 @@ abstract class FormViewModel<T> {
 
   void dispose() {
     _immediateFormChildrenListenerDebouncer?.dispose();
-    for (final subscription in _immediateFormChildrenSubscriptions) {
-      subscription.cancel();
-    }
+    _autosaveOperation?.cancel();
+    /*for (final subscription in _immediateFormChildrenSubscriptions) {
+      subscription.pause();
+    }*/
   }
 
   // - Subclass responsibility

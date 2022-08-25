@@ -37,6 +37,8 @@ class MeasurementNotFoundException extends APIException {}
 
 class QuestionNotFoundException extends APIException {}
 
+class ConsentItemNotFoundException extends APIException {}
+
 class InterventionNotFoundException extends APIException {}
 
 class InterventionTaskNotFoundException extends APIException {}
