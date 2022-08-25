@@ -38,7 +38,7 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
       // Update the controller's state when new invites are available in the repository
       final invites = wrappedModels.map((invite) => invite.model).toList();
       state = state.copyWith(
-        invites: () => AsyncValue.data(invites),
+        invites: AsyncValue.data(invites),
       );
     }); // TODO onError
   }

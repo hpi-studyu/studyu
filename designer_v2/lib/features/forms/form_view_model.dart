@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:async/async.dart';
+import 'package:equatable/equatable.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:studyu_designer_v2/utils/typings.dart';
 
 enum FormMode {
   create,
@@ -23,12 +27,15 @@ abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
-class FormControlOption<T> {
+class FormControlOption<T> extends Equatable {
   final T value;
   final String label;
   final String? description;
 
-  FormControlOption(this.value, this.label, {this.description});
+  const FormControlOption(this.value, this.label, {this.description});
+
+  @override
+  List<Object?> get props => [value, label, description];
 }
 
 typedef FormControlUpdateCallback = void Function(AbstractControl control);
@@ -42,6 +49,7 @@ abstract class FormViewModel<T> {
   }) :  _validationSet = validationSet,
         _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
+    _setFormData(formData);
     _setControlValidators(validationSet);
     _restoreControlsFromFormData();
     _formModeUpdated();
@@ -92,9 +100,15 @@ abstract class FormViewModel<T> {
   /// when saving
   bool _isAutosaving = false;
 
+  CancelableOperation? _autosaveOperation;
+
   /// Map that stores the default enabled/disabled state for each control in
   /// the [form]
   final Map<String, bool> _defaultControlStates = {};
+
+  JsonMap? prevFormValue;
+
+  bool get isDirty => jsonEncode(prevFormValue) == jsonEncode(form.value);
 
   _setFormData(T? formData) {
     _formData = formData;
@@ -102,6 +116,7 @@ abstract class FormViewModel<T> {
       setControlsFrom(formData); // update [form] controls automatically
       form.updateValueAndValidity();
     }
+    prevFormValue = {...form.value};
   }
 
   _saveControlStates() {
@@ -207,7 +222,16 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    formData = buildFormData();
+    final prevFormData = formData;
+    print(form.value == form.value);
+    print("actually dirty");
+    print(isDirty);
+    if (prevFormData as T != buildFormData() as T) {
+      print("DIFFERENT DATA");
+      formData = buildFormData();
+    } else {
+      print("SAME DATA"); // skip to avoid infinite loop
+    }
     delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
@@ -232,20 +256,32 @@ abstract class FormViewModel<T> {
       return;
     }
     listenToImmediateFormChildren((control) {
+      print(_isAutosaving);
       // Prevent infinite loop from the update that is emitted during save
       // which would retrigger the listener
       if (_isAutosaving) {
         return;
       }
-      if (form.valid) {
+      print(form.value);
+      print(form.dirty);
+      print(form.pending);
+      print(form.status);
+      if (form.valid && form.dirty) {
         _isAutosaving = true;
-        save().then((_) => _isAutosaving = false);
+        _autosaveOperation = CancelableOperation.fromFuture(
+          save().then((_) {
+            _isAutosaving = false;
+            //form.reset();
+          }),
+          onCancel: () => _isAutosaving = false,
+        );
       }
     }, debounce: debounce);
   }
 
   void listenToImmediateFormChildren(FormControlUpdateCallback callback,
       {int debounce = 1500}) {
+    print("listenToImmediateFormChildren");
     // Initialize debounce helper if needed
     if (debounce != 0) {
       _immediateFormChildrenListenerDebouncer ??= Debouncer(milliseconds: debounce);
@@ -275,9 +311,10 @@ abstract class FormViewModel<T> {
 
   void dispose() {
     _immediateFormChildrenListenerDebouncer?.dispose();
-    for (final subscription in _immediateFormChildrenSubscriptions) {
-      subscription.cancel();
-    }
+    _autosaveOperation?.cancel();
+    /*for (final subscription in _immediateFormChildrenSubscriptions) {
+      subscription.pause();
+    }*/
   }
 
   // - Subclass responsibility

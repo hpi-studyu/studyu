@@ -131,7 +131,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                     const SizedBox(width: 8.0),
                     IntrinsicWidth(
                       child: SyncIndicator(
-                        state: state.study,
+                        state: state.syncState,
                         isDirty: state.isDirty,
                         lastSynced: state.lastSynced,
                       ),
