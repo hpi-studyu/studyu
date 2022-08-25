@@ -49,8 +49,8 @@ abstract class FormViewModel<T> {
   }) :  _validationSet = validationSet,
         _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
-    _setFormData(formData);
     _setControlValidators(validationSet);
+    _setFormData(formData);
     _restoreControlsFromFormData();
     _formModeUpdated();
 
