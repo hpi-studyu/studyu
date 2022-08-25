@@ -3,11 +3,11 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
-import 'package:studyu_designer_v2/features/study/study_navbar.dart';
+import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyControllerState extends StudyControllerBaseState
-    implements IStudyNavViewModel, ISyncIndicatorViewModel {
+    implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
   const StudyControllerState({
     required super.currentUser,
     super.studyWithMetadata,
@@ -15,14 +15,6 @@ class StudyControllerState extends StudyControllerBaseState
     this.syncState = const AsyncValue<void>.data(null),
     this.lastSynced,
   });
-
-  bool get isPublishVisible =>
-      studyWithMetadata?.model.status == StudyStatus.draft;
-  bool get isStatusBadgeVisible =>
-      studyStatus != null && studyStatus != StudyStatus.draft;
-
-  StudyStatus? get studyStatus => study.value?.status;
-  Participation? get studyParticipation => study.value?.participation;
 
   bool get isPublished => study.value != null && study.value!.published;
 
@@ -68,6 +60,25 @@ class StudyControllerState extends StudyControllerBaseState
   @override
   get isSettingsEnabled =>
       study.value != null && study.value!.canChangeSettings(super.currentUser!);
+
+  // - IStudyAppBarViewModel
+
+  @override
+  bool get isStatusBadgeVisible =>
+      studyStatus != null && studyStatus != StudyStatus.draft;
+
+  @override
+  bool get isSyncIndicatorVisible => true;
+
+  @override
+  bool get isPublishVisible =>
+      studyWithMetadata?.model.status == StudyStatus.draft;
+
+  @override
+  StudyStatus? get studyStatus => study.value?.status;
+
+  @override
+  Participation? get studyParticipation => study.value?.participation;
 
   // - Equatable
 

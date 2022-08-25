@@ -94,21 +94,22 @@ abstract class FormViewModel<T> {
   final List<StreamSubscription> _immediateFormChildrenSubscriptions = [];
   Debouncer? _immediateFormChildrenListenerDebouncer;
 
-  /// Flag indicating whether the form is currently being autosaved
-  ///
-  /// Needed to prevent an infinite loop when updating the form & its controls
-  /// when saving
-  bool _isAutosaving = false;
-
   CancelableOperation? _autosaveOperation;
 
   /// Map that stores the default enabled/disabled state for each control in
   /// the [form]
   final Map<String, bool> _defaultControlStates = {};
 
-  JsonMap? prevFormValue;
+  /// Flag indicating whether the current [form] data is different from
+  /// the most recently set [formData]
+  ///
+  /// Note: [AbstractControl.dirty] does not work reliably when the [form]'s
+  /// values are initialized in [setControlsFrom] (controls that are set
+  /// programmatically are incorrectly marked as dirty without any user input)
+  bool get isDirty => jsonEncode(prevFormValue) != jsonEncode(form.value);
 
-  bool get isDirty => jsonEncode(prevFormValue) == jsonEncode(form.value);
+  /// The [form]'s JSON value after initializing the controls with [formData]
+  JsonMap? prevFormValue;
 
   _setFormData(T? formData) {
     _formData = formData;
@@ -222,15 +223,20 @@ abstract class FormViewModel<T> {
     // Note: order of operations is important here so that the delegate (if any)
     // sees the latest [data] but the previous [formMode]
     final prevFormMode = formMode;
-    final prevFormData = formData;
-    print(form.value == form.value);
-    print("actually dirty");
-    print(isDirty);
-    if (prevFormData as T != buildFormData() as T) {
-      print("DIFFERENT DATA");
-      formData = buildFormData();
+
+    if (isDirty) {
+      final currentFormData = buildFormData();
+      // Reinitialize the viewmodel with the [form]'s current data, resulting
+      // in an update to the [form] controls from calling [_setFormData]
+      // and [setControlsFrom] internally
+      formData = currentFormData;
     } else {
-      print("SAME DATA"); // skip to avoid infinite loop
+      // Do nothing - this is important!
+      // Otherwise we may enter an infinite loop from calling [_setFormData]
+      // and [setControlsFrom] internally. Calling [setControlsFrom] may result
+      // in update events emitted by the reactive controls as their values are
+      // re-initialized, which re-triggers the valueChanges stream subscription
+      // used for autosaving (entering the infinite loop)
     }
     delegate?.onSave(this, prevFormMode);
 
@@ -251,29 +257,17 @@ abstract class FormViewModel<T> {
     return Future.value(null);
   }
 
-  void enableAutosave({int debounce = Config.formAutosaveDebounce}) {
+  void enableAutosave({
+    int debounce = Config.formAutosaveDebounce,
+    onlyValid = true,
+  }) {
     if (_immediateFormChildrenSubscriptions.isNotEmpty) {
       return;
     }
     listenToImmediateFormChildren((control) {
-      print(_isAutosaving);
-      // Prevent infinite loop from the update that is emitted during save
-      // which would retrigger the listener
-      if (_isAutosaving) {
-        return;
-      }
-      print(form.value);
-      print(form.dirty);
-      print(form.pending);
-      print(form.status);
-      if (form.valid && form.dirty) {
-        _isAutosaving = true;
+      if (onlyValid && form.valid) {
         _autosaveOperation = CancelableOperation.fromFuture(
-          save().then((_) {
-            _isAutosaving = false;
-            //form.reset();
-          }),
-          onCancel: () => _isAutosaving = false,
+          save(),
         );
       }
     }, debounce: debounce);
@@ -281,7 +275,6 @@ abstract class FormViewModel<T> {
 
   void listenToImmediateFormChildren(FormControlUpdateCallback callback,
       {int debounce = 1500}) {
-    print("listenToImmediateFormChildren");
     // Initialize debounce helper if needed
     if (debounce != 0) {
       _immediateFormChildrenListenerDebouncer ??= Debouncer(milliseconds: debounce);

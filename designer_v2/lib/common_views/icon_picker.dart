@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -35,11 +36,19 @@ class IconPack {
   }
 }
 
-class IconOption {
+class IconOption extends Equatable {
   const IconOption(this.name, [this.icon]);
+
   final String name;
   final IconData? icon;
+
   bool get isEmpty => name == '';
+
+  @override
+  List<Object?> get props => [name];
+
+  String toJson() => name;
+  static IconOption fromJson(String json) => IconOption(json);
 }
 
 class ReactiveIconPicker

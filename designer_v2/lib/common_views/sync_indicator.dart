@@ -12,14 +12,14 @@ abstract class ISyncIndicatorViewModel {
 }
 
 class SyncIndicator<T> extends StatefulWidget {
-  const SyncIndicator(
-      {required this.state,
-      required this.isDirty,
-      this.lastSynced,
-      this.animationDuration = 1500,
-      this.iconSize = 15.0,
-      Key? key})
-      : super(key: key);
+  const SyncIndicator({
+    required this.state,
+    required this.isDirty,
+    this.lastSynced,
+    this.animationDuration = 1500,
+    this.iconSize = 15.0,
+    Key? key,
+  }) : super(key: key);
 
   final AsyncValue<T> state;
   final DateTime? lastSynced;
@@ -136,8 +136,6 @@ class _SyncIndicatorState extends State<SyncIndicator>
       ),
     );
 
-    return (shouldAnimate)
-        ? refreshingWidget
-        : dataWidget;
+    return (shouldAnimate) ? refreshingWidget : dataWidget;
   }
 }

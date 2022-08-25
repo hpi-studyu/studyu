@@ -36,10 +36,11 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     studyEventsSubscription =
         studyRepository.watchChanges(studyId).listen((event) {
       if (event is IsSaving) {
-        print("isSaving");
-        state = state.copyWith(syncState: const AsyncValue.loading());
+        state = state.copyWith(
+          syncState: const AsyncValue.loading(),
+          isDirty: state.isDirty,
+        );
       } else if (event is IsSaved) {
-        print("IsSaved");
         state = state.copyWith(
           syncState: const AsyncValue.data(null),
           lastSynced: DateTime.now(),
