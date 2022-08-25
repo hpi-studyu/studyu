@@ -1,14 +1,12 @@
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
-import 'package:uuid/uuid.dart';
-import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/question/survey_question_form_data.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:uuid/uuid.dart';
 
 class MeasurementSurveyFormData extends IFormDataWithSchedule {
   static final kDefaultTitle = tr.unnamed_survey;

@@ -9,14 +9,11 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
-
-class StudyTestScreen extends ConsumerStatefulWidget {
-  const StudyTestScreen(this.studyId, {Key? key}) : super(key: key);
 
 class StudyTestScreen extends StudyPageWidget {
   const StudyTestScreen(studyId, {Key? key}) : super(studyId, key: key);
@@ -38,7 +35,7 @@ class StudyTestScreen extends StudyPageWidget {
                     "remove the test progress and start over again."
                 .hardcoded,
             textAlign: TextAlign.center),
-        // tr.this_preview_mode+ tr.press_reset todo not sure if translation is still correct
+        // tr.this_preview_mode+ tr.press_reset .hardcoded todo not sure if translation is still correct
         const SizedBox(height: 12.0),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextButton.icon(

@@ -1,5 +1,4 @@
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 extension EnumX on Enum {
@@ -81,42 +80,41 @@ extension DurationX on Duration {
 extension DateTimeAgoX on DateTime {
   String _timeAgoFormatted({inSeconds = true}) {
     Duration diff = DateTime.now().difference(this);
-
     if (diff.inYears >= 1) {
       if (diff.inYears == 1) {
-        return ${diff.inYears} + ${tr.year_ago};
+        return '${diff.inYears} ${tr.year_ago}';
       } else {
-        return ${diff.inYears} + ${tr.years_ago};
+        return '${diff.inYears} ${tr.years_ago}';
       }
     } else if (diff.inMonths >= 1) {
       if (diff.inMonths == 1) {
-        return ${diff.inMonths} + ${tr.month_ago};
+        return '${diff.inMonths} ${tr.month_ago}';
       } else {
-        return ${diff.inMonths} + ${tr.months_ago};
+        return '${diff.inMonths} ${tr.months_ago}';
       }
     } else if (diff.inDays >= 1) {
       if (diff.inDays == 1) {
-        return ${diff.inDays} + ${tr.day_ago};
+        return '${diff.inDays} ${tr.day_ago}';
       } else {
-        return ${diff.inDays} + ${tr.days_ago};
+        return '${diff.inDays} ${tr.days_ago}';
       }
     } else if (diff.inHours >= 1) {
       if (diff.inHours == 1) {
-        return ${diff.inHours} + ${tr.hour_ago};
+        return '${diff.inHours} ${tr.hour_ago}';
       } else {
-        return ${diff.inHours} + ${tr.hours_ago};
+        return '${diff.inHours} ${tr.hours_ago}';
       }
     } else if (diff.inMinutes >= 1) {
       if (diff.inMinutes == 1) {
-        return ${diff.inMinutes} + ${tr.minute_ago};
+        return '${diff.inMinutes} ${tr.minute_ago}';
       } else {
-        return ${diff.inMinutes} + ${tr.minutes_ago};
+        return '${diff.inMinutes} ${tr.minutes_ago}';
       }
     } else if (diff.inSeconds >= 1 && inSeconds) {
       if (diff.inSeconds == 1) {
-        return ${diff.inSeconds} + ${tr.second_ago};
+        return '${diff.inSeconds} ${tr.second_ago}';
       } else {
-        return ${diff.inSeconds} + ${tr.seconds_ago};
+        return '${diff.inSeconds} ${tr.seconds_ago}';
       }
     } else {
       return tr.just_now;

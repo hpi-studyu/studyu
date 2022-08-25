@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -16,7 +18,6 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
@@ -133,7 +134,7 @@ class StudyRepository extends ModelRepository<Study>
       ModelAction(
         type: StudyActionType.duplicate,
         label: "Copy".hardcoded,
-        //label: tr.copy_draft,
+        //label: tr.copy_draft, .hardcoded
         onExecute: () {
           return duplicateAndSave(study).then((value) =>
               ref.read(routerProvider).dispatch(RoutingIntents.studies));

@@ -1,11 +1,9 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart' as core;
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
-import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum StudyActionType {
   edit,
@@ -54,7 +52,7 @@ extension StudyStatusFormatted on StudyStatus {
       case StudyStatus.draft:
         return tr.drafts;
       case StudyStatus.running:
-        return "Live".hardcoded;
+        return tr.live;
       case StudyStatus.closed:
         return tr.closed;
       default:
