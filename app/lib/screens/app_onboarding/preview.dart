@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -31,7 +33,12 @@ class Preview {
     final recovery = await Supabase.instance.client.auth.recoverSession(session,);
     if (recovery.error != null) return false;
 
-    study = await SupabaseQuery.getById<Study>(queryParameters['studyid']);
+    if (containsQuery('data')) {
+      final data = jsonDecode(queryParameters['data']) as Map<String, dynamic>;
+      study = Study.fromJson(data);
+    } else {
+      study = await SupabaseQuery.getById<Study>(queryParameters['studyid']);
+    }
     // todo are results visible for published studies inside preview?
     if (study == null) return false;
 

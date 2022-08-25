@@ -34,7 +34,6 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
-
     initStudy();
   }
 
@@ -50,20 +49,18 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       // Authorize
       if (!await preview.handleAuthorization()) return;
       model.selectedStudy = preview.study;
-      print("Got study: " + model.selectedStudy.toString());
 
       await preview.runCommands();
-      print("init listener");
 
       html.window.onMessage.listen((event) {
         final message = event.data as String;
         final messageContent = jsonDecode(message) as Map<String, dynamic>;
-        //if (messageContent['intervention'] != null) {
+        // if (messageContent['intervention'] != null) {
         //  print(messageContent['intervention']);
-          model.selectedStudy = Study.fromJson(messageContent);
-          print("App:" + messageContent.toString());
-        //}
+        model.updateStudy(Study.fromJson(messageContent));
+        // }
       });
+
       if (preview.hasRoute()) {
         print("has route: " + preview.selectedRoute);
 
@@ -113,7 +110,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           ];
           print("observation with tasks: " + tasks.first.toString());
           if (!mounted) return;
-          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, taskId: preview.extra));
+          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, /*taskId: preview.extra*/));
           print("FINISHED OBSERVATION");
           html.window.parent.postMessage("routeFinished", '*');
           return;

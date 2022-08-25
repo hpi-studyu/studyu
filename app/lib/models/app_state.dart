@@ -5,7 +5,7 @@ import 'package:studyu_core/core.dart';
 
 import '../screens/study/tasks/task_screen.dart';
 
-class AppState {
+class AppState with ChangeNotifier {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
   StudySubject activeSubject;
@@ -63,5 +63,14 @@ class AppState {
         ),
       );
     }
+  }
+
+  void updateStudy(Study study) {
+    study.schedule.includeBaseline = false;
+    selectedStudy = study;
+    if (activeSubject.study.id == study.id) {
+      activeSubject.study = study;
+    }
+    notifyListeners();
   }
 }

@@ -10,8 +10,8 @@ class TaskScreen extends StatefulWidget {
   final Task task;
   final String taskId;
 
-  static MaterialPageRoute<TaskScreen> routeFor({@required Task task, @required String taskId}) => MaterialPageRoute(
-    builder: (_) => TaskScreen(task: task, taskId: taskId),
+  static MaterialPageRoute<TaskScreen> routeFor({@required Task task}) => MaterialPageRoute(
+    builder: (_) => TaskScreen(task: task),
   );
 
   const TaskScreen({@required this.task, this.taskId, Key key}) : super(key: key);
@@ -26,13 +26,13 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final subject = context.watch<AppState>().activeSubject;
     if (widget.task != null) {
       task = widget.task;
     } else if (widget.taskId != null) {
-      final study = context.read<AppState>().activeSubject;
       final tasks = <Task>[
-        ...study.study.observations.where((observation) => observation.id == widget.taskId).toList(),
-        ...study.selectedInterventions
+        ...subject.study.observations.where((observation) => observation.id == widget.taskId).toList(),
+        ...subject.selectedInterventions
             .map((intervention) => intervention.tasks.where((task) => task.id == widget.taskId))
             .expand((task) => task)
             .toList()
@@ -53,9 +53,9 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget _buildTask() {
     switch (widget.task.runtimeType) {
       case CheckmarkTask:
-        return CheckmarkTaskWidget(task: widget.task as CheckmarkTask);
+        return CheckmarkTaskWidget(task: widget.task as CheckmarkTask, key: UniqueKey());
       case QuestionnaireTask:
-        return QuestionnaireTaskWidget(task: widget.task as QuestionnaireTask);
+        return QuestionnaireTaskWidget(task: widget.task as QuestionnaireTask, key: UniqueKey());
       default:
         print('${widget.task.runtimeType} is not a supported Task!');
         return null;

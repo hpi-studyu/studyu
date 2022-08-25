@@ -22,12 +22,12 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
-    if (context.read<AppState>().isPreview) {
+    final model = context.read<AppState>();
+    if (model.isPreview) {
       return;
     }
-    final activeStudy = context.read<AppState>().activeSubject;
     try {
-      await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
+      await model.activeSubject.addResult<T>(taskId: widget.task.id, result: response);
       if (!mounted) return;
       Navigator.pop(context, true);
     } on PostgrestError {
@@ -43,10 +43,10 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.read<AppState>().activeSubject.study.fhirQuestionnaire;
+    final fhirQuestionnaire = context.watch<AppState>().activeSubject.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
-            context.read<AppState>().activeSubject.study.fhirQuestionnaire,
+            fhirQuestionnaire,
             onComplete: (response) => setState(() {
               response = response;
             }),

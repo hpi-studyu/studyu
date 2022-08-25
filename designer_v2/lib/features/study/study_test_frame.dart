@@ -8,7 +8,6 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
@@ -30,7 +29,6 @@ class PreviewFrame extends StudyPageWidget {
     state ??= ref.watch(studyTestControllerProvider(studyId));
     frameController ??= ref.watch(studyTestPlatformControllerProvider(studyId));
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
-    //measurementsFormViewModelProvider
     String formType = 'default';
 
     if (routeArgs is InterventionFormRouteArgs ) {
@@ -43,22 +41,8 @@ class PreviewFrame extends StudyPageWidget {
 
     final formViewModelCurrent = ref.read(studyFormViewModelProvider(studyId));
     formViewModelCurrent.form.valueChanges.listen((event) {
-      // event is a FormGroup from StudyFormViewModel.form containing the updated values
-      print("Event: $event");
-
-      // formViewModelCurrent.buildFormData() returns the old data
-      print("Designer: ${formViewModelCurrent.buildFormData().toJson()}");
-
-      final formViewModelTemp = StudyFormViewModel(
-        router: formViewModelCurrent.router,
-        studyRepository: formViewModelCurrent.studyRepository,
-        authRepository: formViewModelCurrent.authRepository,
-        formData: ref.watch(studyControllerProvider(studyId)).study.value,
-      );
-      formViewModelTemp.form.value = event;
-      // still old values :(
-      final formJson = jsonEncode(formViewModelTemp.buildFormData().toJson());
-      print("Designer3: $formJson");
+      final formJson = jsonEncode(formViewModelCurrent.buildFormData().toJson());
+      //frameController!.navigate(page: formType, data: formJson);
       frameController!.send(formJson);
     });
 

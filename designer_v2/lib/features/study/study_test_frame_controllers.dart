@@ -10,8 +10,9 @@ class RouteInformation {
   String? route;
   String? extra;
   String? cmd;
+  String? data;
 
-  RouteInformation(this.route, this.extra, this.cmd);
+  RouteInformation(this.route, this.extra, this.cmd, this.data);
 }
 
 abstract class PlatformController {
@@ -23,7 +24,7 @@ abstract class PlatformController {
   PlatformController(this.previewSrc, this.studyId);
 
   void registerViews(Key key);
-  void navigate({String? page, String? extra, String? cmd});
+  void navigate({String? page, String? extra, String? cmd, String? data});
   void refresh({String? cmd});
   void listen();
   void send(String message);
@@ -37,7 +38,7 @@ class WebController extends PlatformController {
     final key = UniqueKey();
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
-    routeInformation = RouteInformation(null, null, null);
+    routeInformation = RouteInformation(null, null, null, null);
   }
 
   @override
@@ -55,7 +56,10 @@ class WebController extends PlatformController {
   }
 
   @override
-  void navigate({String? page, String? extra, String? cmd}) {
+  void navigate({String? page, String? extra, String? cmd, String? data}) {
+    if (previewSrc == '') {
+      return;
+    }
     String newPrev = previewSrc;
     if (page != null) {
       routeInformation.route = page;
@@ -75,8 +79,18 @@ class WebController extends PlatformController {
     } else {
       routeInformation.cmd = null;
     }
+    if (data != null) {
+      routeInformation.data = data;
+      newPrev = "$newPrev&data=$data";
+    } else {
+      routeInformation.cmd = null;
+    }
     if (iFrameElement.src != newPrev) {
       print("*********NAVIGATE TO: $newPrev");
+      html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
+      if (frame != null) {
+        frame.src = newPrev;
+      }
       iFrameElement.src = newPrev;
     } else {
       print("Same link detected");
@@ -155,7 +169,7 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void navigate({String? page, String? extra, String? cmd}) {
+  void navigate({String? page, String? extra, String? cmd, String? data}) {
     throw UnimplementedError();
   }
 }

@@ -22,9 +22,8 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
     if (model.isPreview) {
       return;
     }
-    final activeStudy = model.activeSubject;
     try {
-      await activeStudy.addResult<bool>(taskId: widget.task.id, result: true);
+      await model.activeSubject.addResult<bool>(taskId: widget.task.id, result: true);
       await animation;
       if (!mounted) return;
       Navigator.pop(context, true);
