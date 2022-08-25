@@ -35,6 +35,7 @@ dependencies:
   form_builder_extra_fields: ^8.1.0
   flutter_localizations:
     sdk: flutter
+  async: ^2.8.2
 
 dev_dependencies:
   flutter_test:

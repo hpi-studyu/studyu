@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
 typedef WidgetBuilderAt<T> = Widget Function(
@@ -23,12 +24,14 @@ class FormArrayTable<T> extends StatelessWidget {
     this.leadingWidget,
     this.sectionTitle,
     this.sectionTitleDivider = true,
+    this.sectionDescription,
     this.emptyIcon,
     this.emptyTitle,
     this.emptyDescription,
-    Key? key
-  })
-      : assert(sectionTitle == null || leadingWidget == null,
+    this.itemsSectionPadding =
+        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+    Key? key,
+  })  : assert(sectionTitle == null || leadingWidget == null,
             "Cannot specify both sectionTitle and leadingWidget"),
         super(key: key);
 
@@ -42,6 +45,7 @@ class FormArrayTable<T> extends StatelessWidget {
 
   final String onNewItemLabel;
   final String? sectionTitle;
+  final String? sectionDescription;
 
   final IconData? emptyIcon;
   final String? emptyTitle;
@@ -52,6 +56,8 @@ class FormArrayTable<T> extends StatelessWidget {
   final WidgetBuilderAt<T>? rowPrefix;
 
   final Widget? leadingWidget;
+
+  final EdgeInsets? itemsSectionPadding;
 
   static final List<StandardTableColumn> columns = [
     const StandardTableColumn(
@@ -64,22 +70,30 @@ class FormArrayTable<T> extends StatelessWidget {
     final hasEmptyWidget =
         emptyIcon != null || emptyTitle != null || emptyDescription != null;
 
-    Widget? leading;
-    if (leadingWidget != null) {
-      leading = leadingWidget;
-    } else if (sectionTitle != null) {
-      leading = FormTableLayout(
-          rowDivider: (sectionTitleDivider ?? false)
-              ? const Divider()
-              : const SizedBox.shrink(),
-          rows: [
-            FormTableRow(
-                label: sectionTitle!,
-                input: Container(),
-                labelStyle: Theme.of(context).textTheme.headline6)
-          ]
-      );
-    }
+    const leadingWidgetsSpacing = 4.0;
+
+    final Widget leading = Column(
+      children: [
+        (leadingWidget != null) ? leadingWidget! : const SizedBox.shrink(),
+        (sectionTitle != null && leadingWidget != null)
+            ? const SizedBox(height: leadingWidgetsSpacing)
+            : const SizedBox.shrink(),
+        (sectionTitle != null)
+            ? FormSectionHeader(title: sectionTitle!, divider: false)
+            : const SizedBox.shrink(),
+        (sectionTitleDivider == true &&
+                (sectionTitle != null || leadingWidget != null))
+            ? const Divider()
+            : const SizedBox.shrink(),
+        (sectionDescription != null &&
+                (sectionTitle != null || leadingWidget != null))
+            ? const SizedBox(height: leadingWidgetsSpacing)
+            : const SizedBox.shrink(),
+        (sectionDescription != null)
+            ? TextParagraph(text: sectionDescription!)
+            : const SizedBox.shrink(),
+      ],
+    );
 
     return StandardTable<T>(
       items: items,
@@ -91,16 +105,20 @@ class FormArrayTable<T> extends StatelessWidget {
       rowSpacing: 5.0,
       minRowHeight: 40.0,
       showTableHeader: false,
+      tableWrapper: (table) => Padding(
+        padding: (items.isNotEmpty && itemsSectionPadding != null)
+            ? itemsSectionPadding!
+            : EdgeInsets.zero,
+        child: table,
+      ),
       leadingWidget: leading ?? const SizedBox.shrink(),
       trailingWidget: _newItemButton(),
       emptyWidget: (hasEmptyWidget)
-          ? Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: EmptyBody(
-                  icon: emptyIcon,
-                  title: emptyTitle,
-                  description: emptyDescription,
-                  button: _newItemButton()),
+          ? EmptyBody(
+              icon: emptyIcon,
+              title: emptyTitle,
+              description: emptyDescription,
+              button: _newItemButton(),
             )
           : null,
     );

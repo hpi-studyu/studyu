@@ -10,9 +10,20 @@ import '../models.dart';
 
 part 'study.g.dart';
 
-enum Participation { open, invite }
+enum Participation {
+  open,
+  invite;
 
-enum ResultSharing { public, private, organization }
+  String toJson() => name;
+  static Participation fromJson(String json) => values.byName(json);
+}
+
+enum ResultSharing {
+  public, private, organization;
+
+  String toJson() => name;
+  static ResultSharing fromJson(String json) => values.byName(json);
+}
 
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study> {

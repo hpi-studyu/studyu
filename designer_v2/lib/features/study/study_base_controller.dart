@@ -37,7 +37,7 @@ class StudyBaseController<T extends StudyControllerBaseState> extends StateNotif
 
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
     state = state.copyWith(
-      studyWithMetadata: () => wrappedModel
+      studyWithMetadata: wrappedModel
     ) as T;
   }
 

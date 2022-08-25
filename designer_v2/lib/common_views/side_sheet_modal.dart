@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -143,8 +144,6 @@ Future<T?> showModalSideSheet<T extends Object?>(
     },
   );
 }
-
-typedef WidgetDecorator = Widget Function(Widget widget);
 
 Future<T?> showDefaultSideSheet<T extends Object?>({
     required BuildContext context,

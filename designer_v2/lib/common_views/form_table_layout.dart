@@ -101,9 +101,14 @@ class FormTableLayout extends StatelessWidget {
 }
 
 class FormSectionHeader extends StatelessWidget {
-  const FormSectionHeader({required this.title, Key? key}) : super(key: key);
+  const FormSectionHeader({
+    required this.title,
+    this.divider = true,
+    Key? key,
+  }) : super(key: key);
 
   final String title;
+  final bool divider;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +121,7 @@ class FormSectionHeader extends StatelessWidget {
             input: Container(),
           ),
         ]),
-        const Divider(),
+        (divider) ? const Divider() : const SizedBox.shrink(),
       ],
     );
   }

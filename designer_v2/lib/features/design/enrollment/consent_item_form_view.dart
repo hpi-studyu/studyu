@@ -21,7 +21,7 @@ class ConsentItemFormView extends StatelessWidget {
             FormTableRow(
               control: formViewModel.titleControl,
               label: "Title".hardcoded,
-              labelHelpText: "TODO Consent item title text help text".hardcoded,
+              labelHelpText: "TODO Consent item title help text".hardcoded,
               input: Row(
                 children: [
                   Expanded(
@@ -47,14 +47,14 @@ class ConsentItemFormView extends StatelessWidget {
             ),
             FormTableRow(
               control: formViewModel.descriptionControl,
-              label: "Description".hardcoded,
+              label: "Text".hardcoded,
               labelHelpText:
-                  "TODO Consent item description text help text".hardcoded,
+                  "TODO Consent item text help text".hardcoded,
               input: ReactiveTextField(
                 formControl: formViewModel.descriptionControl,
                 keyboardType: TextInputType.multiline,
                 minLines: 10,
-                maxLines: 10,
+                maxLines: 30,
                 decoration: InputDecoration(
                   hintText:
                       "Provide the complete text that your participant must read & agree to"
@@ -63,6 +63,10 @@ class ConsentItemFormView extends StatelessWidget {
               ),
             ),
           ],
+          columnWidths: const {
+            0: MaxColumnWidth(FixedColumnWidth(90.0), IntrinsicColumnWidth()),
+            1: FlexColumnWidth(),
+          },
         ),
       ],
     );

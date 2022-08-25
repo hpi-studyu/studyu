@@ -73,11 +73,11 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       };
 
   @override
-  FormGroup get form => FormGroup({
-        'enrollmentType': enrollmentTypeControl,
-        'consentItems': consentItemArray,
-        ...questionnaireControls,
-      });
+  late final FormGroup form = FormGroup({
+    'enrollmentType': enrollmentTypeControl,
+    'consentItems': consentItemArray,
+    ...questionnaireControls,
+  });
 
   @override
   void setControlsFrom(EnrollmentFormData data) {
@@ -179,13 +179,26 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   testScreener() {
-    router.dispatch(RoutingIntents.studyTest(study.id));
+    router.dispatch(
+        RoutingIntents.studyTest(study.id)); // TODO preselect app route
   }
+
+  testConsent() {
+    router.dispatch(
+        RoutingIntents.studyTest(study.id)); // TODO preselect app route
+  }
+
+  bool get canTestScreener =>
+      !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
+  bool get canTestConsent =>
+      !consentItemArray.disabled &&
+      (consentItemArray.value?.isNotEmpty ?? false);
 }
 
 class EnrollmentFormConsentItemDelegate
     implements
         IFormViewModelDelegate<ConsentItemFormViewModel>,
+        IListActionProvider<ConsentItemFormViewModel>,
         IProviderArgsResolver<ConsentItemFormViewModel,
             ConsentItemFormRouteArgs> {
   EnrollmentFormConsentItemDelegate({
@@ -239,5 +252,26 @@ class EnrollmentFormConsentItemDelegate
       throw ConsentItemNotFoundException(); // TODO handle 404 not found
     }
     return viewModel;
+  }
+
+  // - IListActionProvider
+
+  @override
+  List<ModelAction> availableActions(ConsentItemFormViewModel model) {
+    final actions = formViewModels.availablePopupActions(
+      model,
+      isReadOnly: owner.isReadonly,
+    );
+    return withIcons(actions, modelActionIcons);
+  }
+
+  @override
+  void onNewItem() {
+    // TODO: open sidesheet programmatically
+  }
+
+  @override
+  void onSelectItem(ConsentItemFormViewModel item) {
+    // TODO: open sidesheet programmatically
   }
 }
