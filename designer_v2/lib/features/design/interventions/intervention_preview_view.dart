@@ -10,6 +10,8 @@ class InterventionPreview extends StatelessWidget {
 
   final InterventionFormRouteArgs routeArgs;
 
+  // todo implement a banner here to show validation errors
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -18,7 +20,12 @@ class InterventionPreview extends StatelessWidget {
         Expanded(
             child: Container(
               color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: Column( children: [ const SizedBox(height: 50), PreviewFrame(routeArgs.studyId, routeArgs: routeArgs)],)
+              child: Column(
+                children: [
+                  const SizedBox(height: 50),
+                  PreviewFrame(routeArgs.studyId, routeArgs: routeArgs),
+                ]
+              )
             ),
         )
       ],
