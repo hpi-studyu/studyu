@@ -105,4 +105,4 @@ Supabase provides different backend services such as a database, API, authentica
 
 ### Local setup
 
-StudyU and Supabase can also be hosted locally via Docker. More information on this [can be found here](docker/).
+StudyU and Supabase can also be hosted locally via Docker. More information on this [can be found here](supabase/).
