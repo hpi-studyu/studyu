@@ -133,7 +133,7 @@ class WebController extends PlatformController {
     //iFrameElement.contentWindow?.postMessage(message, '*');
     // todo refactor when to use iFrameElement?
     html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
-    frame.contentWindow?.postMessage(message, env.appDeepLink);
+    frame.contentWindow?.postMessage(message, env.appUrl ?? '');
   }
 }
 

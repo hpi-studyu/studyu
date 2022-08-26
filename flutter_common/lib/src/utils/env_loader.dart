@@ -25,9 +25,8 @@ Future<void> loadEnv() async {
     dotenv.env['STUDYU_SUPABASE_URL']!,
     dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
     envAppUrl: dotenv.env['STUDYU_APP_URL'],
+    envDesignerUrl: dotenv.env['STUDYU_DESIGNER_URL'],
     envProjectGeneratorUrl: dotenv.env['STUDYU_PROJECT_GENERATOR_URL'],
     supabaseClient: Supabase.instance.client,
-    envAppDeepLink: dotenv.env['STUDYU_APP_DEEPLINK_URL'],
-    envDesignerDeepLink: dotenv.env['STUDYU_DESIGNER_DEEPLINK_URL'],
   );
 }
