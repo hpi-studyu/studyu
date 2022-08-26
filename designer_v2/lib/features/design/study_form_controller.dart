@@ -131,24 +131,17 @@ class StudyFormViewModel extends FormViewModel<Study>
   }
 
   @override
-  void onSave(FormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(FormViewModel formViewModel, FormMode prevFormMode) async {
     assert(prevFormMode == FormMode.edit);
-    _applyAndSaveSubform(formViewModel.formData!);
+    await _applyAndSaveSubform(formViewModel.formData!);
   }
 
-  Future _flushDirtyStudy() {
-    if (studyDirtyCopy == null) {
-      return Future.value(null); // nothing to do
-    }
+  Future _applyAndSaveSubform(IStudyFormData subformData) {
+    studyDirtyCopy ??= formData!.exactDuplicate();
+    subformData.apply(studyDirtyCopy!);
     // Flush the on-write study copy to the repository & clear it
     return studyRepository.save(studyDirtyCopy!)
         .then((study) => studyDirtyCopy = null);
-  }
-
-  _applyAndSaveSubform(IStudyFormData subformData) {
-    studyDirtyCopy ??= formData!.exactDuplicate();
-    subformData.apply(studyDirtyCopy!);
-    _flushDirtyStudy();
   }
 }
 

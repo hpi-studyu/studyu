@@ -26,7 +26,7 @@ class FormConfigException implements Exception {
 }
 
 abstract class IFormViewModelDelegate<T extends FormViewModel> {
-  void onSave(T formViewModel, FormMode prevFormMode);
+  Future onSave(T formViewModel, FormMode prevFormMode);
   void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
@@ -292,7 +292,7 @@ abstract class FormViewModel<T> {
     formMode = FormMode.readonly;
   }
 
-  Future save() {
+  Future save() async {
     if (!form.valid) {
       throw FormInvalidException();
     }
@@ -315,7 +315,7 @@ abstract class FormViewModel<T> {
       // re-initialized, which re-triggers the valueChanges stream subscription
       // used for autosaving (entering the infinite loop)
     }
-    delegate?.onSave(this, prevFormMode);
+    await delegate?.onSave(this, prevFormMode);
 
     // Put form into edit mode with saved data
     if (prevFormMode == FormMode.create) {
@@ -342,7 +342,7 @@ abstract class FormViewModel<T> {
       return;
     }
     listenToImmediateFormChildren((control) {
-      final saveFuture = save();
+      final saveFuture = save().then((_) => print("completed without cancel"));
       _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
       return saveFuture;
     }, debounce: debounce);

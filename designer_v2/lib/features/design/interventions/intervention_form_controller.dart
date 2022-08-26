@@ -156,8 +156,8 @@ class InterventionFormViewModel
   }
 
   @override
-  void onSave(
-      InterventionTaskFormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(
+      InterventionTaskFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       tasksCollection.commit(formViewModel);

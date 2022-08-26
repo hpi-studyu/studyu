@@ -160,14 +160,14 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   @override
-  void onSave(
-      MeasurementSurveyFormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(
+      MeasurementSurveyFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       surveyMeasurementFormViewModels.commit(formViewModel);
     } else if (prevFormMode == FormMode.edit) {
       // nothing to do here
     }
-    super.save();
+    await super.save();
   }
 }

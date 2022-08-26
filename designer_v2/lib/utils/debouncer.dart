@@ -59,8 +59,7 @@ class Debouncer extends ExecutionLimiter {
       // else-branch
       _timer = Timer(timerDuration, () => {});
     } else {
-      print("debounce again");
-      _uncompletedFutureOperation!.cancel();
+      _uncompletedFutureOperation?.cancel();
       _timer?.cancel();
       _timer = Timer(timerDuration, startFutureOperation);
     }

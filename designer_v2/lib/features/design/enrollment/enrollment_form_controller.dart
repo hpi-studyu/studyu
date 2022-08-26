@@ -220,7 +220,7 @@ class EnrollmentFormConsentItemDelegate
   }
 
   @override
-  void onSave(ConsentItemFormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(ConsentItemFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       formViewModels.commit(formViewModel);
@@ -228,7 +228,7 @@ class EnrollmentFormConsentItemDelegate
       // nothing to do here
     }
     if (propagateOnSave) {
-      owner.save();
+      await owner.save();
     }
   }
 

@@ -62,7 +62,7 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   }
 
   @override
-  void onSave(QuestionFormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(QuestionFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       questionFormViewModels.commit(formViewModel);
@@ -70,7 +70,7 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
       // nothing to do here
     }
     if (propagateOnSave) {
-      super.save();
+      await super.save();
     }
   }
 
