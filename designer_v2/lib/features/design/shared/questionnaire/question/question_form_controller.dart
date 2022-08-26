@@ -1,6 +1,7 @@
-import 'dart:async';
+import 'dart:math';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_tabs.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_control.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -20,29 +21,26 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         QuestionFormTabsViewModel {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
-  QuestionFormViewModel(
-      {super.formData,
-      super.delegate,
-      super.validationSet = StudyFormValidationSet.draft}) {
-    // Keep the form in sync with the selected question type
-    _updateFormControls(questionType);
-    _questionTypeChanges =
-        questionTypeControl.valueChanges.listen(_updateFormControls);
-  }
-
-  late final StreamSubscription _questionTypeChanges;
+  QuestionFormViewModel({
+    super.formData,
+    super.delegate,
+    super.validationSet = StudyFormValidationSet.draft,
+  });
 
   // - Form fields (any question type)
 
   final FormControl<QuestionID> questionIdControl =
       FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<SurveyQuestionType> questionTypeControl =
-      FormControl(value: defaultQuestionType);
+  late final FormControl<SurveyQuestionType> questionTypeControl =
+      CustomFormControl(
+    value: defaultQuestionType,
+    onValueChanged: _updateFormControls,
+  );
   final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
 
   QuestionID get questionId => questionIdControl.value!;
-  SurveyQuestionType get questionType => questionTypeControl.value!;
+  SurveyQuestionType get questionType => questionTypeControl.value ?? defaultQuestionType;
 
   List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
       QuestionFormData.questionTypeFormDataFactories.keys
@@ -62,7 +60,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   // Multiple Choice
   final FormControl<bool> isMultipleChoiceControl =
       FormControl(validators: [Validators.required], value: false);
-  late final FormArray<String> _customOptionsArray = FormArray([
+  late final FormArray<String> choiceResponseOptionsArray = FormArray([
     for (int i = 0; i < customOptionsInitial; i++)
       FormControl<String>(value: "")
   ]);
@@ -71,56 +69,146 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final int customOptionsInitial = 2;
 
   FormArray<String> get answerOptionsArray => {
-        SurveyQuestionType.bool: _boolAnswerOptionsArray,
-        SurveyQuestionType.choice: _customOptionsArray,
+        SurveyQuestionType.bool: boolResponseOptionsArray,
+        SurveyQuestionType.choice: choiceResponseOptionsArray,
       }[questionType]!;
   List<AbstractControl<String>> get answerOptionsControls =>
       answerOptionsArray.controls;
 
   // Yes/no
-  final FormArray<String> _boolAnswerOptionsArray = FormArray([
+  final FormArray<String> boolResponseOptionsArray = FormArray([
     FormControl<String>(value: "Yes".hardcoded, disabled: true),
     FormControl<String>(value: "No".hardcoded, disabled: true),
   ]);
 
   // Scale TODO
+  static const int kDefaultScaleMinValue = 0;
+  static const int kDefaultScaleMaxValue = 10;
+  static const int kNumMidValueControls = 10;
+  static const int kMidValueDebounceMilliseconds = 350;
+
+  late final FormControl<int> scaleMinValueControl = CustomFormControl(
+    value: kDefaultScaleMinValue,
+    onValueChanged: (_) => _onScaleRangeChanged(),
+    onValueChangedDebounceTime: kMidValueDebounceMilliseconds,
+  );
+  late final FormControl<int> scaleMaxValueControl = CustomFormControl(
+    value: kDefaultScaleMaxValue,
+    onValueChanged: (_) => _onScaleRangeChanged(),
+    onValueChangedDebounceTime: kMidValueDebounceMilliseconds,
+  );
+  final FormControl<int> scaleRangeControl = FormControl(); // hidden
+  final FormControl<String> scaleMinLabelControl = FormControl();
+  final FormControl<String> scaleMaxLabelControl = FormControl();
+  final FormArray<int> scaleMidValueControls = FormArray([]);
+  final FormArray<String> scaleMidLabelControls = FormArray([]);
+
+  List<int?>? prevMinValues;
+
+  int get scaleMinValue => scaleMinValueControl.value ?? kDefaultScaleMinValue;
+  int get scaleMaxValue => scaleMaxValueControl.value ?? 0;
+
+  String? scaleMidLabelAt(int scaleMidValue) {
+    final idx = scaleMidValueControls.value?.indexOf(scaleMidValue);
+    if (idx == null || idx == -1) {
+      return null;
+    }
+    return scaleMidLabelControls.value?[idx];
+  }
+
+  _onScaleRangeChanged() {
+    scaleRangeControl.value = scaleMaxValue - scaleMinValue;
+    _updateScaleMidValueControls();
+  }
+
+  _updateScaleMidValueControls() {
+    final int midValueStepSize =
+        max((scaleMaxValue / kNumMidValueControls).ceil(), 1);
+    final List<int> midValues = [];
+    final List<String> midLabels = [];
+
+    for (int midValue =
+            scaleMinValue + kDefaultScaleMinValue + midValueStepSize;
+        midValue < scaleMaxValue;
+        midValue += midValueStepSize) {
+      final prevLabel = scaleMidLabelAt(midValue);
+      midValues.add(midValue);
+      midLabels.add(prevLabel ?? ''); // retain previous label at value if any
+      if (midValues.length >= kNumMidValueControls) {
+        break;
+      }
+    }
+
+    // Reset controls to new values + labels
+    prevMinValues = scaleMidValueControls.value;
+    scaleMidValueControls.clear(emitEvent: false);
+    scaleMidLabelControls.clear(emitEvent: false);
+    scaleMidValueControls.value = midValues;
+    scaleMidLabelControls.value = midLabels;
+
+    // Prevent mid-value controls from being edited
+    scaleMidValueControls.markAsDisabled();
+  }
 
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
     SurveyQuestionType.bool: FormGroup({
-      'answerOptionsArray': answerOptionsArray,
+      'boolOptionsArray': boolResponseOptionsArray,
     }),
     SurveyQuestionType.choice: FormGroup({
       'isMultipleChoice': isMultipleChoiceControl,
-      'answerOptionsArray': answerOptionsArray,
+      'choiceOptionsArray': choiceResponseOptionsArray,
     }),
     SurveyQuestionType.scale: FormGroup({
-      // TODO implement SurveyQuestionType.scale controls
+      'scaleMinValue': scaleMinValueControl,
+      'scaleMaxValue': scaleMaxValueControl,
+      '_scaleRange': scaleRangeControl, // hidden, included for validation
+      'scaleMinLabel': scaleMinLabelControl,
+      'scaleMaxLabel': scaleMaxLabelControl,
+      'scaleMidValues': scaleMidValueControls,
+      'scaleMidLabels': scaleMidLabelControls,
     }),
+  };
+
+  late final FormValidationConfigSet _sharedValidationConfig = {
+    StudyFormValidationSet.draft: [questionTextRequired],
+    StudyFormValidationSet.publish: [questionTextRequired],
+  };
+
+  late final Map<SurveyQuestionType, FormValidationConfigSet> _validationConfigsByQuestionType = {
+    SurveyQuestionType.choice: {
+      StudyFormValidationSet.draft: [numValidChoiceOptions],
+      StudyFormValidationSet.publish: [numValidChoiceOptions],
+    },
+    SurveyQuestionType.scale: {
+      StudyFormValidationSet.draft: [scaleRangeValid],
+      StudyFormValidationSet.publish: [scaleRangeValid],
+    },
   };
 
   @override
   FormValidationConfigSet get validationConfig => {
-        StudyFormValidationSet.draft: [
-          questionTextRequired,
-          validCustomOptionsLength
-        ], // TODO
-        StudyFormValidationSet.publish: [
-          questionTextRequired,
-          validCustomOptionsLength
-        ], // TODO
-        StudyFormValidationSet.test: [],
-      };
+      StudyFormValidationSet.draft: _getValidationConfig(StudyFormValidationSet.draft),
+      StudyFormValidationSet.publish: _getValidationConfig(StudyFormValidationSet.publish),
+      StudyFormValidationSet.test: _getValidationConfig(StudyFormValidationSet.test),
+    };
+
+  List<FormControlValidation> _getValidationConfig(StudyFormValidationSet validationSet) {
+    return [
+      ...(_sharedValidationConfig[validationSet] ?? []),
+      ...(_validationConfigsByQuestionType[questionType]?[validationSet] ?? [])
+    ];
+  }
 
   get questionTextRequired =>
       FormControlValidation(control: questionTextControl, validators: [
-        Validators.required
+        Validators.required, Validators.minLength(1)
       ], validationMessages: {
-        ValidationMessage.required: (error) =>
-            'Your question must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => 'Your question must not be empty'.hardcoded,
+        ValidationMessage.minLength: (error) => 'Your question must not be empty'.hardcoded,
       });
 
-  get validCustomOptionsLength =>
-      FormControlValidation(control: _customOptionsArray, validators: [
+  get numValidChoiceOptions =>
+      FormControlValidation(control: choiceResponseOptionsArray, validators: [
         CountWhereValidator<String>(
                 (value) => value != null && value.isNotEmpty,
                 minCount: customOptionsMin,
@@ -128,11 +216,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             .validate
       ], validationMessages: {
         CountWhereValidator.kValidationMessageMaxCount: (error) =>
-            'Your multiple choice question must have at most ${customOptionsMax.toString()} response options'
+            'Your question must have at most ${customOptionsMax.toString()} non-empty response options'
                 .hardcoded,
         CountWhereValidator.kValidationMessageMinCount: (error) =>
-            'Your multiple choice question must have at least ${customOptionsMin.toString()} response options'
+            'Your question must have at least ${customOptionsMin.toString()} non-empty response options'
                 .hardcoded,
+      });
+
+  get scaleRangeValid =>
+      FormControlValidation(control: scaleRangeControl, validators: [
+        Validators.min(1),
+        Validators.max(1000),
+      ], validationMessages: {
+        'min': (error) => 'The high value of the scale must be greater than the low value'.hardcoded,
+        'max': (error) => 'The maximum difference between the high and low values of the scale is 1000'.hardcoded,
       });
 
   /// The form containing the controls for the currently selected
@@ -147,6 +244,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     'questionType': questionTypeControl,
     'questionText': questionTextControl,
     'questionInfoText': questionInfoTextControl,
+    ..._controlsByQuestionType[questionType]!.controls,
   });
 
   /// Dynamically updates the [form] based on the given [questionType]
@@ -158,6 +256,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       }
     }
     form.addAll(subtypeFormControls);
+    revalidate();
     form.updateValueAndValidity();
   }
 
@@ -259,14 +358,15 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   QuestionFormViewModel createDuplicate() {
     return QuestionFormViewModel(
-        delegate: delegate,
-        formData: formData?.copy(),
-        validationSet: validationSet);
+      delegate: delegate,
+      formData: formData?.copy(),
+      validationSet: validationSet,
+    );
   }
 
   bool get isAddOptionButtonVisible =>
-      _customOptionsArray.value != null &&
-      _customOptionsArray.value!.length < customOptionsMax;
+      choiceResponseOptionsArray.value != null &&
+      choiceResponseOptionsArray.value!.length < customOptionsMax;
 
   @override
   // TODO: implement isDesignTabEnabled
@@ -283,4 +383,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   // TODO: implement isLogicTabVisible
   bool get isLogicTabVisible => true;
+
+  // - IScaleQuestionFormViewModel
+
+  bool get isMidValuesClearedInfoVisible => prevMinValues != scaleMidValueControls.value;
 }

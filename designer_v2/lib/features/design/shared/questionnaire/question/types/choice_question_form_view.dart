@@ -12,10 +12,8 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 // TODO needs finished concept/design
 // TODO disabled read-only states
 class ChoiceQuestionFormView extends QuestionTypeFormView {
-  const ChoiceQuestionFormView({
-    required this.formViewModel,
-    Key? key
-  }) : super(key: key);
+  const ChoiceQuestionFormView({required this.formViewModel, Key? key})
+      : super(key: key);
 
   final QuestionFormViewModel formViewModel;
 
@@ -34,12 +32,12 @@ class ChoiceQuestionFormView extends QuestionTypeFormView {
             buildQuestionTextControlRow(formViewModel: formViewModel),
           ],
         ),
-        const SizedBox(height: 12.0),
+        const SizedBox(height: 18.0),
         FormSectionHeader(
           title: "Response options",
           helpText:
-          "The options available to the participant to answer your question"
-              .hardcoded,
+              "Define the options that participants can answer your question with"
+                  .hardcoded,
           divider: false,
         ),
         const SizedBox(height: 12.0),
@@ -55,22 +53,24 @@ class ChoiceQuestionFormView extends QuestionTypeFormView {
                 ),
                 StandardTableColumn(
                     label: '', // don't care (showTableHeader=false)
-                    columnWidth: FlexColumnWidth()
-                ),
+                    columnWidth: FlexColumnWidth()),
               ],
               onSelectItem: (_) => {}, // no-op
               buildCellsAt: _buildRow,
-              trailingActionsAt: (control, _) => formViewModel.availableActions(control),
+              trailingActionsAt: (control, _) =>
+                  formViewModel.availableActions(control),
               cellSpacing: 0.0,
               rowSpacing: 1.0,
               showTableHeader: false,
               rowStyle: StandardTableStyle.plain,
               trailingActionsMenuType: ActionMenuType.inline,
               disableRowInteractions: true,
-              trailingWidget: (formViewModel.isAddOptionButtonVisible) ? TextButton(
-                onPressed: formViewModel.onNewItem,
-                child: Text("+ Add option".hardcoded),
-              ) : null,
+              trailingWidget: (formViewModel.isAddOptionButtonVisible)
+                  ? TextButton(
+                      onPressed: formViewModel.onNewItem,
+                      child: Text("+ Add option".hardcoded),
+                    )
+                  : null,
               trailingWidgetSpacing: 0,
             );
           },
@@ -152,12 +152,8 @@ class ChoiceQuestionFormView extends QuestionTypeFormView {
      */
   }
 
-  List<Widget> _buildRow(
-      BuildContext context,
-      AbstractControl<String> item,
-      int rowIdx,
-      Set<MaterialState> states
-  ) {
+  List<Widget> _buildRow(BuildContext context, AbstractControl<String> item,
+      int rowIdx, Set<MaterialState> states) {
     final theme = Theme.of(context);
     final formControl = item as FormControl;
 

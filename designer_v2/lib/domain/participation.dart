@@ -31,7 +31,7 @@ extension ParticipationFormatted on Participation {
   String get description {
     switch (this) {
       case Participation.open:
-        return "All StudyU users may enroll to the open study in the StudyU app.".hardcoded;
+        return "All StudyU users may enroll to the study in the StudyU app.".hardcoded;
       case Participation.invite:
         return "Only participants with an access "
             "code can enroll in the StudyU app.".hardcoded;

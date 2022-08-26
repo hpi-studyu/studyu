@@ -52,18 +52,6 @@ class DismissButton extends StatelessWidget {
           },
         )
     );
-    return SecondaryButton(
-      text: text ?? "Cancel".hardcoded,
-      icon: null,
-      //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-      onPressed: () {
-        if (onPressed != null) {
-          onPressed!();
-        } else {
-          Navigator.maybePop(context);
-        }
-      },
-    );
   }
 }
 

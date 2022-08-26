@@ -6,7 +6,7 @@ enum FormTableRowLayout { vertical, horizontal }
 
 class FormTableRow {
   FormTableRow({
-    required this.label,
+    this.label,
     required this.input,
     this.labelStyle,
     this.labelHelpText,
@@ -14,7 +14,7 @@ class FormTableRow {
     this.layout,
   });
 
-  final String label;
+  final String? label;
   final TextStyle? labelStyle;
   final String? labelHelpText;
   final Widget input;
@@ -69,7 +69,8 @@ class FormTableLayout extends StatelessWidget {
           FormLabel(
             labelText: row.label,
             helpText: row.labelHelpText,
-            labelTextStyle: rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
+            labelTextStyle:
+                rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
           ),
         ],
       );
@@ -148,13 +149,17 @@ class FormSectionHeader extends StatelessWidget {
   const FormSectionHeader({
     required this.title,
     this.helpText,
+    this.helpTextDisabled = false,
+    this.titleTextStyle,
     this.divider = true,
     Key? key,
   }) : super(key: key);
 
   final String title;
+  final TextStyle? titleTextStyle;
   final String? helpText;
   final bool divider;
+  final bool helpTextDisabled;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +169,8 @@ class FormSectionHeader extends StatelessWidget {
           FormTableRow(
             label: title,
             labelHelpText: helpText,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold)
+                .merge(titleTextStyle),
             input: Container(),
           ),
         ]),
@@ -176,13 +182,13 @@ class FormSectionHeader extends StatelessWidget {
 
 class FormLabel extends StatelessWidget {
   const FormLabel({
-    required this.labelText,
+    this.labelText,
     this.helpText,
     this.labelTextStyle,
     Key? key,
   }) : super(key: key);
 
-  final String labelText;
+  final String? labelText;
   final String? helpText;
   final TextStyle? labelTextStyle;
 
@@ -190,10 +196,13 @@ class FormLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        Text(
-          labelText,
-          style: Theme.of(context).textTheme.caption!.merge(labelTextStyle),
-        ),
+        (labelText != null)
+            ? Text(
+                labelText!,
+                style:
+                    Theme.of(context).textTheme.caption!.merge(labelTextStyle),
+              )
+            : const SizedBox.shrink(),
         (helpText != null)
             ? const SizedBox(width: 8.0)
             : const SizedBox.shrink(),

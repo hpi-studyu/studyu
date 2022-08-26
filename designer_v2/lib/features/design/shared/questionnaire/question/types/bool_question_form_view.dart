@@ -49,13 +49,13 @@ class BoolQuestionFormView extends QuestionTypeFormView {
             buildQuestionTextControlRow(formViewModel: formViewModel),
           ],
         ),
-        const SizedBox(height: 12.0),
+        const SizedBox(height: 18.0),
         Opacity(
           opacity: 0.25,
           child: FormSectionHeader(
             title: "Response options",
             helpText:
-                "The options that participants can answer your question with in the app"
+                "Define the options that participants can answer your question with"
                     .hardcoded,
             divider: false,
           ),

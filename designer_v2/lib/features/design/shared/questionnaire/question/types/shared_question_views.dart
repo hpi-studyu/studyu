@@ -11,8 +11,8 @@ FormTableRow buildQuestionTextControlRow(
     control: formViewModel.questionTextControl,
     label: "Your question".hardcoded,
     labelHelpText:
-    "The question that the participant will be prompted with in the app"
-        .hardcoded,
+    "Enter the question that the participant will be prompted with in the app"
+        .hardcoded, // TODO export hint
     labelStyle: const TextStyle(fontWeight: FontWeight.bold),
     input: ReactiveTextField(
       formControl: formViewModel.questionTextControl,

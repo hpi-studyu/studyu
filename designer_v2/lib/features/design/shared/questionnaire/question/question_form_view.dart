@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_tabs.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
@@ -12,13 +12,13 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]
-class SurveyQuestionFormView extends FormConsumerWidget {
-  SurveyQuestionFormView({required this.formViewModel, Key? key})
+class SurveyQuestionFormView extends ConsumerWidget {
+  const SurveyQuestionFormView({required this.formViewModel, Key? key})
       : super(key: key);
 
   final QuestionFormViewModel formViewModel;
 
-  WidgetBuilder get currentWidgetBuilder {
+  WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
       SurveyQuestionType.choice: (_) =>
           ChoiceQuestionFormView(formViewModel: formViewModel),
@@ -39,9 +39,7 @@ class SurveyQuestionFormView extends FormConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, FormGroup form) {
-    final theme = Theme.of(context);
-
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         ReactiveDropdownField<SurveyQuestionType>(
@@ -53,38 +51,12 @@ class SurveyQuestionFormView extends FormConsumerWidget {
                   ))
               .toList(),
         ),
-        /*
-        FormTableLayout(
-          rows: [
-            FormTableRow(
-              control: formViewModel.questionTypeControl,
-              label: "Type".hardcoded,
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              input: ReactiveDropdownField<SurveyQuestionType>(
-                formControl: formViewModel.questionTypeControl,
-                decoration: const NullHelperDecoration(),
-                items: formViewModel.questionTypeControlOptions
-                    .map((option) => DropdownMenuItem(
-                          value: option.value,
-                          child: Text(option.label),
-                        ))
-                    .toList(),
-              ),
-            ),
-          ],
-          columnWidths: const {
-            0: MaxColumnWidth(IntrinsicColumnWidth(), FixedColumnWidth(120.0)),
-            1: FlexColumnWidth(),
-          },
-        ),
-
-         */
         const SizedBox(height: 12.0),
         Opacity(
           opacity: 0.9,
           child: TabbedNavbar(
             tabs: QuestionFormTabs.tabs(context,
-                currentWidgetBuilder(context) as IQuestionTypeFormWidget),
+                questionTypeBodyBuilder(context) as IQuestionTypeFormWidget),
             height: 42.0,
             disabledTooltipText:
                 "Not available for this question type".hardcoded,
@@ -92,7 +64,12 @@ class SurveyQuestionFormView extends FormConsumerWidget {
         ),
         const Divider(height: 0),
         const SizedBox(height: 24.0),
-        currentWidgetBuilder(context),
+        ReactiveValueListenableBuilder( // re-render when question type changes
+          formControl: formViewModel.questionTypeControl,
+          builder: (context, control, child) {
+            return questionTypeBodyBuilder(context);
+          },
+        ),
       ],
     );
   }
