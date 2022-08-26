@@ -92,9 +92,9 @@ class WebController extends PlatformController {
         frame.src = newPrev;
       }
       iFrameElement.src = newPrev;
-    } else {
-      // print("Same link detected");
-    }
+    } /* else {
+       print("Same link detected");
+    } */
   }
 
   @override

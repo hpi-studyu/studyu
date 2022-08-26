@@ -17,7 +17,7 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
-// todo make this immutable?
+// todo make this immutable
 class PreviewFrame extends StudyPageWidget {
   late PlatformController? frameController;
   late StudyTestControllerState? state;
