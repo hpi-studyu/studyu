@@ -103,7 +103,7 @@ class Preview {
             return '/intervention';
           case 'observation':
             return '/observation';
-  }
+        }
       }
     }
     return null;
@@ -117,55 +117,7 @@ class Preview {
     return queryParameters.containsKey(key) && queryParameters[key] == value;
   }
 
-  /*String identifyRoute() {
-    if (hasRoute()) {
-      handleRouteRequirements(selectedRoute);
-      return selectedRoute;
-    }
-  }*/
-
-  /*void handleRouteRequirements(String selectedRoute) {
-
-
-    // interventionSelection,
-
-    //
-
-    /*final appState = context.read<AppState>();
-    if (appState.preselectedInterventionIds != null) {
-      appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy,
-        Supabase.instance.client.auth.user().id,
-        appState.preselectedInterventionIds,
-        appState.inviteCode,
-      );
-      Navigator.pushNamed(context, Routes.journey);
-    } else if (study.interventions.length <= 2) {
-      // No need to select interventions if there are only 2 or less
-      appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy,
-        Supabase.instance.client.auth.user().id,
-        study.interventions.map((i) => i.id).toList(),
-        appState.inviteCode,
-      );
-      Navigator.pushNamed(context, Routes.journey);
-    } else {
-      Navigator.pushNamed(context, Routes.interventionSelection);
-    }*/
-  }*/
-
   Future<StudySubject> createFakeSubject([String extra]) async {
-    /*if (study.interventions.length <= 2) {
-      // No need to select interventions if there are only 2 or less
-      subject = StudySubject.fromStudy(
-        study,
-        Supabase.instance.client.auth.user().id,
-        study.interventions.map((i) => i.id).toList(),
-        null,
-      );
-    } else {*/
-      // we need to let the user choose interventions
-      //Navigator.pushNamed(context, Routes.interventionSelection);
     final interventionList = study.interventions.map((i) => i.id).toList();
     List<String> newInterventionList = [];
     // If we have a specific intervention we want to show, select this one and another one
@@ -185,7 +137,6 @@ class Preview {
       newInterventionList,
       null, // no invite code
     );
-    //}
     subject.startedAt = DateTime.now();
     return subject;
   }

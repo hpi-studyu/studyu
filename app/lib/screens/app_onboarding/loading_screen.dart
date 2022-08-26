@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:html' as html;
-
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
@@ -42,6 +40,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     final preview = Preview(widget.queryParameters ?? {});
 
     if (preview.containsQueryPair('mode', 'preview')) {
+      final iFrameHelper = IFrameHelper();
       state.isPreview = true;
       await preview.init();
 
@@ -51,18 +50,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       await preview.runCommands();
 
-      html.window.onMessage.listen((event) {
-        final message = event.data as String;
-        final messageContent = jsonDecode(message) as Map<String, dynamic>;
-        // if (messageContent['intervention'] != null) {
-        //  print(messageContent['intervention']);
-        // print("App: " + messageContent.toString());
-        state.updateStudy(Study.fromJson(messageContent));
-        // }
-      });
+      iFrameHelper.listen(state);
 
       if (preview.hasRoute()) {
-        print("has route: " + preview.selectedRoute);
+        // print("has route: " + preview.selectedRoute);
 
         // ELIGIBILITY CHECK
         if (preview.selectedRoute == '/eligibilityCheck') {
@@ -70,8 +61,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             // if we remove the await, we can push multiple times. warning: do not run in while(true)
             final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
             // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
-            // todo refactor webcontent
-            html.window.parent.postMessage("routeFinished", '*');
+          iFrameHelper.postRouteFinished();
             return;
         }
 
@@ -79,7 +69,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         if (preview.selectedRoute == Routes.interventionSelection) {
           if (!mounted) return;
           final interventionSelected = await Navigator.pushNamed(context, Routes.interventionSelection);
-          html.window.parent.postMessage("routeFinished", '*');
+          iFrameHelper.postRouteFinished();
           return;
         }
 
@@ -89,7 +79,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         if (preview.selectedRoute == Routes.consent) {
           if (!mounted) return;
           final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
-          html.window.parent.postMessage("routeFinished", '*');
+          iFrameHelper.postRouteFinished();
           return;
         }
 
@@ -97,44 +87,44 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         if (preview.selectedRoute == Routes.dashboard) {
           if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
-          html.window.parent.postMessage("routeFinished", '*');
-          return;
-        }
-
-        // OBSERVATION [i]
-        if (preview.selectedRoute == '/observation') {
-          print("getting tasks for observation");
-          print(state.selectedStudy.observations.first.id);
-          final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
-          ];
-          print("observation with tasks: " + tasks.first.toString());
-          if (!mounted) return;
-          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
-          print("FINISHED OBSERVATION");
-          html.window.parent.postMessage("routeFinished", '*');
+          iFrameHelper.postRouteFinished();
           return;
         }
 
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
-          print("getting tasks for intervention");
+          // print("getting tasks for intervention");
           state.selectedStudy.schedule.includeBaseline = false;
           if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
-          print("FINISHED INTERVENTION");
-          html.window.parent.postMessage("routeFinished", '*');
+          // print("FINISHED INTERVENTION");
+          iFrameHelper.postRouteFinished();
           return;
         }
-        //}
+
+        // OBSERVATION [i]
+        if (preview.selectedRoute == '/observation') {
+          // print("getting tasks for observation");
+          print(state.selectedStudy.observations.first.id);
+          final tasks = <Task>[
+            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
+          ];
+          // print("observation with tasks: " + tasks.first.toString());
+          if (!mounted) return;
+          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
+          // print("FINISHED OBSERVATION");
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
       } else {
         if (!mounted) return;
         if (isUserLoggedIn()) {
-          print("Return to studyOverview");
+          // print("Return to studyOverview");
           Navigator.pushReplacementNamed(context, Routes.studyOverview);
           return;
         }
-        print("Return to welcome");
+        // print("Return to welcome");
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
@@ -147,7 +137,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('Selected study: $selectedStudyObjectId');
+    // print('Selected study: $selectedStudyObjectId');
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {

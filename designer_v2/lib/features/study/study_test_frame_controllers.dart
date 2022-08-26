@@ -33,6 +33,7 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late html.IFrameElement iFrameElement;
+  late String newPrev;
 
   WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
     final key = UniqueKey();
@@ -60,7 +61,7 @@ class WebController extends PlatformController {
     if (previewSrc == '') {
       return;
     }
-    String newPrev = previewSrc;
+    newPrev = previewSrc;
     if (page != null) {
       routeInformation.route = page;
       newPrev = "$newPrev&route=$page";
@@ -113,7 +114,7 @@ class WebController extends PlatformController {
 
   @override
   void openNewPage() {
-    js.context.callMethod('open', [previewSrc]);
+    js.context.callMethod('open', [newPrev]);
   }
 
   @override
@@ -173,9 +174,3 @@ class MobileController extends PlatformController {
     throw UnimplementedError();
   }
 }
-
-/*class MessageData {
-  final String title;
-  final String message;
-  MessageData(this.title, this.message);
-}*/

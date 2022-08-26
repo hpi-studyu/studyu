@@ -28,7 +28,14 @@ class _TaskScreenState extends State<TaskScreen> {
     super.didChangeDependencies();
     final subject = context.watch<AppState>().activeSubject;
     if (widget.task != null) {
-      task = subject.study.observations.firstWhere((element) => element.id == widget.task.id);
+      final tasks = <Task>[
+    ...subject.study.observations.where((observation) => observation.id == widget.task.id).toList(),
+    ...subject.selectedInterventions
+        .map((intervention) => intervention.tasks.where((task) => task.id == widget.task.id))
+        .expand((task) => task)
+        .toList()
+      ];
+      task = tasks.first;
       // print("found task: " + task.title);
       // task = widget.task;
     } else if (widget.taskId != null) {
