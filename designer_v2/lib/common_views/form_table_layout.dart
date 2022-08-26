@@ -53,29 +53,24 @@ class FormTableLayout extends StatelessWidget {
     for (var i = 0; i < rows.length; i++) {
       final row = rows[i];
       final isTrailing = i == rows.length - 1;
-      final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
 
+      final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
       final stateColorStyle = (row.control != null && row.control!.disabled)
           ? TextStyle(color: theme.disabledColor)
           : null;
+      final actualRowLayout =
+          row.layout ?? rowLayout ?? FormTableRowLayout.horizontal;
 
       final labelWidget = Wrap(
         children: [
-          Text(
-            row.label,
-            style: theme.textTheme.caption!
-                .merge(rowLabelStyle)
-                .merge(row.labelStyle),
+          (actualRowLayout == FormTableRowLayout.vertical)
+              ? const SizedBox(width: 4.0)
+              : const SizedBox.shrink(),
+          FormLabel(
+            labelText: row.label,
+            helpText: row.labelHelpText,
+            labelTextStyle: rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
           ),
-          (row.labelHelpText != null)
-              ? const SizedBox(width: 8.0)
-              : const SizedBox.shrink(),
-          (row.labelHelpText != null)
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: HelpIcon(tooltipText: row.labelHelpText),
-                )
-              : const SizedBox.shrink(),
         ],
       );
 
@@ -92,8 +87,6 @@ class FormTableLayout extends StatelessWidget {
       );
 
       final TableRow tableRow;
-      final actualRowLayout =
-          row.layout ?? rowLayout ?? FormTableRowLayout.horizontal;
 
       if (actualRowLayout == FormTableRowLayout.horizontal) {
         tableRow = TableRow(
@@ -113,17 +106,20 @@ class FormTableLayout extends StatelessWidget {
         // actualRowLayout == FormTableRowLayout.vertical
         tableRow = TableRow(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                labelWidget,
-                const SizedBox(height: 8.0),
-                Container(
-                  padding: EdgeInsets.only(bottom: bottomSpacing * 2),
-                  child: contentWidget,
-                ),
-              ],
-            ),
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  labelWidget,
+                  const SizedBox(height: 12.0),
+                  Container(
+                    padding: EdgeInsets.only(bottom: bottomSpacing * 2),
+                    child: contentWidget,
+                  ),
+                ],
+              ),
+            )
           ],
         );
       }
@@ -136,7 +132,13 @@ class FormTableLayout extends StatelessWidget {
     }
 
     return Table(
-      columnWidths: columnWidths,
+      columnWidths:
+          (rowLayout != null && rowLayout == FormTableRowLayout.vertical)
+              ? const {
+                  0: FlexColumnWidth(),
+                  1: FixedColumnWidth(0.0),
+                }
+              : columnWidths,
       children: tableRows,
     );
   }
@@ -145,11 +147,13 @@ class FormTableLayout extends StatelessWidget {
 class FormSectionHeader extends StatelessWidget {
   const FormSectionHeader({
     required this.title,
+    this.helpText,
     this.divider = true,
     Key? key,
   }) : super(key: key);
 
   final String title;
+  final String? helpText;
   final bool divider;
 
   @override
@@ -159,11 +163,46 @@ class FormSectionHeader extends StatelessWidget {
         FormTableLayout(rows: [
           FormTableRow(
             label: title,
+            labelHelpText: helpText,
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             input: Container(),
           ),
         ]),
         (divider) ? const Divider() : const SizedBox.shrink(),
+      ],
+    );
+  }
+}
+
+class FormLabel extends StatelessWidget {
+  const FormLabel({
+    required this.labelText,
+    this.helpText,
+    this.labelTextStyle,
+    Key? key,
+  }) : super(key: key);
+
+  final String labelText;
+  final String? helpText;
+  final TextStyle? labelTextStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: [
+        Text(
+          labelText,
+          style: Theme.of(context).textTheme.caption!.merge(labelTextStyle),
+        ),
+        (helpText != null)
+            ? const SizedBox(width: 8.0)
+            : const SizedBox.shrink(),
+        (helpText != null)
+            ? Padding(
+                padding: const EdgeInsets.only(top: 2.0),
+                child: HelpIcon(tooltipText: helpText),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

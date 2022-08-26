@@ -28,6 +28,9 @@ class ThemeConfig {
       );
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
+
+  static Color sidesheetBackgroundColor(ThemeData theme) =>
+      theme.scaffoldBackgroundColor.withOpacity(0.15);
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {

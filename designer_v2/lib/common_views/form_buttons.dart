@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
@@ -81,8 +82,11 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         builder: (context, form, child) {
           return retainSizeInAppBar(PrimaryButton(
             text: "Save".hardcoded,
-            tooltipDisabled: "Please fill out all fields as required".hardcoded,
+            tooltipDisabled: "Please fill out all fields as required:".hardcoded +
+                "\n\n" +
+                formViewModel.form.validationErrorSummary,
             icon: null,
+            enabled: formViewModel.isValid,
             onPressedFuture: (formViewModel.isValid) ?
               () => formViewModel.save().then(
                 // Close the form (side sheet or scaffold route) if future

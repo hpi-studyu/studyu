@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_tabs.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
@@ -14,7 +15,9 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
 class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
-    implements IListActionProvider<AbstractControl<String>> {
+    implements
+        IListActionProvider<AbstractControl<String>>,
+        QuestionFormTabsViewModel {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   QuestionFormViewModel(
@@ -31,12 +34,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   // - Form fields (any question type)
 
-  final FormControl<QuestionID> questionIdControl = FormControl(
-      validators: [Validators.required], value: const Uuid().v4()); // hidden
-  final FormControl<SurveyQuestionType> questionTypeControl = FormControl(
-      validators: [Validators.required], value: defaultQuestionType);
-  final FormControl<String> questionTextControl =
-      FormControl(validators: [Validators.required]);
+  final FormControl<QuestionID> questionIdControl =
+      FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<SurveyQuestionType> questionTypeControl =
+      FormControl(value: defaultQuestionType);
+  final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
 
   QuestionID get questionId => questionIdControl.value!;
@@ -57,18 +59,36 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   // - Form fields (question type-specific)
 
+  // Multiple Choice
   final FormControl<bool> isMultipleChoiceControl =
       FormControl(validators: [Validators.required], value: false);
-  final FormArray<String> answerOptionsArray = FormArray([], validators: [
-    CountWhereValidator<String>((value) => value != null && value.isNotEmpty,
-            minCount: 2, maxCount: 10)
-        .validate
+  late final FormArray<String> _customOptionsArray = FormArray([
+    for (int i = 0; i < customOptionsInitial; i++)
+      FormControl<String>(value: "")
   ]);
+  final int customOptionsMin = 2;
+  final int customOptionsMax = 10;
+  final int customOptionsInitial = 2;
+
+  FormArray<String> get answerOptionsArray => {
+        SurveyQuestionType.bool: _boolAnswerOptionsArray,
+        SurveyQuestionType.choice: _customOptionsArray,
+      }[questionType]!;
   List<AbstractControl<String>> get answerOptionsControls =>
       answerOptionsArray.controls;
 
+  // Yes/no
+  final FormArray<String> _boolAnswerOptionsArray = FormArray([
+    FormControl<String>(value: "Yes".hardcoded, disabled: true),
+    FormControl<String>(value: "No".hardcoded, disabled: true),
+  ]);
+
+  // Scale TODO
+
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
-    SurveyQuestionType.bool: FormGroup({}),
+    SurveyQuestionType.bool: FormGroup({
+      'answerOptionsArray': answerOptionsArray,
+    }),
     SurveyQuestionType.choice: FormGroup({
       'isMultipleChoice': isMultipleChoiceControl,
       'answerOptionsArray': answerOptionsArray,
@@ -80,10 +100,40 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
-  };
+        StudyFormValidationSet.draft: [
+          questionTextRequired,
+          validCustomOptionsLength
+        ], // TODO
+        StudyFormValidationSet.publish: [
+          questionTextRequired,
+          validCustomOptionsLength
+        ], // TODO
+        StudyFormValidationSet.test: [],
+      };
+
+  get questionTextRequired =>
+      FormControlValidation(control: questionTextControl, validators: [
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) =>
+            'Your question must not be empty'.hardcoded,
+      });
+
+  get validCustomOptionsLength =>
+      FormControlValidation(control: _customOptionsArray, validators: [
+        CountWhereValidator<String>(
+                (value) => value != null && value.isNotEmpty,
+                minCount: customOptionsMin,
+                maxCount: customOptionsMax)
+            .validate
+      ], validationMessages: {
+        CountWhereValidator.kValidationMessageMaxCount: (error) =>
+            'Your multiple choice question must have at most ${customOptionsMax.toString()} response options'
+                .hardcoded,
+        CountWhereValidator.kValidationMessageMinCount: (error) =>
+            'Your multiple choice question must have at least ${customOptionsMin.toString()} response options'
+                .hardcoded,
+      });
 
   /// The form containing the controls for the currently selected
   /// [SurveyQuestionType]
@@ -183,9 +233,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
     final actions = [
       ModelAction(
-        type: ModelActionType.delete,
-        label: ModelActionType.delete.string,
-        isDestructive: true,
+        type: ModelActionType.remove,
+        label: ModelActionType.remove.string,
         onExecute: () {
           final controlIdx = answerOptionsArray.controls.indexOf(model);
           answerOptionsArray.removeAt(controlIdx);
@@ -214,4 +263,24 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         formData: formData?.copy(),
         validationSet: validationSet);
   }
+
+  bool get isAddOptionButtonVisible =>
+      _customOptionsArray.value != null &&
+      _customOptionsArray.value!.length < customOptionsMax;
+
+  @override
+  // TODO: implement isDesignTabEnabled
+  bool get isDesignTabEnabled => true;
+
+  @override
+  // TODO: implement isDesignTabVisible
+  bool get isDesignTabVisible => true;
+
+  @override
+  // TODO: implement isLogicTabEnabled
+  bool get isLogicTabEnabled => true;
+
+  @override
+  // TODO: implement isLogicTabVisible
+  bool get isLogicTabVisible => true;
 }

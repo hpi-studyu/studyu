@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/shared_question_views.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 // TODO needs finished concept/design
 // TODO disabled read-only states
-class ChoiceQuestionFormView extends StatelessWidget {
+class ChoiceQuestionFormView extends QuestionTypeFormView {
   const ChoiceQuestionFormView({
     required this.formViewModel,
     Key? key
@@ -18,7 +20,65 @@ class ChoiceQuestionFormView extends StatelessWidget {
   final QuestionFormViewModel formViewModel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    return content(context);
+  }
+
+  @override
+  Widget content(BuildContext context) {
+    return Column(
+      children: [
+        FormTableLayout(
+          rowLayout: FormTableRowLayout.vertical,
+          rows: [
+            buildQuestionTextControlRow(formViewModel: formViewModel),
+          ],
+        ),
+        const SizedBox(height: 12.0),
+        FormSectionHeader(
+          title: "Response options",
+          helpText:
+          "The options available to the participant to answer your question"
+              .hardcoded,
+          divider: false,
+        ),
+        const SizedBox(height: 12.0),
+        ReactiveFormArray(
+          formArray: formViewModel.answerOptionsArray,
+          builder: (context, formArray, child) {
+            return StandardTable<AbstractControl<String>>(
+              items: formViewModel.answerOptionsControls,
+              columns: const [
+                StandardTableColumn(
+                  label: '', // don't care (showTableHeader=false)
+                  columnWidth: FixedColumnWidth(48.0),
+                ),
+                StandardTableColumn(
+                    label: '', // don't care (showTableHeader=false)
+                    columnWidth: FlexColumnWidth()
+                ),
+              ],
+              onSelectItem: (_) => {}, // no-op
+              buildCellsAt: _buildRow,
+              trailingActionsAt: (control, _) => formViewModel.availableActions(control),
+              cellSpacing: 0.0,
+              rowSpacing: 1.0,
+              showTableHeader: false,
+              rowStyle: StandardTableStyle.plain,
+              trailingActionsMenuType: ActionMenuType.inline,
+              disableRowInteractions: true,
+              trailingWidget: (formViewModel.isAddOptionButtonVisible) ? TextButton(
+                onPressed: formViewModel.onNewItem,
+                child: Text("+ Add option".hardcoded),
+              ) : null,
+              trailingWidgetSpacing: 0,
+            );
+          },
+        ),
+      ],
+    );
+
+    /*
     return Column(
       children: [
         FormTableLayout(
@@ -33,19 +93,6 @@ class ChoiceQuestionFormView extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: "Type your question".hardcoded,
                   ),
-                ),
-              ),
-              FormTableRow(
-                control: formViewModel.questionTypeControl,
-                label: "Type".hardcoded,
-                input: ReactiveDropdownField<SurveyQuestionType>(
-                  formControl: formViewModel.questionTypeControl,
-                  //decoration: const NullHelperDecoration(),
-                  items: formViewModel.questionTypeControlOptions.map(
-                          (option) => DropdownMenuItem(
-                            value: option.value,
-                            child: Text(option.label),
-                          )).toList(),
                 ),
               ),
             ]
@@ -88,19 +135,21 @@ class ChoiceQuestionFormView extends StatelessWidget {
         const Divider(),
         const SizedBox(height: 4.0),
         FormTableLayout(
-          rows: [
-            FormTableRow(
-              label: "Multiple selection".hardcoded,
-              labelHelpText: "TODO Multiple selection help text".hardcoded,
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              input: ReactiveSwitch(
-                formControl: formViewModel.isMultipleChoiceControl,
+            rows: [
+              FormTableRow(
+                label: "Multiple selection".hardcoded,
+                labelHelpText: "TODO Multiple selection help text".hardcoded,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                input: ReactiveSwitch(
+                  formControl: formViewModel.isMultipleChoiceControl,
+                ),
               ),
-            ),
-          ]
+            ]
         ),
       ],
     );
+
+     */
   }
 
   List<Widget> _buildRow(
