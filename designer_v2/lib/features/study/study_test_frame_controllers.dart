@@ -2,8 +2,8 @@ import 'dart:html' as html;
 import 'dart:js' as js;
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 
 class RouteInformation {
@@ -86,14 +86,14 @@ class WebController extends PlatformController {
       routeInformation.cmd = null;
     }
     if (iFrameElement.src != newPrev) {
-      print("*********NAVIGATE TO: $newPrev");
+      // print("*********NAVIGATE TO: $newPrev");
       html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
       if (frame != null) {
         frame.src = newPrev;
       }
       iFrameElement.src = newPrev;
     } else {
-      print("Same link detected");
+      // print("Same link detected");
     }
   }
 
@@ -131,9 +131,9 @@ class WebController extends PlatformController {
    // For debug purposes: postMessage(message, '*')
     //iFrameElement.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
     //iFrameElement.contentWindow?.postMessage(message, '*');
-    // todo refactor
+    // todo refactor when to use iFrameElement?
     html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
-    frame.contentWindow?.postMessage(message, '*');
+    frame.contentWindow?.postMessage(message, env.appDeepLink);
   }
 }
 

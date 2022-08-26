@@ -38,17 +38,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
   }
 
   Future<void> initStudy() async {
-    final model = context.read<AppState>();
+    final state = context.read<AppState>();
     final preview = Preview(widget.queryParameters ?? {});
-    // print("INIT STUDY");
     if (preview.containsQueryPair('mode', 'preview')) {
-      // print("INIT PREVIEW");
-      model.isPreview = true;
+      state.isPreview = true;
       await preview.init();
 
       // Authorize
       if (!await preview.handleAuthorization()) return;
-      model.selectedStudy = preview.study;
+      state.selectedStudy = preview.study;
 
       await preview.runCommands();
 
@@ -57,7 +55,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         final messageContent = jsonDecode(message) as Map<String, dynamic>;
         // if (messageContent['intervention'] != null) {
         //  print(messageContent['intervention']);
-        model.updateStudy(Study.fromJson(messageContent));
+        // print("App: " + messageContent.toString());
+        state.updateStudy(Study.fromJson(messageContent));
         // }
       });
 
@@ -83,7 +82,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
-        model.activeSubject = await preview.createFakeSubject(preview.extra);
+        state.activeSubject = await preview.createFakeSubject(preview.extra);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
@@ -104,13 +103,13 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
           print("getting tasks for observation");
-          print(model.selectedStudy.observations.first.id);
+          print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
-            ...model.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
+            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
           print("observation with tasks: " + tasks.first.toString());
           if (!mounted) return;
-          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first, /*taskId: preview.extra*/));
+          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
           print("FINISHED OBSERVATION");
           html.window.parent.postMessage("routeFinished", '*');
           return;
@@ -119,7 +118,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           print("getting tasks for intervention");
-          model.selectedStudy.schedule.includeBaseline = false;
+          state.selectedStudy.schedule.includeBaseline = false;
           if (!mounted) return;
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
           print("FINISHED INTERVENTION");
@@ -182,7 +181,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
-      model.activeSubject = subject;
+      state.activeSubject = subject;
       if (!kIsWeb) {
         // Notifications not supported on web
         scheduleStudyNotifications(context);

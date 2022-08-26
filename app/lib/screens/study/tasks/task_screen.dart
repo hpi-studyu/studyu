@@ -28,7 +28,9 @@ class _TaskScreenState extends State<TaskScreen> {
     super.didChangeDependencies();
     final subject = context.watch<AppState>().activeSubject;
     if (widget.task != null) {
-      task = widget.task;
+      task = subject.study.observations.firstWhere((element) => element.id == widget.task.id);
+      // print("found task: " + task.title);
+      // task = widget.task;
     } else if (widget.taskId != null) {
       final tasks = <Task>[
         ...subject.study.observations.where((observation) => observation.id == widget.taskId).toList(),
@@ -51,13 +53,13 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Widget _buildTask() {
-    switch (widget.task.runtimeType) {
+    switch (task.runtimeType) {
       case CheckmarkTask:
-        return CheckmarkTaskWidget(task: widget.task as CheckmarkTask, key: UniqueKey());
+        return CheckmarkTaskWidget(task: task as CheckmarkTask, key: UniqueKey());
       case QuestionnaireTask:
-        return QuestionnaireTaskWidget(task: widget.task as QuestionnaireTask, key: UniqueKey());
+        return QuestionnaireTaskWidget(task: task as QuestionnaireTask, key: UniqueKey());
       default:
-        print('${widget.task.runtimeType} is not a supported Task!');
+        print('${task.runtimeType} is not a supported Task!');
         return null;
     }
   }
@@ -67,7 +69,7 @@ class _TaskScreenState extends State<TaskScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.task.title),
+        title: Text(task.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -75,7 +77,7 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
+              Text(task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
               const SizedBox(height: 20),
               _buildTask(),
             ],
