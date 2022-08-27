@@ -12,7 +12,6 @@ services:
       - studyu-net
     env_file:
       - flutter_common/lib/envs/.env.selfhost
-
   designer-selfhost:
     build:
       context: .

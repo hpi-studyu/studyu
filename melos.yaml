@@ -171,6 +171,14 @@ scripts:
     select-package:
       scope: studyu_designer
 
+  build:web:designer_v2:selfhost:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.selfhost"
+    description: Build designer_v2 for Docker and self-hosted Supabase instance.
+    select-package:
+      scope: studyu_designer_v2
+
   # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
   app:web:local:
     run: |
