@@ -49,7 +49,7 @@ final studyTestControllerProvider = StateNotifierProvider
 });
 
 final studyTestPlatformControllerProvider = Provider
-    .family<PlatformController?, StudyID>((ref, studyId) {
+    .family<PlatformController, StudyID>((ref, studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
 
   PlatformController platformController;

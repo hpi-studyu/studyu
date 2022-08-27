@@ -22,7 +22,7 @@ class StudyTestScreen extends StudyPageWidget {
     final state = ref.watch(studyTestControllerProvider(studyId));
     final frameController = ref.watch(
         studyTestPlatformControllerProvider(studyId));
-    frameController!.navigate();
+    frameController.navigate();
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
     return Column(

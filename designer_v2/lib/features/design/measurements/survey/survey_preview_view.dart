@@ -12,16 +12,14 @@ class SurveyPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-              child: Column( children: [ const SizedBox(height: 50), PreviewFrame(routeArgs.studyId, routeArgs: routeArgs) ],),
-            ),
+    return Container(
+        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
+        child: Column(
+            children: [
+              const SizedBox(height: 50),
+              PreviewFrame(routeArgs.studyId, routeArgs: routeArgs),
+            ]
         )
-      ],
     );
   }
 }

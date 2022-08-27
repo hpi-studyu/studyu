@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
@@ -11,56 +14,119 @@ import 'package:studyu_designer_v2/features/study/study_test_controller_state.da
 import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
-// todo make this immutable
-class PreviewFrame extends ConsumerWidget {
-  late PlatformController? frameController;
-  late StudyTestControllerState? state;
+class PreviewFrame extends ConsumerStatefulWidget {
+  final PlatformController? frameController;
+  final StudyTestControllerState? state;
   final StudyID studyId;
   final StudyFormRouteArgs? routeArgs;
-  PreviewFrame(this.studyId, {this.routeArgs, this.frameController, this.state, Key? key}) : super(key: key);
+  const PreviewFrame(this.studyId, {this.routeArgs, this.frameController, this.state, Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    state ??= ref.watch(studyTestControllerProvider(studyId));
-    frameController ??= ref.watch(studyTestPlatformControllerProvider(studyId));
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+  _PreviewFrameState createState() => _PreviewFrameState();
+}
+
+class _PreviewFrameState extends ConsumerState<PreviewFrame> {
+  bool intercept = false;
+  late ModalRoute? _modalRoute;
+  late GoRouter router;
+
+  @override
+  void initState() {
+    super.initState();
+    _createListener();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _modalRoute = ModalRoute.of(context);
+    router = ref.read(routerProvider);
+    super.didChangeDependencies();
+  }
+
+  Future<void> _createListener() async {
+    SchedulerBinding.instance.addPostFrameCallback((_) => router.addListener(_interceptListener));
+  }
+
+  void _interceptListener() {
+    final isOnTop = _modalRoute!.isCurrent;
+    if (!isOnTop) {
+      setState(() {intercept = true;});
+    } else {
+      setState(() {intercept = false;});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final frameController = ref.watch(studyTestPlatformControllerProvider(widget.studyId));
+    final state = ref.watch(studyTestControllerProvider(widget.studyId));
+    final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyId));
     String formType = 'default';
 
-    if (routeArgs is InterventionFormRouteArgs ) {
+    if (widget.routeArgs is InterventionFormRouteArgs ) {
       formType = 'intervention';
-      frameController!.navigate(page: formType, extra: (routeArgs as InterventionFormRouteArgs).interventionId);
-    } else if (routeArgs is MeasurementFormRouteArgs) {
+      frameController.navigate(page: formType, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+    } else if (widget.routeArgs is MeasurementFormRouteArgs) {
       formType = 'observation';
-      frameController!.navigate(page: formType, extra: (routeArgs as MeasurementFormRouteArgs).measurementId);
+      frameController.navigate(page: formType, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
     }
 
-    final formViewModelCurrent = ref.read(studyFormViewModelProvider(studyId));
+    final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyId));
     formViewModelCurrent.form.valueChanges.listen((event) {
       final formJson = jsonEncode(formViewModelCurrent.buildFormData().toJson());
-      //frameController!.navigate(page: formType, data: formJson);
-      frameController!.send(formJson);
+      frameController.send(formJson);
     });
 
-    frameController!.listen();
+    frameController.listen();
 
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(builder: (context, form, child) {
-                if (formViewModel.form.hasErrors) {
-                  return const DisabledFrame();
-                }
-                return Column(
-                  children: [frameController!.frameWidget, FrameControlsWidget(frameController!, state!)],
-                );
-              })
+    return Stack(
+        children: <Widget>[
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ReactiveForm(
+                    formGroup: formViewModel.form,
+                    child: ReactiveFormConsumer(builder: (context, form, child) {
+                      if (formViewModel.form.hasErrors) {
+                        return const DisabledFrame();
+                      }
+                      return Column(
+                        children: [frameController.frameWidget, FrameControlsWidget(frameController, state)],
+                      );
+                    })
+                ),
+              ]
           ),
+          if (intercept)
+            // workaround for the sidesheet to intercept click events
+            // which would otherwise be consumed by the iframe
+            Positioned.fill(
+              child: DropzoneView(
+                key: UniqueKey(),
+                onDrop: (_) {debugPrint("");},
+              ),
+            )
+          /* // Does not work
+          Positioned.fill(
+            child: PointerInterceptor(
+              debug: true,
+              intercepting: intercept,
+              child: Container(
+                color: Colors.blue,
+              ),
+            )
+          ); */
         ]
     );
+  }
+
+  @override
+  void dispose() {
+    router.removeListener(_interceptListener);
+    super.dispose();
   }
 }

@@ -14,7 +14,9 @@ class InterventionTaskFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return /* PointerInterceptor( // does not work on re-render for some reason
+        debug: true,
+        child: */ Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FormTableLayout(rows: [
@@ -65,6 +67,7 @@ class InterventionTaskFormView extends StatelessWidget {
         const SizedBox(height: 24.0),
         ScheduleControls(formViewModel: formViewModel),
       ],
+      //)
     );
   }
 }
