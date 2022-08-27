@@ -1,6 +1,5 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
-import 'package:studyu_designer_v2/utils/performance.dart';
 
 typedef ValueCallback<T> = void Function(T value);
 
@@ -14,8 +13,6 @@ class CustomFormControl<T> extends FormControl<T> {
     super.disabled = false,
     this.onValueChanged,
     this.onStatusChanged,
-    this.onValueChangedImmediate = true,
-    this.onStatusChangedImmediate = true,
     this.onValueChangedDebounceTime,
     this.onStatusChangedDebounceTime,
   }) : super() {
@@ -24,11 +21,8 @@ class CustomFormControl<T> extends FormControl<T> {
           ? (value) =>
               _onValueChangedDebouncer!(callback: () => onValueChanged!(value))
           : onValueChanged;
+
       valueChanges.listen(callback);
-      if (onValueChangedImmediate) {
-        // defer synchronous operation to avoid loops from side-effects
-        runAsync(() => onValueChanged!(value));
-      }
     }
 
     if (onStatusChanged != null) {
@@ -36,11 +30,8 @@ class CustomFormControl<T> extends FormControl<T> {
           ? (value) => _onStatusChangedDebouncer!(
               callback: () => onStatusChanged!(value))
           : onStatusChanged;
+
       statusChanged.listen(callback);
-      if (onStatusChangedImmediate) {
-        // defer synchronous operation to avoid loops from side-effects
-        runAsync(() => onStatusChanged!(status));
-      }
     }
   }
 
@@ -63,8 +54,6 @@ class CustomFormControl<T> extends FormControl<T> {
 
   final ValueCallback<T?>? onValueChanged;
   final ValueCallback<ControlStatus>? onStatusChanged;
-  final bool onValueChangedImmediate;
-  final bool onStatusChangedImmediate;
   final int? onStatusChangedDebounceTime;
   final int? onValueChangedDebounceTime;
 }

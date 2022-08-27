@@ -66,14 +66,31 @@ class ChoiceQuestionFormView extends QuestionTypeFormView {
               trailingActionsMenuType: ActionMenuType.inline,
               disableRowInteractions: true,
               trailingWidget: (formViewModel.isAddOptionButtonVisible)
-                  ? TextButton(
-                      onPressed: formViewModel.onNewItem,
-                      child: Text("+ Add option".hardcoded),
-                    )
+                  ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
+                child: TextButton.icon(
+                  onPressed: formViewModel.onNewItem,
+                  icon: const Icon(Icons.add_rounded),
+                  label: Text("Add option".hardcoded),
+                )
+              )
                   : null,
               trailingWidgetSpacing: 0,
             );
           },
+        ),
+        const SizedBox(height: 12.0),
+        FormTableLayout(
+            rows: [
+              FormTableRow(
+                label: "Multiple selection".hardcoded,
+                labelHelpText: "Allow participants to select multiple response options".hardcoded,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                input: ReactiveSwitch(
+                  formControl: formViewModel.isMultipleChoiceControl,
+                ),
+              ),
+            ]
         ),
       ],
     );

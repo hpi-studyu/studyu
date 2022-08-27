@@ -132,14 +132,17 @@ class ScaleQuestionFormView extends QuestionTypeFormView {
         ReactiveFormArray(
           formArray: formViewModel.scaleMidValueControls,
           builder: (context, formArray, child) {
+            if (formArray.controls.isEmpty) {
+              return const SizedBox.shrink();
+            }
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(formArray.controls.length, (i) {
                 final valueControl = formViewModel
-                    .scaleMidValueControls.controls[i] as FormControl<int>;
+                    .scaleMidValueControls.controls[i] as FormControl;
                 final labelControl = formViewModel
-                    .scaleMidLabelControls.controls[i] as FormControl<String>;
+                    .scaleMidLabelControls.controls[i] as FormControl;
 
                 return _buildLabelValueControlsPair(
                   labelControl: labelControl,
@@ -168,8 +171,8 @@ class ScaleQuestionFormView extends QuestionTypeFormView {
   }
 
   Widget _buildLabelValueControlsPair({
-    required FormControl<String> labelControl,
-    required FormControl<int> valueControl,
+    required FormControl labelControl,
+    required FormControl valueControl,
     String? labelControlLabel,
     String? labelControlHelpText,
     String? valueControlLabel,
@@ -209,7 +212,7 @@ class ScaleQuestionFormView extends QuestionTypeFormView {
                 label: valueControlLabel,
                 labelHelpText: valueControlHelpText,
                 input: ReactiveTextField(
-                  key: ValueKey<int?>(valueControl.value),
+                  key: ValueKey(valueControl.value),
                   formControl: valueControl,
                   validationMessages: valueControl.validationMessages,
                   keyboardType: TextInputType.number,

@@ -8,6 +8,7 @@ enum SurveyQuestionType {
     final typeMapping = {
       BooleanQuestion.questionType: SurveyQuestionType.bool,
       ChoiceQuestion.questionType: SurveyQuestionType.choice,
+      ScaleQuestion.questionType: SurveyQuestionType.scale,
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
     };

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:async/async.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -41,7 +42,8 @@ class FormControlOption<T> extends Equatable {
   List<Object?> get props => [value, label, description];
 }
 
-typedef FormControlUpdateFutureBuilder = Future Function(AbstractControl control);
+typedef FormControlUpdateFutureBuilder = Future Function(
+    AbstractControl control);
 
 abstract class FormViewModel<T> {
   FormViewModel({
@@ -53,6 +55,7 @@ abstract class FormViewModel<T> {
         _formData = formData,
         _formMode = (formData != null) ? FormMode.edit : FormMode.create {
     _setFormData(formData);
+    initControls();
     _restoreControlsFromFormData();
     _formModeUpdated();
     _applyValidationSet(validationSet);
@@ -113,10 +116,29 @@ abstract class FormViewModel<T> {
   /// Flag indicating whether the current [form] data is different from
   /// the most recently set [formData]
   ///
+  /// The comparison is based on the [form]'s JSON [form.value], including
+  /// values from disabled controls (which is not the case by default) so
+  /// that controls can be marked as disabled when needed for the UI
+  /// without affecting the dirty status.
+  ///
+  /// Note: for the JSON-based comparison to work, all [FormControl] and
+  /// [FormArray] types must be JSON-serializable
+  ///
   /// Note: [AbstractControl.dirty] does not work reliably when the [form]'s
   /// values are initialized in [setControlsFrom] (controls that are set
   /// programmatically are incorrectly marked as dirty without any user input)
-  bool get isDirty => jsonEncode(prevFormValue) != jsonEncode(form.value);
+  bool get isDirty {
+    _rememberDefaultControlStates();
+    for (final control in form.controls.values) {
+      control.markAsEnabled(emitEvent: false, updateParent: false);
+    }
+    final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
+    for (final control in form.controls.values) {
+      control.markAsEnabled(emitEvent: false, updateParent: false);
+    }
+    _restoreControlStates(emitEvent: false, updateParent: false);
+    return !isEqual;
+  }
 
   /// The [form]'s JSON value after initializing the controls with [formData]
   JsonMap? prevFormValue;
@@ -128,9 +150,9 @@ abstract class FormViewModel<T> {
     _formData = formData;
     if (formData != null) {
       setControlsFrom(formData); // update [form] controls automatically
-      form.updateValueAndValidity();
     }
     prevFormValue = {...form.value};
+    form.updateValueAndValidity();
   }
 
   _rememberDefaultControlStates() {
@@ -170,15 +192,16 @@ abstract class FormViewModel<T> {
     assert(form.allControlsDisabled());
   }
 
-  _restoreControlStates() {
+  _restoreControlStates({emitEvent = true, updateParent = true}) {
     for (final entry in form.controls.entries) {
       final controlName = entry.key;
       final control = entry.value;
       final isEnabledByDefault = _defaultControlStates[controlName] ?? true;
       if (isEnabledByDefault) {
-        control.markAsEnabled();
+        control.markAsEnabled(emitEvent: emitEvent, updateParent: updateParent);
       } else {
-        control.markAsDisabled();
+        control.markAsDisabled(
+            emitEvent: emitEvent, updateParent: updateParent);
       }
     }
   }
@@ -199,10 +222,8 @@ abstract class FormViewModel<T> {
   _restoreControlsFromFormData() {
     if (formData != null) {
       setControlsFrom(formData!);
-    } else {
-      initControls();
+      form.updateValueAndValidity();
     }
-    form.updateValueAndValidity();
   }
 
   void revalidate() {
@@ -348,7 +369,8 @@ abstract class FormViewModel<T> {
     }, debounce: debounce);
   }
 
-  void listenToImmediateFormChildren(FormControlUpdateFutureBuilder futureBuilder,
+  void listenToImmediateFormChildren(
+      FormControlUpdateFutureBuilder futureBuilder,
       {int debounce = 1500}) {
     // Initialize debounce helper if needed
     if (debounce != 0) {
