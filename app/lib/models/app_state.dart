@@ -5,7 +5,7 @@ import 'package:studyu_core/core.dart';
 
 import '../screens/study/tasks/task_screen.dart';
 
-class AppState {
+class AppState with ChangeNotifier {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
   StudySubject activeSubject;
@@ -13,7 +13,13 @@ class AppState {
   List<String> preselectedInterventionIds;
   FlutterLocalNotificationsPlugin _notificationsPlugin;
   bool isPreview = false;
-  bool previewInit = false;
+
+  /// Flag indicating whether the participant's progress should be tracked
+  ///
+  /// We always track the participant's progress except when the study is
+  /// being viewed in test/preview mode while already launched (to avoid
+  /// mixing results from test users with actual participants)
+  bool get trackParticipantProgress => !(isPreview && selectedStudy.isRunning);
 
   /// Context used for FlutterLocalNotificationsPlugin
   BuildContext context;
@@ -64,5 +70,14 @@ class AppState {
         ),
       );
     }
+  }
+
+  void updateStudy(Study study) {
+    study.schedule.includeBaseline = false;
+    selectedStudy = study;
+    if (activeSubject.study.id == study.id) {
+      activeSubject.study = study;
+    }
+    notifyListeners();
   }
 }

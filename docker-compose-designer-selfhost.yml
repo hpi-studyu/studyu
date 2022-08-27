@@ -7,7 +7,7 @@ services:
         FLUTTER_APP_FOLDER: designer
         ENV: selfhost
     ports:
-      - 8080:80
+      - 8081:80
     networks:
       - studyu-net
     env_file:
