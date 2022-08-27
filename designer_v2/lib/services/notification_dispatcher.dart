@@ -152,7 +152,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(notification.icon),
-            Text("️ ${notification.title}", style: textTheme.titleLarge),
+            Text("️ ${notification.title}", style: textTheme.headline3),
           ]
       ),
       content: ConstrainedBox(
@@ -163,13 +163,21 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
           child: Row(
               children: [
                 Flexible(
-                    child: Text(notification.message)
+                    child: notificationContent(notification.message, notification.customContent),
                 ),
               ]
           )
       ),
       actions: actions,
     );
+  }
+
+  Widget notificationContent(String? message, Widget? customContent) {
+    if (customContent != null) {
+      return customContent;
+    } else {
+      return Text(message!);
+    }
   }
 
   SnackBar _buildSnackbar(SnackbarIntent notification,
@@ -190,7 +198,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
                   size: 2/3*widget.snackbarInnerPadding,
                   color: theme.snackBarTheme.actionTextColor),
             ) : const SizedBox(),
-          Text(notification.message, style: theme.textTheme.titleMedium!
+          Text(notification.message!, style: theme.textTheme.titleMedium!
               .copyWith(color: theme.colorScheme.onPrimary))
         ],
       ),

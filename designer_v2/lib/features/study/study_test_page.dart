@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
-import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
@@ -20,58 +20,69 @@ class StudyTestScreen extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyTestControllerProvider(studyId));
-    final frameController =
-        ref.watch(studyTestPlatformControllerProvider(studyId));
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+    final frameController = ref.watch(
+        studyTestPlatformControllerProvider(studyId));
+    frameController.navigate();
+    load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
-    load().then((value) => value ? null : showHelp(ref));
-
-    final frameControls = Column(
-      children: [
-        const SizedBox(height: 24.0),
-        Text(
-            "This is the preview mode.\nPress reset to "
-                    "remove the test progress and start over again."
-                .hardcoded,
-            textAlign: TextAlign.center),
-        const SizedBox(height: 12.0),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          TextButton.icon(
-            icon: const Icon(Icons.restart_alt),
-            label: Text("Reset".hardcoded),
-            onPressed: (!state.canTest)
-                ? null
-                : () {
-                    frameController!.sendCmd("reset");
-                  },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.open_in_new_sharp),
-            label: Text("Open in new tab".hardcoded),
-            onPressed: (!state.canTest)
-                ? null
-                : () {
-                    frameController!.openNewPage();
-                  },
-          ),
-        ]),
-      ],
-    );
-
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
         children: [
-          ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(builder: (context, form, child) {
-                if (formViewModel.form.hasErrors) {
-                  return const DisabledFrame();
-                }
-                return Column(
-                  children: [frameController!.frameWidget, frameControls],
-                );
-              })),
+          PreviewFrame(studyId, frameController: frameController, state: state),
+          const SizedBox(height: 24.0),
+          Text("This is the preview mode.\nPress reset to "
+              "remove the test progress and start over again."
+              .hardcoded, textAlign: TextAlign.center),
+          const SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("study overview".hardcoded), // questionnaire?
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate();
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("eligibilityCheck".hardcoded), // questionnaire?
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "eligibilityCheck");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("interventionSelection".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "interventionSelection");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("consent".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "consent");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("dashboard".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "dashboard");
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.help),
+                label: Text("How does this work?".hardcoded),
+                onPressed: () => showHelp(ref, context),
+              ),
+            ],
+          ),
         ]
     );
   }
@@ -82,7 +93,6 @@ class StudyTestScreen extends StudyPageWidget {
     if (!formViewModel.form.hasErrors) {
       return null;
     }
-
     return BannerBox(
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -90,7 +100,7 @@ class StudyTestScreen extends StudyPageWidget {
           children: [
             TextParagraph(
               text: "The preview is unavailable until you update the "
-                      "following information:".hardcoded,
+                  "following information:".hardcoded,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             ReactiveForm(
@@ -126,10 +136,9 @@ class StudyTestScreen extends StudyPageWidget {
     return false;
   }
 
-  showHelp(WidgetRef ref) {
-    ref
-        .read(notificationServiceProvider)
-        .show(Notifications.welcomeTestMode, actions: [
+  showHelp(WidgetRef ref, BuildContext context) {
+    ref.read(notificationServiceProvider).show(
+        Notifications.welcomeTestMode(context), actions: [
       NotificationAction(
           label: "Got it!".hardcoded,
           onSelect: Future.value,

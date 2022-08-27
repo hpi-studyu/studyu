@@ -10,6 +10,10 @@ class TaskScreen extends StatefulWidget {
   final Task task;
   final String taskId;
 
+  static MaterialPageRoute<TaskScreen> routeFor({@required Task task}) => MaterialPageRoute(
+    builder: (_) => TaskScreen(task: task),
+  );
+
   const TaskScreen({@required this.task, this.taskId, Key key}) : super(key: key);
 
   @override
@@ -22,13 +26,22 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final subject = context.watch<AppState>().activeSubject;
     if (widget.task != null) {
-      task = widget.task;
-    } else if (widget.taskId != null) {
-      final study = context.read<AppState>().activeSubject;
       final tasks = <Task>[
-        ...study.study.observations.where((observation) => observation.id == widget.taskId).toList(),
-        ...study.selectedInterventions
+    ...subject.study.observations.where((observation) => observation.id == widget.task.id).toList(),
+    ...subject.selectedInterventions
+        .map((intervention) => intervention.tasks.where((task) => task.id == widget.task.id))
+        .expand((task) => task)
+        .toList()
+      ];
+      task = tasks.first;
+      // print("found task: " + task.title);
+      // task = widget.task;
+    } else if (widget.taskId != null) {
+      final tasks = <Task>[
+        ...subject.study.observations.where((observation) => observation.id == widget.taskId).toList(),
+        ...subject.selectedInterventions
             .map((intervention) => intervention.tasks.where((task) => task.id == widget.taskId))
             .expand((task) => task)
             .toList()
@@ -47,13 +60,13 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Widget _buildTask() {
-    switch (widget.task.runtimeType) {
+    switch (task.runtimeType) {
       case CheckmarkTask:
-        return CheckmarkTaskWidget(task: widget.task as CheckmarkTask);
+        return CheckmarkTaskWidget(task: task as CheckmarkTask, key: UniqueKey());
       case QuestionnaireTask:
-        return QuestionnaireTaskWidget(task: widget.task as QuestionnaireTask);
+        return QuestionnaireTaskWidget(task: task as QuestionnaireTask, key: UniqueKey());
       default:
-        print('${widget.task.runtimeType} is not a supported Task!');
+        print('${task.runtimeType} is not a supported Task!');
         return null;
     }
   }
@@ -63,7 +76,7 @@ class _TaskScreenState extends State<TaskScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.task.title),
+        title: Text(task.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -71,7 +84,7 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
+              Text(task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
               const SizedBox(height: 20),
               _buildTask(),
             ],

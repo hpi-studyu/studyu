@@ -13,25 +13,8 @@ enum StudyActionType {
   delete,
 }
 
-// TODO: Add status field to core package domain model
-enum StudyStatus { draft, running, closed }
-
 typedef StudyID = String;
 typedef MeasurementID = String;
-
-extension StudyStatusX on core.Study {
-  StudyStatus get status {
-    // TODO: missing a flag to indicate a study has been completed & participation is closed
-    if (published) {
-      return StudyStatus.running;
-    }
-    return StudyStatus.draft;
-  }
-
-  bool isReadonly(sb.User user) {
-    return status != StudyStatus.draft || !canEdit(user);
-  }
-}
 
 typedef InterventionProvider = Intervention? Function(String id);
 

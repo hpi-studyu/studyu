@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
-import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
+import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -49,11 +49,12 @@ final studyTestControllerProvider = StateNotifierProvider
 });
 
 final studyTestPlatformControllerProvider = Provider
-    .family<PlatformController?, StudyID>((ref, studyId) {
+    .family<PlatformController, StudyID>((ref, studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
 
   PlatformController platformController;
   if (!kIsWeb) {
+    // Mobile could be built with the webview_flutter package
     throw Exception(
         "The StudyU designer only support the web platform".hardcoded);
   } else {

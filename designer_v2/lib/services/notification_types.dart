@@ -14,13 +14,17 @@ enum NotificationType {
 ///   [AlertIntent] - renders the notification as an alert dialog
 abstract class NotificationIntent {
   NotificationIntent({
-    required this.message,
+    this.message,
+    this.customContent,
     this.icon,
     this.actions,
     required this.type
-  });
+  }) {
+    if (message == null && customContent == null) throw Exception("Invalid AlertIntent");
+  }
 
-  final String message;
+  final String? message;
+  final Widget? customContent;
   final IconData? icon;
   List<NotificationAction>? actions;
   final NotificationType type;
@@ -77,13 +81,15 @@ class AlertIntent extends NotificationIntent {
   );
 
   AlertIntent({
-    required String message,
     required this.title,
+    String? message,
+    Widget? customContent,
     IconData? icon,
     List<NotificationAction>? actions,
     this.dismissOnAction = true,
   }) : super(
       message: message,
+      customContent: customContent,
       icon: icon,
       actions: actions,
       type: NotificationType.alert

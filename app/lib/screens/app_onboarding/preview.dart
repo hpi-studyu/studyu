@@ -1,16 +1,28 @@
+import 'dart:convert';
+
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Preview {
   final Map<String, String> queryParameters;
+  String selectedRoute;
+  String extra;
+  bool hasRoute() => selectedRoute != null && selectedRoute.isNotEmpty;
   Study study;
   String selectedStudyObjectId;
   StudySubject subject;
 
-  Preview(this.queryParameters);
+  Preview(this.queryParameters) { handleQueries(); }
+
+  void handleQueries() {
+    selectedRoute = getSelectedRoute();
+    extra = queryParameters['extra'];
+  }
 
   Future init() async {
+    previewSubjectIdKey();
     selectedStudyObjectId = await getActiveSubjectId();
   }
 
@@ -21,7 +33,12 @@ class Preview {
     final recovery = await Supabase.instance.client.auth.recoverSession(session,);
     if (recovery.error != null) return false;
 
-    study = await SupabaseQuery.getById<Study>(queryParameters['studyid']);
+    if (containsQuery('data')) {
+      final data = jsonDecode(queryParameters['data']) as Map<String, dynamic>;
+      study = Study.fromJson(data);
+    } else {
+      study = await SupabaseQuery.getById<Study>(queryParameters['studyid']);
+    }
     // todo are results visible for published studies inside preview?
     if (study == null) return false;
 
@@ -67,11 +84,60 @@ class Preview {
     return false;
   }
 
+  String getSelectedRoute() {
+    // check if route is allowed and can be handled
+    for (final k in queryParameters.keys) {
+      if('route' == k) {
+        switch (queryParameters[k]) {
+          case 'consent':
+            return Routes.consent;
+          case 'eligibilityCheck': // this should include questionnaire and eligibility_criteria
+            return '/eligibilityCheck';
+          case 'interventionSelection':
+            return Routes.interventionSelection;
+          case 'questionnaire':
+            return Routes.questionnaire;
+          case 'dashboard':
+            return Routes.dashboard;
+          case 'intervention':
+            return '/intervention';
+          case 'observation':
+            return '/observation';
+        }
+      }
+    }
+    return null;
+  }
+
   bool containsQuery(String key) {
     return queryParameters.containsKey(key) && queryParameters[key].isNotEmpty;
   }
 
   bool containsQueryPair(String key, String value) {
     return queryParameters.containsKey(key) && queryParameters[key] == value;
+  }
+
+  Future<StudySubject> createFakeSubject([String extra]) async {
+    final interventionList = study.interventions.map((i) => i.id).toList();
+    List<String> newInterventionList = [];
+    // If we have a specific intervention we want to show, select this one and another one
+    if (selectedRoute == '/intervention' && extra != null) {
+      final String intId = interventionList.firstWhere((id) => id == extra);
+      newInterventionList..add(intId)..add(
+          interventionList.firstWhere((id) => id != intId),
+      );
+      assert (newInterventionList.length == 2);
+    } else {
+      // just take the first two
+      newInterventionList = interventionList.sublist(0, 2);
+    }
+    subject = StudySubject.fromStudy(
+      study,
+      Supabase.instance.client.auth.user().id,
+      newInterventionList,
+      null, // no invite code
+    );
+    subject.startedAt = DateTime.now();
+    return subject;
   }
 }
