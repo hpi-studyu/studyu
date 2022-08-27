@@ -3,7 +3,7 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 
 enum NotificationType {
-  snackbar, alert
+  snackbar, alert, custom
 }
 
 /// Base class for notifications that are dispatched via [NotificationService]
@@ -14,13 +14,17 @@ enum NotificationType {
 ///   [AlertIntent] - renders the notification as an alert dialog
 abstract class NotificationIntent {
   NotificationIntent({
-    required this.message,
+    this.message,
+    this.customContent,
     this.icon,
     this.actions,
     required this.type
-  });
+  }) {
+    if (message == null && customContent == null) throw Exception("Invalid AlertIntent");
+  }
 
-  final String message;
+  final String? message;
+  final Widget? customContent;
   final IconData? icon;
   List<NotificationAction>? actions;
   final NotificationType type;
@@ -69,7 +73,7 @@ class SnackbarIntent extends NotificationIntent {
   final int? duration;
 }
 
-/// Encapsulates a call to [showDialog]
+/// Encapsulates a call to [showDialog] using an alert-style widget
 class AlertIntent extends NotificationIntent {
   static NotificationAction cancelAction = NotificationAction(
       label: "Cancel".hardcoded,
@@ -77,13 +81,15 @@ class AlertIntent extends NotificationIntent {
   );
 
   AlertIntent({
-    required String message,
     required this.title,
+    String? message,
+    Widget? customContent,
     IconData? icon,
     List<NotificationAction>? actions,
     this.dismissOnAction = true,
   }) : super(
       message: message,
+      customContent: customContent,
       icon: icon,
       actions: actions,
       type: NotificationType.alert

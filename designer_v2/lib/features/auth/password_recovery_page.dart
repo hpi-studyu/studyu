@@ -63,7 +63,8 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
                       icon: Icons.send,
                       text: 'Confirm setting a new password'.hardcoded,
                       isLoading: authState.isLoading,
-                      onPressed: authForm.valid ? _formReturnAction : null,
+                      enabled: authForm.valid,
+                      onPressedFuture: () => _formReturnAction(),
                       tooltipDisabled: 'All fields must be filled out',
                     );
                   },
@@ -90,7 +91,7 @@ class _PasswordRecoveryPageContentState extends ConsumerState<PasswordRecoveryPa
     );
   }
 
-  void _formReturnAction() async {
+  Future<void> _formReturnAction() async {
     final authController = ref.watch(authControllerProvider.notifier);
     final success = await authController.updateUser(authForm.control('password').value);
     if (mounted) {

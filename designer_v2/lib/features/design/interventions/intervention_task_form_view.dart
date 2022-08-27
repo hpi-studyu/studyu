@@ -14,11 +14,14 @@ class InterventionTaskFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return /* PointerInterceptor( // does not work on re-render for some reason
+        debug: true,
+        child: */ Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FormTableLayout(rows: [
           FormTableRow(
+            control: formViewModel.taskTitleControl,
             label: "Title".hardcoded,
             labelHelpText: "TODO Intervention title text help text".hardcoded,
             input: ReactiveTextField(
@@ -26,6 +29,7 @@ class InterventionTaskFormView extends StatelessWidget {
             ),
           ),
           FormTableRow(
+            control: formViewModel.taskDescriptionControl,
             label: "Description".hardcoded,
             labelHelpText:
                 "TODO Intervention description text help text".hardcoded,
@@ -63,6 +67,7 @@ class InterventionTaskFormView extends StatelessWidget {
         const SizedBox(height: 24.0),
         ScheduleControls(formViewModel: formViewModel),
       ],
+      //)
     );
   }
 }

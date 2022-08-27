@@ -3,11 +3,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
+import 'package:studyu_designer_v2/utils/behaviour_subject.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:studyu_designer_v2/utils/exceptions.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:studyu_core/env.dart' as env;
 
 abstract class IAuthRepository extends IAppDelegate {
   // - Authentication
@@ -15,7 +16,7 @@ abstract class IAuthRepository extends IAppDelegate {
   bool get isLoggedIn;
   Session? get session;
   late bool allowPasswordReset = false;
-  Stream<User?> watchAuthStateChanges();
+  Stream<User?> watchAuthStateChanges({bool emitLastEvent});
   Future<bool> signUp({required String email, required String password});
   Future<bool> signInWith({required String email, required String password});
   Future<void> signOut();
@@ -37,8 +38,10 @@ class AuthRepository implements IAuthRepository {
 
   /// A stream controller for broadcasting the currently logged in user
   /// Broadcasts null if the user is logged out
-  final BehaviorSubject<User?> _authStateStreamController = BehaviorSubject
-      .seeded(null);
+  final BehaviorSubject<User?> _authStateStreamController =
+      BehaviorSubject.seeded(null);
+  late final _authStateSuppressedController =
+      SuppressedBehaviorSubject(_authStateStreamController);
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
   late final GotrueSubscription _authSubscription;
@@ -51,7 +54,7 @@ class AuthRepository implements IAuthRepository {
   AuthRepository({
     required this.supabaseClient,
     required this.sharedPreferences,
-    }) {
+  }) {
     _registerAuthListener();
   }
 
@@ -96,7 +99,10 @@ class AuthRepository implements IAuthRepository {
   bool get isLoggedIn => currentUser != null;
 
   @override
-  Stream<User?> watchAuthStateChanges() => _authStateStreamController.stream;
+  Stream<User?> watchAuthStateChanges({emitLastEvent = true}) =>
+      (emitLastEvent)
+          ? _authStateStreamController.stream
+          : _authStateSuppressedController.stream;
 
   @override
   Future<bool> signUp({required String email, required String password}) async {
@@ -128,10 +134,10 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<bool> resetPasswordForEmail({required String email}) async {
-    final res = await authClient.api.resetPasswordForEmail(
-        email, options: AuthOptions(redirectTo: authRedirectToUrl));
-      if (res.error != null) {
-        throw StudyUException(res.error!.message);
+    final res = await authClient.api.resetPasswordForEmail(email,
+        options: AuthOptions(redirectTo: env.authRedirectToUrl));
+    if (res.error != null) {
+      throw StudyUException(res.error!.message);
     }
     return true;
   }
@@ -152,8 +158,7 @@ class AuthRepository implements IAuthRepository {
   Future<void> _persistSession() async {
     if (session != null) {
       sharedPreferences.setString(
-          PERSIST_SESSION_KEY, session!.persistSessionString
-      );
+          PERSIST_SESSION_KEY, session!.persistSessionString);
       debugLog("Saving session key ${session!.persistSessionString}");
     }
   }
@@ -182,6 +187,7 @@ class AuthRepository implements IAuthRepository {
   @override
   void dispose() {
     _authStateStreamController.close();
+    _authStateSuppressedController.close();
   }
 
   // - IAppDelegate
@@ -195,12 +201,24 @@ class AuthRepository implements IAuthRepository {
 
 final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
   final authRepository = AuthRepository(
-      supabaseClient: ref.watch(supabaseClientProvider),
-      sharedPreferences: ref.watch(sharedPreferencesProvider),
+    supabaseClient: ref.watch(supabaseClientProvider),
+    sharedPreferences: ref.watch(sharedPreferencesProvider),
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
     authRepository.dispose();
   });
   return authRepository;
+});
+
+final currentUserProvider = riverpod.Provider<User?>((ref) {
+  print("currentUserProvider");
+  final authRepository = ref.watch(authRepositoryProvider);
+  authRepository
+      .watchAuthStateChanges(emitLastEvent: false)
+      .listen((event) {
+    print("currentUserProvider.dispose");
+    ref.invalidateSelf();
+  });
+  return authRepository.currentUser;
 });

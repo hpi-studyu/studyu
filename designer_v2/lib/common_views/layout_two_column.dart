@@ -6,6 +6,7 @@ class TwoColumnLayout extends StatefulWidget {
   const TwoColumnLayout({
     required this.leftWidget,
     required this.rightWidget,
+    this.headerWidget,
     this.dividerWidget = defaultDivider,
     this.flexLeft,
     this.flexRight = 1, // expand right column to fill available space by default
@@ -32,6 +33,7 @@ class TwoColumnLayout extends StatefulWidget {
   final Widget leftWidget;
   final Widget rightWidget;
   final Widget? dividerWidget;
+  final Widget? headerWidget;
 
   final int? flexLeft;
   final int? flexRight;
@@ -80,6 +82,13 @@ class TwoColumnLayout extends StatefulWidget {
 class _TwoColumnLayoutState extends State<TwoColumnLayout> {
   final ScrollController _scrollControllerLeft = ScrollController();
   final ScrollController _scrollControllerRight = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollControllerLeft.dispose();
+    _scrollControllerRight.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +166,7 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
         );
       }
 
-      return Row(
+      Widget body = Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -166,6 +175,19 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
           rightWidget,
         ],
       );
+
+      if (widget.headerWidget != null) {
+        body = Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            widget.headerWidget!,
+            body,
+          ],
+        );
+      }
+
+      return body;
     });
   }
 }

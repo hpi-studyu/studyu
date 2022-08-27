@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/time_of_day.dart';
 
 class ScheduleControls extends FormConsumerWidget {
   const ScheduleControls({required this.formViewModel, Key? key})
@@ -21,6 +22,7 @@ class ScheduleControls extends FormConsumerWidget {
         const SizedBox(height: 12.0),
         FormTableLayout(rows: [
           FormTableRow(
+            control: formViewModel.hasReminderControl,
             label: "App reminder".hardcoded,
             labelHelpText: "TODO reminder notification help text".hardcoded,
             input: Wrap(
@@ -45,8 +47,9 @@ class ScheduleControls extends FormConsumerWidget {
                         initialEntryMode: TimePickerEntryMode.input,
                         builder: (BuildContext context,
                             ReactiveTimePickerDelegate picker, Widget? child) {
-                          return ReactiveTextField(
+                          return ReactiveTextField<Time>(
                             formControl: formViewModel.reminderTimeControl,
+                            valueAccessor: TimeValueAccessor(),
                             decoration: InputDecoration(
                                 hintText: "hh:mm".hardcoded,
                                 suffixIcon: Material(
@@ -66,6 +69,7 @@ class ScheduleControls extends FormConsumerWidget {
             ),
           ),
           FormTableRow(
+            control: formViewModel.isTimeRestrictedControl,
             label: "Time restriction".hardcoded,
             labelHelpText: "TODO Time restriction help text".hardcoded,
             input: ReactiveSwitch(
@@ -84,17 +88,19 @@ class ScheduleControls extends FormConsumerWidget {
     }
     return [
       FormTableRow(
+          control: formViewModel.restrictedTimeStartControl,
           label: " ",
           input: Row(
             children: [
               Flexible(
-                  child: ReactiveTimePicker(
+                child: ReactiveTimePicker(
                 formControl: formViewModel.restrictedTimeStartControl,
                 initialEntryMode: TimePickerEntryMode.input,
                 builder: (BuildContext context,
                     ReactiveTimePickerDelegate picker, Widget? child) {
-                  return ReactiveTextField(
+                  return ReactiveTextField<Time>(
                     formControl: formViewModel.restrictedTimeStartControl,
+                    valueAccessor: TimeValueAccessor(),
                     decoration:
                         (formViewModel.restrictedTimeStartControl.enabled)
                             ? InputDecoration(
@@ -119,8 +125,9 @@ class ScheduleControls extends FormConsumerWidget {
                 initialEntryMode: TimePickerEntryMode.input,
                 builder: (BuildContext context,
                     ReactiveTimePickerDelegate picker, Widget? child) {
-                  return ReactiveTextField(
+                  return ReactiveTextField<Time>(
                     formControl: formViewModel.restrictedTimeEndControl,
+                    valueAccessor: TimeValueAccessor(),
                     decoration: (formViewModel.restrictedTimeEndControl.enabled)
                         ? InputDecoration(
                             labelText: "To".hardcoded,

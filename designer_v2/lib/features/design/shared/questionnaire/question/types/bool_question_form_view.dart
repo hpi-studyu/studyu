@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/form_input_decoration.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -21,6 +22,7 @@ class BoolQuestionFormView extends StatelessWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
+                control: formViewModel.questionTextControl,
                 label: "Text".hardcoded,
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 labelHelpText: "TODO Question text help text".hardcoded,
@@ -29,10 +31,10 @@ class BoolQuestionFormView extends StatelessWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.questionTypeControl,
                 label: "Type".hardcoded,
                 input: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
-                  decoration: const NullHelperDecoration(),
                   items: formViewModel.questionTypeControlOptions.map(
                           (option) => DropdownMenuItem(
                             value: option.value,

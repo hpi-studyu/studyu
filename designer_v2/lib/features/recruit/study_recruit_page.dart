@@ -9,14 +9,13 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 typedef InterventionProvider = Intervention? Function(String id);
 
-class StudyRecruitScreen extends ConsumerWidget {
-  const StudyRecruitScreen(this.studyId, {Key? key}) : super(key: key);
-
-  final String studyId;
+class StudyRecruitScreen extends StudyPageWidget {
+  const StudyRecruitScreen(studyId, {Key? key}) : super(studyId, key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +24,7 @@ class StudyRecruitScreen extends ConsumerWidget {
 
     return AsyncValueWidget<List<StudyInvite>?>(
       value: state.invites,
-      data: (studyInvites) => Container(child: Column(
+      data: (studyInvites) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -33,13 +32,14 @@ class StudyRecruitScreen extends ConsumerWidget {
           const SizedBox(height: 24.0), // spacing between body elements
           StudyInvitesTable(
             invites: studyInvites!, // otherwise falls through to [AsyncValueWidget.empty]
-            onSelectInvite: _onSelectInvite(context, ref),
-            getActionsForInvite: controller.availableActions,
-            getInlineActionsForInvite: controller.availableInlineActions,
+            onSelect: _onSelectInvite(context, ref),
+            getActions: controller.availableActions,
+            getInlineActions: controller.availableInlineActions,
             getIntervention: controller.getIntervention,
+            getParticipantCountForInvite: controller.getParticipantCountForInvite,
           ),
         ],
-      )),
+      ),
       empty: () => Padding(
         padding: const EdgeInsets.only(top: 24),
         child: EmptyBody(

@@ -19,6 +19,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
       children: [
         FormTableLayout(rows: [
           FormTableRow(
+            control: formViewModel.sequenceTypeControl,
             label: "Sequencing".hardcoded,
             labelHelpText: "TODO Sequencing help text".hardcoded,
             input: ReactiveDropdownField(
@@ -38,6 +39,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
             ),
           ),
           FormTableRow(
+              control: formViewModel.phaseDurationControl,
               label: "Phase length".hardcoded,
               labelHelpText: "TODO Phase length help text".hardcoded,
               input: Row(children: [
@@ -53,6 +55,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     text: "days".hardcoded),
               ])),
           FormTableRow(
+              control: formViewModel.numCyclesControl,
               label: "Number of cycles".hardcoded,
               labelHelpText: "TODO Number of cycles help text".hardcoded,
               input: Row(children: [
@@ -68,6 +71,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     text: "cycles".hardcoded),
               ])),
           FormTableRow(
+              control: formViewModel.includeBaselineControl,
               label: "Baseline phase".hardcoded,
               labelHelpText: "TODO Baseline phase help text".hardcoded,
               input: Row(children: [

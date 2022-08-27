@@ -6,15 +6,24 @@ services:
       args:
         FLUTTER_APP_FOLDER: app
     ports:
-      - 8081:80
+      - 8080:80
     env_file:
-      - flutter_common/lib/envs/.env
+      - flutter_common/lib/envs/.env.staging
   designer:
     build:
       context: .
       args:
         FLUTTER_APP_FOLDER: designer
     ports:
-      - 8080:80
+      - 8081:80
     env_file:
-      - flutter_common/lib/envs/.env
+      - flutter_common/lib/envs/.env.staging
+  designer2:
+    build:
+      context: .
+      args:
+        FLUTTER_APP_FOLDER: designer_v2
+    ports:
+      - 8082:80
+    env_file:
+      - flutter_common/lib/envs/.env.staging

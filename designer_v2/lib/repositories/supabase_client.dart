@@ -13,11 +13,8 @@ abstract class SupabaseClientDependant {
 /// An exception that is thrown when Supabase returns a [PostgrestResponse]
 /// with an associated [PostgrestError]
 class SupabaseQueryError implements Exception {
-  SupabaseQueryError({
-    required this.statusCode,
-    required this.message,
-    this.details
-  });
+  SupabaseQueryError(
+      {required this.statusCode, required this.message, this.details});
 
   /// Status code of the erroneous [PostgrestResponse]
   final int? statusCode;
@@ -37,10 +34,7 @@ extension PostgrestResponseX on PostgrestResponse {
   guarded(PostgrestDataCallback callback) {
     if (hasError) {
       throw SupabaseQueryError(
-          statusCode: status,
-          message: error!.message,
-          details: error!.details
-      );
+          statusCode: status, message: error!.message, details: error!.details);
     }
     return callback(data); // TODO: resolve synchronous error in future
   }
@@ -50,25 +44,34 @@ extension PostgrestResponseX on PostgrestResponse {
 mixin SupabaseQueryMixin on SupabaseClientDependant {
   // - Networking
 
-  Future<List<T>> getAll<T extends SupabaseObject>({
-    List<String> selectedColumns = const ['*']
-  }) async {
-    final PostgrestResponse res = await supabaseClient.from(tableName(T))
+  Future<List<T>> deleteAll<T extends SupabaseObject>(
+      Map<String, dynamic> selectionCriteria) async {
+    final PostgrestResponse res = await supabaseClient
+        .from(tableName(T))
+        .delete()
+        .match(selectionCriteria)
+        .execute();
+    return res.guarded((data) => deserializeList<T>(data));
+  }
+
+  Future<List<T>> getAll<T extends SupabaseObject>(
+      {List<String> selectedColumns = const ['*']}) async {
+    final PostgrestResponse res = await supabaseClient
+        .from(tableName(T))
         .select(selectedColumns.join(','))
         .execute();
     return res.guarded((data) => deserializeList<T>(data));
   }
 
-  Future<T> getById<T extends SupabaseObject>(String id, {
-    List<String> selectedColumns = const ['*']
-  }) async {
+  Future<T> getById<T extends SupabaseObject>(String id,
+      {List<String> selectedColumns = const ['*']}) async {
     return getByColumn('id', id, selectedColumns: selectedColumns);
   }
 
-  Future<T> getByColumn<T extends SupabaseObject>(String colName, String value, {
-    List<String> selectedColumns = const ['*']
-  }) async {
-    final PostgrestResponse res = await supabaseClient.from(tableName(T))
+  Future<T> getByColumn<T extends SupabaseObject>(String colName, String value,
+      {List<String> selectedColumns = const ['*']}) async {
+    final PostgrestResponse res = await supabaseClient
+        .from(tableName(T))
         .select(selectedColumns.join(','))
         .eq(colName, value)
         .single()
@@ -79,10 +82,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   // - Deserialization
 
   List<T> deserializeList<T extends SupabaseObject>(dynamic data) {
-    return List<T>.from(
-      List<Map<String, dynamic>>.from(data as List)
-          .map((json) => SupabaseObjectFunctions.fromJson<T>(json))
-    );
+    return List<T>.from(List<Map<String, dynamic>>.from(data as List)
+        .map((json) => SupabaseObjectFunctions.fromJson<T>(json)));
   }
 
   T deserializeObject<T extends SupabaseObject>(dynamic data) {
@@ -91,6 +92,5 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 }
 
 // Re-expose the global client object via Riverpod
-final supabaseClientProvider = riverpod.Provider<SupabaseClient>(
-        (ref) => env.client
-);
+final supabaseClientProvider =
+    riverpod.Provider<SupabaseClient>((ref) => env.client);

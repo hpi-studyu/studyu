@@ -80,6 +80,7 @@ CREATE TABLE public.study (
     description text NOT NULL,
     icon_name text NOT NULL,
     published boolean DEFAULT false NOT NULL,
+    registry_published boolean DEFAULT false NOT NULL,
     questionnaire jsonb NOT NULL,
     eligibility_criteria jsonb NOT NULL,
     observations jsonb NOT NULL,
@@ -213,27 +214,26 @@ CREATE TABLE public.subject_progress (
 ALTER TABLE public.subject_progress OWNER TO supabase_admin;
 
 --
--- Name: study_progress; Type: VIEW; Schema: public; Owner: supabase_admin
+-- Name: study_progress_export; Type: VIEW; Schema: public; Owner: supabase_admin
 --
 
-CREATE VIEW public.study_progress AS
+CREATE VIEW public.study_progress_export AS
  SELECT subject_progress.completed_at,
     subject_progress.intervention_id,
     subject_progress.task_id,
     subject_progress.result_type,
-    subject_progress.result -> 'result' as result,
+    subject_progress.result,
     subject_progress.subject_id,
     study_subject.user_id,
     study_subject.study_id,
     study_subject.started_at,
-    study_subject.selected_intervention_ids,
-    study_subject.invite_code
+    study_subject.selected_intervention_ids
    FROM public.study_subject,
     public.subject_progress
   WHERE (study_subject.id = subject_progress.subject_id);
 
 
-ALTER TABLE public.study_progress OWNER TO supabase_admin;
+ALTER TABLE public.study_progress_export OWNER TO supabase_admin;
 
 --
 -- Name: user; Type: TABLE; Schema: public; Owner: supabase_admin
@@ -317,7 +317,7 @@ ALTER TABLE ONLY public.study_subject
 --
 
 ALTER TABLE ONLY public.subject_progress
-    ADD CONSTRAINT "participant_progress_subjectId_fkey" FOREIGN KEY (subject_id) REFERENCES public.study_subject(id);
+    ADD CONSTRAINT "participant_progress_subjectId_fkey" FOREIGN KEY (subject_id) REFERENCES public.study_subject(id) ON DELETE CASCADE;
 
 
 --
@@ -752,6 +752,14 @@ CREATE POLICY "Editors can do everything with study invite codes" ON public.stud
 --
 
 CREATE POLICY "Editors can do everything with their studies" ON public.study USING (public.can_edit(auth.uid(), study.*));
+
+
+--
+-- Name: study_subject Editors can do everything with their study subjects; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY "Editors can do everything with their study subjects" ON public.study_subject AS PERMISSIVE FOR ALL
+TO public USING (( SELECT can_edit(uid(), study.*) AS can_edit FROM study WHERE (study.id = study_subject.study_id)));
 
 
 --

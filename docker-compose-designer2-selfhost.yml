@@ -1,0 +1,17 @@
+version: '3'
+services:
+  designer-selfhost:
+    build:
+      context: .
+      args:
+        FLUTTER_APP_FOLDER: designer
+        ENV: selfhost
+    ports:
+      - 8082:80
+    networks:
+      - studyu-net
+    env_file:
+      - flutter_common/lib/envs/.env.selfhost
+networks:
+  studyu-net:
+    name: studyu_network

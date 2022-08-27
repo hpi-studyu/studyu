@@ -25,30 +25,32 @@ class InterventionFormView extends ConsumerWidget {
       children: [
         FormTableLayout(rows: [
           FormTableRow(
-              label: "Title".hardcoded,
-              //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              labelHelpText: "TODO Intervention task title help text".hardcoded,
-              input: Row(
-                children: [
-                  // TODO: responsive layout (input field gets too small)
-                  Expanded(
-                      child: ReactiveTextField(
-                    formControl: formViewModel.interventionTitleControl,
-                  )),
-                  ReactiveFormConsumer(builder: (context, form, child) {
-                    return (formViewModel.interventionIconControl.value != null)
-                        ? const SizedBox(width: 4.0)
-                        : const SizedBox(width: 8.0);
-                  }),
-                  IntrinsicWidth(
-                    child: ReactiveIconPicker(
-                      formControl: formViewModel.interventionIconControl,
-                      iconOptions: IconPack.material,
-                    ),
-                  )
-                ],
-              )),
+            control: formViewModel.interventionTitleControl,
+            label: "Title".hardcoded,
+            //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            labelHelpText: "TODO Intervention task title help text".hardcoded,
+            input: Row(
+              children: [
+                // TODO: responsive layout (input field gets too small)
+                Expanded(
+                    child: ReactiveTextField(
+                  formControl: formViewModel.interventionTitleControl,
+                )),
+                ReactiveFormConsumer(builder: (context, form, child) {
+                  return (formViewModel.interventionIconControl.value != null)
+                      ? const SizedBox(width: 4.0)
+                      : const SizedBox(width: 8.0);
+                }),
+                IntrinsicWidth(
+                  child: ReactiveIconPicker(
+                    formControl: formViewModel.interventionIconControl,
+                    iconOptions: IconPack.material,
+                  ),
+                )
+              ],
+            )),
           FormTableRow(
+            control: formViewModel.interventionDescriptionControl,
             label: "Description".hardcoded,
             labelHelpText:
                 "TODO Intervention task description help text".hardcoded,
@@ -82,6 +84,7 @@ class InterventionFormView extends ConsumerWidget {
             formArray: formViewModel.interventionTasksArray,
             builder: (context, formArray, child) {
               return FormArrayTable<InterventionTaskFormViewModel>(
+                control: formViewModel.interventionTasksArray,
                 items: formViewModel.tasksCollection.formViewModels,
                 onSelectItem: (viewModel) =>
                     _onSelectItem(viewModel, context, ref),

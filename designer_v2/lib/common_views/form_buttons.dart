@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
@@ -29,6 +30,27 @@ class DismissButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
+    return KeyboardListener(
+        focusNode: FocusNode(),
+        autofocus: true,
+        onKeyEvent: (key) {
+          if (key.logicalKey.keyLabel == "Escape") {
+            Navigator.maybePop(context);
+          }
+        },
+        child: SecondaryButton(
+          text: text ?? "Cancel".hardcoded,
+          icon: null,
+          //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+          onPressed: () {
+            if (onPressed != null) {
+              onPressed!();
+            } else {
+              Navigator.maybePop(context);
+            }
+          },
+        )
+    );
     return SecondaryButton(
       text: text ?? "Cancel".hardcoded,
       icon: null,
@@ -45,20 +67,10 @@ class DismissButton extends StatelessWidget {
 }
 
 List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
-  // Allows the wrapped [widget] to retain its preferred size & avoid
-  // being stretched when placed into the [AppBar] actions
-  // Note: [AppBar] places the actions in a [CrossAxisAlignment.stretched] row
-  _retainSizeInAppBar(Widget widget) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [widget],
-    );
-  }
-
   final modifyActionButtons = [
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
-          return _retainSizeInAppBar(DismissButton(
+          return retainSizeInAppBar(DismissButton(
             onPressed: () =>
                 formViewModel.cancel().then(
                         (_) => Navigator.maybePop(context)),
@@ -67,16 +79,16 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ),
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
-          return _retainSizeInAppBar(PrimaryButton(
+          return retainSizeInAppBar(PrimaryButton(
             text: "Save".hardcoded,
             tooltipDisabled: "Please fill out all fields as required".hardcoded,
             icon: null,
-            onPressed: (formViewModel.isValid) ?
-                () => formViewModel.save().then(
-                  // Close the form (side sheet or scaffold route) if future
-                  // completed successfully
-                  (value) => Navigator.maybePop(context).then((_) => print(formViewModel.isValid))
-                ) : null,
+            onPressedFuture: (formViewModel.isValid) ?
+              () => formViewModel.save().then(
+                // Close the form (side sheet or scaffold route) if future
+                // completed successfully
+                (value) => Navigator.maybePop(context)
+              ) : null,
           ));
         }
     ),
@@ -85,7 +97,7 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     // TODO: clean this up more
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
-          return _retainSizeInAppBar(DismissButton(
+          return retainSizeInAppBar(DismissButton(
             text: "Close".hardcoded,
             onPressed: () =>
                 formViewModel.cancel().then(

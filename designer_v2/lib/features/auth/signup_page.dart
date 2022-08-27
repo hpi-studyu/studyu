@@ -65,7 +65,8 @@ class _PageContentState extends ConsumerState<PageContent> {
                 icon: Icons.add,
                 text: 'Create Account'.hardcoded,
                 isLoading: authState.isLoading,
-                onPressed: authForm.valid ? _formReturnAction : null,
+                enabled: authForm.valid,
+                onPressedFuture: () => _formReturnAction(),
                 tooltipDisabled: authForm.control('termsOfService').value ? 'All fields must be filled out' : 'Terms of use and privacy policy need to be accepted',
               );
             },
@@ -112,9 +113,8 @@ class _PageContentState extends ConsumerState<PageContent> {
     );
   }
 
-  // todo use async?
-  _formReturnAction() {
+  Future<void> _formReturnAction() async {
     final authController = ref.watch(authControllerProvider.notifier);
-    authController.signUp(authForm.control('email').value, authForm.control('password').value);
+    await authController.signUp(authForm.control('email').value, authForm.control('password').value);
   }
 }

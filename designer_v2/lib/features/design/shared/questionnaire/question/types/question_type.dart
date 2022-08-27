@@ -30,4 +30,7 @@ enum SurveyQuestionType {
         return "[Invalid SurveyQuestionType]";
     }
   }
+
+  String toJson() => name;
+  static SurveyQuestionType fromJson(String json) => values.byName(json);
 }

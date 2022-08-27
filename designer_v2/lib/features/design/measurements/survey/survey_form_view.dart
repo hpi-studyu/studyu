@@ -4,11 +4,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
@@ -27,6 +27,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
         FormTableLayout(
             rows: [
               FormTableRow(
+                control: formViewModel.surveyTitleControl,
                 label: "Survey title".hardcoded,
                 //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 labelHelpText: "TODO Survey title help text".hardcoded,
@@ -35,6 +36,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.surveyIntroTextControl,
                 label: "Intro text".hardcoded,
                 labelHelpText: "TODO Intro text help text".hardcoded,
                 input: ReactiveTextField(
@@ -48,6 +50,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.surveyOutroTextControl,
                 label: "Outro text".hardcoded,
                 labelHelpText: "TODO Outro text help text".hardcoded,
                 input: ReactiveTextField(
@@ -71,6 +74,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               formArray: formViewModel.questionsArray,
               builder: (context, formArray, child) {
                 return FormArrayTable<QuestionFormViewModel>(
+                  control: formViewModel.questionsArray,
                   items: formViewModel.questionModels,
                   onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
                   getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),

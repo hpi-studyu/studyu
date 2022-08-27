@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 // TODO needs finished concept/design
+// TODO disabled read-only states
 class ChoiceQuestionFormView extends StatelessWidget {
   const ChoiceQuestionFormView({
     required this.formViewModel,
@@ -18,12 +19,12 @@ class ChoiceQuestionFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(formViewModel.answerOptionsArray.valid);
     return Column(
       children: [
         FormTableLayout(
             rows: [
               FormTableRow(
+                control: formViewModel.questionTextControl,
                 label: "Text".hardcoded,
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                 labelHelpText: "TODO Question text help text".hardcoded,
@@ -35,6 +36,7 @@ class ChoiceQuestionFormView extends StatelessWidget {
                 ),
               ),
               FormTableRow(
+                control: formViewModel.questionTypeControl,
                 label: "Type".hardcoded,
                 input: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,

@@ -3,6 +3,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
@@ -15,11 +17,10 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-
 class MeasurementSurveyFormViewModel
     extends ManagedFormViewModel<MeasurementSurveyFormData>
     with WithQuestionnaireControls, WithScheduleControls
-        implements
+    implements
         IFormViewModelDelegate<QuestionFormViewModel>,
         IListActionProvider<QuestionFormViewModel>,
         IProviderArgsResolver<QuestionFormViewModel, QuestionFormRouteArgs> {
@@ -27,6 +28,7 @@ class MeasurementSurveyFormViewModel
     required this.study,
     super.delegate,
     super.formData,
+    super.validationSet = StudyFormValidationSet.draft,
   });
 
   final Study study;
@@ -42,9 +44,17 @@ class MeasurementSurveyFormViewModel
   final FormControl<String> surveyOutroTextControl = FormControl(value: '');
 
   @override // - WithQuestionnaireControls
-  List<ValidatorFunction> get questionsArrayValidators => [Validators.minLength(1)];
+  List<ValidatorFunction> get questionsArrayValidators =>
+      [Validators.minLength(1)];
 
   MeasurementID get measurementId => measurementIdControl.value!;
+
+  @override
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -95,6 +105,7 @@ class MeasurementSurveyFormViewModel
   @override
   Map<FormMode, String> get titles => {
         FormMode.create: breadcrumbsTitle,
+        FormMode.readonly: breadcrumbsTitle,
         FormMode.edit: breadcrumbsTitle,
       };
 
@@ -102,19 +113,20 @@ class MeasurementSurveyFormViewModel
 
   @override
   List<ModelAction> availableActions(QuestionFormViewModel model) {
-    // TODO: set & propagate FormMode.readonly at root FormViewModel (if needed)
-    final isReadonly = formMode == FormMode.readonly;
-    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(model,
+        onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model);
+    final actions = questionFormViewModels.availablePopupActions(model,
+        isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model);
+    final actions = questionFormViewModels.availableInlineActions(model,
+        isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -154,6 +166,9 @@ class MeasurementSurveyFormViewModel
   @override
   MeasurementSurveyFormViewModel createDuplicate() {
     return MeasurementSurveyFormViewModel(
-        study: study, delegate: delegate, formData: formData?.copy());
+        study: study,
+        delegate: delegate,
+        formData: formData?.copy(),
+        validationSet: validationSet);
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -147,25 +148,36 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
     }
 
     return AlertDialog(
-      title: Text(
-          "⚠️ ${notification.title}",
-          style: textTheme.titleLarge
+      title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(notification.icon),
+            Text("️ ${notification.title}", style: textTheme.headline3),
+          ]
       ),
       content: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 300,
-          maxWidth: MediaQuery.of(context).size.width * 0.33,
-        ),
-        child: Row(
-          children: [
-            Flexible(
-              child: Text(notification.message)
-            ),
-          ]
-        )
+          constraints: BoxConstraints(
+            minWidth: 300,
+            maxWidth: MediaQuery.of(context).size.width * 0.33,
+          ),
+          child: Row(
+              children: [
+                Flexible(
+                    child: notificationContent(notification.message, notification.customContent),
+                ),
+              ]
+          )
       ),
       actions: actions,
     );
+  }
+
+  Widget notificationContent(String? message, Widget? customContent) {
+    if (customContent != null) {
+      return customContent;
+    } else {
+      return Text(message!);
+    }
   }
 
   SnackBar _buildSnackbar(SnackbarIntent notification,
@@ -186,7 +198,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
                   size: 2/3*widget.snackbarInnerPadding,
                   color: theme.snackBarTheme.actionTextColor),
             ) : const SizedBox(),
-          Text(notification.message, style: theme.textTheme.titleMedium!
+          Text(notification.message!, style: theme.textTheme.titleMedium!
               .copyWith(color: theme.colorScheme.onPrimary))
         ],
       ),

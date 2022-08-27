@@ -66,7 +66,8 @@ class _PasswordForgotPageContentState extends ConsumerState<PasswordForgotPageCo
                 icon: Icons.question_mark,
                 text: 'Forgot Password'.hardcoded,
                 isLoading: authState.isLoading,
-                onPressed: authForm.valid ? _formReturnAction : null,
+                enabled: authForm.valid,
+                onPressedFuture: () => _formReturnAction(),
                 tooltipDisabled: 'All fields must be filled out',
               );
             },

@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/common_views/under_construction.dart';
+import 'package:studyu_designer_v2/features/analyze/study_analyze_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_page_view.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/theme.dart';
+
+class StudyAnalyzeScreen extends StudyPageWidget {
+  const StudyAnalyzeScreen(studyId, {Key? key}) : super(studyId, key: key);
+
+  @override
+  Widget? banner(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(studyAnalyzeControllerProvider(studyId));
+
+    if (state.isDraft) {
+      return BannerBox(
+          noPrefix: true,
+          body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextParagraph(
+                  text: "Because this study has not been launched yet, this page is "
+                      "currently based on the data generated during study "
+                      "testing.".hardcoded,
+                ),
+                TextParagraph(
+                    text: "The data on this page will be reset once you launch "
+                        "the study with real participants.".hardcoded
+                ),
+              ]
+          ),
+          style: BannerStyle.info
+      );
+    }
+
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final controller =
+        ref.watch(studyAnalyzeControllerProvider(studyId).notifier);
+    final state = ref.watch(studyAnalyzeControllerProvider(studyId));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          color: ThemeConfig.containerColor(theme),
+          width: double.infinity,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                SelectableText("Want to run your own analysis?".hardcoded,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 24.0),
+                PrimaryButton(
+                  text: "Export data".hardcoded,
+                  icon: Icons.download_rounded,
+                  enabled: state.canExport,
+                  tooltipDisabled: state.exportDisabledReason,
+                  onPressedFuture: () => controller.onExport(),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 32.0),
+        Container(
+          width: double.infinity,
+          color: theme.colorScheme.secondary.withOpacity(0.03),
+          height: 300,
+          child: const Center(
+            child: UnderConstruction(),
+          )
+        )
+      ],
+    );
+  }
+}
