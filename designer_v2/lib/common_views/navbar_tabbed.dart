@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -10,13 +9,13 @@ import 'package:studyu_designer_v2/utils/performance.dart';
 class NavbarTab {
   NavbarTab({
     required this.title,
-    this.intent,
     required this.index,
+    this.intent,
     this.enabled = true,
   });
 
   /// The text displayed as the tab's title
-  final String title; // TODO: use localization key here
+  final String title;
 
   /// The route to navigate to when switching to the tab
   final RoutingIntent? intent;
@@ -26,7 +25,9 @@ class NavbarTab {
   final bool enabled;
 }
 
-class TabbedNavbar extends ConsumerStatefulWidget {
+typedef OnTabSelectCallback<T extends NavbarTab> = void Function(int tabIdx, T tab);
+
+class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
   const TabbedNavbar({
     required this.tabs,
     this.selectedTab,
@@ -34,21 +35,23 @@ class TabbedNavbar extends ConsumerStatefulWidget {
     this.height,
     this.disabledBackgroundColor,
     this.disabledTooltipText,
+    this.onSelect,
     Key? key,
   }) : super(key: key);
 
-  final List<NavbarTab> tabs;
-  final NavbarTab? selectedTab;
+  final List<T> tabs;
+  final T? selectedTab;
   final BoxDecoration? indicator;
   final double? height;
   final Color? disabledBackgroundColor;
   final String? disabledTooltipText;
+  final OnTabSelectCallback<T>? onSelect;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TabbedNavbarState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TabbedNavbarState<T>();
 }
 
-class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
+class _TabbedNavbarState<T extends NavbarTab> extends ConsumerState<TabbedNavbar>
     with TickerProviderStateMixin
     implements Listenable {
   /// A [TabController] that has its index synced to the currently selected
@@ -78,7 +81,7 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
     }
   }
 
-  NavbarTab get selectedTab => widget.tabs[selectedTabIndex];
+  T get selectedTab => widget.tabs[selectedTabIndex] as T;
 
   /// Registered listeners that are called immediately when changing the
   /// currently selected tab
@@ -93,6 +96,9 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
     _tabController = TabController(length: widget.tabs.length, vsync: this);
     _tabController.index = selectedTabIndex;
     addListener(navigateToTabRoute);
+    if (widget.onSelect != null) {
+      addListener(() => widget.onSelect!(selectedTabIndex, selectedTab));
+    }
   }
 
   revalidateTabSelection() {
@@ -157,7 +163,7 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
             .vertical ??
         0.0;
 
-    decorateIfDisabled({required Widget tabContent, required NavbarTab tab}) {
+    decorateIfDisabled({required Widget tabContent, required T tab}) {
       if (tab.enabled) {
         return tabContent;
       }
@@ -167,9 +173,7 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
       );
       if (widget.disabledTooltipText != null) {
         return Tooltip(
-            message: widget.disabledTooltipText!,
-            child: disablePointerCursor
-        );
+            message: widget.disabledTooltipText!, child: disablePointerCursor);
       }
       return disablePointerCursor;
     }
@@ -182,7 +186,7 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
         unselectedLabelStyle: theme.textTheme.labelLarge,
         indicator: widget.indicator ?? theme.tabBarTheme.indicator,
         controller: _tabController,
-        tabs: widget.tabs
+        tabs: (widget.tabs as List<T>)
             .map(
               (t) => decorateIfDisabled(
                   tabContent: Container(
