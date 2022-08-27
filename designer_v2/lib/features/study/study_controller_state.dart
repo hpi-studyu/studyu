@@ -68,7 +68,8 @@ class StudyControllerState extends StudyControllerBaseState
       studyStatus != null && studyStatus != StudyStatus.draft;
 
   @override
-  bool get isSyncIndicatorVisible => true;
+  bool get isSyncIndicatorVisible =>
+      studyStatus != null && studyStatus == StudyStatus.draft;
 
   @override
   bool get isPublishVisible =>

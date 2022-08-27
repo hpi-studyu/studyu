@@ -48,12 +48,13 @@ class _TaskBoxState extends State<TaskBox> {
               child: ListTile(
                 leading: widget.icon,
                 title: Text(widget.task.title),
+                onTap: completed ? null : () => _navigateToTaskScreen(),
               ),
             ),
             if (widget.completionPeriod.contains(nowTime) || context.read<AppState>().isPreview)
               RoundCheckbox(
                 value: completed, //_isCompleted,
-                onChanged: (value) => completed ? () {} : _navigateToTaskScreen(),
+                onChanged: (value) => completed ? {} : _navigateToTaskScreen(),
               )
             else
               Padding(

@@ -18,7 +18,7 @@ Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
       'numberOfCycles': instance.numberOfCycles,
       'phaseDuration': instance.phaseDuration,
       'includeBaseline': instance.includeBaseline,
-      'sequence': _$PhaseSequenceEnumMap[instance.sequence]!,
+      'sequence': instance.sequence.toJson(),
     };
 
 const _$PhaseSequenceEnumMap = {

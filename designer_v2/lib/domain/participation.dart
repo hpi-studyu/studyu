@@ -54,9 +54,9 @@ extension ParticipationFormatted on Participation {
   String get asAdjective { // used when launching the study
     switch (this) {
       case Participation.open:
-        return "open".hardcoded;
+        return "open to everyone".hardcoded;
       case Participation.invite:
-        return "private, invite-only".hardcoded;
+        return "invite-only".hardcoded;
       default:
         return "[Invalid Participation]";
     }

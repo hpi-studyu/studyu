@@ -331,7 +331,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             data.midValues.map((v) => v?.toInt()).toList();
         scaleMidLabelControls.clear();
         scaleMidLabelControls.value = data.midLabels;
-        //_updateScaleMidValueControls();
+        _updateScaleMidValueControls();
     // TODO scaleInitialValueControl
       // TODO scaleStepSizeControl
       // TODO scaleMinColorControl
