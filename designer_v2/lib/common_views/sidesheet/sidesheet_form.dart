@@ -24,7 +24,7 @@ showFormSideSheet<T extends FormViewModel>({
   required BuildContext context,
   required T formViewModel,
   FormViewBuilder<T>? formViewBuilder,
-  List<FormSideSheetTab>? tabs,
+  List<FormSideSheetTab<T>>? tabs,
   List<Widget>? actionButtons,
   double? width,
   bool withCloseButton = false,
@@ -43,12 +43,13 @@ showFormSideSheet<T extends FormViewModel>({
   }
 
   // Bind the [formViewModel] to the [SidesheetTab]s' widget builder
-  final boundTabs = tabs
+  final List<SidesheetTab>? boundTabs = tabs
       ?.map((t) => SidesheetTab(
-          title: t.title,
-          index: t.index,
-          enabled: t.enabled,
-          builder: (BuildContext context) => t.formViewBuilder(formViewModel)))
+            title: t.title,
+            index: t.index,
+            enabled: t.enabled,
+            builder: (BuildContext context) => t.formViewBuilder(formViewModel),
+          ))
       .toList();
 
   return showModalSideSheet(

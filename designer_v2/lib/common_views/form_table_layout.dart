@@ -7,6 +7,7 @@ enum FormTableRowLayout { vertical, horizontal }
 class FormTableRow {
   FormTableRow({
     this.label,
+    this.labelBuilder,
     required this.input,
     this.labelStyle,
     this.labelHelpText,
@@ -15,6 +16,7 @@ class FormTableRow {
   });
 
   final String? label;
+  final WidgetBuilder? labelBuilder;
   final TextStyle? labelStyle;
   final String? labelHelpText;
   final Widget input;
@@ -61,19 +63,22 @@ class FormTableLayout extends StatelessWidget {
       final actualRowLayout =
           row.layout ?? rowLayout ?? FormTableRowLayout.horizontal;
 
-      final labelWidget = Wrap(
-        children: [
-          (actualRowLayout == FormTableRowLayout.vertical)
-              ? const SizedBox(width: 4.0)
-              : const SizedBox.shrink(),
-          FormLabel(
-            labelText: row.label,
-            helpText: row.labelHelpText,
-            labelTextStyle:
-                rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
-          ),
-        ],
-      );
+      final labelWidget = (row.labelBuilder != null)
+          ? row.labelBuilder!(context)
+          : Wrap(
+              children: [
+                (actualRowLayout == FormTableRowLayout.vertical)
+                    ? const SizedBox(width: 2.0)
+                    : const SizedBox.shrink(),
+                FormLabel(
+                  labelText: row.label,
+                  helpText: row.labelHelpText,
+                  labelTextStyle:
+                      rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
+                  layout: row.layout,
+                ),
+              ],
+            );
 
       final contentWidget = Align(
         alignment: Alignment.topLeft,
@@ -185,22 +190,27 @@ class FormLabel extends StatelessWidget {
     this.labelText,
     this.helpText,
     this.labelTextStyle,
+    this.layout = FormTableRowLayout.vertical,
     Key? key,
   }) : super(key: key);
 
   final String? labelText;
   final String? helpText;
   final TextStyle? labelTextStyle;
+  final FormTableRowLayout? layout;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       children: [
+        (labelText != null && layout == FormTableRowLayout.vertical)
+            ? const SizedBox(width: 2.0)
+            : const SizedBox.shrink(),
         (labelText != null)
             ? Text(
                 labelText!,
                 style:
-                    Theme.of(context).textTheme.caption!.merge(labelTextStyle),
+                    Theme.of(context).textTheme.caption?.merge(labelTextStyle),
               )
             : const SizedBox.shrink(),
         (helpText != null)

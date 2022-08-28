@@ -59,14 +59,21 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     onButtonPressed() {
       widget.onPressed?.call();
       if (widget.onPressedFuture != null) {
-        final future = widget.onPressedFuture!()
-            .whenComplete(() => trackedFuture = Future.value(null));
+        final future = widget.onPressedFuture!().whenComplete(() {
+          if (mounted) {
+            setState(() {
+              trackedFuture = Future.value(null);
+            });
+          }
+        });
         Future.delayed(
-          Duration(milliseconds: widget.showLoadingEarliestAfterMs),
-          () => setState(() {
-            trackedFuture = future;
-          }),
-        );
+            Duration(milliseconds: widget.showLoadingEarliestAfterMs), () {
+          if (mounted) {
+            setState(() {
+              trackedFuture = future;
+            });
+          }
+        });
       }
     }
 

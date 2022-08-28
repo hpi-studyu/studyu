@@ -26,7 +26,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
                 TextParagraph(
                   text: "Because this study has not been launched yet, this page is "
                       "currently based on the data generated during study "
-                      "testing.".hardcoded,
+                      "testing (only the latest test session).".hardcoded,
                 ),
                 TextParagraph(
                     text: "The data on this page will be reset once you launch "

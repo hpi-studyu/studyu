@@ -1,11 +1,21 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
+
+class DropdownMenuItemTheme with Diagnosticable {
+  const DropdownMenuItemTheme({this.iconTheme});
+  final IconThemeData? iconTheme;
+}
 
 class ThemeConfig {
   static const double kMinContentWidth = 600.0;
   static const double kMaxContentWidth = 1264.0;
+
+  static const double kHoverFadeFactor = 0.7;
+  static const double kMuteFadeFactor = 0.8;
 
   static Color modalBarrierColor(ThemeData theme) =>
       theme.colorScheme.secondary.withOpacity(0.4);
@@ -13,24 +23,34 @@ class ThemeConfig {
   static Color containerColor(ThemeData theme) =>
       theme.colorScheme.secondaryContainer.withOpacity(0.3);
 
-  static TextStyle bodyTextMuted(ThemeData theme) =>
-      TextStyle(
-          fontSize: 14.0,
-          height: 1.35,
-          color: theme.colorScheme.onSurface.withOpacity(0.5)
-      );
+  static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
+      fontSize: 14.0,
+      height: 1.35,
+      color: theme.textTheme.bodyText1?.color?.faded(0.6),
+  );
 
-  static TextStyle bodyTextBackground(ThemeData theme) =>
-      TextStyle(
-          fontSize: 14.0,
-          height: 1.35,
-          color: theme.colorScheme.onSurface.withOpacity(0.25)
-      );
+  static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
+      fontSize: 14.0,
+      height: 1.35,
+      color: theme.colorScheme.onSurface.withOpacity(0.25));
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
 
   static Color sidesheetBackgroundColor(ThemeData theme) =>
       theme.scaffoldBackgroundColor.withOpacity(0.15);
+
+  static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) =>
+      theme.inputDecorationTheme.copyWith(
+        contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
+      );
+
+  static dropdownMenuItemTheme(ThemeData theme) => DropdownMenuItemTheme(
+        iconTheme: IconThemeData(
+          color: theme.colorScheme.onPrimaryContainer.withOpacity(0.35),
+          // theme.iconTheme.color?.faded(0.75)
+          size: 20.0,
+        ),
+      );
 }
 
 class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -205,12 +225,12 @@ class ThemeProvider extends InheritedWidget {
       trackColor: MaterialStateColor.resolveWith((states) {
         if (states.contains(MaterialState.selected)) {
           if (states.contains(MaterialState.disabled)) {
-            return colors.primary.withOpacity(0.5*0.6);
+            return colors.primary.withOpacity(0.5 * 0.6);
           }
           return colors.primary.withOpacity(0.5);
         }
         if (states.contains(MaterialState.disabled)) {
-          return colors.onSurface.withOpacity(0.3*0.6);
+          return colors.onSurface.withOpacity(0.3 * 0.6);
         }
         return colors.onSurface.withOpacity(0.3);
       }),
@@ -224,8 +244,7 @@ class ThemeProvider extends InheritedWidget {
       hoverColor: Colors.white,
       focusColor: Colors.white,
       isDense: true,
-      //constraints: BoxConstraints(maxHeight: 40.0),
-      //contentPadding: EdgeInsets.fromLTRB(4.0, 4.0, 4.0, 4.0),
+      //contentPadding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
@@ -270,17 +289,36 @@ class ThemeProvider extends InheritedWidget {
     final headlineColor = colors.onSurfaceVariant;
 
     return TextTheme(
-      button: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
-      caption: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.85)), // Form Labels
-      subtitle1: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // TextInput
-      bodyText1: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)),
-      bodyText2: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.75)),
-      headline6: TextStyle(fontSize: 14.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline5: TextStyle(fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline4: TextStyle(fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline3: TextStyle(fontSize: 28.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline2: TextStyle(fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline1: TextStyle(fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
+      button:
+          TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
+      caption: TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: colors.onSurface.withOpacity(0.9)), // Form Labels
+      subtitle1: TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: colors.onSurface.withOpacity(0.9)), // TextInput
+      bodyText1: TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: colors.onSurface.withOpacity(0.9)),
+      bodyText2: TextStyle(
+          fontSize: 14.0,
+          height: 1.35,
+          color: colors.onSurface.withOpacity(0.8)),
+      headline6: TextStyle(
+          fontSize: 14.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline5: TextStyle(
+          fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline4: TextStyle(
+          fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline3: TextStyle(
+          fontSize: 28.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline2: TextStyle(
+          fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headline1: TextStyle(
+          fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
     );
   }
 
@@ -296,7 +334,9 @@ class ThemeProvider extends InheritedWidget {
   }
 
   DrawerThemeData drawerTheme(ColorScheme colors) {
-    return const DrawerThemeData(backgroundColor: Colors.white,);
+    return const DrawerThemeData(
+      backgroundColor: Colors.white,
+    );
   }
 
   IconThemeData iconTheme(ColorScheme colors) {
@@ -329,7 +369,7 @@ class ThemeProvider extends InheritedWidget {
     return RadioThemeData(
       splashRadius: 18.0,
       fillColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
+          (Set<MaterialState> states) {
         if (states.contains(MaterialState.disabled)) {
           return null;
         }
@@ -346,21 +386,20 @@ class ThemeProvider extends InheritedWidget {
       padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
       textStyle: textTheme(colors).caption!.copyWith(color: colors.onPrimary),
       decoration: BoxDecoration(
-        color: colors.secondary.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(2.0),
-        boxShadow: [
-          BoxShadow(
-            color: colors.primaryContainer.withOpacity(0.1),
-            blurRadius: 1,
-            spreadRadius: 2,
-          ),
-          BoxShadow(
-            color: colors.secondary.withOpacity(0.3),
-            blurRadius: 3,
-            spreadRadius: 0,
-          )
-        ]
-      ),
+          color: colors.secondary.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(2.0),
+          boxShadow: [
+            BoxShadow(
+              color: colors.primaryContainer.withOpacity(0.1),
+              blurRadius: 1,
+              spreadRadius: 2,
+            ),
+            BoxShadow(
+              color: colors.secondary.withOpacity(0.3),
+              blurRadius: 3,
+              spreadRadius: 0,
+            )
+          ]),
     );
   }
 

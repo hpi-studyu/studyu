@@ -24,7 +24,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.formData,
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
-  });
+    titles,
+  }) : _titles = titles;
+
+  /// Customized titles (if any) depending on the context of use
+  final Map<FormMode, String>? _titles;
 
   // - Form fields (any question type)
 
@@ -129,6 +133,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   _onScaleRangeChanged() {
+    if (formMode == FormMode.readonly) {
+      return; // prevent change listener from firing in readonly mode
+    }
     _applyInputFormatters();
     scaleRangeControl.value = scaleMaxValue - scaleMinValue;
     _updateScaleMidValueControls();
@@ -291,8 +298,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       }
     }
     form.addAll(subtypeFormControls);
-    revalidate();
-    form.updateValueAndValidity();
+    onFormGroupChanged();
   }
 
   @override
@@ -332,7 +338,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         scaleMidLabelControls.clear();
         scaleMidLabelControls.value = data.midLabels;
         _updateScaleMidValueControls();
-    // TODO scaleInitialValueControl
+      // TODO scaleInitialValueControl
       // TODO scaleStepSizeControl
       // TODO scaleMinColorControl
       // TODO scaleMaxColorControl
@@ -384,9 +390,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: "New Question".hardcoded,
-        FormMode.edit: "Edit Question".hardcoded,
-        FormMode.readonly: "View Question".hardcoded,
+        FormMode.create: _titles?[FormMode.create] ?? "New Question".hardcoded,
+        FormMode.edit: _titles?[FormMode.edit] ?? "Edit Question".hardcoded,
+        FormMode.readonly: _titles?[FormMode.readonly] ?? "View Question".hardcoded,
       };
 
   @override

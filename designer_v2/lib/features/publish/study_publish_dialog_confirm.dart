@@ -65,7 +65,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
                   ),
                   const SizedBox(width: 4.0),
                   Opacity(
-                    opacity: 0.75,
+                    opacity: ThemeConfig.kMuteFadeFactor,
                     child: TextButton(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),

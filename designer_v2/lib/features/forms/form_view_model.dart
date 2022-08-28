@@ -404,6 +404,14 @@ abstract class FormViewModel<T> {
     }
   }
 
+  /// Call after changing / adding / removing the child controls in [form]
+  /// to perform necessary housekeeping
+  onFormGroupChanged() {
+    revalidate();
+    _formModeUpdated();
+    form.updateValueAndValidity();
+  }
+
   void dispose() {
     _immediateFormChildrenListenerDebouncer?.dispose();
     _autosaveOperation?.cancel();

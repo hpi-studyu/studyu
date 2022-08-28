@@ -26,7 +26,7 @@ class Sidesheet extends StatefulWidget {
     this.width,
     this.withCloseButton = false,
     this.ignoreAppBar = true,
-    this.collapseSingleTab = true,
+    this.collapseSingleTab = false,
     this.bodyPadding =
         const EdgeInsets.symmetric(vertical: 32.0, horizontal: 48.0),
     this.wrapContent,
@@ -63,9 +63,9 @@ class _SidesheetState extends State<Sidesheet> {
     super.initState();
   }
 
-  _onTabChange(int tabIdx, SidesheetTab selectedTab) {
+  void _onTabChange(int tabIdx, NavbarTab selectedTab) {
     setState(() {
-      this.selectedTab = selectedTab;
+      this.selectedTab = selectedTab as SidesheetTab;
     });
   }
 
@@ -115,6 +115,8 @@ class _SidesheetState extends State<Sidesheet> {
 
   _build(BuildContext context, Widget? body, List<SidesheetTab>? tabs) {
     final theme = Theme.of(context);
+    final backgroundColor =
+        ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
 
     final hasTabs = tabs != null;
     final isCollapsed =
@@ -128,6 +130,10 @@ class _SidesheetState extends State<Sidesheet> {
 
     final actualWrapContent =
         widget.wrapContent ?? (widget) => widget; // default to identity no-op
+
+    final tabBarLabelHoverColor =
+        (theme.tabBarTheme.labelColor ?? theme.tabBarTheme.labelStyle?.color)
+            ?.faded(ThemeConfig.kHoverFadeFactor);
 
     return Container(
       decoration: BoxDecoration(
@@ -153,7 +159,7 @@ class _SidesheetState extends State<Sidesheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  SelectableText(
                     widget.titleText,
                     style: theme.textTheme.headline5!
                         .copyWith(fontWeight: FontWeight.normal),
@@ -165,21 +171,38 @@ class _SidesheetState extends State<Sidesheet> {
               ),
             ),
             (hasTabs && !isCollapsed)
-                ? Column(
-                    children: [
-                      const SizedBox(height: 32.0),
-                      TabbedNavbar<SidesheetTab>(
-                        tabs: tabs,
-                        onSelect: _onTabChange,
+                ? Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal:
+                            (widget.bodyPadding?.horizontal ?? 0) * 0.5),
+                    child: TabbedNavbar<SidesheetTab>(
+                      tabs: tabs,
+                      height: 38.0,
+                      onSelect: _onTabChange,
+                      labelPadding: EdgeInsets.zero,
+                      labelSpacing: 24.0,
+                      isScrollable: true,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      backgroundColor: backgroundColor,
+                      overlayColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.transparent,
                       ),
-                    ],
+                      labelColorHover: tabBarLabelHoverColor,
+                      unselectedLabelColorHover: tabBarLabelHoverColor,
+                    ),
                   )
                 : const SizedBox.shrink(),
-            const Divider(),
+            (hasTabs && !isCollapsed)
+                ? const Divider(height: 1)
+                : const Divider(),
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    (hasTabs &&
+                            !isCollapsed) // compensate for divider height loss
+                        ? const SizedBox(height: 12.0)
+                        : const SizedBox.shrink(),
                     Padding(
                       padding: EdgeInsets.fromLTRB(
                         (widget.bodyPadding?.horizontal ?? 0) * 0.5,

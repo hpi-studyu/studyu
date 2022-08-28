@@ -22,6 +22,8 @@ class MeasurementSurveyFormView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         FormTableLayout(
@@ -85,6 +87,18 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle: "No questions defined".hardcoded,
                   emptyDescription: "You need to define at least one question to determine the effect of your intervention(s).".hardcoded,
+                  rowPrefix: (context, viewModel, rowIdx) {
+                    return Row(
+                      children: [
+                        Tooltip(
+                            message: viewModel.questionType.string,
+                            child: Icon(viewModel.questionType.icon,
+                                color: theme.colorScheme.onPrimaryContainer
+                                    .withOpacity(0.35))),
+                        const SizedBox(width: 16.0),
+                      ],
+                    );
+                  },
                 );
               },
             );
