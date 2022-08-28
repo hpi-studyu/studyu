@@ -379,6 +379,23 @@ ALTER TABLE ONLY public.study
 -- ======================== STUDY FUNCTIONS =====================================
 
 --
+-- Name: is_active_subject(uuid, integer); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) RETURNS boolean
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+  RETURN (
+    SELECT
+      (DATE(now()) - last_completed_task (psubject_id)) <= days_active);
+END;
+$$;
+
+
+ALTER FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) OWNER TO supabase_admin;
+
+--
 -- Name: active_subject_count(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
@@ -401,6 +418,18 @@ $$;
 
 
 ALTER FUNCTION public.active_subject_count(study public.study) OWNER TO supabase_admin;
+
+--
+-- Name: user_email(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.user_email(user_id uuid) RETURNS text
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT email from "user" where id = user_id
+$$;
+
+ALTER FUNCTION public.user_email(user_id uuid) OWNER TO supabase_admin;
 
 --
 -- Name: can_edit(uuid, public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
@@ -450,7 +479,7 @@ ALTER FUNCTION public.get_study_from_invite(invite_code text) OWNER TO supabase_
 -- Name: get_study_record_from_invite(text); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
-CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS Study
+CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS public.study
     LANGUAGE sql IMMUTABLE SECURITY DEFINER AS $$
     SELECT * FROM study WHERE study.id = (
         SELECT study_invite.study_id
@@ -520,23 +549,6 @@ $$;
 ALTER FUNCTION public.has_study_ended(subject public.study_subject) OWNER TO supabase_admin;
 
 --
--- Name: is_active_subject(uuid, integer); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) RETURNS boolean
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $$
-BEGIN
-  RETURN (
-    SELECT
-      (DATE(now()) - last_completed_task (psubject_id)) <= days_active);
-END;
-$$;
-
-
-ALTER FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) OWNER TO supabase_admin;
-
---
 -- Name: last_completed_task(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
@@ -559,6 +571,24 @@ $$;
 
 
 ALTER FUNCTION public.last_completed_task(psubject_id uuid) OWNER TO supabase_admin;
+
+--
+-- Name: subject_total_active_days(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.subject_total_active_days(subject public.study_subject) RETURNS integer
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT
+    COUNT(DISTINCT DATE(completed_at))::int
+FROM
+    subject_progress
+WHERE subject_id = subject.id
+AND DATE(completed_at) < DATE(now());
+$$;
+
+
+ALTER FUNCTION public.subject_total_active_days(subject public.study_subject) OWNER TO supabase_admin;
 
 --
 -- Name: study_active_days(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
@@ -621,6 +651,23 @@ $$;
 ALTER FUNCTION public.study_length(study_param public.study) OWNER TO supabase_admin;
 
 --
+-- Name: subject_current_day(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.subject_current_day(subject public.study_subject) RETURNS integer
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT
+    CASE WHEN has_study_ended(subject) THEN (Select study_length(study) from study where id = subject.study_id)::int
+    ELSE
+        DATE(now()) - DATE(subject.started_at)
+    END;
+$$;
+
+
+ALTER FUNCTION public.subject_current_day(subject public.study_subject) OWNER TO supabase_admin;
+
+--
 -- Name: study_missed_days(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
@@ -663,55 +710,6 @@ $$;
 
 
 ALTER FUNCTION public.study_total_tasks(subject public.study_subject) OWNER TO supabase_admin;
-
---
--- Name: subject_current_day(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.subject_current_day(subject public.study_subject) RETURNS integer
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  SELECT
-    CASE WHEN has_study_ended(subject) THEN (Select study_length(study) from study where id = subject.study_id)::int
-    ELSE
-        DATE(now()) - DATE(subject.started_at)
-    END;
-$$;
-
-
-ALTER FUNCTION public.subject_current_day(subject public.study_subject) OWNER TO supabase_admin;
-
---
--- Name: subject_total_active_days(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.subject_total_active_days(subject public.study_subject) RETURNS integer
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  SELECT
-    COUNT(DISTINCT DATE(completed_at))::int
-FROM
-    subject_progress
-WHERE subject_id = subject.id
-AND DATE(completed_at) < DATE(now());
-$$;
-
-
-ALTER FUNCTION public.subject_total_active_days(subject public.study_subject) OWNER TO supabase_admin;
-
---
--- Name: user_email(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.user_email(user_id uuid) RETURNS text
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  SELECT email from "user" where id = user_id
-$$;
-
-
-ALTER FUNCTION public.user_email(user_id uuid) OWNER TO supabase_admin;
-
 
 -- ========================= TRIGGERS ==========================================
 
@@ -759,7 +757,7 @@ CREATE POLICY "Editors can do everything with their studies" ON public.study USI
 --
 
 CREATE POLICY "Editors can do everything with their study subjects" ON public.study_subject AS PERMISSIVE FOR ALL
-TO public USING (( SELECT can_edit(uid(), study.*) AS can_edit FROM study WHERE (study.id = study_subject.study_id)));
+TO public USING (( SELECT public.can_edit(auth.uid(), study) AS can_edit FROM public.study WHERE (study.id = study_subject.study_id)));
 
 
 --
@@ -792,7 +790,7 @@ CREATE POLICY "Everybody can view (published and open) studies" ON public.study 
 -- Name: study Study subjects can view their joined study; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
-CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (is_study_subject_of(auth.uid(), id));
+CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (public.is_study_subject_of(auth.uid(), id));
 
 --
 -- Name: study_subject Invite code needs to be valid (not possible in the app); Type: POLICY; Schema: public; Owner: supabase_admin
