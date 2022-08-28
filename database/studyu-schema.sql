@@ -479,7 +479,7 @@ ALTER FUNCTION public.get_study_from_invite(invite_code text) OWNER TO supabase_
 -- Name: get_study_record_from_invite(text); Type: FUNCTION; Schema: public; Owner: supabase_admin
 --
 
-CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS Study
+CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS public.study
     LANGUAGE sql IMMUTABLE SECURITY DEFINER AS $$
     SELECT * FROM study WHERE study.id = (
         SELECT study_invite.study_id
@@ -757,7 +757,7 @@ CREATE POLICY "Editors can do everything with their studies" ON public.study USI
 --
 
 CREATE POLICY "Editors can do everything with their study subjects" ON public.study_subject AS PERMISSIVE FOR ALL
-TO public USING (( SELECT can_edit(auth.uid(), study.*) AS can_edit FROM study WHERE (study.id = study_subject.study_id)));
+TO public USING (( SELECT public.can_edit(auth.uid(), study) AS can_edit FROM public.study WHERE (study.id = study_subject.study_id)));
 
 
 --
@@ -790,7 +790,7 @@ CREATE POLICY "Everybody can view (published and open) studies" ON public.study 
 -- Name: study Study subjects can view their joined study; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
-CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (is_study_subject_of(auth.uid(), id));
+CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (public.is_study_subject_of(auth.uid(), id));
 
 --
 -- Name: study_subject Invite code needs to be valid (not possible in the app); Type: POLICY; Schema: public; Owner: supabase_admin
