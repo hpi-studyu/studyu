@@ -180,7 +180,8 @@ services:
     volumes:
       # - ./volumes/db/data:/var/lib/postgresql/data
       - ./volumes/db/init:/docker-entrypoint-initdb.d
-      - ../database/studyu-schema.sql:/docker-entrypoint-initdb.d/studyu-schema.sql
+      # todo there seems to be an issue executing the complete studyu-schema.sql in one run
+      # - ../database/studyu-schema.sql:/docker-entrypoint-initdb.d/studyu-schema.sql
     networks:
       - supabase-net
 networks:

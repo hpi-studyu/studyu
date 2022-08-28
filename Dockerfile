@@ -48,6 +48,8 @@ RUN if [ -n "$ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$ENV ; else 
 
 FROM nginx:stable-alpine
 ARG FLUTTER_APP_FOLDER
+# we need to modify the nginx conf to redirect all links to index.html for designer_v2
+COPY ./nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html
 RUN mkdir /usr/share/nginx/html/assets/envs
 
