@@ -125,7 +125,7 @@ Future<T?> showModalSideSheet<T extends Object?>(
             height: height,
             child: Scaffold(
               appBar: null,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.15),
+              backgroundColor: ThemeConfig.sidesheetBackgroundColor(Theme.of(context)),
               body: withCloseControll ? Stack(children: [
                   body,
                   const Positioned(top: 5, right: 5, child: CloseButton())

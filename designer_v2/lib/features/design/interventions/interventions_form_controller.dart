@@ -156,13 +156,13 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   }
 
   @override
-  void onSave(InterventionFormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(InterventionFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       interventionsCollection.commit(formViewModel);
     } else if (prevFormMode == FormMode.edit) {
       // nothing to do here
     }
-    super.save();
+    await super.save();
   }
 }

@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -51,18 +52,7 @@ class DismissButton extends StatelessWidget {
             }
           },
         )
-    );
-    return SecondaryButton(
-      text: text ?? tr.cancel,
-      icon: null,
-      //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-      onPressed: () {
-        if (onPressed != null) {
-          onPressed!();
-        } else {
-          Navigator.maybePop(context);
-        }
-      },
+        // removed tr.cancel .hardcoded
     );
   }
 }
@@ -82,8 +72,10 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         builder: (context, form, child) {
           return retainSizeInAppBar(PrimaryButton(
             text: tr.save,
-            tooltipDisabled: tr.please_fill_out_all_fields_as_required,
+            tooltipDisabled: tr.please_fill_out_all_fields_as_required +
+                "\n\n" + formViewModel.form.validationErrorSummary,
             icon: null,
+            enabled: formViewModel.isValid,
             onPressedFuture: (formViewModel.isValid) ?
               () => formViewModel.save().then(
                 // Close the form (side sheet or scaffold route) if future

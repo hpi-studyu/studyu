@@ -1,13 +1,13 @@
 version: '3'
 services:
-  app-selfhost:
+  designer-selfhost:
     build:
       context: .
       args:
-        FLUTTER_APP_FOLDER: app
+        FLUTTER_APP_FOLDER: designer_v2
         ENV: selfhost
     ports:
-      - 8080:80
+      - 8082:80
     networks:
       - studyu-net
     env_file:

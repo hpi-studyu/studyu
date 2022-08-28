@@ -33,9 +33,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Multimap<CompletionPeriod, Task> scheduleToday;
 
   @override
-  void initState() {
-    super.initState();
-    subject = context.read<AppState>().activeSubject;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    subject = context.watch<AppState>().activeSubject;
     scheduleToday = subject.scheduleFor(DateTime.now());
   }
 

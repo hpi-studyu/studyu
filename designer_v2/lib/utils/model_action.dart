@@ -32,6 +32,7 @@ abstract class IListActionProvider<V> extends IModelActionProvider<V> {
 enum ModelActionType {
   edit,
   delete,
+  remove, // same semantics as delete
   duplicate,
   clipboard,
 }
@@ -44,6 +45,8 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.edit;
       case ModelActionType.delete:
         return tr.delete;
+      case ModelActionType.remove:
+        return "Remove".hardcoded;
       case ModelActionType.duplicate:
         return tr.duplicate;
       case ModelActionType.clipboard:
@@ -57,6 +60,7 @@ extension ModelActionTypeFormatted on ModelActionType {
 Map<ModelActionType, IconData> modelActionIcons = {
   ModelActionType.edit: Icons.edit_rounded,
   ModelActionType.delete: Icons.delete_rounded,
+  ModelActionType.remove: Icons.close_rounded,
   ModelActionType.duplicate: Icons.file_copy_rounded,
   ModelActionType.clipboard: Icons.copy_rounded,
 };

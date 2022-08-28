@@ -7,11 +7,12 @@ abstract class FormValidationSetEnum {}
 
 /// Validator configuration that is applied to the given [control] at runtime
 class FormControlValidation {
-  const FormControlValidation(
-      {required this.control,
-      required this.validators,
-      this.asyncValidators,
-      required this.validationMessages});
+  const FormControlValidation({
+    required this.control,
+    required this.validators,
+    this.asyncValidators,
+    required this.validationMessages,
+  });
 
   final AbstractControl<dynamic> control;
   final List<ValidatorFunction> validators;
@@ -61,8 +62,7 @@ extension AbstractControlX on AbstractControl {
 }
 
 List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
-    AbstractControl control,
-    {onlyLeaves = true}) {
+    AbstractControl control) {
   final List<Tuple<AbstractControl, String>> allValidationErrorMessages = [];
 
   if (!control.enabled || !control.hasErrors) {
@@ -70,10 +70,22 @@ List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
   }
 
   for (final error in control.errors.entries) {
-    final isPrimitive = error.value is! Map;
-    if (!isPrimitive && onlyLeaves) {
-      continue;
+    // Only collect errors at the control that generated it & has a
+    // corresponding validation message registered
+    //
+    // Note: this is needed as the [AbstractControl.errors] object is a
+    // nested JSON with the same structure as [AbstractControl.value].
+    // If the given [control] is not a leaf in the form control tree structure
+    // (i.e. a [FormGroup]), we want to skip these intermediary path
+    // descriptors & collect the error at the child control instead where we
+    // can resolve its validation error message correctly.
+    if (control is FormGroup) {
+      final isChildError = control.controls.containsKey(error.key);
+      if (isChildError) {
+        continue;
+      }
     }
+
     final validationMessageFunc = control.validationMessages[error.key];
     final String validationMessage =
         validationMessageFunc?.call(error.value) ?? '[${error.key}]';
@@ -144,5 +156,12 @@ extension FormGroupX on FormGroup {
   List<String> get formattedErrorMessages =>
       validationErrorMessages.map((t) => t.second).toList();
 
-  String get validationErrorSummary => "- ${formattedErrorMessages.join("\n- ")}";
+  String get validationErrorSummary => getValidationErrorSummary();
+
+  String getValidationErrorSummary({uniqueErrors = true}) {
+    final errorMessages = (uniqueErrors)
+        ? {...formattedErrorMessages}.toList()
+        : formattedErrorMessages;
+    return "- ${errorMessages.join("\n- ")}";
+  }
 }

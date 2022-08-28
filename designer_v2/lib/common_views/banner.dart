@@ -17,6 +17,7 @@ class BannerBox extends StatefulWidget {
           const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
       this.prefixIcon,
       this.noPrefix = false,
+      this.isDismissed,
       this.dismissable = true,
       this.dismissIconSize = 24.0,
       Key? key})
@@ -28,6 +29,7 @@ class BannerBox extends StatefulWidget {
   final EdgeInsets? padding;
   final bool noPrefix;
   final bool dismissable;
+  final bool? isDismissed;
   final double dismissIconSize;
 
   @override
@@ -36,6 +38,14 @@ class BannerBox extends StatefulWidget {
 
 class _BannerBoxState extends State<BannerBox> {
   bool isDismissed = false;
+
+  @override
+  void didUpdateWidget(covariant BannerBox oldWidget) {
+    if (widget.isDismissed != null && !widget.isDismissed!) {
+      isDismissed = false;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +58,7 @@ class _BannerBoxState extends State<BannerBox> {
           color: theme.iconTheme.color,
         );
 
-    if (isDismissed) {
+    if ((widget.isDismissed != null && widget.isDismissed!) || isDismissed) {
       return const SizedBox.shrink();
     }
 

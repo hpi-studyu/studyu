@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
+import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,7 +25,6 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
-  Preview preview;
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
@@ -30,94 +32,154 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
-
-    preview = Preview(widget.queryParameters ?? {});
-
-    if (preview.containsQueryPair('mode', 'preview')) {
-      modifySelectedSubjectIdKey(preview: true);
-      if (!mounted) return;
-      context.read<AppState>().isPreview = true;
-      context.read<AppState>().previewInit = true;
-    }
     initStudy();
-    //print('returned from initStudy');
   }
 
   Future<void> initStudy() async {
-    final model = context.read<AppState>();
-    await preview.init();
-    if (!mounted) return;
+    final state = context.read<AppState>();
+    final preview = Preview(widget.queryParameters ?? {});
 
     if (preview.containsQueryPair('mode', 'preview')) {
-      if (!await preview.handleAuthorization()) return;
-      model.selectedStudy = preview.study;
+      final iFrameHelper = IFrameHelper();
+      state.isPreview = true;
+      await preview.init();
 
-      // Authentication completed
+      // Authorize
+      if (!await preview.handleAuthorization()) return;
+      state.selectedStudy = preview.study;
 
       await preview.runCommands();
 
-      final bool subscribed = await preview.isSubscribed();
-      model.activeSubject = preview.subject;
+      iFrameHelper.listen(state);
 
-      // check if user is subscribed to the currently shown study
-      if (subscribed) {
-        if (!mounted) return;
-        context.read<AppState>().previewInit = false;
-        Navigator.pushReplacementNamed(context, Routes.dashboard);
-        return;
-      }
+      if (preview.hasRoute()) {
+        // print("has route: " + preview.selectedRoute);
 
-      // user still has to subscribe to the study
-      if (!mounted) return;
-      context.read<AppState>().previewInit = false;
-      Navigator.pushReplacementNamed(context, Routes.studyOverview);
-      return;
+        // ELIGIBILITY CHECK
+        if (preview.selectedRoute == '/eligibilityCheck') {
+          if (!mounted) return;
+            // if we remove the await, we can push multiple times. warning: do not run in while(true)
+            final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
+            // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
+          iFrameHelper.postRouteFinished();
+            return;
+        }
 
-    } else if (!context.read<AppState>().previewInit) {
-      // non preview routes
-      if (preview.selectedStudyObjectId == null) {
-        if (isUserLoggedIn()) {
-          Navigator.pushReplacementNamed(context, Routes.studySelection);
+        // INTERVENTION SELECTION
+        if (preview.selectedRoute == Routes.interventionSelection) {
+          if (!mounted) return;
+          final interventionSelected = await Navigator.pushNamed(context, Routes.interventionSelection);
+          iFrameHelper.postRouteFinished();
           return;
         }
+
+        state.activeSubject = await preview.createFakeSubject(preview.extra);
+
+        // CONSENT
+        if (preview.selectedRoute == Routes.consent) {
+          if (!mounted) return;
+          final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
+        // DASHBOARD
+        if (preview.selectedRoute == Routes.dashboard) {
+          if (!mounted) return;
+          await Navigator.pushReplacementNamed(context, Routes.dashboard);
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
+        // INTERVENTION [i]
+        if (preview.selectedRoute == '/intervention') {
+          // print("getting tasks for intervention");
+          state.selectedStudy.schedule.includeBaseline = false;
+          if (!mounted) return;
+          await Navigator.pushReplacementNamed(context, Routes.dashboard);
+          // print("FINISHED INTERVENTION");
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
+        // OBSERVATION [i]
+        if (preview.selectedRoute == '/observation') {
+          // print("getting tasks for observation");
+          print(state.selectedStudy.observations.first.id);
+          final tasks = <Task>[
+            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
+          ];
+          // print("observation with tasks: " + tasks.first.toString());
+          if (!mounted) return;
+          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
+          // print("FINISHED OBSERVATION");
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
+      } else {
+        if (!mounted) return;
+        if (isUserLoggedIn()) {
+          // print("Return to studyOverview");
+          Navigator.pushReplacementNamed(context, Routes.studyOverview);
+          return;
+        }
+        // print("Return to welcome");
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
+      // WE NEED TO HAVE RETURNED BY HERE
+    }
+    // todo is this necessary to run?
+    if (!mounted) return;
+    if (context.read<AppState>().isPreview) {
+      previewSubjectIdKey();
+    }
 
-      StudySubject subject;
-      try {
-        subject = await SupabaseQuery.getById<StudySubject>(
-          preview.selectedStudyObjectId,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-      } catch (e) {
-        // Try signing in again. Needed if JWT is expired
-        await signInParticipant();
-        subject = await SupabaseQuery.getById<StudySubject>(
-          preview.selectedStudyObjectId,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
+    final selectedStudyObjectId = await getActiveSubjectId();
+    // print('Selected study: $selectedStudyObjectId');
+    if (!mounted) return;
+    if (selectedStudyObjectId == null) {
+      if (isUserLoggedIn()) {
+        Navigator.pushReplacementNamed(context, Routes.studySelection);
+        return;
       }
-      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, Routes.welcome);
+      return;
+    }
+    StudySubject subject;
+    try {
+      subject = await SupabaseQuery.getById<StudySubject>(
+        selectedStudyObjectId,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+      );
+    } catch (e) {
+      // Try signing in again. Needed if JWT is expired
+      await signInParticipant();
+      subject = await SupabaseQuery.getById<StudySubject>(
+        selectedStudyObjectId,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+      );
+    }
+    if (!mounted) return;
 
-      if (subject != null) {
-        model.activeSubject = subject;
-        if (!kIsWeb) {
-          // Notifications not supported on web
-          scheduleStudyNotifications(context);
-        }
-        Navigator.pushReplacementNamed(context, Routes.dashboard);
-      } else {
-        Navigator.pushReplacementNamed(context, Routes.welcome);
+    if (subject != null) {
+      state.activeSubject = subject;
+      if (!kIsWeb) {
+        // Notifications not supported on web
+        scheduleStudyNotifications(context);
       }
+      Navigator.pushReplacementNamed(context, Routes.dashboard);
+    } else {
+      Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
 

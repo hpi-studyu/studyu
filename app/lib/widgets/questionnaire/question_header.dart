@@ -8,7 +8,7 @@ class QuestionHeader extends StatelessWidget {
   const QuestionHeader({this.prompt, this.subtitle, this.rationale});
 
   List<Widget> _buildSubtitle(BuildContext context) {
-    if (subtitle == null) return [];
+    if (subtitle == null|| subtitle.isEmpty) return [];
     return [
       const SizedBox(height: 8),
       Text(subtitle, style: Theme.of(context).textTheme.caption),
@@ -16,7 +16,7 @@ class QuestionHeader extends StatelessWidget {
   }
 
   List<Widget> _buildRationaleButton(BuildContext context) {
-    if (rationale == null) return [];
+    if (rationale == null || rationale.isEmpty) return [];
     return [
       const SizedBox(width: 8),
       IconButton(

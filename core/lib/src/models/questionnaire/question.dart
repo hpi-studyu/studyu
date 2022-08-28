@@ -9,9 +9,10 @@ typedef QuestionParser = Question Function(Map<String, dynamic> data);
 
 abstract class Question<V> {
   static Map<String, QuestionParser> questionTypes = {
-    AnnotatedScaleQuestion.questionType: (json) => AnnotatedScaleQuestion.fromJson(json),
     BooleanQuestion.questionType: (json) => BooleanQuestion.fromJson(json),
     ChoiceQuestion.questionType: (json) => ChoiceQuestion.fromJson(json),
+    ScaleQuestion.questionType: (json) => ScaleQuestion.fromJson(json),
+    AnnotatedScaleQuestion.questionType: (json) => AnnotatedScaleQuestion.fromJson(json),
     VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
   };
   static const String keyType = 'type';

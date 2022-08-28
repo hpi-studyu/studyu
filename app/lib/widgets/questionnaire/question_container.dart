@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/widgets/questionnaire/scale_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
 import 'annotated_scale_question_widget.dart';
@@ -31,6 +32,11 @@ class QuestionContainer extends StatelessWidget {
       case BooleanQuestion:
         return BooleanQuestionWidget(
           question: question as BooleanQuestion,
+          onDone: _onDone,
+        );
+      case ScaleQuestion:
+        return ScaleQuestionWidget(
+          question: question as ScaleQuestion,
           onDone: _onDone,
         );
       case VisualAnalogueQuestion:

@@ -161,6 +161,8 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   tabs: tabs,
                   selectedTab: widget.selectedTab,
                   height: widget.appbarHeight,
+                  disabledBackgroundColor: theme.appBarTheme.backgroundColor,
+                  disabledTooltipText: "This page is not available to you".hardcoded,
                 ),
               ),
             ),

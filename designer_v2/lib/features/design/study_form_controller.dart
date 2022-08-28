@@ -1,21 +1,22 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
+import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -110,7 +111,12 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   Study buildFormData() {
-    return formData!;
+    final studyCopy = (formData as Study).exactDuplicate();
+    studyInfoFormViewModel.buildFormData().apply(studyCopy);
+    enrollmentFormViewModel.buildFormData().apply(studyCopy);
+    measurementsFormViewModel.buildFormData().apply(studyCopy);
+    interventionsFormViewModel.buildFormData().apply(studyCopy);
+    return studyCopy;
   }
 
   @override
@@ -131,24 +137,17 @@ class StudyFormViewModel extends FormViewModel<Study>
   }
 
   @override
-  void onSave(FormViewModel formViewModel, FormMode prevFormMode) {
+  Future onSave(FormViewModel formViewModel, FormMode prevFormMode) async {
     assert(prevFormMode == FormMode.edit);
-    _applyAndSaveSubform(formViewModel.formData!);
+    await _applyAndSaveSubform(formViewModel.formData!);
   }
 
-  Future _flushDirtyStudy() {
-    if (studyDirtyCopy == null) {
-      return Future.value(null); // nothing to do
-    }
+  Future _applyAndSaveSubform(IStudyFormData subformData) {
+    studyDirtyCopy ??= formData!.exactDuplicate();
+    subformData.apply(studyDirtyCopy!);
     // Flush the on-write study copy to the repository & clear it
     return studyRepository.save(studyDirtyCopy!)
         .then((study) => studyDirtyCopy = null);
-  }
-
-  _applyAndSaveSubform(IStudyFormData subformData) {
-    studyDirtyCopy ??= formData!.exactDuplicate();
-    subformData.apply(studyDirtyCopy!);
-    _flushDirtyStudy();
   }
 }
 

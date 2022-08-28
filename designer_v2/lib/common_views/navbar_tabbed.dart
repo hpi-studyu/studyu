@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/utils/performance.dart';
 class NavbarTab {
   NavbarTab({
     required this.title,
-    required this.intent,
+    this.intent,
     required this.index,
     this.enabled = true,
   });
@@ -19,7 +19,7 @@ class NavbarTab {
   final String title; // TODO: use localization key here
 
   /// The route to navigate to when switching to the tab
-  final RoutingIntent intent;
+  final RoutingIntent? intent;
 
   final int index;
 
@@ -32,6 +32,8 @@ class TabbedNavbar extends ConsumerStatefulWidget {
     this.selectedTab,
     this.indicator,
     this.height,
+    this.disabledBackgroundColor,
+    this.disabledTooltipText,
     Key? key,
   }) : super(key: key);
 
@@ -39,6 +41,8 @@ class TabbedNavbar extends ConsumerStatefulWidget {
   final NavbarTab? selectedTab;
   final BoxDecoration? indicator;
   final double? height;
+  final Color? disabledBackgroundColor;
+  final String? disabledTooltipText;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TabbedNavbarState();
@@ -123,10 +127,10 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
   }
 
   void navigateToTabRoute() {
-    if (!selectedTab.enabled) {
+    if (!selectedTab.enabled || selectedTab.intent == null) {
       return;
     }
-    runAsync(() => ref.read(routerProvider).dispatch(selectedTab.intent));
+    runAsync(() => ref.read(routerProvider).dispatch(selectedTab.intent!));
   }
 
   void _onSelectTab(int tabIndex) {
@@ -157,12 +161,17 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
       if (tab.enabled) {
         return tabContent;
       }
-      return Tooltip(
-        message: "This page is disabled.".hardcoded,
-        child: MouseEventsRegion(
-            builder: (context, state) => tabContent,
-            cursor: SystemMouseCursors.basic),
+      final disablePointerCursor = MouseEventsRegion(
+        builder: (context, state) => tabContent,
+        cursor: SystemMouseCursors.basic,
       );
+      if (widget.disabledTooltipText != null) {
+        return Tooltip(
+            message: widget.disabledTooltipText!,
+            child: disablePointerCursor
+        );
+      }
+      return disablePointerCursor;
     }
 
     return Theme(
@@ -178,8 +187,8 @@ class _TabbedNavbarState extends ConsumerState<TabbedNavbar>
               (t) => decorateIfDisabled(
                   tabContent: Container(
                     decoration: (!t.enabled)
-                        ? const BoxDecoration(
-                            color: Colors.white,
+                        ? BoxDecoration(
+                            color: widget.disabledBackgroundColor,
                             /*border: Border(
                             bottom: BorderSide(width: indicatorSize * 2, color: Colors.red),
                           )

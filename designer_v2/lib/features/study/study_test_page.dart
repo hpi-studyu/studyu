@@ -21,59 +21,71 @@ class StudyTestScreen extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyTestControllerProvider(studyId));
-    final frameController =
-        ref.watch(studyTestPlatformControllerProvider(studyId));
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+    final frameController = ref.watch(
+        studyTestPlatformControllerProvider(studyId));
+    frameController.navigate();
+    load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
-    load().then((value) => value ? null : showHelp(ref));
-
-    final frameControls = Column(
-      children: [
-        const SizedBox(height: 24.0),
-        Text(
-            "This is the preview mode.\nPress reset to "
-                    "remove the test progress and start over again."
-                .hardcoded,
-            textAlign: TextAlign.center),
-        // tr.this_preview_mode+ tr.press_reset .hardcoded todo not sure if translation is still correct
-        const SizedBox(height: 12.0),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          TextButton.icon(
-            icon: const Icon(Icons.restart_alt),
-            label: Text(tr.reset),
-            onPressed: (!state.canTest)
-                ? null
-                : () {
-                    frameController!.sendCmd("reset");
-                  },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.open_in_new_sharp),
-            label: Text(tr.open_in_tab),
-            onPressed: (!state.canTest)
-                ? null
-                : () {
-                    frameController!.openNewPage();
-                  },
-          ),
-        ]),
-      ],
-    );
-
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
         children: [
-          ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(builder: (context, form, child) {
-                if (formViewModel.form.hasErrors) {
-                  return const DisabledFrame();
-                }
-                return Column(
-                  children: [frameController!.frameWidget, frameControls],
-                );
-              })),
+          PreviewFrame(studyId, frameController: frameController, state: state),
+          const SizedBox(height: 24.0),
+          Text("This is the preview mode.\nPress reset to "
+              "remove the test progress and start over again."
+              .hardcoded, textAlign: TextAlign.center),
+          // tr.this_preview_mode+ tr.press_reset .hardcoded todo not sure if translation is still correct
+          // tr.reset, open_in_tab moved .hardcoded
+          const SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("study overview".hardcoded), // questionnaire?
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate();
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("eligibilityCheck".hardcoded), // questionnaire?
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "eligibilityCheck");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("interventionSelection".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "interventionSelection");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("consent".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "consent");
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.arrow_forward),
+                label: Text("dashboard".hardcoded),
+                onPressed: (!state.canTest) ? null : () {
+                  frameController.navigate(page: "dashboard");
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: const Icon(Icons.help),
+                label: Text("How does this work?".hardcoded),
+                onPressed: () => showHelp(ref, context),
+              ),
+            ],
+          ),
         ]
     );
   }
@@ -84,7 +96,6 @@ class StudyTestScreen extends StudyPageWidget {
     if (!formViewModel.form.hasErrors) {
       return null;
     }
-
     return BannerBox(
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -92,7 +103,7 @@ class StudyTestScreen extends StudyPageWidget {
           children: [
             TextParagraph(
               text: "The preview is unavailable until you update the "
-                      "following information:".hardcoded,
+                  "following information:".hardcoded,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             ReactiveForm(
@@ -128,10 +139,9 @@ class StudyTestScreen extends StudyPageWidget {
     return false;
   }
 
-  showHelp(WidgetRef ref) {
-    ref
-        .read(notificationServiceProvider)
-        .show(Notifications.welcomeTestMode, actions: [
+  showHelp(WidgetRef ref, BuildContext context) {
+    ref.read(notificationServiceProvider).show(
+        Notifications.welcomeTestMode(context), actions: [
       NotificationAction(
           label: "Got it!".hardcoded,
           onSelect: Future.value,

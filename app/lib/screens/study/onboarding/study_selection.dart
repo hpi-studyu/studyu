@@ -140,9 +140,10 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             label: Text(AppLocalizations.of(context).next),
             onPressed: () async {
               final res = await Supabase.instance.client
-                  .rpc('get_study_from_invite', params: {'invite_code': _controller.text})
-                  .single()
-                  .execute();
+                  .rpc('get_study_from_invite',
+                  params: {'invite_code': _controller.text},
+              ).single().execute();
+
               if (res.error != null) {
                 print(res.error.message);
                 setState(() {
@@ -156,23 +157,48 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 setState(() {
                   _errorMessage = null;
                 });
-                final result = res.data as Map<String, dynamic>;
-                final studyId = result['study_id'] as String;
-                final study = await SupabaseQuery.getById<Study>(studyId);
-                if (!mounted) return;
-                Navigator.pop(context);
 
-                if (result.containsKey('preselected_intervention_ids') &&
-                    result['preselected_intervention_ids'] != null) {
-                  final preselectedIds = List<String>.from(result['preselected_intervention_ids'] as List);
-                  await navigateToStudyOverview(
-                    context,
-                    study,
-                    inviteCode: _controller.text,
-                    preselectedIds: preselectedIds,
-                  );
+                final result = res.data as Map<String, dynamic>;
+                final studyRes = await Supabase.instance.client
+                    .rpc('get_study_record_from_invite',
+                  params: {'invite_code': _controller.text},
+                ).single().execute();
+
+                if (studyRes.error != null) {
+                  print(studyRes.error.message);
+                  setState(() {
+                    _errorMessage = studyRes.error.message;
+                  });
+                } else if (studyRes.data == null) {
+                  setState(() {
+                    _errorMessage = AppLocalizations.of(context).error;
+                  });
                 } else {
-                  await navigateToStudyOverview(context, study, inviteCode: _controller.text);
+                  setState(() {
+                    _errorMessage = null;
+                  });
+
+                  final study = Study.fromJson(studyRes.data as Map<String, dynamic>);
+
+                  if (!mounted) return;
+                  Navigator.pop(context);
+
+                  if (result.containsKey('preselected_intervention_ids') &&
+                      result['preselected_intervention_ids'] != null) {
+                    final preselectedIds = List<String>.from(
+                        result['preselected_intervention_ids'] as List,
+                    );
+                    await navigateToStudyOverview(
+                      context,
+                      study,
+                      inviteCode: _controller.text,
+                      preselectedIds: preselectedIds,
+                    );
+                  } else {
+                    await navigateToStudyOverview(
+                        context, study, inviteCode: _controller.text,
+                    );
+                  }
                 }
               }
             },

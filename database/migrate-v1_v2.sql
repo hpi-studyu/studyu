@@ -34,6 +34,24 @@ UPDATE public.study
     SET registry_published = true
     WHERE result_sharing = 'public';
 
+-- ==================== FUNCTIONS ========================
+
+--
+-- Name: is_subject_of(uuid, public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+--
+
+CREATE FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) RETURNS boolean
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM study_subject
+    WHERE study_subject.user_id = _user_id AND study_subject.study_id = _study_id
+  )
+$$;
+
+
+ALTER FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) OWNER TO supabase_admin;
+
 -- ============================ ROW LEVEL SECURITY POLICIES ======================================
 
 --
@@ -48,6 +66,12 @@ AS PERMISSIVE FOR ALL
 TO public
 USING (( SELECT can_edit(uid(), study.*) AS can_edit FROM study WHERE (study.id = study_subject.study_id)));
 
+
+--
+-- Name: study Everybody can view (published and open) studies; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY "Everybody can view (published and open) studies" ON public.study FOR SELECT USING ((published = true) AND (participation = 'open'::public.participation));
 
 -- ======================== FOREIGN KEY CONTRAINTS ======================================================
 
