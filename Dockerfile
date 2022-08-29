@@ -48,10 +48,10 @@ COPY ./docker/nginx/designer2-stage.hpi.studyu.health.conf /etc/nginx/designer2-
 COPY ./hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
-RUN mkdir /usr/share/nginx/html/assets/envs
 
-# EXPOSE 80
-EXPOSE 80 443
-
+# todo can we do this only once for all flutter packages?
 # Loads all env vars starting with "STUDYU" into the .env file used by both Flutter apps
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/assets/envs/.env && nginx -g 'daemon off;'"]
+RUN mkdir /usr/share/nginx/html/$FLUTTER_APP_FOLDER/assets/envs
+CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/$FLUTTER_APP_FOLDER/assets/envs/.env && nginx -g 'daemon off;'"]
+
+EXPOSE 80 443
