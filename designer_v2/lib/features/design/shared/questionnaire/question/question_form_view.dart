@@ -54,29 +54,31 @@ class _SurveyQuestionFormViewState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildQuestionText(context),
-        (isQuestionHelpTextFieldVisible)
-            ? Column(
-                children: [
-                  const SizedBox(height: 16.0),
-                  _buildQuestionHelpText(context),
-                ],
-              )
-            : const SizedBox.shrink(),
-        const SizedBox(height: 24.0),
-        _buildResponseTypeHeader(context),
-        const SizedBox(height: 16.0),
-        ReactiveValueListenableBuilder(
-          // re-renders when question type changes
-          formControl: formViewModel.questionTypeControl,
-          builder: (context, control, child) {
-            return questionTypeBodyBuilder(context);
-          },
-        ),
-      ],
-    );
+    return ReactiveFormConsumer(builder: (context, formGroup, child) {
+      // Wrap everything in a [ReactiveFormConsumer] for convenience so that the
+      // sidesheet content is re-rendered when the form changes
+      //
+      // Note: if this becomes a performance issue, remove the
+      // ReactiveFormConsumer here & use consumers / listeners selectively for
+      // the UI parts that need to be rebuild
+      return Column(
+        children: [
+          _buildQuestionText(context),
+          (isQuestionHelpTextFieldVisible)
+              ? Column(
+                  children: [
+                    const SizedBox(height: 16.0),
+                    _buildQuestionHelpText(context),
+                  ],
+                )
+              : const SizedBox.shrink(),
+          const SizedBox(height: 24.0),
+          _buildResponseTypeHeader(context),
+          const SizedBox(height: 16.0),
+          questionTypeBodyBuilder(context),
+        ],
+      );
+    });
   }
 
   _buildResponseTypeHeader(BuildContext context) {
@@ -99,11 +101,6 @@ class _SurveyQuestionFormViewState
                         ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
-                  onChanged: (_) {
-                    // prevent gray focus box from being rendered after
-                    // the dropdown was interacted with + scrolled out of view
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  },
                   items: formViewModel.questionTypeControlOptions.map((option) {
                     final menuItemTheme =
                         ThemeConfig.dropdownMenuItemTheme(theme);
@@ -164,7 +161,7 @@ class _SurveyQuestionFormViewState
                       opacity: ThemeConfig.kMuteFadeFactor,
                       child: Tooltip(
                         message:
-                            "Enter an additional text that is shown with a help icon next to the question in the app"
+                            "Add a text that is shown with a help icon next to the question in the app"
                                 .hardcoded,
                         child: Hyperlink(
                           text: "+ Add a help text",
@@ -184,13 +181,6 @@ class _SurveyQuestionFormViewState
                 formViewModel.questionTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,
-            /*
-            decoration: InputDecoration(
-              hintText: "Enter the question you want to ask the participant"
-                  .hardcoded,
-              //helperText: "", // reserve space
-            ),
-             */
           ),
         ),
       ],

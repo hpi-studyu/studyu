@@ -1,9 +1,10 @@
+import 'package:flutter/rendering.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
+import 'package:studyu_designer_v2/utils/color.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
-import 'package:studyu_designer_v2/utils/tuple.dart';
 import 'package:uuid/uuid.dart';
 
 typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
@@ -13,13 +14,22 @@ abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
       questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question) {
-      // Remain backward compatible with specialized scale types
-      if (question is AnnotatedScaleQuestion) {
-        question = ScaleQuestion.fromAnnotatedScaleQuestion(
-            question as AnnotatedScaleQuestion);
-      } else if (question is VisualAnalogueQuestion) {
-        question = ScaleQuestion.fromVisualAnalogueQuestion(
-            question as VisualAnalogueQuestion);
+      switch (question.runtimeType) {
+        // First check for general scale which implements the other interfaces
+        case ScaleQuestion:
+          return ScaleQuestionFormData.fromDomainModel(
+              question as ScaleQuestion);
+        // Remain backward compatible with specialized scale types
+        case AnnotatedScaleQuestion:
+          return ScaleQuestionFormData.fromDomainModel(
+            ScaleQuestion.fromAnnotatedScaleQuestion(
+                question as AnnotatedScaleQuestion),
+          );
+        case VisualAnalogueQuestion:
+          return ScaleQuestionFormData.fromDomainModel(
+            ScaleQuestion.fromVisualAnalogueQuestion(
+                question as VisualAnalogueQuestion),
+          );
       }
       return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion);
     },
@@ -169,22 +179,21 @@ class ScaleQuestionFormData extends QuestionFormData {
     required this.midLabels,
     this.initialValue = 1,
     this.stepSize = 1,
-    //this.annotations = const [],
     this.minColor,
     this.maxColor,
-  }) : assert(midValues.length == midLabels.length, "midValues.length and midLabels.length must be equal");
+  }) : assert(midValues.length == midLabels.length,
+            "midValues.length and midLabels.length must be equal");
 
   final double minValue;
   final double maxValue;
-  final double stepSize;
-  final double initialValue;
-  //final List<Tuple<int, String>> annotations; // TODO remove
-  final int? minColor;
-  final int? maxColor;
   final String? minLabel;
   final String? maxLabel;
   final List<double?> midValues;
   final List<String?> midLabels;
+  final double stepSize;
+  final double initialValue;
+  final Color? minColor;
+  final Color? maxColor;
 
   List<Annotation> get midAnnotations {
     final List<Annotation> midAnnotations = [];
@@ -193,8 +202,8 @@ class ScaleQuestionFormData extends QuestionFormData {
       final label = midLabels[i];
       if (value != null && label != null && label.isNotEmpty) {
         final midAnnotation = Annotation()
-          ..value=value.toInt()
-          ..annotation=label;
+          ..value = value.toInt()
+          ..annotation = label;
         midAnnotations.add(midAnnotation);
       }
     }
@@ -215,14 +224,8 @@ class ScaleQuestionFormData extends QuestionFormData {
       midLabels: question.midLabels,
       stepSize: question.step,
       initialValue: question.initial,
-      minColor: question.minimumColor,
-      maxColor: question.maximumColor,
-      /*
-      annotations: question.annotations
-          .map((a) => Tuple(a.value, a.annotation))
-          .toList(),
-
-       */
+      minColor: (question.minColor != null) ? Color(question.minColor!) : null,
+      maxColor: (question.maxColor != null) ? Color(question.maxColor!) : null,
     );
   }
 
@@ -236,8 +239,8 @@ class ScaleQuestionFormData extends QuestionFormData {
       ..maximum = maxValue
       ..step = stepSize
       ..initial = initialValue
-      ..minimumColor = minColor ?? 0 // TODO default
-      ..maximumColor = maxColor ?? 0 // TODO default
+      ..minColor = minColor?.value
+      ..maxColor = maxColor?.value
       ..midAnnotations = midAnnotations;
 
     if (minLabel != null) {
@@ -246,13 +249,6 @@ class ScaleQuestionFormData extends QuestionFormData {
     if (maxLabel != null) {
       question.maxLabel = maxLabel!;
     }
-    /*
-    question.annotations = annotations
-        .map((a) => Annotation()
-          ..value = a.first
-          ..annotation = a.second)
-        .toList();
-     */
     return question;
   }
 
@@ -273,7 +269,6 @@ class ScaleQuestionFormData extends QuestionFormData {
       maxColor: maxColor,
       midLabels: midLabels,
       midValues: midValues,
-      //annotations: [...annotations.map((a) => a.copy())],
     );
   }
 }

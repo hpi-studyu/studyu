@@ -16,7 +16,7 @@ class SidesheetTab extends NavbarTab {
 }
 
 class Sidesheet extends StatefulWidget {
-  static double kDefaultWidth = 560;
+  static double kDefaultWidth = 580;
 
   const Sidesheet({
     required this.titleText,

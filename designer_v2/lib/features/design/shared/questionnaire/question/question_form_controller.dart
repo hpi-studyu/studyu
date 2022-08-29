@@ -1,9 +1,10 @@
 import 'dart:math';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_tabs.dart';
+import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/utils/color.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -14,10 +15,9 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
+// TODO: refactor break up into separate classes for each type
 class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
-    implements
-        IListActionProvider<AbstractControl<String>>,
-        QuestionFormTabsViewModel {
+    implements IListActionProvider<AbstractControl<String>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   QuestionFormViewModel({
@@ -95,7 +95,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     FormControl<String>(value: "No".hardcoded, disabled: true),
   ]);
 
-  // Scale TODO
+  // Scale
   static const int kDefaultScaleMinValue = 0;
   static const int kDefaultScaleMaxValue = 10;
   static const int kNumMidValueControls = 10;
@@ -111,12 +111,15 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     onValueChanged: (_) => _onScaleRangeChanged(),
     onValueChangedDebounceTime: kMidValueDebounceMilliseconds,
   );
-  late final FormControl<int> scaleRangeControl =
+  late final FormControl<int> _scaleRangeControl =
       FormControl(value: scaleRange); // hidden
   final FormControl<String> scaleMinLabelControl = FormControl();
   final FormControl<String> scaleMaxLabelControl = FormControl();
   final FormArray<int> scaleMidValueControls = FormArray([]);
   final FormArray<String?> scaleMidLabelControls = FormArray([]);
+
+  final FormControl<SerializableColor> scaleMinColorControl = FormControl();
+  final FormControl<SerializableColor> scaleMaxColorControl = FormControl();
 
   List<int?>? prevMidValues;
 
@@ -137,7 +140,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       return; // prevent change listener from firing in readonly mode
     }
     _applyInputFormatters();
-    scaleRangeControl.value = scaleMaxValue - scaleMinValue;
+    _scaleRangeControl.value = scaleMaxValue - scaleMinValue;
     _updateScaleMidValueControls();
   }
 
@@ -191,11 +194,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.scale: FormGroup({
       'scaleMinValue': scaleMinValueControl,
       'scaleMaxValue': scaleMaxValueControl,
-      '_scaleRange': scaleRangeControl, // hidden, included for validation
+      '_scaleRange': _scaleRangeControl, // hidden, included for validation
       'scaleMinLabel': scaleMinLabelControl,
       'scaleMaxLabel': scaleMaxLabelControl,
       'scaleMidValues': scaleMidValueControls,
       'scaleMidLabels': scaleMidLabelControls,
+      'scaleMinColor': scaleMinColorControl,
+      'scaleMaxColor': scaleMaxColorControl,
     }),
   };
 
@@ -262,7 +267,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       });
 
   get scaleRangeValid =>
-      FormControlValidation(control: scaleRangeControl, validators: [
+      FormControlValidation(control: _scaleRangeControl, validators: [
         Validators.min(1),
         Validators.max(1000),
       ], validationMessages: {
@@ -337,11 +342,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             data.midValues.map((v) => v?.toInt()).toList();
         scaleMidLabelControls.clear();
         scaleMidLabelControls.value = data.midLabels;
+        scaleMinColorControl.value = data.minColor != null ? SerializableColor(data.minColor!.value) : null;
+        scaleMaxColorControl.value = data.maxColor != null ? SerializableColor(data.maxColor!.value) : null;
+        print(scaleMinColorControl.value);//s
+        print(scaleMaxColorControl.value);
         _updateScaleMidValueControls();
       // TODO scaleInitialValueControl
       // TODO scaleStepSizeControl
-      // TODO scaleMinColorControl
-      // TODO scaleMaxColorControl
     }
   }
 
@@ -380,10 +387,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
               scaleMidValueControls.value?.map((v) => v?.toDouble()).toList() ??
                   [],
           midLabels: scaleMidLabelControls.value ?? [],
+          minColor: scaleMinColorControl.value,
+          maxColor: scaleMaxColorControl.value,
           // TODO scaleInitialValueControl
           // TODO scaleStepSizeControl
-          // TODO scaleMinColorControl
-          // TODO scaleMaxColorControl
         );
     }
   }
@@ -392,7 +399,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   Map<FormMode, String> get titles => {
         FormMode.create: _titles?[FormMode.create] ?? "New Question".hardcoded,
         FormMode.edit: _titles?[FormMode.edit] ?? "Edit Question".hardcoded,
-        FormMode.readonly: _titles?[FormMode.readonly] ?? "View Question".hardcoded,
+        FormMode.readonly:
+            _titles?[FormMode.readonly] ?? "View Question".hardcoded,
       };
 
   @override
@@ -436,22 +444,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   bool get isAddOptionButtonVisible =>
       choiceResponseOptionsArray.value != null &&
       choiceResponseOptionsArray.value!.length < customOptionsMax;
-
-  @override
-  // TODO: implement isDesignTabEnabled
-  bool get isDesignTabEnabled => true;
-
-  @override
-  // TODO: implement isDesignTabVisible
-  bool get isDesignTabVisible => true;
-
-  @override
-  // TODO: implement isLogicTabEnabled
-  bool get isLogicTabEnabled => true;
-
-  @override
-  // TODO: implement isLogicTabVisible
-  bool get isLogicTabVisible => true;
 
   // - IScaleQuestionFormViewModel
 

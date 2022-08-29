@@ -66,7 +66,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                               children: [
                                 Text(option.value.whoShort,
                                     style: theme.textTheme.bodyText1),
-                                const SizedBox(height: 4.0),
+                                const SizedBox(height: 2.0),
                               ],
                             ),
                             subtitle: (option.description) != null

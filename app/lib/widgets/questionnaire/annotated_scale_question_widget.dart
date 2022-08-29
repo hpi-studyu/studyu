@@ -68,15 +68,26 @@ class _AnnotatedScaleQuestionWidgetState
 List<Widget> buildAnnotations(
   AnnotatedScaleQuestion question,
   BuildContext context, {
-  double labelMaxWidth = 80,
+  double labelMaxWidth = 60,
 }) {
   List<Annotation> annotations = [...question.annotations];
   if (annotations.isEmpty) return [];
 
   // Ensure annotation order is correct for widget generation
+  double startPosValue = question.minimum;
   annotations.sort((a, b) => a.value.compareTo(b.value));
   if (question.maximum < question.minimum) {
     annotations = annotations.reversed.toList();
+    startPosValue = question.maximum;
+  }
+
+  // Ensure that there is always an annotation object at the very start
+  final missingStartPosLabel = annotations[0].value != startPosValue;
+  if (missingStartPosLabel) {
+    final startPosAnnotation = Annotation()
+      ..annotation = ''
+      ..value = startPosValue.toInt();
+    annotations = [startPosAnnotation, ...annotations];
   }
 
   // Build & layout labels according to their annotation's value

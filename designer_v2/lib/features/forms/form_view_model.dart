@@ -131,14 +131,22 @@ abstract class FormViewModel<T> {
   /// programmatically are incorrectly marked as dirty without any user input)
   bool get isDirty {
     _rememberDefaultControlStates();
+
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
     }
     final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
+
+    // Note: unfortunately this line is needed because despite disabling
+    // all the updateParent and emitEvent flags, there's a bug in reactive
+    // forms where the updateParent gets propagated & causes an infinite loop
+    prevFormValue = {...form.value};
+
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
     }
     _restoreControlStates(emitEvent: false, updateParent: false);
+
     return !isEqual;
   }
 
@@ -365,7 +373,7 @@ abstract class FormViewModel<T> {
       return;
     }
     listenToImmediateFormChildren((control) {
-      final saveFuture = save().then((_) => print("completed without cancel"));
+      final saveFuture = save();
       _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
       return saveFuture;
     }, debounce: debounce);

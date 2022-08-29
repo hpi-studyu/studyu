@@ -23,6 +23,9 @@ class ThemeConfig {
   static Color containerColor(ThemeData theme) =>
       theme.colorScheme.secondaryContainer.withOpacity(0.3);
 
+  static Color colorPickerInitialColor(ThemeData theme) =>
+      theme.colorScheme.primary;
+
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
       fontSize: 14.0,
       height: 1.35,
@@ -325,7 +328,7 @@ class ThemeProvider extends InheritedWidget {
   DividerThemeData dividerTheme(ColorScheme colors) {
     return DividerThemeData(
       thickness: 0.5,
-      color: colors.secondary.withOpacity(0.2),
+      color: colors.onPrimaryContainer.withOpacity(0.15),
     );
   }
 

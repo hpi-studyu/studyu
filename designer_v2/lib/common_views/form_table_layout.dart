@@ -118,7 +118,7 @@ class FormTableLayout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   labelWidget,
-                  const SizedBox(height: 12.0),
+                  const SizedBox(height: 8.0),
                   Container(
                     padding: EdgeInsets.only(bottom: bottomSpacing * 2),
                     child: contentWidget,
