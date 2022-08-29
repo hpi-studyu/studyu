@@ -39,8 +39,11 @@ RUN if [ -n "$ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$ENV ; else 
 FROM nginx:stable-alpine
 ARG FLUTTER_APP_FOLDER
 
-# we need to modify the nginx conf to redirect all links to index.html for designer_v2
+# We need to modify the nginx conf to redirect all links to index.html for designer_v2
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+COPY ./docker/nginx/vm-studyu-04.dhclab.i.hpi.de.conf /etc/nginx/conf.d/vm-studyu-04.dhclab.i.hpi.de.conf
+COPY ../hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html
 RUN mkdir /usr/share/nginx/html/assets/envs
