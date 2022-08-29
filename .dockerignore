@@ -7,8 +7,8 @@ docker-compose*
 LICENSE
 *.md
 *.iml
-**/docker/.supabase
-**/docker/supabase
+.supabase
+supabase
 
 # Flutter specific
 **/.dart_tool
