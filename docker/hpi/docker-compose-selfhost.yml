@@ -13,3 +13,6 @@ services:
       - studyu-net
     env_file:
       - ../../flutter_common/lib/envs/.env.selfhost
+networks:
+  studyu-net:
+    name: studyu_network
