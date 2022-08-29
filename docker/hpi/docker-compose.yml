@@ -1,0 +1,24 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      args:
+        FLUTTER_APP_FOLDER: app
+        ENV: staging
+    ports:
+      - 8080:80
+      - 8040:443
+    env_file:
+      - flutter_common/lib/envs/.env.staging
+  designer2:
+    build:
+      context: .
+      args:
+        FLUTTER_APP_FOLDER: designer_v2
+        ENV: staging
+    ports:
+      - 8081:80
+      - 8041:443
+    env_file:
+      - flutter_common/lib/envs/.env.staging

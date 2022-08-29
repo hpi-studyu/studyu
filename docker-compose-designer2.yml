@@ -7,7 +7,6 @@ services:
         FLUTTER_APP_FOLDER: designer_v2
         ENV: staging
     ports:
-      - 80:80
-      - 443:443
+      - 8082:80
     env_file:
       - flutter_common/lib/envs/.env.staging

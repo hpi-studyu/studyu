@@ -3,10 +3,7 @@ FROM cirrusci/flutter:latest as builder
 # E.g. app or designer
 ARG FLUTTER_APP_FOLDER
 
-# ENV PATH ${PATH}:${FLUTTER_HOME}/bin:${FLUTTER_HOME}/bin/cache/dart-sdk/bin:/root/.pub-cache/bin/
 ENV PATH ${PATH}:/root/.pub-cache/bin/
-
-# RUN flutter config --enable-web
 
 # Install melos
 RUN dart pub global activate melos
