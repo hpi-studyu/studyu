@@ -1,11 +1,5 @@
 # Run StudyU with Docker
 
-## Notice
-
-The files in this directory are adapted from the [Supabase Github repository](https://github.com/supabase/supabase/tree/master/docker)
-
-In case of upgrading this setup from the official repository, custom changes to the docker-compose.yml file have to be considered.
-
 ## Description
 
 The StudyU modules can be run with Docker and `docker-compose` which makes it easy to operate.
@@ -22,10 +16,10 @@ The following steps describe the manual installation process. However, in order 
 2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a `JWT_SECRET` with at least 32 characters.
    Then [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
 3. Insert the secrets and keys into the following files:
-    - `supabase/.env`
-    - `supabase/volumes/api/kong.yml`
+    - `docker.supabase/.env`
+    - `docker.supabase/volumes/api/kong.yml`
     - `flutter_common/lib/envs/.env` or `flutter_common/lib/envs/.env.selfhost` (see below)
-4. Configure `supabase/.env` and your chosen StudyU environment file according to your wishes. Do not forget to replace `localhost` with the correct hostname.
+4. Configure `docker.supabase/.env` and your chosen StudyU environment file according to your wishes. Do not forget to replace `localhost` with the correct hostname.
 
 StudyU modules can be run with a managed (`.env`) or a self-hosted (`.env.selfhost`) instance of Supabase.
 Depending on your choice, the respective environment file has to be customized.
@@ -46,7 +40,7 @@ Make sure to replace `<module>` with one of the following:
 
 ### Run with a self-hosted Supabase instance
 
-1. Run Supabase: `cd supabase` and `docker-compose up`
+1. Run Supabase: `cd docker.supabase` and `docker-compose up`
 
 2. Run StudyU: `cd ..` and `docker-compose -f docker-compose-<module>-selfhost.yml up --build` (replace `<module>` as described above)
 
@@ -58,6 +52,6 @@ Make sure to replace `<module>` with one of the following:
 ## Good to know
 
 Use `-d` to run containers in the background.
-In order to stop docker containers from running press CTRL+C or run `docker-compose -p 'studyu' down --remove-orphans` and `docker-compose -p 'supabase' down --remove-orphans`.
+In order to stop docker containers from running press CTRL+C or run `docker-compose -p 'studyu' down --remove-orphans` and `docker-compose -p 'docker.supabase' down --remove-orphans`.
 When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
 Moreover, it often helps to clear the cache of your webbrowser when making changes to environment files.

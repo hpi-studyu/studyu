@@ -39,13 +39,13 @@ ARG FLUTTER_APP_FOLDER
 ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 
 # We need to modify the nginx conf to redirect all links to index.html for designer_v2
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/hpi/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-COPY ./nginx/app-stage.hpi.studyu.health.conf /etc/nginx/conf.d/app-stage.hpi.studyu.health.conf
-COPY ./nginx/designer2-stage.hpi.studyu.health.conf /etc/nginx/conf.d/designer2-stage.hpi.studyu.health.conf
+COPY ./docker/hpi/nginx/app.hpi.studyu.health.conf /etc/nginx/conf.d/app.hpi.studyu.health.conf
+COPY ./docker/hpi/nginx/designer2.hpi.studyu.health.conf /etc/nginx/conf.d/designer2.hpi.studyu.health.conf
 
 # todo get ssl certs from elsewhere
-COPY ./hpi.studyu.health /etc/nginx/certs
+COPY ./docker/hpi/hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
 COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2

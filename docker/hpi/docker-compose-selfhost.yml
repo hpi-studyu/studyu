@@ -5,9 +5,11 @@ services:
       context: ../../
       dockerfile: ./docker/hpi/Dockerfile
       args:
-        ENV: staging
+        ENV: selfhost
     ports:
       - 80:80
       - 443:443
+    networks:
+      - studyu-net
     env_file:
-      - ../../flutter_common/lib/envs/.env.staging
+      - ../../flutter_common/lib/envs/.env.selfhost

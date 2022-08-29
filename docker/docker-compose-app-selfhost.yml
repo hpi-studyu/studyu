@@ -1,17 +1,18 @@
 version: '3'
 services:
-  designer2-selfhost:
+  app-selfhost:
     build:
-      context: .
+      context: ../
+      dockerfile: ./docker/Dockerfile
       args:
-        FLUTTER_APP_FOLDER: designer_v2
+        FLUTTER_APP_FOLDER: app
         ENV: selfhost
     ports:
-      - 8082:80
+      - 8080:80
     networks:
       - studyu-net
     env_file:
-      - flutter_common/lib/envs/.env.selfhost
+      - ../flutter_common/lib/envs/.env.selfhost
 networks:
   studyu-net:
     name: studyu_network

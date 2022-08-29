@@ -2,7 +2,8 @@ version: '3'
 services:
   designer-selfhost:
     build:
-      context: .
+      context: ../
+      dockerfile: ./docker/Dockerfile
       args:
         FLUTTER_APP_FOLDER: designer
         ENV: selfhost
@@ -11,7 +12,7 @@ services:
     networks:
       - studyu-net
     env_file:
-      - flutter_common/lib/envs/.env.selfhost
+      - ../flutter_common/lib/envs/.env.selfhost
 networks:
   studyu-net:
     name: studyu_network
