@@ -1,5 +1,8 @@
 FROM cirrusci/flutter:latest as builder
 
+# necessary?
+RUN flutter config --enable-web
+
 ENV PATH ${PATH}:/root/.pub-cache/bin/
 
 # Install melos
