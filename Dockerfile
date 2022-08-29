@@ -47,7 +47,7 @@ COPY ./docker/nginx/vm-studyu-04.dhclab.i.hpi.de.conf /etc/nginx/conf.d/vm-study
 # todo get ssl certs from elsewhere
 COPY ./hpi.studyu.health /etc/nginx/certs
 
-COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html
+COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
 RUN mkdir /usr/share/nginx/html/assets/envs
 
 # EXPOSE 80
