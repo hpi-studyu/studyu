@@ -8,7 +8,7 @@ LICENSE
 *.md
 *.iml
 .supabase
-supabase
+supabase/
 
 # Flutter specific
 **/.dart_tool
