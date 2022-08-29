@@ -5,6 +5,7 @@ services:
       context: .
       args:
         FLUTTER_APP_FOLDER: designer_v2
+        ENV: staging
     ports:
       - 8082:80
     env_file:

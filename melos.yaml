@@ -94,42 +94,6 @@ scripts:
     select-package:
       dir-exists: web
 
-  build:web:staging:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
-    description: Build web staging.
-    select-package:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
-
-  build:web:staging:app:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
-    description: Build web app staging.
-    select-package:
-      scope: studyu_app
-      dir-exists: web
-
-  build:web:staging:designer:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
-    description: Build designer app staging.
-    select-package:
-      scope: studyu_designer
-      dir-exists: web
-
-  build:web:staging:designer_v2:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
-    description: Build designer_v2 staging.
-    select-package:
-      scope: studyu_designer_v2
-      dir-exists: web
-
   build:web:app:
     run: |
       melos exec -c 1 --fail-fast -- \
@@ -154,7 +118,46 @@ scripts:
     select-package:
       scope: studyu_designer_v2
 
-  # Build for Docker and a self-hosted Supabase instance
+  # Staging Env
+
+  build:web:staging:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
+    description: Build web staging.
+    select-package:
+      scope: [studyu_app, studyu_designer_v2]
+      dir-exists: web
+
+  build:web:app:staging:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
+    description: Build web app staging.
+    select-package:
+      scope: studyu_app
+      dir-exists: web
+
+  build:web:designer:staging:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
+    description: Build designer app staging.
+    select-package:
+      scope: studyu_designer
+      dir-exists: web
+
+  build:web:designer_v2:staging:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
+    description: Build designer_v2 staging.
+    select-package:
+      scope: studyu_designer_v2
+      dir-exists: web
+
+  # Selfhost Env
+
   build:web:app:selfhost:
     run: |
       melos exec -c 1 --fail-fast -- \
