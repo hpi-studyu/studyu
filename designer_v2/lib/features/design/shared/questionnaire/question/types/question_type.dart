@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -30,6 +31,19 @@ enum SurveyQuestionType {
         return tr.scale;
       default:
         return "[Invalid SurveyQuestionType]";
+    }
+  }
+
+  IconData? get icon {
+    switch (this) {
+      case SurveyQuestionType.choice:
+        return Icons.format_list_bulleted_rounded;
+      case SurveyQuestionType.bool:
+        return Icons.rule_rounded; // Icons.contrast
+      case SurveyQuestionType.scale:
+        return Icons.tune_rounded;
+      default:
+        return null;
     }
   }
 

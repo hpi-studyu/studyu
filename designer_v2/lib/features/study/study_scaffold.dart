@@ -103,6 +103,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                             selectedTab: widget.selectedTabSubnav,
                             height: widget.appbarSubnavHeight,
                             indicator: const BoxDecoration(),
+                            isScrollable: true,
                           ),
                         )
                       ],
@@ -163,6 +164,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   height: widget.appbarHeight,
                   disabledBackgroundColor: theme.appBarTheme.backgroundColor,
                   disabledTooltipText: "This page is not available to you".hardcoded,
+                  isScrollable: true,
                 ),
               ),
             ),

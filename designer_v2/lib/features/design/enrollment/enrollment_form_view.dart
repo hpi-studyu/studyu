@@ -4,11 +4,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
+import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
@@ -35,60 +36,59 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
             ref.read(enrollmentFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextParagraph(
-                  text: "Define who will be able to participate in your study, "
-                          "the criteria they have to meet and the terms they have t"
-                          "o consent to."
-                      .hardcoded),
-              const SizedBox(height: 32.0),
-              FormTableLayout(
-                rows: [
-                  FormTableRow(
-                      control: formViewModel.enrollmentTypeControl,
-                      label: "Participant pool".hardcoded,
-                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      input: Column(
-                        children: formViewModel.enrollmentTypeControlOptions
-                            .map((option) =>
-                                ReactiveRadioListTile<Participation>(
-                                  formControl:
-                                      formViewModel.enrollmentTypeControl,
-                                  value: option.value,
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(option.value.whoShort,
-                                          style: theme.textTheme.bodyText1),
-                                      const SizedBox(height: 4.0),
-                                    ],
-                                  ),
-                                  subtitle: (option.description) != null
-                                      ? TextParagraph(
-                                          text: option.description!,
-                                          selectable: false,
-                                          style:
-                                              ThemeConfig.bodyTextMuted(theme),
-                                        )
-                                      : null,
-                                ) as Widget)
-                            .toList()
-                            .separatedBy(() => const SizedBox(height: 8.0)),
-                      )),
-                ],
-                columnWidths: const {
-                  0: FixedColumnWidth(130.0),
-                  1: FlexColumnWidth(),
-                },
-              ),
-              const SizedBox(height: 32.0),
-              const SizedBox(height: 12.0),
-              ReactiveFormConsumer(builder: (context, form, child) {
-                return ReactiveFormArray(
+          child: ReactiveFormConsumer(
+            builder: (context, formGroup, child) => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextParagraph(
+                    text: "Define who will be able to participate in your study, "
+                        "the criteria they have to meet and the terms they have t"
+                        "o consent to."
+                        .hardcoded),
+                const SizedBox(height: 32.0),
+                FormTableLayout(
+                  rows: [
+                    FormTableRow(
+                        control: formViewModel.enrollmentTypeControl,
+                        label: "Participant pool".hardcoded,
+                        labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        input: Column(
+                          children: formViewModel.enrollmentTypeControlOptions
+                              .map((option) =>
+                          ReactiveRadioListTile<Participation>(
+                            formControl:
+                            formViewModel.enrollmentTypeControl,
+                            value: option.value,
+                            title: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(option.value.whoShort,
+                                    style: theme.textTheme.bodyText1),
+                                const SizedBox(height: 4.0),
+                              ],
+                            ),
+                            subtitle: (option.description) != null
+                                ? TextParagraph(
+                              text: option.description!,
+                              selectable: false,
+                              style:
+                              ThemeConfig.bodyTextMuted(theme),
+                            )
+                                : null,
+                          ) as Widget)
+                              .toList()
+                              .separatedBy(() => const SizedBox(height: 8.0)),
+                        )),
+                  ],
+                  columnWidths: const {
+                    0: FixedColumnWidth(130.0),
+                    1: FlexColumnWidth(),
+                  },
+                ),
+                const SizedBox(height: 32.0),
+                ReactiveFormArray(
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
                     return FormArrayTable<QuestionFormViewModel>(
@@ -103,22 +103,22 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       getActionsAt: (viewModel, _) =>
                           formViewModel.availablePopupActions(viewModel),
                       onNewItem: () {
-                        final routeArgs = formViewModel
-                            .buildNewScreenerQuestionFormRouteArgs();
+                        final routeArgs =
+                        formViewModel.buildNewScreenerQuestionFormRouteArgs();
                         _showScreenerQuestionSidesheetWithArgs(
                             routeArgs, context, ref);
                       },
                       sectionDescription:
-                          "Optional screener questions can help determine whether "
-                                  "a potential participant is qualified to participate "
-                                  "in the study. For invite-only studies, you may "
-                                  "choose not to add any screening questions if you are "
-                                  "manually qualifying & recruiting participants before "
-                                  "inviting them to StudyU."
-                              .hardcoded,
+                      "Optional screener questions can help determine whether "
+                          "a potential participant is qualified to participate "
+                          "in the study. For invite-only studies, you may "
+                          "choose not to add any screening questions if you are "
+                          "manually qualifying & recruiting participants before "
+                          "inviting them to StudyU."
+                          .hardcoded,
                       onNewItemLabel: 'Add screener question'.hardcoded,
                       rowTitle: (viewModel) =>
-                          viewModel.formData?.questionText ??
+                      viewModel.formData?.questionText ??
                           'Missing item title'.hardcoded,
                       leadingWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,37 +129,35 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           ),
                           (formViewModel.canTestScreener)
                               ? Opacity(
-                                  opacity: 0.85,
-                                  child: TextButton.icon(
-                                    onPressed: formViewModel.testScreener,
-                                    icon: const Icon(
-                                        Icons.play_circle_outline_rounded),
-                                    label: Text("Test screener".hardcoded),
-                                  ),
-                                )
+                            opacity: ThemeConfig.kMuteFadeFactor,
+                            child: TextButton.icon(
+                              onPressed: formViewModel.testScreener,
+                              icon: const Icon(
+                                  Icons.play_circle_outline_rounded),
+                              label: Text("Test screener".hardcoded),
+                            ),
+                          )
                               : const SizedBox.shrink(),
                         ],
                       ),
-                      /*//emptyIcon: Icons.content_paste_off_rounded,
-                      emptyTitle: "No screening criteria".hardcoded,
-                      emptyDescription: "Optional screener questions can help determine whether "
-                              "a potential participant is qualified to participate "
-                              "in the study. For invite-only studies, you may "
-                              "choose not to add any screening questions if you are "
-                              "manually qualifying & recruiting participants before "
-                              "inviting them to StudyU."
-                          .hardcoded,*/
+                      rowPrefix: (context, viewModel, rowIdx) {
+                        return Row(
+                          children: [
+                            Tooltip(
+                                message: viewModel.questionType.string,
+                                child: Icon(viewModel.questionType.icon,
+                                    color: theme.colorScheme.onPrimaryContainer
+                                        .withOpacity(0.35))),
+                            const SizedBox(width: 16.0),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              }),
-              const SizedBox(height: 32.0),
-              const SizedBox(height: 8.0),
-              ReactiveFormConsumer(
-                  // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
-                  // By default, ReactiveFormArray only updates when adding/removing controls
-                  builder: (context, form, child) {
-                return ReactiveFormArray(
+                ),
+                const SizedBox(height: 32.0),
+                const SizedBox(height: 8.0),
+                ReactiveFormArray(
                   formArray: formViewModel.consentItemArray,
                   builder: (context, formArray, child) {
                     return FormArrayTable<ConsentItemFormViewModel>(
@@ -176,19 +174,19 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           .availableActions(viewModel),
                       onNewItem: () {
                         final routeArgs =
-                            formViewModel.buildNewConsentItemFormRouteArgs();
+                        formViewModel.buildNewConsentItemFormRouteArgs();
                         _showConsentItemSidesheetWithArgs(
                             routeArgs, context, ref);
                       },
                       sectionDescription: "Provide the terms that participants have to "
-                              "consent to when enrolling in your study via the "
-                              "StudyU app. You may choose not to add any terms here "
-                              "if you obtain your participants' consent by some other method"
-                              " before recruiting them to your study on StudyU."
+                          "consent to when enrolling in your study via the "
+                          "StudyU app. You may choose not to add any terms here "
+                          "if you obtain your participants' consent by some other method"
+                          " before recruiting them to your study on StudyU."
                           .hardcoded,
                       onNewItemLabel: 'Add consent text'.hardcoded,
                       rowTitle: (viewModel) =>
-                          viewModel.formData?.title ??
+                      viewModel.formData?.title ??
                           'Missing item title'.hardcoded,
                       leadingWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,30 +197,22 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           ),
                           (formViewModel.canTestConsent)
                               ? Opacity(
-                                  opacity: 0.85,
-                                  child: TextButton.icon(
-                                    onPressed: formViewModel.testConsent,
-                                    icon: const Icon(
-                                        Icons.play_circle_outline_rounded),
-                                    label: Text("Test consent".hardcoded),
-                                  ),
-                                )
+                            opacity: ThemeConfig.kMuteFadeFactor,
+                            child: TextButton.icon(
+                              onPressed: formViewModel.testConsent,
+                              icon: const Icon(
+                                  Icons.play_circle_outline_rounded),
+                              label: Text("Test consent".hardcoded),
+                            ),
+                          )
                               : const SizedBox.shrink(),
                         ],
                       ),
-                      /*//emptyIcon: Icons.content_paste_off_rounded,
-                      emptyTitle: "No terms of consent".hardcoded,
-                      emptyDescription: "Provide the terms that participants have to "
-                              "consent to when enrolling in your study via the "
-                              "StudyU app. You may choose not to add any terms here "
-                              "if you get the participants' consent through another "
-                              "method before recruiting them to your study on StudyU."
-                          .hardcoded,*/
                     );
                   },
-                );
-              }),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -231,30 +221,46 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
   _showScreenerQuestionSidesheetWithArgs(
-      ScreenerQuestionFormRouteArgs routeArgs,
-      BuildContext context,
-      WidgetRef ref) {
+    ScreenerQuestionFormRouteArgs routeArgs,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final surveyQuestionFormViewModel =
         ref.read(screenerQuestionFormViewModelProvider(routeArgs));
+
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
-      formViewBuilder: (formViewModel) =>
-          SurveyQuestionFormView(formViewModel: formViewModel),
-      ignoreAppBar: true,
+      tabs: <FormSideSheetTab<QuestionFormViewModel>>[
+        FormSideSheetTab(
+          title: "Content".hardcoded,
+          index: 0,
+          formViewBuilder: (formViewModel) =>
+              SurveyQuestionFormView(formViewModel: formViewModel),
+        ),
+        FormSideSheetTab(
+          title: "Logic".hardcoded,
+          index: 1,
+          formViewBuilder: (formViewModel) =>
+              ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+        ),
+      ],
     );
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
   _showConsentItemSidesheetWithArgs(
-      ConsentItemFormRouteArgs routeArgs, BuildContext context, WidgetRef ref) {
+    ConsentItemFormRouteArgs routeArgs,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final formViewModel = ref.read(consentItemFormViewModelProvider(routeArgs));
+
     showFormSideSheet<ConsentItemFormViewModel>(
       context: context,
       formViewModel: formViewModel,
       formViewBuilder: (formViewModel) =>
           ConsentItemFormView(formViewModel: formViewModel),
-      ignoreAppBar: true,
     );
   }
 }

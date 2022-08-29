@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -32,11 +33,12 @@ abstract class IFormViewModelDelegate<T extends FormViewModel> {
 }
 
 class FormControlOption<T> extends Equatable {
+  const FormControlOption(
+      this.value, this.label, {this.description});
+
   final T value;
   final String label;
   final String? description;
-
-  const FormControlOption(this.value, this.label, {this.description});
 
   @override
   List<Object?> get props => [value, label, description];
@@ -400,6 +402,14 @@ abstract class FormViewModel<T> {
         _immediateFormChildrenSubscriptions.add(valueChanges);
       }
     }
+  }
+
+  /// Call after changing / adding / removing the child controls in [form]
+  /// to perform necessary housekeeping
+  onFormGroupChanged() {
+    revalidate();
+    _formModeUpdated();
+    form.updateValueAndValidity();
   }
 
   void dispose() {

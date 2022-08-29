@@ -18,7 +18,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyControllerProvider(studyId));
-    print("StudyDesignMeasurementsFormView.build");
 
     return AsyncValueWidget<Study>(
       value: state.study,

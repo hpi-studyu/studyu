@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/common_views/side_sheet_modal.dart';
+import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
@@ -23,6 +23,8 @@ class MeasurementSurveyFormView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         FormTableLayout(
@@ -86,6 +88,18 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle: tr.no_questions,
                   emptyDescription: tr.no_questions_defined_text,
+                  rowPrefix: (context, viewModel, rowIdx) {
+                    return Row(
+                      children: [
+                        Tooltip(
+                            message: viewModel.questionType.string,
+                            child: Icon(viewModel.questionType.icon,
+                                color: theme.colorScheme.onPrimaryContainer
+                                    .withOpacity(0.35))),
+                        const SizedBox(width: 16.0),
+                      ],
+                    );
+                  },
                 );
               },
             );

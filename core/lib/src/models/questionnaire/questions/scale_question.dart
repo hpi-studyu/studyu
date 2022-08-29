@@ -93,6 +93,9 @@ class ScaleQuestion extends SliderQuestion
   @override
   int minimumColor = 0; // TODO
 
+  int? minColor = 0xFFFF0000;
+  int? maxColor = 0xFF00FF00;
+
   @override
   set maximumAnnotation(String newLabel) {
     _setAnnotationLabel(

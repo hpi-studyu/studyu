@@ -111,8 +111,11 @@ class FormArrayTable<T> extends StatelessWidget {
             : EdgeInsets.zero,
         child: table,
       ),
-      leadingWidget: leading ?? const SizedBox.shrink(),
-      trailingWidget: _newItemButton(),
+      leadingWidget: leading,
+      trailingWidget: ReactiveStatusListenableBuilder(
+        formControl: control,
+        builder: (context, form, child) => _newItemButton(),
+      ),
       emptyWidget: (hasEmptyWidget)
           ? EmptyBody(
               icon: emptyIcon,
@@ -126,9 +129,7 @@ class FormArrayTable<T> extends StatelessWidget {
 
   List<Widget> _buildRow(
       BuildContext context, T item, int rowIdx, Set<MaterialState> states) {
-    final theme = Theme.of(context);
-    final tableTextStyleSecondary = theme.textTheme.bodyText1!;
-
+    final tableTextStyleSecondary = Theme.of(context).textTheme.bodyText2;
     return [
       SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -140,7 +141,8 @@ class FormArrayTable<T> extends StatelessWidget {
                 : const SizedBox.shrink(),
             Text(
               rowTitle(item),
-              style: tableTextStyleSecondary.copyWith(
+              style: tableTextStyleSecondary?.copyWith(
+                
                 overflow: TextOverflow.ellipsis,
               ),
               maxLines: 1,

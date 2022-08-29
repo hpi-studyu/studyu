@@ -32,7 +32,11 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
     if (data.questionsData != null) {
       final viewModels = data.questionsData!
           .map((data) => QuestionFormViewModel(
-              formData: data, delegate: this, validationSet: validationSet))
+                formData: data,
+                delegate: this,
+                validationSet: validationSet,
+                titles: questionTitles.isNotEmpty ? questionTitles : null,
+              ))
           .toList();
       questionFormViewModels.reset(viewModels);
     }
@@ -43,6 +47,9 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
       questionsData: questionFormViewModels.formData,
     );
   }
+
+  /// May be overridden in subclasses to customize the title
+  Map<FormMode, String> get questionTitles => {};
 
   @override
   void read([T? formData]) {
@@ -62,7 +69,8 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   }
 
   @override
-  Future onSave(QuestionFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(
+      QuestionFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       questionFormViewModels.commit(formViewModel);
@@ -82,7 +90,11 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
       final viewModel = QuestionFormViewModel(
-          formData: null, delegate: this, validationSet: validationSet);
+        formData: null,
+        delegate: this,
+        validationSet: validationSet,
+        titles: questionTitles.isNotEmpty ? questionTitles : null,
+      );
       questionFormViewModels.stage(viewModel);
       return viewModel;
     }

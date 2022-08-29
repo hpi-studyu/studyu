@@ -40,7 +40,7 @@ class _AnnotatedScaleQuestionWidgetState
         Row(
           children: [
             const SizedBox(width: 16),
-            ...buildAnnotationWidgets(widget.question, context),
+            ...buildAnnotations(widget.question, context),
             const SizedBox(width: 16),
           ],
         ),
@@ -65,7 +65,7 @@ class _AnnotatedScaleQuestionWidgetState
   }
 }
 
-List<Widget> buildAnnotationWidgets(
+List<Widget> buildAnnotations(
   AnnotatedScaleQuestion question,
   BuildContext context, {
   double labelMaxWidth = 80,
@@ -83,17 +83,12 @@ List<Widget> buildAnnotationWidgets(
   final List<Widget> labelWidgets = [];
 
   final textTheme = Theme.of(context).textTheme;
-  final labelTextStyle =
-      textTheme.caption.copyWith(fontSize: textTheme.button.fontSize);
+  final labelTextStyle = textTheme.bodyText1;
 
   for (var i = 0; i < annotations.length; i++) {
     final Annotation current = annotations[i];
     final Annotation next =
         (i + 1 < annotations.length) ? annotations[i + 1] : null;
-
-    if (current.annotation.isEmpty) {
-      continue; // skip empty labels
-    }
 
     final scaleRange = question.maximum - question.minimum;
     assert(scaleRange != 0);
@@ -111,12 +106,14 @@ List<Widget> buildAnnotationWidgets(
         width: labelMaxWidth,
         transform: Matrix4.translationValues(offset, 0, 0),
         child: Center(
-          child: Text(
-            current.annotation,
-            style: labelTextStyle,
-            softWrap: true,
-            overflow: TextOverflow.visible,
-            textAlign: TextAlign.center,
+          child: IntrinsicWidth(
+            child: Text(
+              current.annotation,
+              style: labelTextStyle,
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );
@@ -128,7 +125,7 @@ List<Widget> buildAnnotationWidgets(
       // and make sure labels stay centered on the value by offsetting them
       labelWidget = Expanded(
         flex: flex,
-        child: Row(
+        child: Wrap(
           children: [
             buildTextLabel(labelOffset),
           ],
