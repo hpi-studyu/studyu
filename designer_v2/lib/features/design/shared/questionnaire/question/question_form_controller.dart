@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -17,7 +16,7 @@ import 'package:studyu_designer_v2/utils/validation.dart';
 
 // TODO: refactor break up into separate classes for each type
 class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
-    implements IListActionProvider<AbstractControl<String>> {
+    implements IListActionProvider<FormControl<dynamic>> {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   QuestionFormViewModel({
@@ -25,7 +24,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
     titles,
-  }) : _titles = titles;
+  }) : _titles = titles {
+    boolResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
+    choiceResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
+    _scaleResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
+  }
 
   /// Customized titles (if any) depending on the context of use
   final Map<FormMode, String>? _titles;
@@ -37,7 +43,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormControl<SurveyQuestionType> questionTypeControl =
       CustomFormControl(
     value: defaultQuestionType,
-    onValueChanged: _updateFormControls,
+    onValueChanged: onQuestionTypeChanged,
   );
   final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
@@ -52,7 +58,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
               FormControlOption(questionType, questionType.string))
           .toList();
 
-  late final Map<String, AbstractControl> _questionBaseControls = {
+  late final Map<String, AbstractControl> questionBaseControls = {
     'questionId': questionIdControl, // hidden
     'questionType': questionTypeControl,
     'questionText': questionTextControl,
@@ -64,19 +70,18 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   // Multiple Choice
   final FormControl<bool> isMultipleChoiceControl =
       FormControl(validators: [Validators.required], value: false);
-  late final FormArray<String> choiceResponseOptionsArray = FormArray([
-    for (int i = 0; i < customOptionsInitial; i++)
-      FormControl<String>(value: "")
-  ]);
+  late final FormArray choiceResponseOptionsArray = FormArray(
+      [for (int i = 0; i < customOptionsInitial; i++) FormControl(value: "")]);
   final int customOptionsMin = 2;
   final int customOptionsMax = 10;
   final int customOptionsInitial = 2;
 
-  FormArray<String> get answerOptionsArray => {
+  FormArray get answerOptionsArray => {
         SurveyQuestionType.bool: boolResponseOptionsArray,
         SurveyQuestionType.choice: choiceResponseOptionsArray,
+        SurveyQuestionType.scale: _scaleResponseOptionsArray,
       }[questionType]!;
-  List<AbstractControl<String>> get answerOptionsControls =>
+  List<AbstractControl> get answerOptionsControls =>
       answerOptionsArray.controls;
 
   List<String> get validAnswerOptions {
@@ -117,6 +122,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormControl<String> scaleMaxLabelControl = FormControl();
   final FormArray<int> scaleMidValueControls = FormArray([]);
   final FormArray<String?> scaleMidLabelControls = FormArray([]);
+  late final FormArray<int> _scaleResponseOptionsArray =
+      FormArray([...scaleAllValueControls]);
 
   final FormControl<SerializableColor> scaleMinColorControl = FormControl();
   final FormControl<SerializableColor> scaleMaxColorControl = FormControl();
@@ -126,6 +133,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   int get scaleMinValue => scaleMinValueControl.value ?? kDefaultScaleMinValue;
   int get scaleMaxValue => scaleMaxValueControl.value ?? 0;
   int get scaleRange => scaleMaxValue - scaleMinValue;
+
+  List<AbstractControl<int>> get scaleAllValueControls => [
+        scaleMinValueControl,
+        ...(scaleMidValueControls.controls),
+        scaleMaxValueControl,
+      ];
 
   String? scaleMidLabelAt(int scaleMidValue) {
     final idx = scaleMidValueControls.value?.indexOf(scaleMidValue);
@@ -142,6 +155,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     _applyInputFormatters();
     _scaleRangeControl.value = scaleMaxValue - scaleMinValue;
     _updateScaleMidValueControls();
+    _scaleResponseOptionsArray.clear();
+    _scaleResponseOptionsArray.addAll(scaleAllValueControls);
   }
 
   _applyInputFormatters() {
@@ -252,7 +267,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   get numValidChoiceOptions =>
       FormControlValidation(control: choiceResponseOptionsArray, validators: [
-        CountWhereValidator<String>(
+        CountWhereValidator<dynamic>(
                 (value) => value != null && value.isNotEmpty,
                 minCount: customOptionsMin,
                 maxCount: customOptionsMax)
@@ -294,16 +309,25 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     ..._controlsByQuestionType[questionType]!.controls,
   });
 
+  onQuestionTypeChanged(SurveyQuestionType? questionType) {
+    _updateFormControls(questionType);
+  }
+
+  onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
+    return; // subclass responsibility
+  }
+
   /// Dynamically updates the [form] based on the given [questionType]
   void _updateFormControls(SurveyQuestionType? questionType) {
     final subtypeFormControls = _controlsByQuestionType[questionType]!.controls;
     for (final controlName in form.controls.keys) {
-      if (!_questionBaseControls.containsKey(controlName)) {
+      if (!questionBaseControls.containsKey(controlName)) {
         form.removeControl(controlName, emitEvent: false);
       }
     }
     form.addAll(subtypeFormControls);
-    onFormGroupChanged();
+    markFormGroupChanged();
+    onResponseOptionsChanged(answerOptionsControls);
   }
 
   @override
@@ -342,10 +366,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             data.midValues.map((v) => v?.toInt()).toList();
         scaleMidLabelControls.clear();
         scaleMidLabelControls.value = data.midLabels;
-        scaleMinColorControl.value = data.minColor != null ? SerializableColor(data.minColor!.value) : null;
-        scaleMaxColorControl.value = data.maxColor != null ? SerializableColor(data.maxColor!.value) : null;
-        print(scaleMinColorControl.value);//s
-        print(scaleMaxColorControl.value);
+        scaleMinColorControl.value = data.minColor != null
+            ? SerializableColor(data.minColor!.value)
+            : null;
+        scaleMaxColorControl.value = data.maxColor != null
+            ? SerializableColor(data.maxColor!.value)
+            : null;
         _updateScaleMidValueControls();
       // TODO scaleInitialValueControl
       // TODO scaleStepSizeControl
@@ -404,7 +430,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       };
 
   @override
-  List<ModelAction> availableActions(AbstractControl<String> model) {
+  List<ModelAction> availableActions(AbstractControl model) {
     final isNotReadonly = formMode != FormMode.readonly;
 
     final actions = [
@@ -424,11 +450,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void onNewItem() {
-    answerOptionsArray.add(FormControl<String>());
+    answerOptionsArray.add(FormControl());
   }
 
   @override
-  void onSelectItem(AbstractControl<String> item) {
+  void onSelectItem(FormControl<dynamic> item) {
     return; // no-op
   }
 

@@ -57,3 +57,19 @@ class CustomFormControl<T> extends FormControl<T> {
   final int? onStatusChangedDebounceTime;
   final int? onValueChangedDebounceTime;
 }
+
+typedef AbstractControlChangedCallback = void Function(AbstractControl control);
+typedef FormArrayChangedCallback = void Function(FormArray control);
+
+extension AbstractControlChangedX on AbstractControl {
+  void onChanged(AbstractControlChangedCallback callback) {
+    valueChanges.listen((event) => callback(this));
+  }
+}
+
+extension FormArrayChangedX on FormArray {
+  void onChanged(FormArrayChangedCallback callback) {
+    valueChanges.listen((event) => callback(this));
+    collectionChanges.listen((event) => callback(this));
+  }
+}

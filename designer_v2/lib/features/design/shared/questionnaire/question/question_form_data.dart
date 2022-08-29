@@ -3,7 +3,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
-import 'package:studyu_designer_v2/utils/color.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 

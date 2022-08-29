@@ -414,7 +414,7 @@ abstract class FormViewModel<T> {
 
   /// Call after changing / adding / removing the child controls in [form]
   /// to perform necessary housekeeping
-  onFormGroupChanged() {
+  markFormGroupChanged() {
     revalidate();
     _formModeUpdated();
     form.updateValueAndValidity();

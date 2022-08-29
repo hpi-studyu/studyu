@@ -29,7 +29,7 @@ class ThemeConfig {
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
       fontSize: 14.0,
       height: 1.35,
-      color: theme.textTheme.bodyText1?.color?.faded(0.6),
+      color: theme.textTheme.bodyText1?.color?.faded(0.65),
   );
 
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
