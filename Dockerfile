@@ -43,12 +43,15 @@ ARG FLUTTER_APP_FOLDER
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 COPY ./docker/nginx/vm-studyu-04.dhclab.i.hpi.de.conf /etc/nginx/conf.d/vm-studyu-04.dhclab.i.hpi.de.conf
-COPY ../hpi.studyu.health /etc/nginx/certs
+
+# todo get ssl certs from elsewhere
+COPY ./hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html
 RUN mkdir /usr/share/nginx/html/assets/envs
 
 # EXPOSE 80
+EXPOSE 80 443
 
 # Loads all env vars starting with "STUDYU" into the .env file used by both Flutter apps
 CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/assets/envs/.env && nginx -g 'daemon off;'"]
