@@ -48,7 +48,7 @@ COPY ./nginx/designer2-stage.hpi.studyu.health.conf /etc/nginx/conf.d/designer2-
 COPY ./hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
-COPY --from=builder /src/app/build/designer_v2 /usr/share/nginx/html/designer_v2
+COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
 
 # Loads all env vars starting with "STUDYU" into the .env file used by both Flutter apps
 RUN mkdir /usr/share/nginx/html/app/assets/envs
