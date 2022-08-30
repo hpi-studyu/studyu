@@ -91,7 +91,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> addResult<T>({required String taskId, required T result}) async {
     late final Result<T> resultObject;
-    print("Debug: addResult: " + result.toString());
+    print('Debug: addResult2: $result');
     switch (T) {
       case QuestionnaireState:
         resultObject = Result<T>.app(type: 'QuestionnaireState', result: result);
@@ -106,7 +106,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         print('Unsupported question type: $T');
         resultObject = Result<T>.app(type: 'unknown', result: result);
     }
-
+    print('Debug: subjectId: ${id}');
+    print('Debug: interventionId: ${getInterventionForDate(DateTime.now())!.id}');
+    print('Debug: resultObject: ${resultObject.type} $resultObject');
     final p = await SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,
