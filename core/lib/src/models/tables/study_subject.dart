@@ -91,15 +91,18 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> addResult<T>({required String taskId, required T result}) async {
     late final Result<T> resultObject;
-    print('Debug: addResult2: $result');
+    print('Debug: addResult3: $result');
     switch (T) {
       case QuestionnaireState:
+        print((result as QuestionnaireState).toJson().toString());
         resultObject = Result<T>.app(type: 'QuestionnaireState', result: result);
         break;
       case fhir.QuestionnaireResponse:
+        print((result as fhir.QuestionnaireResponse).toJson().toString());
         resultObject = Result<T>.app(type: 'fhir.QuestionnaireResponse', result: result);
         break;
       case bool:
+        print((result as bool).toString());
         resultObject = Result<T>.app(type: 'bool', result: result);
         break;
       default:
@@ -108,7 +111,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     }
     print('Debug: subjectId: ${id}');
     print('Debug: interventionId: ${getInterventionForDate(DateTime.now())!.id}');
-    print('Debug: resultObject: ${resultObject.type} $resultObject');
+    print('Debug: result: ${resultObject.type} ${resultObject.toJson()}');
     final p = await SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,

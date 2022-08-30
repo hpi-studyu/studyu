@@ -59,8 +59,10 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().execute(),
       );
 
-  Future<T> save() async =>
-      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).execute()).single;
+  Future<T> save() async {
+    print("save: " + this.toJson().toString());
+    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).execute()).single;
+  }
 }
 
 // ignore: avoid_classes_with_only_static_members
