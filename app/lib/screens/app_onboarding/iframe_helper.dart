@@ -18,7 +18,7 @@ void listen(AppState state) {
     final messageContent = jsonDecode(message) as Map<String, dynamic>;
     // if (messageContent['intervention'] != null) {
     //  print(messageContent['intervention']);
-    // print("App: " + messageContent.toString());
+    print("AppListen: " + messageContent.toString());
     state.updateStudy(Study.fromJson(messageContent));
     // }
   });
