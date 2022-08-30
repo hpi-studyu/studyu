@@ -8,6 +8,7 @@ import 'package:studyu_core/env.dart' as env;
 class IFrameHelper {
 
 void postRouteFinished() {
+  // Go back to the selected origin route
   html.window.parent.postMessage('routeFinished', env.designerUrl);
 }
 

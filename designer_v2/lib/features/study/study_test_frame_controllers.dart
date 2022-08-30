@@ -13,18 +13,26 @@ class RouteInformation {
   String? data;
 
   RouteInformation(this.route, this.extra, this.cmd, this.data);
+
+  @override
+  String toString() {
+    return 'RouteInformation{route: $route, extra: $extra, cmd: $cmd, data: $data}';
+  }
 }
 
 abstract class PlatformController {
   final String studyId;
-  final String previewSrc;
+  final String baseSrc;
+  late String previewSrc;
   late RouteInformation routeInformation;
   late Widget frameWidget;
 
-  PlatformController(this.previewSrc, this.studyId);
+  PlatformController(this.baseSrc, this.studyId);
 
+  void activate();
   void registerViews(Key key);
-  void navigate({String? page, String? extra, String? cmd, String? data});
+  void generateUrl({String? route, String? extra, String? cmd, String? data});
+  void navigate({String? route, String? extra, String? cmd, String? data});
   void refresh({String? cmd});
   void listen();
   void send(String message);
@@ -33,13 +41,19 @@ abstract class PlatformController {
 
 class WebController extends PlatformController {
   late html.IFrameElement iFrameElement;
-  late String newPrev;
 
-  WebController(String previewSrc, String studyId) : super(previewSrc, studyId) {
+  WebController(String baseSrc, String studyId) : super(baseSrc, studyId) {
+    super.frameWidget = Container();
+    routeInformation = RouteInformation(null, null, null, null);
+  }
+
+  @override
+  activate() {
+    if (baseSrc == '') return;
     final key = UniqueKey();
+    print("Register view with: " + previewSrc);
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
-    routeInformation = RouteInformation(null, null, null, null);
   }
 
   @override
@@ -57,55 +71,55 @@ class WebController extends PlatformController {
   }
 
   @override
-  void navigate({String? page, String? extra, String? cmd, String? data}) {
-    if (previewSrc == '') {
+  generateUrl({String? route, String? extra, String? cmd, String? data}) {
+    routeInformation = RouteInformation(route, extra, cmd, data);
+    print("generateUrl: baseSrc $baseSrc und routeInformation: " + routeInformation.toString());
+    if (baseSrc == '') {
+      previewSrc = '';
       return;
     }
-    newPrev = previewSrc;
-    if (page != null) {
-      routeInformation.route = page;
-      newPrev = "$newPrev&route=$page";
-    } else {
-      routeInformation.route = null;
+    previewSrc = baseSrc;
+    if (route != null) {
+      previewSrc = "$previewSrc&route=$route";
     }
     if (extra != null) {
-      routeInformation.extra = extra;
-      newPrev = "$newPrev&extra=$extra";
-    } else {
-      routeInformation.extra = null;
+      previewSrc = "$previewSrc&extra=$extra";
     }
     if (cmd != null) {
-      routeInformation.cmd = cmd;
-      newPrev = "$newPrev&cmd=$cmd";
-    } else {
-      routeInformation.cmd = null;
+      previewSrc = "$previewSrc&cmd=$cmd";
     }
     if (data != null) {
-      routeInformation.data = data;
-      newPrev = "$newPrev&data=$data";
-    } else {
-      routeInformation.cmd = null;
+      previewSrc = "$previewSrc&data=$data";
     }
-    if (iFrameElement.src != newPrev) {
-      // print("*********NAVIGATE TO: $newPrev");
-      html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
-      if (frame != null) {
-        frame.src = newPrev;
-      }
-      iFrameElement.src = newPrev;
-    } /* else {
+  }
+
+  @override
+  void navigate({String? route, String? extra, String? cmd, String? data}) {
+    print("Navigate called");
+    generateUrl(route: route, extra: extra, cmd: cmd, data: data);
+
+    //html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
+    //if (frame != null) {
+      // iFrameElement = frame;
+      if (iFrameElement.src != previewSrc) {
+        print("*********NAVIGATE TO: $previewSrc");
+        iFrameElement.src = previewSrc;
+        //iFrameElement.src = newPrev;
+      } /* else {
        print("Same link detected");
-    } */
+      } */
+    // }
   }
 
   @override
   void refresh({String? cmd}) {
+    print("Designer: REFRESH");
     if (routeInformation.route != null) {
       if (routeInformation.extra != null) {
-        navigate(page: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
+        navigate(route: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
         return;
       }
-      navigate(page: routeInformation.route, cmd: cmd);
+      navigate(route: routeInformation.route, cmd: cmd);
       return;
     }
     navigate(cmd: cmd);
@@ -114,7 +128,7 @@ class WebController extends PlatformController {
 
   @override
   void openNewPage() {
-    js.context.callMethod('open', [newPrev]);
+    js.context.callMethod('open', [previewSrc]);
   }
 
   @override
@@ -122,6 +136,7 @@ class WebController extends PlatformController {
     html.window.onMessage.listen((event) {
       var data = event.data;
       if (data == 'routeFinished') {
+        print("Designer: Route finished");
         refresh();
       }
     });
@@ -134,6 +149,7 @@ class WebController extends PlatformController {
     //iFrameElement.contentWindow?.postMessage(message, '*');
     // todo refactor when to use iFrameElement?
     html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
+    print("[Preview]: Sent message: " + message);
     frame.contentWindow?.postMessage(message, env.appUrl ?? '');
   }
 }
@@ -170,7 +186,17 @@ class MobileController extends PlatformController {
   }
 
   @override
-  void navigate({String? page, String? extra, String? cmd, String? data}) {
+  void navigate({String? route, String? extra, String? cmd, String? data}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void activate() {
+    throw UnimplementedError();
+  }
+
+  @override
+  void generateUrl({String? route, String? extra, String? cmd, String? data}) {
     throw UnimplementedError();
   }
 }

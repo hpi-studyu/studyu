@@ -68,11 +68,14 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
     if (widget.routeArgs is InterventionFormRouteArgs ) {
       formType = 'intervention';
-      frameController.navigate(page: formType, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+      print("intervention navigate");
+      frameController.generateUrl(route: formType, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
     } else if (widget.routeArgs is MeasurementFormRouteArgs) {
       formType = 'observation';
-      frameController.navigate(page: formType, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+      frameController.generateUrl(route: formType, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
     }
+
+    frameController.activate();
 
     final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyId));
     formViewModelCurrent.form.valueChanges.listen((event) {

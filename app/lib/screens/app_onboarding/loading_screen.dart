@@ -39,13 +39,18 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     final state = context.read<AppState>();
     final preview = Preview(widget.queryParameters ?? {});
 
+    print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
+
     if (preview.containsQueryPair('mode', 'preview')) {
       final iFrameHelper = IFrameHelper();
       state.isPreview = true;
       await preview.init();
 
       // Authorize
-      if (!await preview.handleAuthorization()) return;
+      if (!await preview.handleAuthorization()) {
+        print("[PreviewApp]: Preview authorization error");
+        return;
+      }
       state.selectedStudy = preview.study;
 
       await preview.runCommands();
@@ -53,16 +58,16 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       iFrameHelper.listen(state);
 
       if (preview.hasRoute()) {
-        // print("has route: " + preview.selectedRoute);
+        print("[PreviewApp]: Found preview route:: " + preview.selectedRoute);
 
         // ELIGIBILITY CHECK
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
-            // if we remove the await, we can push multiple times. warning: do not run in while(true)
-            final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
-            // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
+          // if we remove the await, we can push multiple times. warning: do not run in while(true)
+          final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
+          // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
           iFrameHelper.postRouteFinished();
-            return;
+          return;
         }
 
         // INTERVENTION SELECTION
@@ -93,57 +98,56 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
-          // print("getting tasks for intervention");
           state.selectedStudy.schedule.includeBaseline = false;
+          print("[PreviewApp]: selected preview");
           if (!mounted) return;
+          print("[PreviewApp]: pushing to dashboard");
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
-          // print("FINISHED INTERVENTION");
           iFrameHelper.postRouteFinished();
           return;
         }
 
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
-          // print("getting tasks for observation");
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
             ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
-          // print("observation with tasks: " + tasks.first.toString());
           if (!mounted) return;
           final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
-          // print("FINISHED OBSERVATION");
           iFrameHelper.postRouteFinished();
           return;
         }
 
       } else {
+        print("[PreviewApp]: Found no preview route");
         if (!mounted) return;
         if (isUserLoggedIn()) {
-          // print("Return to studyOverview");
+          print("[PreviewApp]: Go to overview");
           Navigator.pushReplacementNamed(context, Routes.studyOverview);
           return;
         }
-        // print("Return to welcome");
+        print("[PreviewApp]: Go to welcome");
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
-      // WE NEED TO HAVE RETURNED BY HERE
     }
-    // todo is this necessary to run?
+    print("[PreviewApp]: No preview");
     if (!mounted) return;
     if (context.read<AppState>().isPreview) {
       previewSubjectIdKey();
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    // print('Selected study: $selectedStudyObjectId');
+    print('[PreviewApp]: Selected study: $selectedStudyObjectId');
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
+        print("[PreviewApp]: push to study selection");
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }
+      print("[PreviewApp]: push to welcome");
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }

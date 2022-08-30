@@ -91,6 +91,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> addResult<T>({required String taskId, required T result}) async {
     late final Result<T> resultObject;
+    print("Debug: addResult: " + T.toString());
     switch (T) {
       case QuestionnaireState:
         resultObject = Result<T>.app(type: 'QuestionnaireState', result: result);

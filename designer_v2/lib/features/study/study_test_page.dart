@@ -56,28 +56,28 @@ class StudyTestScreen extends StudyPageWidget {
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Eligibility Check".hardcoded), // questionnaire?
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "eligibilityCheck");
+                    frameController.navigate(route: "eligibilityCheck");
                   },
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Intervention Selection".hardcoded),
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "interventionSelection");
+                    frameController.navigate(route: "interventionSelection");
                   },
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Consent".hardcoded),
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "consent");
+                    frameController.navigate(route: "consent");
                   },
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Dashboard".hardcoded),
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "dashboard");
+                    frameController.navigate(route: "dashboard");
                   },
                 ),
               ]
