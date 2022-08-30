@@ -11,7 +11,7 @@ import 'router_config.dart';
 /// How to create a new page & use it for navigation:
 ///
 /// 1. Add the [GoRoute] in router_config.dart and register it as
-/// a [RouterConfig.topLevelRoute] (most likely it should be a top-level
+/// a [RouterConf.topLevelRoute] (most likely it should be a top-level
 /// route, unless you know what you are doing with subroutes)
 ///
 /// 2. To navigate to the new route from your code, specify one or more
@@ -21,7 +21,7 @@ import 'router_config.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
-  final defaultLocation = RouterConfig.studies.path;
+  final defaultLocation = RouterConf.studies.path;
 
   return GoRouter(
     refreshListenable: CombinedStreamNotifier([
@@ -30,19 +30,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       authRepository.watchAuthStateChanges()  // authentication events
     ]),
     initialLocation: defaultLocation,
-    routes: RouterConfig.topLevelRoutes,
+    routes: RouterConf.topLevelRoutes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (state) {
-      final loginLocation = state.namedLocation(RouterConfig.login.name!);
-      final signupLocation = state.namedLocation(RouterConfig.signup.name!);
-      final splashLocation = state.namedLocation(RouterConfig.splash.name!);
-      final passwordRecoveryLocation = state.namedLocation(RouterConfig.passwordRecovery.name!);
+      final loginLocation = state.namedLocation(RouterConf.login.name!);
+      final signupLocation = state.namedLocation(RouterConf.signup.name!);
+      final splashLocation = state.namedLocation(RouterConf.splash.name!);
+      final passwordRecoveryLocation = state.namedLocation(RouterConf.passwordRecovery.name!);
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
       final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
-      final isOnPublicPage = RouterConfig.topLevelPublicRoutes.any((element) => element.path == state.subloc);
+      final isOnPublicPage = RouterConf.topLevelPublicRoutes.any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
@@ -73,7 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!isInitialized) {
         // Redirect to splash screen while app is pending initialization
         return (isOnSplashPage)
-            ? null : namedLocForwarded(RouterConfig.splash.name!);
+            ? null : namedLocForwarded(RouterConf.splash.name!);
       }
 
       /*print("***NEW ROUTER***");
@@ -91,7 +91,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           authRepository.allowPasswordReset = false;
           return null;
         } else {
-          return namedLocForwarded(RouterConfig.passwordRecovery.name!);
+          return namedLocForwarded(RouterConf.passwordRecovery.name!);
         }
       }
 
@@ -106,7 +106,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           }
         }
         // Redirect to login page as default
-        return (isOnLoginPage) ? null : namedLocForwarded(RouterConfig.login.name!);
+        return (isOnLoginPage) ? null : namedLocForwarded(RouterConf.login.name!);
 
       } else {
         // If the user is authenticated, forward to where
