@@ -22,7 +22,8 @@ class StudyTestScreen extends StudyPageWidget {
     final state = ref.watch(studyTestControllerProvider(studyId));
     final frameController = ref.watch(
         studyTestPlatformControllerProvider(studyId));
-    frameController.navigate();
+    frameController.generateUrl();
+    frameController.activate();
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
     return Stack(

@@ -73,6 +73,8 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     } else if (widget.routeArgs is MeasurementFormRouteArgs) {
       formType = 'observation';
       frameController.generateUrl(route: formType, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+    } else {
+      frameController.generateUrl();
     }
 
     frameController.activate();
