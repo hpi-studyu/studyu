@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 class DashboardScaffold extends StatelessWidget {
   const DashboardScaffold({required this.body, Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class DashboardScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
       appBar: null, // default app bar not suitable for our layout
       body: TwoColumnLayout(
         leftWidget: AppDrawer(title: 'StudyU'.hardcoded),

@@ -95,6 +95,7 @@ extension StudyDuplicateX on Study {
     copy.userId = userId;
     copy.published = false;
     copy.resultSharing = ResultSharing.private;
+    copy.registryPublished = false;
     copy.results = [];
     copy.collaboratorEmails = [];
     copy.createdAt = DateTime.now();
