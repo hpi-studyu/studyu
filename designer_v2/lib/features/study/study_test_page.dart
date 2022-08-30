@@ -25,63 +25,73 @@ class StudyTestScreen extends StudyPageWidget {
     frameController.navigate();
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
-    return Column(
+    return Stack(
+      //mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          PreviewFrame(studyId, frameController: frameController, state: state),
-          const SizedBox(height: 24.0),
-          Text("This is the preview mode.\nPress reset to "
-              "remove the test progress and start over again."
-              .hardcoded, textAlign: TextAlign.center),
-          const SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: Text("study overview".hardcoded), // questionnaire?
-                onPressed: (!state.canTest) ? null : () {
-                  frameController.navigate();
-                },
-              ),
-              TextButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: Text("eligibilityCheck".hardcoded), // questionnaire?
-                onPressed: (!state.canTest) ? null : () {
-                  frameController.navigate(page: "eligibilityCheck");
-                },
-              ),
-              TextButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: Text("interventionSelection".hardcoded),
-                onPressed: (!state.canTest) ? null : () {
-                  frameController.navigate(page: "interventionSelection");
-                },
-              ),
-              TextButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: Text("consent".hardcoded),
-                onPressed: (!state.canTest) ? null : () {
-                  frameController.navigate(page: "consent");
-                },
-              ),
-              TextButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: Text("dashboard".hardcoded),
-                onPressed: (!state.canTest) ? null : () {
-                  frameController.navigate(page: "dashboard");
-                },
-              ),
-            ],
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("In the test mode you can preview your study.".hardcoded),
+                const SizedBox(height: 12.0),
+                Row(
+                    children: [
+                      TextButton.icon(
+                        icon: const Icon(Icons.help),
+                        label: Text("How does this work?".hardcoded),
+                        onPressed: () => showHelp(ref, context),
+                      ),
+                    ]
+                ),
+                const SizedBox(height: 12.0),
+                Text("Choose a page:".hardcoded),
+                const SizedBox(height: 12.0),
+                TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward),
+                  label: Text("Study Overview".hardcoded), // questionnaire?
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.navigate();
+                  },
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward),
+                  label: Text("Eligibility Check".hardcoded), // questionnaire?
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.navigate(page: "eligibilityCheck");
+                  },
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward),
+                  label: Text("Intervention Selection".hardcoded),
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.navigate(page: "interventionSelection");
+                  },
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward),
+                  label: Text("Consent".hardcoded),
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.navigate(page: "consent");
+                  },
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.arrow_forward),
+                  label: Text("Dashboard".hardcoded),
+                  onPressed: (!state.canTest) ? null : () {
+                    frameController.navigate(page: "dashboard");
+                  },
+                ),
+              ]
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                icon: const Icon(Icons.help),
-                label: Text("How does this work?".hardcoded),
-                onPressed: () => showHelp(ref, context),
-              ),
-            ],
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                    children: [
+                      PreviewFrame(studyId, frameController: frameController, state: state),
+                    ]
+                ),
+              ]
           ),
         ]
     );
