@@ -78,7 +78,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
-        state.activeSubject = await preview.createFakeSubject(preview.extra);
+        state.activeSubject = await preview.createFakeSubject(state, preview.extra);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -117,7 +118,7 @@ class Preview {
     return queryParameters.containsKey(key) && queryParameters[key] == value;
   }
 
-  Future<StudySubject> createFakeSubject([String extra]) async {
+  Future<StudySubject> createFakeSubject(AppState state, [String extra]) async {
     final interventionList = study.interventions.map((i) => i.id).toList();
     List<String> newInterventionList = [];
     // If we have a specific intervention we want to show, select this one and another one
@@ -138,6 +139,18 @@ class Preview {
       null, // no invite code
     );
     subject.startedAt = DateTime.now();
+
+    if (state.trackParticipantProgress) {
+      print("[PreviewApp]: Tracking Participant progress");
+      try {
+        subject = await subject.save();
+        await storeActiveSubjectId(subject.id);
+        print("[PreviewApp]: Saved subject");
+      } catch (e) {
+        print('[PreviewApp]: Failed creating subject: $e');
+      }
+    }
+
     return subject;
   }
 }
