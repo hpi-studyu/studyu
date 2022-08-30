@@ -12,6 +12,8 @@ class PrimaryButton extends StatefulWidget {
     this.onPressedFuture,
     this.enabled = true,
     this.showLoadingEarliestAfterMs = 100,
+    this.innerPadding = const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+    this.minimumSize,
     Key? key,
   }) : super(key: key);
 
@@ -35,8 +37,12 @@ class PrimaryButton extends StatefulWidget {
 
   final FutureFactory? onPressedFuture;
 
+  final EdgeInsets innerPadding;
+
   bool get isDisabled =>
       !enabled || (onPressed == null && onPressedFuture == null);
+
+  final Size? minimumSize;
 
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -49,8 +55,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryStyle = ElevatedButton.styleFrom(
-      onPrimary: Theme.of(context).colorScheme.onPrimary,
-      primary: Theme.of(context).colorScheme.primary,
+      onPrimary: theme.colorScheme.onPrimary,
+      primary: theme.colorScheme.primary,
+      minimumSize: widget.minimumSize,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 
     final tooltipMessage =
@@ -140,15 +147,25 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       return Tooltip(
         message: tooltipMessage,
         child: stackWithLoadingIndicator(
-          ElevatedButton.icon(
+          ElevatedButton(
             style: primaryStyle,
             onPressed: (widget.isDisabled) ? null : onButtonPressed,
-            icon: _visibilityDuringLoading(
-              (context) => Icon(widget.icon),
-              visible: false,
-            ),
-            label: _visibilityDuringLoading(
-              (context) => Text(widget.text, textAlign: TextAlign.center),
+            child: _visibilityDuringLoading(
+              (context) => Padding(
+                padding: widget.innerPadding,
+                child: Row(
+                  children: [
+                    Container(
+                      child: _visibilityDuringLoading(
+                            (context) => Icon(widget.icon),
+                        visible: false,
+                      ),
+                    ),
+                    const SizedBox(width: 6.0),
+                    Text(widget.text, textAlign: TextAlign.center),
+                  ],
+                ),
+              ),
               visible: false,
             ),
           ),
@@ -163,7 +180,10 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           style: primaryStyle,
           onPressed: (widget.isDisabled) ? null : onButtonPressed,
           child: _visibilityDuringLoading(
-            (context) => Text(widget.text, textAlign: TextAlign.center),
+            (context) => Padding(
+              padding: widget.innerPadding,
+              child: Text(widget.text, textAlign: TextAlign.center),
+            ),
             visible: false,
           ),
         ),

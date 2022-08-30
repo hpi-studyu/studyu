@@ -31,9 +31,8 @@ class FormControlLabel extends StatelessWidget {
       builder: (context, states) {
         return Text(
             text,
-            style: theme.textTheme.bodyText1!.copyWith(
-              fontSize: theme.textTheme.bodyText1!.fontSize! * 0.95,
-            ).merge(textStyle).merge(stateColorStyle),
+            style: theme.textTheme.caption?.merge(textStyle)
+                .merge(stateColorStyle),
           overflow: TextOverflow.clip,
         );
       },

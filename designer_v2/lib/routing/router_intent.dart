@@ -129,7 +129,8 @@ class RoutingIntents {
   static final studyNew = studyEdit(Config.newStudyId);
   static final login = RoutingIntent(route: RouterConfig.login);
   static final signup = RoutingIntent(route: RouterConfig.signup);
-  static final passwordForgot = (String email) => RoutingIntent(
+  static final passwordForgot = RoutingIntent(route: RouterConfig.passwordForgot);
+  static final passwordForgot2 = (String email) => RoutingIntent(
         route: RouterConfig.passwordForgot,
         extra: email,
       );

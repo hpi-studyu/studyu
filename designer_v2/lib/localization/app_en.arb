@@ -140,8 +140,8 @@
   "completed": "Completed",
 
 
-  "signup": "Signup",
+  "signup": "Create your workspace",
   "signin": "Sign In",
-  "login": "Login",
+  "login": "Sign in to your workspace",
   "my_studies": "My Studies"
 }

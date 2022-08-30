@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
-import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
+import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -112,7 +112,9 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         title: 'Sign out'.hardcoded,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
-          ref.read(authControllerProvider.notifier).signOut();
+          ref
+              .read(authFormControllerProvider(AuthFormKey.login).notifier)
+              .signOut();
         },
       ),
     ],
@@ -197,28 +199,30 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-        constraints: BoxConstraints(minHeight: widget.logoSectionMinHeight, maxHeight: widget.logoSectionMaxHeight),
-        child: Container(
-          constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: widget.logoPaddingHorizontal, vertical: widget.logoPaddingVertical),
-            child: GestureDetector(
-              onTap: () => ref
-                  .read(routerProvider)
-                  .dispatch(RoutingIntents.root),
-              child: Container(
-                foregroundDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
-                  backgroundBlendMode: BlendMode.color,
-                ),
-                child: Image.asset(
-                  'assets/images/icon_wide.png',
-                  fit: BoxFit.scaleDown,
-                ),
+      constraints: BoxConstraints(
+          minHeight: widget.logoSectionMinHeight,
+          maxHeight: widget.logoSectionMaxHeight),
+      child: Container(
+        constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: widget.logoPaddingHorizontal,
+              vertical: widget.logoPaddingVertical),
+          child: GestureDetector(
+            onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
+            child: Container(
+              foregroundDecoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                backgroundBlendMode: BlendMode.color,
+              ),
+              child: Image.asset(
+                'assets/images/icon_wide.png',
+                fit: BoxFit.scaleDown,
               ),
             ),
           ),
         ),
+      ),
     );
 
     return Padding(

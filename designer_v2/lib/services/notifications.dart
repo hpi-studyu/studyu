@@ -6,6 +6,12 @@ import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Notifications {
+  static final passwordReset = SnackbarIntent(
+    message: "Check your email for a password reset link!".hardcoded,
+  );
+  static final passwordResetSuccess = SnackbarIntent(
+    message: "Password was reset successfully".hardcoded,
+  );
   static final studyDeleted = SnackbarIntent(
     message: "Study was deleted from your account".hardcoded,
   );

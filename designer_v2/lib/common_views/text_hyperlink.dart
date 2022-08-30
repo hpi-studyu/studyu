@@ -81,13 +81,16 @@ class _HyperlinkState extends State<Hyperlink> {
         final textWidget = Text(widget.text, style: actualStyle);
 
         if (widget.icon != null) {
-          return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Icon(widget.icon,
-                color: actualColor,
-                size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
-            const SizedBox(width: 2.0),
-            textWidget
-          ]);
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(widget.icon,
+                  color: actualColor,
+                  size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
+              const SizedBox(width: 2.0),
+              textWidget
+            ],
+          );
         }
 
         return textWidget;

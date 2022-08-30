@@ -32,6 +32,10 @@ abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
+abstract class IFormGroupController {
+  FormGroup get form;
+}
+
 class FormControlOption<T> extends Equatable {
   const FormControlOption(
       this.value, this.label, {this.description});
@@ -47,7 +51,7 @@ class FormControlOption<T> extends Equatable {
 typedef FormControlUpdateFutureBuilder = Future Function(
     AbstractControl control);
 
-abstract class FormViewModel<T> {
+abstract class FormViewModel<T> implements IFormGroupController {
   FormViewModel({
     formData,
     this.delegate,
@@ -430,7 +434,6 @@ abstract class FormViewModel<T> {
 
   // - Subclass responsibility
 
-  FormGroup get form;
   Map<FormMode, String> get titles;
 
   /// The available set of validation configurations for the [form] managed

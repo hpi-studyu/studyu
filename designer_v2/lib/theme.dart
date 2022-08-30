@@ -247,6 +247,7 @@ class ThemeProvider extends InheritedWidget {
       hoverColor: Colors.white,
       focusColor: Colors.white,
       isDense: true,
+      hintStyle: TextStyle(color: colors.onSurfaceVariant.withOpacity(0.4)),
       //contentPadding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
@@ -295,7 +296,7 @@ class ThemeProvider extends InheritedWidget {
       button:
           TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
       caption: TextStyle(
-          fontSize: 14.0,
+          fontSize: 14.0 * 0.95,
           height: 1.35,
           color: colors.onSurface.withOpacity(0.9)), // Form Labels
       subtitle1: TextStyle(
