@@ -27,7 +27,6 @@ class StudyTestScreen extends StudyPageWidget {
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
     return Stack(
-      //mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
               crossAxisAlignment: CrossAxisAlignment.start,

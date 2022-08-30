@@ -145,10 +145,6 @@ class WebController extends PlatformController {
   @override
   void send(String message) {
    // For debug purposes: postMessage(message, '*')
-    //iFrameElement.contentWindow?.postMessage(message, Uri.parse(previewSrc).host);
-    //iFrameElement.contentWindow?.postMessage(message, '*');
-    // todo refactor when to use iFrameElement?
-    //html.IFrameElement frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement;
     // print("[Preview]: Sent message: " + message);
     iFrameElement.contentWindow?.postMessage(message, env.appUrl ?? '');
   }

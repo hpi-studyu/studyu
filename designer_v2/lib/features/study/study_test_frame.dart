@@ -29,35 +29,6 @@ class PreviewFrame extends ConsumerStatefulWidget {
 }
 
 class _PreviewFrameState extends ConsumerState<PreviewFrame> {
-  bool intercept = false;
-  late ModalRoute? _modalRoute;
-  late GoRouter router;
-
-  @override
-  void initState() {
-    super.initState();
-    _createListener();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _modalRoute = ModalRoute.of(context);
-    router = ref.read(routerProvider);
-    super.didChangeDependencies();
-  }
-
-  Future<void> _createListener() async {
-    SchedulerBinding.instance.addPostFrameCallback((_) => router.addListener(_interceptListener));
-  }
-
-  void _interceptListener() {
-    final isOnTop = _modalRoute!.isCurrent;
-    if (!isOnTop) {
-      setState(() {intercept = true;});
-    } else {
-      setState(() {intercept = false;});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,16 +77,67 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                 ),
               ]
           ),
-          if (intercept)
-            // workaround for the sidesheet to intercept click events
-            // which would otherwise be consumed by the iframe
-            Positioned.fill(
-              child: DropzoneView(
-                key: UniqueKey(),
-                onDrop: (_) {debugPrint("");},
-              ),
-            )
-          /* // Does not work
+      const Interceptor(),
+    ]
+    );
+  }
+}
+
+class Interceptor extends ConsumerStatefulWidget {
+  const Interceptor({super.key});
+
+@override
+_InterceptorState createState() => _InterceptorState();
+}
+
+class _InterceptorState extends ConsumerState<Interceptor> {
+  bool intercept = false;
+  late ModalRoute? _modalRoute;
+  late GoRouter router;
+
+  @override
+  void initState() {
+    super.initState();
+    _createListener();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _modalRoute = ModalRoute.of(context);
+    router = ref.read(routerProvider);
+    super.didChangeDependencies();
+  }
+
+  Future<void> _createListener() async {
+    SchedulerBinding.instance.addPostFrameCallback((_) => router.addListener(_interceptListener));
+  }
+
+  void _interceptListener() {
+    final isOnTop = _modalRoute!.isCurrent;
+    if (!isOnTop) {
+      setState(() {intercept = true;});
+    } else {
+      setState(() {intercept = false;});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+      // workaround to intercept click events for the sidesheet
+      // which would otherwise be consumed by the iframe
+    if (intercept) {
+      return Positioned.fill(
+        child: DropzoneView(
+          key: UniqueKey(),
+          onDrop: (_) {
+            debugPrint("");
+          },
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
+      /* // Does not work
           Positioned.fill(
             child: PointerInterceptor(
               debug: true,
@@ -125,8 +147,6 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
               ),
             )
           ); */
-        ]
-    );
   }
 
   @override
@@ -134,4 +154,5 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     router.removeListener(_interceptListener);
     super.dispose();
   }
+
 }
