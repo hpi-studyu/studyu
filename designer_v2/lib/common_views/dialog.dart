@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 class StandardDialog extends StatelessWidget {
-  const StandardDialog(
-      {this.title,
+  const StandardDialog({
+    this.title,
       this.titleText,
       required this.body,
       this.width,
@@ -14,17 +15,17 @@ class StandardDialog extends StatelessWidget {
       this.maxWidth,
       this.maxHeight,
       this.actionButtons = const [],
-      this.backgroundColor = Colors.white,
+      this.backgroundColor,
       this.borderRadius = 20.0,
-      Key? key})
-      : super(key: key);
+      Key? key,
+  }) : super(key: key);
 
   final Widget? title;
   final String? titleText;
   final Widget body;
   final List<Widget> actionButtons;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final double? borderRadius;
 
   final double? width;
@@ -57,6 +58,7 @@ class StandardDialog extends StatelessWidget {
       alignment: Alignment.center,
       child: Container(
         decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
           boxShadow: [
             BoxShadow(
@@ -75,7 +77,7 @@ class StandardDialog extends StatelessWidget {
             maxHeight: maxHeight ?? double.infinity,
           ),
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: backgroundColor ?? ThemeConfig.bodyBackgroundColor(theme),
             borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)),
           ),
           child: SizedBox(

@@ -104,9 +104,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
   final List<List<DrawerEntry>> bottomEntries = [
     [
-      DrawerEntry(
+      GoRouterDrawerEntry(
         title: 'Settings'.hardcoded,
         icon: Icons.settings_rounded,
+        intent: RoutingIntents.accountSettings,
       ),
       DrawerEntry(
         title: 'Sign out'.hardcoded,

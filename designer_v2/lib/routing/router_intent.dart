@@ -126,6 +126,10 @@ class RoutingIntents {
         },
         dispatch: RoutingIntentDispatch.push, // modal route
       );
+  static final accountSettings = RoutingIntent(
+    route: RouterConfig.accountSettings,
+    dispatch: RoutingIntentDispatch.push, // modal route
+  );
   static final studyNew = studyEdit(Config.newStudyId);
   static final login = RoutingIntent(route: RouterConfig.login);
   static final signup = RoutingIntent(route: RouterConfig.signup);

@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/task.dart';
+import 'package:studyu_designer_v2/features/account/account_settings.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_scaffold.dart';
 import 'package:studyu_designer_v2/features/auth/login_form_view.dart';
@@ -84,6 +85,7 @@ class RouterConfig {
     studyRecruit,
     studyAnalyze,
     studySettings,
+    accountSettings,
     passwordRecovery,
   ];
 
@@ -336,6 +338,16 @@ class RouterConfig {
         final studyId = state.params[RouteParams.studyId]!;
         return buildModalTransitionPage(context, state,
           StudySettingsDialog(studyId),
+        );
+      }
+  );
+
+  static final accountSettings = GoRoute(
+      path: "/settings",
+      name: "accountSettings",
+      pageBuilder: (context, state) {
+        return buildModalTransitionPage(context, state,
+          AccountSettingsDialog(),
         );
       }
   );

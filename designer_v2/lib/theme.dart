@@ -17,6 +17,9 @@ class ThemeConfig {
   static const double kHoverFadeFactor = 0.7;
   static const double kMuteFadeFactor = 0.8;
 
+  static bodyBackgroundColor(ThemeData theme) =>
+      theme.scaffoldBackgroundColor.faded(0.5);
+
   static Color modalBarrierColor(ThemeData theme) =>
       theme.colorScheme.secondary.withOpacity(0.4);
 
