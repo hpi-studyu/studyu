@@ -99,7 +99,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           // todo not sure which includeBaseline statement is needed.
-          // Either one of here or in preview.createFakeSubject
+          // todo Either one of here or in preview.createFakeSubject
+          // todo maybe remove
           state.selectedStudy.schedule.includeBaseline = false;
           state.activeSubject.study.schedule.includeBaseline = false;
           print("[PreviewApp]: selected preview");

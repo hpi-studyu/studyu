@@ -151,7 +151,7 @@ class StudyTestScreen extends StudyPageWidget {
   showHelp(WidgetRef ref, BuildContext context) {
     final theme = Theme.of(context);
     Widget previewHelp = StandardDialog(
-        titleText: "Test your study now live!".hardcoded,
+        titleText: "Test your study!".hardcoded,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,18 +175,17 @@ class StudyTestScreen extends StudyPageWidget {
             Align(alignment: Alignment.centerLeft, child: TextParagraph(text: "• All test users and their data will be reset one you launch the study\n")),
           ],
         ),
-        actionButtons: [
-          ReactiveFormConsumer(builder: (context, form, child) {
-            return PrimaryButton(
-                text: "Start testing".hardcoded,
-                icon: null,
-            );
-          }),
-        ],
-        maxWidth: 650,
-        minWidth: 550,
+      actionButtons: [
+        PrimaryButton(
+          text: "Start testing".hardcoded,
+          icon: null,
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+      maxWidth: 650,
+      minWidth: 550,
     );
-    showDialog (
+    showDialog(
       context: context,
       barrierColor: ThemeConfig.modalBarrierColor(theme),
       builder: (context) => previewHelp,

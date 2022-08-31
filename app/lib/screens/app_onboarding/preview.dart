@@ -103,6 +103,7 @@ class Preview {
   Future<StudySubject> getActiveSubject(AppState state, [String extra]) async {
     subject = await _fetchSubject(state, extra);
     if (selectedRoute == '/intervention') {
+      print("disable base 2");
       // todo might be unnecessary if we have study.schedule.includeBaseline = false;
       subject.study.schedule.includeBaseline = false;
     }
@@ -110,7 +111,8 @@ class Preview {
   }
 
   Future<StudySubject> _fetchSubject(AppState state, [String extra]) async {
-    if (selectedStudyObjectId != null) {
+    // we do not want to load a preconfigured schedule when previewing intervention or observation
+    if (selectedStudyObjectId != null && selectedRoute != '/intervention' && selectedRoute != '/observation') {
       subject = await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
         selectedColumns: [
@@ -120,10 +122,11 @@ class Preview {
         ],
       );
       if (subject != null && subject.studyId == study.id) {
-        // user is already subscribed to a study
+        // User is already subscribed to a study
         return subject;
       }
     }
+    // Create a new study subject
     return _createFakeSubject(state, extra);
   }
 
@@ -131,6 +134,7 @@ class Preview {
     final interventionList = study.interventions.map((i) => i.id).toList();
     List<String> newInterventionList = [];
     if (selectedRoute == '/intervention') {
+      // todo maybe remove
       study.schedule.includeBaseline = false;
     }
     // If we have a specific intervention we want to show, select that and another one
