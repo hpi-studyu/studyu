@@ -110,7 +110,7 @@ class Preview {
           'subject_progress(*)',
         ],
       );
-      if (subject.studyId == study.id) {
+      if (subject != null && subject.studyId == study.id) {
         // user is already subscribed to a study
         return subject;
       }
