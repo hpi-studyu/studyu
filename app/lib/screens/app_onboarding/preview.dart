@@ -101,6 +101,14 @@ class Preview {
   }
 
   Future<StudySubject> getActiveSubject(AppState state, [String extra]) async {
+    subject = await _fetchSubject(state, extra);
+    if (selectedRoute == '/intervention') {
+      subject.study.schedule.includeBaseline = false;
+    }
+    return subject;
+  }
+
+  Future<StudySubject> _fetchSubject(AppState state, [String extra]) async {
     if (selectedStudyObjectId != null) {
       subject = await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
@@ -115,15 +123,14 @@ class Preview {
         return subject;
       }
     }
-    return createFakeSubject(state, extra);
+    return _createFakeSubject(state, extra);
   }
 
-  Future<StudySubject> createFakeSubject(AppState state, [String extra]) async {
+  Future<StudySubject> _createFakeSubject(AppState state, [String extra]) async {
     final interventionList = study.interventions.map((i) => i.id).toList();
     List<String> newInterventionList = [];
     if (selectedRoute == '/intervention') {
-      state.selectedStudy.schedule.includeBaseline = false;
-      subject.study.schedule.includeBaseline = false;
+      study.schedule.includeBaseline = false;
     }
     // If we have a specific intervention we want to show, select that and another one
     if (selectedRoute == '/intervention' && extra != null) {
@@ -154,7 +161,6 @@ class Preview {
         print('[PreviewApp]: Failed creating subject: $e');
       }
     }
-
     return subject;
   }
 }
