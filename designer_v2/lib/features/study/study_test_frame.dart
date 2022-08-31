@@ -39,7 +39,6 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
     if (widget.routeArgs is InterventionFormRouteArgs ) {
       formType = 'intervention';
-      print("intervention navigate");
       frameController.generateUrl(route: formType, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
     } else if (widget.routeArgs is MeasurementFormRouteArgs) {
       formType = 'observation';

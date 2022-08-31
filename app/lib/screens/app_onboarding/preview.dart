@@ -67,24 +67,6 @@ class Preview {
     }
   }
 
-  Future<bool> isSubscribed() async {
-    if (selectedStudyObjectId != null) {
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
-      if (subject.studyId == study.id) {
-        // user is already subscribed to a study
-        return true;
-      }
-    }
-    return false;
-  }
-
   String getSelectedRoute() {
     // check if route is allowed and can be handled
     for (final k in queryParameters.keys) {
@@ -116,6 +98,24 @@ class Preview {
 
   bool containsQueryPair(String key, String value) {
     return queryParameters.containsKey(key) && queryParameters[key] == value;
+  }
+
+  Future<StudySubject> getActiveSubject(AppState state, [String extra]) async {
+    if (selectedStudyObjectId != null) {
+      subject = await SupabaseQuery.getById<StudySubject>(
+        selectedStudyObjectId,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+      );
+      if (subject.studyId == study.id) {
+        // user is already subscribed to a study
+        return subject;
+      }
+    }
+    return createFakeSubject(state, extra);
   }
 
   Future<StudySubject> createFakeSubject(AppState state, [String extra]) async {

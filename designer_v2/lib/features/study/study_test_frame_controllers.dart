@@ -73,7 +73,6 @@ class WebController extends PlatformController {
   @override
   generateUrl({String? route, String? extra, String? cmd, String? data}) {
     routeInformation = RouteInformation(route, extra, cmd, data);
-    print("generateUrl: baseSrc $baseSrc und routeInformation: " + routeInformation.toString());
     if (baseSrc == '') {
       previewSrc = '';
       return;
@@ -95,7 +94,6 @@ class WebController extends PlatformController {
 
   @override
   void navigate({String? route, String? extra, String? cmd, String? data}) {
-    print("Navigate called");
     generateUrl(route: route, extra: extra, cmd: cmd, data: data);
 
     //html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
@@ -113,7 +111,6 @@ class WebController extends PlatformController {
 
   @override
   void refresh({String? cmd}) {
-    print("Designer: REFRESH");
     if (routeInformation.route != null) {
       if (routeInformation.extra != null) {
         navigate(route: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
@@ -144,7 +141,7 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-   // For debug purposes: postMessage(message, '*')
+    // For debug purposes: postMessage(message, '*')
     // print("[Preview]: Sent message: " + message);
     iFrameElement.contentWindow?.postMessage(message, env.appUrl ?? '');
   }

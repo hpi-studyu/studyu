@@ -78,7 +78,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
-        state.activeSubject = await preview.createFakeSubject(state, preview.extra);
+        state.activeSubject = await preview.getActiveSubject(state, preview.extra);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
@@ -98,8 +98,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
-          // state.selectedStudy.schedule.includeBaseline = false;
-          // state.activeSubject.study.schedule.includeBaseline = false;
+          // todo not sure which includeBaseline statement is needed.
+          // Either one of here or in preview.createFakeSubject
+          state.selectedStudy.schedule.includeBaseline = false;
+          state.activeSubject.study.schedule.includeBaseline = false;
           print("[PreviewApp]: selected preview");
           if (!mounted) return;
           print("[PreviewApp]: pushing to dashboard");
