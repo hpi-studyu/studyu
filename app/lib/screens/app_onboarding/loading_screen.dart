@@ -103,9 +103,9 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           // todo maybe remove
           state.selectedStudy.schedule.includeBaseline = false;
           state.activeSubject.study.schedule.includeBaseline = false;
-          print("[PreviewApp]: selected preview");
+          print("[PreviewApp]: Route preview");
           if (!mounted) return;
-          print("[PreviewApp]: pushing to dashboard");
+          print("[PreviewApp]: Go to dashboard");
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
           iFrameHelper.postRouteFinished();
           return;
@@ -131,7 +131,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           Navigator.pushReplacementNamed(context, Routes.studyOverview);
           return;
         }
-        print("[PreviewApp]: Go to welcome");
+        print("[PreviewApp]: Go to welcome1");
         Navigator.pushReplacementNamed(context, Routes.welcome);
         return;
       }
@@ -147,11 +147,11 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
-        print("[PreviewApp]: push to study selection");
+        print("[PreviewApp]: Go to study selection");
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }
-      print("[PreviewApp]: push to welcome");
+      print("[PreviewApp]: Go to welcome2");
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -185,8 +185,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // Notifications not supported on web
         scheduleStudyNotifications(context);
       }
+      print("[PreviewApp]: push to dashboard");
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      print("[PreviewApp]: push to welcome3");
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
