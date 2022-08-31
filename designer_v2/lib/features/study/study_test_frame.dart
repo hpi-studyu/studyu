@@ -136,16 +136,6 @@ class _InterceptorState extends ConsumerState<Interceptor> {
     } else {
       return const SizedBox();
     }
-      /* // Does not work
-          Positioned.fill(
-            child: PointerInterceptor(
-              debug: true,
-              intercepting: intercept,
-              child: Container(
-                color: Colors.blue,
-              ),
-            )
-          ); */
   }
 
   @override
@@ -153,5 +143,4 @@ class _InterceptorState extends ConsumerState<Interceptor> {
     router.removeListener(_interceptListener);
     super.dispose();
   }
-
 }

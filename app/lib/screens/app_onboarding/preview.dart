@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
@@ -109,47 +110,66 @@ class Preview {
   }
 
   Future<StudySubject> _fetchSubject(AppState state, [String extra]) async {
-    // we do not want to load a preconfigured schedule when previewing intervention or observation
-    if (selectedStudyObjectId != null && selectedRoute != '/intervention' && selectedRoute != '/observation') {
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
-      if (subject != null && subject.studyId == study.id) {
-        // User is already subscribed to a study
-        return subject;
+    try {
+      if (selectedStudyObjectId != null) {
+        // we do not want to load a preconfigured schedule when previewing intervention or observation
+        if (selectedRoute == '/intervention') {
+          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<StudySubject>(
+            selectedColumns: [
+              '*',
+              'study!study_subject_studyId_fkey(*)',
+              'subject_progress(*)',
+            ],
+          );
+          // If the user has a study object Id, there was already a subject created
+          // and we need to find the last one they created for the study
+          // with the correct interventions
+          subject = studySubjects.lastWhere(
+                (foundSubject) {
+                  foundSubject.study.schedule.includeBaseline = false;
+                  return foundSubject.userId == Supabase.instance.client.auth.currentUser.id
+                      && foundSubject.studyId == study.id
+                      && listEquals(foundSubject.selectedInterventions
+                          .map((i) => i.id).toList(), getInterventionIds(),);
+                },
+          );
+          // We switch the currently selected study subject with the one we found
+          // that has fitting interventions in the correct order
+          // Therefore, we get different subject entries for different interventions
+          selectedStudyObjectId = subject.id;
+          await storeActiveSubjectId(selectedStudyObjectId);
+          // User is already subscribed to a study
+          return subject;
+        }
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+        if (subject != null && subject.studyId == study.id) {
+          // User is already subscribed to the study
+          return subject;
+        }
       }
+    } catch (e) {
+      print('[PreviewApp]: Failed fetching subject: $e');
     }
     // Create a new study subject
     return _createFakeSubject(state, extra);
   }
 
   Future<StudySubject> _createFakeSubject(AppState state, [String extra]) async {
-    final interventionList = study.interventions.map((i) => i.id).toList();
-    List<String> newInterventionList = [];
     if (selectedRoute == '/intervention') {
       // todo maybe remove
       study.schedule.includeBaseline = false;
     }
-    // If we have a specific intervention we want to show, select that and another one
-    if (selectedRoute == '/intervention' && extra != null) {
-      final String intId = interventionList.firstWhere((id) => id == extra);
-      newInterventionList..add(intId)..add(
-          interventionList.firstWhere((id) => id != intId),
-      );
-      assert (newInterventionList.length == 2);
-    } else {
-      // just take the first two
-      newInterventionList = interventionList.sublist(0, 2);
-    }
     subject = StudySubject.fromStudy(
       study,
       Supabase.instance.client.auth.user().id,
-      newInterventionList,
+      getInterventionIds(),
       null, // no invite code
     );
     subject.startedAt = DateTime.now();
@@ -165,5 +185,22 @@ class Preview {
       }
     }
     return subject;
+  }
+
+  List<String> getInterventionIds() {
+    final interventionList = study.interventions.map((i) => i.id).toList();
+    List<String> newInterventionList = [];
+    // If we have a specific intervention we want to show, select that and another one
+    if (selectedRoute == '/intervention' && extra != null) {
+      final String intId = interventionList.firstWhere((id) => id == extra);
+      newInterventionList..add(intId)..add(
+        interventionList.firstWhere((id) => id != intId),
+      );
+      assert (newInterventionList.length == 2);
+    } else {
+      // just take the first two
+      newInterventionList = interventionList.sublist(0, 2);
+    }
+    return newInterventionList;
   }
 }

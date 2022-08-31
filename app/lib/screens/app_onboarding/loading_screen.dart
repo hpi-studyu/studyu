@@ -32,7 +32,9 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
-    initStudy();
+    if (widget.sessionString == null) {
+      initStudy();
+    }
   }
 
   Future<void> initStudy() async {
