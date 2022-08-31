@@ -112,7 +112,6 @@ class Preview {
   Future<StudySubject> _fetchSubject(AppState state, [String extra]) async {
     try {
       if (selectedStudyObjectId != null) {
-        // we do not want to load a preconfigured schedule when previewing intervention or observation
         if (selectedRoute == '/intervention') {
           final List<StudySubject> studySubjects = await SupabaseQuery.getAll<StudySubject>(
             selectedColumns: [
