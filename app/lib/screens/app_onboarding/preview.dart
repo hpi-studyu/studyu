@@ -61,8 +61,6 @@ class Preview {
         );
         subject.delete();
         deleteActiveStudyReference();
-        selectedStudyObjectId = await getActiveSubjectId();
-        assert (selectedStudyObjectId == null);
       }
     }
   }
