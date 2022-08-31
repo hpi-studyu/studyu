@@ -121,8 +121,10 @@ class Preview {
   Future<StudySubject> createFakeSubject(AppState state, [String extra]) async {
     final interventionList = study.interventions.map((i) => i.id).toList();
     List<String> newInterventionList = [];
-    // If we have a specific intervention we want to show, select this one and another one
+    // If we have a specific intervention we want to show, select that and another one
     if (selectedRoute == '/intervention' && extra != null) {
+      state.selectedStudy.schedule.includeBaseline = false;
+      subject.study.schedule.includeBaseline = false;
       final String intId = interventionList.firstWhere((id) => id == extra);
       newInterventionList..add(intId)..add(
           interventionList.firstWhere((id) => id != intId),

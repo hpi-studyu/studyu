@@ -99,6 +99,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           state.selectedStudy.schedule.includeBaseline = false;
+          state.activeSubject.study.schedule.includeBaseline = false;
           print("[PreviewApp]: selected preview");
           if (!mounted) return;
           print("[PreviewApp]: pushing to dashboard");
