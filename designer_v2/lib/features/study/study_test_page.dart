@@ -13,9 +13,7 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/services/notification_types.dart';
-import 'package:studyu_designer_v2/services/notifications.dart';
+import 'package:studyu_designer_v2/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudyTestScreen extends StudyPageWidget {
@@ -152,7 +150,7 @@ class StudyTestScreen extends StudyPageWidget {
 
   showHelp(WidgetRef ref, BuildContext context) {
     final theme = Theme.of(context);
-    StandardDialog(
+    Widget previewHelp = StandardDialog(
         titleText: "Test your study now live!".hardcoded,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -187,6 +185,11 @@ class StudyTestScreen extends StudyPageWidget {
         ],
         maxWidth: 650,
         minWidth: 550,
+    );
+    showDialog (
+      context: context,
+      barrierColor: ThemeConfig.modalBarrierColor(theme),
+      builder: (context) => previewHelp,
     );
     save();
   }

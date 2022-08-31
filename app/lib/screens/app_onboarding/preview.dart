@@ -103,6 +103,7 @@ class Preview {
   Future<StudySubject> getActiveSubject(AppState state, [String extra]) async {
     subject = await _fetchSubject(state, extra);
     if (selectedRoute == '/intervention') {
+      // todo might be unnecessary if we have study.schedule.includeBaseline = false;
       subject.study.schedule.includeBaseline = false;
     }
     return subject;
