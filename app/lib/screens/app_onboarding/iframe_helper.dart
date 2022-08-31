@@ -8,6 +8,7 @@ import 'package:studyu_core/env.dart' as env;
 class IFrameHelper {
 
 void postRouteFinished() {
+  // Go back to the selected origin route
   html.window.parent.postMessage('routeFinished', env.designerUrl);
 }
 
@@ -17,7 +18,7 @@ void listen(AppState state) {
     final messageContent = jsonDecode(message) as Map<String, dynamic>;
     // if (messageContent['intervention'] != null) {
     //  print(messageContent['intervention']);
-    // print("App: " + messageContent.toString());
+    // print("AppListen: " + messageContent.toString());
     state.updateStudy(Study.fromJson(messageContent));
     // }
   });

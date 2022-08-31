@@ -65,6 +65,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Has eligibility check? " + context.watch<AppState>().selectedStudy.hasEligibilityCheck.toString());
+    print("Eligibility Criteria: " + context.watch<AppState>().selectedStudy.eligibilityCriteria.toString());
+    print("Eligibility Questions: " + context.watch<AppState>().selectedStudy.questionnaire.questions.toString());
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(MdiIcons.textLong),
@@ -84,8 +87,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: context.watch<AppState>().selectedStudy.hasEligibilityCheck
-            ? () => navigateToEligibilityCheck(context)
-            : () => navigateToJourney(context),
+            ? () => navigateToEligibilityCheck(context) // todo temporary disabled for designer_v2 test
+            : () => navigateToEligibilityCheck(context),
+            //: () => navigateToJourney(context),
       ),
     );
   }

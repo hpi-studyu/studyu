@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
+import 'package:studyu_designer_v2/common_views/dialog.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -10,9 +13,8 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/services/notification_types.dart';
-import 'package:studyu_designer_v2/services/notifications.dart';
+import 'package:studyu_designer_v2/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudyTestScreen extends StudyPageWidget {
   const StudyTestScreen(studyId, {Key? key}) : super(studyId, key: key);
@@ -22,11 +24,11 @@ class StudyTestScreen extends StudyPageWidget {
     final state = ref.watch(studyTestControllerProvider(studyId));
     final frameController = ref.watch(
         studyTestPlatformControllerProvider(studyId));
-    frameController.navigate();
+    frameController.generateUrl();
+    frameController.activate();
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
 
     return Stack(
-      //mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,28 +58,28 @@ class StudyTestScreen extends StudyPageWidget {
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Eligibility Check".hardcoded), // questionnaire?
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "eligibilityCheck");
+                    frameController.navigate(route: "eligibilityCheck");
                   },
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Intervention Selection".hardcoded),
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "interventionSelection");
+                    frameController.navigate(route: "interventionSelection");
                   },
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Consent".hardcoded),
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "consent");
+                    frameController.navigate(route: "consent");
                   },
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
                   label: Text("Dashboard".hardcoded),
                   onPressed: (!state.canTest) ? null : () {
-                    frameController.navigate(page: "dashboard");
+                    frameController.navigate(route: "dashboard");
                   },
                 ),
               ]
@@ -147,13 +149,47 @@ class StudyTestScreen extends StudyPageWidget {
   }
 
   showHelp(WidgetRef ref, BuildContext context) {
-    ref.read(notificationServiceProvider).show(
-        Notifications.welcomeTestMode(context), actions: [
-      NotificationAction(
-          label: "Got it!".hardcoded,
-          onSelect: Future.value,
-          isDestructive: false),
-    ]);
+    final theme = Theme.of(context);
+    Widget previewHelp = StandardDialog(
+        titleText: "Test your study!".hardcoded,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextParagraph(text: "This page allows you to experience your study like one of your study's participants, so that you can tailor the design to your needs and verify everything works correctly.\n"),
+            Align(alignment: Alignment.centerLeft, child: Text("\u{2b50} Pro Tips\n", style: theme.textTheme.headline5)),
+            Align(alignment: Alignment.centerLeft, child: TextParagraph(span: [
+              const TextSpan(text: "• Use the menu in the top-left to quickly preview and jump to different parts of your study (e.g. surveys)\n"
+                  "• To get a fresh experience, you can reset all data and enroll as a new test user\n"
+                  "• You can also "),
+              TextSpan(
+                text: 'download the StudyU app',
+                style: const TextStyle(color: Colors.blue),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => launchUrl(Uri.parse('https://github.com/hpi-studyu/studyu#app-stores')),
+              ),
+              const TextSpan(text: " on your phone for testing\n"),
+            ])),
+            Align(alignment: Alignment.centerLeft, child: Text("\u{26a0} Please note\n", style: theme.textTheme.headline5)),
+            Align(alignment: Alignment.centerLeft, child: TextParagraph(text: "• All test users and their data will be reset one you launch the study\n")),
+          ],
+        ),
+      actionButtons: [
+        PrimaryButton(
+          text: "Start testing".hardcoded,
+          icon: null,
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+      maxWidth: 650,
+      minWidth: 550,
+    );
+    showDialog(
+      context: context,
+      barrierColor: ThemeConfig.modalBarrierColor(theme),
+      builder: (context) => previewHelp,
+    );
     save();
   }
 }

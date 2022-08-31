@@ -59,7 +59,7 @@ class RouteParams {
 ///
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
-class RouterConfig {
+class RouterConf {
 
   /// Public routes can be accessed without login
   static final topLevelPublicRoutes = [

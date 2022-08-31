@@ -105,7 +105,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         print('Unsupported question type: $T');
         resultObject = Result<T>.app(type: 'unknown', result: result);
     }
-
     final p = await SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,
