@@ -135,7 +135,7 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<bool> resetPasswordForEmail({required String email}) async {
     final res = await authClient.api.resetPasswordForEmail(email,
-        options: AuthOptions(redirectTo: env.authRedirectToUrl));
+        options: AuthOptions(redirectTo: env.designerUrl));
     if (res.error != null) {
       throw StudyUException(res.error!.message);
     }
