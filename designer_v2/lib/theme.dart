@@ -299,7 +299,7 @@ class ThemeProvider extends InheritedWidget {
       button:
           TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
       caption: TextStyle(
-          fontSize: 14.0 * 0.95,
+          fontSize: 14.0,
           height: 1.35,
           color: colors.onSurface.withOpacity(0.9)), // Form Labels
       subtitle1: TextStyle(
@@ -315,7 +315,7 @@ class ThemeProvider extends InheritedWidget {
           height: 1.35,
           color: colors.onSurface.withOpacity(0.8)),
       headline6: TextStyle(
-          fontSize: 14.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline5: TextStyle(
           fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline4: TextStyle(
