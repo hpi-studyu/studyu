@@ -9,17 +9,17 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
-mixin WithQuestionnaireControls<T> on FormViewModel<T>
+mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewModel<D>
     implements
-        IFormViewModelDelegate<QuestionFormViewModel>,
-        IProviderArgsResolver<QuestionFormViewModel, QuestionFormRouteArgs> {
+        IFormViewModelDelegate<Q>,
+        IProviderArgsResolver<Q, QuestionFormRouteArgs> {
   late final FormArray questionsArray =
       FormArray([], validators: questionsArrayValidators);
   late final questionFormViewModels =
-      FormViewModelCollection<QuestionFormViewModel, QuestionFormData>(
+      FormViewModelCollection<Q, QuestionFormData>(
           [], questionsArray);
 
-  List<QuestionFormViewModel> get questionModels =>
+  List<Q> get questionModels =>
       questionFormViewModels.formViewModels;
 
   late final questionnaireControls = {
@@ -31,12 +31,7 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   void setQuestionnaireControlsFrom(QuestionnaireFormData data) {
     if (data.questionsData != null) {
       final viewModels = data.questionsData!
-          .map((data) => QuestionFormViewModel(
-                formData: data,
-                delegate: this,
-                validationSet: validationSet,
-                titles: questionTitles.isNotEmpty ? questionTitles : null,
-              ))
+          .map((data) => provideQuestionFormViewModel(data))
           .toList();
       questionFormViewModels.reset(viewModels);
     }
@@ -52,7 +47,7 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   Map<FormMode, String> get questionTitles => {};
 
   @override
-  void read([T? formData]) {
+  void read([D? formData]) {
     questionFormViewModels.read();
     super.read(formData);
   }
@@ -64,13 +59,12 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   bool propagateOnSave = false;
 
   @override
-  void onCancel(QuestionFormViewModel formViewModel, FormMode prevFormMode) {
+  void onCancel(Q formViewModel, FormMode prevFormMode) {
     return; // no-op
   }
 
   @override
-  Future onSave(
-      QuestionFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(Q formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       questionFormViewModels.commit(formViewModel);
@@ -85,16 +79,11 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
   // IProviderArgsResolver
 
   @override
-  QuestionFormViewModel provide(QuestionFormRouteArgs args) {
+  Q provide(QuestionFormRouteArgs args) {
     if (args.questionId.isNewId) {
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
-      final viewModel = QuestionFormViewModel(
-        formData: null,
-        delegate: this,
-        validationSet: validationSet,
-        titles: questionTitles.isNotEmpty ? questionTitles : null,
-      );
+      final viewModel = provideQuestionFormViewModel(null);
       questionFormViewModels.stage(viewModel);
       return viewModel;
     }
@@ -105,5 +94,14 @@ mixin WithQuestionnaireControls<T> on FormViewModel<T>
       throw QuestionNotFoundException(); // TODO handle 404 not found
     }
     return viewModel;
+  }
+
+  Q provideQuestionFormViewModel(QuestionFormData? formData) {
+    return QuestionFormViewModel(
+      formData: formData,
+      delegate: this,
+      validationSet: validationSet,
+      titles: questionTitles.isNotEmpty ? questionTitles : null,
+    ) as Q;
   }
 }

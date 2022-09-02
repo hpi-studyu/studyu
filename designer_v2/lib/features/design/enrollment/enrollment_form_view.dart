@@ -9,8 +9,8 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -91,7 +91,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<QuestionFormViewModel>(
+                    return FormArrayTable<ScreenerQuestionFormViewModel>(
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
@@ -225,13 +225,13 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final surveyQuestionFormViewModel =
+    final formViewModel =
         ref.read(screenerQuestionFormViewModelProvider(routeArgs));
 
-    showFormSideSheet<QuestionFormViewModel>(
+    showFormSideSheet<ScreenerQuestionFormViewModel>(
       context: context,
-      formViewModel: surveyQuestionFormViewModel,
-      tabs: <FormSideSheetTab<QuestionFormViewModel>>[
+      formViewModel: formViewModel,
+      tabs: <FormSideSheetTab<ScreenerQuestionFormViewModel>>[
         FormSideSheetTab(
           title: "Content".hardcoded,
           index: 0,

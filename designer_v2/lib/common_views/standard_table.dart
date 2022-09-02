@@ -81,7 +81,7 @@ class StandardTable<T> extends StatefulWidget {
 
   final double cellSpacing;
   final double rowSpacing;
-  final double minRowHeight;
+  final double? minRowHeight;
 
   final bool showTableHeader;
 
@@ -273,6 +273,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     final item = widget.items[rowIdx];
     final dataRowBuilder = widget.dataRowBuilder ?? _defaultDataRow;
     final rowStates = _rowStates[rowIdx];
+
     return dataRowBuilder(context, item, rowIdx, rowStates);
   }
 
@@ -302,6 +303,10 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       isTrailing = false,
       disableOnTap = false,
     }) {
+      final content = Align(
+        alignment: alignment,
+        child: child,
+      );
       final styledCell = Material(
           color: rowColor,
           child: Padding(
@@ -311,13 +316,12 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
                   (isLeading || isTrailing) ? 2*widget.cellSpacing : widget.cellSpacing,
                   widget.cellSpacing
               ),
-              child: SizedBox(
-                  height: widget.minRowHeight,
-                  child: Align(
-                    alignment: alignment,
-                    child: child,
-                  )
-              )
+              child: (widget.minRowHeight != null)
+                  ? SizedBox(
+                      height: widget.minRowHeight,
+                      child: content,
+                    )
+                  : content,
           )
       );
 
