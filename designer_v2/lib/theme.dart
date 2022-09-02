@@ -321,7 +321,7 @@ class ThemeProvider extends InheritedWidget {
       headline4: TextStyle(
           fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline3: TextStyle(
-          fontSize: 28.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline2: TextStyle(
           fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline1: TextStyle(

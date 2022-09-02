@@ -68,13 +68,13 @@ extension DashboardStateSafeViewProps on DashboardState {
   String get visibleListTitle {
     switch(studiesFilter) {
       case StudiesFilter.public:
-        return "Study registry".hardcoded;
+        return "Study Registry".hardcoded;
       case StudiesFilter.owned:
-        return "My studies".hardcoded;
+        return "My Studies".hardcoded;
       case StudiesFilter.shared:
-        return "Shared with me".hardcoded;
+        return "Shared With Me".hardcoded;
       case StudiesFilter.all:
-        return "All studies".hardcoded;
+        return "All Studies".hardcoded;
     }
   }
 }

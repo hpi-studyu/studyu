@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
+import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -10,16 +13,18 @@ import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class StudiesTable extends StatelessWidget {
-  const StudiesTable(
-      {required this.studies,
-      required this.onSelect,
-      required this.getActions,
-      Key? key})
-      : super(key: key);
+  const StudiesTable({
+    required this.studies,
+    required this.onSelect,
+    required this.getActions,
+    required this.emptyWidget,
+    Key? key,
+  }) : super(key: key);
 
   final List<Study> studies;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<Study> getActions;
+  final Widget emptyWidget;
 
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
@@ -32,8 +37,8 @@ class StudiesTable extends StatelessWidget {
             const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
     StandardTableColumn(
         label: 'Participation'.hardcoded,
-        columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(120), IntrinsicColumnWidth())),
+        columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(120), IntrinsicColumnWidth())),
     StandardTableColumn(
       label: 'Created'.hardcoded,
       columnWidth: const FlexColumnWidth(1.3),
@@ -60,6 +65,7 @@ class StudiesTable extends StatelessWidget {
       onSelectItem: onSelect,
       trailingActionsAt: (item, _) => getActions(item),
       buildCellsAt: _buildRow,
+      emptyWidget: emptyWidget,
     );
   }
 

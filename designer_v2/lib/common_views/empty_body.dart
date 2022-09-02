@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 
 class EmptyBody extends StatelessWidget {
-  const EmptyBody(
-      {this.icon,
-      this.leading,
-      this.leadingSpacing = 24.0,
-      required this.title,
-      required this.description,
-      this.button,
-      Key? key})
-      : super(key: key);
+  const EmptyBody({
+    this.icon,
+    this.leading,
+    this.leadingSpacing = 24.0,
+    required this.title,
+    required this.description,
+    this.button,
+    Key? key,
+  }) : super(key: key);
 
   final IconData? icon;
   final Widget? leading;
@@ -30,35 +31,34 @@ class EmptyBody extends StatelessWidget {
               ? SizedBox(height: leadingSpacing!)
               : const SizedBox.shrink(),
           (icon != null)
-              ? Icon(
-                  icon,
-                  size: 96.0,
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
-                )
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Icon(
+                    icon,
+                    size: 96.0,
+                    color: theme.colorScheme.secondary,
+                  ))
               : const SizedBox.shrink(),
           (title != null)
               ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
                   child: SelectableText(
                     title!,
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.headline5!.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.headline4,
                   ),
                 )
               : const SizedBox.shrink(),
           (description != null)
-              ? SelectableText(
-                  description!,
+              ? SelectableText(description!,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyText2!,
-                )
+                  style: theme.textTheme.bodyText2?.copyWith(
+                    color: theme.textTheme.bodyText2?.color?.faded(0.9),
+                  ))
               : const SizedBox.shrink(),
           (button != null)
               ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 16.0),
                   child: button,
                 )
               : const SizedBox.shrink(),

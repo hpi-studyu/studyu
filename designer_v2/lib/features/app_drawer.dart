@@ -17,10 +17,12 @@ class DrawerEntry {
     this.icon,
     this.onSelected,
     this.helpText,
+    this.enabled = true,
   });
   final String title;
   final IconData? icon;
   final String? helpText;
+  final bool enabled;
   final OnEntrySelectedCallback? onSelected;
 
   void onClick(BuildContext context, WidgetRef ref) {
@@ -35,6 +37,7 @@ class GoRouterDrawerEntry extends DrawerEntry {
     required super.title,
     super.icon,
     super.helpText,
+    super.enabled,
     required this.intent,
   });
   final RoutingIntent intent;
@@ -85,6 +88,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         title: 'Shared With Me'.hardcoded,
         icon: Icons.folder_shared_rounded,
         intent: RoutingIntents.studiesShared,
+        enabled: false,
       ),
     ],
     [
@@ -277,7 +281,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       leading: Icon(
         entry.icon,
         size: theme.iconTheme.size! * 1.2,
-        color: (isSelected) ? null : theme.iconTheme.color!.faded(0.75),
+        color: (isSelected) ? null : (entry.enabled) ? theme.iconTheme.color!.faded(0.75) : theme.iconTheme.color!.faded(0.3),
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(
@@ -286,6 +290,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       ),
       contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
       selected: isSelected,
+      enabled: entry.enabled,
       onTap: () => entry.onClick(context, ref),
     );
   }

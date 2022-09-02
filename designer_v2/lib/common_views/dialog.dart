@@ -9,7 +9,7 @@ class StandardDialog extends StatelessWidget {
       required this.body,
       this.width,
       this.height,
-      this.padding = const EdgeInsets.fromLTRB(38.0, 32.0, 38.0, 32.0),
+      this.padding = const EdgeInsets.fromLTRB(42.0, 36.0, 42.0, 36.0),
       this.minWidth = 400,
       this.minHeight = 300,
       this.maxWidth,
@@ -47,7 +47,7 @@ class StandardDialog extends StatelessWidget {
         ((titleText != null)
             ? SelectableText(
                 titleText!,
-                style: theme.textTheme.headline4?.copyWith(
+                style: theme.textTheme.headline3?.copyWith(
                   fontWeight: FontWeight.normal,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),

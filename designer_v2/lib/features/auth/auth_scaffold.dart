@@ -81,7 +81,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                             formKey.title,
                             style: theme.textTheme.headline3!,
                           ),
-                          const SizedBox(height: 12.0),
+                          const SizedBox(height: 8.0),
                           (formKey.description != null) ?
                           TextParagraph(
                             text: formKey.description,
