@@ -97,14 +97,19 @@ class FormTableLayout extends StatelessWidget {
       if (actualRowLayout == FormTableRowLayout.horizontal) {
         tableRow = TableRow(
           children: [
-            Container(
-              padding:
-                  EdgeInsets.only(top: 8.0, bottom: bottomSpacing, right: 8.0),
-              child: labelWidget,
+            TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
+                  child: labelWidget,
+                )
             ),
-            Container(
-              padding: EdgeInsets.only(bottom: bottomSpacing),
-              child: contentWidget,
+            TableCell(
+                verticalAlignment: TableCellVerticalAlignment.middle,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 8.0, bottom: bottomSpacing),
+                  child: contentWidget,
+                )
             ),
           ],
         );

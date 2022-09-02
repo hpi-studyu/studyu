@@ -20,12 +20,14 @@ class AccountSettingsDialog extends ConsumerWidget {
         children: [
           const SizedBox(height: 16.0),
           FormTableLayout(
-            //rowLayout: FormTableRowLayout.vertical,
+            rowLayout: FormTableRowLayout.horizontal,
             rows: [
               FormTableRow(
                 label: "Language",
-                //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                input: const LanguagePicker(),
+                input: const Align(
+                    alignment: Alignment.centerRight,
+                    child: LanguagePicker()
+                ),
               ),
             ],
           ),

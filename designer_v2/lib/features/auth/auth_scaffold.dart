@@ -116,12 +116,22 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                           "© HPI Digital Health Center 2022",
                           style: ThemeConfig.bodyTextBackground(theme),
                         ),
-                        Hyperlink(
-                          text: "Imprint",
-                          onClick: () => _onClickImprint(),
-                          linkColor:
-                          ThemeConfig.bodyTextBackground(theme).color!,
-                        ),
+                        Row(
+                          children: [
+                            LanguagePicker(
+                              languagePickerType: LanguagePickerType.icon,
+                              iconColor: ThemeConfig.bodyTextBackground(theme).color!,
+                              offset: const Offset(0, -60),
+                            ),
+                            const SizedBox(width: 12.0),
+                            Hyperlink(
+                              text: "Imprint",
+                              onClick: () => _onClickImprint(),
+                              linkColor:
+                              ThemeConfig.bodyTextBackground(theme).color!,
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -137,13 +147,6 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
             Expanded(
               child: Center(
                 child: StudyUJobsToBeDone(),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: SizedBox(
-                width: 200,
-                child: LanguagePicker(),
               ),
             ),
           ],

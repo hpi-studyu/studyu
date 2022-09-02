@@ -7,7 +7,7 @@ class EmailTextField extends StatefulWidget {
     this.labelText = 'Email', // .hardcoded
     this.formControlName,
     this.formControl,
-    this.hintText = 'mail@example.com', //.hardcoded
+    this.hintText = 'Email', //.hardcoded
     Key? key,
   })  : assert(
   (formControlName != null && formControl == null) ||
@@ -31,12 +31,12 @@ class _EmailTextFieldState extends State<EmailTextField> {
       rowLayout: FormTableRowLayout.vertical,
       rows: [
         FormTableRow(
-          label: widget.labelText,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold),
           input: ReactiveTextField(
             formControl: widget.formControl,
             formControlName: widget.formControlName,
             decoration: InputDecoration(
+              labelText: widget.labelText,
               hintText: widget.hintText,
             ),
           ),
@@ -51,7 +51,7 @@ class PasswordTextField extends StatefulWidget {
     this.labelText = 'Password', // .hardcoded
     this.formControlName,
     this.formControl,
-    this.hintText = 'Enter password', //.hardcoded
+    this.hintText = 'Enter your password', //.hardcoded
     Key? key,
   })  : assert(
             (formControlName != null && formControl == null) ||
@@ -77,13 +77,12 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       rowLayout: FormTableRowLayout.vertical,
       rows: [
         FormTableRow(
-            label: widget.labelText,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             input: ReactiveTextField(
               formControl: widget.formControl,
               formControlName: widget.formControlName,
               obscureText: !passwordVisibility,
               decoration: InputDecoration(
+                labelText: widget.labelText,
                 hintText: widget.hintText,
                 suffixIcon: InkWell(
                   onTap: () => setState(
@@ -97,7 +96,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
                   ),
                 ),
               ),
-            ))
+            )
+        )
       ],
     );
   }
