@@ -95,10 +95,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   // Yes/no
-  final FormArray<String> boolResponseOptionsArray = FormArray([
-    FormControl<String>(value: "Yes".hardcoded, disabled: true),
-    FormControl<String>(value: "No".hardcoded, disabled: true),
-  ]);
+  final FormArray<String> boolResponseOptionsArray = FormArray(
+      BoolQuestionFormData.kResponseOptions.keys
+          .map((e) => FormControl(value: e, disabled:true)).toList()
+  );
 
   // Scale
   static const int kDefaultScaleMinValue = 0;
@@ -302,10 +302,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   /// removed dynamically via the [_questionTypeChanges] subscription.
   @override
   late final FormGroup form = FormGroup({
-    'questionId': questionIdControl, // hidden
-    'questionType': questionTypeControl,
-    'questionText': questionTextControl,
-    'questionInfoText': questionInfoTextControl,
+    ...questionBaseControls,
     ..._controlsByQuestionType[questionType]!.controls,
   });
 

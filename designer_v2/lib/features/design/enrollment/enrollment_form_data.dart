@@ -20,7 +20,8 @@ class EnrollmentFormData implements IStudyFormData {
     return EnrollmentFormData(
       enrollmentType: study.participation,
       questionnaireFormData:
-          QuestionnaireFormData.fromDomainModel(study.questionnaire),
+          QuestionnaireFormData.fromDomainModel(
+              study.questionnaire, study.eligibilityCriteria),
       consentItemsFormData: study.consent
           .map(
               (consentItem) => ConsentItemFormData.fromDomainModel(consentItem))
@@ -37,7 +38,7 @@ class EnrollmentFormData implements IStudyFormData {
             .map((formData) => formData.toConsentItem())
             .toList()
         : [];
-    // TODO study.eligibilityCriteria (= questions.map((s) => s.eligibilityCriterion))
+    study.eligibilityCriteria = questionnaireFormData.toEligibilityCriteria();
     return study;
   }
 

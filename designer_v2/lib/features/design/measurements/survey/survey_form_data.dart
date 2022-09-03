@@ -41,7 +41,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
       introText: questionnaireTask.header,
       outroText: questionnaireTask.footer,
       questionnaireFormData:
-          QuestionnaireFormData.fromDomainModel(questionnaireTask.questions),
+          QuestionnaireFormData.fromDomainModel(questionnaireTask.questions, []),
       isTimeLocked: questionnaireTask.schedule.isTimeRestricted,
       timeLockStart: questionnaireTask.schedule.restrictedTimeStart,
       timeLockEnd: questionnaireTask.schedule.restrictedTimeEnd,

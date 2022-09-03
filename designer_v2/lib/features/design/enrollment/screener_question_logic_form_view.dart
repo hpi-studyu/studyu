@@ -25,13 +25,10 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
       children: [
         TextParagraph(
           text: "Define which responses qualify or disqualify participants from "
-                  "enrolling in your study. \n\n"
-                  "Positive (qualifying) criteria are evaluated using OR logic. "
-                  "Negative (disqualifying) criteria are evaluated using AND logic. "
-                  "To qualify as a participant, at least one of the positive criteria "
-                  "and none of the negative criteria must be selected. "
-                  "You can leave the criterion blank if you don’t care."
-              .hardcoded,
+                "enrolling in your study. To qualify as a participant, at least "
+                "one of the qualifying response options and none of the "
+                "disqualifying ones must be selected for this question in the "
+                "screening survey.".hardcoded,
           style: ThemeConfig.bodyTextMuted(theme),
         ),
         const SizedBox(height: 16.0),
@@ -40,7 +37,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
           labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
           helpText:
               "Define which response options are qualifying or disqualifying "
-                      "when selected by the participant"
+              "when selected by the participant."
                   .hardcoded,
         ),
         _buildInfoBanner(context),
@@ -59,8 +56,9 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
               body: TextParagraph(
                   text:
                       "The options you see here are cleared automatically to "
-                          "reflect the available responses."
-                          .hardcoded),
+                      "reflect the available responses. Every option is "
+                      "qualifying by default unless you explicitly mark them "
+                      "as disqualifying.".hardcoded),
               padding:
                   const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,

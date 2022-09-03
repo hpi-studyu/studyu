@@ -94,8 +94,12 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           children: [
             Text(AppLocalizations.of(context).eligible_no, style: Theme.of(context).textTheme.subtitle1),
             const SizedBox(height: 4),
-            Text(activeResult.firstFailed.reason),
-            const SizedBox(height: 4),
+            (activeResult?.firstFailed.reason != null)
+                ? Text(activeResult.firstFailed.reason)
+                : const SizedBox.shrink(),
+            (activeResult?.firstFailed.reason != null)
+                ? const SizedBox(height: 4)
+                : const SizedBox.shrink(),
             Text(AppLocalizations.of(context).eligible_mistake),
           ],
         ),

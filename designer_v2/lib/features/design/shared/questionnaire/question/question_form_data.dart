@@ -3,39 +3,45 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
-    Question question);
+    Question question, List<EligibilityCriterion> eligibilityCriteria);
 
 abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
       questionTypeFormDataFactories = {
-    SurveyQuestionType.scale: (question) {
+    SurveyQuestionType.scale: (question, eligibilityCriteria) {
       switch (question.runtimeType) {
         // First check for general scale which implements the other interfaces
         case ScaleQuestion:
           return ScaleQuestionFormData.fromDomainModel(
-              question as ScaleQuestion);
+              question as ScaleQuestion, eligibilityCriteria);
         // Remain backward compatible with specialized scale types
         case AnnotatedScaleQuestion:
           return ScaleQuestionFormData.fromDomainModel(
             ScaleQuestion.fromAnnotatedScaleQuestion(
                 question as AnnotatedScaleQuestion),
+            eligibilityCriteria,
           );
         case VisualAnalogueQuestion:
           return ScaleQuestionFormData.fromDomainModel(
             ScaleQuestion.fromVisualAnalogueQuestion(
                 question as VisualAnalogueQuestion),
+            eligibilityCriteria,
           );
       }
-      return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion);
+      return ScaleQuestionFormData.fromDomainModel(
+          question as ScaleQuestion, eligibilityCriteria);
     },
-    SurveyQuestionType.bool: (question) =>
-        BoolQuestionFormData.fromDomainModel(question as BooleanQuestion),
-    SurveyQuestionType.choice: (question) =>
-        ChoiceQuestionFormData.fromDomainModel(question as ChoiceQuestion),
+    SurveyQuestionType.bool: (question, eligibilityCriteria) =>
+        BoolQuestionFormData.fromDomainModel(
+            question as BooleanQuestion, eligibilityCriteria),
+    SurveyQuestionType.choice: (question, eligibilityCriteria) =>
+        ChoiceQuestionFormData.fromDomainModel(
+            question as ChoiceQuestion, eligibilityCriteria),
   };
 
   QuestionFormData({
@@ -49,22 +55,75 @@ abstract class QuestionFormData implements IFormData {
   final String questionText;
   final String? questionInfoText;
   final SurveyQuestionType questionType;
-
-  // TODO final EligibilityCriterion? eligibilityCriterion;
+  late final List<bool> responseOptionsValidity;
 
   @override
   String get id => questionId;
 
-  factory QuestionFormData.fromDomainModel(Question question) {
+  factory QuestionFormData.fromDomainModel(
+    Question question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
     final surveyQuestionType = SurveyQuestionType.of(question);
     if (!questionTypeFormDataFactories.containsKey(surveyQuestionType)) {
       throw Exception("Failed to create SurveyQuestionFormData for unknown "
           "SurveyQuestionType: $surveyQuestionType");
     }
-    return questionTypeFormDataFactories[surveyQuestionType]!(question);
+    return questionTypeFormDataFactories[surveyQuestionType]!(
+        question, eligibilityCriteria);
   }
 
+  List<dynamic> get responseOptions; // subclass responsibility
+
   Question toQuestion(); // subclass responsibility
+
+  EligibilityCriterion toEligibilityCriterion() {
+    final criterion = EligibilityCriterion.withId();
+    final expression = ChoiceExpression()..target = questionId;
+    // Screener conditions are implemented as disqualifying by default in the
+    // app (as of now), so we only need to generate conditions for the
+    // qualifying response options here
+    for (var i = 0; i < responseOptions.length; i++) {
+      final isQualifying = responseOptionsValidity[i];
+      if (isQualifying) {
+        final answer = constructAnswerFor(responseOptions[i]);
+        final selectedValue = answer.response;
+        if (selectedValue is List) {
+          expression.choices.addAll(selectedValue);
+        } else {
+          expression.choices.add(selectedValue);
+        }
+      }
+    }
+    criterion.condition = expression;
+    return criterion;
+  }
+
+  Answer constructAnswerFor(dynamic responseOption);
+
+  /// Determines the [responseOptionsValidity] in terms of qualify/disqualify
+  /// by evaluating the given criteria for each response option on a new
+  /// [QuestionnaireState] where the option is selected
+  setResponseOptionsValidityFrom(
+      List<EligibilityCriterion> eligibilityCriteria) {
+    final List<bool> result = [];
+
+    for (final responseOption in responseOptions) {
+      final questionnaireState = QuestionnaireState();
+      //final answer = Answer<List<String>>(id, DateTime.now());
+      final answer = constructAnswerFor(responseOption);
+      questionnaireState.answers[id] = answer;
+
+      bool responseOptionValidity = false; // disqualifying by default
+      for (final criterion in eligibilityCriteria) {
+        responseOptionValidity = responseOptionValidity ||
+            (criterion.condition.evaluate(questionnaireState) ?? false);
+      }
+      result.add(responseOptionValidity);
+    }
+
+    responseOptionsValidity = result;
+  }
 
   @override
   QuestionFormData copy(); // subclass responsibility
@@ -83,14 +142,23 @@ class ChoiceQuestionFormData extends QuestionFormData {
   final bool isMultipleChoice;
   final List<String> answerOptions;
 
-  factory ChoiceQuestionFormData.fromDomainModel(ChoiceQuestion question) {
-    return ChoiceQuestionFormData(
-        questionId: question.id,
-        questionType: SurveyQuestionType.choice,
-        questionText: question.prompt ?? '',
-        questionInfoText: question.rationale ?? '',
-        isMultipleChoice: question.multiple,
-        answerOptions: question.choices.map((choice) => choice.text).toList());
+  @override
+  List<String> get responseOptions => answerOptions;
+
+  factory ChoiceQuestionFormData.fromDomainModel(
+    ChoiceQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = ChoiceQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.choice,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      isMultipleChoice: question.multiple,
+      answerOptions: question.choices.map((choice) => choice.text).toList(),
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
   }
 
   @override
@@ -100,18 +168,13 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
-    question.choices = answerOptions.map((value) {
-      final choiceId = value.toKey();
-      final choice = Choice(choiceId);
-      choice.text = value;
-      return choice;
-    }).toList();
+    question.choices = answerOptions.map(_buildChoiceForValue).toList();
     return question;
   }
 
   @override
   QuestionFormData copy() {
-    return ChoiceQuestionFormData(
+    final data = ChoiceQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
@@ -119,14 +182,25 @@ class ChoiceQuestionFormData extends QuestionFormData {
       isMultipleChoice: isMultipleChoice,
       answerOptions: [...answerOptions],
     );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  Choice _buildChoiceForValue(String value) {
+    final choiceId = value.toKey();
+    final choice = Choice(choiceId);
+    choice.text = value;
+    return choice;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as ChoiceQuestion;
+    final choice = _buildChoiceForValue(responseOption);
+    return question.constructAnswer([choice]);
   }
 }
 
-/*
-BoolQuestionFormData
-options: Option(id, label, value, validator?)
-  validators: Any (qualify), None (disqualify)
- */
 class BoolQuestionFormData extends QuestionFormData {
   BoolQuestionFormData({
     required super.questionId,
@@ -135,13 +209,26 @@ class BoolQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  factory BoolQuestionFormData.fromDomainModel(BooleanQuestion question) {
-    return BoolQuestionFormData(
+  static final Map<String, bool> kResponseOptions = {
+    'Yes'.hardcoded: true,
+    'No'.hardcoded: false,
+  };
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory BoolQuestionFormData.fromDomainModel(
+    BooleanQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = BoolQuestionFormData(
       questionId: question.id,
       questionType: SurveyQuestionType.bool,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
     );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
   }
 
   @override
@@ -155,12 +242,21 @@ class BoolQuestionFormData extends QuestionFormData {
 
   @override
   BoolQuestionFormData copy() {
-    return BoolQuestionFormData(
+    final data = BoolQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
     );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as BooleanQuestion;
+    final value = kResponseOptions[responseOption] as bool;
+    return question.constructAnswer(value);
   }
 }
 
@@ -194,6 +290,13 @@ class ScaleQuestionFormData extends QuestionFormData {
   final Color? minColor;
   final Color? maxColor;
 
+  @override
+  List<double> get responseOptions => [
+        minValue,
+        ...(midValues.where((v) => v != null).map((v) => v as double).toList()),
+        maxValue,
+      ];
+
   List<Annotation> get midAnnotations {
     final List<Annotation> midAnnotations = [];
     for (int i = 0; i < midValues.length; i++) {
@@ -209,8 +312,11 @@ class ScaleQuestionFormData extends QuestionFormData {
     return midAnnotations;
   }
 
-  factory ScaleQuestionFormData.fromDomainModel(ScaleQuestion question) {
-    return ScaleQuestionFormData(
+  factory ScaleQuestionFormData.fromDomainModel(
+    ScaleQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = ScaleQuestionFormData(
       questionId: question.id,
       questionType: SurveyQuestionType.scale,
       questionText: question.prompt ?? '',
@@ -226,6 +332,8 @@ class ScaleQuestionFormData extends QuestionFormData {
       minColor: (question.minColor != null) ? Color(question.minColor!) : null,
       maxColor: (question.maxColor != null) ? Color(question.maxColor!) : null,
     );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
   }
 
   @override
@@ -253,7 +361,7 @@ class ScaleQuestionFormData extends QuestionFormData {
 
   @override
   QuestionFormData copy() {
-    return ScaleQuestionFormData(
+    final data = ScaleQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
@@ -269,5 +377,13 @@ class ScaleQuestionFormData extends QuestionFormData {
       midLabels: midLabels,
       midValues: midValues,
     );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion();
+    return question.constructAnswer(responseOption as double);
   }
 }
