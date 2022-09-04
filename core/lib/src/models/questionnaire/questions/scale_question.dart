@@ -184,6 +184,16 @@ class ScaleQuestion extends SliderQuestion
     addAnnotation(value: atValue.toInt(), label: newLabel);
   }
 
+  @JsonKey(ignore: true)
+  List<double> get values {
+    final List<double> values = [];
+    for (double value = minimum; value < maximum; value += step) {
+      values.add(value);
+    }
+    values.add(maximum);
+    return values;
+  }
+
   // - VisualAnalogueQuestion
 
   @override

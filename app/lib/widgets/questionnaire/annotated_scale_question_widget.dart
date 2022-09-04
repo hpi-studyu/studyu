@@ -96,6 +96,8 @@ List<Widget> buildAnnotations(
   final textTheme = Theme.of(context).textTheme;
   final labelTextStyle = textTheme.bodyText1;
 
+  int flexSum = 0;
+
   for (var i = 0; i < annotations.length; i++) {
     final Annotation current = annotations[i];
     final Annotation next =
@@ -105,7 +107,8 @@ List<Widget> buildAnnotations(
     assert(scaleRange != 0);
     final flex = (next != null)
         ? ((next.value - current.value) / scaleRange * 100).toInt()
-        : 0;
+        : 100 - flexSum;
+    flexSum += flex;
     final midValue = question.minimum + 0.5 * scaleRange;
     final midValueDistance =
         (current.value - midValue).abs() / (scaleRange / 2);

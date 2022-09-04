@@ -277,7 +277,7 @@ class ScaleQuestionFormData extends QuestionFormData {
     required this.midValues,
     required this.midLabels,
     this.initialValue = 1,
-    this.stepSize = 1,
+    this.stepSize = 0,
     this.minColor,
     this.maxColor,
   }) : assert(midValues.length == midLabels.length,
@@ -295,14 +295,7 @@ class ScaleQuestionFormData extends QuestionFormData {
   final Color? maxColor;
 
   @override
-  List<double> get responseOptions {
-    final List<double> values = [];
-    for (double value = minValue; value < maxValue; value += stepSize) {
-      values.add(value);
-    }
-    values.add(maxValue);
-    return values;
-  }
+  List<double> get responseOptions => toQuestion().values;
 
   List<Annotation> get midAnnotations {
     final List<Annotation> midAnnotations = [];

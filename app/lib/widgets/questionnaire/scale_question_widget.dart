@@ -76,7 +76,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Stack(
             alignment: Alignment.center,
             children: [
