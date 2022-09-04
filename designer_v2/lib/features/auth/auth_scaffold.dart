@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/src/models/tables/app_config.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/studyu_logo.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
@@ -44,6 +45,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
+    final appConfig = ref.watch(appConfigProvider).value;
     print("AuthScaffold.build");
 
     return Scaffold(
@@ -126,9 +128,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                             const SizedBox(width: 12.0),
                             Hyperlink(
                               text: "Imprint",
-                              onClick: () => _onClickImprint(),
-                              linkColor:
-                              ThemeConfig.bodyTextBackground(theme).color!,
+                              onClick: () => _onClickImprint(appConfig),
+                              linkColor: ThemeConfig.bodyTextBackground(theme).color!,
                             ),
                           ],
                         )
@@ -161,13 +162,13 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
     );
   }
 
-  _onClickImprint() {
-    final appConfig = ref.watch(appConfigProvider);
+  _onClickImprint(AppConfig? appConfig) {
     final locale = ref.watch(localeProvider);
-
-    launchUrl(appConfig.maybeWhen(
-      data: (value) => Uri.parse(value.imprint[locale.languageCode] ?? ""),
-      orElse: () => Uri.parse(''),
-    ));
+    if (appConfig != null) {
+      final imprintUri = appConfig.imprint[locale.languageCode];
+      if (imprintUri != null) {
+        return launchUrl(Uri.parse(imprintUri));
+      }
+    }
   }
 }

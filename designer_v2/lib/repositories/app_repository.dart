@@ -24,7 +24,7 @@ class AppRepository implements IAppRepository {
   }
 }
 
-final appConfigProvider = FutureProvider.autoDispose<AppConfig>((ref) {
+final appConfigProvider = FutureProvider.autoDispose<AppConfig>((ref) async {
   final apiClient = ref.watch(apiClientProvider);
-  return AppRepository(apiClient).fetchAppConfig();
+  return await AppRepository(apiClient).fetchAppConfig();
 });
