@@ -87,9 +87,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: context.watch<AppState>().selectedStudy.hasEligibilityCheck
-            ? () => navigateToEligibilityCheck(context) // todo temporary disabled for designer_v2 test
-            : () => navigateToEligibilityCheck(context),
-            //: () => navigateToJourney(context),
+            ? () => navigateToEligibilityCheck(context)
+            : () => navigateToJourney(context),
       ),
     );
   }
