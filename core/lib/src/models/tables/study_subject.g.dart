@@ -17,7 +17,8 @@ StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) => StudySubject(
       ..startedAt = json['started_at'] == null
           ? null
           : DateTime.parse(json['started_at'] as String)
-      ..inviteCode = json['invite_code'] as String?;
+      ..inviteCode = json['invite_code'] as String?
+      ..isDeleted = json['is_deleted'] as bool;
 
 Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
   final val = <String, dynamic>{
@@ -35,5 +36,6 @@ Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) {
   writeNotNull('started_at', instance.startedAt?.toIso8601String());
   val['selected_intervention_ids'] = instance.selectedInterventionIds;
   writeNotNull('invite_code', instance.inviteCode);
+  val['is_deleted'] = instance.isDeleted;
   return val;
 }

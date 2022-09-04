@@ -19,12 +19,12 @@ ScaleQuestion _$ScaleQuestionFromJson(Map<String, dynamic> json) =>
       ..minimum = (json['minimum'] as num).toDouble()
       ..maximum = (json['maximum'] as num).toDouble()
       ..initial = (json['initial'] as num).toDouble()
-      ..step = (json['step'] as num).toDouble()
       ..annotations = (json['annotations'] as List<dynamic>)
           .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
           .toList()
       ..minColor = json['min_color'] as int?
-      ..maxColor = json['max_color'] as int?;
+      ..maxColor = json['max_color'] as int?
+      ..step = (json['step'] as num).toDouble();
 
 Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) {
   final val = <String, dynamic>{
@@ -44,9 +44,9 @@ Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) {
   val['minimum'] = instance.minimum;
   val['maximum'] = instance.maximum;
   val['initial'] = instance.initial;
-  val['step'] = instance.step;
   val['annotations'] = instance.annotations.map((e) => e.toJson()).toList();
   writeNotNull('min_color', instance.minColor);
   writeNotNull('max_color', instance.maxColor);
+  val['step'] = instance.step;
   return val;
 }
