@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -20,6 +22,22 @@ class ScaleQuestion extends SliderQuestion
   @JsonKey(name: 'max_color')
   int? maxColor;
 
+  @JsonKey(ignore: true)
+  double _step = 0; // autogenerate intermediate values by default
+
+  @override
+  double get step => isAutostep ? autostep.toDouble() : _step;
+
+  @override
+  set step(double value) => _step = value;
+
+  @JsonKey(ignore: true)
+  bool get isAutostep => _step == 0;
+
+  @JsonKey(ignore: true)
+  int get autostep =>
+      getAutostepSize(scaleMaxValue: maximum.toInt(), numValuesGenerated: 10);
+
   ScaleQuestion() : super(questionType);
 
   ScaleQuestion.withId() : super.withId(questionType);
@@ -28,7 +46,8 @@ class ScaleQuestion extends SliderQuestion
       _$ScaleQuestionFromJson(json);
 
   factory ScaleQuestion.fromAnnotatedScaleQuestion(
-      AnnotatedScaleQuestion question,) {
+    AnnotatedScaleQuestion question,
+  ) {
     final result = ScaleQuestion()
       ..id = question.id
       ..prompt = question.prompt
@@ -43,7 +62,8 @@ class ScaleQuestion extends SliderQuestion
   }
 
   factory ScaleQuestion.fromVisualAnalogueQuestion(
-      VisualAnalogueQuestion question,) {
+    VisualAnalogueQuestion question,
+  ) {
     final result = ScaleQuestion()
       ..id = question.id
       ..prompt = question.prompt
@@ -168,11 +188,13 @@ class ScaleQuestion extends SliderQuestion
 
   @override
   @JsonKey(ignore: true)
-  String get minimumAnnotation => minAnnotation?.annotation ?? minimum.toString();
+  String get minimumAnnotation =>
+      minAnnotation?.annotation ?? minimum.toString();
 
   @override
   @JsonKey(ignore: true)
-  String get maximumAnnotation => maxAnnotation?.annotation ?? maximum.toString();
+  String get maximumAnnotation =>
+      maxAnnotation?.annotation ?? maximum.toString();
 
   @override
   @JsonKey(ignore: true)
@@ -206,5 +228,32 @@ class ScaleQuestion extends SliderQuestion
       atSortedIndex: 0,
       atValue: minimum,
     );
+  }
+
+  static int getAutostepSize({
+    required int scaleMaxValue,
+    int numValuesGenerated = 10,
+  }) {
+    return max((scaleMaxValue / numValuesGenerated).ceil(), 1);
+  }
+
+  static List<int> generateMidValues({
+    required int scaleMinValue,
+    required int scaleMaxValue,
+    int numValuesGenerated = 10,
+  }) {
+    final int midValueStepSize = getAutostepSize(
+        scaleMaxValue: scaleMinValue, numValuesGenerated: numValuesGenerated);
+    final List<int> midValues = [];
+
+    for (int midValue = scaleMinValue + midValueStepSize;
+        midValue < scaleMaxValue;
+        midValue += midValueStepSize) {
+      midValues.add(midValue);
+      if (midValues.length >= numValuesGenerated) {
+        break;
+      }
+    }
+    return midValues;
   }
 }

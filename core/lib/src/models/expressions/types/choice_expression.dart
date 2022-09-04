@@ -5,10 +5,10 @@ import 'value_expression.dart';
 part 'choice_expression.g.dart';
 
 @JsonSerializable()
-class ChoiceExpression extends ValueExpression<List<String>> {
+class ChoiceExpression extends ValueExpression<dynamic> {
   static const String expressionType = 'choice';
 
-  Set<String> choices = {};
+  Set<dynamic> choices = {};
 
   ChoiceExpression() : super(expressionType);
 
@@ -20,5 +20,10 @@ class ChoiceExpression extends ValueExpression<List<String>> {
   Map<String, dynamic> toJson() => _$ChoiceExpressionToJson(this);
 
   @override
-  bool checkValue(List<String> value) => value.any((element) => choices.contains(element));
+  bool checkValue(dynamic value) {
+    if (value is List) {
+      return value.any((element) => choices.contains(element));
+    }
+    return choices.contains(value);
+  }
 }
