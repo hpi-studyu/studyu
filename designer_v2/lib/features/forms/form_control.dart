@@ -1,5 +1,6 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 typedef ValueCallback<T> = void Function(T value);
 
@@ -69,7 +70,19 @@ extension AbstractControlChangedX on AbstractControl {
 
 extension FormArrayChangedX on FormArray {
   void onChanged(FormArrayChangedCallback callback) {
-    valueChanges.listen((event) => callback(this));
-    collectionChanges.listen((event) => callback(this));
+    bool didNotify = false;
+
+    void notifyListener(event) {
+      if (didNotify) {
+        return;
+      }
+      callback(this);
+      // ensure single listener notification in synchronous control flow
+      didNotify = true;
+      runAsync(() => didNotify = false);
+    }
+
+    valueChanges.listen(notifyListener);
+    collectionChanges.listen(notifyListener);
   }
 }

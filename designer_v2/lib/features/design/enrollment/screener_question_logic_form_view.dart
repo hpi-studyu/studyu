@@ -10,6 +10,10 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
+abstract class IScreenerQuestionLogicFormViewModel {
+  bool get isDirtyOptionsBannerVisible;
+}
+
 class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   const ScreenerQuestionLogicFormView({required this.formViewModel, Key? key})
       : super(key: key);
@@ -48,7 +52,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   }
 
   _buildInfoBanner(BuildContext context) {
-    return (!formViewModel.isReadonly)
+    return (!formViewModel.isReadonly && formViewModel.isDirtyOptionsBannerVisible)
         ? Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: BannerBox(

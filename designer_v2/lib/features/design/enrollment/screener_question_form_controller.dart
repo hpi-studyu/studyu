@@ -1,11 +1,14 @@
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class ScreenerQuestionFormViewModel extends QuestionFormViewModel {
+class ScreenerQuestionFormViewModel extends QuestionFormViewModel
+    implements IScreenerQuestionLogicFormViewModel {
   ScreenerQuestionFormViewModel({
     super.formData,
     super.delegate,
@@ -44,16 +47,21 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel {
   };
 
   @override
-  Map<String, AbstractControl> get questionBaseControls => _questionBaseControls;
+  Map<String, AbstractControl> get questionBaseControls =>
+      _questionBaseControls;
 
   List<AbstractControl> prevResponseOptionControls = [];
+  late List<dynamic> prevResponseOptionValues = [];
 
   @override
   onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
     // Build new form arrays consolidated with previous values (if any)
     final newLogicControls = responseOptionControls.map((newControl) {
       // Consolidate with previous value (if any)
-      final idx = prevResponseOptionControls.indexOf(newControl);
+      final idx = prevResponseOptionControls
+          .map((c) => c.value)
+          .toList()
+          .indexOf(newControl.value);
       final newValue = (idx != -1)
           ? responseOptionsLogicControls.controls[idx].value
           : defaultResponseOptionValidity;
@@ -62,7 +70,10 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel {
     final newLogicDescriptionControls =
         responseOptionControls.map((newControl) {
       // Consolidate with previous value (if any)
-      final idx = prevResponseOptionControls.indexOf(newControl);
+      final idx = prevResponseOptionControls
+          .map((c) => c.value)
+          .toList()
+          .indexOf(newControl.value);
       final newValue = (idx != -1)
           ? responseOptionsLogicDescriptionControls.controls[idx].value
           : null;
@@ -77,12 +88,46 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel {
     responseOptionsDisabledArray.markAsDisabled();
 
     // Reset logic controls to new consolidated ones
+    prevResponseOptionValues = prevResponseOptionControls.map((c) => c.value).toList();
     responseOptionsLogicControls.clear();
     responseOptionsLogicControls.addAll(newLogicControls);
     responseOptionsLogicDescriptionControls.clear();
     responseOptionsLogicDescriptionControls.addAll(newLogicDescriptionControls);
 
     prevResponseOptionControls = responseOptionControls;
+  }
+
+  @override
+  void setControlsFrom(QuestionFormData data) {
+    super.setControlsFrom(data);
+    //prevResponseOptionControls = answerOptionsControls;
+    onResponseOptionsChanged(answerOptionsControls);
+
+    for (final entry in data.responseOptionsValidity.entries) {
+      final responseOption = entry.key;
+      final responseValidity = entry.value;
+      final logicControl =
+          _findAssociatedLogicControlFor(responseOption: responseOption);
+      if (logicControl != null) {
+        logicControl.value = responseValidity;
+      }
+    }
+  }
+
+  @override
+  QuestionFormData buildFormData() {
+    final data = super.buildFormData();
+
+    final Map<dynamic, bool> responseOptionsValidity = {};
+    for (var i = 0; i < answerOptionsControls.length; i++) {
+      final optionControl = answerOptionsControls[i];
+      final logicControl = responseOptionsLogicControls.controls[i];
+      responseOptionsValidity[optionControl.value] =
+          logicControl.value ?? defaultResponseOptionValidity;
+    }
+    data.responseOptionsValidity = responseOptionsValidity;
+
+    return data;
   }
 
   List<FormControl> _copyFormControls(List<AbstractControl> controls) {
@@ -92,22 +137,32 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel {
         .toList();
   }
 
-  @override
-  void setControlsFrom(QuestionFormData data) {
-    super.setControlsFrom(data);
-    prevResponseOptionControls = answerOptionsControls;
-    for (var i = 0; i < data.responseOptionsValidity.length; i++) {
-      responseOptionsLogicControls.controls[i].value =
-          data.responseOptionsValidity[i];
-    }
+  AbstractControl? _findAssociatedLogicControlFor({
+    required dynamic responseOption,
+  }) {
+    return _findAssociatedControlFor(
+      responseOption: responseOption,
+      controls: responseOptionsLogicControls.controls,
+    );
   }
 
-  @override
-  QuestionFormData buildFormData() {
-    final data = super.buildFormData();
-    data.responseOptionsValidity = responseOptionsLogicControls.value
-            ?.map((v) => v ?? defaultResponseOptionValidity)
-            .toList() ?? [];
-    return data;
+  AbstractControl? _findAssociatedControlFor({
+    required dynamic responseOption,
+    required List<AbstractControl> controls,
+  }) {
+    for (var i = 0; i < controls.length; i++) {
+      final optionControl = answerOptionsControls[i];
+      final associatedControl = controls[i];
+      if (optionControl.value == responseOption) {
+        return associatedControl;
+      }
+    }
+    return null;
   }
+
+  // - IScreenerQuestionLogicFormViewModel
+
+  @override
+  bool get isDirtyOptionsBannerVisible => !prevResponseOptionValues
+      .equals(answerOptionsControls.map((c) => c.value).toList());
 }

@@ -55,7 +55,11 @@ abstract class QuestionFormData implements IFormData {
   final String questionText;
   final String? questionInfoText;
   final SurveyQuestionType questionType;
-  late final List<bool> responseOptionsValidity;
+
+  /// Mapping from response option => qualifying/disqualifying
+  late final Map<dynamic, bool> responseOptionsValidity;
+
+  List<dynamic> get responseOptions; // subclass responsibility
 
   @override
   String get id => questionId;
@@ -73,7 +77,6 @@ abstract class QuestionFormData implements IFormData {
         question, eligibilityCriteria);
   }
 
-  List<dynamic> get responseOptions; // subclass responsibility
 
   Question toQuestion(); // subclass responsibility
 
@@ -81,12 +84,12 @@ abstract class QuestionFormData implements IFormData {
     final criterion = EligibilityCriterion.withId();
     final expression = ChoiceExpression()..target = questionId;
     // Screener conditions are implemented as disqualifying by default in the
-    // app (as of now), so we only need to generate conditions for the
-    // qualifying response options here
-    for (var i = 0; i < responseOptions.length; i++) {
-      final isQualifying = responseOptionsValidity[i];
+    // app (as of now), so we need to generate conditions for the qualifying
+    // response options here
+    for (final responseOption in responseOptions) {
+      final isQualifying = responseOptionsValidity[responseOption] ?? true;
       if (isQualifying) {
-        final answer = constructAnswerFor(responseOptions[i]);
+        final answer = constructAnswerFor(responseOption);
         final selectedValue = answer.response;
         if (selectedValue is List) {
           expression.choices.addAll(selectedValue);
@@ -106,20 +109,21 @@ abstract class QuestionFormData implements IFormData {
   /// [QuestionnaireState] where the option is selected
   setResponseOptionsValidityFrom(
       List<EligibilityCriterion> eligibilityCriteria) {
-    final List<bool> result = [];
+    final Map<dynamic,bool> result = {};
 
     for (final responseOption in responseOptions) {
       final questionnaireState = QuestionnaireState();
-      //final answer = Answer<List<String>>(id, DateTime.now());
       final answer = constructAnswerFor(responseOption);
       questionnaireState.answers[id] = answer;
 
-      bool responseOptionValidity = false; // disqualifying by default
+      // Options are implemented as disqualifying by default in the app
+      // (as of now) if no criterion evaluates to true
+      bool responseOptionValidity = false;
       for (final criterion in eligibilityCriteria) {
         responseOptionValidity = responseOptionValidity ||
             (criterion.condition.evaluate(questionnaireState) ?? false);
       }
-      result.add(responseOptionValidity);
+      result[responseOption] = responseOptionValidity;
     }
 
     responseOptionsValidity = result;
@@ -291,11 +295,14 @@ class ScaleQuestionFormData extends QuestionFormData {
   final Color? maxColor;
 
   @override
-  List<double> get responseOptions => [
-        minValue,
-        ...(midValues.where((v) => v != null).map((v) => v as double).toList()),
-        maxValue,
-      ];
+  List<double> get responseOptions {
+    final List<double> values = [];
+    for (double value = minValue; value < maxValue; value += stepSize) {
+      values.add(value);
+    }
+    values.add(maxValue);
+    return values;
+  }
 
   List<Annotation> get midAnnotations {
     final List<Annotation> midAnnotations = [];
