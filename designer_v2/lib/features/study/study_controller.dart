@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -75,7 +76,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
         studyRepository
             .availableActions(study)
             .where((action) => action.type != StudyActionType.edit)
-            .toList() as List<ModelAction>,
+            .toList(),
         studyActionIcons);
   }
 
