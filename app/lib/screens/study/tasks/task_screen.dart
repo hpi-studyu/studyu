@@ -10,7 +10,7 @@ class TaskScreen extends StatefulWidget {
   final Task task;
   final String taskId;
 
-  static MaterialPageRoute<TaskScreen> routeFor({@required Task task}) => MaterialPageRoute(
+  static MaterialPageRoute<bool> routeFor({@required Task task}) => MaterialPageRoute(
     builder: (_) => TaskScreen(task: task),
   );
 
@@ -36,8 +36,6 @@ class _TaskScreenState extends State<TaskScreen> {
         .toList()
       ];
       task = tasks.first;
-      // print("found task: " + task.title);
-      // task = widget.task;
     } else if (widget.taskId != null) {
       final tasks = <Task>[
         ...subject.study.observations.where((observation) => observation.id == widget.taskId).toList(),

@@ -120,7 +120,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
           if (!mounted) return;
-          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
+          final result = await Navigator.push<bool>(context, TaskScreen.routeFor(task: tasks.first));
           iFrameHelper.postRouteFinished();
           return;
         }

@@ -129,7 +129,7 @@ class _InterceptorState extends ConsumerState<Interceptor> {
         child: DropzoneView(
           key: UniqueKey(),
           onDrop: (_) {
-            debugPrint("");
+            debugPrint('');
           },
         ),
       );
