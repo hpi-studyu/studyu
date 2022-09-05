@@ -74,13 +74,37 @@ class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
   }
 }
 
+class WebTransitionBuilder extends PageTransitionsBuilder {
+  const WebTransitionBuilder();  @override
+  Widget buildTransitions<T>(
+      PageRoute<T> route,
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child
+      ) {
+
+    final opacityOldTween = Tween(begin: 1.0, end: 0.0).chain(
+        CurveTween(curve: Curves.easeIn)
+    );
+    final opacityNewTween = Tween(begin: 0.0, end: 1.0)
+        .chain(CurveTween(curve: Curves.easeIn)
+    );
+
+    return FadeTransition(
+        opacity: opacityOldTween.animate(secondaryAnimation),
+        child: FadeTransition(opacity: opacityNewTween.animate(animation), child: child),
+    );
+  }
+}
+
 class ThemeSettingChange extends Notification {
   ThemeSettingChange({required this.settings});
   final ThemeSettings settings;
 }
 
 class ThemeProvider extends InheritedWidget {
-  const ThemeProvider(
+  ThemeProvider(
       {Key? key,
       required this.settings,
       required this.lightDynamic,
@@ -92,8 +116,12 @@ class ThemeProvider extends InheritedWidget {
   final ColorScheme? lightDynamic;
   final ColorScheme? darkDynamic;
 
-  final pageTransitionsTheme = const PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
+  final pageTransitionsTheme = PageTransitionsTheme(
+    builders: kIsWeb ? <TargetPlatform, PageTransitionsBuilder> {
+      // Animation when running on Web
+      for (final platform in TargetPlatform.values)
+        platform: const WebTransitionBuilder(),
+    } : const <TargetPlatform, PageTransitionsBuilder> {
       TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),

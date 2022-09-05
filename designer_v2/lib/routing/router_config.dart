@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/account/account_settings.dart';
+import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_scaffold.dart';
 import 'package:studyu_designer_v2/features/auth/login_form_view.dart';
@@ -20,7 +21,6 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
-import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_preview_view.dart';
@@ -30,10 +30,10 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_fo
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
-import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
-import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
@@ -347,7 +347,7 @@ class RouterConf {
       name: "accountSettings",
       pageBuilder: (context, state) {
         return buildModalTransitionPage(context, state,
-          AccountSettingsDialog(),
+          const AccountSettingsDialog(),
         );
       }
   );
