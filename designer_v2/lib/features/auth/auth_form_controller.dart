@@ -30,7 +30,7 @@ enum AuthFormKey {
       case passwordForgot:
         return "Reset password".hardcoded;
       case passwordRecovery:
-        return "Recover account password".hardcoded;
+        return "Set a new password".hardcoded;
       default:
         return "[private]";
     }
@@ -252,7 +252,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
   }
 
   Future<void> sendPasswordResetLink() {
-    if (!form.valid || emailControl.isNullOrEmpty) {
+    if (!form.valid) {
       return Future.value(null);
     }
     return resetPasswordForEmail(emailControl.value!)
@@ -260,7 +260,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
   }
 
   Future<void> recoverPassword() async {
-    if (!form.valid || emailControl.isNullOrEmpty) {
+    if (!form.valid) {
       return Future.value(null);
     }
     return updateUser(passwordControl.value!)

@@ -21,6 +21,6 @@ void setEnv(
   projectGeneratorUrl = envProjectGeneratorUrl;
   appUrl = envAppUrl;
   designerUrl = envDesignerUrl;
+  authRedirectToUrl = envDesignerUrl;
   client = supabaseClient ?? SupabaseClient(supabaseUrl, supabaseAnonKey);
-  authRedirectToUrl = designerUrl;
 }
