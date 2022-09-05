@@ -41,7 +41,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     final state = context.read<AppState>();
     final preview = Preview(widget.queryParameters ?? {});
 
-    print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
+    // print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
 
     if (preview.containsQueryPair('mode', 'preview')) {
       final iFrameHelper = IFrameHelper();
@@ -80,7 +80,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
-        state.activeSubject = await preview.getActiveSubject(state, preview.extra);
+        state.activeSubject = await preview.getStudySubject(state, createSubject: true);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
@@ -105,9 +105,9 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           // todo maybe remove
           state.selectedStudy.schedule.includeBaseline = false;
           state.activeSubject.study.schedule.includeBaseline = false;
-          print("[PreviewApp]: Route preview");
+          // print("[PreviewApp]: Route preview");
           if (!mounted) return;
-          print("[PreviewApp]: Go to dashboard");
+          // print("[PreviewApp]: Go to dashboard");
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
           iFrameHelper.postRouteFinished();
           return;
@@ -124,36 +124,47 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           iFrameHelper.postRouteFinished();
           return;
         }
-
       } else {
-        print("[PreviewApp]: Found no preview route");
-        if (!mounted) return;
+        // print("[PreviewApp]: Found no preview route");
         if (isUserLoggedIn()) {
-          print("[PreviewApp]: Go to overview");
-          Navigator.pushReplacementNamed(context, Routes.studyOverview);
+          final subject = await preview.getStudySubject(state);
+          if (subject != null) {
+            state.activeSubject = subject;
+            // print("[PreviewApp]: push to dashboard1");
+            if (!mounted) return;
+            Navigator.pushReplacementNamed(context, Routes.dashboard);
+            return;
+          } else {
+            // print("[PreviewApp]: Go to overview");
+            if (!mounted) return;
+            Navigator.pushReplacementNamed(context, Routes.studyOverview);
+            return;
+          }
+        } else {
+          // print("[PreviewApp]: Go to welcome1");
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, Routes.welcome);
           return;
         }
-        print("[PreviewApp]: Go to welcome1");
-        Navigator.pushReplacementNamed(context, Routes.welcome);
-        return;
       }
-    }
-    print("[PreviewApp]: No preview");
+    } // finish preview
+
+    // print("No preview");
     if (!mounted) return;
     if (context.read<AppState>().isPreview) {
       previewSubjectIdKey();
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('[PreviewApp]: Selected study: $selectedStudyObjectId');
+    // print('Selected study: $selectedStudyObjectId');
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
-        print("[PreviewApp]: Go to study selection");
+        // print("Go to study selection");
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }
-      print("[PreviewApp]: Go to welcome2");
+      // print("Go to welcome2");
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -187,10 +198,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // Notifications not supported on web
         scheduleStudyNotifications(context);
       }
-      print("[PreviewApp]: push to dashboard");
+      // print("push to dashboard2");
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      print("[PreviewApp]: push to welcome3");
+      // print("push to welcome3");
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }

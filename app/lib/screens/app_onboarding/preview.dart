@@ -62,6 +62,7 @@ class Preview {
         );
         subject.delete();
         deleteActiveStudyReference();
+        selectedStudyObjectId = '';
       }
     }
   }
@@ -99,21 +100,13 @@ class Preview {
     return queryParameters.containsKey(key) && queryParameters[key] == value;
   }
 
-  Future<StudySubject> getActiveSubject(AppState state, [String extra]) async {
-    subject = await _fetchSubject(state, extra);
-    if (selectedRoute == '/intervention') {
-      print("disable base 2");
-      // todo might be unnecessary if we have study.schedule.includeBaseline = false;
-      subject.study.schedule.includeBaseline = false;
-    }
-    return subject;
-  }
-
-  Future<StudySubject> _fetchSubject(AppState state, [String extra]) async {
-    try {
-      if (selectedStudyObjectId != null) {
+  /// createSubject: If true, the method will return a new StudySubject if none can be found. Otherwise, null is returned
+  Future<StudySubject> getStudySubject(AppState state, {bool createSubject = false}) async {
+    if (selectedStudyObjectId != null) {
+      try {
         if (selectedRoute == '/intervention') {
-          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<StudySubject>(
+          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<
+              StudySubject>(
             selectedColumns: [
               '*',
               'study!study_subject_studyId_fkey(*)',
@@ -125,8 +118,10 @@ class Preview {
           // with the correct interventions
           subject = studySubjects.lastWhere(
                 (foundSubject) {
+                  // todo baseline
                   foundSubject.study.schedule.includeBaseline = false;
-                  return foundSubject.userId == Supabase.instance.client.auth.currentUser.id
+                  return foundSubject.userId ==
+                      Supabase.instance.client.auth.currentUser.id
                       && foundSubject.studyId == study.id
                       && listEquals(foundSubject.selectedInterventions
                           .map((i) => i.id).toList(), getInterventionIds(),);
@@ -152,17 +147,28 @@ class Preview {
           // User is already subscribed to the study
           return subject;
         }
+      } catch (e) {
+        print('[PreviewApp]: Failed fetching subject: $e');
+        // todo try sign in again if token expired see loading screen
       }
-    } catch (e) {
-      print('[PreviewApp]: Failed fetching subject: $e');
     }
-    // Create a new study subject
-    return _createFakeSubject(state, extra);
+    if (createSubject) {
+      // Create a new study subject
+      subject = await _createFakeSubject(state);
+      if (selectedRoute == '/intervention') {
+        // print("disable base 2");
+        // todo might be unnecessary if we have study.schedule.includeBaseline = false;
+        subject.study.schedule.includeBaseline = false;
+      }
+      return subject;
+    }
+    return null;
   }
 
-  Future<StudySubject> _createFakeSubject(AppState state, [String extra]) async {
+  Future<StudySubject> _createFakeSubject(AppState state) async {
     if (selectedRoute == '/intervention') {
       // todo maybe remove
+      // print("disable base ?");
       study.schedule.includeBaseline = false;
     }
     subject = StudySubject.fromStudy(
@@ -174,11 +180,11 @@ class Preview {
     subject.startedAt = DateTime.now();
 
     if (state.trackParticipantProgress) {
-      print("[PreviewApp]: Tracking Participant progress");
+      // print("[PreviewApp]: Tracking Participant progress");
       try {
         subject = await subject.save();
         await storeActiveSubjectId(subject.id);
-        print("[PreviewApp]: Saved subject");
+        // print("[PreviewApp]: Saved subject");
       } catch (e) {
         print('[PreviewApp]: Failed creating subject: $e');
       }
