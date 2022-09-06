@@ -133,12 +133,16 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
         } else { // replace existing code
           study.invites![inviteIdx] = model;
         }
+        studyRepository.upsertLocally(study);
       },
       apply: () async {
         await studyRepository.ensurePersisted(model.studyId);
         await apiClient.saveStudyInvite(model);
       },
-      rollback: () => study.invites = prevInvites,
+      rollback: () {
+        study.invites = prevInvites;
+        studyRepository.upsertLocally(study);
+      },
       onUpdate: () {
         print("saveOperation: studyRepository.emitUpdate()");
         studyRepository.emitUpdate();
@@ -156,9 +160,15 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
 
     final prevInvites = [...study.invites!];
     final deleteOperation = OptimisticUpdate(
-      applyOptimistic: () => study.invites!.remove(model),
+      applyOptimistic: () {
+        study.invites!.remove(model);
+        studyRepository.upsertLocally(study);
+      },
       apply: () => apiClient.deleteStudyInvite(model),
-      rollback: () => study.invites = prevInvites,
+      rollback: () {
+        study.invites = prevInvites;
+        studyRepository.upsertLocally(study);
+      },
       onUpdate: studyRepository.emitUpdate,
       rethrowErrors: true,
     );

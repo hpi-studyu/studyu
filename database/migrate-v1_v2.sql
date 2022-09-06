@@ -182,3 +182,11 @@ $$;
 
 
 ALTER FUNCTION public.study_missed_days(study_param public.study) OWNER TO supabase_admin;
+
+ALTER TABLE ONLY public.study_invite DROP CONSTRAINT "study_invite_studyId_fkey";
+ALTER TABLE ONLY public.study_invite
+    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY public.study_subject DROP CONSTRAINT "study_subject_loginCode_fkey";
+ALTER TABLE ONLY public.study_subject
+    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY (invite_code) REFERENCES public.study_invite(code) ON DELETE CASCADE;

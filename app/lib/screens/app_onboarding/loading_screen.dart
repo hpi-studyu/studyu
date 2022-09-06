@@ -179,16 +179,20 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         ],
       );
     } catch (e) {
-      // Try signing in again. Needed if JWT is expired
-      await signInParticipant();
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
+      try {
+        // Try signing in again. Needed if JWT is expired
+        await signInParticipant();
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+      } catch (e) {
+        print("Error when trying to login and retrieve the study subject");
+      }
     }
     if (!mounted) return;
 
