@@ -19,7 +19,7 @@ dependencies:
   fl_chart: ^0.46.0 # migrate to ^0.50.5
   flutter:
     sdk: flutter
-  flutter_file_dialog: ^2.3.0
+  flutter_file_dialog: ^2.3.2
   flutter_form_builder: ^7.5.0
   flutter_iconpicker:
     git: https://github.com/dmhuisma/FlutterIconPicker.git
