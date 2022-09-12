@@ -194,7 +194,7 @@ extension StudyPermissionsX on Study {
   }
 
   bool canDelete(sb.User user) {
-    return isOwner(user) && !published;
+    return isOwner(user);
   }
 
   bool canChangeSettings(sb.User user) {

@@ -334,7 +334,7 @@ ALTER TABLE ONLY public.repo
 --
 
 ALTER TABLE ONLY public.repo
-    ADD CONSTRAINT "repo_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
+    ADD CONSTRAINT "repo_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
 
 
 --
@@ -358,7 +358,7 @@ ALTER TABLE ONLY public.study_subject
 --
 
 ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
+    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
 
 --

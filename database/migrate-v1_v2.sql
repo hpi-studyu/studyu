@@ -96,6 +96,54 @@ REFERENCES public.study_subject(id)
 ON DELETE CASCADE;
 
 
+--
+-- Name: study_invite study_invite_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.study_invite
+DROP CONSTRAINT IF EXISTS "study_invite_studyId_fkey",
+ADD CONSTRAINT "study_invite_studyId_fkey"
+FOREIGN KEY (study_id)
+REFERENCES public.study(id)
+ON DELETE CASCADE;
+
+
+--
+-- Name: study_subject study_subject_loginCode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.study_subject
+DROP CONSTRAINT IF EXISTS "study_subject_loginCode_fkey",
+ADD CONSTRAINT "study_subject_loginCode_fkey"
+FOREIGN KEY (invite_code)
+REFERENCES public.study_invite(code)
+ON DELETE CASCADE;
+
+
+--
+-- Name: repo repo_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE public.repo
+DROP CONSTRAINT IF EXISTS "repo_studyId_fkey",
+ADD CONSTRAINT "repo_studyId_fkey"
+FOREIGN KEY (study_id)
+REFERENCES public.study(id)
+ON DELETE CASCADE;
+
+
+--
+-- Name: study_subject study_subject_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE public.study_subject
+DROP CONSTRAINT IF EXISTS "study_subject_studyId_fkey",
+ADD CONSTRAINT "study_subject_studyId_fkey"
+FOREIGN KEY (study_id)
+REFERENCES public.study(id)
+ON DELETE CASCADE;
+
+
 -- ======================== STUDY FUNCTIONS =====================================
 
 --
@@ -182,11 +230,3 @@ $$;
 
 
 ALTER FUNCTION public.study_missed_days(study_param public.study) OWNER TO supabase_admin;
-
-ALTER TABLE ONLY public.study_invite DROP CONSTRAINT "study_invite_studyId_fkey";
-ALTER TABLE ONLY public.study_invite
-    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
-
-ALTER TABLE ONLY public.study_subject DROP CONSTRAINT "study_subject_loginCode_fkey";
-ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY (invite_code) REFERENCES public.study_invite(code) ON DELETE CASCADE;
