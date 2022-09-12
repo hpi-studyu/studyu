@@ -20,7 +20,7 @@ dependencies:
       url: https://github.com/nstrelow/extended_math.git
   flutter:
     sdk: flutter
-  flutter_file_dialog: ^2.3.0
+  flutter_file_dialog: ^2.3.2
   flutter_local_notifications: ^9.7.0
   flutter_localizations:
     sdk: flutter
