@@ -30,6 +30,7 @@ class FormArrayTable<T> extends StatelessWidget {
     this.emptyDescription,
     this.itemsSectionPadding =
         const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+    this.hideLeadingTrailingWhenEmpty = false,
     Key? key,
   })  : assert(sectionTitle == null || leadingWidget == null,
             "Cannot specify both sectionTitle and leadingWidget"),
@@ -59,6 +60,8 @@ class FormArrayTable<T> extends StatelessWidget {
 
   final EdgeInsets? itemsSectionPadding;
 
+  final bool hideLeadingTrailingWhenEmpty;
+
   static final List<StandardTableColumn> columns = [
     const StandardTableColumn(
         label: '', // don't care (showTableHeader=false)
@@ -69,6 +72,9 @@ class FormArrayTable<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasEmptyWidget =
         emptyIcon != null || emptyTitle != null || emptyDescription != null;
+    final isSection = sectionTitle != null ||
+        sectionTitleDivider != null ||
+        sectionDescription != null;
 
     const leadingWidgetsSpacing = 4.0;
 
@@ -114,16 +120,27 @@ class FormArrayTable<T> extends StatelessWidget {
       leadingWidget: leading,
       trailingWidget: ReactiveStatusListenableBuilder(
         formControl: control,
-        builder: (context, form, child) => _newItemButton(),
+        builder: (context, form, child) {
+          if (hasEmptyWidget && items.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          return _newItemButton();
+        },
       ),
       emptyWidget: (hasEmptyWidget)
-          ? EmptyBody(
-              icon: emptyIcon,
-              title: emptyTitle,
-              description: emptyDescription,
-              button: _newItemButton(),
+          ? Padding(
+              padding: (itemsSectionPadding != null && isSection)
+                  ? itemsSectionPadding!
+                  : EdgeInsets.zero,
+              child: EmptyBody(
+                icon: emptyIcon,
+                title: emptyTitle,
+                description: emptyDescription,
+                button: _newItemButton(),
+              ),
             )
           : null,
+      hideLeadingTrailingWhenEmpty: hideLeadingTrailingWhenEmpty,
     );
   }
 
@@ -142,7 +159,6 @@ class FormArrayTable<T> extends StatelessWidget {
             Text(
               rowTitle(item),
               style: tableTextStyleSecondary?.copyWith(
-                
                 overflow: TextOverflow.ellipsis,
               ),
               maxLines: 1,

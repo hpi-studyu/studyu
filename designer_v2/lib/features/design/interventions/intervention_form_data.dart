@@ -1,11 +1,14 @@
 import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:uuid/uuid.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class InterventionFormData extends IFormData {
+  static String kDefaultTitle = "Unnamed Intervention".hardcoded;
+
   InterventionFormData({
     required this.interventionId,
     required this.title,

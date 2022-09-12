@@ -78,6 +78,8 @@ class Preview {
             return '/eligibilityCheck';
           case 'interventionSelection':
             return Routes.interventionSelection;
+          case 'journey':
+            return Routes.journey;
           case 'questionnaire':
             return Routes.questionnaire;
           case 'dashboard':

@@ -99,16 +99,15 @@ class FormTableLayout extends StatelessWidget {
           children: [
             Container(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
-                  child: labelWidget,
-                )
-            ),
+              padding:
+                  EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
+              child: labelWidget,
+            )),
             Container(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: bottomSpacing),
-                  child: contentWidget,
-                )
-            ),
+              padding: EdgeInsets.only(bottom: bottomSpacing),
+              child: contentWidget,
+            )),
           ],
         );
       } else {
@@ -171,17 +170,23 @@ class FormSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.headline6!;
+
     return Column(
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            label: title,
-            labelHelpText: helpText,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold)
-                .merge(titleTextStyle),
-            input: Container(),
-          ),
-        ]),
+        FormTableLayout(
+          rows: [
+            FormTableRow(
+              label: title,
+              labelHelpText: helpText,
+              labelStyle: titleStyle.merge(titleTextStyle),
+              input: Container(),
+            ),
+          ],
+          columnWidths: const {
+            0: IntrinsicColumnWidth(),
+          },
+        ),
         (divider) ? const Divider() : const SizedBox.shrink(),
       ],
     );

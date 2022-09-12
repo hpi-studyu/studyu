@@ -30,10 +30,10 @@ class ThemeConfig {
       theme.colorScheme.primary;
 
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
-      fontSize: 14.0,
-      height: 1.35,
-      color: theme.textTheme.bodyText1?.color?.faded(0.65),
-  );
+        fontSize: 14.0,
+        height: 1.35,
+        color: theme.textTheme.bodyText1?.color?.faded(0.65),
+      );
 
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
       fontSize: 14.0,
@@ -50,11 +50,12 @@ class ThemeConfig {
         contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
       );
 
-  static dropdownMenuItemTheme(ThemeData theme) => DropdownMenuItemTheme(
+  static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
+      DropdownMenuItemTheme(
         iconTheme: IconThemeData(
-          color: theme.colorScheme.onPrimaryContainer.withOpacity(0.35),
+          color: theme.textTheme.bodyText1?.color?.faded(0.4),
           // theme.iconTheme.color?.faded(0.75)
-          size: 20.0,
+          size: 18.0,
         ),
       );
 }
@@ -75,25 +76,23 @@ class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
 }
 
 class WebTransitionBuilder extends PageTransitionsBuilder {
-  const WebTransitionBuilder();  @override
+  const WebTransitionBuilder();
+  @override
   Widget buildTransitions<T>(
       PageRoute<T> route,
       BuildContext context,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
-      Widget child
-      ) {
-
-    final opacityOldTween = Tween(begin: 1.0, end: 0.0).chain(
-        CurveTween(curve: Curves.easeIn)
-    );
-    final opacityNewTween = Tween(begin: 0.0, end: 1.0)
-        .chain(CurveTween(curve: Curves.easeIn)
-    );
+      Widget child) {
+    final opacityOldTween =
+        Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
+    final opacityNewTween =
+        Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
 
     return FadeTransition(
-        opacity: opacityOldTween.animate(secondaryAnimation),
-        child: FadeTransition(opacity: opacityNewTween.animate(animation), child: child),
+      opacity: opacityOldTween.animate(secondaryAnimation),
+      child: FadeTransition(
+          opacity: opacityNewTween.animate(animation), child: child),
     );
   }
 }
@@ -117,17 +116,19 @@ class ThemeProvider extends InheritedWidget {
   final ColorScheme? darkDynamic;
 
   final pageTransitionsTheme = PageTransitionsTheme(
-    builders: kIsWeb ? <TargetPlatform, PageTransitionsBuilder> {
-      // Animation when running on Web
-      for (final platform in TargetPlatform.values)
-        platform: const WebTransitionBuilder(),
-    } : const <TargetPlatform, PageTransitionsBuilder> {
-      TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.macOS: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.windows: NoAnimationPageTransitionsBuilder(),
-    },
+    builders: kIsWeb
+        ? <TargetPlatform, PageTransitionsBuilder>{
+            // Animation when running on Web
+            for (final platform in TargetPlatform.values)
+              platform: const WebTransitionBuilder(),
+          }
+        : const <TargetPlatform, PageTransitionsBuilder>{
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),
+            TargetPlatform.macOS: NoAnimationPageTransitionsBuilder(),
+            TargetPlatform.windows: NoAnimationPageTransitionsBuilder(),
+          },
   );
 
   Color custom(CustomColor custom) {

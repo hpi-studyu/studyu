@@ -164,7 +164,7 @@ class StudyTemplates {
   static Study emptyDraft(String userId) {
     final newDraft = Study.withId(userId);
     newDraft.title = "Unnamed study".hardcoded;
-    newDraft.description = "Lorem ipsum".hardcoded;
+    newDraft.iconName = '';
     return newDraft;
   }
 }

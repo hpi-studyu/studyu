@@ -89,10 +89,9 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
 
   @override
   FormValidationConfigSet get validationConfig => {
-    // TODO title.length, description.length, phoneFormat
+    // TODO phoneFormat
     StudyFormValidationSet.draft: [
-      titleRequired, descriptionRequired,
-      emailFormat, websiteFormat
+      titleRequired, emailFormat, websiteFormat
     ],
     StudyFormValidationSet.publish: [
       titleRequired, descriptionRequired, iconRequired, organizationRequired,
@@ -101,7 +100,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       emailFormat, websiteFormat
     ],
     StudyFormValidationSet.test: [
-      titleRequired, descriptionRequired, emailRequired
+      titleRequired
     ],
   };
 

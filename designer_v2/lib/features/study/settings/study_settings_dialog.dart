@@ -40,7 +40,7 @@ class StudySettingsDialog extends StudyPageWidget {
                 FormTableRow(
                     label: "Publish study".hardcoded,
                     labelHelpText: "Other researchers & clinicians will be able "
-                            "to access, test, review or create a \ncopy of our study "
+                            "to access, test, review or create a \ncopy of your study "
                             "design. They won't be able to access any data related "
                             "to \nin-progress studies such as participants or "
                             "study results (your study's \nRecruit, Monitor & "
@@ -56,9 +56,9 @@ class StudySettingsDialog extends StudyPageWidget {
                     label: "Publish results".hardcoded,
                     labelHelpText: "Make your anonymized study results & data "
                             "available in the study registry. \n"
-                            "Other researchers & clinicians will can access, export and "
-                            "analyze \nthe results from your study "
-                            "(the Analyze tab will be available). \n"
+                            "Other researchers & clinicians will be able to access, export and "
+                            "\nanalyze the results from your study "
+                            "(the Analyze page will be available). \n"
                             "This will automatically publish your study design to the registry."
                         .hardcoded,
                     input: Align(

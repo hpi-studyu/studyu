@@ -56,6 +56,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                           emptyIcon: Icons.content_paste_off_rounded,
                           emptyTitle: "No surveys defined".hardcoded,
                           emptyDescription: "You need to define at least one survey to determine the effect of your intervention(s).".hardcoded,
+                          hideLeadingTrailingWhenEmpty: true,
                         );
                       },
                     );

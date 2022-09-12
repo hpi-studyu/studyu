@@ -81,9 +81,9 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
+    StudyFormValidationSet.draft: [], // defined in subforms
+    StudyFormValidationSet.publish: [], // defined in subforms
+    StudyFormValidationSet.test: [], // defined in subforms
   };
 
   @override

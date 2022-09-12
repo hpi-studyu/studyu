@@ -32,7 +32,7 @@ class EmptyBody extends StatelessWidget {
               : const SizedBox.shrink(),
           (icon != null)
               ? Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: const EdgeInsets.only(bottom: 0.0),
                   child: Icon(
                     icon,
                     size: 96.0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
@@ -30,10 +31,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                  text: "Provide general information about your study for "
-                          "participants as well as other researchers and clinicians."
+                  text: "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers & clinicians as well."
                       .hardcoded),
-              const SizedBox(height: 32.0),
+              const SizedBox(height: 24.0),
               FormTableLayout(rows: [
                 FormTableRow(
                   control: formViewModel.titleControl,
@@ -45,8 +45,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       Expanded(
                           child: ReactiveTextField(
                         formControl: formViewModel.titleControl,
-                        validationMessages:
-                            formViewModel.titleControl.validationMessages,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(100),
+                        ],
+                        validationMessages: formViewModel.titleControl.validationMessages,
                       )),
                       ReactiveFormConsumer(builder: (context, form, child) {
                         return (formViewModel.iconControl.value != null)
@@ -76,6 +78,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(500),
+                    ],
                     decoration: InputDecoration(
                         hintText:
                             "Give a short summary of your study to participants"
@@ -86,23 +91,26 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 0: FixedColumnWidth(185.0),
                 1: FlexColumnWidth(),
               }),
-              const SizedBox(height: 24.0),
-              FormSectionHeader(title: "Contact information".hardcoded),
+              const SizedBox(height: 32.0),
+              FormSectionHeader(title: "Publisher & Contact Information".hardcoded),
               const SizedBox(height: 12.0),
               TextParagraph(
                   text: "Participants will be able to contact you "
                           "via the StudyU app using this information. Other clinicians "
                           "or researchers will only be able to contact you if you "
-                          "agree to publish your study to the study repository."
+                          "agree to publish your study to the study registry."
                           ""
                       .hardcoded),
-              const SizedBox(height: 32.0),
+              const SizedBox(height: 24.0),
               FormTableLayout(rows: [
                 FormTableRow(
                   control: formViewModel.organizationControl,
                   label: "Responsible organization".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.organizationControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages:
                         formViewModel.organizationControl.validationMessages,
                   ),
@@ -112,6 +120,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Institutional Review Board".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.reviewBoardControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages: formViewModel
                         .reviewBoardControl.validationMessages,
                   ),
@@ -123,6 +134,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   input: ReactiveTextField(
                     formControl:
                         formViewModel.reviewBoardNumberControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages: formViewModel
                         .reviewBoardNumberControl
                         .validationMessages,
@@ -133,8 +147,11 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Responsible\nresearcher(s)".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.researchersControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages:
-                        formViewModel.researchersControl.validationMessages,
+                    formViewModel.researchersControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -142,6 +159,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Website".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.websiteControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(300),
+                    ],
                     validationMessages:
                         formViewModel.websiteControl.validationMessages,
                   ),
@@ -151,6 +171,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Email".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.emailControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages:
                         formViewModel.emailControl.validationMessages,
                   ),
@@ -160,6 +183,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: "Phone".hardcoded,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                     validationMessages:
                         formViewModel.phoneControl.validationMessages,
                   ),

@@ -86,14 +86,11 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ),
   ];
   final readonlyActionButtons = [
-    // TODO: clean this up more
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
           return retainSizeInAppBar(DismissButton(
             text: "Close".hardcoded,
-            onPressed: () =>
-                formViewModel.cancel().then(
-                        (_) => Navigator.maybePop(context)),
+            onPressed: () => Navigator.maybePop(context),
           ));
         }
     ),

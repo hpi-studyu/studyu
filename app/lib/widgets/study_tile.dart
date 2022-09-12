@@ -46,7 +46,7 @@ class StudyTile extends StatelessWidget {
           contentPadding: contentPadding,
           onTap: onTap,
           title: Center(child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
-          subtitle: Center(child: Text(description)),
+          subtitle: Center(child: Text(description ?? '')),
           leading: Icon(MdiIcons.fromString(iconName ?? 'accountHeart'), color: theme.primaryColor),
         ),
       ],

@@ -50,6 +50,7 @@ class RouteParams {
   static const studyId = 'studyId';
   static const measurementId = 'measurementId';
   static const interventionId = 'interventionId';
+  static const testAppRoute = 'appRoute';
 }
 
 /// The route configuration passed to [GoRouter] during instantiation.
@@ -211,6 +212,7 @@ class RouterConf {
                 rightWidget: InterventionPreview(routeArgs: routeArgs),
                 flexLeft: 7,
                 flexRight: 8,
+                constraintsLeft: const BoxConstraints(minWidth: 500.0),
                 scrollLeft: true,
                 scrollRight: false,
                 paddingRight: null,
@@ -258,6 +260,7 @@ class RouterConf {
               rightWidget: SurveyPreview(routeArgs: routeArgs),
               flexLeft: 7,
               flexRight: 8,
+              constraintsLeft: const BoxConstraints(minWidth: 500.0),
               scrollLeft: true,
               scrollRight: false,
               paddingRight: null,
@@ -272,12 +275,13 @@ class RouterConf {
       name: "studyTest",
       pageBuilder: (context, state) {
         final studyId = state.params[RouteParams.studyId]!;
+        final appRoute = state.queryParams[RouteParams.testAppRoute];
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
               selectedTab: StudyNav.test(studyId),
-              body: StudyTestScreen(studyId),
+              body: StudyTestScreen(studyId, previewRoute: appRoute),
               layoutType: SingleColumnLayoutType.stretched,
         ));
       }

@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/color.dart';
+import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
 abstract class IScaleQuestionFormViewModel {
   bool get isMidValuesClearedInfoVisible;
@@ -299,7 +300,8 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                   validationMessages: valueControl.validationMessages,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                    FilteringTextInputFormatter.digitsOnly,
+                    NumericalRangeFormatter(max: 10000),
                   ],
                 ),
               ),

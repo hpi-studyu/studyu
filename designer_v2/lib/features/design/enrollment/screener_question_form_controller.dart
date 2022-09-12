@@ -55,6 +55,10 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
 
   @override
   onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
+    if (formMode == FormMode.readonly) {
+      return;
+    }
+
     // Build new form arrays consolidated with previous values (if any)
     final newLogicControls = responseOptionControls.map((newControl) {
       // Consolidate with previous value (if any)
@@ -133,7 +137,10 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   List<FormControl> _copyFormControls(List<AbstractControl> controls) {
     return controls
         .map((control) =>
-            FormControl<String>(value: control.value?.toString() ?? ''))
+            FormControl<String>(
+                value: control.value?.toString() ?? '',
+                disabled: control.disabled,
+            ))
         .toList();
   }
 
@@ -158,6 +165,15 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
       }
     }
     return null;
+  }
+
+  @override
+  ScreenerQuestionFormViewModel createDuplicate() {
+    return ScreenerQuestionFormViewModel(
+      delegate: delegate,
+      formData: formData?.copy(),
+      validationSet: validationSet,
+    );
   }
 
   // - IScreenerQuestionLogicFormViewModel

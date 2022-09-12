@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -37,16 +38,13 @@ class InterventionFormViewModel
   // - Form fields
 
   final FormControl<InterventionID> interventionIdControl = FormControl(
-      validators: [Validators.required], value: const Uuid().v4()); // hidden
+      value: const Uuid().v4()); // hidden
   final FormControl<String> interventionTitleControl =
-      FormControl(validators: [Validators.required, Validators.minLength(3)]);
-  final FormControl<IconOption> interventionIconControl =
-      FormControl(value: null);
-  final FormControl<String> interventionDescriptionControl =
-      FormControl(value: '');
+      FormControl(value: InterventionFormData.kDefaultTitle);
+  final FormControl<IconOption> interventionIconControl = FormControl();
+  final FormControl<String> interventionDescriptionControl = FormControl();
 
-  final FormArray interventionTasksArray =
-      FormArray([], validators: [Validators.minLength(1)]);
+  final FormArray interventionTasksArray = FormArray([]);
 
   late final tasksCollection = FormViewModelCollection<
       InterventionTaskFormViewModel,
@@ -56,10 +54,26 @@ class InterventionFormViewModel
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
+    StudyFormValidationSet.draft: [titleRequired, atLeastOneTask],
+    StudyFormValidationSet.publish: [titleRequired, atLeastOneTask],
+    StudyFormValidationSet.test: [titleRequired, atLeastOneTask],
   };
+
+  get titleRequired => FormControlValidation(
+      control: interventionTitleControl,
+      validators: [Validators.required],
+      validationMessages: {
+        ValidationMessage.required: (error) => 'The intervention title must not be empty'.hardcoded,
+      }
+  );
+
+  get atLeastOneTask => FormControlValidation(
+      control: interventionTasksArray,
+      validators: [Validators.minLength(1)],
+      validationMessages: {
+        ValidationMessage.minLength: (error) => 'You must define at least one task for your participants to complete during this intervention phase'.hardcoded,
+      }
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -102,7 +116,10 @@ class InterventionFormViewModel
   }
 
   String get breadcrumbsTitle {
-    final components = [study.title, formData?.title ?? ''];
+    final components = [
+      study.title,
+      formData?.title ?? InterventionFormData.kDefaultTitle,
+    ];
     return components.join(kPathSeparator);
   }
 

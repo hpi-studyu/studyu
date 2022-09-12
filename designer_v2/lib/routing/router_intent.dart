@@ -97,11 +97,15 @@ class RoutingIntents {
               RouteParams.measurementId: measurementId,
             },
           );
-  static final studyTest = (StudyID studyId) => RoutingIntent(
+  static final studyTest = (StudyID studyId, {String? appRoute}) => RoutingIntent(
         route: RouterConf.studyTest,
         params: {
           RouteParams.studyId: studyId,
         },
+        queryParams: {
+          if (appRoute != null)
+            RouteParams.testAppRoute: appRoute,
+        }
       );
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
         route: RouterConf.studyRecruit,

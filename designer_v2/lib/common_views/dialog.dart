@@ -98,18 +98,19 @@ class StandardDialog extends StatelessWidget {
                           ? titleWidget
                           : const SizedBox.shrink(),
                       (titleWidget != null)
-                          ? SizedBox(height: padding.top * 3 / 4)
+                          ? SizedBox(height: padding.top * 2/3)
                           : const SizedBox.shrink(),
                       Expanded(
                         child: SingleChildScrollView(child: body),
                       ),
-                      SizedBox(height: padding.bottom * 3 / 4),
+                      SizedBox(height: padding.bottom * 3/4),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: withSpacing(actionButtons, spacing: 8.0),
                       ),
                     ],
-                  )),
+                  ),
+              ),
             ),
           ),
         ),

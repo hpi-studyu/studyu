@@ -4,6 +4,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/unsaved_changes_dialog.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 /// Signature for a builder that renders the widget corresponding to the
 /// [FormViewModel] of type [T]
@@ -13,7 +15,7 @@ typedef FormViewBuilder<T extends FormViewModel> = Widget Function(T formViewMod
 /// via a Riverpod [WidgetRef]
 typedef FormViewModelBuilder<T extends FormViewModel> = T Function(WidgetRef ref);
 
-class FormScaffold<T extends FormViewModel> extends ConsumerWidget {
+class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
   const FormScaffold({
     required this.formViewModel,
     required this.body,
@@ -32,7 +34,46 @@ class FormScaffold<T extends FormViewModel> extends ConsumerWidget {
   final double actionsPadding;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FormScaffold<T>> createState() => _FormScaffoldState();
+}
+
+class _FormScaffoldState<T extends FormViewModel> extends ConsumerState<FormScaffold<T>> {
+  T get formViewModel => widget.formViewModel;
+
+  ModalRoute<dynamic>? _route;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _route?.removeScopedWillPopCallback(_promptBackNavigationConfirmation);
+    _route = ModalRoute.of(context);
+    _route?.addScopedWillPopCallback(_promptBackNavigationConfirmation);
+  }
+
+  @override
+  void dispose() {
+    _route?.removeScopedWillPopCallback(_promptBackNavigationConfirmation);
+    _route = null;
+    super.dispose();
+  }
+
+  Future<bool> _promptBackNavigationConfirmation() async {
+    if (!formViewModel.isDirty) {
+      return true;
+    }
+    final shouldPop = await showDialog<bool>(
+      context: context,
+      barrierColor: ThemeConfig.modalBarrierColor(Theme.of(context)),
+      builder: (context) => const UnsavedChangesDialog(),
+    );
+    if (shouldPop!) {
+      await formViewModel.cancel();
+    }
+    return shouldPop;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final defaultActionButtons = buildFormButtons(
         formViewModel, formViewModel.formMode);
 
@@ -57,14 +98,14 @@ class FormScaffold<T extends FormViewModel> extends ConsumerWidget {
             softWrap: false
         ),
         actions: withSpacing(
-          actions ?? defaultActionButtons,
-          spacing: actionsSpacing,
-          paddingStart: actionsPadding,
-          paddingEnd: actionsPadding,
+          widget.actions ?? defaultActionButtons,
+          spacing: widget.actionsSpacing,
+          paddingStart: widget.actionsPadding,
+          paddingEnd: widget.actionsPadding,
         ),
       ),
-      body: body,
-      drawer: drawer,
+      body: widget.body,
+      drawer: widget.drawer,
     ));
   }
 }

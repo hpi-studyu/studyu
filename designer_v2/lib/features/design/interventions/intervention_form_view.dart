@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
-import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
@@ -23,59 +24,63 @@ class InterventionFormView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            control: formViewModel.interventionTitleControl,
-            label: "Title".hardcoded,
-            //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            labelHelpText: "TODO Intervention task title help text".hardcoded,
-            input: Row(
-              children: [
-                // TODO: responsive layout (input field gets too small)
-                Expanded(
+        FormTableLayout(
+          rows: [
+            FormTableRow(
+              control: formViewModel.interventionTitleControl,
+              label: "Title".hardcoded,
+              labelHelpText: "TODO Intervention task title help text".hardcoded,
+              input: Row(
+                children: [
+                  // TODO: responsive layout (input field gets too small)
+                  Expanded(
                     child: ReactiveTextField(
-                  formControl: formViewModel.interventionTitleControl,
-                )),
-                ReactiveFormConsumer(builder: (context, form, child) {
-                  return (formViewModel.interventionIconControl.value != null)
-                      ? const SizedBox(width: 4.0)
-                      : const SizedBox(width: 8.0);
-                }),
-                IntrinsicWidth(
-                  child: ReactiveIconPicker(
-                    formControl: formViewModel.interventionIconControl,
-                    iconOptions: IconPack.material,
+                      formControl: formViewModel.interventionTitleControl,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(200),
+                      ],
+                      validationMessages: formViewModel
+                          .interventionTitleControl.validationMessages,
+                    ),
                   ),
-                )
-              ],
-            )),
-          FormTableRow(
-            control: formViewModel.interventionDescriptionControl,
-            label: "Description".hardcoded,
-            labelHelpText:
-                "TODO Intervention task description help text".hardcoded,
-            input: ReactiveTextField(
-              formControl: formViewModel.interventionDescriptionControl,
-              keyboardType: TextInputType.multiline,
-              minLines: 5,
-              maxLines: 5,
-              decoration: InputDecoration(
-                  hintText: "Describe the intervention phase to your study participants".hardcoded
+                  ReactiveFormConsumer(builder: (context, form, child) {
+                    return (formViewModel.interventionIconControl.value != null)
+                        ? const SizedBox(width: 4.0)
+                        : const SizedBox(width: 8.0);
+                  }),
+                  IntrinsicWidth(
+                    child: ReactiveIconPicker(
+                      formControl: formViewModel.interventionIconControl,
+                      iconOptions: IconPack.material,
+                    ),
+                  )
+                ],
               ),
             ),
-          ),
-        ]),
+            FormTableRow(
+              control: formViewModel.interventionDescriptionControl,
+              label: "Description".hardcoded,
+              labelHelpText:
+                  "TODO Intervention task description help text".hardcoded,
+              input: ReactiveTextField(
+                formControl: formViewModel.interventionDescriptionControl,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(2000),
+                ],
+                validationMessages: formViewModel
+                    .interventionDescriptionControl.validationMessages,
+                keyboardType: TextInputType.multiline,
+                minLines: 5,
+                maxLines: 5,
+                decoration: InputDecoration(
+                    hintText:
+                        "Describe the intervention phase to your study participants"
+                            .hardcoded),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 28.0),
-        FormSectionHeader(title: "Treatments".hardcoded),
-        const SizedBox(height: 6.0),
-        TextParagraph(
-            text: "You can define one or more tasks that your participants should "
-                    "complete during the intervention phase. Participants will be "
-                    "prompted to complete these tasks in the StudyU app.\nYou can "
-                    "track compliance by requiring participants to mark these tasks "
-                    "as completed."
-                .hardcoded),
-        const SizedBox(height: 6.0),
         ReactiveFormConsumer(
             // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
             // By default, ReactiveFormArray only updates when adding/removing controls
@@ -91,14 +96,21 @@ class InterventionFormView extends ConsumerWidget {
                 getActionsAt: (viewModel, _) =>
                     formViewModel.availablePopupActions(viewModel),
                 onNewItem: () => _onNewItem(context, ref),
-                onNewItemLabel: 'Add treatment'.hardcoded,
+                onNewItemLabel: 'Add intervention task'.hardcoded,
                 rowTitle: (viewModel) =>
                     viewModel.formData?.taskTitle ??
                     'Missing item title'.hardcoded,
+                sectionTitle: "Intervention Tasks".hardcoded,
+                sectionDescription: "You can define one or more tasks that your participants should "
+                    "complete during this intervention phase. Participants will be "
+                    "prompted to complete these tasks in the StudyU app.\nYou can "
+                    "track compliance by requiring participants to mark these tasks "
+                    "as completed."
+                    .hardcoded,
                 emptyIcon: Icons.content_paste_off_rounded,
-                emptyTitle: "No treatments defined".hardcoded,
+                emptyTitle: "No intervention tasks defined".hardcoded,
                 emptyDescription:
-                    "You must define at least one task for your participants to complete during this intervention phase"
+                    "You must define at least one task for participants to complete during this intervention phase"
                         .hardcoded,
               );
             },

@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef OnSelectHandler<T> = void Function(T item);
@@ -57,6 +58,7 @@ class StandardTable<T> extends StatefulWidget {
     this.emptyWidget,
     this.rowStyle = StandardTableStyle.material,
     this.disableRowInteractions = false,
+    this.hideLeadingTrailingWhenEmpty = true,
     Key? key
   }) : super(key: key) {
     // Insert trailing column for actions menu
@@ -84,6 +86,7 @@ class StandardTable<T> extends StatefulWidget {
   final double? minRowHeight;
 
   final bool showTableHeader;
+  final bool hideLeadingTrailingWhenEmpty;
 
   /// Optional widget rendered above/below the table body
   final Widget? leadingWidget;
@@ -175,7 +178,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
 
     final isTableVisible = !(tableHeaderRows.isEmpty && tableDataRows.isEmpty);
 
-    if (tableDataRows.isEmpty && widget.emptyWidget != null) {
+    if (tableDataRows.isEmpty && widget.emptyWidget != null
+        && widget.hideLeadingTrailingWhenEmpty) {
       return widget.emptyWidget!;
     }
 
@@ -188,6 +192,10 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
               ? SizedBox(height: widget.leadingWidgetSpacing!)
               : const SizedBox.shrink(),
           (isTableVisible) ? tableWidget : Container(),
+          (!isTableVisible && widget.emptyWidget != null
+              && !widget.hideLeadingTrailingWhenEmpty)
+              ? widget.emptyWidget!
+              : const SizedBox.shrink(),
           (widget.trailingWidget != null && widget.trailingWidgetSpacing != null)
               ? SizedBox(height: widget.trailingWidgetSpacing!)
               : const SizedBox.shrink(),
@@ -406,7 +414,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       actionMenuWidget = ActionPopUpMenuButton(
         actions: actions,
         orientation: Axis.horizontal,
-        triggerIconColor: theme.colorScheme.secondary.withOpacity(0.8),
+        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,

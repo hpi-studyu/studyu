@@ -90,6 +90,14 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
+        // JOURNEY
+        if (preview.selectedRoute == Routes.journey) {
+          if (!mounted) return;
+          await Navigator.pushNamed(context, Routes.journey);
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
         // DASHBOARD
         if (preview.selectedRoute == Routes.dashboard) {
           if (!mounted) return;

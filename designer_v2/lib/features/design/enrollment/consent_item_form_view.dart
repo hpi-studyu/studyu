@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/common_views/form_input_decoration.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
@@ -19,19 +19,27 @@ class ConsentItemFormView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FormTableLayout(
+          rowLayout: FormTableRowLayout.vertical,
           rows: [
             FormTableRow(
               control: formViewModel.titleControl,
               label: "Title".hardcoded,
-              labelHelpText: "TODO Consent item title help text".hardcoded,
+              labelHelpText: "Enter a short title for the terms the participant must read & accept.\nFor each consent text, a card with the title & icon is shown on the app's consent screen.".hardcoded,
               input: Row(
                 children: [
                   Expanded(
                     child: ReactiveTextField(
                       formControl: formViewModel.titleControl,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(100),
+                      ],
                       validationMessages:
                           formViewModel.titleControl.validationMessages,
-                      decoration: const NullHelperDecoration(),
+                      decoration: InputDecoration(
+                        hintText:
+                        "Enter a short title"
+                            .hardcoded,
+                      ),
                     ),
                   ),
                   ReactiveFormConsumer(
@@ -53,9 +61,12 @@ class ConsentItemFormView extends StatelessWidget {
             FormTableRow(
               control: formViewModel.descriptionControl,
               label: "Text".hardcoded,
-              labelHelpText: "TODO Consent item text help text".hardcoded,
+              labelHelpText: "Enter the terms the participant must read & accept when enrolling in the study.\nThe terms are shown when clicking on the corresponding card in the app's consent screen.".hardcoded,
               input: ReactiveTextField(
                 formControl: formViewModel.descriptionControl,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(10000),
+                ],
                 validationMessages:
                     formViewModel.descriptionControl.validationMessages,
                 keyboardType: TextInputType.multiline,
@@ -63,17 +74,12 @@ class ConsentItemFormView extends StatelessWidget {
                 maxLines: 30,
                 decoration: InputDecoration(
                   hintText:
-                      "Enter the text that your participant must read & agree to"
+                      "Enter the full terms to be read & accepted"
                           .hardcoded,
-                  helperText: "",
                 ),
               ),
             ),
           ],
-          columnWidths: const {
-            0: MaxColumnWidth(FixedColumnWidth(80.0), IntrinsicColumnWidth()),
-            1: FlexColumnWidth(),
-          },
         ),
       ],
     );

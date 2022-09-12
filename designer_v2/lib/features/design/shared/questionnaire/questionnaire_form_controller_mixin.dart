@@ -13,8 +13,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
     implements
         IFormViewModelDelegate<Q>,
         IProviderArgsResolver<Q, QuestionFormRouteArgs> {
-  late final FormArray questionsArray =
-      FormArray([], validators: questionsArrayValidators);
+  late final FormArray questionsArray = FormArray([]);
   late final questionFormViewModels =
       FormViewModelCollection<Q, QuestionFormData>(
           [], questionsArray);
@@ -25,8 +24,6 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
   late final questionnaireControls = {
     'questions': questionsArray,
   };
-
-  List<ValidatorFunction> get questionsArrayValidators => [];
 
   void setQuestionnaireControlsFrom(QuestionnaireFormData data) {
     if (data.questionsData != null) {

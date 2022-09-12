@@ -11,6 +11,8 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
+import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -19,7 +21,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
-    with StudyScheduleControls
+    with
+        StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
@@ -39,22 +42,41 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   // - Form fields
 
-  final FormArray interventionsArray =
-      FormArray([], validators: [Validators.minLength(1)]);
+  final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
       FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
           [], interventionsArray);
 
   @override
-  FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
-  };
+  late final FormGroup form = FormGroup({
+    'interventions': interventionsArray,
+    ...studyScheduleControls,
+  });
+
+  // - Validation
 
   @override
-  late final FormGroup form = FormGroup(
-      {'interventions': interventionsArray, ...studyScheduleControls});
+  FormValidationConfigSet get validationConfig => {
+        StudyFormValidationSet.draft: [
+          ...studyScheduleValidationConfig[StudyFormValidationSet.draft]!,
+        ],
+        StudyFormValidationSet.publish: [
+          ...studyScheduleValidationConfig[StudyFormValidationSet.publish]!,
+          interventionsRequired,
+        ],
+        StudyFormValidationSet.test: [
+          ...studyScheduleValidationConfig[StudyFormValidationSet.test]!,
+          interventionsRequired,
+        ],
+      };
+
+  get interventionsRequired =>
+      FormControlValidation(control: interventionsArray, validators: [
+        Validators.minLength(2)
+      ], validationMessages: {
+        ValidationMessage.minLength: (error) =>
+            'You must define at least two interventions to compare'.hardcoded,
+      });
 
   @override
   void setControlsFrom(InterventionsFormData data) {
@@ -156,7 +178,8 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   }
 
   @override
-  Future onSave(InterventionFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(
+      InterventionFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       interventionsCollection.commit(formViewModel);
@@ -165,4 +188,15 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     }
     await super.save();
   }
+
+  testStudySchedule() {
+    router.dispatch(
+        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.journey));
+  }
+
+  bool get canTestStudySchedule =>
+      !interventionsArray.disabled &&
+      ((interventionsArray.value != null)
+          ? interventionsArray.value!.length >= 2
+          : false);
 }

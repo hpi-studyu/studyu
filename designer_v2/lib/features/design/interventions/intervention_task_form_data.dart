@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 class InterventionTaskFormData extends IFormDataWithSchedule {
+  static String kDefaultTitle = "Unnamed task";
+
   InterventionTaskFormData({
     required this.taskId,
     required this.taskTitle,

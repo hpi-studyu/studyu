@@ -46,7 +46,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         "the criteria they have to meet and the terms they have t"
                         "o consent to."
                         .hardcoded),
-                const SizedBox(height: 32.0),
+                const SizedBox(height: 24.0),
                 FormTableLayout(
                   rows: [
                     FormTableRow(
@@ -144,10 +144,16 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         return Row(
                           children: [
                             Tooltip(
-                                message: viewModel.questionType.string,
-                                child: Icon(viewModel.questionType.icon,
-                                    color: theme.colorScheme.onPrimaryContainer
-                                        .withOpacity(0.35))),
+                              message: viewModel.questionType.string,
+                              child: Icon(viewModel.questionType.icon,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .color,
+                                size: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .size,
+                              ),
+                            ),
                             const SizedBox(width: 16.0),
                           ],
                         );
@@ -155,8 +161,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 32.0),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 24.0),
                 ReactiveFormArray(
                   formArray: formViewModel.consentItemArray,
                   builder: (context, formArray, child) {

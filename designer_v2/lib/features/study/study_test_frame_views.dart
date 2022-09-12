@@ -44,17 +44,20 @@ class DisabledFrame extends StatelessWidget {
           ),
         ),
       ),
-      borderColor: theme.colorScheme.secondary.withOpacity(0.25),
+      borderColor: theme.colorScheme.secondary.withOpacity(0.3),
       innerContentBackgroundColor: theme.colorScheme.secondary.withOpacity(0.03),
     );
   }
 }
 
 class PhoneContainer extends StatelessWidget {
+  static const double defaultWidth = 300.0;
+  static const double defaultHeight = 600.0;
+
   const PhoneContainer({
     required this.innerContent,
-    this.width = 300,
-    this.height = 600,
+    this.width = PhoneContainer.defaultWidth,
+    this.height = PhoneContainer.defaultHeight,
     this.borderColor = Colors.black,
     this.borderWidth = 6.0,
     this.borderRadius = 25.0,
