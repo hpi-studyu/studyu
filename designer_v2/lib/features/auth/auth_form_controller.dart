@@ -4,7 +4,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -24,29 +23,26 @@ enum AuthFormKey {
   String get title {
     switch (this) {
       case login:
-        return tr.login;
+        return tr.login_page_title;
       case signup:
-        return tr.signup;
+        return tr.signup_page_title;
       case passwordForgot:
-        return "Reset password".hardcoded;
+        return tr.password_forgot_page_title;
       case passwordRecovery:
-        return "Set a new password".hardcoded;
+        return tr.password_recover_page_title;
       default:
-        return "[private]";
+        return "[AuthFormKey.title]";
     }
   }
 
   String? get description {
     switch (this) {
       case login:
-        return "Accelerate your research with digital N-of-1 studies."
-            .hardcoded;
+        return tr.login_page_description;
       case signup:
-        return "Get started with digital N-of-1 studies for your research or clinical practice. Free, open source & open science!"
-            .hardcoded;
+        return tr.signup_page_description;
       case passwordForgot:
-        return "Enter the email associated with your account and we'll send an email with instructions to reset your password"
-            .hardcoded;
+        return tr.password_forgot_page_description;
       default:
         return null;
     }
@@ -81,11 +77,10 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
   bool get shouldRemember => rememberMeControl.value!;
 
   static final authValidationMessages = {
-    ValidationMessage.required: (error) => 'Field must not be empty',
-    ValidationMessage.email: (error) => 'Must enter a valid email',
-    ValidationMessage.mustMatch: (error) => 'Both passwords must match',
-    ValidationMessage.minLength: (error) =>
-        'Passwords have a minimum of ${(error as Map)['requiredLength']} characters',
+    ValidationMessage.required: (error) => tr.form_field_required,
+    ValidationMessage.email: (error) => tr.form_field_email_invalid,
+    ValidationMessage.mustMatch: (error) => tr.form_field_password_mustmatch,
+    ValidationMessage.minLength: (error) => tr.form_field_password_minlength(error['requiredLength']),
   };
 
   late final FormGroup loginForm = FormGroup({

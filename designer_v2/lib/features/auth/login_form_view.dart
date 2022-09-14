@@ -9,7 +9,6 @@ import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
 import 'package:studyu_designer_v2/features/auth/auth_required_state.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
@@ -20,7 +19,6 @@ class _LoginFormBody extends FormConsumerRefWidget {
 
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
-    print("_LoginFormBody.build");
     final theme = Theme.of(context);
     final state = ref.watch(authFormControllerProvider(formKey));
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
@@ -31,7 +29,8 @@ class _LoginFormBody extends FormConsumerRefWidget {
         EmailTextField(
           formControl: controller.emailControl,
         ),
-        const SizedBox(height: 16.0),
+        //const SizedBox(height: 16.0),
+        const SizedBox(height: 4.0),
         PasswordTextField(
           formControl: controller.passwordControl,
         ),
@@ -51,14 +50,14 @@ class _LoginFormBody extends FormConsumerRefWidget {
                   const SizedBox(width: 3.0),
                   FormControlLabel(
                     formControl: controller.rememberMeControl,
-                    text: 'Remember me'.hardcoded,
+                    text: tr.form_field_remember_me,
                   ),
                   const SizedBox(width: 8.0),
                 ],
               ),
             ),
             Hyperlink(
-              text: 'Forgot password?'.hardcoded,
+              text: tr.link_forgot_password,
               style: TextStyle(fontSize: theme.textTheme.caption!.fontSize),
               onClick: () => ref
                   .read(routerProvider)
@@ -71,14 +70,13 @@ class _LoginFormBody extends FormConsumerRefWidget {
           return Center(
             child: PrimaryButton(
               icon: Icons.login,
-              text: tr.signin,
+              text: tr.action_button_login,
               isLoading: state.isLoading,
               enabled: form.valid,
               onPressedFuture: () => ref
                   .read(authFormControllerProvider(formKey).notifier)
                   .signIn(),
-              tooltipDisabled:
-                  'Please fill out all fields as required'.hardcoded,
+              tooltipDisabled: tr.form_invalid_prompt,
               innerPadding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             ),
@@ -90,10 +88,10 @@ class _LoginFormBody extends FormConsumerRefWidget {
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text("Don't have an account?".hardcoded),
+            Text(tr.link_signup_description),
             const SizedBox(width: 4.0),
             Hyperlink(
-              text: 'Sign up'.hardcoded,
+              text: tr.link_signup,
               onClick: () =>
                   ref.read(routerProvider).dispatch(RoutingIntents.signup),
             ),

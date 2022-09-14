@@ -8,8 +8,8 @@ import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
 import 'package:studyu_designer_v2/features/auth/auth_state.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/app_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -33,15 +33,17 @@ class _SignupFormBody extends FormConsumerRefWidget {
         EmailTextField(
           formControl: controller.emailControl,
         ),
-        const SizedBox(height: 12.0),
+        //const SizedBox(height: 12.0),
+        const SizedBox(height: 4.0),
         PasswordTextField(
           formControl: controller.passwordControl,
         ),
-        const SizedBox(height: 12.0),
+        //const SizedBox(height: 12.0),
+        const SizedBox(height: 4.0),
         PasswordTextField(
           formControl: controller.passwordConfirmationControl,
-          labelText: 'Confirm password'.hardcoded,
-          hintText: 'Enter password again'.hardcoded,
+          labelText: tr.form_field_password_confirm,
+          hintText: tr.form_field_password_confirm_hint,
         ),
         const SizedBox(height: 16.0),
         Row(
@@ -61,10 +63,10 @@ class _SignupFormBody extends FormConsumerRefWidget {
                 children: [
                   FormControlLabel(
                     formControl: controller.termsOfServiceControl,
-                    text: "I have read and agree to StudyU's ".hardcoded,
+                    text: tr.signup_tos_intro,
                   ),
                   Hyperlink(
-                    text: 'terms of use'.hardcoded,
+                    text: tr.signup_tos_terms_of_service,
                     onClick: () => _onClickTermsOfUse(ref),
                     style: TextStyle(
                       fontSize: theme.textTheme.caption!.fontSize,
@@ -73,15 +75,19 @@ class _SignupFormBody extends FormConsumerRefWidget {
                   ),
                   FormControlLabel(
                     formControl: controller.termsOfServiceControl,
-                    text: ' and '.hardcoded,
+                    text: tr.signup_tos_and,
                   ),
                   Hyperlink(
-                    text: 'privacy policy'.hardcoded,
+                    text: tr.signup_tos_privacy_policy,
                     onClick: () => _onClickPrivacyPolicy(ref),
                     style: TextStyle(
                       fontSize: theme.textTheme.caption!.fontSize,
                       height: theme.textTheme.caption!.height,
                     ),
+                  ),
+                  FormControlLabel(
+                    formControl: controller.termsOfServiceControl,
+                    text: tr.signup_tos_outro,
                   ),
                 ],
               ),
@@ -92,14 +98,13 @@ class _SignupFormBody extends FormConsumerRefWidget {
         ReactiveFormConsumer(builder: (context, form, child) {
           return Center(
             child: PrimaryButton(
-              text: "Create account".hardcoded,
+              text: tr.action_button_signup,
               isLoading: state.isLoading,
               enabled: form.valid,
               onPressedFuture: () => ref
                   .read(authFormControllerProvider(formKey).notifier)
                   .signUp(),
-              tooltipDisabled:
-                  'Please fill out all fields as required'.hardcoded,
+              tooltipDisabled: tr.form_invalid_prompt,
               innerPadding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             ),
@@ -111,10 +116,10 @@ class _SignupFormBody extends FormConsumerRefWidget {
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text("Already have an account?".hardcoded),
+            Text(tr.link_login_description),
             const SizedBox(width: 4.0),
             Hyperlink(
-              text: 'Sign in'.hardcoded,
+              text: tr.link_login,
               onClick: () =>
                   ref.read(routerProvider).dispatch(RoutingIntents.login),
             ),

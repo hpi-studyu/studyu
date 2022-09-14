@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class EmailTextField extends StatefulWidget {
-  const EmailTextField({
-    this.labelText = 'Email', // .hardcoded
+  EmailTextField({
+    labelText,
     this.formControlName,
     this.formControl,
-    this.hintText = 'Email', //.hardcoded
+    hintText,
     Key? key,
   })  : assert(
-  (formControlName != null && formControl == null) ||
-      (formControlName == null && formControl != null),
-  "Must provide either formControlName or formControl"),
+            (formControlName != null && formControl == null) ||
+                (formControlName == null && formControl != null),
+            "Must provide either formControlName or formControl"),
+        labelText = labelText ?? tr.form_field_email,
+        hintText = hintText ?? tr.form_field_email_hint,
         super(key: key);
 
   final String labelText;
@@ -47,16 +50,18 @@ class _EmailTextFieldState extends State<EmailTextField> {
 }
 
 class PasswordTextField extends StatefulWidget {
-  const PasswordTextField({
-    this.labelText = 'Password', // .hardcoded
+  PasswordTextField({
+    labelText,
     this.formControlName,
     this.formControl,
-    this.hintText = 'Enter your password', //.hardcoded
+    hintText,
     Key? key,
   })  : assert(
-            (formControlName != null && formControl == null) ||
-                (formControlName == null && formControl != null),
-            "Must provide either formControlName or formControl"),
+  (formControlName != null && formControl == null) ||
+      (formControlName == null && formControl != null),
+  "Must provide either formControlName or formControl"),
+        labelText = labelText ?? tr.form_field_password,
+        hintText = hintText ?? tr.form_field_password_hint,
         super(key: key);
 
   final String labelText;
@@ -78,26 +83,25 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       rows: [
         FormTableRow(
             input: ReactiveTextField(
-              formControl: widget.formControl,
-              formControlName: widget.formControlName,
-              obscureText: !passwordVisibility,
-              decoration: InputDecoration(
-                labelText: widget.labelText,
-                hintText: widget.hintText,
-                suffixIcon: InkWell(
-                  onTap: () => setState(
-                    () => passwordVisibility = !passwordVisibility,
-                  ),
-                  focusNode: FocusNode(skipTraversal: true),
-                  child: Icon(
-                    passwordVisibility
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                  ),
-                ),
+          formControl: widget.formControl,
+          formControlName: widget.formControlName,
+          obscureText: !passwordVisibility,
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            hintText: widget.hintText,
+            suffixIcon: InkWell(
+              onTap: () => setState(
+                () => passwordVisibility = !passwordVisibility,
               ),
-            )
-        )
+              focusNode: FocusNode(skipTraversal: true),
+              child: Icon(
+                passwordVisibility
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+              ),
+            ),
+          ),
+        ))
       ],
     );
   }

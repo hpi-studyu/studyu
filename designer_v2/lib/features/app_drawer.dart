@@ -80,12 +80,12 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<GoRouterDrawerEntry>> topEntries = [
     [
       GoRouterDrawerEntry(
-        title: tr.my_studies,
+        title: tr.navlink_my_studies,
         icon: Icons.folder_copy_rounded,
         intent: RoutingIntents.studies,
       ),
       GoRouterDrawerEntry(
-        title: 'Shared With Me'.hardcoded,
+        title: tr.navlink_shared_studies,
         icon: Icons.folder_shared_rounded,
         intent: RoutingIntents.studiesShared,
         enabled: false,
@@ -93,14 +93,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     ],
     [
       GoRouterDrawerEntry(
-        title: 'Study Registry'.hardcoded,
+        title: tr.navlink_public_studies,
         icon: Icons.public,
         intent: RoutingIntents.publicRegistry,
-        helpText: "The study registry is a public collection of studies "
-                "conducted on the StudyU \nplatform. In the spirit of "
-                "open science, it fosters collaboration & transparency "
-                "\namong all researchers & clinicians on the platform."
-            .hardcoded,
+        helpText: tr.navlink_public_studies_tooltip,
       ),
     ]
   ];

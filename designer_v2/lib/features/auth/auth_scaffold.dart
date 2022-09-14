@@ -6,9 +6,9 @@ import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/studyu_logo.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/studyu_jtbd.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/language_picker.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/repositories/app_repository.dart';
@@ -46,7 +46,6 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
     final theme = Theme.of(context);
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
     final appConfig = ref.watch(appConfigProvider).value;
-    print("AuthScaffold.build");
 
     return Scaffold(
       key: RouterKeys.authKey,
@@ -67,7 +66,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                   constraints: const BoxConstraints(maxHeight: 88.0),
                   child: const StudyULogo(),
                 ),
-                const SizedBox(height: 48.0),
+                const SizedBox(height: 32.0),
                 Flexible(
                   child: Padding(
                     // adjust for whitespace in logo
@@ -89,7 +88,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                             text: formKey.description,
                             style: ThemeConfig.bodyTextMuted(theme),
                           ) : const SizedBox.shrink(),
-                          const SizedBox(height: 40.0),
+                          const SizedBox(height: 24.0),
                           Flexible(
                             child: SingleChildScrollView(
                               child: Padding(
@@ -127,7 +126,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                             ),
                             const SizedBox(width: 12.0),
                             Hyperlink(
-                              text: "Imprint",
+                              text: tr.imprint,
                               onClick: () => _onClickImprint(appConfig),
                               linkColor: ThemeConfig.bodyTextBackground(theme).color!,
                             ),

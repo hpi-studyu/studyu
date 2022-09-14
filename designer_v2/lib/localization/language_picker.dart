@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -56,7 +57,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
         );
       case LanguagePickerType.icon:
         return PopupMenuButton<Locale>(
-          tooltip: "Select a language".hardcoded,
+          tooltip: tr.language_select_tooltip,
           offset: widget.offset ?? Offset.zero,
           position: PopupMenuPosition.over,
           icon: Icon(Icons.language, color: widget.iconColor),
@@ -74,7 +75,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
       final locale = Locale(languageCode, countryCode);
       options.add(PopupMenuItem(
         value: locale,
-        child: Text('${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}'),
+        child: Text('${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}'),
       ));
     });
     return options;

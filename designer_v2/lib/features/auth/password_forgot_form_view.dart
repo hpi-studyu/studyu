@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
 import 'package:studyu_designer_v2/features/auth/auth_state.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
@@ -46,14 +46,13 @@ class _PasswordForgotFormBody extends FormConsumerRefWidget {
           return Center(
             child: PrimaryButton(
               icon: null,
-              text: 'Reset password'.hardcoded,
+              text: tr.action_button_password_reset,
               isLoading: state.isLoading,
               enabled: form.valid,
               onPressedFuture: () => ref
                   .read(authFormControllerProvider(formKey).notifier)
                   .sendPasswordResetLink(),
-              tooltipDisabled:
-                  'Please fill out all fields as required'.hardcoded,
+              tooltipDisabled: tr.form_invalid_prompt,
               innerPadding:
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             ),
@@ -65,10 +64,10 @@ class _PasswordForgotFormBody extends FormConsumerRefWidget {
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text("Log into your workspace?".hardcoded),
+            Text(tr.link_login_description2),
             const SizedBox(width: 4.0),
             Hyperlink(
-              text: 'Sign in'.hardcoded,
+              text: tr.link_login,
               onClick: () =>
                   ref.read(routerProvider).dispatch(RoutingIntents.login),
             ),
