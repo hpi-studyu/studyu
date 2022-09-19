@@ -121,9 +121,6 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   /// Static helper row for padding
   late final TableRow paddingRow = _buildPaddingRow();
 
-  /// Static table header row
-  late final TableRow headerRow = _buildHeaderRow();
-
   @override
   void initState() {
     super.initState();
@@ -160,6 +157,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       columnWidths[idx] = widget.columns[idx].columnWidth;
     }
 
+    final headerRow = _buildHeaderRow();
     final tableHeaderRows = (widget.showTableHeader)
         ? [headerRow, paddingRow, paddingRow] : [];
     final tableDataRows = _tableRows(theme);

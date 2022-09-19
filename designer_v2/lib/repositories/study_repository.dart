@@ -5,7 +5,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -116,15 +115,15 @@ class StudyRepository extends ModelRepository<Study>
     final actions = [
       ModelAction(
         type: StudyActionType.edit,
-        label: "Edit".hardcoded,
+        label: StudyActionType.edit.string,
         onExecute: () {
           ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(study.id));
         },
         isAvailable: study.canEditDraft(currentUser),
       ),
       ModelAction( // same as "Copy" but for non-drafts
-        type: StudyActionType.duplicate,
-        label: "Copy as draft".hardcoded,
+        type: StudyActionType.duplicateDraft,
+        label: StudyActionType.duplicateDraft.string,
         onExecute: () {
           return duplicateAndSave(study).then((value) =>
               ref.read(routerProvider).dispatch(RoutingIntents.studies));
@@ -133,7 +132,7 @@ class StudyRepository extends ModelRepository<Study>
       ),
       ModelAction(
         type: StudyActionType.duplicate,
-        label: "Copy".hardcoded,
+        label: StudyActionType.duplicate.string,
         onExecute: () {
           return duplicateAndSave(study).then((value) =>
               ref.read(routerProvider).dispatch(RoutingIntents.studies));
@@ -153,7 +152,7 @@ class StudyRepository extends ModelRepository<Study>
        */
       ModelAction(
         type: StudyActionType.export,
-        label: "Export results".hardcoded,
+        label: StudyActionType.export.string,
         onExecute: () {
           runAsync(() => study.exportData.downloadAsZip());
         },
@@ -161,14 +160,14 @@ class StudyRepository extends ModelRepository<Study>
       ),
       ModelAction(
           type: StudyActionType.delete,
-          label: "Delete".hardcoded,
+          label: StudyActionType.delete.string,
           onExecute: () {
             return ref.read(notificationServiceProvider).show(
                 Notifications
                     .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
                 actions: [
                   NotificationAction(
-                      label: "Delete".hardcoded,
+                      label: StudyActionType.delete.string,
                       onSelect: onDeleteCallback,
                       isDestructive: true),
                 ]);

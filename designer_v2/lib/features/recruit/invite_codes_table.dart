@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
-import 'package:studyu_designer_v2/common_views/badge.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/recruit/enrolled_badge.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 typedef ParticipantCountProvider = int Function(StudyInvite invite);
@@ -32,19 +31,19 @@ class StudyInvitesTable extends StatelessWidget {
 
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
-        label: '#'.hardcoded, columnWidth: const FixedColumnWidth(60)),
+        label: '#', columnWidth: const FixedColumnWidth(60)),
     StandardTableColumn(
-        label: 'Code'.hardcoded,
+        label: tr.code_list_header_code,
         columnWidth:
             const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
     StandardTableColumn(
-        label: 'Enrolled'.hardcoded, columnWidth: const FixedColumnWidth(100)),
+        label: tr.studies_list_header_participants_enrolled, columnWidth: const FixedColumnWidth(100)),
     StandardTableColumn(
-        label: 'Intervention A'.hardcoded,
+        label: tr.form_field_preconfigured_schedule_intervention_a,
         columnWidth:
             const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
     StandardTableColumn(
-        label: 'Intervention B'.hardcoded,
+        label: tr.form_field_preconfigured_schedule_intervention_b,
         columnWidth:
             const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
     //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
@@ -87,7 +86,7 @@ class StudyInvitesTable extends StatelessWidget {
               softWrap: false,
             )
           : Text(
-              'Default'.hardcoded,
+              tr.form_field_preconfigured_schedule_intervention_default,
               style: mutedTextStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

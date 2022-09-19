@@ -1,4 +1,5 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 /// Provides a human-readable translation
@@ -6,9 +7,9 @@ extension ParticipationFormatted on Participation {
   String get string {
     switch (this) {
       case Participation.open:
-        return "Open".hardcoded;
+        return tr.form_enrollment_option_open;
       case Participation.invite:
-        return "Private (Invite-only)".hardcoded;
+        return tr.form_enrollment_option_invite;
       default:
         return "[Invalid Participation]";
     }
@@ -31,10 +32,9 @@ extension ParticipationFormatted on Participation {
   String get description {
     switch (this) {
       case Participation.open:
-        return "All StudyU users may enroll to the study in the StudyU app.".hardcoded;
+        return tr.participation_open_who_description;
       case Participation.invite:
-        return "Only participants with an access "
-            "code can enroll in the StudyU app.".hardcoded;
+        return tr.participation_invite_who_description;
       default:
         return "[Invalid Participation]";
     }
@@ -43,9 +43,9 @@ extension ParticipationFormatted on Participation {
   String get whoShort {
     switch (this) {
       case Participation.open:
-        return "Everyone".hardcoded;
+        return tr.participation_open_who;
       case Participation.invite:
-        return "Invite-only".hardcoded;
+        return tr.participation_invite_who;
       default:
         return "[Invalid Participation]";
     }
@@ -54,9 +54,9 @@ extension ParticipationFormatted on Participation {
   String get asAdjective { // used when launching the study
     switch (this) {
       case Participation.open:
-        return "open to everyone".hardcoded;
+        return tr.participation_open_as_adjective;
       case Participation.invite:
-        return "invite-only".hardcoded;
+        return tr.participation_invite_as_adjective;
       default:
         return "[Invalid Participation]";
     }

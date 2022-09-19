@@ -1,6 +1,6 @@
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 abstract class IStudyNavViewModel {
@@ -23,31 +23,31 @@ class StudyNav {
 
   static final edit = (studyId, {enabled = true}) => NavbarTab(
     index: 0,
-    title: "Design".hardcoded,
+    title: tr.navlink_study_design,
     intent: RoutingIntents.studyEdit(studyId),
     enabled: enabled,
   );
   static final test = (studyId, {enabled = true}) => NavbarTab(
     index: 1,
-    title: "Test".hardcoded,
+    title: tr.navlink_study_test,
     intent: RoutingIntents.studyTest(studyId),
     enabled: enabled,
   );
   static final recruit = (studyId, {enabled = true}) => NavbarTab(
     index: 2,
-    title: "Recruit".hardcoded,
+    title: tr.navlink_study_recruit,
     intent: RoutingIntents.studyRecruit(studyId),
     enabled: enabled,
   );
   static final monitor = (studyId, {enabled = true}) => NavbarTab(
     index: 3,
-    title: "Monitor".hardcoded,
+    title: tr.navlink_study_monitor,
     intent: RoutingIntents.studyMonitor(studyId),
     enabled: enabled,
   );
   static final analyze = (studyId, {enabled = true}) => NavbarTab(
     index: 4,
-    title: "Analyze".hardcoded,
+    title: tr.navlink_study_analyze,
     intent: RoutingIntents.studyAnalyze(studyId),
     enabled: enabled,
   );
@@ -63,22 +63,22 @@ class StudyDesignNav {
 
   static final info = (studyId) => NavbarTab(
       index: 0,
-      title: "Study Info".hardcoded,
+      title: tr.navlink_study_design_info,
       intent: RoutingIntents.studyEditInfo(studyId)
   );
   static final enrollment = (studyId) => NavbarTab(
       index: 1,
-      title: "Participation".hardcoded,
+      title: tr.navlink_study_design_enrollment,
       intent: RoutingIntents.studyEditEnrollment(studyId)
   );
   static final interventions = (studyId) => NavbarTab(
       index: 2,
-      title: "Interventions".hardcoded,
+      title: tr.navlink_study_design_interventions,
       intent: RoutingIntents.studyEditInterventions(studyId)
   );
   static final measurements = (studyId) => NavbarTab(
       index: 3,
-      title: "Measurements".hardcoded,
+      title: tr.navlink_study_design_measurements,
       intent: RoutingIntents.studyEditMeasurements(studyId)
   );
 }

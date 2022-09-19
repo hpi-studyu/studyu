@@ -1,5 +1,5 @@
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 extension EnumX on Enum {
   String toShortString() {
@@ -82,43 +82,19 @@ extension DateTimeAgoX on DateTime {
     Duration diff = DateTime.now().difference(this);
 
     if (diff.inYears >= 1) {
-      if (diff.inYears == 1) {
-        return '${diff.inYears} year ago'.hardcoded;
-      } else {
-        return '${diff.inYears} years ago'.hardcoded;
-      }
+      return tr.date_diff_years(diff.inYears);
     } else if (diff.inMonths >= 1) {
-      if (diff.inMonths == 1) {
-        return '${diff.inMonths} month ago'.hardcoded;
-      } else {
-        return '${diff.inMonths} months ago'.hardcoded;
-      }
+      return tr.date_diff_months(diff.inMonths);
     } else if (diff.inDays >= 1) {
-      if (diff.inDays == 1) {
-        return '${diff.inDays} day ago'.hardcoded;
-      } else {
-        return '${diff.inDays} days ago'.hardcoded;
-      }
+      return tr.date_diff_days(diff.inDays);
     } else if (diff.inHours >= 1) {
-      if (diff.inHours == 1) {
-        return '${diff.inHours} hour ago'.hardcoded;
-      } else {
-        return '${diff.inHours} hours ago'.hardcoded;
-      }
+      return tr.date_diff_hours(diff.inHours);
     } else if (diff.inMinutes >= 1) {
-      if (diff.inMinutes == 1) {
-        return '${diff.inMinutes} minute ago'.hardcoded;
-      } else {
-        return '${diff.inMinutes} minutes ago'.hardcoded;
-      }
+      return tr.date_diff_minutes(diff.inMinutes);
     } else if (diff.inSeconds >= 1 && inSeconds) {
-      if (diff.inSeconds == 1) {
-        return '${diff.inSeconds} second ago'.hardcoded;
-      } else {
-        return '${diff.inSeconds} seconds ago'.hardcoded;
-      }
+      return tr.date_diff_seconds(diff.inSeconds);
     } else {
-      return 'just now'.hardcoded;
+      return tr.date_just_now;
     }
   }
 

@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
-import 'package:studyu_designer_v2/common_views/empty_body.dart';
-import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_participation_badge.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class StudiesTable extends StatelessWidget {
   const StudiesTable({
@@ -26,42 +22,40 @@ class StudiesTable extends StatelessWidget {
   final ActionsProviderFor<Study> getActions;
   final Widget emptyWidget;
 
-  static final List<StandardTableColumn> columns = [
-    StandardTableColumn(
-        label: 'Title'.hardcoded,
-        columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.5))),
-    StandardTableColumn(
-        label: 'Status'.hardcoded,
-        columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
-    StandardTableColumn(
-        label: 'Participation'.hardcoded,
-        columnWidth: const MaxColumnWidth(
-            FixedColumnWidth(120), IntrinsicColumnWidth())),
-    StandardTableColumn(
-      label: 'Created'.hardcoded,
-      columnWidth: const FlexColumnWidth(1.3),
-    ),
-    StandardTableColumn(
-      label: 'Enrolled'.hardcoded,
-      columnWidth: const FlexColumnWidth(0.5),
-    ),
-    StandardTableColumn(
-      label: 'Active'.hardcoded,
-      columnWidth: const FlexColumnWidth(0.5),
-    ),
-    StandardTableColumn(
-      label: 'Completed'.hardcoded,
-      columnWidth: const FlexColumnWidth(0.5),
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return StandardTable<Study>(
       items: studies,
-      columns: columns,
+      columns: [
+        StandardTableColumn(
+            label: tr.studies_list_header_title,
+            columnWidth:
+            const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4))),
+        StandardTableColumn(
+            label: tr.studies_list_header_status,
+            columnWidth:
+            const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
+        StandardTableColumn(
+            label: tr.studies_list_header_participation,
+            columnWidth: const MaxColumnWidth(
+                FixedColumnWidth(130), IntrinsicColumnWidth())),
+        StandardTableColumn(
+          label: tr.studies_list_header_created_at,
+          columnWidth: const FlexColumnWidth(1),
+        ),
+        StandardTableColumn(
+          label: tr.studies_list_header_participants_enrolled,
+          columnWidth: const FlexColumnWidth(0.5),
+        ),
+        StandardTableColumn(
+          label: tr.studies_list_header_participants_active,
+          columnWidth: const FlexColumnWidth(0.5),
+        ),
+        StandardTableColumn(
+          label: tr.studies_list_header_participants_completed,
+          columnWidth: const FlexColumnWidth(0.5),
+        ),
+      ],
       onSelectItem: onSelect,
       trailingActionsAt: (item, _) => getActions(item),
       buildCellsAt: _buildRow,

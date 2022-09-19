@@ -1,4 +1,5 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -7,10 +8,32 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 enum StudyActionType {
   edit,
   duplicate,
+  duplicateDraft,
   addCollaborator,
-  recruit,
   export,
   delete,
+}
+
+/// Provides a human-readable translation of the model action type
+extension StudyActionTypeFormatted on StudyActionType {
+  String get string {
+    switch (this) {
+      case StudyActionType.edit:
+        return tr.action_edit;
+      case StudyActionType.delete:
+        return tr.action_delete;
+      case StudyActionType.duplicate:
+        return tr.action_duplicate;
+      case StudyActionType.duplicateDraft:
+        return tr.action_study_duplicate_draft;
+      case StudyActionType.addCollaborator:
+        return "[StudyActionType.addCollaborator]"; // not implemented yet
+      case StudyActionType.export:
+        return tr.action_study_export_results;
+      default:
+        return "[Invalid ModelActionType]";
+    }
+  }
 }
 
 typedef StudyID = String;
@@ -21,7 +44,7 @@ typedef InterventionProvider = Intervention? Function(String id);
 extension StudyHelpers on core.Study {
   Intervention? getIntervention(String id) {
     if (id == Study.baselineID) {
-      return Intervention(Study.baselineID, 'Baseline');
+      return Intervention(Study.baselineID, 'Baseline'.hardcoded);
     }
     return interventions.firstWhereOrNull((i) => i.id == id);
   }
@@ -32,11 +55,11 @@ extension StudyStatusFormatted on StudyStatus {
   String get string {
     switch (this) {
       case StudyStatus.draft:
-        return "Draft".hardcoded;
+        return tr.study_status_draft;
       case StudyStatus.running:
-        return "Live".hardcoded;
+        return tr.study_status_running;
       case StudyStatus.closed:
-        return "Closed".hardcoded;
+        return tr.study_status_closed;
       default:
         return "[Invalid StudyStatus]";
     }
@@ -45,11 +68,11 @@ extension StudyStatusFormatted on StudyStatus {
   String get description {
     switch (this) {
       case StudyStatus.draft:
-        return "This study is still being drafted.".hardcoded;
+        return tr.study_status_draft_description;
       case StudyStatus.running:
-        return "This study is currently in progress.".hardcoded;
+        return tr.study_status_running_description;
       case StudyStatus.closed:
-        return "This study has been completed.".hardcoded;
+        return tr.study_status_closed_description;
       default:
         return "[Invalid StudyStatus]";
     }
@@ -57,6 +80,7 @@ extension StudyStatusFormatted on StudyStatus {
 }
 
 /// Provides a human-readable translation of the participation / enrollment type
+// TODO can we get rid of this?
 extension ParticipationTypeFormatted on core.Participation {
   String get value {
     switch (this) {

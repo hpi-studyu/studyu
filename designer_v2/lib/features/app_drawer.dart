@@ -4,7 +4,6 @@ import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
@@ -13,17 +12,20 @@ typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
 class DrawerEntry {
   const DrawerEntry({
-    required this.title,
+    required this.localizedTitle,
     this.icon,
     this.onSelected,
-    this.helpText,
+    this.localizedHelpText,
     this.enabled = true,
   });
-  final String title;
+  final LocalizedStringResolver localizedTitle;
   final IconData? icon;
-  final String? helpText;
+  final LocalizedStringResolver? localizedHelpText;
   final bool enabled;
   final OnEntrySelectedCallback? onSelected;
+
+  String get title => localizedTitle();
+  String? get helpText => localizedHelpText?.call();
 
   void onClick(BuildContext context, WidgetRef ref) {
     if (onSelected != null) {
@@ -34,9 +36,9 @@ class DrawerEntry {
 
 class GoRouterDrawerEntry extends DrawerEntry {
   const GoRouterDrawerEntry({
-    required super.title,
+    required super.localizedTitle,
     super.icon,
-    super.helpText,
+    super.localizedHelpText,
     super.enabled,
     required this.intent,
   });
@@ -80,12 +82,12 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<GoRouterDrawerEntry>> topEntries = [
     [
       GoRouterDrawerEntry(
-        title: tr.navlink_my_studies,
+        localizedTitle: () => tr.navlink_my_studies,
         icon: Icons.folder_copy_rounded,
         intent: RoutingIntents.studies,
       ),
       GoRouterDrawerEntry(
-        title: tr.navlink_shared_studies,
+        localizedTitle: () => tr.navlink_shared_studies,
         icon: Icons.folder_shared_rounded,
         intent: RoutingIntents.studiesShared,
         enabled: false,
@@ -93,10 +95,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     ],
     [
       GoRouterDrawerEntry(
-        title: tr.navlink_public_studies,
+        localizedTitle: () => tr.navlink_public_studies,
         icon: Icons.public,
         intent: RoutingIntents.publicRegistry,
-        helpText: tr.navlink_public_studies_tooltip,
+        localizedHelpText: () => tr.navlink_public_studies_tooltip,
       ),
     ]
   ];
@@ -105,12 +107,12 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<DrawerEntry>> bottomEntries = [
     [
       GoRouterDrawerEntry(
-        title: 'Settings'.hardcoded,
+        localizedTitle: () => tr.navlink_account_settings,
         icon: Icons.settings_rounded,
         intent: RoutingIntents.accountSettings,
       ),
       DrawerEntry(
-        title: 'Sign out'.hardcoded,
+        localizedTitle: () => tr.navlink_logout,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
           ref
