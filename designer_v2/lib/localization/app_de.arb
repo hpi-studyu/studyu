@@ -117,7 +117,6 @@
   "studies_list_header_participants_active": "Aktiv",
   "studies_list_header_participants_completed": "Abgeschlossen",
 
-
   "@__________________STUDYPAGE__________________": {},
 
   "navlink_learn": "Lernen",
@@ -146,6 +145,37 @@
   "notification_study_deleted": "Die Studie wurde gelöscht",
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
+
+  "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
+
+  "form_study_design_info_description": "Auf dieser Seite gibst du allgemeine Informationen für Teilnehmer der Studie an. Wenn du dich entscheidest, die Studie im Studienregister zu veröffentlichen, sind diese Informationen auch für andere Forscher und Kliniker einsehbar.",
+
+  "form_field_study_title": "Studientitel",
+  "form_field_study_title_tooltip": "Gib den Titel der Studie an, so wie er in der StudyU App angezeigt werden soll",
+  "form_field_study_title_required": "Die Studie muss einen Titel haben",
+  "form_field_study_description": "Beschreibung",
+  "form_field_study_description_tooltip": "Beschreibe die Studie kurz & verständlich für Teilnehmer",
+  "form_field_study_description_hint": "Beschreibe die Studie kurz & verständlich für Teilnehmer",
+  "form_field_study_description_required": "Die Studie muss eine Beschreibung haben",
+  "form_field_study_icon_required": "Die Studie muss ein Icon haben",
+
+  "form_section_publisher": "Herausgeber & Kontakt",
+  "form_section_publisher_description": "Teilnehmer der Studie können gemäß den hier angegebenen Informationen über die StudyU App mit dir in Kontakt treten. Andere Forscher oder Kliniker können dich nur kontaktieren, wenn die Studie im Studienregister veröffentlicht ist.",
+  "form_field_organization": "Verantwortliche Organisation",
+  "form_field_organization_required": "Die Studie muss eine verantwortliche Organisation haben",
+  "form_field_review_board": "Institutionelles Prüfungsgremium",
+  "form_field_review_board_required": "Du musst das für die Studie zuständige Prüfungsgremium angeben",
+  "form_field_review_board_number": "Protokollnummer des Prüfungsgremiums",
+  "form_field_review_board_number_required": "Du musst die der Studie zugewiesene Protokollnummer des zuständigen Prüfungsgremiums angeben",
+  "form_field_researchers": "Verantwortliche Person(en)",
+  "form_field_researchers_required": "Du musst einen oder mehrere für die Studie verantwortliche Forscher oder Kliniker angeben",
+  "form_field_website": "Studien-Webseite",
+  "form_field_website_pattern": "Bitte gib eine korrekte Webseite zur Studie an",
+  "form_field_contact_email": "Email",
+  "form_field_contact_email_required": "Die Studie muss eine Email-Addresse zur Kontaktaufnahme haben",
+  "form_field_contact_email_email": "Bitte gib eine korrekte Email zur Kontaktaufnahme ein",
+  "form_field_contact_phone": "Telefon",
+  "form_field_contact_phone_required": "Die Studie muss eine Telefonnummer zur Kontaktaufnahme haben",
 
   "@__________________STUDYPAGE_RECRUIT__________________": {},
 

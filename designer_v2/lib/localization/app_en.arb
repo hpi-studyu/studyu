@@ -149,6 +149,37 @@
     "dialog_study_delete_title": "Permanently delete?",
     "dialog_study_delete_description": "Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.",
 
+    "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
+
+    "form_study_design_info_description": "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers & clinicians as well.",
+
+    "form_field_study_title": "Study title",
+    "form_field_study_title_tooltip": "Provide the title of the study as it should be displayed in the StudyU app",
+    "form_field_study_title_required": "The study title must not be empty",
+    "form_field_study_description": "Description",
+    "form_field_study_description_tooltip": "Give a short summary of your study to participants",
+    "form_field_study_description_hint": "Give a short summary of your study to participants",
+    "form_field_study_description_required": "The study description must not be empty",
+    "form_field_study_icon_required": "You must select an icon for your study",
+
+    "form_section_publisher": "Publisher & Contact Information",
+    "form_section_publisher_description": "Participants will be able to contact you via the StudyU app using this information. Other clinicians or researchers will only be able to contact you if you agree to publish your study to the study registry.",
+    "form_field_organization": "Responsible organization",
+    "form_field_organization_required": "The responsible organization must not be empty",
+    "form_field_review_board": "Institutional Review Board",
+    "form_field_review_board_required": "You must specify the responsible review board for your study",
+    "form_field_review_board_number": "Institutional Review Board Protocol Number",
+    "form_field_review_board_number_required": "You must provide a review board protocol number for your study",
+    "form_field_researchers": "Responsible person(s)",
+    "form_field_researchers_required": "You must specify the researcher(s) responsible for the study",
+    "form_field_website": "Website",
+    "form_field_website_pattern": "Please enter a valid contact website URL",
+    "form_field_contact_email": "Email",
+    "form_field_contact_email_required": "You must specify a contact email",
+    "form_field_contact_email_email": "Please enter a valid contact email address",
+    "form_field_contact_phone": "Phone",
+    "form_field_contact_phone_required": "You must specify a phone number for participants to contact",
+
     "@__________________STUDYPAGE_RECRUIT__________________": {},
 
     "enrolled_count_tooltip": "{count,plural, =0{Nobody has enrolled in the study with this code yet} =1{{count} participant is enrolled in the study with this code} other{{count} participants are enrolled in the study with this code}}",

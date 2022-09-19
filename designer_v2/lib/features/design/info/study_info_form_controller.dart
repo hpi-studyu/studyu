@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dar
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
 class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
@@ -108,77 +108,77 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       control: titleControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The study title must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_study_title_required,
       }
   );
   get descriptionRequired => FormControlValidation(
       control: descriptionControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The study description must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_study_description_required,
       }
   );
   get iconRequired => FormControlValidation(
       control: iconControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must select an icon for your study'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_study_icon_required,
       }
   );
   get organizationRequired => FormControlValidation(
       control: organizationControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The responsible organization must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_organization_required,
       }
   );
   get reviewBoardRequired => FormControlValidation(
       control: reviewBoardControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must specify the responsible review board for your study'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_review_board_required,
       }
   );
   get reviewBoardNumberRequired => FormControlValidation(
       control: reviewBoardNumberControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must provide a review board protocol number for your study'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_review_board_number_required,
       }
   );
   get researchersRequired => FormControlValidation(
       control: researchersControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must specify the researcher(s) responsible for the study'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_researchers_required,
       }
   );
   get emailRequired => FormControlValidation(
       control: emailControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must specify a contact email'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_contact_email_required,
       }
   );
   get phoneRequired => FormControlValidation(
       control: phoneControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must specify a phone number for participants to contact'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_contact_phone_required,
       }
   );
   get emailFormat => FormControlValidation(
       control: emailControl,
       validators: [Validators.email],
       validationMessages: {
-        'email': (error) => 'Please enter a valid contact email address'.hardcoded,
+        'email': (error) => tr.form_field_contact_email_email,
       }
   );
   get websiteFormat => FormControlValidation(
       control: websiteControl,
       validators: [Validators.pattern(Patterns.url)],
       validationMessages: {
-        'pattern': (error) => 'Please enter a valid contact website URL'.hardcoded,
+        'pattern': (error) => tr.form_field_website_pattern,
       }
   );
 }
