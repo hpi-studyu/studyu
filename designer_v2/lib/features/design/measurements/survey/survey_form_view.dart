@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_fo
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -33,9 +33,9 @@ class MeasurementSurveyFormView extends ConsumerWidget {
             rows: [
               FormTableRow(
                 control: formViewModel.surveyTitleControl,
-                label: "Survey title".hardcoded,
+                label: tr.form_field_measurement_survey_title,
                 //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                labelHelpText: "TODO Survey title help text".hardcoded,
+                labelHelpText: tr.form_field_measurement_survey_title_tooltip,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyTitleControl,
                   inputFormatters: [
@@ -47,8 +47,8 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               ),
               FormTableRow(
                 control: formViewModel.surveyIntroTextControl,
-                label: "Intro text".hardcoded,
-                labelHelpText: "TODO Intro text help text".hardcoded,
+                label: tr.form_field_measurement_survey_intro_text,
+                labelHelpText: tr.form_field_measurement_survey_intro_text_tooltip,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyIntroTextControl,
                   inputFormatters: [
@@ -60,14 +60,14 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   minLines: 5,
                   maxLines: 5,
                   decoration: InputDecoration(
-                      hintText: "e.g. welcome & introduce participants to the survey".hardcoded
+                      hintText: tr.form_field_measurement_survey_intro_text_hint
                   ),
                 ),
               ),
               FormTableRow(
                 control: formViewModel.surveyOutroTextControl,
-                label: "Outro text".hardcoded,
-                labelHelpText: "TODO Outro text help text".hardcoded,
+                label: tr.form_field_measurement_survey_outro_text,
+                labelHelpText: tr.form_field_measurement_survey_outro_text_tooltip,
                 input: ReactiveTextField(
                   formControl: formViewModel.surveyOutroTextControl,
                   inputFormatters: [
@@ -79,7 +79,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   minLines: 5,
                   maxLines: 5,
                   decoration: InputDecoration(
-                      hintText: "e.g. thank participants for completing the survey".hardcoded
+                      hintText: tr.form_field_measurement_survey_outro_text_hint
                   ),
                 ),
               ),
@@ -99,12 +99,12 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
                   getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                   onNewItem: () => _onNewItem(context, ref),
-                  onNewItemLabel: 'Add question'.hardcoded,
-                  rowTitle: (viewModel) => viewModel.formData?.questionText ?? 'Missing item title'.hardcoded,
-                  sectionTitle: "Questions".hardcoded,
+                  onNewItemLabel: tr.form_array_measurement_survey_questions_new,
+                  rowTitle: (viewModel) => viewModel.formData?.questionText ?? '',
+                  sectionTitle: tr.form_array_measurement_survey_questions,
                   emptyIcon: Icons.content_paste_off_rounded,
-                  emptyTitle: "No questions defined".hardcoded,
-                  emptyDescription: "You need to define at least one question to determine the effect of your intervention(s).".hardcoded,
+                  emptyTitle: tr.form_array_measurement_survey_questions_empty_title,
+                  emptyDescription: tr.form_array_measurement_survey_questions_empty_descriptions,
                   hideLeadingTrailingWhenEmpty: true,
                   rowPrefix: (context, viewModel, rowIdx) {
                     return Row(

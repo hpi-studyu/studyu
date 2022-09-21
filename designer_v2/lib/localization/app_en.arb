@@ -94,9 +94,10 @@
     "participation_open_who_description": "All StudyU users may enroll to the study in the StudyU app.",
     "participation_invite_who": "Invite-only",
     "participation_invite_who_description": "Only participants with an access code can enroll in the StudyU app.",
-
     "participation_open_as_adjective": "open to everyone",
     "participation_invite_as_adjective": "invite-only",
+    "participation_open_launch_description": "Once launched, all users of the StudyU platform can enroll in your study as long as they meet your screening criteria.",
+    "participation_invite_launch_description": "Once launched, you can invite participants by sending them a code to access & enroll in your study",
 
     "phase_sequence_alternating": "Alternating (AB AB)",
     "phase_sequence_counterbalanced": "Counterbalanced (AB BA)",
@@ -140,6 +141,7 @@
     "study_settings": "Study settings",
     "study_settings_publish_study": "Publish study",
     "study_settings_publish_study_tooltip": "Other researchers & clinicians will be able to access, test, review or create a \ncopy of your study design. They won't be able to access any data related to \nin-progress studies such as participants or study results (your study's \nRecruit, Monitor & Analyze pages will be unavailable).",
+    "study_settings_publish_study_launch_description": "To facilitate collaboration among researchers & clinicians, I agree that the my study will be published to the StudyU study registry for others. (Other researchers & clinicians will be able to contact you and review the study design, but they won't be able to access participation or result data unless shared explicitly)",
     "study_settings_publish_results": "Publish results",
     "study_settings_publish_results_tooltip": "Make your anonymized study results & data available in the study registry. \nOther researchers & clinicians will be able to access, export and \nanalyze the results from your study (the Analyze page will be available). \n This will automatically publish your study design to the registry.",
 
@@ -149,6 +151,76 @@
     "dialog_study_delete_title": "Permanently delete?",
     "dialog_study_delete_description": "Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.",
 
+    "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
+
+    "form_question_create": "New question",
+    "form_question_edit": "Edit question",
+    "form_question_readonly": "View question",
+
+    "form_field_question": "Your question",
+    "form_field_question_tooltip": "Enter the question that the participant will be prompted with in the app",
+    "form_field_question_required": "Your question must not be empty",
+
+    "form_field_question_help_text": "Question help text",
+    "form_field_question_help_text_tooltip": "Enter a text that is shown with a help icon next to the question in the app",
+    "form_field_question_help_text_hint": "Provide additional context, help or instructions for the question",
+    "form_field_question_help_text_add": "Add a help text",
+    "form_field_question_help_text_add_tooltip": "Add a text that is shown with a help icon next to the question in the app",
+
+    "form_field_question_response_options": "Response options",
+    "form_field_question_response_options_tooltip": "Define the options that participants can answer your question with",
+    "form_field_question_response_options_description": "Choose the response type that best matches your question and define the response options according to the data you want to collect.",
+
+    "question_type_choice": "Multiple choice",
+    "question_type_bool": "Yes/no",
+    "question_type_scale": "Scale",
+
+    "form_array_response_options_bool_yes": "Yes",
+    "form_array_response_options_bool_no": "No",
+
+    "form_field_response_choice_multiple": "Select multiple",
+    "form_field_response_choice_multiple_tooltip": "Allow the participant to select multiple response options. Otherwise only a single option can be selected.",
+    "form_array_response_options_choice_new": "Add option",
+    "form_array_response_options_choice_hint": "Option",
+
+    "form_field_response_scale_min_label": "Custom low label",
+    "form_field_response_scale_min_label_tooltip": "Enter a custom label to display at the value's position on the scale",
+    "form_field_response_scale_min_value": "Low value",
+    "form_field_response_scale_max_label": "Custom high label",
+    "form_field_response_scale_max_label_tooltip": "Enter a custom label to display at the value's position on the scale",
+    "form_field_response_scale_max_value": "High value",
+    "form_field_response_scale_label_hint": "Optional label",
+    "form_array_response_scale_mid_values": "See mid-values",
+    "form_array_response_scale_mid_values_dirty_banner": "The mid-values values and labels are cleared automatically to reflect the low & high of the scale.",
+    "form_field_response_scale_colors_add": "Add start & end colors",
+    "form_field_response_scale_color_add": "Add color",
+    "form_field_response_scale_color_min": "Low color",
+    "form_field_response_scale_color_max": "High color",
+    "form_field_response_scale_color_tooltip": "Set a custom color for the scale shown in the app",
+
+    "navlink_question_visuals": "Visuals",
+    "navlink_question_visuals_description": "Customize the look & feel of the question in the app to your liking. This does not change the data that is collected, but can help guide the study participant visually",
+
+    "form_array_response_options_choice_countmin": "Your question must have at least {count} non-empty response options",
+    "@form_array_response_options_choice_countmin": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "form_array_response_options_choice_countmax": "Your question must have at most {count} non-empty response options",
+    "@form_array_response_options_choice_countmax": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "form_array_response_options_scale_rangevalid_min": "The high value of the scale must be greater than the low value",
+    "form_array_response_options_scale_rangevalid_max": "The maximum difference between the high and low values of the scale is {count}",
+    "@form_array_response_options_scale_rangevalid_max": {
+        "placeholders": {
+            "max": {}
+        }
+    },
+
     "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
 
     "form_study_design_info_description": "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers & clinicians as well.",
@@ -156,6 +228,7 @@
     "form_field_study_title": "Study title",
     "form_field_study_title_tooltip": "Provide the title of the study as it should be displayed in the StudyU app",
     "form_field_study_title_required": "The study title must not be empty",
+    "form_field_study_title_default": "Unnamed study",
     "form_field_study_description": "Description",
     "form_field_study_description_tooltip": "Give a short summary of your study to participants",
     "form_field_study_description_hint": "Give a short summary of your study to participants",
@@ -179,6 +252,80 @@
     "form_field_contact_email_email": "Please enter a valid contact email address",
     "form_field_contact_phone": "Phone",
     "form_field_contact_phone_required": "You must specify a phone number for participants to contact",
+
+    "@__________________STUDYPAGE_DESIGN_ENROLLMENT__________________": {},
+
+    "form_study_design_enrollment_description": "Define who will be able to participate in your study, the criteria they have to meet and the terms they have to consent to.",
+
+    "form_field_enrollment_type": "Participant pool",
+    "form_field_enrollment_type_open_description": "Your study will be open for enrollment to all users of the StudyU platform as long as they match your screening criteria, if any.",
+    "form_field_enrollment_type_invite_description": "Only select participants will be able to enroll in your study using a designated access code. Choose this option if you have a preselected pool of participants.",
+
+    "form_array_screener_questions_title": "Screening criteria",
+    "form_array_screener_questions_description": "Optional screener questions can help determine whether a potential participant is qualified to participate in the study. For invite-only studies, you may choose not to add any screening questions if you are manually qualifying & recruiting participants before inviting them to StudyU.",
+    "form_array_screener_questions_new": "Add screener question",
+    "form_array_screener_questions_test": "Test screener",
+
+    "form_array_consent_items_title": "Participant consent",
+    "form_array_consent_items_description": "Provide the terms that participants have to consent to when enrolling in your study via the StudyU app. You may choose not to add any terms here if you obtain your participants' consent by some other method before recruiting them to your study on StudyU.",
+    "form_array_consent_items_new": "Add consent text",
+    "form_array_consent_items_test": "Test consent",
+
+    "form_screener_question_create": "New screener question",
+    "form_screener_question_edit": "Edit screener question",
+    "form_screener_question_readonly": "View screener question",
+
+    "form_screener_question_logic_qualify": "Qualify",
+    "form_screener_question_logic_disqualify": "Disqualify",
+
+    "navlink_screener_question_content": "Content",
+    "navlink_screener_question_logic": "Logic",
+
+    "form_array_screener_question_logic_title": "Screening rules",
+    "form_array_screener_question_logic_description": "Define which responses qualify or disqualify participants from enrolling in your study. To qualify as a participant, at least one of the qualifying response options and none of the disqualifying ones must be selected for this question in the screening survey.",
+    "form_array_screener_question_logic_tooltip": "Define which response options are qualifying or disqualifying when selected by the participant.",
+    "form_array_screener_question_logic_dirty_banner": "The options you see here are cleared automatically to reflect the available responses. Every option is qualifying by default unless you explicitly mark them as disqualifying.",
+
+    "form_consent_create": "New participant consent",
+    "form_consent_edit": "Edit participant consent",
+    "form_consent_readonly": "View participant consent",
+
+    "form_field_consent_title": "Title",
+    "form_field_consent_title_tooltip": "Enter a short title for the terms the participant must read & accept.\nFor each consent text, a card with the title & icon is shown on the app's consent screen.",
+    "form_field_consent_title_hint": "Enter a short title",
+    "form_field_consent_title_required": "You must provide a title for your participant consent",
+    "form_field_consent_text": "Text",
+    "form_field_consent_text_tooltip": "Enter the terms the participant must read & accept when enrolling in the study.\nThe terms are shown when clicking on the corresponding card in the app's consent screen.",
+    "form_field_consent_text_hint": "Enter the full terms to be read & accepted",
+    "form_field_consent_text_required": "The text for your participant consent must not be empty",
+
+    "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
+
+    "form_study_design_measurements_description": "Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU app on a daily basis. The collected data & results will be available on the Analyze page when the study is launched.",
+
+    "form_array_measurements_minlength": "You need to define at least one survey to determine the effect of your intervention(s).",
+
+    "form_array_measurements_surveys": "Surveys",
+    "form_array_measurements_surveys_new": "Add survey",
+    "form_array_measurements_surveys_empty_title": "No surveys defined",
+    "form_array_measurements_surveys_empty_description": "You need to define at least one survey to determine the effect of your intervention(s).",
+
+    "form_field_measurement_survey_title": "Survey title",
+    "form_field_measurement_survey_title_required": "The survey title must not be empty",
+    "form_field_measurement_survey_title_default": "Unnamed survey",
+    "form_field_measurement_survey_title_tooltip": "Provide the title of the survey as it should be displayed in the StudyU app",
+    "form_field_measurement_survey_intro_text": "Intro text",
+    "form_field_measurement_survey_intro_text_tooltip": "Enter a text that is shown at the very beginning of the survey",
+    "form_field_measurement_survey_intro_text_hint": "e.g. welcome & introduce participants to the survey",
+    "form_field_measurement_survey_outro_text": "Outro text",
+    "form_field_measurement_survey_outro_text_tooltip": "Enter a text that is shown at the very end of the survey after completion",
+    "form_field_measurement_survey_outro_text_hint": "e.g. thank participants for completing the survey",
+
+    "form_array_measurement_survey_questions": "Questions",
+    "form_array_measurement_survey_questions_new": "Add question",
+    "form_array_measurement_survey_questions_empty_title": "No questions defined",
+    "form_array_measurement_survey_questions_empty_descriptions": "You need to define at least one question to determine the effect of your intervention(s).",
+    "form_array_measurement_survey_questions_minlength": "You need to define at least one question to determine the effect of your intervention(s)",
 
     "@__________________STUDYPAGE_RECRUIT__________________": {},
 
@@ -232,6 +379,21 @@
 
     "study_export_unavailable_empty_tooltip": "There is no data available yet",
     "study_export_unavailable_no_permission_tooltip": "You do not have sufficient permission to access this study's data",
+
+    "@__________________STUDY_LAUNCH_DIALOG__________________": {},
+
+    "study_launch_title": "Great work! \uD83D\uDC4F Ready to launch?",
+    "study_launch_participation_intro": "The study you are creating is",
+    "study_launch_participation_outro": "",
+    "study_launch_post_launch_intro": "After launching your study:",
+    "study_launch_post_launch_summary": "- The study design will be locked & you won’t be able to make any changes\n- All data from test runs will be reset (incl. test users, their tasks & results)",
+
+    "study_launch_success_title": "Your study is live!",
+    "study_launch_success_description": "Next, you can start inviting and enrolling your participants in the StudyU app.",
+
+    "action_button_post_launch_followup": "Add participants",
+    "action_button_post_launch_followup_skip": "Skip for now",
+    "action_button_study_participation_change": "Change\nparticipation",
 
     "@__________________FORMS__________________": {},
 

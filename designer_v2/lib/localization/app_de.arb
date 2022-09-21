@@ -84,9 +84,10 @@
   "participation_open_who_description": "Jeder kann sich für die Studie in der StudyU App anmelden.",
   "participation_invite_who": "Ausgewählte Teilnehmer",
   "participation_invite_who_description": "Nur ausgewählte Nutzer mit Teilnahme-Code könnten sich für die Studie in der StudyU App anmelden.",
-
   "participation_open_as_adjective": "für jeden offen",
   "participation_invite_as_adjective": "nur für ausgewählte Teilnehmer offen",
+  "participation_open_launch_description": "Nach dem Start kann sich jeder in der StudyU App für die Studie anmelden.",
+  "participation_invite_launch_description": "Nach dem Start kannst du Teilnehmer zu deiner Studie mittels Teilnahmecodes einladen.",
 
   "phase_sequence_alternating": "Alternierend (AB AB)",
   "phase_sequence_counterbalanced": "Ausgeglichen (AB BA)",
@@ -137,6 +138,7 @@
   "study_settings": "Studien-Einstellungen",
   "study_settings_publish_study": "Studie veröffentlichen",
   "study_settings_publish_study_tooltip": "Andere Forscher und Kliniker können deine Studie begutachten, sie testen und als Entwurf duplizieren.\nDie zur laufenden oder abgeschlossen Studie gehörigen Teilnehmer- und Ergebnisdaten werden nicht \nfür andere freigegeben (die Unterseiten Rekrutieren, Durchführen und Analysieren deiner Studie bleiben \nunzugänglich).",
+  "study_settings_publish_study_launch_description": "Ich stimme zu, dass meine Studie im Studienregister veröffentlicht wird, um die Transparenz & Zusammenarbeit aller Forscher und Kliniker auf der StudyU Plattform zu fördern. (Andere Forscher & Kliniker können auf die Studie selbst zugreifen, die zur laufenden oder abgeschlossen Studie gehörigen Teilnehmer- und Ergebnisdaten werden aber nicht freigegeben)",
   "study_settings_publish_results": "Ergebnisse veröffentlichen",
   "study_settings_publish_results_tooltip": "Andere Forscher und Kliniker können auf die anonymisierten Ergebnisdaten einer Studie zugreifen, \nsie exportieren und analysieren (die Analysieren-Unterseite deiner Studie ist zugänglich). Die Studie \nselbst wird dadurch automatisch auch für andere Forscher und Kliniker im Studienregister veröffentlicht.",
 
@@ -146,6 +148,76 @@
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
 
+  "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
+
+  "form_question_create": "Neue Frage",
+  "form_question_edit": "Frage bearbeiten",
+  "form_question_readonly": "Frage",
+
+  "form_field_question": "Frage an Teilnehmer",
+  "form_field_question_tooltip": "Gib die Frage ein, die von Teilnehmern in der App beantwortet werden soll",
+  "form_field_question_required": "Die Frage an Teilnehmer darf nicht leer sein",
+
+  "form_field_question_help_text": "Erläuterungen zur Frage",
+  "form_field_question_help_text_tooltip": "Gib einen zusätzlichen Hilfstext ein, der in der App mit einem Hilfs-Icon neben der Frage angezeigt wird",
+  "form_field_question_help_text_hint": "Gib zusätzliche Informationen oder Erklärungen zur Frage",
+  "form_field_question_help_text_add": "Hilftext hinzufügen",
+  "form_field_question_help_text_add_tooltip": "Gib einen zusätzlichen Hilfstext ein, der in der App mit einem Hilfs-Icon neben der Frage angezeigt wird",
+
+  "form_field_question_response_options": "Antwortoptionen",
+  "form_field_question_response_options_tooltip": "Definiere welche Optionen zur Beantwortung der Frage in der App verfügbar sind",
+  "form_field_question_response_options_description": "Wähle die Antwortoptionen so, dass sie zur Frage passen und die von dir gewünschten Daten erhoben werden.",
+
+  "question_type_choice": "Multiple-Choice",
+  "question_type_bool": "Ja/Nein",
+  "question_type_scale": "Skala",
+
+  "form_array_response_options_bool_yes": "Ja",
+  "form_array_response_options_bool_no": "No",
+
+  "form_field_response_choice_multiple": "Mehrfachauswahl",
+  "form_field_response_choice_multiple_tooltip": "Erlaubt die Auswahl von mehreren Antwortoptionen gleichzeitig,\nansonsten kann nur eine einzige Option ausgewählt werden",
+  "form_array_response_options_choice_new": "Antwortoption hinzufügen",
+  "form_array_response_options_choice_hint": "Option",
+
+  "form_field_response_scale_min_label": "Start-Beschriftung",
+  "form_field_response_scale_min_label_tooltip": "Gib eine Beschriftung ein, die an der zu dem Wert gehörigen Position auf der Skala angezeigt wird",
+  "form_field_response_scale_min_value": "Startwert",
+  "form_field_response_scale_max_label": "End-Beschriftung",
+  "form_field_response_scale_max_label_tooltip": "Gib eine Beschriftung ein, die an der zu dem Wert gehörigen Position auf der Skala angezeigt wird",
+  "form_field_response_scale_max_value": "Endwert",
+  "form_field_response_scale_label_hint": "Optionale Beschriftung",
+  "form_array_response_scale_mid_values": "Werte dazwischen zeigen",
+  "form_array_response_scale_mid_values_dirty_banner": "Die Zwischenwerte und -Beschriftungen werden automatisch mit dem Start- und Endwert der Skala synchronisiert.",
+  "form_field_response_scale_colors_add": "Farben hinzufügen",
+  "form_field_response_scale_color_add": "Farbe hinzufügen",
+  "form_field_response_scale_color_min": "Startfarbe",
+  "form_field_response_scale_color_max": "Endfarbe",
+  "form_field_response_scale_color_tooltip": "Definiere Farben für die Darstellung der Skala in der StudyU App",
+
+  "navlink_question_visuals": "Visuelle Darstellung",
+  "navlink_question_visuals_description": "Passe die Darstellung der Frage in der StudyU App an, um Teilnehmer visuell zu unterstützen. Es ändert sich dadurch nichts an den Daten & Werten, die erhoben werden.",
+
+  "form_array_response_options_choice_countmin": "Die Frage muss mindestens {count} gültige Antwortoptionen haben",
+  "@form_array_response_options_choice_countmin": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "form_array_response_options_choice_countmax": "Die Frage darf nicht mehr als {count} gültige Antwortoptionen haben",
+  "@form_array_response_options_choice_countmax": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "form_array_response_options_scale_rangevalid_min": "Der Startwert muss kleiner als der Endwert der Skala sein",
+  "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {max} betragen",
+  "@form_array_response_options_scale_rangevalid_max": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+
   "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
 
   "form_study_design_info_description": "Auf dieser Seite gibst du allgemeine Informationen für Teilnehmer der Studie an. Wenn du dich entscheidest, die Studie im Studienregister zu veröffentlichen, sind diese Informationen auch für andere Forscher und Kliniker einsehbar.",
@@ -153,6 +225,7 @@
   "form_field_study_title": "Studientitel",
   "form_field_study_title_tooltip": "Gib den Titel der Studie an, so wie er in der StudyU App angezeigt werden soll",
   "form_field_study_title_required": "Die Studie muss einen Titel haben",
+  "form_field_study_title_default": "Unbenannte Studie",
   "form_field_study_description": "Beschreibung",
   "form_field_study_description_tooltip": "Beschreibe die Studie kurz & verständlich für Teilnehmer",
   "form_field_study_description_hint": "Beschreibe die Studie kurz & verständlich für Teilnehmer",
@@ -176,6 +249,80 @@
   "form_field_contact_email_email": "Bitte gib eine korrekte Email zur Kontaktaufnahme ein",
   "form_field_contact_phone": "Telefon",
   "form_field_contact_phone_required": "Die Studie muss eine Telefonnummer zur Kontaktaufnahme haben",
+
+  "@__________________STUDYPAGE_DESIGN_ENROLLMENT__________________": {},
+
+  "form_study_design_enrollment_description": "Auf dieser Seite gibst du an wer an deiner Studie unter welchen Bedingungen teilnehmen darf.",
+
+  "form_field_enrollment_type": "Teilnehmer",
+  "form_field_enrollment_type_open_description": "Jeder kann sich in der StudyU App für die Studie anmelden, solange die Eignung mittels Screening-Kriterien festgestellt wird und die Einwilligung zur Teilnahme abgegeben wird.",
+  "form_field_enrollment_type_invite_description": "Nur ausgewählte Teilnehmer können sich für die Studie durch Eingabe eines Teilnahme-Codes in der StudyU App anmelden. Wähle diese Option aus, wenn die Teilnehmer der Studie bereits vorausgewählt wurden.",
+
+  "form_array_screener_questions_title": "Screening-Kriterien",
+  "form_array_screener_questions_description": "Du kannst Screening-Kriterien festlegen, um die Eignung für die Teilnahme an der Studie festzustellen & einzuschränken. Wenn die Teilnehmer deiner Studie bereits geprüft und vorausgewählt wurden, kannst du diesen Schritt auch überspringen.",
+  "form_array_screener_questions_new": "Screening-Frage hinzufügen",
+  "form_array_screener_questions_test": "Screening testen",
+
+  "form_array_consent_items_title": "Einwilligung zur Studienteilnahme",
+  "form_array_consent_items_description": "Hier kannst du die Erklärung(en) hinzufügen, die von Teilnehmern eingewilligt werden müssen, wenn sie sich in der StudyU App für die Studie anmelden. Wenn die Teilnehmer deiner Studie bereits vorausgewählt wurden und ihre Einwilligung erklärt haben, kannst du diesen Schritt auch überspringen.",
+  "form_array_consent_items_new": "Einwilligung einholen",
+  "form_array_consent_items_test": "Einwilligung testen",
+
+  "form_screener_question_create": "Neue Screening-Frage",
+  "form_screener_question_edit": "Screening-Frage bearbeiten",
+  "form_screener_question_readonly": "Screening-Frage",
+
+  "form_screener_question_logic_qualify": "Qualifizierend",
+  "form_screener_question_logic_disqualify": "Disqualifizierend",
+
+  "navlink_screener_question_content": "Inhalt",
+  "navlink_screener_question_logic": "Logik",
+
+  "form_array_screener_question_logic_title": "Screening-Logik",
+  "form_array_screener_question_logic_description": "Definiere, welche Antworten zur Studienteilnahme berechtigen oder disqualifizieren. Um an der Studie teilnehmen zu können, muss für diese Frage mindestens eine qualifizierende Antwort & keine disqualifizierende Antwort ausgewählt werden.",
+  "form_array_screener_question_logic_tooltip": "Definiere, welche Antworten zur Studienteilnahme berechtigen oder disqualifizieren",
+  "form_array_screener_question_logic_dirty_banner": "Die hier aufgelisteten Antwortmöglichkeiten werden automatisch mit der Frage synchronisiert. Standardmäßig berechtigt jede Antwort zur Teilnahme an der Studie, es sei denn du markierst sie explizit als disqualifizierend.",
+
+  "form_consent_create": "Neue Einwilligung",
+  "form_consent_edit": "Einwilligung bearbeiten",
+  "form_consent_readonly": "Einwilligung",
+
+  "form_field_consent_title": "Kurztitel",
+  "form_field_consent_title_tooltip": "Gib einen Kurztitel für die Einwilligungserklärung ein",
+  "form_field_consent_title_hint": "Kurztitel eingeben",
+  "form_field_consent_title_required": "Du musst einen Kurztitel für die Einwilligungserklärung angeben",
+  "form_field_consent_text": "Einwilligungserklärung",
+  "form_field_consent_text_tooltip": "Gib den Text ein, der bei der Anmeldung zur Studie in der StudyU App gelesen & bestätigt werden muss",
+  "form_field_consent_text_hint": "Gib den Text ein, der gelesen & bestätigt werden muss",
+  "form_field_consent_text_required": "Die Einwilligungserklärung darf nicht leer sein",
+
+  "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
+
+  "form_study_design_measurements_description": "Auf dieser Seite legst du fest, welche Daten im Laufe der Studie erhoben werden sollen - hauptsächlich um den Effekt der Interventionen zu bestimmen. Zur Erhebung der Daten füllen Teilnehmer jeden Tag einen oder mehrere Fragebögen in der StudyU-App aus. Die gesammelten Daten & Ergebnisse sind nach dem Start der Studie auf der Analysieren-Unterseite abrufbar.",
+
+  "form_array_measurements_minlength": "Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.",
+
+  "form_array_measurements_surveys": "Fragebögen",
+  "form_array_measurements_surveys_new": "Neuer Fragebogen",
+  "form_array_measurements_surveys_empty_title": "Noch keine Fragebögen erstellt",
+  "form_array_measurements_surveys_empty_description": "Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.",
+
+  "form_field_measurement_survey_title": "Fragebogen Titel",
+  "form_field_measurement_survey_title_required": "Der Titel des Fragebogens darf nicht leer sein",
+  "form_field_measurement_survey_title_default": "Unbenannter Fragebogen",
+  "form_field_measurement_survey_title_tooltip": "Gib den Titel des Fragebogens an, so wie er in der App angezeigt werden soll",
+  "form_field_measurement_survey_intro_text": "Begrüßungstext",
+  "form_field_measurement_survey_intro_text_tooltip": "Gib einen zusätzlichen Text ein, der zu Beginn des Fragebogens angezeigt wird",
+  "form_field_measurement_survey_intro_text_hint": "z.B. Teilnehmer begrüßen",
+  "form_field_measurement_survey_outro_text": "Abschlusstext",
+  "form_field_measurement_survey_outro_text_tooltip": "Gib einen zusätzlichen Text ein, der am Ende und nach Abschluss des Fragebogens angezeigt wird",
+  "form_field_measurement_survey_outro_text_hint": "z.B. fürs Ausfüllen bedanken",
+
+  "form_array_measurement_survey_questions": "Fragen",
+  "form_array_measurement_survey_questions_new": "Neue Frage",
+  "form_array_measurement_survey_questions_empty_title": "Noch keine Fragen erstellt",
+  "form_array_measurement_survey_questions_empty_descriptions": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
+  "form_array_measurement_survey_questions_minlength": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
 
   "@__________________STUDYPAGE_RECRUIT__________________": {},
 
@@ -214,7 +361,7 @@
   "form_field_preconfigured_schedule_intervention_hint": "Intervention auswählen...",
 
   "code_list_section_title": "Teilnahmecodes",
-  "code_list_empty_title": "Du hast noch keine Teilnehmer eingeladen",
+  "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
 
@@ -232,6 +379,21 @@
 
   "study_export_unavailable_empty_tooltip": "Es sind noch keine Ergebnisdaten verfügbar",
   "study_export_unavailable_no_permission_tooltip": "Du bist nicht berechtigt, auf die Ergebnisdaten der Studie zuzugreifen",
+
+  "@__________________STUDY_LAUNCH_DIALOG__________________": {},
+
+  "study_launch_title": "Super Arbeit! \uD83D\uDC4F Alles bereit?",
+  "study_launch_participation_intro": "Die von dir erstellte Studie ist",
+  "study_launch_participation_outro": "",
+  "study_launch_post_launch_intro": "Wenn die Studie gestartet wird, beachte:",
+  "study_launch_post_launch_summary": "- Der Entwurfsmodus wird gesperrt & du kannst keine Änderungen mehr an der Studie selbst vornehmen\n- Alle nicht die Studie selbst betreffenden Daten werden zurückgesetzt (einschließlich Testnutzern & -ergebnissen)",
+
+  "study_launch_success_title": "Deine Studie ist live!",
+  "study_launch_success_description": "Lade als nächstes Teilnehmer zur Anmeldung in der StudyU App ein.",
+
+  "action_button_post_launch_followup": "Teilnehmer einladen",
+  "action_button_post_launch_followup_skip": "Später vielleicht",
+  "action_button_study_participation_change": "Teilnahme\nändern",
 
   "@__________________FORMS__________________": {},
 

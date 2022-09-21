@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -41,7 +42,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
   }
 
   /// May be overridden in subclasses to customize the title
-  Map<FormMode, String> get questionTitles => {};
+  Map<FormMode, LocalizedStringResolver> get questionTitles => {};
 
   @override
   void read([D? formData]) {

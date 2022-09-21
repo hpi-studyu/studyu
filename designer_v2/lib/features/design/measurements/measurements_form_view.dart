@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
   const StudyDesignMeasurementsFormView(super.studyId, {super.key});
@@ -30,11 +30,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                  text: "Define the data you want to gather from participants "
-                      "to evaluate the effect of your interventions & for "
-                      "additional context. The data will be self-reported "
-                      "by participants in one or more surveys served via "
-                      "the StudyU app.".hardcoded),
+                  text: tr.form_study_design_measurements_description),
               const SizedBox(height: 32.0),
               ReactiveFormConsumer(
                 // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
@@ -49,13 +45,13 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                           onSelectItem: formViewModel.onSelectItem,
                           getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                           onNewItem: formViewModel.onNewItem,
-                          onNewItemLabel: 'Add survey'.hardcoded,
-                          rowTitle: (viewModel) => viewModel.formData?.title ?? 'Missing item title'.hardcoded,
-                          sectionTitle: "Surveys".hardcoded,
+                          onNewItemLabel: tr.form_array_measurements_surveys_new,
+                          rowTitle: (viewModel) => viewModel.formData?.title ?? '',
+                          sectionTitle: tr.form_array_measurements_surveys,
                           sectionTitleDivider: false,
                           emptyIcon: Icons.content_paste_off_rounded,
-                          emptyTitle: "No surveys defined".hardcoded,
-                          emptyDescription: "You need to define at least one survey to determine the effect of your intervention(s).".hardcoded,
+                          emptyTitle: tr.form_array_measurements_surveys_empty_title,
+                          emptyDescription: tr.form_array_measurements_surveys_empty_description,
                           hideLeadingTrailingWhenEmpty: true,
                         );
                       },

@@ -3,7 +3,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
@@ -213,9 +213,9 @@ class BoolQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static final Map<String, bool> kResponseOptions = {
-    'Yes'.hardcoded: true,
-    'No'.hardcoded: false,
+  static Map<String, bool> get kResponseOptions => {
+    tr.form_array_response_options_bool_yes: true,
+    tr.form_array_response_options_bool_no: false,
   };
 
   @override

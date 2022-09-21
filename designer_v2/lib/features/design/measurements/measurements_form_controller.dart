@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -57,9 +57,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       FormControlValidation(control: measurementsArray, validators: [
         Validators.minLength(1)
       ], validationMessages: {
-        ValidationMessage.minLength: (error) =>
-            'You need to define at least one survey to determine the effect of your intervention(s)'
-                .hardcoded,
+        ValidationMessage.minLength: (error) => tr.form_array_measurements_minlength,
       });
 
   @override

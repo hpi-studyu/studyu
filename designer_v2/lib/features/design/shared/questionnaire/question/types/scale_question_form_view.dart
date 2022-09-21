@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/color.dart';
 import 'package:studyu_designer_v2/utils/input_formatter.dart';
@@ -48,18 +48,14 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
         _buildLabelValueControlsPair(
           labelControl: formViewModel.scaleMinLabelControl,
           valueControl: formViewModel.scaleMinValueControl,
-          labelControlLabel: "Custom low label".hardcoded,
-          labelControlHelpText:
-              "Enter a custom label to display at the value's "
-                      "position on the scale, \notherwise the numeric value is "
-                      "displayed as the label"
-                  .hardcoded,
-          valueControlLabel: "Low value".hardcoded,
+          labelControlLabel: tr.form_field_response_scale_min_label,
+          labelControlHelpText: tr.form_field_response_scale_min_label_tooltip,
+          valueControlLabel: tr.form_field_response_scale_min_value,
           valueControlHelpText: null,
         ),
         const SizedBox(height: 16.0),
         Collapsible(
-          title: "See mid-values".hardcoded,
+          title: tr.form_array_response_scale_mid_values,
           contentBuilder: (context, _) => _buildMidValuesSection(context),
         ),
         const SizedBox(height: 12.0),
@@ -67,13 +63,9 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
         _buildLabelValueControlsPair(
           labelControl: formViewModel.scaleMaxLabelControl,
           valueControl: formViewModel.scaleMaxValueControl,
-          labelControlLabel: "Custom high label".hardcoded,
-          labelControlHelpText:
-              "Enter a custom label to display at the value's "
-                      "position on the scale, \notherwise the numeric value is "
-                      "displayed as the label"
-                  .hardcoded,
-          valueControlLabel: "High value".hardcoded,
+          labelControlLabel: tr.form_field_response_scale_max_label,
+          labelControlHelpText: tr.form_field_response_scale_max_label_tooltip,
+          valueControlLabel: tr.form_field_response_scale_max_value,
           valueControlHelpText: null,
         ),
         const SizedBox(height: 16.0),
@@ -90,7 +82,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                 ? Opacity(
                     opacity: ThemeConfig.kMuteFadeFactor,
                     child: Hyperlink(
-                      text: "+ Add start & end colors".hardcoded,
+                      text: "+ ${tr.form_field_response_scale_colors_add}",
                       onClick: () => setState(() {
                         isMinMaxColorsVisible = true;
                       }),
@@ -107,15 +99,12 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
     return Column(
       children: [
         FormSectionHeader(
-          title: "Visuals".hardcoded,
+          title: tr.navlink_question_visuals,
           divider: false,
         ),
         const SizedBox(height: 16.0),
         TextParagraph(
-          text: "Customize the look & feel of the question in the app to your liking. "
-                  "This does not change the data that is collected, but can help guide the study "
-                  "participant visually"
-              .hardcoded,
+          text: tr.navlink_question_visuals_description,
           style: ThemeConfig.bodyTextMuted(theme),
         )
       ],
@@ -130,8 +119,11 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
           child: FormTableLayout(
             rowLayout: FormTableRowLayout.vertical,
             rows: [
-              _buildColorControlRow(context, formViewModel.scaleMinColorControl,
-                  "Low color".hardcoded),
+              _buildColorControlRow(
+                  context,
+                  formViewModel.scaleMinColorControl,
+                  tr.form_field_response_scale_color_min,
+              ),
             ],
           ),
         ),
@@ -141,8 +133,11 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
           child: FormTableLayout(
             rowLayout: FormTableRowLayout.vertical,
             rows: [
-              _buildColorControlRow(context, formViewModel.scaleMaxColorControl,
-                  "High color".hardcoded),
+              _buildColorControlRow(
+                  context,
+                  formViewModel.scaleMaxColorControl,
+                  tr.form_field_response_scale_color_max,
+              ),
             ],
           ),
         ),
@@ -159,15 +154,14 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
         children: [
           FormLabel(
             labelText: labelText,
-            helpText:
-                "Set a custom color for the scale shown in the app".hardcoded,
+            helpText: tr.form_field_response_scale_color_tooltip,
           ),
-          const SizedBox(width: 32.0),
+          const SizedBox(width: 24.0),
           (control.value == null && !formViewModel.isReadonly)
               ? Opacity(
                   opacity: ThemeConfig.kMuteFadeFactor,
                   child: Hyperlink(
-                    text: "+ Add color".hardcoded,
+                    text: "+ ${tr.form_field_response_scale_color_add}",
                     onClick: () => control.value = SerializableColor(
                         ThemeConfig.colorPickerInitialColor(theme).value),
                     visitedColor: null,
@@ -206,10 +200,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                     child: BannerBox(
                       style: BannerStyle.info,
                       body: TextParagraph(
-                          text: "The mid-values values and labels are cleared "
-                                  "automatically to reflect the low & high of the "
-                                  "scale."
-                              .hardcoded),
+                          text: tr.form_array_response_scale_mid_values_dirty_banner),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18.0, vertical: 12.0),
                       noPrefix: true,
@@ -276,7 +267,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                   validationMessages: labelControl.validationMessages,
                   decoration: (!formViewModel.isReadonly)
                       ? InputDecoration(
-                          hintText: "Optional label".hardcoded,
+                          hintText: tr.form_field_response_scale_label_hint,
                         )
                       : const InputDecoration(),
                 ),

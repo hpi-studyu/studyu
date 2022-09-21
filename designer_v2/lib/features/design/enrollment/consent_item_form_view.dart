@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ConsentItemFormView extends StatelessWidget {
   const ConsentItemFormView({required this.formViewModel, Key? key})
@@ -23,8 +23,8 @@ class ConsentItemFormView extends StatelessWidget {
           rows: [
             FormTableRow(
               control: formViewModel.titleControl,
-              label: "Title".hardcoded,
-              labelHelpText: "Enter a short title for the terms the participant must read & accept.\nFor each consent text, a card with the title & icon is shown on the app's consent screen.".hardcoded,
+              label: tr.form_field_consent_title,
+              labelHelpText: tr.form_field_consent_title_tooltip,
               input: Row(
                 children: [
                   Expanded(
@@ -36,9 +36,7 @@ class ConsentItemFormView extends StatelessWidget {
                       validationMessages:
                           formViewModel.titleControl.validationMessages,
                       decoration: InputDecoration(
-                        hintText:
-                        "Enter a short title"
-                            .hardcoded,
+                        hintText: tr.form_field_consent_title_hint,
                       ),
                     ),
                   ),
@@ -60,8 +58,8 @@ class ConsentItemFormView extends StatelessWidget {
             ),
             FormTableRow(
               control: formViewModel.descriptionControl,
-              label: "Text".hardcoded,
-              labelHelpText: "Enter the terms the participant must read & accept when enrolling in the study.\nThe terms are shown when clicking on the corresponding card in the app's consent screen.".hardcoded,
+              label: tr.form_field_consent_text,
+              labelHelpText: tr.form_field_consent_text_tooltip,
               input: ReactiveTextField(
                 formControl: formViewModel.descriptionControl,
                 inputFormatters: [
@@ -73,9 +71,7 @@ class ConsentItemFormView extends StatelessWidget {
                 minLines: 10,
                 maxLines: 30,
                 decoration: InputDecoration(
-                  hintText:
-                      "Enter the full terms to be read & accepted"
-                          .hardcoded,
+                  hintText: tr.form_field_consent_text_hint,
                 ),
               ),
             ),

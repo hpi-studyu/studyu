@@ -29,31 +29,30 @@ class StudyInvitesTable extends StatelessWidget {
   final InterventionProvider getIntervention;
   final ParticipantCountProvider getParticipantCountForInvite;
 
-  static final List<StandardTableColumn> columns = [
-    StandardTableColumn(
-        label: '#', columnWidth: const FixedColumnWidth(60)),
-    StandardTableColumn(
-        label: tr.code_list_header_code,
-        columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
-    StandardTableColumn(
-        label: tr.studies_list_header_participants_enrolled, columnWidth: const FixedColumnWidth(100)),
-    StandardTableColumn(
-        label: tr.form_field_preconfigured_schedule_intervention_a,
-        columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
-    StandardTableColumn(
-        label: tr.form_field_preconfigured_schedule_intervention_b,
-        columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
-    //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return StandardTable<StudyInvite>(
       items: invites,
-      columns: columns,
+      columns: [
+        StandardTableColumn(
+            label: '#', columnWidth: const FixedColumnWidth(60)),
+        StandardTableColumn(
+            label: tr.code_list_header_code,
+            columnWidth: const MaxColumnWidth(
+                FixedColumnWidth(200), FlexColumnWidth(1.6))),
+        StandardTableColumn(
+            label: tr.studies_list_header_participants_enrolled,
+            columnWidth: const FixedColumnWidth(100)),
+        StandardTableColumn(
+            label: tr.form_field_preconfigured_schedule_intervention_a,
+            columnWidth: const MaxColumnWidth(
+                FixedColumnWidth(150), FlexColumnWidth(1))),
+        StandardTableColumn(
+            label: tr.form_field_preconfigured_schedule_intervention_b,
+            columnWidth: const MaxColumnWidth(
+                FixedColumnWidth(150), FlexColumnWidth(1))),
+        //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
+      ],
       onSelectItem: onSelect,
       buildCellsAt: _buildRow,
       trailingActionsAt: (item, _) => getActions(item),

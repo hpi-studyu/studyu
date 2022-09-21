@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class ScreenerQuestionFormViewModel extends QuestionFormViewModel
@@ -35,9 +35,9 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   List<AbstractControl> get responseOptionsDisabledControls =>
       responseOptionsDisabledArray.controls;
 
-  final List<FormControlOption<bool>> logicControlOptions = [
-    FormControlOption(true, "Qualify".hardcoded),
-    FormControlOption(false, "Disqualify".hardcoded)
+  List<FormControlOption<bool>> get logicControlOptions => [
+    FormControlOption(true, tr.form_screener_question_logic_qualify),
+    FormControlOption(false, tr.form_screener_question_logic_disqualify)
   ];
 
   late final _questionBaseControls = {

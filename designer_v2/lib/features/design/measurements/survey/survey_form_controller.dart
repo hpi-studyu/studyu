@@ -12,7 +12,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
@@ -56,7 +56,7 @@ class MeasurementSurveyFormViewModel
       control: surveyTitleControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The survey title must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_measurement_survey_title_required,
       }
   );
 
@@ -64,7 +64,7 @@ class MeasurementSurveyFormViewModel
       control: questionsArray,
       validators: [Validators.minLength(1)],
       validationMessages: {
-        ValidationMessage.minLength: (error) => 'You need to define at least one question to determine the effect of your intervention(s)'.hardcoded,
+        ValidationMessage.minLength: (error) => tr.form_array_measurement_survey_questions_minlength,
       }
   );
 

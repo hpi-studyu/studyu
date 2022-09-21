@@ -3,6 +3,7 @@ import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/color.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,7 +11,6 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
@@ -34,7 +34,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   /// Customized titles (if any) depending on the context of use
-  final Map<FormMode, String>? _titles;
+  final Map<FormMode, LocalizedStringResolver>? _titles;
 
   // - Form fields (any question type)
 
@@ -95,10 +95,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   // Yes/no
-  final FormArray<String> boolResponseOptionsArray = FormArray(
+  List<AbstractControl<String>> get boolOptions =>
       BoolQuestionFormData.kResponseOptions.keys
-          .map((e) => FormControl(value: e, disabled:true)).toList()
-  );
+          .map((e) => FormControl(value: e, disabled: true)).toList();
+  late final FormArray<String> boolResponseOptionsArray = FormArray(boolOptions);
 
   // Scale
   static const int kDefaultScaleMinValue = 0;
@@ -259,10 +259,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         Validators.required,
         Validators.minLength(1)
       ], validationMessages: {
-        ValidationMessage.required: (error) =>
-            'Your question must not be empty'.hardcoded,
-        ValidationMessage.minLength: (error) =>
-            'Your question must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_question_required,
+        ValidationMessage.minLength: (error) => tr.form_field_question_required,
       });
 
   get numValidChoiceOptions =>
@@ -274,11 +272,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
             .validate
       ], validationMessages: {
         CountWhereValidator.kValidationMessageMaxCount: (error) =>
-            'Your question must have at most ${customOptionsMax.toString()} non-empty response options'
-                .hardcoded,
+            tr.form_array_response_options_choice_countmax(customOptionsMax),
         CountWhereValidator.kValidationMessageMinCount: (error) =>
-            'Your question must have at least ${customOptionsMin.toString()} non-empty response options'
-                .hardcoded,
+            tr.form_array_response_options_choice_countmin(customOptionsMin),
       });
 
   get scaleRangeValid =>
@@ -287,11 +283,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         Validators.max(1000),
       ], validationMessages: {
         'min': (error) =>
-            'The high value of the scale must be greater than the low value'
-                .hardcoded,
+            tr.form_array_response_options_scale_rangevalid_min,
         'max': (error) =>
-            'The maximum difference between the high and low values of the scale is 1000'
-                .hardcoded,
+            tr.form_array_response_options_scale_rangevalid_max(1000),
       });
 
   /// The form containing the controls for the currently selected
@@ -420,10 +414,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: _titles?[FormMode.create] ?? "New Question".hardcoded,
-        FormMode.edit: _titles?[FormMode.edit] ?? "Edit Question".hardcoded,
+        FormMode.create: _titles?[FormMode.create]?.call() ?? tr.form_question_create,
+        FormMode.edit: _titles?[FormMode.edit]?.call() ?? tr.form_question_edit,
         FormMode.readonly:
-            _titles?[FormMode.readonly] ?? "View Question".hardcoded,
+            _titles?[FormMode.readonly]?.call() ?? tr.form_question_readonly,
       };
 
   @override
@@ -461,6 +455,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       delegate: delegate,
       formData: formData?.copy(),
       validationSet: validationSet,
+      titles: _titles,
     );
   }
 

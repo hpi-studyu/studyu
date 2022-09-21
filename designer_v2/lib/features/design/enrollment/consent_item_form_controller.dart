@@ -3,10 +3,10 @@ import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class ConsentItemFormViewModel
     extends ManagedFormViewModel<ConsentItemFormData> {
@@ -37,14 +37,14 @@ class ConsentItemFormViewModel
       control: titleControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'You must provide a title for your participant consent'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_consent_title_required,
       }
   );
   get descriptionRequired => FormControlValidation(
       control: descriptionControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The text for your participant consent must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_consent_text_required,
       }
   );
 
@@ -76,9 +76,9 @@ class ConsentItemFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: "New participant consent".hardcoded,
-    FormMode.edit: "Edit participant consent".hardcoded,
-    FormMode.readonly: "View participant consent".hardcoded,
+    FormMode.create: tr.form_consent_create,
+    FormMode.edit: tr.form_consent_edit,
+    FormMode.readonly: tr.form_consent_readonly,
   };
 
   // - ManagedFormViewModel

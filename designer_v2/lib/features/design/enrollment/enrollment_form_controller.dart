@@ -16,7 +16,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -199,10 +199,10 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       (consentItemArray.value?.isNotEmpty ?? false);
 
   @override
-  Map<FormMode, String> get questionTitles => {
-    FormMode.create: "New Screener Question".hardcoded,
-    FormMode.edit: "Edit Screener Question".hardcoded,
-    FormMode.readonly: "View Screener Question".hardcoded,
+  Map<FormMode, LocalizedStringResolver> get questionTitles => {
+    FormMode.create: () => tr.form_screener_question_create,
+    FormMode.edit: () => tr.form_screener_question_edit,
+    FormMode.readonly: () => tr.form_screener_question_readonly,
   };
 
   @override

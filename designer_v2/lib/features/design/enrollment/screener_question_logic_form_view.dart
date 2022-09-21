@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 abstract class IScreenerQuestionLogicFormViewModel {
@@ -28,21 +28,14 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextParagraph(
-          text: "Define which responses qualify or disqualify participants from "
-                "enrolling in your study. To qualify as a participant, at least "
-                "one of the qualifying response options and none of the "
-                "disqualifying ones must be selected for this question in the "
-                "screening survey.".hardcoded,
+          text: tr.form_array_screener_question_logic_description,
           style: ThemeConfig.bodyTextMuted(theme),
         ),
         const SizedBox(height: 16.0),
         FormLabel(
-          labelText: "Screening rules".hardcoded,
+          labelText: tr.form_array_screener_question_logic_title,
           labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
-          helpText:
-              "Define which response options are qualifying or disqualifying "
-              "when selected by the participant."
-                  .hardcoded,
+          helpText: tr.form_array_screener_question_logic_tooltip,
         ),
         _buildInfoBanner(context),
         const SizedBox(height: 12.0),
@@ -58,11 +51,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
             child: BannerBox(
               style: BannerStyle.info,
               body: TextParagraph(
-                  text:
-                      "The options you see here are cleared automatically to "
-                      "reflect the available responses. Every option is "
-                      "qualifying by default unless you explicitly mark them "
-                      "as disqualifying.".hardcoded),
+                  text: tr.form_array_screener_question_logic_dirty_banner),
               padding:
                   const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,

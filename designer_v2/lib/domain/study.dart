@@ -79,21 +79,6 @@ extension StudyStatusFormatted on StudyStatus {
   }
 }
 
-/// Provides a human-readable translation of the participation / enrollment type
-// TODO can we get rid of this?
-extension ParticipationTypeFormatted on core.Participation {
-  String get value {
-    switch (this) {
-      case core.Participation.invite:
-        return "Invite".hardcoded;
-      case core.Participation.open:
-        return "Open".hardcoded;
-      default:
-        return "[Invalid ParticipationFormatted]";
-    }
-  }
-}
-
 extension StudyInviteCodeX on Study {
   StudyInvite? getInvite(String code) {
     if (invites == null || invites!.isEmpty) {
@@ -185,9 +170,11 @@ extension StudyRegistryX on Study {
 }
 
 class StudyTemplates {
+  static String get kUnnamedStudyTitle => tr.form_field_study_title_default;
+
   static Study emptyDraft(String userId) {
     final newDraft = Study.withId(userId);
-    newDraft.title = "Unnamed study".hardcoded;
+    newDraft.title = StudyTemplates.kUnnamedStudyTitle;
     newDraft.iconName = '';
     return newDraft;
   }
