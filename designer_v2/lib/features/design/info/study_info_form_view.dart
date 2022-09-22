@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
@@ -10,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
   const StudyDesignInfoFormView(super.studyId, {super.key});
@@ -29,24 +30,23 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextParagraph(
-                  text: "Provide general information about your study for "
-                          "participants as well as other researchers and clinicians."
-                      .hardcoded),
-              const SizedBox(height: 32.0),
+              TextParagraph(text: tr.form_study_design_info_description),
+              const SizedBox(height: 24.0),
               FormTableLayout(rows: [
                 FormTableRow(
                   control: formViewModel.titleControl,
-                  label: "Title".hardcoded,
-                  labelHelpText: "TODO Study title help text".hardcoded,
+                  label: tr.form_field_study_title,
+                  labelHelpText: tr.form_field_study_title_tooltip,
                   input: Row(
                     children: [
                       // TODO: responsive layout (input field gets too small)
                       Expanded(
                           child: ReactiveTextField(
                         formControl: formViewModel.titleControl,
-                        validationMessages:
-                            formViewModel.titleControl.validationMessages,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(100),
+                        ],
+                        validationMessages: formViewModel.titleControl.validationMessages,
                       )),
                       ReactiveFormConsumer(builder: (context, form, child) {
                         return (formViewModel.iconControl.value != null)
@@ -66,9 +66,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 ),
                 FormTableRow(
                   control: formViewModel.descriptionControl,
-                  label: "Description".hardcoded,
-                  labelHelpText:
-                      "TODO Study description text help text".hardcoded,
+                  label: tr.form_field_study_description,
+                  labelHelpText: tr.form_field_study_description_tooltip,
                   input: ReactiveTextField(
                     formControl: formViewModel.descriptionControl,
                     validationMessages:
@@ -76,53 +75,56 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(500),
+                    ],
                     decoration: InputDecoration(
-                        hintText:
-                            "Give a short summary of your study to participants"
-                                .hardcoded),
+                        hintText: tr.form_field_study_description_hint),
                   ),
                 ),
               ], columnWidths: const {
                 0: FixedColumnWidth(185.0),
                 1: FlexColumnWidth(),
               }),
-              const SizedBox(height: 24.0),
-              FormSectionHeader(title: "Contact information".hardcoded),
-              const SizedBox(height: 12.0),
-              TextParagraph(
-                  text: "Participants will be able to contact you "
-                          "via the StudyU app using this information. Other clinicians "
-                          "or researchers will only be able to contact you if you "
-                          "agree to publish your study to the study repository."
-                          ""
-                      .hardcoded),
               const SizedBox(height: 32.0),
+              FormSectionHeader(title: tr.form_section_publisher),
+              const SizedBox(height: 12.0),
+              TextParagraph(text: tr.form_section_publisher_description),
+              const SizedBox(height: 24.0),
               FormTableLayout(rows: [
                 FormTableRow(
                   control: formViewModel.organizationControl,
-                  label: "Responsible organization".hardcoded,
+                  label: tr.form_field_organization,
                   input: ReactiveTextField(
                     formControl: formViewModel.organizationControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages:
                         formViewModel.organizationControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.reviewBoardControl,
-                  label: "Institutional Review Board".hardcoded,
+                  label: tr.form_field_review_board,
                   input: ReactiveTextField(
                     formControl: formViewModel.reviewBoardControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages: formViewModel
                         .reviewBoardControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.reviewBoardNumberControl,
-                  label:
-                      "Institutional Review Board\nProtocol Number".hardcoded,
+                  label: tr.form_field_review_board_number,
                   input: ReactiveTextField(
                     formControl:
                         formViewModel.reviewBoardNumberControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages: formViewModel
                         .reviewBoardNumberControl
                         .validationMessages,
@@ -130,36 +132,48 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 ),
                 FormTableRow(
                   control: formViewModel.researchersControl,
-                  label: "Responsible\nresearcher(s)".hardcoded,
+                  label: tr.form_field_researchers,
                   input: ReactiveTextField(
                     formControl: formViewModel.researchersControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages:
-                        formViewModel.researchersControl.validationMessages,
+                    formViewModel.researchersControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.websiteControl,
-                  label: "Website".hardcoded,
+                  label: tr.form_field_website,
                   input: ReactiveTextField(
                     formControl: formViewModel.websiteControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(300),
+                    ],
                     validationMessages:
                         formViewModel.websiteControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.emailControl,
-                  label: "Email".hardcoded,
+                  label: tr.form_field_contact_email,
                   input: ReactiveTextField(
                     formControl: formViewModel.emailControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
                     validationMessages:
                         formViewModel.emailControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.phoneControl,
-                  label: "Phone".hardcoded,
+                  label: tr.form_field_contact_phone,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                     validationMessages:
                         formViewModel.phoneControl.validationMessages,
                   ),

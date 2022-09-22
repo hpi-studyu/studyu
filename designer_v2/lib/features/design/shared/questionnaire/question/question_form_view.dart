@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 /// Wrapper that dispatches to the appropriate widget for the corresponding
@@ -54,29 +54,31 @@ class _SurveyQuestionFormViewState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildQuestionText(context),
-        (isQuestionHelpTextFieldVisible)
-            ? Column(
-                children: [
-                  const SizedBox(height: 16.0),
-                  _buildQuestionHelpText(context),
-                ],
-              )
-            : const SizedBox.shrink(),
-        const SizedBox(height: 24.0),
-        _buildResponseTypeHeader(context),
-        const SizedBox(height: 16.0),
-        ReactiveValueListenableBuilder(
-          // re-renders when question type changes
-          formControl: formViewModel.questionTypeControl,
-          builder: (context, control, child) {
-            return questionTypeBodyBuilder(context);
-          },
-        ),
-      ],
-    );
+    return ReactiveFormConsumer(builder: (context, formGroup, child) {
+      // Wrap everything in a [ReactiveFormConsumer] for convenience so that the
+      // sidesheet content is re-rendered when the form changes
+      //
+      // Note: if this becomes a performance issue, remove the
+      // ReactiveFormConsumer here & use consumers / listeners selectively for
+      // the UI parts that need to be rebuild
+      return Column(
+        children: [
+          _buildQuestionText(context),
+          (isQuestionHelpTextFieldVisible)
+              ? Column(
+                  children: [
+                    const SizedBox(height: 16.0),
+                    _buildQuestionHelpText(context),
+                  ],
+                )
+              : const SizedBox.shrink(),
+          const SizedBox(height: 24.0),
+          _buildResponseTypeHeader(context),
+          const SizedBox(height: 16.0),
+          questionTypeBodyBuilder(context),
+        ],
+      );
+    });
   }
 
   _buildResponseTypeHeader(BuildContext context) {
@@ -87,10 +89,8 @@ class _SurveyQuestionFormViewState
         FormTableLayout(
           rows: [
             FormTableRow(
-              label: "Response options".hardcoded,
-              labelHelpText:
-                  "Define the options that participants can answer your question with"
-                      .hardcoded,
+              label: tr.form_field_question_response_options,
+              labelHelpText: tr.form_field_question_response_options_tooltip,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
@@ -99,11 +99,6 @@ class _SurveyQuestionFormViewState
                         ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
-                  onChanged: (_) {
-                    // prevent gray focus box from being rendered after
-                    // the dropdown was interacted with + scrolled out of view
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  },
                   items: formViewModel.questionTypeControlOptions.map((option) {
                     final menuItemTheme =
                         ThemeConfig.dropdownMenuItemTheme(theme);
@@ -133,10 +128,7 @@ class _SurveyQuestionFormViewState
         ),
         const SizedBox(height: 16.0),
         TextParagraph(
-          text: "Choose the response type that best matches your question and "
-                  "define the response options according to the data you want "
-                  "to collect."
-              .hardcoded,
+          text: tr.form_field_question_response_options_description,
           style: ThemeConfig.bodyTextMuted(theme),
         )
       ],
@@ -153,21 +145,16 @@ class _SurveyQuestionFormViewState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               FormLabel(
-                labelText: "Your question".hardcoded,
-                //labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
-                helpText:
-                    "Enter the question that the participant will be prompted with in the app"
-                        .hardcoded,
+                labelText: tr.form_field_question,
+                helpText: tr.form_field_question_tooltip,
               ),
               (!isQuestionHelpTextFieldVisible && !formViewModel.isReadonly)
                   ? Opacity(
                       opacity: ThemeConfig.kMuteFadeFactor,
                       child: Tooltip(
-                        message:
-                            "Enter an additional text that is shown with a help icon next to the question in the app"
-                                .hardcoded,
+                        message: tr.form_field_question_help_text_add_tooltip,
                         child: Hyperlink(
-                          text: "+ Add a help text",
+                          text: "+ ${tr.form_field_question_help_text_add}",
                           onClick: () => setState(() {
                             isQuestionHelpTextFieldVisible = true;
                           }),
@@ -184,13 +171,6 @@ class _SurveyQuestionFormViewState
                 formViewModel.questionTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,
-            /*
-            decoration: InputDecoration(
-              hintText: "Enter the question you want to ask the participant"
-                  .hardcoded,
-              //helperText: "", // reserve space
-            ),
-             */
           ),
         ),
       ],
@@ -203,10 +183,8 @@ class _SurveyQuestionFormViewState
       rows: [
         FormTableRow(
           control: formViewModel.questionInfoTextControl,
-          label: "Question help text".hardcoded,
-          labelHelpText:
-              "Enter a text that is shown with a help icon next to the question in the app"
-                  .hardcoded,
+          label: tr.form_field_question_help_text,
+          labelHelpText: tr.form_field_question_help_text_tooltip,
           input: ReactiveTextField(
             formControl: formViewModel.questionInfoTextControl,
             validationMessages:
@@ -214,9 +192,7 @@ class _SurveyQuestionFormViewState
             minLines: 3,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText:
-                  "Provide additional context, help or instructions for the question"
-                      .hardcoded,
+              hintText: tr.form_field_question_help_text_hint,
               //helperText: "", // reserve space
             ),
           ),

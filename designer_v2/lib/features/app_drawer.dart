@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
-import 'package:studyu_designer_v2/features/auth/auth_controller.dart';
+import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
@@ -13,15 +12,20 @@ typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
 class DrawerEntry {
   const DrawerEntry({
-    required this.title,
+    required this.localizedTitle,
     this.icon,
     this.onSelected,
-    this.helpText,
+    this.localizedHelpText,
+    this.enabled = true,
   });
-  final String title;
+  final LocalizedStringResolver localizedTitle;
   final IconData? icon;
-  final String? helpText;
+  final LocalizedStringResolver? localizedHelpText;
+  final bool enabled;
   final OnEntrySelectedCallback? onSelected;
+
+  String get title => localizedTitle();
+  String? get helpText => localizedHelpText?.call();
 
   void onClick(BuildContext context, WidgetRef ref) {
     if (onSelected != null) {
@@ -32,9 +36,10 @@ class DrawerEntry {
 
 class GoRouterDrawerEntry extends DrawerEntry {
   const GoRouterDrawerEntry({
-    required super.title,
+    required super.localizedTitle,
     super.icon,
-    super.helpText,
+    super.localizedHelpText,
+    super.enabled,
     required this.intent,
   });
   final RoutingIntent intent;
@@ -77,26 +82,23 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   final List<List<GoRouterDrawerEntry>> topEntries = [
     [
       GoRouterDrawerEntry(
-        title: tr.my_studies,
+        localizedTitle: () => tr.navlink_my_studies,
         icon: Icons.folder_copy_rounded,
         intent: RoutingIntents.studies,
       ),
       GoRouterDrawerEntry(
-        title: 'Shared With Me'.hardcoded,
+        localizedTitle: () => tr.navlink_shared_studies,
         icon: Icons.folder_shared_rounded,
         intent: RoutingIntents.studiesShared,
+        enabled: false,
       ),
     ],
     [
       GoRouterDrawerEntry(
-        title: 'Study Registry'.hardcoded,
+        localizedTitle: () => tr.navlink_public_studies,
         icon: Icons.public,
         intent: RoutingIntents.publicRegistry,
-        helpText: "The study registry is a public collection of studies "
-                "conducted on the StudyU \nplatform. In the spirit of "
-                "open science, it fosters collaboration & transparency "
-                "\namong all researchers & clinicians on the platform."
-            .hardcoded,
+        localizedHelpText: () => tr.navlink_public_studies_tooltip,
       ),
     ]
   ];
@@ -104,15 +106,18 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
   final List<List<DrawerEntry>> bottomEntries = [
     [
-      DrawerEntry(
-        title: 'Settings'.hardcoded,
+      GoRouterDrawerEntry(
+        localizedTitle: () => tr.navlink_account_settings,
         icon: Icons.settings_rounded,
+        intent: RoutingIntents.accountSettings,
       ),
       DrawerEntry(
-        title: 'Sign out'.hardcoded,
+        localizedTitle: () => tr.navlink_logout,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
-          ref.read(authControllerProvider.notifier).signOut();
+          ref
+              .read(authFormControllerProvider(AuthFormKey.login).notifier)
+              .signOut();
         },
       ),
     ],
@@ -197,28 +202,30 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-        constraints: BoxConstraints(minHeight: widget.logoSectionMinHeight, maxHeight: widget.logoSectionMaxHeight),
-        child: Container(
-          constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: widget.logoPaddingHorizontal, vertical: widget.logoPaddingVertical),
-            child: GestureDetector(
-              onTap: () => ref
-                  .read(routerProvider)
-                  .dispatch(RoutingIntents.root),
-              child: Container(
-                foregroundDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
-                  backgroundBlendMode: BlendMode.color,
-                ),
-                child: Image.asset(
-                  'assets/images/icon_wide.png',
-                  fit: BoxFit.scaleDown,
-                ),
+      constraints: BoxConstraints(
+          minHeight: widget.logoSectionMinHeight,
+          maxHeight: widget.logoSectionMaxHeight),
+      child: Container(
+        constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: widget.logoPaddingHorizontal,
+              vertical: widget.logoPaddingVertical),
+          child: GestureDetector(
+            onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
+            child: Container(
+              foregroundDecoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                backgroundBlendMode: BlendMode.color,
+              ),
+              child: Image.asset(
+                'assets/images/icon_wide.png',
+                fit: BoxFit.scaleDown,
               ),
             ),
           ),
         ),
+      ),
     );
 
     return Padding(
@@ -272,7 +279,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       leading: Icon(
         entry.icon,
         size: theme.iconTheme.size! * 1.2,
-        color: (isSelected) ? null : theme.iconTheme.color!.faded(0.75),
+        color: (isSelected) ? null : (entry.enabled) ? theme.iconTheme.color!.faded(0.75) : theme.iconTheme.color!.faded(0.3),
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(
@@ -281,6 +288,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       ),
       contentPadding: EdgeInsets.only(left: widget.leftPaddingEntries),
       selected: isSelected,
+      enabled: entry.enabled,
       onTap: () => entry.onClick(context, ref),
     );
   }

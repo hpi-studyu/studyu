@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -14,6 +16,28 @@ class ScaleQuestion extends SliderQuestion
   @override
   List<Annotation> annotations = [];
 
+  @JsonKey(name: 'min_color')
+  int? minColor;
+
+  @JsonKey(name: 'max_color')
+  int? maxColor;
+
+  @JsonKey(ignore: true)
+  double _step = 0; // autogenerate intermediate values by default
+
+  @override
+  double get step => isAutostep ? autostep.toDouble() : _step;
+
+  @override
+  set step(double value) => _step = value;
+
+  @JsonKey(ignore: true)
+  bool get isAutostep => _step == 0;
+
+  @JsonKey(ignore: true)
+  int get autostep =>
+      getAutostepSize(scaleMaxValue: maximum.toInt(), numValuesGenerated: 10);
+
   ScaleQuestion() : super(questionType);
 
   ScaleQuestion.withId() : super.withId(questionType);
@@ -22,7 +46,8 @@ class ScaleQuestion extends SliderQuestion
       _$ScaleQuestionFromJson(json);
 
   factory ScaleQuestion.fromAnnotatedScaleQuestion(
-      AnnotatedScaleQuestion question) {
+    AnnotatedScaleQuestion question,
+  ) {
     final result = ScaleQuestion()
       ..id = question.id
       ..prompt = question.prompt
@@ -37,7 +62,8 @@ class ScaleQuestion extends SliderQuestion
   }
 
   factory ScaleQuestion.fromVisualAnalogueQuestion(
-      VisualAnalogueQuestion question) {
+    VisualAnalogueQuestion question,
+  ) {
     final result = ScaleQuestion()
       ..id = question.id
       ..prompt = question.prompt
@@ -57,66 +83,11 @@ class ScaleQuestion extends SliderQuestion
   @override
   Map<String, dynamic> toJson() => _$ScaleQuestionToJson(this);
 
-  @override
   @JsonKey(ignore: true)
-  String get maximumAnnotation => maxAnnotation?.annotation ?? maximum.toString();
-  /*{ TODO remove
-    final last = annotationsSorted[annotationsSorted.length - 1];
-    if (last.value == maximum) {
-      return last.annotation;
-    }
-    return maximum.toString();
-  }
-
-   */
-
-  @override
-  int maximumColor = 0; // TODO
-
-  @override
-  @JsonKey(ignore: true)
-  String get minimumAnnotation => minAnnotation?.annotation ?? minimum.toString();
-
-  /*
-  @override
-  @JsonKey(ignore: true)
-  String get minimumAnnotation {
-    final first = annotationsSorted[0];
-    if (first.value == minimum) {
-      return first.annotation;
-    }
-    return minimum.toString();
-  }
-
-   */
-
-  @override
-  int minimumColor = 0; // TODO
-
-  int? minColor = 0xFFFF0000;
-  int? maxColor = 0xFF00FF00;
-
-  @override
-  set maximumAnnotation(String newLabel) {
-    _setAnnotationLabel(
-      newLabel: newLabel,
-      atSortedIndex: annotations.length - 1,
-      atValue: maximum,
-    );
-  }
-
-  @override
-  set minimumAnnotation(String newLabel) {
-    _setAnnotationLabel(
-      newLabel: newLabel,
-      atSortedIndex: 0,
-      atValue: minimum,
-    );
-  }
-
   List<Annotation> get annotationsSorted =>
       annotations.sorted((a, b) => a.value.compareTo(b.value));
 
+  @JsonKey(ignore: true)
   Annotation? get minAnnotation {
     final firstOrNull = annotationsSorted.firstOrNull;
     if (firstOrNull?.value == minimum) {
@@ -125,6 +96,7 @@ class ScaleQuestion extends SliderQuestion
     return null;
   }
 
+  @JsonKey(ignore: true)
   Annotation? get maxAnnotation {
     final lastOrNull = annotationsSorted.lastOrNull;
     if (lastOrNull?.value == maximum) {
@@ -133,8 +105,12 @@ class ScaleQuestion extends SliderQuestion
     return null;
   }
 
+  @JsonKey(ignore: true)
   String? get minLabel => minAnnotation?.annotation;
+
+  @JsonKey(ignore: true)
   String? get maxLabel => maxAnnotation?.annotation;
+
   set minLabel(String? newLabel) {
     if (newLabel != null) {
       minimumAnnotation = newLabel; // _setAnnotationLabel
@@ -144,6 +120,7 @@ class ScaleQuestion extends SliderQuestion
       }
     }
   }
+
   set maxLabel(String? newLabel) {
     if (newLabel != null) {
       maximumAnnotation = newLabel; // _setAnnotationLabel
@@ -154,6 +131,7 @@ class ScaleQuestion extends SliderQuestion
     }
   }
 
+  @JsonKey(ignore: true)
   List<Annotation> get midAnnotations => annotationsSorted
       .where((a) => a.value != minimum && a.value != maximum)
       .toList();
@@ -174,8 +152,11 @@ class ScaleQuestion extends SliderQuestion
     this.annotations = newAnnotations;
   }
 
+  @JsonKey(ignore: true)
   List<String> get midLabels =>
       midAnnotations.map((a) => a.annotation).toList();
+
+  @JsonKey(ignore: true)
   List<double> get midValues =>
       midAnnotations.map((a) => a.value.toDouble()).toList();
 
@@ -186,22 +167,6 @@ class ScaleQuestion extends SliderQuestion
     annotations.add(annotation);
     return annotation;
   }
-
-  /*
-  TODO remove
-  void ensureMinMaxAnnotations() {
-    final firstOrNull = annotationsSorted.firstOrNull;
-    final lastOrNull = annotationsSorted.lastOrNull;
-    if (firstOrNull?.value != minimum) {
-      addAnnotation(value: minimum.toInt(), label: minimum.toString());
-    }
-    if (lastOrNull?.value != maximum) {
-      addAnnotation(value: maximum.toInt(), label: maximum.toString());
-    }
-    assert(annotations.length >= 2);
-  }
-
-   */
 
   void _setAnnotationLabel({
     required String newLabel,
@@ -217,5 +182,88 @@ class ScaleQuestion extends SliderQuestion
       } // else: fall-through & insert new annotation
     }
     addAnnotation(value: atValue.toInt(), label: newLabel);
+  }
+
+  @JsonKey(ignore: true)
+  List<double> get values {
+    final List<double> values = [];
+    for (double value = minimum; value < maximum; value += step) {
+      values.add(value);
+    }
+    values.add(maximum);
+    return values;
+  }
+
+  // - VisualAnalogueQuestion
+
+  @override
+  @JsonKey(ignore: true)
+  String get minimumAnnotation =>
+      minAnnotation?.annotation ?? minimum.toString();
+
+  @override
+  @JsonKey(ignore: true)
+  String get maximumAnnotation =>
+      maxAnnotation?.annotation ?? maximum.toString();
+
+  @override
+  @JsonKey(ignore: true)
+  int get maximumColor => maxColor ?? 0xFFFFFFFF;
+
+  @override
+  set maximumColor(int value) => maxColor = value;
+
+  @override
+  @JsonKey(ignore: true)
+  int get minimumColor => minColor ?? 0xFFFFFFFF;
+
+  @override
+  set minimumColor(int value) => minColor = value;
+
+  // - AnnotatedScaleQuestion
+
+  @override
+  set maximumAnnotation(String newLabel) {
+    _setAnnotationLabel(
+      newLabel: newLabel,
+      atSortedIndex: annotations.length - 1,
+      atValue: maximum,
+    );
+  }
+
+  @override
+  set minimumAnnotation(String newLabel) {
+    _setAnnotationLabel(
+      newLabel: newLabel,
+      atSortedIndex: 0,
+      atValue: minimum,
+    );
+  }
+
+  static int getAutostepSize({
+    required int scaleMaxValue,
+    int numValuesGenerated = 10,
+  }) {
+    return max((scaleMaxValue / numValuesGenerated).ceil(), 1);
+  }
+
+  static List<int> generateMidValues({
+    required int scaleMinValue,
+    required int scaleMaxValue,
+    int numValuesGenerated = 10,
+  }) {
+    final int midValueStepSize = getAutostepSize(
+        scaleMaxValue: scaleMinValue, numValuesGenerated: numValuesGenerated);
+    final List<int> midValues = [];
+
+    for (int midValue = scaleMinValue + midValueStepSize;
+        midValue < scaleMaxValue;
+        midValue += midValueStepSize) {
+      midValues.add(midValue);
+      if (midValues.length >= numValuesGenerated) {
+        break;
+      }
+    }
+    return midValues;
   }
 }

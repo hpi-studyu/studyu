@@ -9,16 +9,18 @@ import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/task.dart';
-import 'package:studyu_designer_v2/features/auth/authform_scaffold.dart';
-import 'package:studyu_designer_v2/features/auth/login_page.dart';
-import 'package:studyu_designer_v2/features/auth/password_forgot_page.dart';
-import 'package:studyu_designer_v2/features/auth/password_recovery_page.dart';
-import 'package:studyu_designer_v2/features/auth/signup_page.dart';
+import 'package:studyu_designer_v2/features/account/account_settings.dart';
+import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
+import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
+import 'package:studyu_designer_v2/features/auth/auth_scaffold.dart';
+import 'package:studyu_designer_v2/features/auth/login_form_view.dart';
+import 'package:studyu_designer_v2/features/auth/password_forgot_form_view.dart';
+import 'package:studyu_designer_v2/features/auth/password_recovery_form_view.dart';
+import 'package:studyu_designer_v2/features/auth/signup_form_view.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
-import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_preview_view.dart';
@@ -28,11 +30,10 @@ import 'package:studyu_designer_v2/features/design/measurements/survey/survey_fo
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/main_page_scaffold.dart';
+import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
+import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
-import 'package:studyu_designer_v2/features/analyze/study_analyze_page.dart';
-import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
@@ -41,6 +42,7 @@ import 'package:studyu_designer_v2/routing/router_utils.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
+  static const authKey = ValueKey("auth"); // shared key for auth pages
 }
 
 class RouteParams {
@@ -48,6 +50,7 @@ class RouteParams {
   static const studyId = 'studyId';
   static const measurementId = 'measurementId';
   static const interventionId = 'interventionId';
+  static const testAppRoute = 'appRoute';
 }
 
 /// The route configuration passed to [GoRouter] during instantiation.
@@ -57,7 +60,7 @@ class RouteParams {
 ///
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
-class RouterConfig {
+class RouterConf {
 
   /// Public routes can be accessed without login
   static final topLevelPublicRoutes = [
@@ -83,6 +86,7 @@ class RouterConfig {
     studyRecruit,
     studyAnalyze,
     studySettings,
+    accountSettings,
     passwordRecovery,
   ];
 
@@ -208,6 +212,7 @@ class RouterConfig {
                 rightWidget: InterventionPreview(routeArgs: routeArgs),
                 flexLeft: 7,
                 flexRight: 8,
+                constraintsLeft: const BoxConstraints(minWidth: 500.0),
                 scrollLeft: true,
                 scrollRight: false,
                 paddingRight: null,
@@ -255,6 +260,7 @@ class RouterConfig {
               rightWidget: SurveyPreview(routeArgs: routeArgs),
               flexLeft: 7,
               flexRight: 8,
+              constraintsLeft: const BoxConstraints(minWidth: 500.0),
               scrollLeft: true,
               scrollRight: false,
               paddingRight: null,
@@ -269,12 +275,13 @@ class RouterConfig {
       name: "studyTest",
       pageBuilder: (context, state) {
         final studyId = state.params[RouteParams.studyId]!;
+        final appRoute = state.queryParams[RouteParams.testAppRoute];
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
               selectedTab: StudyNav.test(studyId),
-              body: StudyTestScreen(studyId),
+              body: StudyTestScreen(studyId, previewRoute: appRoute),
               layoutType: SingleColumnLayoutType.stretched,
         ));
       }
@@ -339,6 +346,16 @@ class RouterConfig {
       }
   );
 
+  static final accountSettings = GoRoute(
+      path: "/settings",
+      name: "accountSettings",
+      pageBuilder: (context, state) {
+        return buildModalTransitionPage(context, state,
+          const AccountSettingsDialog(),
+        );
+      }
+  );
+
   static final splash = GoRoute(
     path: "/splash",
     name: "splash",
@@ -346,63 +363,55 @@ class RouterConfig {
   );
 
   static final login = GoRoute(
-    path: "/login",
-    name: "login",
+      path: "/login",
+      name: "login",
       pageBuilder: (context, state) =>
-          MaterialPage(
-              child: MainPageScaffold(
-                  childName: state.name!,
-                  child: AuthFormScaffold(
-                      childName: state.name!,
-                      children: const LoginPage()
-                  )
-              )
-          )
+        const MaterialPage(
+          key: RouterKeys.authKey,
+          child: AuthScaffold(
+            formKey: AuthFormKey.login,
+            body: LoginForm(),
+          ),
+        )
   );
 
   static final signup = GoRoute(
       path: "/signup",
       name: "signup",
       pageBuilder: (context, state) =>
-          MaterialPage(
-              child: MainPageScaffold(
-              childName: state.name!,
-              child: AuthFormScaffold(
-                  childName: state.name!,
-                  children: const SignupPage()
-              )
-          )
-          )
+        const MaterialPage(
+          key: RouterKeys.authKey,
+          child: AuthScaffold(
+            formKey: AuthFormKey.signup,
+            body: SignupForm(),
+          ),
+        )
   );
 
   static final passwordForgot = GoRoute(
       path: "/forgot_password",
       name: "forgotPassword",
       pageBuilder: (context, state) =>
-          MaterialPage(
-              child: MainPageScaffold(
-                childName: state.name!,
-                child: AuthFormScaffold(
-                  childName: state.name!,
-                  children: PasswordForgotPage(email: state.extra as String?),
-                )
-              )
-          )
+        const MaterialPage(
+          key: RouterKeys.authKey,
+          child: AuthScaffold(
+            formKey: AuthFormKey.passwordForgot,
+            body: PasswordForgotForm(),
+          ),
+        )
   );
 
   static final passwordRecovery = GoRoute(
       path: "/password_recovery",
       name: "recoverPassword",
       pageBuilder: (context, state) =>
-          MaterialPage(
-              child: MainPageScaffold(
-                  childName: state.name!,
-                  child: AuthFormScaffold(
-                      childName: state.name!,
-                      children: const PasswordRecoveryPage()
-                  )
-              )
-          )
+        const MaterialPage(
+          key: RouterKeys.authKey,
+          child: AuthScaffold(
+            formKey: AuthFormKey.passwordRecovery,
+            body: PasswordRecoveryForm(),
+          ),
+        )
   );
 
   static final error = GoRoute(

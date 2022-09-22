@@ -41,8 +41,8 @@
   "today_tasks": "Today's tasks",
   "intervention_current": "Current intervention",
   "study_current": "Current study:",
-  "opt_out": "Opt-out",
-  "delete_data": "Delete all data",
+  "opt_out": "Leave study",
+  "delete_data": "Leave study & delete all data",
 
   "your_journey": "Your Journey",
   "journey_results_available": "Results available",

@@ -17,17 +17,23 @@ class ThemeConfig {
   static const double kHoverFadeFactor = 0.7;
   static const double kMuteFadeFactor = 0.8;
 
+  static bodyBackgroundColor(ThemeData theme) =>
+      theme.scaffoldBackgroundColor.faded(0.5);
+
   static Color modalBarrierColor(ThemeData theme) =>
       theme.colorScheme.secondary.withOpacity(0.4);
 
   static Color containerColor(ThemeData theme) =>
       theme.colorScheme.secondaryContainer.withOpacity(0.3);
 
+  static Color colorPickerInitialColor(ThemeData theme) =>
+      theme.colorScheme.primary;
+
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
-      fontSize: 14.0,
-      height: 1.35,
-      color: theme.textTheme.bodyText1?.color?.faded(0.6),
-  );
+        fontSize: 14.0,
+        height: 1.35,
+        color: theme.textTheme.bodyText1?.color?.faded(0.65),
+      );
 
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
       fontSize: 14.0,
@@ -44,11 +50,12 @@ class ThemeConfig {
         contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
       );
 
-  static dropdownMenuItemTheme(ThemeData theme) => DropdownMenuItemTheme(
+  static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
+      DropdownMenuItemTheme(
         iconTheme: IconThemeData(
-          color: theme.colorScheme.onPrimaryContainer.withOpacity(0.35),
+          color: theme.textTheme.bodyText1?.color?.faded(0.4),
           // theme.iconTheme.color?.faded(0.75)
-          size: 20.0,
+          size: 18.0,
         ),
       );
 }
@@ -68,13 +75,35 @@ class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
   }
 }
 
+class WebTransitionBuilder extends PageTransitionsBuilder {
+  const WebTransitionBuilder();
+  @override
+  Widget buildTransitions<T>(
+      PageRoute<T> route,
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    final opacityOldTween =
+        Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
+    final opacityNewTween =
+        Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
+
+    return FadeTransition(
+      opacity: opacityOldTween.animate(secondaryAnimation),
+      child: FadeTransition(
+          opacity: opacityNewTween.animate(animation), child: child),
+    );
+  }
+}
+
 class ThemeSettingChange extends Notification {
   ThemeSettingChange({required this.settings});
   final ThemeSettings settings;
 }
 
 class ThemeProvider extends InheritedWidget {
-  const ThemeProvider(
+  ThemeProvider(
       {Key? key,
       required this.settings,
       required this.lightDynamic,
@@ -86,14 +115,20 @@ class ThemeProvider extends InheritedWidget {
   final ColorScheme? lightDynamic;
   final ColorScheme? darkDynamic;
 
-  final pageTransitionsTheme = const PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.macOS: NoAnimationPageTransitionsBuilder(),
-      TargetPlatform.windows: NoAnimationPageTransitionsBuilder(),
-    },
+  final pageTransitionsTheme = PageTransitionsTheme(
+    builders: kIsWeb
+        ? <TargetPlatform, PageTransitionsBuilder>{
+            // Animation when running on Web
+            for (final platform in TargetPlatform.values)
+              platform: const WebTransitionBuilder(),
+          }
+        : const <TargetPlatform, PageTransitionsBuilder>{
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux: NoAnimationPageTransitionsBuilder(),
+            TargetPlatform.macOS: NoAnimationPageTransitionsBuilder(),
+            TargetPlatform.windows: NoAnimationPageTransitionsBuilder(),
+          },
   );
 
   Color custom(CustomColor custom) {
@@ -244,6 +279,7 @@ class ThemeProvider extends InheritedWidget {
       hoverColor: Colors.white,
       focusColor: Colors.white,
       isDense: true,
+      hintStyle: TextStyle(color: colors.onSurfaceVariant.withOpacity(0.4)),
       //contentPadding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
@@ -308,13 +344,13 @@ class ThemeProvider extends InheritedWidget {
           height: 1.35,
           color: colors.onSurface.withOpacity(0.8)),
       headline6: TextStyle(
-          fontSize: 14.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline5: TextStyle(
           fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline4: TextStyle(
           fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline3: TextStyle(
-          fontSize: 28.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline2: TextStyle(
           fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
       headline1: TextStyle(
@@ -325,7 +361,7 @@ class ThemeProvider extends InheritedWidget {
   DividerThemeData dividerTheme(ColorScheme colors) {
     return DividerThemeData(
       thickness: 0.5,
-      color: colors.secondary.withOpacity(0.2),
+      color: colors.onPrimaryContainer.withOpacity(0.15),
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 enum SurveyQuestionType {
   choice, bool, scale;
@@ -23,11 +23,11 @@ enum SurveyQuestionType {
   String get string {
     switch (this) {
       case SurveyQuestionType.choice:
-        return "Multiple Choice".hardcoded;
+        return tr.question_type_choice;
       case SurveyQuestionType.bool:
-        return "Yes/no".hardcoded;
+        return tr.question_type_bool;
       case SurveyQuestionType.scale:
-        return "Scale".hardcoded;
+        return tr.question_type_scale;
       default:
         return "[Invalid SurveyQuestionType]";
     }

@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/common_views/under_construction.dart';
 import 'package:studyu_designer_v2/features/analyze/study_analyze_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class StudyAnalyzeScreen extends StudyPageWidget {
@@ -24,13 +24,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextParagraph(
-                  text: "Because this study has not been launched yet, this page is "
-                      "currently based on the data generated during study "
-                      "testing (only the latest test session).".hardcoded,
-                ),
-                TextParagraph(
-                    text: "The data on this page will be reset once you launch "
-                        "the study with real participants.".hardcoded
+                  text: tr.banner_text_study_analyze_draft,
                 ),
               ]
           ),
@@ -60,12 +54,12 @@ class StudyAnalyzeScreen extends StudyPageWidget {
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                SelectableText("Want to run your own analysis?".hardcoded,
+                SelectableText(tr.action_button_study_export_prompt,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 24.0),
                 PrimaryButton(
-                  text: "Export data".hardcoded,
+                  text: tr.action_button_study_export,
                   icon: Icons.download_rounded,
                   enabled: state.canExport,
                   tooltipDisabled: state.exportDisabledReason,

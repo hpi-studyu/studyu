@@ -6,14 +6,17 @@ import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
+import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -22,11 +25,11 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
-    with WithQuestionnaireControls
+    with WithQuestionnaireControls<EnrollmentFormData, ScreenerQuestionFormViewModel>
     implements
-        IFormViewModelDelegate<QuestionFormViewModel>,
-        IListActionProvider<QuestionFormViewModel>,
-        IProviderArgsResolver<QuestionFormViewModel, QuestionFormRouteArgs> {
+        IFormViewModelDelegate<ScreenerQuestionFormViewModel>,
+        IListActionProvider<ScreenerQuestionFormViewModel>,
+        IProviderArgsResolver<ScreenerQuestionFormViewModel, QuestionFormRouteArgs> {
   EnrollmentFormViewModel({
     required this.study,
     required this.router,
@@ -119,19 +122,19 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   // - IListActionProvider
 
   @override
-  List<ModelAction> availableActions(QuestionFormViewModel model) {
+  List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
     final actions = questionFormViewModels.availableActions(model,
         onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
+  List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModel model) {
     final actions = questionFormViewModels.availablePopupActions(model,
         isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
+  List<ModelAction> availableInlineActions(ScreenerQuestionFormViewModel model) {
     final actions = questionFormViewModels.availableInlineActions(model,
         isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
@@ -181,12 +184,12 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   testScreener() {
     router.dispatch(
-        RoutingIntents.studyTest(study.id)); // TODO preselect app route
+        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.eligibility));
   }
 
   testConsent() {
     router.dispatch(
-        RoutingIntents.studyTest(study.id)); // TODO preselect app route
+        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
   }
 
   bool get canTestScreener =>
@@ -196,11 +199,21 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       (consentItemArray.value?.isNotEmpty ?? false);
 
   @override
-  Map<FormMode, String> get questionTitles => {
-    FormMode.create: "New Screener Question".hardcoded,
-    FormMode.edit: "Edit Screener Question".hardcoded,
-    FormMode.readonly: "View Screener Question".hardcoded,
+  Map<FormMode, LocalizedStringResolver> get questionTitles => {
+    FormMode.create: () => tr.form_screener_question_create,
+    FormMode.edit: () => tr.form_screener_question_edit,
+    FormMode.readonly: () => tr.form_screener_question_readonly,
   };
+
+  @override
+  ScreenerQuestionFormViewModel provideQuestionFormViewModel(QuestionFormData? formData) {
+    return ScreenerQuestionFormViewModel(
+      formData: formData,
+      delegate: this,
+      validationSet: validationSet,
+      titles: questionTitles.isNotEmpty ? questionTitles : null,
+    );
+  }
 }
 
 class EnrollmentFormConsentItemDelegate

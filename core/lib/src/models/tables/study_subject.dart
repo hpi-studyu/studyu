@@ -31,6 +31,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   List<String> selectedInterventionIds;
   @JsonKey(name: 'invite_code')
   String? inviteCode;
+  @JsonKey(name: 'is_deleted')
+  bool isDeleted = false;
 
   @JsonKey(ignore: true)
   late Study study;
@@ -105,7 +107,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         print('Unsupported question type: $T');
         resultObject = Result<T>.app(type: 'unknown', result: result);
     }
-
     final p = await SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,
@@ -272,6 +273,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     final json = response.data as Map<String, dynamic>;
     json['study'] = study.toJson();
     return StudySubject.fromJson(json);
+  }
+
+  Future<StudySubject> softDelete() {
+    isDeleted = true;
+    return save();
   }
 
   static Future<List<StudySubject>> getUserStudiesFor(Study study) async =>

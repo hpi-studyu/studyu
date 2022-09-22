@@ -28,115 +28,124 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 ///
 class RoutingIntents {
   static final root = RoutingIntent(
-    route: RouterConfig.root,
+    route: RouterConf.root,
   );
   static final studies = RoutingIntent(
-    route: RouterConfig.studies,
+    route: RouterConf.studies,
   );
   static final studiesShared = RoutingIntent(
-    route: RouterConfig.studies,
+    route: RouterConf.studies,
     queryParams: {
       RouteParams.studiesFilter: StudiesFilter.shared.toShortString(),
     },
   );
   static final publicRegistry = RoutingIntent(
-    route: RouterConfig.studies,
+    route: RouterConf.studies,
     queryParams: {
       RouteParams.studiesFilter: StudiesFilter.public.toShortString(),
     },
   );
   static final study = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.study,
+        route: RouterConf.study,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyEdit = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyEdit,
+        route: RouterConf.studyEdit,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyEditInfo = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyEditInfo,
+        route: RouterConf.studyEditInfo,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyEditEnrollment = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyEditEnrollment,
+        route: RouterConf.studyEditEnrollment,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyEditInterventions = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyEditInterventions,
+        route: RouterConf.studyEditInterventions,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyEditIntervention =
       (StudyID studyId, InterventionID interventionId) => RoutingIntent(
-            route: RouterConfig.studyEditIntervention,
+            route: RouterConf.studyEditIntervention,
             params: {
               RouteParams.studyId: studyId,
               RouteParams.interventionId: interventionId,
             },
           );
   static final studyEditMeasurements = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyEditMeasurements,
+        route: RouterConf.studyEditMeasurements,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyEditMeasurement =
       (StudyID studyId, MeasurementID measurementId) => RoutingIntent(
-            route: RouterConfig.studyEditMeasurement,
+            route: RouterConf.studyEditMeasurement,
             params: {
               RouteParams.studyId: studyId,
               RouteParams.measurementId: measurementId,
             },
           );
-  static final studyTest = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyTest,
+  static final studyTest = (StudyID studyId, {String? appRoute}) => RoutingIntent(
+        route: RouterConf.studyTest,
         params: {
           RouteParams.studyId: studyId,
         },
+        queryParams: {
+          if (appRoute != null)
+            RouteParams.testAppRoute: appRoute,
+        }
       );
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyRecruit,
+        route: RouterConf.studyRecruit,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studyMonitor = (StudyID studyId) =>
-      RoutingIntent(route: RouterConfig.studyMonitor, params: {
+      RoutingIntent(route: RouterConf.studyMonitor, params: {
         RouteParams.studyId: studyId,
       });
   static final studyAnalyze = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studyAnalyze,
+        route: RouterConf.studyAnalyze,
         params: {
           RouteParams.studyId: studyId,
         },
       );
   static final studySettings = (StudyID studyId) => RoutingIntent(
-        route: RouterConfig.studySettings,
+        route: RouterConf.studySettings,
         params: {
           RouteParams.studyId: studyId,
         },
         dispatch: RoutingIntentDispatch.push, // modal route
       );
+  static final accountSettings = RoutingIntent(
+    route: RouterConf.accountSettings,
+    dispatch: RoutingIntentDispatch.push, // modal route
+  );
   static final studyNew = studyEdit(Config.newStudyId);
-  static final login = RoutingIntent(route: RouterConfig.login);
-  static final signup = RoutingIntent(route: RouterConfig.signup);
-  static final passwordForgot = (String email) => RoutingIntent(
-        route: RouterConfig.passwordForgot,
+  static final login = RoutingIntent(route: RouterConf.login);
+  static final signup = RoutingIntent(route: RouterConf.signup);
+  static final passwordForgot = RoutingIntent(route: RouterConf.passwordForgot);
+  static final passwordForgot2 = (String email) => RoutingIntent(
+        route: RouterConf.passwordForgot,
         extra: email,
       );
   static final passwordRecovery =
-      RoutingIntent(route: RouterConfig.passwordRecovery);
+      RoutingIntent(route: RouterConf.passwordRecovery);
   static final error = (Exception error) => RoutingIntent(
-        route: RouterConfig.error,
+        route: RouterConf.error,
         extra: error,
       );
 }

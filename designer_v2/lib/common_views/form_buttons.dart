@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 /// A cancel / dismiss button for use with [FormScaffold] [showFormSideSheet)
 /// Heavily inspired by [CloseButton]
@@ -40,7 +40,7 @@ class DismissButton extends StatelessWidget {
           }
         },
         child: SecondaryButton(
-          text: text ?? "Cancel".hardcoded,
+          text: text ?? tr.dialog_cancel,
           icon: null,
           //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           onPressed: () {
@@ -69,10 +69,8 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
           return retainSizeInAppBar(PrimaryButton(
-            text: "Save".hardcoded,
-            tooltipDisabled: "Please fill out all fields as required:".hardcoded +
-                "\n\n" +
-                formViewModel.form.validationErrorSummary,
+            text: tr.dialog_save,
+            tooltipDisabled: "${tr.form_invalid_prompt}\n\n${formViewModel.form.validationErrorSummary}",
             icon: null,
             enabled: formViewModel.isValid,
             onPressedFuture: (formViewModel.isValid) ?
@@ -86,14 +84,11 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ),
   ];
   final readonlyActionButtons = [
-    // TODO: clean this up more
     ReactiveFormConsumer( // enable re-rendering based on form validation status
         builder: (context, form, child) {
           return retainSizeInAppBar(DismissButton(
-            text: "Close".hardcoded,
-            onPressed: () =>
-                formViewModel.cancel().then(
-                        (_) => Navigator.maybePop(context)),
+            text: tr.dialog_close,
+            onPressed: () => Navigator.maybePop(context),
           ));
         }
     ),

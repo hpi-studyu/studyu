@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/domain/participation.dart';
 import 'package:studyu_designer_v2/features/study/settings/study_settings_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class PublishConfirmationDialog extends StudyPageWidget {
@@ -27,7 +27,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
     return ReactiveForm(
       formGroup: formViewModel.form,
       child: StandardDialog(
-        titleText: "Great work! \u{1F44F} Ready to launch?".hardcoded,
+        titleText: tr.study_launch_title,
         body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +42,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       children: [
                         RichText(
                           text: TextSpan(
-                            text: 'The study you are creating is'.hardcoded,
+                            text: tr.study_launch_participation_intro,
                             children: [
                               const TextSpan(text: ' '),
                               TextSpan(
@@ -50,6 +50,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
                                 style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                               const TextSpan(text: '.'),
+                              TextSpan(text: tr.study_launch_participation_outro),
                             ],
                           ),
                         ),
@@ -69,7 +70,10 @@ class PublishConfirmationDialog extends StudyPageWidget {
                     child: TextButton(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                        child: Text("Change\nparticipation".hardcoded, textAlign: TextAlign.center,),
+                        child: Text(
+                          tr.action_button_study_participation_change,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                       onPressed: () {
                         Navigator.maybePop(context)
@@ -80,16 +84,9 @@ class PublishConfirmationDialog extends StudyPageWidget {
                 ],
               ),
               const SizedBox(height: 24.0),
-              SelectableText("After launching your study:".hardcoded),
+              SelectableText(tr.study_launch_post_launch_intro),
               const SizedBox(height: 4.0),
-              SelectableText(
-                  "- " +
-                  "The study design will be locked & you won’t be able to "
-                      "make any changes".hardcoded
-                  + "\n" +
-                  "- " +
-                  "All data from test runs will be reset (incl. test users, "
-                      "their tasks & results)".hardcoded,
+              SelectableText(tr.study_launch_post_launch_summary,
                   style: const TextStyle(fontWeight: FontWeight.bold)
               ),
               const SizedBox(height: 32.0),
@@ -109,13 +106,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
                         Flexible(
                           child: FormControlLabel(
                             formControl: formViewModel.isPublishedToRegistryControl,
-                            text: "To facilitate collaboration among researchers & "
-                                "clinicians, I agree that the my study will be published "
-                                "to the StudyU study registry for others. "
-                                "(Other researchers & clinicians will be able to contact "
-                                "you and review the study design, but they won't "
-                                "be able to access participation or result data unless "
-                                "shared explicitly)".hardcoded
+                            text: tr.study_settings_publish_study_launch_description,
                           )
                         )
                       ],
@@ -129,7 +120,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
           const DismissButton(),
           ReactiveFormConsumer(builder: (context, form, child) {
             return PrimaryButton(
-                text: "Launch".hardcoded,
+                text: tr.action_button_study_launch,
                 icon: null,
                 onPressedFuture: () => controller.publishStudy(
                     toRegistry: formViewModel.isPublishedToRegistryControl.value)
@@ -138,7 +129,7 @@ class PublishConfirmationDialog extends StudyPageWidget {
           }),
         ],
         maxWidth: 650,
-        minWidth: 550,
+        minWidth: 610,
       ),
     );
   }

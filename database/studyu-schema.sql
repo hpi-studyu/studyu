@@ -118,7 +118,8 @@ CREATE TABLE public.study_subject (
     user_id uuid NOT NULL,
     started_at timestamp with time zone DEFAULT now(),
     selected_intervention_ids text[] NOT NULL,
-    invite_code text
+    invite_code text,
+    is_deleted boolean DEFAULT false NOT NULL
 );
 
 
@@ -333,7 +334,7 @@ ALTER TABLE ONLY public.repo
 --
 
 ALTER TABLE ONLY public.repo
-    ADD CONSTRAINT "repo_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
+    ADD CONSTRAINT "repo_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
 
 
 --
@@ -341,7 +342,7 @@ ALTER TABLE ONLY public.repo
 --
 
 ALTER TABLE ONLY public.study_invite
-    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
+    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
 
 --
@@ -349,7 +350,7 @@ ALTER TABLE ONLY public.study_invite
 --
 
 ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY (invite_code) REFERENCES public.study_invite(code);
+    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY (invite_code) REFERENCES public.study_invite(code) ON DELETE CASCADE;
 
 
 --
@@ -357,7 +358,7 @@ ALTER TABLE ONLY public.study_subject
 --
 
 ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
+    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
 
 --
@@ -410,7 +411,9 @@ CREATE FUNCTION public.active_subject_count(study public.study) RETURNS integer
             FROM
                 study_subject
             WHERE
-                study_id = study.id) AS s
+                study_id = study.id
+                AND study_subject.is_deleted = false
+            ) AS s
         WHERE
             s.is_active_subject;
 
@@ -619,7 +622,9 @@ CREATE FUNCTION public.study_ended_count(study public.study) RETURNS integer
         FROM
             study_subject
         WHERE
-            study_id = study.id) AS s
+            study_id = study.id
+            AND study_subject.is_deleted = false
+        ) AS s
 WHERE
     completed;
 
@@ -675,7 +680,7 @@ CREATE FUNCTION public.study_missed_days(study_param public.study) RETURNS integ
     LANGUAGE sql SECURITY DEFINER
     AS $$
   select ARRAY_AGG(subject_current_day(study_subject) - subject_total_active_days(study_subject)) from study_subject
-where study_subject.study_id = study_param.id;
+where study_subject.study_id = study_param.id and study_subject.is_deleted = false;
 $$;
 
 
@@ -690,7 +695,8 @@ CREATE FUNCTION public.study_participant_count(study public.study) RETURNS integ
     AS $$
   select count(1)::int
     from study_subject
-    where study_id = study.id;
+    where study_id = study.id
+      and study_subject.is_deleted = false;
 $$;
 
 

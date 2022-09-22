@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 
@@ -68,13 +68,13 @@ extension DashboardStateSafeViewProps on DashboardState {
   String get visibleListTitle {
     switch(studiesFilter) {
       case StudiesFilter.public:
-        return "Study registry".hardcoded;
+        return tr.navlink_public_studies;
       case StudiesFilter.owned:
-        return "My studies".hardcoded;
+        return tr.navlink_my_studies;
       case StudiesFilter.shared:
-        return "Shared with me".hardcoded;
+        return tr.navlink_shared_studies;
       case StudiesFilter.all:
-        return "All studies".hardcoded;
+        return "[StudiesFilter.all]"; // not available in UI
     }
   }
 }

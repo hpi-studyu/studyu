@@ -1,14 +1,16 @@
 import 'dart:ui';
 
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 String translateLocaleName({required Locale locale}) {
   switch (locale.toLanguageTag()) {
     case ("de-DE"):
       {
-        return "Deutsch";
+        return tr.locale_de;
       }
     case ("en-US"):
       {
-        return "English";
+        return tr.locale_en;
       }
     case ("es-ES"):
       {

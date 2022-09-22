@@ -6,7 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
 
 class IconPack {
@@ -163,7 +163,7 @@ class IconPickerField extends StatelessWidget {
                   iconPack: iconOptions)!
               .icon;
       return IconButton(
-          tooltip: "Change icon".hardcoded,
+          tooltip: tr.iconpicker_nonempty_prompt,
           splashRadius: actualSelectedIconSize,
           onPressed: (isDisabled) ? null : openIconPicker,
           focusNode: focusNode,
@@ -173,7 +173,7 @@ class IconPickerField extends StatelessWidget {
     return TextButton(
       onPressed: (isDisabled) ? null : openIconPicker,
       focusNode: focusNode,
-      child: Text('Pick an icon'.hardcoded),
+      child: Text(tr.iconpicker_empty_prompt),
     );
   }
 }
@@ -241,7 +241,7 @@ Future<void> showIconPickerDialog(
                 iconOptions: iconOptions, iconSize: galleryIconSize ?? 48.0),
           ),
           title: SelectableText(
-            "Pick an icon".hardcoded,
+            tr.iconpicker_dialog_title,
             style: theme.textTheme.headline5?.copyWith(
               fontWeight: FontWeight.normal,
               color: theme.colorScheme.onPrimaryContainer,

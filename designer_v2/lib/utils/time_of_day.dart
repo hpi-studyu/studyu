@@ -16,8 +16,7 @@ class Time extends TimeOfDay {
       );
 }
 
-/// Represents a control value accessor that convert between data types
-/// [Time] and [String].
+/// Control value accessor that converts between data types [Time] and [String]
 class TimeValueAccessor extends ControlValueAccessor<Time, String> {
   @override
   String modelToViewValue(Time? modelValue) {

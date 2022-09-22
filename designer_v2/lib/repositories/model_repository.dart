@@ -67,6 +67,7 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   Future<WrappedModel<T>?> save(T model); // upsert
   Future<void> delete(ModelID modelId);
   Future<void> duplicateAndSave(T model);
+  Future<void> duplicateAndSaveFromRemote(ModelID model);
   Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true});
   Stream<List<WrappedModel<T>>> watchAll({fetchOnSubscribe = true});
   Stream<ModelEvent<T>> watchChanges(ModelID modelId);
@@ -243,6 +244,14 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   Future<void> duplicateAndSave(T model) {
     final duplicateModel = delegate.createDuplicate(model);
     return save(duplicateModel);
+  }
+
+  @override
+  Future<void> duplicateAndSaveFromRemote(ModelID modelId) async {
+    WrappedModel<T>? wrappedModel = get(modelId);
+    wrappedModel ??= await fetch(modelId);
+    final duplicateModel = delegate.createDuplicate(wrappedModel.model);
+    await save(duplicateModel);
   }
 
   @override

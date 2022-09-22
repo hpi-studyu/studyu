@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class WebFrame extends StatelessWidget {
   final String previewSrc;
@@ -37,17 +44,20 @@ class DisabledFrame extends StatelessWidget {
           ),
         ),
       ),
-      borderColor: theme.colorScheme.secondary.withOpacity(0.25),
+      borderColor: theme.colorScheme.secondary.withOpacity(0.3),
       innerContentBackgroundColor: theme.colorScheme.secondary.withOpacity(0.03),
     );
   }
 }
 
 class PhoneContainer extends StatelessWidget {
+  static const double defaultWidth = 300.0;
+  static const double defaultHeight = 600.0;
+
   const PhoneContainer({
     required this.innerContent,
-    this.width = 300,
-    this.height = 600,
+    this.width = PhoneContainer.defaultWidth,
+    this.height = PhoneContainer.defaultHeight,
     this.borderColor = Colors.black,
     this.borderWidth = 6.0,
     this.borderRadius = 25.0,
@@ -136,4 +146,32 @@ class DesktopFrame extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget? previewBanner(WidgetRef ref, String studyId) {
+  final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+
+  if (!formViewModel.form.hasErrors) {
+    return null;
+  }
+  return BannerBox(
+    body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextParagraph(
+            text: "The preview is unavailable until you update the "
+                "following information:".hardcoded,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          ReactiveForm(
+              formGroup: formViewModel.form,
+              child: ReactiveFormConsumer(builder: (context, form, child) {
+                return TextParagraph(
+                  text: form.validationErrorSummary,
+                );
+              })),
+        ]),
+    style: BannerStyle.warning,
+  );
 }

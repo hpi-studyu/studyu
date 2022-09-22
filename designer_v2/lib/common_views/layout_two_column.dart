@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/constrained_flexible.dart';
 
-
 class TwoColumnLayout extends StatefulWidget {
   const TwoColumnLayout({
     required this.leftWidget,
@@ -9,13 +8,17 @@ class TwoColumnLayout extends StatefulWidget {
     this.headerWidget,
     this.dividerWidget = defaultDivider,
     this.flexLeft,
-    this.flexRight = 1, // expand right column to fill available space by default
+    this.flexRight =
+        1, // expand right column to fill available space by default
     this.constraintsLeft,
     this.constraintsRight,
     this.scrollLeft = true,
     this.scrollRight = true,
     this.paddingLeft = defaultContentPadding,
     this.paddingRight = defaultContentPadding,
+    this.backgroundColorLeft,
+    this.backgroundColorRight,
+    this.stretchHeight = false,
     Key? key,
   }) : super(key: key);
 
@@ -24,10 +27,12 @@ class TwoColumnLayout extends StatefulWidget {
     thickness: 1,
   );
   static const EdgeInsets defaultContentPadding = EdgeInsets.symmetric(
-    horizontal: 48.0, vertical: 32.0,
+    horizontal: 48.0,
+    vertical: 32.0,
   );
   static const EdgeInsets slimContentPadding = EdgeInsets.symmetric(
-    horizontal: 32.0, vertical: 32.0,
+    horizontal: 32.0,
+    vertical: 32.0,
   );
 
   final Widget leftWidget;
@@ -46,6 +51,11 @@ class TwoColumnLayout extends StatefulWidget {
 
   final EdgeInsets? paddingLeft;
   final EdgeInsets? paddingRight;
+
+  final Color? backgroundColorLeft;
+  final Color? backgroundColorRight;
+
+  final bool stretchHeight;
 
   @override
   State<TwoColumnLayout> createState() => _TwoColumnLayoutState();
@@ -102,48 +112,64 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
       rightWidget = Padding(padding: widget.paddingRight!, child: rightWidget);
     }
 
-    if (widget.scrollLeft) {
-      leftWidget = Scrollbar(
-        thumbVisibility: true,
-        controller: _scrollControllerLeft,
-        child: SingleChildScrollView(
-          controller: _scrollControllerLeft,
-          child: leftWidget
-        ),
-      );
+    if (widget.backgroundColorLeft != null) {
+      leftWidget =
+          Material(color: widget.backgroundColorLeft, child: leftWidget);
     }
-    if (widget.scrollRight) {
-      rightWidget = Scrollbar(
-        thumbVisibility: true,
-        controller: _scrollControllerRight,
-        child: SingleChildScrollView(
-            controller: _scrollControllerRight,
-            child: rightWidget
-        ),
-      );
-    }
-
-    if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
-      if (widget.constraintsLeft != null) {
-        leftWidget = Container(
-            constraints: widget.constraintsLeft!, child: leftWidget);
-      }
-      if (widget.flexLeft != null) {
-        leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
-      }
-    }
-
-    if (!(widget.constraintsRight != null && widget.flexRight != null)) {
-      if (widget.constraintsRight != null) {
-        rightWidget = Container(
-            constraints: widget.constraintsRight!, child: rightWidget);
-      }
-      if (widget.flexRight != null) {
-        rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);
-      }
+    if (widget.backgroundColorRight != null) {
+      rightWidget =
+          Material(color: widget.backgroundColorRight, child: rightWidget);
     }
 
     return LayoutBuilder(builder: (context, constraints) {
+      if (widget.stretchHeight) {
+        leftWidget = SizedBox(
+          height: constraints.maxHeight,
+          child: leftWidget,
+        );
+        rightWidget = SizedBox(
+          height: constraints.maxHeight,
+          child: rightWidget,
+        );
+      }
+
+      if (widget.scrollLeft) {
+        leftWidget = Scrollbar(
+          thumbVisibility: true,
+          controller: _scrollControllerLeft,
+          child: SingleChildScrollView(
+              controller: _scrollControllerLeft, child: leftWidget),
+        );
+      }
+      if (widget.scrollRight) {
+        rightWidget = Scrollbar(
+          thumbVisibility: true,
+          controller: _scrollControllerRight,
+          child: SingleChildScrollView(
+              controller: _scrollControllerRight, child: rightWidget),
+        );
+      }
+
+      if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
+        if (widget.constraintsLeft != null) {
+          leftWidget = Container(
+              constraints: widget.constraintsLeft!, child: leftWidget);
+        }
+        if (widget.flexLeft != null) {
+          leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
+        }
+      }
+
+      if (!(widget.constraintsRight != null && widget.flexRight != null)) {
+        if (widget.constraintsRight != null) {
+          rightWidget = Container(
+              constraints: widget.constraintsRight!, child: rightWidget);
+        }
+        if (widget.flexRight != null) {
+          rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);
+        }
+      }
+
       if (widget.constraintsLeft != null && widget.flexLeft != null) {
         leftWidget = ConstrainedWidthFlexible(
           minWidth: widget.constraintsLeft?.minWidth ?? double.infinity,
@@ -168,7 +194,7 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
 
       Widget body = Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           leftWidget,
           widget.dividerWidget ?? const SizedBox.shrink(),

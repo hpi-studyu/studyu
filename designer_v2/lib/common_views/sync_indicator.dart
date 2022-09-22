@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 abstract class ISyncIndicatorViewModel {
@@ -73,7 +73,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
     return widget.state.when(
       data: (data) => MouseEventsRegion(builder: buildIndicator),
       error: (error, stackTrace) => Tooltip(
-        message: "Changes could not be saved".hardcoded,
+        message: tr.sync_failed,
         child: Icon(Icons.sync_problem_outlined, size: widget.iconSize),
       ),
       loading: () => MouseEventsRegion(builder: buildIndicator),
@@ -91,11 +91,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
 
     if (!widget.isDirty && widget.lastSynced != null) {
       dataWidget = Tooltip(
-        message: "All changes saved".hardcoded +
-            "\n\n" +
-            "Last saved:".hardcoded +
-            " " +
-            widget.lastSynced!.toTimeAgoStringPrecise(),
+        message: "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
         child: Icon(
           Icons.check_circle_rounded,
           size: widget.iconSize,
@@ -104,8 +100,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
       );
     } else if (!widget.isDirty && widget.lastSynced == null) {
       dataWidget = Tooltip(
-        message: "No changes to be saved".hardcoded,
-        //message: "Any changes will be saved automatically.".hardcoded,
+        message: tr.sync_initial,
         child: Icon(
           Icons.check_circle_rounded,
           size: widget.iconSize,
@@ -115,7 +110,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
     } else {
       // isDirty
       dataWidget = Tooltip(
-        message: "There are unsaved changes".hardcoded,
+        message: tr.sync_dirty,
         child: Icon(
           Icons.sync_disabled_rounded,
           size: widget.iconSize,
@@ -125,7 +120,7 @@ class _SyncIndicatorState extends State<SyncIndicator>
     }
 
     final refreshingWidget = Tooltip(
-      message: "Saving changes...".hardcoded,
+      message: tr.sync_saving,
       child: RotationTransition(
         turns: _animation,
         child: Icon(

@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -37,8 +38,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   // - Form fields
 
-  final FormArray measurementsArray =
-      FormArray([], validators: [Validators.minLength(1)]);
+  final FormArray measurementsArray = FormArray([]);
   late final surveyMeasurementFormViewModels = FormViewModelCollection<
       MeasurementSurveyFormViewModel,
       MeasurementSurveyFormData>([], measurementsArray);
@@ -48,10 +48,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
-  };
+        StudyFormValidationSet.draft: [],
+        StudyFormValidationSet.publish: [measurementRequired],
+        StudyFormValidationSet.test: [],
+      };
+
+  get measurementRequired =>
+      FormControlValidation(control: measurementsArray, validators: [
+        Validators.minLength(1)
+      ], validationMessages: {
+        ValidationMessage.minLength: (error) => tr.form_array_measurements_minlength,
+      });
 
   @override
   late final FormGroup form = FormGroup({
@@ -160,8 +167,8 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   }
 
   @override
-  Future onSave(
-      MeasurementSurveyFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(MeasurementSurveyFormViewModel formViewModel,
+      FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       surveyMeasurementFormViewModels.commit(formViewModel);

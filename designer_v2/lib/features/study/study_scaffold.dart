@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 abstract class IStudyAppBarViewModel
@@ -122,7 +122,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             // responsive layout conflicts (the tabbed control would be overlaid
             // by the app bar widgets).
             Expanded(
-              flex: 4,
+              flex: 8,
               child: AsyncValueWidget(
                 value: state.study,
                 data: (study) => Row(
@@ -155,17 +155,14 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
               ),
             ),
             Flexible(
-              flex: 5,
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: TabbedNavbar(
-                  tabs: tabs,
-                  selectedTab: widget.selectedTab,
-                  height: widget.appbarHeight,
-                  disabledBackgroundColor: theme.appBarTheme.backgroundColor,
-                  disabledTooltipText: "This page is not available to you".hardcoded,
-                  isScrollable: true,
-                ),
+              flex: 11,
+              child: TabbedNavbar(
+                tabs: tabs,
+                selectedTab: widget.selectedTab,
+                height: widget.appbarHeight,
+                disabledBackgroundColor: theme.appBarTheme.backgroundColor,
+                disabledTooltipText: tr.navlink_unavailable_tooltip,
+                isScrollable: true,
               ),
             ),
           ],
@@ -236,11 +233,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             // enable re-rendering based on form validation status
             builder: (context, form, child) {
           return PrimaryButton(
-            text: "Launch".hardcoded,
+            text: tr.action_button_study_launch,
             tooltipDisabled:
-                "Please fill out all fields as required:".hardcoded +
-                    "\n\n" +
-                    form.validationErrorSummary,
+                "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
             icon: null,
             enabled: formViewModel.isValid,
             onPressed: () => showPublishDialog(context, widget.studyId),
@@ -255,6 +250,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       actionButtons.add(IconButton(
         onPressed: controller.onSettingsPressed,
         icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
+        tooltip: tr.study_settings,
         color: theme.iconTheme.color?.faded(0.8),
         splashRadius: ThemeConfig.iconSplashRadius(theme),
       ));

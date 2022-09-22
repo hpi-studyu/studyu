@@ -24,8 +24,7 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
-class _AppState extends AuthState<App>  {
-
+class _AppState extends AuthState<App> {
   @override
   Widget build(BuildContext context) {
     return const AppContent();
@@ -78,37 +77,39 @@ class _AppContentState extends ConsumerState<AppContent> {
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(
-        builder: (lightDynamic, darkDynamic) => ThemeProvider(
-            lightDynamic: lightDynamic,
-            darkDynamic: darkDynamic,
-            settings: settings,
-            child: Builder(builder: (context) {
-              final themeProvider = ThemeProvider.of(context);
-              final theme = themeProvider.light(settings.value.sourceColor);
-              return MaterialApp.router(
+      builder: (lightDynamic, darkDynamic) => ThemeProvider(
+        lightDynamic: lightDynamic,
+        darkDynamic: darkDynamic,
+        settings: settings,
+        child: Builder(
+          builder: (context) {
+            final themeProvider = ThemeProvider.of(context);
+            final theme = themeProvider.light(settings.value.sourceColor);
+            return MaterialApp.router(
+              scaffoldMessengerKey: scaffoldMessengerKey,
+              builder: (context, widget) => NotificationDispatcher(
                 scaffoldMessengerKey: scaffoldMessengerKey,
-                builder: (context, widget) => NotificationDispatcher(
-                    scaffoldMessengerKey: scaffoldMessengerKey,
-                    navigatorKey: router.routerDelegate.navigatorKey,
-                    child: widget
-                ),
-                debugShowCheckedModeBanner: Config.isDebugMode,
-                title: 'Study Designer'.hardcoded,
-                color: theme.colorScheme.surface,
-                theme: theme,
-                routeInformationParser: router.routeInformationParser,
-                routerDelegate: router.routerDelegate,
-                locale: locale,
-                supportedLocales: AppLocalizations.supportedLocales,
-                localizationsDelegates: const [
-                  ...AppLocalizations.localizationsDelegates,
-                  // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
-                  FormBuilderLocalizations.delegate,
-                ],
-                //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
-              );
-            })
-        )
+                navigatorKey: router.routerDelegate.navigatorKey,
+                child: widget,
+              ),
+              debugShowCheckedModeBanner: Config.isDebugMode,
+              title: 'Study Designer'.hardcoded,
+              color: theme.colorScheme.surface,
+              theme: theme,
+              routeInformationParser: router.routeInformationParser,
+              routerDelegate: router.routerDelegate,
+              locale: locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: const [
+                ...AppLocalizations.localizationsDelegates,
+                // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
+                FormBuilderLocalizations.delegate,
+              ],
+              //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
+            );
+          },
+        ),
+      ),
     );
   }
 }

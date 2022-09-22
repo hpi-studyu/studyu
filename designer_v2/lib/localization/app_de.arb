@@ -1,125 +1,468 @@
 {
   "@@locale": "de",
 
+  "@__________________GENERAL__________________": {},
+
+  "studyu": "StudyU",
+  "loading_message": "Laden...",
+
   "language": "Sprache",
-  "en": "Englisch",
-  "de": "Deutsch",
+  "language_select_tooltip": "Sprache auswählen",
+  "locale_en": "Englisch",
+  "locale_de": "Deutsch",
 
-  "study_u": "Study U",
+  "navlink_error_home": "Zur Startseite",
 
-  "create_new_study": "Neue Studie anlegen",
-  "contact_details": "Kontaktdaten",
-  "view_published_study": "Publizierte Studien betrachten",
-  "view_mode_warning": "Studie Betrachten Modus. Die Studie ist bereits publiziert und daher können Änderungen nicht gespeichert werden.",
-  "organization": "Verantwortliche Organisation",
-  "irb": "Zuständige Ethikkommission",
-  "irb_number": "Studiennummer",
-  "researchers": "Verantwortliche Forscher",
-  "website": "Webseite",
-  "email": "E-Mail",
-  "phone": "Telefon",
-  "about": "Über",
-  "interventions": "Interventionen",
-  "eligibility_questions": "Berechtigungs-Fragen",
-  "eligibility_criteria": "Berechtigungs-Kriterien",
-  "questionnaire": "Befragung",
-  "eligibility": "Berechtigung",
-  "observations": "Observierungen",
-  "schedule": "Zeitplan",
-  "report": "Report",
-  "results": "Ergebnisse",
-  "consent": "Einverständnis",
-  "save": "Speichern",
-  "delete": "Löschen",
-  "title": "Titel",
-  "description": "Bescheibung",
-  "choose_icon": "Icon auswählen",
-  "name": "Name",
-  "draft_studies": "Studienentwürfe",
-  "published_studies": "Publizierte Studien",
-  "deleted": "gelöscht",
-  "export_csv": "CSV exportieren",
-  "delete_draft_study": "Studienenwurf löschen?",
-  "add_consent_item": "Einverständnis-Punkt hinzufügen",
-  "consent_item": "Einverständnis-Punkt",
-  "add_criterion": "Kriterium hinzufügen",
-  "add_choice": "Option hinzufügen",
-  "eligibility_criterion": "Berechtigungs Kriterium",
-  "reason": "Grund",
-  "expression": "Ausdruck",
-  "target": "Ziel",
-  "no_questions_yet": "Noch keine Fragen hinzugefügt",
-  "add_intervention": "Intervention hinzufügen",
-  "add_task": "Aufgabe hinzufügen",
-  "intervention": "Intervention",
-  "add_observation": "Observierung hinzufügen",
-  "add_question": "Frage hinzufügen",
-  "add_annotation": "Annotation hinzufügen",
-  "value": "Wert",
-  "annotation": "Annotation",
-  "choice": "Option",
-  "multiple": "Mehrfachauswahl",
-  "question": "Frage",
-  "prompt": "Prompt",
-  "rationale": "Rational",
-  "minimum": "Minimum",
-  "maximum": "Maximum",
-  "initial": "Initial",
-  "step": "Schritt",
-  "section": "Abschnitt",
-  "minimum_annotation": "Minimum Annotation",
-  "minimum_color": "Minimum Farbe",
-  "maximum_annotation": "Maximum Annotation",
-  "maximum_color": "Maximum Farbe",
-  "add_section": "Abschnitt hinzufügen",
-  "add_result": "Ergebniss hinzufügen",
-  "was_saved_and_published": "wurde gespeichert und publiziert.",
-  "was_saved_as_draft": "wurde als Entwurf gespeichert.",
-  "failed_saving": "speichern fehlgeschlagen. Bitte nocheinmal versuchen.",
-  "save_draft": "Entwurf speichern",
-  "publish_study": "Studie publizieren",
-  "debug_output": "Debug Informationen",
-  "show_debug_output": "Debug Informationen anzeigen",
-  "study_model_in_json": "resultierendes Study Model im JSON-Format",
-  "copied_json": "JSON kopiert zur Zwischenablage",
-  "copy": "kopieren",
-  "lock_and_publish": "Studie publizieren und für Bearbeitungen sperren?",
-  "really_want_to_publish": " wird publiziert. Danach können keine Bearbeitungen vorgenommen werden!",
-  "publish": "Publizieren",
-  "number_of_cycles": "Anzahl an Zyklen",
-  "phase_duration": "Länge einer Phase",
-  "include_baseline": "Baseline hinzufügen",
-  "sequence": "Sequenz",
-  "improvement_direction": "Verbesserungsrichtung",
-  "temporal_aggregation": "Zeitliche Aggregation",
-  "alpha": "Alpha",
-  "alpha_confidence": "Alpha (Confidence)",
-  "primary": "Primär",
-  "result": "Ergebnis",
-  "filename": "Dateiname",
-  "hour": "Stunde",
-  "minute": "Minute",
-  "data_source": "Datenquelle",
-  "signed_out": "Abgemeldet",
-  "terms_privacy": "Nutzungsbedingungen & Datenschutzbestimmung",
-  "terms_read": "Nutzungsbedingungen lesen",
-  "privacy_read": "Datenschutzbestimmung lesen",
-  "terms_content": "Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung des StudyU Designers. Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.",
-  "terms_agree": "Ich habe die Nutzungsbedingungen und die Datenschutzbestimmung gelesen und bin damit einverstanden",
+  "@__________________LANDING__________________": {},
 
-  "study_title": "Studienname",
-  "my_studies": "Meine Studien",
-  "shared_with_me": "Mit mir geteilt",
-  "study_registry": "Studienregister",
-  "status": "Status",
-  "settings": "Einstellungen",
-  "enrollment": "Anmeldung",
-  "started_at": "Gestartet am",
-  "enrolled": "Angemeldet",
-  "active": "Aktiv",
-  "completed": "Abgeschlossen",
+  "imprint": "Impressum",
 
-  "signup": "Account erstellen",
-  "login": "Anmelden",
-  "my_studies": "Meine Studien"
+  "@__________________AUTH__________________": {},
+
+  "link_forgot_password": "Passwort vergessen?",
+  "link_signup_description": "Noch kein Nutzerkonto?",
+  "link_signup": "Registrieren",
+  "link_login_description": "Bereits ein Nutzerkonto?",
+  "link_login_description2": "Zum Workspace?",
+  "link_login": "Anmelden",
+
+  "action_button_login": "Anmelden",
+  "action_button_signup": "Nutzerkonto erstellen",
+  "action_button_password_reset": "Passwort zurücksetzen",
+
+  "signup_tos_intro": "Ich habe die ",
+  "signup_tos_terms_of_service": "Nutzungsbedingungen ",
+  "signup_tos_and": "und ",
+  "signup_tos_privacy_policy": "Datenschutzbestimmungen ",
+  "signup_tos_outro": "von StudyU gelesen und bin damit einverstanden.",
+
+  "login_page_title": "Im Workspace anmelden",
+  "login_page_description": "Gestalte deine Forschung oder Behandlung individuell und effizient mit digitalen N-of-1 Studien.",
+
+  "signup_page_title": "Neuen Workspace anlegen",
+  "signup_page_description": "Lege jetzt mit digitalen N-of-1 Studien los, um deine Forschung oder Behandlung effizienter und individueller zu gestalten. Free, open source & open science!",
+
+  "password_forgot_page_title": "Passwort zurücksetzen",
+  "password_forgot_page_description": "Bitte gib die mit deinem Nutzerkonto verknüpfte Email-Addresse ein & wir schicken dir eine Email zum Zurücksetzen deines Passworts.",
+
+  "password_recover_page_title": "Neues Passwort festlegen",
+
+  "form_field_email": "Email",
+  "form_field_email_hint": "Email",
+  "form_field_password": "Passwort",
+  "form_field_password_hint": "Passwort",
+  "form_field_password_confirm": "Passwort bestätigen",
+  "form_field_password_confirm_hint": "Passwort erneut eingeben",
+
+  "form_field_email_invalid": "Das ist keine gültige Email-Addresse",
+  "form_field_password_mustmatch": "Die Passwörter stimmen nicht überein",
+  "form_field_password_minlength": "Passwörter müssen mindestens {minLength} Zeichen lang sein",
+  "@form_field_password_minlength": {
+    "placeholders": {
+      "minLength": {}
+    }
+  },
+  "form_field_remember_me": "Zugangsdaten speichern",
+  "form_field_password_new": "Neues Passwort",
+  "form_field_password_new_hint": "Neues Passwort",
+  "form_field_password_new_confirm": "Neues Passwort wiederholen",
+  "form_field_password_new_confirm_hint": "Neues Passwort wiederholen",
+
+  "notification_password_reset_check_email": "Schaue in deinen Email-Account nach, um dein Passwort zurückzusetzen!",
+  "notification_password_reset_success": "Passwort erfolgreich zurückgesetzt",
+
+  "@__________________DOMAIN__________________": {},
+
+  "study_status_draft": "Entwurf",
+  "study_status_draft_description": "Die Studie ist noch in Planung",
+  "study_status_running": "Live",
+  "study_status_running_description": "Die Studie wird gerade durchgeführt",
+  "study_status_closed": "Abgeschlossen",
+  "study_status_closed_description": "Die Studie wurde bereits abgeschlossen",
+
+  "participation_open_who": "Für jeden offen",
+  "participation_open_who_description": "Jeder kann sich für die Studie in der StudyU App anmelden.",
+  "participation_invite_who": "Ausgewählte Teilnehmer",
+  "participation_invite_who_description": "Nur ausgewählte Nutzer mit Teilnahme-Code könnten sich für die Studie in der StudyU App anmelden.",
+  "participation_open_as_adjective": "für jeden offen",
+  "participation_invite_as_adjective": "nur für ausgewählte Teilnehmer offen",
+  "participation_open_launch_description": "Nach dem Start kann sich jeder in der StudyU App für die Studie anmelden.",
+  "participation_invite_launch_description": "Nach dem Start kannst du Teilnehmer zu deiner Studie mittels Teilnahmecodes einladen.",
+
+  "phase_sequence_alternating": "Alternierend (AB AB)",
+  "phase_sequence_counterbalanced": "Ausgeglichen (AB BA)",
+  "phase_sequence_random": "Zufällig",
+
+  "form_enrollment_option_open": "Open",
+  "form_enrollment_option_invite": "Private (Invite-only)",
+
+  "@__________________NAV_DRAWER__________________": {},
+
+  "navlink_my_studies": "Meine Studien",
+  "navlink_shared_studies": "Mit mir geteilt",
+  "navlink_public_studies": "Studienregister",
+  "navlink_public_studies_tooltip": "Das Studienregister ist eine Sammmlung von Studien, die mit Hilfe von StudyU durchgeführt werden & \nvon den Erstellern für andere veröffentlicht wurden. Im Sinne von Open Science verfolgt es die Absicht, \ndie Transparenz & Zusammenarbeit aller Forscher und Kliniker auf der StudyU Plattform zu fördern.",
+  "navlink_public_studies_description": "Das Studienregister ist eine Sammmlung von Studien, die mit Hilfe von StudyU durchgeführt werden & von den Erstellern für andere veröffentlicht wurden. Im Sinne von Open Science verfolgt es die Absicht, die Transparenz & Zusammenarbeit aller Forscher und Kliniker auf der StudyU Plattform zu fördern.",
+  "navlink_account_settings": "Einstellungen",
+  "navlink_logout": "Abmelden",
+
+  "@__________________DASHBOARD__________________": {},
+
+  "action_button_new_study": "Neue Studie",
+
+  "studies_list_header_title": "Studientitel",
+  "studies_list_header_status": "Status",
+  "studies_list_header_participation": "Rekrutierung",
+  "studies_list_header_created_at": "Erstellt",
+  "studies_list_header_participants_enrolled": "Angemeldet",
+  "studies_list_header_participants_active": "Aktiv",
+  "studies_list_header_participants_completed": "Abgeschlossen",
+
+  "@__________________STUDYPAGE__________________": {},
+
+  "navlink_learn": "Lernen",
+  "navlink_study_design": "Entwerfen",
+  "navlink_study_test": "Testen",
+  "navlink_study_recruit": "Rekrutieren",
+  "navlink_study_monitor": "Durchführen",
+  "navlink_study_analyze": "Analysieren",
+  "navlink_share": "Teilen",
+
+  "navlink_study_design_info": "Allgemeine Infos",
+  "navlink_study_design_enrollment": "Teilnahme",
+  "navlink_study_design_interventions": "Interventionen",
+  "navlink_study_design_measurements": "Messungen",
+
+  "navlink_unavailable_tooltip": "Diese Seite ist nicht zugänglich",
+
+  "study_settings": "Studien-Einstellungen",
+  "study_settings_publish_study": "Studie veröffentlichen",
+  "study_settings_publish_study_tooltip": "Andere Forscher und Kliniker können deine Studie begutachten, sie testen und als Entwurf duplizieren.\nDie zur laufenden oder abgeschlossen Studie gehörigen Teilnehmer- und Ergebnisdaten werden nicht \nfür andere freigegeben (die Unterseiten Rekrutieren, Durchführen und Analysieren deiner Studie bleiben \nunzugänglich).",
+  "study_settings_publish_study_launch_description": "Ich stimme zu, dass meine Studie im Studienregister veröffentlicht wird, um die Transparenz & Zusammenarbeit aller Forscher und Kliniker auf der StudyU Plattform zu fördern. (Andere Forscher & Kliniker können auf die Studie selbst zugreifen, die zur laufenden oder abgeschlossen Studie gehörigen Teilnehmer- und Ergebnisdaten werden aber nicht freigegeben)",
+  "study_settings_publish_results": "Ergebnisse veröffentlichen",
+  "study_settings_publish_results_tooltip": "Andere Forscher und Kliniker können auf die anonymisierten Ergebnisdaten einer Studie zugreifen, \nsie exportieren und analysieren (die Analysieren-Unterseite deiner Studie ist zugänglich). Die Studie \nselbst wird dadurch automatisch auch für andere Forscher und Kliniker im Studienregister veröffentlicht.",
+
+  "action_button_study_launch": "Studie starten",
+
+  "notification_study_deleted": "Die Studie wurde gelöscht",
+  "dialog_study_delete_title": "Dauerhaft löschen?",
+  "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
+
+  "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
+
+  "form_question_create": "Neue Frage",
+  "form_question_edit": "Frage bearbeiten",
+  "form_question_readonly": "Frage",
+
+  "form_field_question": "Frage an Teilnehmer",
+  "form_field_question_tooltip": "Gib die Frage ein, die von Teilnehmern in der App beantwortet werden soll",
+  "form_field_question_required": "Die Frage an Teilnehmer darf nicht leer sein",
+
+  "form_field_question_help_text": "Erläuterungen zur Frage",
+  "form_field_question_help_text_tooltip": "Gib einen zusätzlichen Hilfstext ein, der in der App mit einem Hilfs-Icon neben der Frage angezeigt wird",
+  "form_field_question_help_text_hint": "Gib zusätzliche Informationen oder Erklärungen zur Frage",
+  "form_field_question_help_text_add": "Hilftext hinzufügen",
+  "form_field_question_help_text_add_tooltip": "Gib einen zusätzlichen Hilfstext ein, der in der App mit einem Hilfs-Icon neben der Frage angezeigt wird",
+
+  "form_field_question_response_options": "Antwortoptionen",
+  "form_field_question_response_options_tooltip": "Definiere welche Optionen zur Beantwortung der Frage in der App verfügbar sind",
+  "form_field_question_response_options_description": "Wähle die Antwortoptionen so, dass sie zur Frage passen und die von dir gewünschten Daten erhoben werden.",
+
+  "question_type_choice": "Multiple-Choice",
+  "question_type_bool": "Ja/Nein",
+  "question_type_scale": "Skala",
+
+  "form_array_response_options_bool_yes": "Ja",
+  "form_array_response_options_bool_no": "No",
+
+  "form_field_response_choice_multiple": "Mehrfachauswahl",
+  "form_field_response_choice_multiple_tooltip": "Erlaubt die Auswahl von mehreren Antwortoptionen gleichzeitig,\nansonsten kann nur eine einzige Option ausgewählt werden",
+  "form_array_response_options_choice_new": "Antwortoption hinzufügen",
+  "form_array_response_options_choice_hint": "Option",
+
+  "form_field_response_scale_min_label": "Start-Beschriftung",
+  "form_field_response_scale_min_label_tooltip": "Gib eine Beschriftung ein, die an der zu dem Wert gehörigen Position auf der Skala angezeigt wird",
+  "form_field_response_scale_min_value": "Startwert",
+  "form_field_response_scale_max_label": "End-Beschriftung",
+  "form_field_response_scale_max_label_tooltip": "Gib eine Beschriftung ein, die an der zu dem Wert gehörigen Position auf der Skala angezeigt wird",
+  "form_field_response_scale_max_value": "Endwert",
+  "form_field_response_scale_label_hint": "Optionale Beschriftung",
+  "form_array_response_scale_mid_values": "Werte dazwischen zeigen",
+  "form_array_response_scale_mid_values_dirty_banner": "Die Zwischenwerte und -Beschriftungen werden automatisch mit dem Start- und Endwert der Skala synchronisiert.",
+  "form_field_response_scale_colors_add": "Farben hinzufügen",
+  "form_field_response_scale_color_add": "Farbe hinzufügen",
+  "form_field_response_scale_color_min": "Startfarbe",
+  "form_field_response_scale_color_max": "Endfarbe",
+  "form_field_response_scale_color_tooltip": "Definiere Farben für die Darstellung der Skala in der StudyU App",
+
+  "navlink_question_visuals": "Visuelle Darstellung",
+  "navlink_question_visuals_description": "Passe die Darstellung der Frage in der StudyU App an, um Teilnehmer visuell zu unterstützen. Es ändert sich dadurch nichts an den Daten & Werten, die erhoben werden.",
+
+  "form_array_response_options_choice_countmin": "Die Frage muss mindestens {count} gültige Antwortoptionen haben",
+  "@form_array_response_options_choice_countmin": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "form_array_response_options_choice_countmax": "Die Frage darf nicht mehr als {count} gültige Antwortoptionen haben",
+  "@form_array_response_options_choice_countmax": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "form_array_response_options_scale_rangevalid_min": "Der Startwert muss kleiner als der Endwert der Skala sein",
+  "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {max} betragen",
+  "@form_array_response_options_scale_rangevalid_max": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+
+  "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
+
+  "form_study_design_info_description": "Auf dieser Seite gibst du allgemeine Informationen für Teilnehmer der Studie an. Wenn du dich entscheidest, die Studie im Studienregister zu veröffentlichen, sind diese Informationen auch für andere Forscher und Kliniker einsehbar.",
+
+  "form_field_study_title": "Studientitel",
+  "form_field_study_title_tooltip": "Gib den Titel der Studie an, so wie er in der StudyU App angezeigt werden soll",
+  "form_field_study_title_required": "Die Studie muss einen Titel haben",
+  "form_field_study_title_default": "Unbenannte Studie",
+  "form_field_study_description": "Beschreibung",
+  "form_field_study_description_tooltip": "Beschreibe die Studie kurz & verständlich für Teilnehmer",
+  "form_field_study_description_hint": "Beschreibe die Studie kurz & verständlich für Teilnehmer",
+  "form_field_study_description_required": "Die Studie muss eine Beschreibung haben",
+  "form_field_study_icon_required": "Die Studie muss ein Icon haben",
+
+  "form_section_publisher": "Herausgeber & Kontakt",
+  "form_section_publisher_description": "Teilnehmer der Studie können gemäß den hier angegebenen Informationen über die StudyU App mit dir in Kontakt treten. Andere Forscher oder Kliniker können dich nur kontaktieren, wenn die Studie im Studienregister veröffentlicht ist.",
+  "form_field_organization": "Verantwortliche Organisation",
+  "form_field_organization_required": "Die Studie muss eine verantwortliche Organisation haben",
+  "form_field_review_board": "Institutionelles Prüfungsgremium",
+  "form_field_review_board_required": "Du musst das für die Studie zuständige Prüfungsgremium angeben",
+  "form_field_review_board_number": "Protokollnummer des Prüfungsgremiums",
+  "form_field_review_board_number_required": "Du musst die der Studie zugewiesene Protokollnummer des zuständigen Prüfungsgremiums angeben",
+  "form_field_researchers": "Verantwortliche Person(en)",
+  "form_field_researchers_required": "Du musst einen oder mehrere für die Studie verantwortliche Forscher oder Kliniker angeben",
+  "form_field_website": "Studien-Webseite",
+  "form_field_website_pattern": "Bitte gib eine korrekte Webseite zur Studie an",
+  "form_field_contact_email": "Email",
+  "form_field_contact_email_required": "Die Studie muss eine Email-Addresse zur Kontaktaufnahme haben",
+  "form_field_contact_email_email": "Bitte gib eine korrekte Email zur Kontaktaufnahme ein",
+  "form_field_contact_phone": "Telefon",
+  "form_field_contact_phone_required": "Die Studie muss eine Telefonnummer zur Kontaktaufnahme haben",
+
+  "@__________________STUDYPAGE_DESIGN_ENROLLMENT__________________": {},
+
+  "form_study_design_enrollment_description": "Auf dieser Seite gibst du an wer an deiner Studie unter welchen Bedingungen teilnehmen darf.",
+
+  "form_field_enrollment_type": "Teilnehmer",
+  "form_field_enrollment_type_open_description": "Jeder kann sich in der StudyU App für die Studie anmelden, solange die Eignung mittels Screening-Kriterien festgestellt wird und die Einwilligung zur Teilnahme abgegeben wird.",
+  "form_field_enrollment_type_invite_description": "Nur ausgewählte Teilnehmer können sich für die Studie durch Eingabe eines Teilnahme-Codes in der StudyU App anmelden. Wähle diese Option aus, wenn die Teilnehmer der Studie bereits vorausgewählt wurden.",
+
+  "form_array_screener_questions_title": "Screening-Kriterien",
+  "form_array_screener_questions_description": "Du kannst Screening-Kriterien festlegen, um die Eignung für die Teilnahme an der Studie festzustellen & einzuschränken. Wenn die Teilnehmer deiner Studie bereits geprüft und vorausgewählt wurden, kannst du diesen Schritt auch überspringen.",
+  "form_array_screener_questions_new": "Screening-Frage hinzufügen",
+  "form_array_screener_questions_test": "Screening testen",
+
+  "form_array_consent_items_title": "Einwilligung zur Studienteilnahme",
+  "form_array_consent_items_description": "Hier kannst du die Erklärung(en) hinzufügen, die von Teilnehmern eingewilligt werden müssen, wenn sie sich in der StudyU App für die Studie anmelden. Wenn die Teilnehmer deiner Studie bereits vorausgewählt wurden und ihre Einwilligung erklärt haben, kannst du diesen Schritt auch überspringen.",
+  "form_array_consent_items_new": "Einwilligung einholen",
+  "form_array_consent_items_test": "Einwilligung testen",
+
+  "form_screener_question_create": "Neue Screening-Frage",
+  "form_screener_question_edit": "Screening-Frage bearbeiten",
+  "form_screener_question_readonly": "Screening-Frage",
+
+  "form_screener_question_logic_qualify": "Qualifizierend",
+  "form_screener_question_logic_disqualify": "Disqualifizierend",
+
+  "navlink_screener_question_content": "Inhalt",
+  "navlink_screener_question_logic": "Logik",
+
+  "form_array_screener_question_logic_title": "Screening-Logik",
+  "form_array_screener_question_logic_description": "Definiere, welche Antworten zur Studienteilnahme berechtigen oder disqualifizieren. Um an der Studie teilnehmen zu können, muss für diese Frage mindestens eine qualifizierende Antwort & keine disqualifizierende Antwort ausgewählt werden.",
+  "form_array_screener_question_logic_tooltip": "Definiere, welche Antworten zur Studienteilnahme berechtigen oder disqualifizieren",
+  "form_array_screener_question_logic_dirty_banner": "Die hier aufgelisteten Antwortmöglichkeiten werden automatisch mit der Frage synchronisiert. Standardmäßig berechtigt jede Antwort zur Teilnahme an der Studie, es sei denn du markierst sie explizit als disqualifizierend.",
+
+  "form_consent_create": "Neue Einwilligung",
+  "form_consent_edit": "Einwilligung bearbeiten",
+  "form_consent_readonly": "Einwilligung",
+
+  "form_field_consent_title": "Kurztitel",
+  "form_field_consent_title_tooltip": "Gib einen Kurztitel für die Einwilligungserklärung ein",
+  "form_field_consent_title_hint": "Kurztitel eingeben",
+  "form_field_consent_title_required": "Du musst einen Kurztitel für die Einwilligungserklärung angeben",
+  "form_field_consent_text": "Einwilligungserklärung",
+  "form_field_consent_text_tooltip": "Gib den Text ein, der bei der Anmeldung zur Studie in der StudyU App gelesen & bestätigt werden muss",
+  "form_field_consent_text_hint": "Gib den Text ein, der gelesen & bestätigt werden muss",
+  "form_field_consent_text_required": "Die Einwilligungserklärung darf nicht leer sein",
+
+  "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
+
+  "form_study_design_measurements_description": "Auf dieser Seite legst du fest, welche Daten im Laufe der Studie erhoben werden sollen - hauptsächlich um den Effekt der Interventionen zu bestimmen. Zur Erhebung der Daten füllen Teilnehmer jeden Tag einen oder mehrere Fragebögen in der StudyU-App aus. Die gesammelten Daten & Ergebnisse sind nach dem Start der Studie auf der Analysieren-Unterseite abrufbar.",
+
+  "form_array_measurements_minlength": "Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.",
+
+  "form_array_measurements_surveys": "Fragebögen",
+  "form_array_measurements_surveys_new": "Neuer Fragebogen",
+  "form_array_measurements_surveys_empty_title": "Noch keine Fragebögen erstellt",
+  "form_array_measurements_surveys_empty_description": "Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.",
+
+  "form_field_measurement_survey_title": "Fragebogen Titel",
+  "form_field_measurement_survey_title_required": "Der Titel des Fragebogens darf nicht leer sein",
+  "form_field_measurement_survey_title_default": "Unbenannter Fragebogen",
+  "form_field_measurement_survey_title_tooltip": "Gib den Titel des Fragebogens an, so wie er in der App angezeigt werden soll",
+  "form_field_measurement_survey_intro_text": "Begrüßungstext",
+  "form_field_measurement_survey_intro_text_tooltip": "Gib einen zusätzlichen Text ein, der zu Beginn des Fragebogens angezeigt wird",
+  "form_field_measurement_survey_intro_text_hint": "z.B. Teilnehmer begrüßen",
+  "form_field_measurement_survey_outro_text": "Abschlusstext",
+  "form_field_measurement_survey_outro_text_tooltip": "Gib einen zusätzlichen Text ein, der am Ende und nach Abschluss des Fragebogens angezeigt wird",
+  "form_field_measurement_survey_outro_text_hint": "z.B. fürs Ausfüllen bedanken",
+
+  "form_array_measurement_survey_questions": "Fragen",
+  "form_array_measurement_survey_questions_new": "Neue Frage",
+  "form_array_measurement_survey_questions_empty_title": "Noch keine Fragen erstellt",
+  "form_array_measurement_survey_questions_empty_descriptions": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
+  "form_array_measurement_survey_questions_minlength": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
+
+  "@__________________STUDYPAGE_RECRUIT__________________": {},
+
+  "enrolled_count_tooltip": "{count,plural, =0{Bisher hat sich niemand mit diesem Teilnahme-Code zur Studie angemeldet} =1{{count} Teilnehmer hat sich mit diesem Code zur Studie angemeldet} other{{count} Teilnehmer haben sich mit diesem Code zur Studie angemeldet}}",
+  "@enrolled_count_tooltip": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+
+  "form_code_create": "Neuer Teilnahmecode",
+  "form_code_readonly": "Teilnahmecode",
+
+  "form_field_code": "Code",
+  "form_field_code_tooltip": "TODO",
+  "form_field_code_required": "Der Code darf nicht leer sein",
+  "form_field_code_minlength": "Der Code muss mindestens {minLength} Zeichen lang sein",
+  "@form_field_code_minlength": {
+    "placeholders": {
+      "minLength": {}
+    }
+  },
+  "form_field_code_maxlength": "Der Code darf maximal {maxLength} Zeichen lang sein",
+  "@form_field_code_maxlength": {
+    "placeholders": {
+      "maxLength": {}
+    }
+  },
+  "form_field_code_alreadyused": "Dieser Code wird bereits verwendet",
+  "form_field_is_preconfigured_schedule": "Vordefinierter Zeitplan",
+  "form_field_is_preconfigured_schedule_description": "Du kannst die Phasen und Interventionen für jeden Teilnehmer, der über diesen Code an der Studie teilnimmt, vordefinieren. Die hier festgelegten Einstellungen haben Vorrang gegenüber den Standard-Einstellungen der Studie.",
+  "form_field_preconfigured_schedule_type": "Zeitplan",
+  "form_field_preconfigured_schedule_intervention_a": "Intervention A",
+  "form_field_preconfigured_schedule_intervention_b": "Intervention B",
+  "form_field_preconfigured_schedule_intervention_default": "Standard",
+  "form_field_preconfigured_schedule_intervention_hint": "Intervention auswählen...",
+
+  "code_list_section_title": "Teilnahmecodes",
+  "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
+  "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
+  "code_list_header_code": "Code",
+
+  "action_button_code_new": "Neuer Code",
+
+  "notification_code_deleted": "Teilnahmecode gelöscht",
+  "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",
+
+  "@__________________STUDYPAGE_ANALYZE__________________": {},
+
+  "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf dem letzten Testlauf der Studie (siehe Testmodus).\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
+
+  "action_button_study_export": "Daten exportieren",
+  "action_button_study_export_prompt": "Möchtest du deine eigene Analyse durchführen?",
+
+  "study_export_unavailable_empty_tooltip": "Es sind noch keine Ergebnisdaten verfügbar",
+  "study_export_unavailable_no_permission_tooltip": "Du bist nicht berechtigt, auf die Ergebnisdaten der Studie zuzugreifen",
+
+  "@__________________STUDY_LAUNCH_DIALOG__________________": {},
+
+  "study_launch_title": "Super Arbeit! \uD83D\uDC4F Alles bereit?",
+  "study_launch_participation_intro": "Die von dir erstellte Studie ist",
+  "study_launch_participation_outro": "",
+  "study_launch_post_launch_intro": "Wenn die Studie gestartet wird, beachte:",
+  "study_launch_post_launch_summary": "- Der Entwurfsmodus wird gesperrt & du kannst keine Änderungen mehr an der Studie selbst vornehmen\n- Alle nicht die Studie selbst betreffenden Daten werden zurückgesetzt (einschließlich Testnutzern & -ergebnissen)",
+
+  "study_launch_success_title": "Deine Studie ist live!",
+  "study_launch_success_description": "Lade als nächstes Teilnehmer zur Anmeldung in der StudyU App ein.",
+
+  "action_button_post_launch_followup": "Teilnehmer einladen",
+  "action_button_post_launch_followup_skip": "Später vielleicht",
+  "action_button_study_participation_change": "Teilnahme\nändern",
+
+  "@__________________FORMS__________________": {},
+
+  "form_field_required": "Das Feld darf nicht leer sein",
+  "form_invalid_prompt": "Bitte fülle alle Felder vollständig & korrekt aus",
+
+  "@__________________COMMON__________________": {},
+
+  "date_diff_years": "{count,plural, =1{Vor einem Jahr} other{Vor {count} Jahren}}",
+  "@date_diff_years": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "date_diff_months": "{count,plural, =1{Vor einem Monat} other{Vor {count} Monaten}}",
+  "@date_diff_months": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "date_diff_days": "{count,plural, =1{Vor einem Tag} other{Vor {count} Tagen}}",
+  "@date_diff_days": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "date_diff_hours": "{count,plural, =1{Vor einer Stunde} other{Vor {count} Stunden}}",
+  "@date_diff_hours": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "date_diff_minutes": "{count,plural, =1{Vor einer Minute} other{Vor {count} Minuten}}",
+  "@date_diff_minutes": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "date_diff_seconds": "{count,plural, =1{Vor einer Sekunde} other{Vor {count} Sekunden}}",
+  "@date_diff_seconds": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "date_just_now": "Gerade eben",
+
+  "action_edit": "Bearbeiten",
+  "action_delete": "Löschen",
+  "action_remove": "Entfernen",
+  "action_duplicate": "Duplizieren",
+  "action_clipboard": "In Zwischenablage kopieren",
+  "action_study_duplicate_draft": "Als Entwurf duplizieren",
+  "action_study_export_results": "Ergebnisdaten exportieren",
+
+  "dialog_close": "Schließen",
+  "dialog_cancel": "Abbrechen",
+  "dialog_save": "Speichern",
+
+  "sync_initial": "Keine Änderungen zum Speichern",
+  "sync_dirty": "Es gibt nicht gespeicherte Änderungen",
+  "sync_saving": "Änderungen werden gespeichert...",
+  "sync_done": "Alle Änderungen gespeichert",
+  "sync_last_saved": "Zuletzt gespeichert",
+  "sync_failed": "Änderungen konnten nicht gespeichert werden & könnten verloren gehen.",
+
+  "iconpicker_nonempty_prompt": "Icon auswählen",
+  "iconpicker_empty_prompt": "Icon auswählen",
+  "iconpicker_dialog_title": "Icon auswählen",
+
+  "under_construction": "Noch in Arbeit",
+  "under_construction_description": "Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld & komm denächst wieder!"
 }

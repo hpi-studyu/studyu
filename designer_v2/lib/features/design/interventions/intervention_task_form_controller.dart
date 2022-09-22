@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -17,25 +18,26 @@ class InterventionTaskFormViewModel
     super.formData,
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
-  });
+  }) {
+    runAsync(() => markAsCompletedControl.markAsDisabled()); // TODO not yet supported
+  }
 
   // - Form fields
 
   final FormControl<TaskID> taskIdControl = FormControl(
-      validators: [Validators.required], value: const Uuid().v4()); // hidden
-  final FormControl<String> taskTitleControl =
-      FormControl(validators: [Validators.required]);
+      value: const Uuid().v4()); // hidden
+  final FormControl<String> taskTitleControl = FormControl(
+      value: InterventionTaskFormData.kDefaultTitle);
   final FormControl<String> taskDescriptionControl = FormControl();
-  final FormControl<bool> markAsCompletedControl =
-      FormControl(); // not yet supported
+  final FormControl<bool> markAsCompletedControl = FormControl(value: true);
 
   TaskID get taskId => taskIdControl.value!;
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
+    StudyFormValidationSet.draft: [titleRequired],
+    StudyFormValidationSet.publish: [titleRequired],
+    StudyFormValidationSet.test: [titleRequired],
   };
 
   @override
@@ -43,10 +45,17 @@ class InterventionTaskFormViewModel
     'taskId': taskIdControl, // hidden
     'taskTitle': taskTitleControl,
     'taskDescription': taskDescriptionControl,
-    'markAsCompleted':
-        markAsCompletedControl, // TODO: figure out how to disable this
+    'markAsCompleted': markAsCompletedControl,
     ...scheduleFormControls
   });
+
+  get titleRequired => FormControlValidation(
+      control: taskTitleControl,
+      validators: [Validators.required],
+      validationMessages: {
+        ValidationMessage.required: (error) => 'The intervention task title must not be empty'.hardcoded,
+      }
+  );
 
   @override
   void setControlsFrom(InterventionTaskFormData data) {
@@ -72,9 +81,9 @@ class InterventionTaskFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: "New Treatment".hardcoded,
-        FormMode.edit: "Edit Treatment".hardcoded,
-        FormMode.readonly: "View Treatment".hardcoded,
+        FormMode.create: "New Intervention Task".hardcoded,
+        FormMode.edit: "Edit Intervention Task".hardcoded,
+        FormMode.readonly: "View Intervention Task".hardcoded,
       };
 
   // - ManagedFormViewModel

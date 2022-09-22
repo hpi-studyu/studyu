@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/badge.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -18,8 +19,7 @@ class EnrolledBadge extends StatelessWidget {
 
     if (enrolledCount == 0) {
       return Tooltip(
-        message:
-            "Nobody has enrolled in the study with this code yet".hardcoded,
+        message: tr.enrolled_count_tooltip(enrolledCount),
         child: Badge(
           icon: null,
           label: "-",
@@ -29,11 +29,7 @@ class EnrolledBadge extends StatelessWidget {
     }
 
     return Tooltip(
-        message: (enrolledCount == 1)
-            ? "$enrolledCount participant is enrolled in the study with this code"
-            .hardcoded
-            : "$enrolledCount participants are enrolled in the study with this code"
-            .hardcoded,
+        message: tr.enrolled_count_tooltip(enrolledCount),
         child: Badge(
           icon: Icons.check_circle_rounded,
           iconSize: theme.iconTheme.size,

@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class PublishSuccessDialog extends StudyPageWidget {
@@ -20,16 +21,14 @@ class PublishSuccessDialog extends StudyPageWidget {
         children: [
           const SizedBox(height: 24.0),
           EmptyBody(
-            leading: Text("\u{1f389}",
+            leading: Text("\u{1f389}".hardcoded,
                 style: theme.textTheme.headline1?.copyWith(
                   fontSize: (theme.textTheme.headline1?.fontSize ?? 48.0) * 1.5,
                 )),
-            title: "Your study is live!".hardcoded,
-            description:
-                "Next, you can start inviting and enrolling your participants in the StudyU app."
-                    .hardcoded,
+            title: tr.study_launch_success_title,
+            description: tr.study_launch_success_description,
           ),
-          const SizedBox(height: 12.0),
+          const SizedBox(height: 8.0),
         ],
       ),
       actionButtons: [
@@ -38,7 +37,7 @@ class PublishSuccessDialog extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PrimaryButton(
-              text: "Add participants".hardcoded,
+              text: tr.action_button_post_launch_followup,
               onPressed: () => Navigator.maybePop(context)
                   .whenComplete(() => controller.onAddParticipants()),
             ),
@@ -48,7 +47,7 @@ class PublishSuccessDialog extends StudyPageWidget {
               child: TextButton(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                  child: Text("Skip for now".hardcoded),
+                  child: Text(tr.action_button_post_launch_followup_skip),
                 ),
                 onPressed: () => Navigator.maybePop(context),
               ),

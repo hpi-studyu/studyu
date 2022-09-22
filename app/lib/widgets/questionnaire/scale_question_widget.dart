@@ -49,14 +49,14 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
     final isColored = minColor != null || maxColor != null;
     if (isColored) {
       // set defaults if one or the other is undefined
-      minColor ??= Colors.transparent;
-      maxColor ??= Colors.transparent;
+      minColor ??= Colors.white;
+      maxColor ??= Colors.white;
     }
 
     final theme = Theme.of(context);
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
     final thumbColor = isColored
-        ? Color.lerp(minColor, maxColor, value / sliderRange).lighten(0.2)
+        ? Color.lerp(minColor, maxColor, value / sliderRange).withOpacity(1)
         : null;
     final activeTrackColor =
         isColored ? coloredSliderTheme.activeTrackColor : null;
@@ -76,7 +76,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Stack(
             alignment: Alignment.center,
             children: [

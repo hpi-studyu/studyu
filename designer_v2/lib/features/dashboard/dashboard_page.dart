@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -44,7 +44,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final controller = ref.read(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
-    print("DashboardScreen.build");
 
     return DashboardScaffold(
       body: Column(
@@ -55,13 +54,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             children: [
               PrimaryButton(
                 icon: Icons.add,
-                text: "New study".hardcoded,
+                text: tr.action_button_new_study,
                 onPressed: controller.onClickNewStudy,
               ),
-              Container(width: 32.0),
+              const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle,
                   style: theme.textTheme.headline4),
-              Container(width: 32.0),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
@@ -71,11 +69,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               studies: visibleStudies,
               onSelect: controller.onSelectStudy,
               getActions: controller.availableActions,
-            ),
-            empty: () => EmptyBody(
-              icon: Icons.folder_open_rounded,
-              title: 'Nothing here yet'.hardcoded, // TODO: proper empty text
-              description: 'Lorem ipsum dolor sit amet'.hardcoded,
+              emptyWidget: (widget.filter == null ||
+                      widget.filter == StudiesFilter.owned)
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: EmptyBody(
+                        icon: Icons.content_paste_search_rounded,
+                        title: "You don't have any studies yet",
+                        description:
+                            "Build your own study from scratch, start from the default template or create a new draft copy from an already published study!",
+                        button: PrimaryButton(
+                          text: "From template",
+                          onPressed: () {
+                            print("TODO");
+                          },
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           )
         ],

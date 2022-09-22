@@ -12,3 +12,5 @@ class AppTranslation {
     _tr = await AppLocalizations.delegate.load(ref.watch(localeProvider));
   }
 }
+
+typedef LocalizedStringResolver = String Function();

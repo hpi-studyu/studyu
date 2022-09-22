@@ -32,6 +32,10 @@ abstract class IFormViewModelDelegate<T extends FormViewModel> {
   void onCancel(T formViewModel, FormMode prevFormMode);
 }
 
+abstract class IFormGroupController {
+  FormGroup get form;
+}
+
 class FormControlOption<T> extends Equatable {
   const FormControlOption(
       this.value, this.label, {this.description});
@@ -47,7 +51,7 @@ class FormControlOption<T> extends Equatable {
 typedef FormControlUpdateFutureBuilder = Future Function(
     AbstractControl control);
 
-abstract class FormViewModel<T> {
+abstract class FormViewModel<T> implements IFormGroupController {
   FormViewModel({
     formData,
     this.delegate,
@@ -131,14 +135,22 @@ abstract class FormViewModel<T> {
   /// programmatically are incorrectly marked as dirty without any user input)
   bool get isDirty {
     _rememberDefaultControlStates();
+
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
     }
     final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
+
+    // Note: unfortunately this line is needed because despite disabling
+    // all the updateParent and emitEvent flags, there's a bug in reactive
+    // forms where the updateParent gets propagated & causes an infinite loop
+    prevFormValue = {...form.value};
+
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
     }
     _restoreControlStates(emitEvent: false, updateParent: false);
+
     return !isEqual;
   }
 
@@ -365,7 +377,7 @@ abstract class FormViewModel<T> {
       return;
     }
     listenToImmediateFormChildren((control) {
-      final saveFuture = save().then((_) => print("completed without cancel"));
+      final saveFuture = save();
       _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
       return saveFuture;
     }, debounce: debounce);
@@ -406,7 +418,7 @@ abstract class FormViewModel<T> {
 
   /// Call after changing / adding / removing the child controls in [form]
   /// to perform necessary housekeeping
-  onFormGroupChanged() {
+  markFormGroupChanged() {
     revalidate();
     _formModeUpdated();
     form.updateValueAndValidity();
@@ -422,7 +434,6 @@ abstract class FormViewModel<T> {
 
   // - Subclass responsibility
 
-  FormGroup get form;
   Map<FormMode, String> get titles;
 
   /// The available set of validation configurations for the [form] managed

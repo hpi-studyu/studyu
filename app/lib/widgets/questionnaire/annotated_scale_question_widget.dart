@@ -68,15 +68,26 @@ class _AnnotatedScaleQuestionWidgetState
 List<Widget> buildAnnotations(
   AnnotatedScaleQuestion question,
   BuildContext context, {
-  double labelMaxWidth = 80,
+  double labelMaxWidth = 60,
 }) {
   List<Annotation> annotations = [...question.annotations];
   if (annotations.isEmpty) return [];
 
   // Ensure annotation order is correct for widget generation
+  double startPosValue = question.minimum;
   annotations.sort((a, b) => a.value.compareTo(b.value));
   if (question.maximum < question.minimum) {
     annotations = annotations.reversed.toList();
+    startPosValue = question.maximum;
+  }
+
+  // Ensure that there is always an annotation object at the very start
+  final missingStartPosLabel = annotations[0].value != startPosValue;
+  if (missingStartPosLabel) {
+    final startPosAnnotation = Annotation()
+      ..annotation = ''
+      ..value = startPosValue.toInt();
+    annotations = [startPosAnnotation, ...annotations];
   }
 
   // Build & layout labels according to their annotation's value
@@ -84,6 +95,8 @@ List<Widget> buildAnnotations(
 
   final textTheme = Theme.of(context).textTheme;
   final labelTextStyle = textTheme.bodyText1;
+
+  int flexSum = 0;
 
   for (var i = 0; i < annotations.length; i++) {
     final Annotation current = annotations[i];
@@ -94,7 +107,8 @@ List<Widget> buildAnnotations(
     assert(scaleRange != 0);
     final flex = (next != null)
         ? ((next.value - current.value) / scaleRange * 100).toInt()
-        : 0;
+        : 100 - flexSum;
+    flexSum += flex;
     final midValue = question.minimum + 0.5 * scaleRange;
     final midValueDistance =
         (current.value - midValue).abs() / (scaleRange / 2);

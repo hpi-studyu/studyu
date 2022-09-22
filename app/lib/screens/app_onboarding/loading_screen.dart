@@ -32,12 +32,16 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
-    initStudy();
+    if (widget.sessionString == null) {
+      initStudy();
+    }
   }
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
     final preview = Preview(widget.queryParameters ?? {});
+
+    // print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
 
     if (preview.containsQueryPair('mode', 'preview')) {
       final iFrameHelper = IFrameHelper();
@@ -45,7 +49,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       await preview.init();
 
       // Authorize
-      if (!await preview.handleAuthorization()) return;
+      if (!await preview.handleAuthorization()) {
+        print("[PreviewApp]: Preview authorization error");
+        return;
+      }
       state.selectedStudy = preview.study;
 
       await preview.runCommands();
@@ -53,16 +60,16 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       iFrameHelper.listen(state);
 
       if (preview.hasRoute()) {
-        // print("has route: " + preview.selectedRoute);
+        print("[PreviewApp]: Found preview route:: " + preview.selectedRoute);
 
         // ELIGIBILITY CHECK
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
-            // if we remove the await, we can push multiple times. warning: do not run in while(true)
-            final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
-            // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
+          // if we remove the await, we can push multiple times. warning: do not run in while(true)
+          final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
+          // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
           iFrameHelper.postRouteFinished();
-            return;
+          return;
         }
 
         // INTERVENTION SELECTION
@@ -73,12 +80,20 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           return;
         }
 
-        state.activeSubject = await preview.createFakeSubject(preview.extra);
+        state.activeSubject = await preview.getStudySubject(state, createSubject: true);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
           if (!mounted) return;
           final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+          iFrameHelper.postRouteFinished();
+          return;
+        }
+
+        // JOURNEY
+        if (preview.selectedRoute == Routes.journey) {
+          if (!mounted) return;
+          await Navigator.pushNamed(context, Routes.journey);
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -93,44 +108,56 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
-          // print("getting tasks for intervention");
+          // todo not sure which includeBaseline statement is needed.
+          // todo Either one of here or in preview.createFakeSubject
+          // todo maybe remove
           state.selectedStudy.schedule.includeBaseline = false;
+          state.activeSubject.study.schedule.includeBaseline = false;
+          // print("[PreviewApp]: Route preview");
           if (!mounted) return;
+          // print("[PreviewApp]: Go to dashboard");
           await Navigator.pushReplacementNamed(context, Routes.dashboard);
-          // print("FINISHED INTERVENTION");
           iFrameHelper.postRouteFinished();
           return;
         }
 
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
-          // print("getting tasks for observation");
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
             ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
           ];
-          // print("observation with tasks: " + tasks.first.toString());
           if (!mounted) return;
-          final result = await Navigator.push<TaskScreen>(context, TaskScreen.routeFor(task: tasks.first));
-          // print("FINISHED OBSERVATION");
+          final result = await Navigator.push<bool>(context, TaskScreen.routeFor(task: tasks.first));
           iFrameHelper.postRouteFinished();
           return;
         }
-
       } else {
-        if (!mounted) return;
+        // print("[PreviewApp]: Found no preview route");
         if (isUserLoggedIn()) {
-          // print("Return to studyOverview");
-          Navigator.pushReplacementNamed(context, Routes.studyOverview);
+          final subject = await preview.getStudySubject(state);
+          if (subject != null) {
+            state.activeSubject = subject;
+            // print("[PreviewApp]: push to dashboard1");
+            if (!mounted) return;
+            Navigator.pushReplacementNamed(context, Routes.dashboard);
+            return;
+          } else {
+            // print("[PreviewApp]: Go to overview");
+            if (!mounted) return;
+            Navigator.pushReplacementNamed(context, Routes.studyOverview);
+            return;
+          }
+        } else {
+          // print("[PreviewApp]: Go to welcome1");
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, Routes.welcome);
           return;
         }
-        // print("Return to welcome");
-        Navigator.pushReplacementNamed(context, Routes.welcome);
-        return;
       }
-      // WE NEED TO HAVE RETURNED BY HERE
-    }
-    // todo is this necessary to run?
+    } // finish preview
+
+    // print("No preview");
     if (!mounted) return;
     if (context.read<AppState>().isPreview) {
       previewSubjectIdKey();
@@ -141,9 +168,11 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
+        // print("Go to study selection");
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }
+      // print("Go to welcome2");
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -158,16 +187,20 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         ],
       );
     } catch (e) {
-      // Try signing in again. Needed if JWT is expired
-      await signInParticipant();
-      subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );
+      try {
+        // Try signing in again. Needed if JWT is expired
+        await signInParticipant();
+        subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+      } catch (e) {
+        print("Error when trying to login and retrieve the study subject");
+      }
     }
     if (!mounted) return;
 
@@ -177,8 +210,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // Notifications not supported on web
         scheduleStudyNotifications(context);
       }
+      // print("push to dashboard2");
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      // print("push to welcome3");
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }

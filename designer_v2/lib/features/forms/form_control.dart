@@ -1,5 +1,6 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/utils/debouncer.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 typedef ValueCallback<T> = void Function(T value);
 
@@ -56,4 +57,32 @@ class CustomFormControl<T> extends FormControl<T> {
   final ValueCallback<ControlStatus>? onStatusChanged;
   final int? onStatusChangedDebounceTime;
   final int? onValueChangedDebounceTime;
+}
+
+typedef AbstractControlChangedCallback = void Function(AbstractControl control);
+typedef FormArrayChangedCallback = void Function(FormArray control);
+
+extension AbstractControlChangedX on AbstractControl {
+  void onChanged(AbstractControlChangedCallback callback) {
+    valueChanges.listen((event) => callback(this));
+  }
+}
+
+extension FormArrayChangedX on FormArray {
+  void onChanged(FormArrayChangedCallback callback) {
+    bool didNotify = false;
+
+    void notifyListener(event) {
+      if (didNotify) {
+        return;
+      }
+      callback(this);
+      // ensure single listener notification in synchronous control flow
+      didNotify = true;
+      runAsync(() => didNotify = false);
+    }
+
+    valueChanges.listen(notifyListener);
+    collectionChanges.listen(notifyListener);
+  }
 }

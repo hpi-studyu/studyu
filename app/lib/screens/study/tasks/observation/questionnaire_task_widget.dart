@@ -26,7 +26,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     final activeStudy = state.activeSubject;
     try {
       if (state.trackParticipantProgress) {
-        await activeStudy.addResult<bool>(taskId: widget.task.id, result: true);
+        await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
       }
       if (!mounted) return;
       Navigator.pop(context, true);

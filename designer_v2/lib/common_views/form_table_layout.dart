@@ -98,14 +98,16 @@ class FormTableLayout extends StatelessWidget {
         tableRow = TableRow(
           children: [
             Container(
+                child: Padding(
               padding:
-                  EdgeInsets.only(top: 8.0, bottom: bottomSpacing, right: 8.0),
+                  EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
               child: labelWidget,
-            ),
+            )),
             Container(
+                child: Padding(
               padding: EdgeInsets.only(bottom: bottomSpacing),
               child: contentWidget,
-            ),
+            )),
           ],
         );
       } else {
@@ -118,7 +120,7 @@ class FormTableLayout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   labelWidget,
-                  const SizedBox(height: 12.0),
+                  const SizedBox(height: 8.0),
                   Container(
                     padding: EdgeInsets.only(bottom: bottomSpacing * 2),
                     child: contentWidget,
@@ -168,17 +170,23 @@ class FormSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.headline6!;
+
     return Column(
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            label: title,
-            labelHelpText: helpText,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold)
-                .merge(titleTextStyle),
-            input: Container(),
-          ),
-        ]),
+        FormTableLayout(
+          rows: [
+            FormTableRow(
+              label: title,
+              labelHelpText: helpText,
+              labelStyle: titleStyle.merge(titleTextStyle),
+              input: Container(),
+            ),
+          ],
+          columnWidths: const {
+            0: IntrinsicColumnWidth(),
+          },
+        ),
         (divider) ? const Divider() : const SizedBox.shrink(),
       ],
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -9,7 +8,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Loading...'.hardcoded),
+        child: Text(tr.loading_message),
       ),
     );
   }

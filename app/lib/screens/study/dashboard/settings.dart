@@ -97,7 +97,7 @@ class _SettingsState extends State<Settings> {
               label: Text(AppLocalizations.of(context).delete_data),
               style: ElevatedButton.styleFrom(primary: Colors.red),
               onPressed: () {
-                showDialog(context: context, builder: (_) => DeleteAlertDialog());
+                showDialog(context: context, builder: (_) => DeleteAlertDialog(subject: subject));
               },
             )
           ],
@@ -116,18 +116,20 @@ class OptOutAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: const Text('Opt-out of study?'),
+      title: Text('${AppLocalizations.of(context).opt_out} ?'),
       content: RichText(
         text: TextSpan(
           style: const TextStyle(color: Colors.black),
           children: [
-            const TextSpan(text: 'The progress of your current study '),
+            const TextSpan(text: 'You will lose your progress in '),
             TextSpan(
               text: subject.study.title,
               style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const TextSpan(
-              text: ' will be deleted and cannot be recovered. Previously completed studies will not be deleted.',
+              text: " and won't be able recover it. Previously completed "
+                  "studies will not be deleted.\nYour anonymized data up to this "
+                  "point may still be used for research purposes.",
             ),
           ],
         ),
@@ -135,11 +137,11 @@ class OptOutAlertDialog extends StatelessWidget {
       actions: [
         ElevatedButton.icon(
           icon: const Icon(MdiIcons.exitToApp),
-          label: const Text('Opt-out'),
+          label: Text(AppLocalizations.of(context).opt_out),
           style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
           onPressed: () async {
-            subject.delete();
-            deleteActiveStudyReference();
+            await subject.softDelete();
+            await deleteActiveStudyReference();
             Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           },
         )
@@ -149,19 +151,26 @@ class OptOutAlertDialog extends StatelessWidget {
 }
 
 class DeleteAlertDialog extends StatelessWidget {
+  final StudySubject subject;
+
+  const DeleteAlertDialog({@required this.subject}) : super();
+
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Delete all local data?'),
+        title: Text('${AppLocalizations.of(context).delete_data} ?'),
         content: const Text(
-          'You will not be able to restore your data. Your anonymized data may still be used for research purposes.',
+          'You are about to delete all data from your device & our servers. '
+          'You will not be able to restore your data.\nYour anonymized data will '
+          'not be available for research purposes anymore.',
         ),
         actions: [
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
-            label: const Text('Delete all local data'),
+            label: Text(AppLocalizations.of(context).delete_data),
             style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
             onPressed: () async {
-              deleteLocalData();
+              await subject.delete(); // hard-delete
+              await deleteLocalData();
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             },
           )

@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class InviteCodeFormView extends FormConsumerWidget {
   const InviteCodeFormView({required this.formViewModel, Key? key})
@@ -20,9 +20,9 @@ class InviteCodeFormView extends FormConsumerWidget {
       children: [
         FormTableLayout(rows: [
           FormTableRow(
-            label: "Code".hardcoded,
+            label: tr.form_field_code,
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            labelHelpText: "TODO Access code help text".hardcoded,
+            labelHelpText: tr.form_field_code_tooltip,
             control: formViewModel.codeControl,
             input: ReactiveTextField(
               formControl: formViewModel.codeControl,
@@ -41,7 +41,7 @@ class InviteCodeFormView extends FormConsumerWidget {
             ),
           ),
           FormTableRow(
-            label: "Predefined Schedule".hardcoded,
+            label: tr.form_field_is_preconfigured_schedule,
             labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             input: ReactiveSwitch(
               formControl: formViewModel.isPreconfiguredScheduleControl,
@@ -49,12 +49,7 @@ class InviteCodeFormView extends FormConsumerWidget {
           ),
         ]),
         const SizedBox(height: 4.0),
-        TextParagraph(
-            text: "You can predefine the phases & interventions for any participant "
-                    "who joins your study via this access code. If enabled, these "
-                    "settings will override the default schedule defined in your study "
-                    "design."
-                .hardcoded),
+        TextParagraph(text: tr.form_field_is_preconfigured_schedule_description),
         const SizedBox(height: 24.0),
         FormTableLayout(rows: [
           ..._conditionalInterventionRows(context),
@@ -70,7 +65,7 @@ class InviteCodeFormView extends FormConsumerWidget {
 
     return [
       FormTableRow(
-        label: "Schedule".hardcoded,
+        label: tr.form_field_preconfigured_schedule_type,
         input: ReactiveDropdownField<PhaseSequence>(
           formControl: formViewModel.preconfiguredScheduleTypeControl,
           //decoration: const NullHelperDecoration(),
@@ -84,10 +79,10 @@ class InviteCodeFormView extends FormConsumerWidget {
         ),
       ),
       FormTableRow(
-        label: "Intervention A".hardcoded,
+        label: tr.form_field_preconfigured_schedule_intervention_a,
         input: ReactiveDropdownField<String>(
           formControl: formViewModel.interventionAControl,
-          hint: Text('Select intervention...'.hardcoded),
+          hint: Text(tr.form_field_preconfigured_schedule_intervention_hint),
           //decoration: const NullHelperDecoration(),
           items: formViewModel.interventionControlOptions
               .map((option) => DropdownMenuItem(
@@ -98,10 +93,10 @@ class InviteCodeFormView extends FormConsumerWidget {
         ),
       ),
       FormTableRow(
-        label: "Intervention B".hardcoded,
+        label: tr.form_field_preconfigured_schedule_intervention_b,
         input: ReactiveDropdownField<String>(
           formControl: formViewModel.interventionBControl,
-          hint: Text('Select intervention...'.hardcoded),
+          hint: Text(tr.form_field_preconfigured_schedule_intervention_hint),
           //decoration: const NullHelperDecoration(),
           items: formViewModel.interventionControlOptions
               .map((option) => DropdownMenuItem(
