@@ -1,6 +1,6 @@
 FROM cirrusci/flutter:latest as builder
 
-# necessary?
+# todo is this line already part of cirrusci/flutter ?
 RUN flutter config --enable-web
 
 ENV PATH ${PATH}:/root/.pub-cache/bin/
