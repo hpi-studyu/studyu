@@ -1,22 +1,9 @@
-# Based on https://github.com/cirruslabs/docker-images-flutter/blob/master/sdk/Dockerfile
-FROM cirrusci/android-sdk:30 as builder
+FROM cirrusci/flutter:latest as builder
 
 # E.g. app or designer
 ARG FLUTTER_APP_FOLDER
 
-# SETUP FLUTTER
-USER root
-
-ENV FLUTTER_HOME=${HOME}/sdks/flutter
-ENV FLUTTER_ROOT=$FLUTTER_HOME
-
-ENV PATH ${PATH}:${FLUTTER_HOME}/bin:${FLUTTER_HOME}/bin/cache/dart-sdk/bin:/root/.pub-cache/bin/
-
-RUN git clone --depth 1 --branch stable https://github.com/flutter/flutter.git ${FLUTTER_HOME}
-
-RUN yes | flutter doctor --android-licenses \
-    && flutter doctor \
-    && chown -R root:root ${FLUTTER_HOME}
+ENV PATH ${PATH}:/root/.pub-cache/bin/
 
 # Install melos
 RUN dart pub global activate melos
@@ -48,12 +35,20 @@ RUN if [ -n "$ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$ENV ; else 
 
 FROM nginx:stable-alpine
 ARG FLUTTER_APP_FOLDER
-# we need to modify the nginx conf to redirect all links to index.html for designer_v2
-COPY ./nginx-default.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html
-RUN mkdir /usr/share/nginx/html/assets/envs
+ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 
-EXPOSE 80
+# We need to modify the nginx conf to redirect all links to index.html for designer_v2
+COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+COPY ./docker/nginx/designer2-stage.hpi.studyu.health.conf /etc/nginx/conf.d/designer2-stage.hpi.studyu.health.conf
+
+# todo get ssl certs from elsewhere
+COPY ./hpi.studyu.health /etc/nginx/certs
+
+COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
 
 # Loads all env vars starting with "STUDYU" into the .env file used by both Flutter apps
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/assets/envs/.env && nginx -g 'daemon off;'"]
+RUN mkdir /usr/share/nginx/html/$FLUTTER_APP_FOLDER/assets/envs
+CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/$FLUTTER_APP_FOLDER/assets/envs/.env && nginx -g 'daemon off;'"]
+
+EXPOSE 80 443
