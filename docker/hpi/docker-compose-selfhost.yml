@@ -1,18 +1,18 @@
 version: '3'
 services:
-  app-selfhost:
+  studyu-apps:
     build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+      context: ../../
+      dockerfile: ./docker/hpi/Dockerfile
       args:
-        FLUTTER_APP_FOLDER: app
         ENV: selfhost
     ports:
-      - 8080:80
+      - 80:80
+      - 443:443
     networks:
       - studyu-net
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
+      - ../../flutter_common/lib/envs/.env.selfhost
 networks:
   studyu-net:
     name: studyu_network
