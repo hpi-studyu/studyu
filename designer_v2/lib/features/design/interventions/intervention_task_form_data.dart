@@ -2,11 +2,12 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 class InterventionTaskFormData extends IFormDataWithSchedule {
-  static String kDefaultTitle = "Unnamed task";
+  static String get kDefaultTitle => tr.form_field_intervention_task_default;
 
   InterventionTaskFormData({
     required this.taskId,

@@ -3,8 +3,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/time_of_day.dart';
 
 class ScheduleControls extends FormConsumerWidget {
@@ -18,13 +19,17 @@ class ScheduleControls extends FormConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormSectionHeader(title: "Scheduling".hardcoded),
-        const SizedBox(height: 12.0),
+        FormSectionHeader(
+            title: tr.form_section_scheduling,
+        ),
+        const SizedBox(height: 4.0),
+        TextParagraph(text: tr.form_section_scheduling_description),
+        const SizedBox(height: 16.0),
         FormTableLayout(rows: [
           FormTableRow(
             control: formViewModel.hasReminderControl,
-            label: "App reminder".hardcoded,
-            labelHelpText: "TODO reminder notification help text".hardcoded,
+            label: tr.form_field_has_reminder,
+            labelHelpText: tr.form_field_has_reminder_tooltip,
             input: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
@@ -34,7 +39,8 @@ class ScheduleControls extends FormConsumerWidget {
                 const SizedBox(width: 3.0),
                 FormControlLabel(
                     formControl: formViewModel.hasReminderControl,
-                    text: "Send notification ".hardcoded),
+                    text: tr.form_field_has_reminder_label,
+                ),
                 const SizedBox(width: 8.0),
                 Opacity(
                   opacity: (formViewModel.hasReminder) ? 1 : 0.5,
@@ -51,7 +57,7 @@ class ScheduleControls extends FormConsumerWidget {
                             formControl: formViewModel.reminderTimeControl,
                             valueAccessor: TimeValueAccessor(),
                             decoration: InputDecoration(
-                                hintText: "hh:mm".hardcoded,
+                                hintText: tr.form_field_time_of_day_hint,
                                 suffixIcon: Material(
                                     color: Colors.transparent,
                                     child: IconButton(
@@ -70,8 +76,8 @@ class ScheduleControls extends FormConsumerWidget {
           ),
           FormTableRow(
             control: formViewModel.isTimeRestrictedControl,
-            label: "Time restriction".hardcoded,
-            labelHelpText: "TODO Time restriction help text".hardcoded,
+            label: tr.form_field_time_restriction,
+            labelHelpText: tr.form_field_time_restriction_tooltip,
             input: ReactiveSwitch(
               formControl: formViewModel.isTimeRestrictedControl,
             ),
@@ -104,9 +110,9 @@ class ScheduleControls extends FormConsumerWidget {
                     decoration:
                         (formViewModel.restrictedTimeStartControl.enabled)
                             ? InputDecoration(
-                                labelText: "From".hardcoded,
+                                labelText: tr.form_field_time_restriction_start_hint,
                                 helperText: "",
-                                hintText: "hh:mm".hardcoded,
+                                hintText: tr.form_field_time_of_day_hint,
                                 suffixIcon: Material(
                                     color: Colors.transparent,
                                     child: IconButton(
@@ -130,9 +136,9 @@ class ScheduleControls extends FormConsumerWidget {
                     valueAccessor: TimeValueAccessor(),
                     decoration: (formViewModel.restrictedTimeEndControl.enabled)
                         ? InputDecoration(
-                            labelText: "To".hardcoded,
+                            labelText: tr.form_field_time_restriction_end_hint,
                             helperText: "",
-                            hintText: "hh:mm".hardcoded,
+                            hintText: tr.form_field_time_of_day_hint,
                             suffixIcon: Material(
                                 color: Colors.transparent,
                                 child: IconButton(

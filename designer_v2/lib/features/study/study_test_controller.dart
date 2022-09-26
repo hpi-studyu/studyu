@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -16,13 +17,18 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
     required super.currentUser,
     required super.router,
     required this.authRepository,
-  }) : super(StudyTestControllerState(currentUser: currentUser)) {
+    required this.languageCode,
+  }) : super(StudyTestControllerState(
+      currentUser: currentUser,
+      languageCode: languageCode,
+  )) {
     state = state.copyWith(
       serializedSession: authRepository.session?.persistSessionString ?? ''
     );
   }
 
   final IAuthRepository authRepository;
+  final String languageCode;
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
@@ -35,6 +41,7 @@ final studyTestControllerProvider = StateNotifierProvider
     currentUser: ref.watch(currentUserProvider),
     router: ref.watch(routerProvider),
     authRepository: ref.watch(authRepositoryProvider),
+    languageCode: ref.watch(localeProvider).languageCode,
   );
   ref.onDispose(() {
     // Reload the study after disposing the test controller so that any

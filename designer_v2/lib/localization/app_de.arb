@@ -112,7 +112,7 @@
 
   "studies_list_header_title": "Studientitel",
   "studies_list_header_status": "Status",
-  "studies_list_header_participation": "Rekrutierung",
+  "studies_list_header_participation": "Teilnahme",
   "studies_list_header_created_at": "Erstellt",
   "studies_list_header_participants_enrolled": "Angemeldet",
   "studies_list_header_participants_active": "Aktiv",
@@ -218,6 +218,20 @@
     }
   },
 
+  "banner_study_readonly_title":  "Die Studie kann nicht bearbeitet werden.",
+  "banner_study_readonly_description":  "Du kannst nur Studien bearbeiten, die du selbst erstellt hast oder die mit dir zur Mitarbeit geteilt wurden. Studien, die bereits gestartet sind, können grundsätzlich nicht mehr verändert werden.",
+
+  "form_section_scheduling": "Zeitplan & Einhaltung",
+  "form_section_scheduling_description": "Um die Compliance von Teilnehmern zu verbessern, kannst du ein begrenztes Zeitfenster & eine App-Benachrichtigung als Erinnerung definieren.",
+  "form_field_has_reminder": "Erinnerung",
+  "form_field_has_reminder_tooltip": "Wähle diese Option, um Teilnehmer zur gegebenen Zeit über eine Benachrichtigung (Notification)\nan die Erfüllung der Aufgabe in der StudyU App zu erinnern.",
+  "form_field_has_reminder_label": "Teilnehmer benachrichtigen",
+  "form_field_time_of_day_hint": "hh:mm",
+  "form_field_time_restriction": "Zeitbeschränkung",
+  "form_field_time_restriction_tooltip": "Gib die Tageszeiten an, zu denen die Aufgabe von Teilnehmern erfüllt werden muss. Die Aufgabe kann außerhalb \ndieses Zeitfensters nicht abgeschlossen werden, d.h. es werden für diesen Tag dann keine Daten erhoben.",
+  "form_field_time_restriction_start_hint": "Von",
+  "form_field_time_restriction_end_hint": "Bis",
+
   "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
 
   "form_study_design_info_description": "Auf dieser Seite gibst du allgemeine Informationen für Teilnehmer der Studie an. Wenn du dich entscheidest, die Studie im Studienregister zu veröffentlichen, sind diese Informationen auch für andere Forscher und Kliniker einsehbar.",
@@ -296,11 +310,97 @@
   "form_field_consent_text_hint": "Gib den Text ein, der gelesen & bestätigt werden muss",
   "form_field_consent_text_required": "Die Einwilligungserklärung darf nicht leer sein",
 
+  "@__________________STUDYPAGE_DESIGN_INTERVENTIONS_________________": {},
+
+  "form_study_design_interventions_description": "Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Versuchsaufbau wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.",
+  "link_n_of_1_learn_more": "Mehr über N-of-1 Studien erfahren",
+  "link_n_of_1_learn_more_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118090/pdf/nihms297482.pdf",
+
+  "form_array_interventions_minlength": "{count,plural, =2{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_interventions_minlength}}",
+  "@form_array_interventions_minlength": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+
+  "form_array_interventions": "Interventionsphasen",
+  "form_array_interventions_new": "Neue Intervention",
+  "form_array_interventions_empty_title": "Noch keine Interventionen definiert",
+  "form_array_interventions_empty_description": "Du brauchst mindestens zwei Interventionen, die verglichen werden sollen.",
+
+  "form_field_intervention_title": "Titel",
+  "form_field_intervention_title_required": "Der Titel der Interventionsphase darf nicht leer sein",
+  "form_field_intervention_title_default": "Unbenannte Interventionsphase",
+  "form_field_intervention_title_tooltip": "Gib den Titel der Interventionsphase an, so wie er in der App angezeigt werden soll",
+  "form_field_intervention_description": "Beschreibung",
+  "form_field_intervention_description_tooltip": "Gib einen Erklärungstext ein, der zu Beginn der Interventionsphase und als Beschreibung\nfür die Interventionsphase im Studienplan angezeigt wird",
+  "form_field_intervention_description_hint": "Beschreibe die Interventionsphase kurz für Teilnehmer",
+
+  "form_array_intervention_tasks": "Interventions-Maßnahmen",
+  "form_array_intervention_tasks_description": "Hier legst du fest, welche Maßnahmen während der Interventionsphase von Teilnehmern täglich erfüllt werden sollen. Eine entsprechende Aufforderung wird in der StudyU App angezeigt.",
+  "form_array_intervention_tasks_new": "Maßnahme hinzufügen",
+  "form_array_intervention_tasks_empty_title": "Noch keine Maßnahmen festgelegt",
+  "form_array_intervention_tasks_empty_description": "Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll.",
+  "form_array_intervention_tasks_minlength": "{count,plural, =1{Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll} other{form_array_intervention_tasks_minlength}}",
+  "@form_array_intervention_tasks_minlength": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+
+  "form_intervention_task_create": "Neue Maßnahme",
+  "form_intervention_task_edit": "Maßnahme bearbeiten",
+  "form_intervention_task_readonly": "Maßnahme",
+
+  "form_field_intervention_task_title": "Titel",
+  "form_field_intervention_task_default": "Unbenannte Maßnahme",
+  "form_field_intervention_task_title_tooltip": "Gib den Titel der Maßnahme an, so wie er für die tägliche Aufforderung in der StudyU App angezeigt werden soll",
+  "form_field_intervention_task_title_required": "Der Titel der Maßnahme darf nicht leer sein",
+
+  "form_field_intervention_task_description": "Beschreibung",
+  "form_field_intervention_task_description_tooltip": "Gib wahlweise eine ausführliche Erklärung ein, die als Beschreibung zur täglichen Aufforderung in der StudyU angezeigt wird",
+  "form_field_intervention_task_description_hint": "Beschreibe die Maßnahme ausführlich, zB. kannst du ein Video verlinken",
+  "form_field_intervention_task_mark_as_completed_label": "Teilnehmer müssen die Maßnahme \"Als bestätigt markieren\"",
+
+  "form_section_crossover_schedule": "Versuchsplan",
+  "navlink_crossover_schedule_test": "Versuchsplan testen",
+  "form_field_crossover_schedule_sequence": "Abfolge der Phasen",
+  "form_field_crossover_schedule_sequence_tooltip": "Wähle wie die Interventionsphasen im Versuchsplan zeitlich angeordnet werden",
+  "form_field_crossover_schedule_sequence_description": "Die hier festgelegte Abfolge gilt standardmäßig für alle Teilnehmer. Für Studien mit ausgewählten Teilnehmern kann die Abfolge im Teilnahmecode individuell überschrieben werden.",
+  "form_field_crossover_schedule_phase_length": "Phasenlänge",
+  "form_field_crossover_schedule_phase_length_tooltip": "Lege fest wie lange ein einziger Durchlauf einer Interventionsphase dauert",
+  "form_field_crossover_schedule_phase_length_range": "Interventionsphasen müssen zwischen {min} und {max} Tagen lang sein",
+  "@form_field_crossover_schedule_phase_length_range": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "form_field_amount_days": "Tage",
+  "form_field_crossover_schedule_num_cycles": "Anzahl Wiederholungen",
+  "form_field_crossover_schedule_num_cycles_tooltip": "Lege fest wie oft jede Interventionsphase im Versuchsplan durchlaufen wird",
+  "form_field_crossover_schedule_num_cycles_range": "Die Anzahl der Wiederholungen für Interventionsphasen im Versuchsplan muss zwischen {min} und {max} liegen",
+  "@form_field_crossover_schedule_num_cycles_range": {
+    "placeholders": {
+      "min": {},
+      "max": {}
+    }
+  },
+  "form_field_amount_crossover_schedule_num_cycles": "Wiederholungen",
+  "form_field_crossover_schedule_include_baseline": "Baseline",
+  "form_field_crossover_schedule_include_baseline_tooltip": "Wähle diese Option, um die Studie mit einer interventionsfreien Phase zur Messung einer Baseline zu beginnen",
+  "form_field_crossover_schedule_include_baseline_label": "Mit Baseline-Phase starten",
+
   "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
 
   "form_study_design_measurements_description": "Auf dieser Seite legst du fest, welche Daten im Laufe der Studie erhoben werden sollen - hauptsächlich um den Effekt der Interventionen zu bestimmen. Zur Erhebung der Daten füllen Teilnehmer jeden Tag einen oder mehrere Fragebögen in der StudyU-App aus. Die gesammelten Daten & Ergebnisse sind nach dem Start der Studie auf der Analysieren-Unterseite abrufbar.",
 
-  "form_array_measurements_minlength": "Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.",
+  "form_array_measurements_minlength": "{count,plural, =1{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_measurements_minlength}}",
+  "@form_array_measurements_minlength": {
+    "placeholders": {
+      "count": {}
+    }
+  },
 
   "form_array_measurements_surveys": "Fragebögen",
   "form_array_measurements_surveys_new": "Neuer Fragebogen",
@@ -321,8 +421,44 @@
   "form_array_measurement_survey_questions": "Fragen",
   "form_array_measurement_survey_questions_new": "Neue Frage",
   "form_array_measurement_survey_questions_empty_title": "Noch keine Fragen erstellt",
-  "form_array_measurement_survey_questions_empty_descriptions": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
-  "form_array_measurement_survey_questions_minlength": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
+  "form_array_measurement_survey_questions_empty_description": "Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.",
+  "form_array_measurement_survey_questions_minlength": "{count,plural, =1{Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.} other{form_array_measurement_survey_questions_minlength}}",
+  "@form_array_measurement_survey_questions_minlength": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+
+  "@__________________STUDYPAGE_TEST__________________": {},
+
+  "study_test_page_description": "Im Testmodus kannst du die Studie aus Teilnehmersicht testen.",
+  "navlink_study_test_help": "Wie funktioniert's?",
+
+  "study_test_app_nav_title": "Gehe zur App:",
+  "navlink_study_test_app_overview": "Studienübersicht",
+  "navlink_study_test_app_eligibility": "Teilnehmer-Screening",
+  "navlink_study_test_app_intervention": "Interventionsauswahl",
+  "navlink_study_test_app_consent": "Teilnahme-Einwilligung",
+  "navlink_study_test_app_journey": "Studienverlaufsplan",
+  "navlink_study_test_app_dashboard": "Tagesübersicht",
+
+  "action_button_study_test_reset": "Zurücksetzen",
+  "action_button_study_test_open_new_tab": "In neuem Fenster öffnen",
+
+  "banner_study_test_unavailable": "Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
+  "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
+
+  "dialog_study_test_help_title": "Teste deine Studie!",
+  "dialog_study_test_help_description": "Im Testmodus siehst du deine Studie aus Teilnehmersicht in der StudyU App, sodass du sie für deine Zwecke anpassen & sicherstellen kannst, dass alles wie vorgesehen funktioniert.",
+  "dialog_study_test_section_tips": "⭐ Profi-Tipps",
+  "dialog_study_test_section_tips_text": "• Über das Menü auf der linken Seite kannst du schnell zu verschiedenen Teilen deiner Studie gelangen\n• Du kannst die Studie im Schnelldurchlauf testen, indem du auf der Tagesübersicht via 'next day' zum nächsten Tag gehst\n• Sieh dir eine Vorschau der möglichen Ergebnisse an, indem du die Daten aus dem aktuellen Testlauf exportierst (über die Analysieren-Unterseite)\n• Um als neuer Teilnehmer nochmal von vorne anzufangen, kannst du den Testdurchlauf jederzeit zurücksetzen",
+  "dialog_study_test_download_url_intro": "• Du kannst",
+  "dialog_study_test_download_url": "https://github.com/hpi-studyu/studyu#app-stores",
+  "dialog_study_test_download_url_text": "die StudyU App runterladen",
+  "dialog_study_test_download_url_outro": " um sie auf dem Smartphone zu testen",
+  "dialog_study_test_section_notice": "⚠️ Bitte beachte",
+  "dialog_study_test_section_notice_text": "• Der Testdurchlauf und die dabei generierten Daten werden automatisch zurückgesetzt, wenn die Studie mit echten Teilnehmern startet",
+  "dialog_action_study_test_start": "Testdurchlauf starten",
 
   "@__________________STUDYPAGE_RECRUIT__________________": {},
 
@@ -402,6 +538,8 @@
 
   "@__________________COMMON__________________": {},
 
+  "copy_suffix_label": "Kopie",
+
   "date_diff_years": "{count,plural, =1{Vor einem Jahr} other{Vor {count} Jahren}}",
   "@date_diff_years": {
     "placeholders": {
@@ -462,6 +600,11 @@
   "iconpicker_nonempty_prompt": "Icon auswählen",
   "iconpicker_empty_prompt": "Icon auswählen",
   "iconpicker_dialog_title": "Icon auswählen",
+
+  "dialog_unsaved_changes_title": "Zurück und Änderungen verwerfen?",
+  "dialog_unsaved_changes_description": "Du hast Änderungen vorgenommen, die noch nicht gespeichert wurden & verloren gehen, wenn du zurückgehst. Wenn du die Änderungen beibehalten möchtest, musst du sie vorher speichern.",
+  "dialog_action_unsaved_changes_stay": "Hier bleiben",
+  "dialog_action_unsaved_changes_discard": "Änderungen verwerfen",
 
   "under_construction": "Noch in Arbeit",
   "under_construction_description": "Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld & komm denächst wieder!"

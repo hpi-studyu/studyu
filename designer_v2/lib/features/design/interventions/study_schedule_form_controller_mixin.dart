@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/features/design/interventions/study_schedule_
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 mixin StudyScheduleControls {
   static const defaultScheduleType = PhaseSequence.alternating;
@@ -36,39 +36,53 @@ mixin StudyScheduleControls {
         StudyFormValidationSet.test: [numCyclesRange, phaseDurationRange],
       };
 
+  static int kNumCyclesMin = 1;
+  static int kNumCyclesMax = 9;
   get numCyclesRange => FormControlValidation(
         control: numCyclesControl,
-        validators: [Validators.required, Validators.min(1), Validators.max(9)],
+        validators: [
+          Validators.required,
+          Validators.min(kNumCyclesMin),
+          Validators.max(kNumCyclesMax),
+        ],
         validationMessages: {
           ValidationMessage.required: (error) =>
-              'The number of cycles in your study schedule must be between 1 and 9'
-                  .hardcoded,
+              tr.form_field_crossover_schedule_num_cycles_range(
+                  kNumCyclesMin, kNumCyclesMax
+              ),
           ValidationMessage.min: (error) =>
-              'The number of cycles in your study schedule must be between 1 and 9'
-                  .hardcoded,
+              tr.form_field_crossover_schedule_num_cycles_range(
+                  kNumCyclesMin, kNumCyclesMax
+              ),
           ValidationMessage.max: (error) =>
-              'The number of cycles in your study schedule must be between 1 and 9'
-                  .hardcoded,
+              tr.form_field_crossover_schedule_num_cycles_range(
+                  kNumCyclesMin, kNumCyclesMax
+              ),
         },
       );
 
+  static int kPhaseDurationMin = 1;
+  static int kPhaseDurationMax = 365;
   get phaseDurationRange => FormControlValidation(
         control: phaseDurationControl,
         validators: [
           Validators.required,
-          Validators.min(1),
-          Validators.max(365)
+          Validators.min(kPhaseDurationMin),
+          Validators.max(kPhaseDurationMax)
         ],
         validationMessages: {
           ValidationMessage.required: (error) =>
-              'Intervention phases must be between 1 and 365 days long'
-                  .hardcoded,
+              tr.form_field_crossover_schedule_phase_length_range(
+                  kPhaseDurationMin, kPhaseDurationMax
+              ),
           ValidationMessage.min: (error) =>
-              'Intervention phases must be between 1 and 365 days long'
-                  .hardcoded,
+              tr.form_field_crossover_schedule_phase_length_range(
+                  kPhaseDurationMin, kPhaseDurationMax
+              ),
           ValidationMessage.max: (error) =>
-              'Intervention phases must be between 1 and 365 days long'
-                  .hardcoded,
+              tr.form_field_crossover_schedule_phase_length_range(
+                  kPhaseDurationMin, kPhaseDurationMax
+              ),
         },
       );
 

@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
 class StudyScheduleFormView extends FormConsumerWidget {
@@ -23,14 +23,12 @@ class StudyScheduleFormView extends FormConsumerWidget {
         FormTableLayout(rows: [
           FormTableRow(
             control: formViewModel.sequenceTypeControl,
-            label: "Sequencing".hardcoded,
-            labelHelpText: "TODO Sequencing help text".hardcoded,
+            label: tr.form_field_crossover_schedule_sequence,
+            labelHelpText: tr.form_field_crossover_schedule_sequence_tooltip,
             input: ReactiveDropdownField(
               formControl: formViewModel.sequenceTypeControl,
               decoration: InputDecoration(
-                helperText:
-                "This is the default sequence of interventions for each participant. You may override this sequencing individually for each participant in invite-only studies."
-                    .hardcoded,
+                helperText: tr.form_field_crossover_schedule_sequence_description,
                 helperMaxLines: 5,
               ),
               items: formViewModel.sequenceTypeControlOptions
@@ -45,8 +43,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
           ),
           FormTableRow(
             control: formViewModel.phaseDurationControl,
-            label: "Phase length".hardcoded,
-            labelHelpText: "TODO Phase length help text".hardcoded,
+            label: tr.form_field_crossover_schedule_phase_length,
+            labelHelpText: tr.form_field_crossover_schedule_phase_length_tooltip,
             input: Row(
               children: [
                 Container(
@@ -57,7 +55,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(3),
-                      NumericalRangeFormatter(min: 1, max: 365),
+                      NumericalRangeFormatter(
+                          min: StudyScheduleControls.kPhaseDurationMin,
+                          max: StudyScheduleControls.kPhaseDurationMax,
+                      ),
                     ],
                     validationMessages:
                         formViewModel.phaseDurationControl.validationMessages,
@@ -66,15 +67,15 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 const SizedBox(width: 8.0),
                 FormControlLabel(
                   formControl: formViewModel.phaseDurationControl,
-                  text: "days".hardcoded,
+                  text: tr.form_field_amount_days,
                 ),
               ],
             ),
           ),
           FormTableRow(
             control: formViewModel.numCyclesControl,
-            label: "Number of cycles".hardcoded,
-            labelHelpText: "TODO Number of cycles help text".hardcoded,
+            label: tr.form_field_crossover_schedule_num_cycles,
+            labelHelpText: tr.form_field_crossover_schedule_num_cycles_tooltip,
             input: Row(
               children: [
                 Container(
@@ -85,7 +86,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(2),
-                      NumericalRangeFormatter(min: 1, max: 9),
+                      NumericalRangeFormatter(
+                        min: StudyScheduleControls.kNumCyclesMin,
+                        max: StudyScheduleControls.kNumCyclesMax,
+                      ),
                     ],
                     validationMessages:
                         formViewModel.numCyclesControl.validationMessages,
@@ -94,15 +98,15 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 const SizedBox(width: 8.0),
                 FormControlLabel(
                   formControl: formViewModel.numCyclesControl,
-                  text: "cycles".hardcoded,
+                  text: tr.form_field_amount_crossover_schedule_num_cycles,
                 ),
               ],
             ),
           ),
           FormTableRow(
             control: formViewModel.includeBaselineControl,
-            label: "Baseline phase".hardcoded,
-            labelHelpText: "TODO Baseline phase help text".hardcoded,
+            label: tr.form_field_crossover_schedule_include_baseline,
+            labelHelpText: tr.form_field_crossover_schedule_include_baseline_tooltip,
             input: Row(
               children: [
                 Container(
@@ -114,13 +118,17 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 const SizedBox(width: 8.0),
                 FormControlLabel(
                   formControl: formViewModel.includeBaselineControl,
-                  text: "Include in schedule".hardcoded,
+                  text: tr.form_field_crossover_schedule_include_baseline_label,
                 ),
               ],
             ),
           ),
           // TODO washout
-        ]),
+        ], columnWidths: const {
+            0: MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth()),
+            1: FlexColumnWidth(),
+          },
+        ),
       ],
     );
   }

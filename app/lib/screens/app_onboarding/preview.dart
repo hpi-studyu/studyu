@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
@@ -9,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Preview {
   final Map<String, String> queryParameters;
+  final AppLanguage appLanguage;
   String selectedRoute;
   String extra;
   bool hasRoute() => selectedRoute != null && selectedRoute.isNotEmpty;
@@ -16,7 +18,7 @@ class Preview {
   String selectedStudyObjectId;
   StudySubject subject;
 
-  Preview(this.queryParameters) { handleQueries(); }
+  Preview(this.queryParameters, this.appLanguage) { handleQueries(); }
 
   void handleQueries() {
     selectedRoute = getSelectedRoute();
@@ -26,6 +28,11 @@ class Preview {
   Future init() async {
     previewSubjectIdKey();
     selectedStudyObjectId = await getActiveSubjectId();
+
+    if (containsQuery('languageCode')) {
+      final locale = Locale(queryParameters['languageCode']);
+      appLanguage.changeLanguage(locale);
+    }
   }
 
   Future<bool> handleAuthorization() async {

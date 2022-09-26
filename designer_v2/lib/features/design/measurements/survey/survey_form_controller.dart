@@ -64,7 +64,9 @@ class MeasurementSurveyFormViewModel
       control: questionsArray,
       validators: [Validators.minLength(1)],
       validationMessages: {
-        ValidationMessage.minLength: (error) => tr.form_array_measurement_survey_questions_minlength,
+        ValidationMessage.minLength: (error) =>
+            tr.form_array_measurement_survey_questions_minlength(
+                (error as Map)['requiredLength']),
       }
   );
 

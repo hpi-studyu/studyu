@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -63,7 +63,7 @@ class InterventionFormViewModel
       control: interventionTitleControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The intervention title must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_intervention_title_required,
       }
   );
 
@@ -71,7 +71,9 @@ class InterventionFormViewModel
       control: interventionTasksArray,
       validators: [Validators.minLength(1)],
       validationMessages: {
-        ValidationMessage.minLength: (error) => 'You must define at least one task for your participants to complete during this intervention phase'.hardcoded,
+        ValidationMessage.minLength: (error) =>
+            tr.form_array_intervention_tasks_minlength(
+                (error as Map)['requiredLength']),
       }
   );
 

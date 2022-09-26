@@ -57,7 +57,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       FormControlValidation(control: measurementsArray, validators: [
         Validators.minLength(1)
       ], validationMessages: {
-        ValidationMessage.minLength: (error) => tr.form_array_measurements_minlength,
+        ValidationMessage.minLength: (error) =>
+            tr.form_array_measurements_minlength(
+                (error as Map)['requiredLength']),
       });
 
   @override

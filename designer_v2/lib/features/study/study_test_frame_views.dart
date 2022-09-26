@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class WebFrame extends StatelessWidget {
   final String previewSrc;
@@ -160,8 +160,7 @@ Widget? previewBanner(WidgetRef ref, String studyId) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextParagraph(
-            text: "The preview is unavailable until you update the "
-                "following information:".hardcoded,
+            text: tr.banner_study_preview_unavailable,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           ReactiveForm(

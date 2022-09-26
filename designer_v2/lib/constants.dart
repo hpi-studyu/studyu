@@ -22,4 +22,3 @@ class Config {
 }
 
 const kPathSeparator = '   /   ';
-const kDuplicateLabel = "Copy"; // .hardcoded

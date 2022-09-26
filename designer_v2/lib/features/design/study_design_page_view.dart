@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 abstract class StudyDesignPageWidget extends StudyPageWidget {
   const StudyDesignPageWidget(super.studyId, {super.key});
@@ -21,13 +21,11 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextParagraph(
-              text: "This study cannot be edited.".hardcoded,
+              text: tr.banner_study_readonly_title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             TextParagraph(
-                text: "You can only make changes to studies where you are an "
-                    "owner or collaborator. Studies that have been launched "
-                    "cannot be changed by anyone.".hardcoded
+                text: tr.banner_study_readonly_description,
             ),
           ]
         ),

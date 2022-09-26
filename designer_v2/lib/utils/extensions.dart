@@ -9,12 +9,15 @@ extension EnumX on Enum {
 
 extension StringX on String {
   bool get isNewId => this == Config.newModelId;
+  static String get kCopySuffix => tr.copy_suffix_label;
 
   String toKey() {
     return toLowerCase().replaceAll(' ', '_');
   }
 
-  String withDuplicateLabel({label = kDuplicateLabel}) {
+  String withDuplicateLabel({String? label}) {
+    label ??= kCopySuffix;
+
     final regexStr = r"\((?:" + label + r")\s*(\d*)\)$";
     final suffixFactory =
         (n) => (n > 0) ? "($label ${n.toString()})" : "($label)";

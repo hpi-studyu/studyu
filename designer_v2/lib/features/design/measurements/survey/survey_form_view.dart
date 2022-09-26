@@ -104,7 +104,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                   sectionTitle: tr.form_array_measurement_survey_questions,
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle: tr.form_array_measurement_survey_questions_empty_title,
-                  emptyDescription: tr.form_array_measurement_survey_questions_empty_descriptions,
+                  emptyDescription: tr.form_array_measurement_survey_questions_empty_description,
                   hideLeadingTrailingWhenEmpty: true,
                   rowPrefix: (context, viewModel, rowIdx) {
                     return Row(

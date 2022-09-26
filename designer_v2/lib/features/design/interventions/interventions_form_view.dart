@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
@@ -35,24 +35,13 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                  text: "Define the different phases of interventions to be "
-                          "studied, as well as the their "
-                          "sequence and frequency. In N-of-1 trials, a single "
-                          "participant will go through the intervention phases "
-                          "once or multiple times in a pre-specified order "
-                          "(so called multi-crossover trial). Each "
-                          "intervention consists of one or more tasks "
-                          "which are administered during the corresponding phase.\n\n"
-                          "Note: If you specify more than two interventions, participants "
-                      "are free to choose any two interventions to compare "
-                      "when they begin the study. "
-                      .hardcoded),
+                  text: tr.form_study_design_interventions_description,
+              ),
               const SizedBox(height: 8.0),
-              const Hyperlink(
+              Hyperlink(
                 icon: Icons.north_east_rounded,
-                text: "Learn more about N-of-1 trials",
-                url:
-                    "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118090/pdf/nihms297482.pdf",
+                text: tr.link_n_of_1_learn_more,
+                url: tr.link_n_of_1_learn_more_url,
               ),
               const SizedBox(height: 24.0),
               ReactiveFormConsumer(
@@ -70,17 +59,13 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                       getActionsAt: (viewModel, _) =>
                           formViewModel.availablePopupActions(viewModel),
                       onNewItem: formViewModel.onNewItem,
-                      onNewItemLabel: 'Add intervention'.hardcoded,
-                      rowTitle: (viewModel) =>
-                          viewModel.formData?.title ??
-                          'Missing item title'.hardcoded,
-                      sectionTitle: "Intervention phases".hardcoded,
+                      onNewItemLabel: tr.form_array_interventions_new,
+                      rowTitle: (viewModel) => viewModel.formData?.title ?? '',
+                      sectionTitle: tr.form_array_interventions,
                       sectionTitleDivider: false,
                       emptyIcon: Icons.content_paste_off_rounded,
-                      emptyTitle: "No interventions defined".hardcoded,
-                      emptyDescription:
-                          "You must define at least two interventions to compare."
-                              .hardcoded,
+                      emptyTitle: tr.form_array_interventions_empty_title,
+                      emptyDescription: tr.form_array_interventions_empty_description,
                       hideLeadingTrailingWhenEmpty: true,
                       rowPrefix: (context, viewModel, rowIdx) {
                         return Row(
@@ -106,7 +91,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Crossover Schedule".hardcoded,
+                    tr.form_section_crossover_schedule,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   (formViewModel.canTestStudySchedule)
@@ -115,7 +100,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                           child: TextButton.icon(
                             onPressed: formViewModel.testStudySchedule,
                             icon: const Icon(Icons.play_circle_outline_rounded),
-                            label: Text("Test schedule".hardcoded),
+                            label: Text(tr.navlink_crossover_schedule_test),
                           ),
                         )
                       : const SizedBox.shrink(),

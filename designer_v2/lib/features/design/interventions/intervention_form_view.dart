@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/interventions/intervention_ta
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class InterventionFormView extends ConsumerWidget {
@@ -28,8 +28,8 @@ class InterventionFormView extends ConsumerWidget {
           rows: [
             FormTableRow(
               control: formViewModel.interventionTitleControl,
-              label: "Title".hardcoded,
-              labelHelpText: "TODO Intervention task title help text".hardcoded,
+              label: tr.form_field_intervention_title,
+              labelHelpText: tr.form_field_intervention_title_tooltip,
               input: Row(
                 children: [
                   // TODO: responsive layout (input field gets too small)
@@ -59,9 +59,8 @@ class InterventionFormView extends ConsumerWidget {
             ),
             FormTableRow(
               control: formViewModel.interventionDescriptionControl,
-              label: "Description".hardcoded,
-              labelHelpText:
-                  "TODO Intervention task description help text".hardcoded,
+              label: tr.form_field_intervention_description,
+              labelHelpText: tr.form_field_intervention_description_tooltip,
               input: ReactiveTextField(
                 formControl: formViewModel.interventionDescriptionControl,
                 inputFormatters: [
@@ -73,9 +72,8 @@ class InterventionFormView extends ConsumerWidget {
                 minLines: 5,
                 maxLines: 5,
                 decoration: InputDecoration(
-                    hintText:
-                        "Describe the intervention phase to your study participants"
-                            .hardcoded),
+                    hintText: tr.form_field_intervention_description_hint,
+                ),
               ),
             ),
           ],
@@ -96,22 +94,13 @@ class InterventionFormView extends ConsumerWidget {
                 getActionsAt: (viewModel, _) =>
                     formViewModel.availablePopupActions(viewModel),
                 onNewItem: () => _onNewItem(context, ref),
-                onNewItemLabel: 'Add intervention task'.hardcoded,
-                rowTitle: (viewModel) =>
-                    viewModel.formData?.taskTitle ??
-                    'Missing item title'.hardcoded,
-                sectionTitle: "Intervention Tasks".hardcoded,
-                sectionDescription: "You can define one or more tasks that your participants should "
-                    "complete during this intervention phase. Participants will be "
-                    "prompted to complete these tasks in the StudyU app.\nYou can "
-                    "track compliance by requiring participants to mark these tasks "
-                    "as completed."
-                    .hardcoded,
+                onNewItemLabel: tr.form_array_intervention_tasks_new,
+                rowTitle: (viewModel) => viewModel.formData?.taskTitle ?? '',
+                sectionTitle: tr.form_array_intervention_tasks,
+                sectionDescription: tr.form_array_intervention_tasks_description,
                 emptyIcon: Icons.content_paste_off_rounded,
-                emptyTitle: "No intervention tasks defined".hardcoded,
-                emptyDescription:
-                    "You must define at least one task for participants to complete during this intervention phase"
-                        .hardcoded,
+                emptyTitle: tr.form_array_intervention_tasks_empty_title,
+                emptyDescription: tr.form_array_intervention_tasks_empty_description,
               );
             },
           );

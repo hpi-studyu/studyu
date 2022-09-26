@@ -8,9 +8,11 @@ class StudyTestControllerState extends StudyControllerBaseState {
     required super.currentUser,
     super.studyWithMetadata,
     this.serializedSession = '',
+    this.languageCode = 'en',
   });
 
   final String serializedSession;
+  final String languageCode;
 
   bool get canTest => serializedSession.isNotEmpty;
 
@@ -21,6 +23,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
     String appUrl = env.appUrl ?? '';
     appUrl += "?mode=preview&session=${Uri.encodeComponent(serializedSession)}";
     appUrl += "&studyid=$studyId";
+    appUrl += "&languageCode=$languageCode";
     return appUrl;
   }
 
@@ -28,10 +31,12 @@ class StudyTestControllerState extends StudyControllerBaseState {
   StudyTestControllerState copyWith({
     WrappedModel<Study>? studyWithMetadata,
     String? serializedSession,
+    String? languageCode,
   }) {
     return StudyTestControllerState(
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       serializedSession: serializedSession ?? this.serializedSession,
+      languageCode: languageCode ?? this.languageCode,
       currentUser: currentUser,
     );
   }

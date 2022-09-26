@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class EnrolledBadge extends StatelessWidget {

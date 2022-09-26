@@ -153,9 +153,9 @@
 
     "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
 
-    "form_question_create": "New question",
-    "form_question_edit": "Edit question",
-    "form_question_readonly": "View question",
+    "form_question_create": "New Question",
+    "form_question_edit": "Edit Question",
+    "form_question_readonly": "View Question",
 
     "form_field_question": "Your question",
     "form_field_question_tooltip": "Enter the question that the participant will be prompted with in the app",
@@ -221,6 +221,20 @@
         }
     },
 
+    "banner_study_readonly_title":  "This study cannot be edited.",
+    "banner_study_readonly_description":  "You can only make changes to studies where you are an owner or collaborator. Studies that have been launched cannot be changed by anyone.",
+
+    "form_section_scheduling": "Scheduling & Compliance",
+    "form_section_scheduling_description": "To improve compliance, you can set a limited window of time for participants to complete the task & send a reminder notification at the specified time.",
+    "form_field_has_reminder": "App reminder",
+    "form_field_has_reminder_tooltip": "Select this option to send a reminder notification from the StudyU app to the participant's phone at the time specified.",
+    "form_field_has_reminder_label": "Send notification",
+    "form_field_time_of_day_hint": "hh:mm",
+    "form_field_time_restriction": "Time restriction",
+    "form_field_time_restriction_tooltip": "Provide the hours of the day during which participants need to complete the task. Please note that the task will not \nbe available for completion outside these hours & will be considered as missed for the purpose of data collection.",
+    "form_field_time_restriction_start_hint": "From",
+    "form_field_time_restriction_end_hint": "To",
+
     "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
 
     "form_study_design_info_description": "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers & clinicians as well.",
@@ -271,9 +285,9 @@
     "form_array_consent_items_new": "Add consent text",
     "form_array_consent_items_test": "Test consent",
 
-    "form_screener_question_create": "New screener question",
-    "form_screener_question_edit": "Edit screener question",
-    "form_screener_question_readonly": "View screener question",
+    "form_screener_question_create": "New Screener Question",
+    "form_screener_question_edit": "Edit Screener Question",
+    "form_screener_question_readonly": "View Screener Question",
 
     "form_screener_question_logic_qualify": "Qualify",
     "form_screener_question_logic_disqualify": "Disqualify",
@@ -286,9 +300,9 @@
     "form_array_screener_question_logic_tooltip": "Define which response options are qualifying or disqualifying when selected by the participant.",
     "form_array_screener_question_logic_dirty_banner": "The options you see here are cleared automatically to reflect the available responses. Every option is qualifying by default unless you explicitly mark them as disqualifying.",
 
-    "form_consent_create": "New participant consent",
-    "form_consent_edit": "Edit participant consent",
-    "form_consent_readonly": "View participant consent",
+    "form_consent_create": "New Participant Consent",
+    "form_consent_edit": "Edit Participant Consent",
+    "form_consent_readonly": "View Participant Consent",
 
     "form_field_consent_title": "Title",
     "form_field_consent_title_tooltip": "Enter a short title for the terms the participant must read & accept.\nFor each consent text, a card with the title & icon is shown on the app's consent screen.",
@@ -299,11 +313,96 @@
     "form_field_consent_text_hint": "Enter the full terms to be read & accepted",
     "form_field_consent_text_required": "The text for your participant consent must not be empty",
 
+    "@__________________STUDYPAGE_DESIGN_INTERVENTIONS_________________": {},
+
+    "form_study_design_interventions_description": "Define the different phases of interventions to be studied, as well as the their sequence and frequency. In N-of-1 trials, a single participant will go through the intervention phases once or multiple times in a pre-specified order (so called multi-crossover trial). Each intervention consists of one or more tasks which are administered during the corresponding phase.\n\nNote: If you specify more than two interventions, participants are free to choose any two interventions to compare when they begin the study.",
+    "link_n_of_1_learn_more": "Learn more about N-of-1 trials",
+    "link_n_of_1_learn_more_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118090/pdf/nihms297482.pdf",
+
+    "form_array_interventions_minlength": "{count,plural, =2{You must define at least two interventions to compare.} other{form_array_interventions_minlength}}",
+    "@form_array_interventions_minlength": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+
+    "form_array_interventions": "Intervention phases",
+    "form_array_interventions_new": "Add intervention",
+    "form_array_interventions_empty_title": "No interventions defined",
+    "form_array_interventions_empty_description": "You must define at least two interventions to compare.",
+
+    "form_field_intervention_title": "Title",
+    "form_field_intervention_title_required": "The intervention title must not be empty",
+    "form_field_intervention_title_default": "Unnamed intervention",
+    "form_field_intervention_title_tooltip": "Provide the title of the intervention phase as it should be displayed in the StudyU app",
+    "form_field_intervention_description": "Description",
+    "form_field_intervention_description_tooltip": "Enter an explanation text that is shown when the intervention phase starts or when the participant\nclicks on the respective phase in the study plan",
+    "form_field_intervention_description_hint": "Describe the intervention phase to participants",
+
+    "form_array_intervention_tasks": "Intervention tasks",
+    "form_array_intervention_tasks_description": "Define one or more tasks that participants should complete during this intervention phase. Every day, participants will be prompted to complete these tasks in the StudyU app.",
+    "form_array_intervention_tasks_new": "Add intervention task",
+    "form_array_intervention_tasks_empty_title": "No intervention tasks defined",
+    "form_array_intervention_tasks_empty_description": "You must define at least one task for participants to complete during this intervention phase.",
+    "form_array_intervention_tasks_minlength": "{count,plural, =1{You must define at least one task for participants to complete during this intervention phase} other{form_array_intervention_tasks_minlength}}",
+    "@form_array_intervention_tasks_minlength": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+
+    "form_intervention_task_create": "New Intervention Task",
+    "form_intervention_task_edit": "Edit Intervention Task",
+    "form_intervention_task_readonly": "View Intervention Task",
+
+    "form_field_intervention_task_title": "Title",
+    "form_field_intervention_task_default": "Unnamed task",
+    "form_field_intervention_task_title_tooltip": "Provide the title of the intervention task for the daily prompt in the StudyU app",
+    "form_field_intervention_task_title_required": "The intervention task title must not be empty",
+    "form_field_intervention_task_description": "Description",
+    "form_field_intervention_task_description_tooltip": "Enter a detailed description that is shown when clicking on the daily prompt in the StudyU app",
+    "form_field_intervention_task_description_hint": "Give a detailed description of the task to be performed, link to a video instruction, etc.",
+    "form_field_intervention_task_mark_as_completed_label": "Require participants to \"Mark as completed\"",
+
+    "form_section_crossover_schedule": "Study schedule",
+    "navlink_crossover_schedule_test": "Test schedule",
+    "form_field_crossover_schedule_sequence": "Sequencing",
+    "form_field_crossover_schedule_sequence_tooltip": "Choose the pattern for how intervention phases are sequenced in the study schedule",
+    "form_field_crossover_schedule_sequence_description": "This is the default sequence of interventions for each participant. You may override this sequencing individually for each participant in invite-only studies.",
+    "form_field_crossover_schedule_phase_length": "Phase length",
+    "form_field_crossover_schedule_phase_length_tooltip": "Set the number of days it takes to complete one phase in the study schedule",
+    "form_field_crossover_schedule_phase_length_range": "Intervention phases must be between {min} and {max} days long",
+    "@form_field_crossover_schedule_phase_length_range": {
+        "placeholders": {
+            "min": {},
+            "max": {}
+        }
+    },
+    "form_field_amount_days": "days",
+    "form_field_crossover_schedule_num_cycles": "Number of cycles",
+    "form_field_crossover_schedule_num_cycles_tooltip": "Define the number of repetitions for each phase in the study schedule",
+    "form_field_crossover_schedule_num_cycles_range": "The number of cycles in your study schedule must be between {min} and {max}",
+    "@form_field_crossover_schedule_num_cycles_range": {
+        "placeholders": {
+            "min": {},
+            "max": {}
+        }
+    },
+    "form_field_amount_crossover_schedule_num_cycles": "cycles",
+    "form_field_crossover_schedule_include_baseline": "Baseline phase",
+    "form_field_crossover_schedule_include_baseline_tooltip": "Add an intervention-free baseline phase at the beginning of your study",
+    "form_field_crossover_schedule_include_baseline_label": "Include in schedule",
+
     "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
 
     "form_study_design_measurements_description": "Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU app on a daily basis. The collected data & results will be available on the Analyze page when the study is launched.",
 
-    "form_array_measurements_minlength": "You need to define at least one survey to determine the effect of your intervention(s).",
+    "form_array_measurements_minlength": "{count,plural, =1{You need to define at least one survey to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}",
+    "@form_array_measurements_minlength": {
+        "placeholders": {
+            "count": {}
+        }
+    },
 
     "form_array_measurements_surveys": "Surveys",
     "form_array_measurements_surveys_new": "Add survey",
@@ -324,8 +423,44 @@
     "form_array_measurement_survey_questions": "Questions",
     "form_array_measurement_survey_questions_new": "Add question",
     "form_array_measurement_survey_questions_empty_title": "No questions defined",
-    "form_array_measurement_survey_questions_empty_descriptions": "You need to define at least one question to determine the effect of your intervention(s).",
-    "form_array_measurement_survey_questions_minlength": "You need to define at least one question to determine the effect of your intervention(s)",
+    "form_array_measurement_survey_questions_empty_description": "You need to define at least one question to determine the effect of your intervention(s).",
+    "form_array_measurement_survey_questions_minlength": "{count,plural, =1{You need to define at least one question to determine the effect of your intervention(s)} other{form_array_measurement_survey_questions_minlength}}",
+    "@form_array_measurement_survey_questions_minlength": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+
+    "@__________________STUDYPAGE_TEST__________________": {},
+
+    "study_test_page_description": "In the test mode you can test your study as a participant.",
+    "navlink_study_test_help": "How does this work?",
+
+    "study_test_app_nav_title": "Choose a page:",
+    "navlink_study_test_app_overview": "Study Overview",
+    "navlink_study_test_app_eligibility": "Screener",
+    "navlink_study_test_app_intervention": "Intervention Selection",
+    "navlink_study_test_app_consent": "Consent",
+    "navlink_study_test_app_journey": "Schedule",
+    "navlink_study_test_app_dashboard": "Daily Dashboard",
+
+    "action_button_study_test_reset": "Reset",
+    "action_button_study_test_open_new_tab": "Open in new tab",
+
+    "banner_study_test_unavailable": "The test mode is unavailable until you update the following information:",
+    "banner_study_preview_unavailable": "The preview is unavailable until you update the following information:",
+
+    "dialog_study_test_help_title": "Test your study!",
+    "dialog_study_test_help_description": "This page allows you to experience your study like one of your study's participants, so that you can tailor the design to your needs and verify everything works correctly.",
+    "dialog_study_test_section_tips": "⭐ Pro tips",
+    "dialog_study_test_section_tips_text": "• Use the menu in the top-left to quickly preview and jump to different parts of your study\n• Fast-forward through the participant's schedule by clicking 'next day' on the app's dashboard page\n• Preview what your results will look like by exporting & analyzing the data from your latest test session (via the Analyze tab)\n• To get a fresh experience, you can reset all data and enroll as a new test user",
+    "dialog_study_test_download_url_intro": "• You can also",
+    "dialog_study_test_download_url": "https://github.com/hpi-studyu/studyu#app-stores",
+    "dialog_study_test_download_url_text": "download the StudyU app",
+    "dialog_study_test_download_url_outro": " on your phone for testing",
+    "dialog_study_test_section_notice": "⚠️ Please note",
+    "dialog_study_test_section_notice_text": "• All test users and their data will be reset one you launch the study",
+    "dialog_action_study_test_start": "Start testing",
 
     "@__________________STUDYPAGE_RECRUIT__________________": {},
 
@@ -402,6 +537,8 @@
 
     "@__________________COMMON__________________": {},
 
+    "copy_suffix_label": "Copy",
+
     "date_diff_years": "{count,plural, =1{1 year ago} other{{count} years ago}}",
     "@date_diff_years": {
         "placeholders": {
@@ -462,6 +599,11 @@
     "iconpicker_nonempty_prompt": "Change icon",
     "iconpicker_empty_prompt": "Pick an icon",
     "iconpicker_dialog_title": "Pick an icon",
+
+    "dialog_unsaved_changes_title": "Go back and discard changes?",
+    "dialog_unsaved_changes_description": "There are unsaved changes that will be lost when you go back. If you want to keep your changes, you need to save your work before going back.",
+    "dialog_action_unsaved_changes_stay": "Stay",
+    "dialog_action_unsaved_changes_discard": "Discard changes",
 
     "under_construction": "Under construction",
     "under_construction_description": "We are still busy working on this part, check back soon!"

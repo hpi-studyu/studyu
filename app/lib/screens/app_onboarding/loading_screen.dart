@@ -39,7 +39,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
-    final preview = Preview(widget.queryParameters ?? {});
+    final preview = Preview(
+      widget.queryParameters ?? {},
+      context.read<AppLanguage>(),
+    );
 
     // print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
 

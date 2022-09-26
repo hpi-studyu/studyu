@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class InterventionTaskFormView extends StatelessWidget {
   const InterventionTaskFormView({required this.formViewModel, Key? key})
@@ -22,8 +22,8 @@ class InterventionTaskFormView extends StatelessWidget {
         FormTableLayout(rowLayout: FormTableRowLayout.vertical, rows: [
           FormTableRow(
             control: formViewModel.taskTitleControl,
-            label: "Title".hardcoded,
-            labelHelpText: "TODO Intervention title text help text".hardcoded,
+            label: tr.form_field_intervention_task_title,
+            labelHelpText: tr.form_field_intervention_task_title_tooltip,
             input: ReactiveTextField(
               formControl: formViewModel.taskTitleControl,
               inputFormatters: [
@@ -34,9 +34,8 @@ class InterventionTaskFormView extends StatelessWidget {
           ),
           FormTableRow(
             control: formViewModel.taskDescriptionControl,
-            label: "Description".hardcoded,
-            labelHelpText:
-                "TODO Intervention description text help text".hardcoded,
+            label: tr.form_field_intervention_task_description,
+            labelHelpText: tr.form_field_intervention_task_description_tooltip,
             input: ReactiveTextField(
               formControl: formViewModel.taskDescriptionControl,
               inputFormatters: [
@@ -47,14 +46,11 @@ class InterventionTaskFormView extends StatelessWidget {
               minLines: 5,
               maxLines: 5,
               decoration: InputDecoration(
-                  hintText: "Give a detailed description of the task to be "
-                          "performed, link to a video instruction, etc"
-                      .hardcoded),
+                  hintText: tr.form_field_intervention_task_description_hint,
+              ),
             ),
           ),
         ]),
-        const SizedBox(height: 12.0),
-        FormSectionHeader(title: "Compliance".hardcoded),
         const SizedBox(height: 12.0),
         ReactiveFormConsumer(builder: (context, form, child) {
           return Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -64,7 +60,8 @@ class InterventionTaskFormView extends StatelessWidget {
             const SizedBox(width: 3.0),
             FormControlLabel(
                 formControl: formViewModel.markAsCompletedControl,
-                text: 'Require participants to "Mark as completed"'.hardcoded),
+                text: tr.form_field_intervention_task_mark_as_completed_label,
+            ),
           ]);
         }),
         const SizedBox(height: 24.0),

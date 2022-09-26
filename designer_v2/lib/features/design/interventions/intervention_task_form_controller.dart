@@ -4,12 +4,12 @@ import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:uuid/uuid.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class InterventionTaskFormViewModel
     extends ManagedFormViewModel<InterventionTaskFormData>
@@ -53,7 +53,7 @@ class InterventionTaskFormViewModel
       control: taskTitleControl,
       validators: [Validators.required],
       validationMessages: {
-        ValidationMessage.required: (error) => 'The intervention task title must not be empty'.hardcoded,
+        ValidationMessage.required: (error) => tr.form_field_intervention_task_title_required,
       }
   );
 
@@ -81,9 +81,9 @@ class InterventionTaskFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: "New Intervention Task".hardcoded,
-        FormMode.edit: "Edit Intervention Task".hardcoded,
-        FormMode.readonly: "View Intervention Task".hardcoded,
+        FormMode.create: tr.form_intervention_task_create,
+        FormMode.edit: tr.form_intervention_task_edit,
+        FormMode.readonly: tr.form_intervention_task_readonly,
       };
 
   // - ManagedFormViewModel
