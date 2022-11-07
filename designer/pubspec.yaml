@@ -26,7 +26,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   form_builder_extra_fields: ^8.3.0
-  form_builder_validators: ^8.3.0
+  form_builder_validators: ^8.4.0
   http: ^0.13.4
   intl: 0.17.0
   material_design_icons_flutter: ^5.0.6996
