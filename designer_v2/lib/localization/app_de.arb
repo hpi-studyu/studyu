@@ -92,6 +92,7 @@
   "phase_sequence_alternating": "Alternierend (AB AB)",
   "phase_sequence_counterbalanced": "Ausgeglichen (AB BA)",
   "phase_sequence_random": "Zufällig",
+  "phase_sequence_custom": "Benutzerdefiniert",
 
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",

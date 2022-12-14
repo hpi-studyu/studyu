@@ -10,8 +10,11 @@ class StudySchedule {
   int phaseDuration = 7;
   bool includeBaseline = true;
   PhaseSequence sequence = PhaseSequence.alternating;
+  String sequenceCustom;
 
-  StudySchedule();
+  StudySchedule({
+    this.sequenceCustom = 'ABAB',
+  });
 
   factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
@@ -23,7 +26,6 @@ class StudySchedule {
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles);
     final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
-
     return phases;
   }
 
@@ -37,6 +39,8 @@ class StudySchedule {
         return _generateCounterBalancedCycle(first, cycle);
       case PhaseSequence.randomized:
         return _generateRandomizedCycle(first, cycle);
+      case PhaseSequence.customized:
+        return _generateCustomizedCycle(cycle);
       default:
         throw TypeError();
     }
@@ -57,6 +61,13 @@ class StudySchedule {
     return phase;
   }
 
+  List<int> _generateCustomizedCycle(int cycle) {
+    final String seqNum = sequenceCustom
+        .replaceAll(RegExp('A', caseSensitive: false), '0')
+        .replaceAll(RegExp('B', caseSensitive: false), '1');
+    return seqNum.split('').map(int.parse).toList();
+  }
+
   String get nameOfSequence {
     switch (sequence) {
       case PhaseSequence.alternating:
@@ -65,12 +76,14 @@ class StudySchedule {
         return 'ABBA';
       case PhaseSequence.randomized:
         return 'Random';
+      case PhaseSequence.customized:
+        return 'Custom';
     }
   }
 }
 
 enum PhaseSequence {
-  alternating, counterBalanced, randomized;
+  alternating, counterBalanced, randomized, customized;
 
   String toJson() => name;
   static PhaseSequence fromJson(String json) => values.byName(json);

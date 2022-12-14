@@ -11,6 +11,8 @@ extension PhaseSequenceFormatted on PhaseSequence {
         return tr.phase_sequence_counterbalanced;
       case PhaseSequence.randomized:
         return tr.phase_sequence_random; // TODO random between both options?
+      case PhaseSequence.customized:
+        return tr.phase_sequence_custom;
       default:
         return "[Invalid PhaseSequence]";
     }
