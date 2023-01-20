@@ -37,7 +37,7 @@ dependencies:
   supabase: ^0.3.6
   supabase_flutter: ^0.3.3
   universal_html: ^2.0.8
-  url_launcher: ^6.1.5
+  url_launcher: ^6.1.8
   uuid: ^3.0.6
   webview_flutter: ^3.0.4
   webview_flutter_web: ^0.1.0+4
