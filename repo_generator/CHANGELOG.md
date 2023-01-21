@@ -1,3 +1,8 @@
+## 1.4.21-dev.0
+
+ - **FIX**: upgrade deps. ([4b011445](https://github.com/hpi-studyu/studyu/commit/4b011445bb2390570c536646bb119b5a00a809ab))
+ - **FIX**: lint errors. ([6007e46e](https://github.com/hpi-studyu/studyu/commit/6007e46e45c36e77932930ce94c634499d57a444))
+
 ## 1.4.20
 
  - **FIX**: upgrade deps. ([d221eae7](https://github.com/hpi-studyu/studyu/commit/d221eae7ea55fa8761d7ff7625f92eaa3488148e))

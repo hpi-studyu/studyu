@@ -1,3 +1,25 @@
+## 4.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: upgrade deps. ([4b011445](https://github.com/hpi-studyu/studyu/commit/4b011445bb2390570c536646bb119b5a00a809ab))
+ - **FIX**: password reset. ([5c3fda47](https://github.com/hpi-studyu/studyu/commit/5c3fda4791bd5aed957dbe721babe701fb462f50))
+ - **FIX**: leave study with soft delete & delete data option with hard delete. ([8006f0f6](https://github.com/hpi-studyu/studyu/commit/8006f0f6c9a63eb6ede1b9b25f8dc77b1fef7616))
+ - **FIX**: correctly position annotations / labels for scale questions. ([acfa3524](https://github.com/hpi-studyu/studyu/commit/acfa3524fcc7e9c2f5237398e271b9390fe6e1e1))
+ - **FIX**: make autosave indicator work again. ([6664589f](https://github.com/hpi-studyu/studyu/commit/6664589f27195190dcf21cebdc77719af5db19c0))
+ - **FIX**: null error when loading appconfig. ([ef720c47](https://github.com/hpi-studyu/studyu/commit/ef720c47744b03797dcf7fd51e063579bf6642be))
+ - **FIX**: answer parse error. ([a47e1fb3](https://github.com/hpi-studyu/studyu/commit/a47e1fb3521cbc5b2a40ebb3dd3a9e3020699f56))
+ - **FIX**: Json serialization bug & remove copy draft redirect. ([39860a45](https://github.com/hpi-studyu/studyu/commit/39860a45329ad55fdea66968d91f2edd596ef3ec))
+ - **FEAT**: enable screening logic for scale questions. ([4f956be1](https://github.com/hpi-studyu/studyu/commit/4f956be135f9b8c36304d22166c5b2a751be1ee3))
+ - **FEAT**: colored scale questions. ([305377d3](https://github.com/hpi-studyu/studyu/commit/305377d38d59f42c7d310a58b2b1b61cf85922c2))
+ - **FEAT**: improve scale widget in app. ([1d2652aa](https://github.com/hpi-studyu/studyu/commit/1d2652aa5e3fd1d7dcc929ebf7f69b004b5f3147))
+ - **FEAT**: add scale question-type to app + improved annotation layout. ([169ef10d](https://github.com/hpi-studyu/studyu/commit/169ef10d145a0b4e9da104af9fd22817b1c14d82))
+ - **FEAT**: implement study registry properly. ([1cc329c0](https://github.com/hpi-studyu/studyu/commit/1cc329c0e2d119f19994b5f1be0f490a03ebb3b1))
+ - **FEAT**: dont record participant progress for launched studies in test mode. ([2dc6a8ca](https://github.com/hpi-studyu/studyu/commit/2dc6a8ca72785d8929b3ecf3451d352c893fabde))
+ - **FEAT**: data export. ([1a099135](https://github.com/hpi-studyu/studyu/commit/1a099135d66b1a2bc25bfed8d1e10cf5c6e48a78))
+ - **FEAT**: Add createdAt key to Study object. ([7ac66a40](https://github.com/hpi-studyu/studyu/commit/7ac66a40e0fbe5b5385d92dd24342201316a0288))
+ - **BREAKING** **CHANGE**: Database changes, so that only studies which are both published and open can be viewed. ([f8e85013](https://github.com/hpi-studyu/studyu/commit/f8e85013a23dd0450ce75e97fa0d751c6d4af055))
+
 ## 3.7.15
 
  - **FIX**: upgrade deps. ([d221eae7](https://github.com/hpi-studyu/studyu/commit/d221eae7ea55fa8761d7ff7625f92eaa3488148e))
