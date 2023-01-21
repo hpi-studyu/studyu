@@ -10,10 +10,6 @@ class SuppressedBehaviorSubject<T> {
 
   late final StreamController<T> _controller = _buildDerivedController();
 
-  Stream<T> get stream {
-    return _controller.stream;
-  }
-
   StreamController<T> _buildDerivedController() {
     final StreamController<T> controller = StreamController.broadcast();
     final subjectSubscription = subject.listen((event) {
