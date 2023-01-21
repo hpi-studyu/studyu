@@ -11,13 +11,13 @@ dependencies:
   collection: ^1.16.0
   csv: ^5.0.1
   fhir: ^0.4.7 # 0.6.0
-  json_annotation: ^4.6.0
-  quiver: ^3.1.0
-  supabase: ^0.3.6
-  uuid: ^3.0.6
+  json_annotation: ^4.8.0
+  quiver: ^3.2.1
+  supabase: ^0.3.6 # breaking
+  uuid: ^3.0.7
 
 dev_dependencies:
-  build_runner: ^2.2.0
-  json_serializable: ^6.3.1
-  lint: ^1.10.0
-  test: ^1.21.4
+  build_runner: ^2.3.3
+  json_serializable: ^6.6.0
+  lint: ^2.0.1
+  test: ^1.22.2
