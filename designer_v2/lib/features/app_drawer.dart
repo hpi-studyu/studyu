@@ -110,6 +110,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         localizedTitle: () => tr.navlink_account_settings,
         icon: Icons.settings_rounded,
         intent: RoutingIntents.accountSettings,
+        enabled: false,
       ),
       DrawerEntry(
         localizedTitle: () => tr.navlink_logout,
@@ -199,7 +200,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   Widget _buildLogo(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    // final textTheme = Theme.of(context).textTheme;
 
     return Container(
       constraints: BoxConstraints(
@@ -228,13 +229,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       ),
     );
 
-    return Padding(
+    /* return Padding(
       padding: EdgeInsets.all(widget.leftPaddingEntries),
       child: SelectableText(
         widget.title,
         style: textTheme.headline5?.copyWith(fontWeight: FontWeight.bold),
       ),
-    );
+    ); */
   }
 
   _buildSections(List<List<DrawerEntry>> sections) {

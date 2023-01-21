@@ -32,11 +32,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: defaultLocation,
     routes: RouterConf.topLevelRoutes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
-    redirect: (state) {
-      final loginLocation = state.namedLocation(RouterConf.login.name!);
-      final signupLocation = state.namedLocation(RouterConf.signup.name!);
-      final splashLocation = state.namedLocation(RouterConf.splash.name!);
-      final passwordRecoveryLocation = state.namedLocation(RouterConf.passwordRecovery.name!);
+    redirect: (_, state) {
+      final loginLocation = RouterConf.login.path;
+      final signupLocation = RouterConf.signup.path;
+      final splashLocation = RouterConf.splash.path;
+      final passwordRecoveryLocation = RouterConf.passwordRecovery.path;
       final isOnDefaultPage = state.subloc == defaultLocation;
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
@@ -123,8 +123,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       // don't redirect in all other cases
       return null;
     },
-    // Turn off the # in the URLs on the web
-    urlPathStrategy: UrlPathStrategy.path,
     debugLogDiagnostics: kDebugMode,
   );
 });

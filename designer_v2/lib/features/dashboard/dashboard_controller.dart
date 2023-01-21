@@ -43,7 +43,7 @@ class DashboardController extends StateNotifier<DashboardState>
       );
     }, onError: (error) {
       state = state.copyWith(
-        studies: () => AsyncValue.error(error),
+        studies: () => AsyncValue.error(error, StackTrace.current),
       );
     });
   }

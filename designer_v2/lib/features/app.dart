@@ -68,12 +68,16 @@ class _AppContentState extends ConsumerState<AppContent> {
     super.initState();
     appController = ref.read(appControllerProvider.notifier);
     appController.onAppStart();
+    // todo move this into appControllerProvider
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Locale Startup Actions
+      ref.read(localeStateProvider.notifier).initLocale();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = ref.watch(localeProvider);
-    AppTranslation.init(ref);
+    AppTranslation.init(ref); // todo Refactor this into initState locale delegate if possible
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(
@@ -93,19 +97,19 @@ class _AppContentState extends ConsumerState<AppContent> {
                 child: widget,
               ),
               debugShowCheckedModeBanner: Config.isDebugMode,
-              title: 'Study Designer'.hardcoded,
+              title: 'StudyU Designer V2'.hardcoded,
               color: theme.colorScheme.surface,
               theme: theme,
+              routeInformationProvider: router.routeInformationProvider,
               routeInformationParser: router.routeInformationParser,
               routerDelegate: router.routerDelegate,
-              locale: locale,
+              locale: ref.watch(localeProvider),
               supportedLocales: AppLocalizations.supportedLocales,
               localizationsDelegates: const [
                 ...AppLocalizations.localizationsDelegates,
                 // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
                 FormBuilderLocalizations.delegate,
               ],
-              //routeInformationProvider: appRouter.routeInformationProvider, // for migration to v4
             );
           },
         ),
