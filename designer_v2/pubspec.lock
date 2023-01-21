@@ -608,7 +608,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.7"
+    version: "0.27.4"
   shared_preferences:
     dependency: "direct main"
     description:
