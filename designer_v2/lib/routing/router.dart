@@ -26,7 +26,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
-      appController.stream,                   // initialization events
+      appController.stream,                          // initialization events
       authRepository.watchAuthStateChanges()  // authentication events
     ]),
     initialLocation: defaultLocation,
