@@ -44,7 +44,7 @@ class AuthRepository implements IAuthRepository {
       SuppressedBehaviorSubject(_authStateStreamController);
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
-  late final GotrueSubscription _authSubscription;
+  // late final GotrueSubscription _authSubscription;
 
   GoTrueClient get authClient => supabaseClient.auth;
 
@@ -61,7 +61,7 @@ class AuthRepository implements IAuthRepository {
   /// Register as a listener on [SupabaseClient] to re-expose auth state
   /// changes on the repository's stream
   void _registerAuthListener() {
-    _authSubscription = authClient.onAuthStateChange((event, session) {
+    /* _authSubscription =*/ authClient.onAuthStateChange((event, session) {
       switch (event) {
         case AuthChangeEvent.signedIn:
           // Update stream with logged in user
@@ -99,10 +99,10 @@ class AuthRepository implements IAuthRepository {
   bool get isLoggedIn => currentUser != null;
 
   @override
-  Stream<User?> watchAuthStateChanges({emitLastEvent = true}) =>
+  BehaviorSubject<User?> watchAuthStateChanges({emitLastEvent = true}) =>
       (emitLastEvent)
-          ? _authStateStreamController.stream
-          : _authStateSuppressedController.stream;
+          ? _authStateStreamController
+          : _authStateSuppressedController.subject;
 
   @override
   Future<bool> signUp({required String email, required String password}) async {

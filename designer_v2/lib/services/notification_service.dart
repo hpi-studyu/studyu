@@ -23,7 +23,7 @@ class NotificationService implements INotificationService {
   final BehaviorSubject<NotificationIntent> _streamController = BehaviorSubject();
 
   @override
-  Stream<NotificationIntent> watchNotifications() => _streamController.stream;
+  Stream<NotificationIntent> watchNotifications() => _streamController;
 
   @override
   void showMessage(String message, {List<NotificationAction>? actions}) {
