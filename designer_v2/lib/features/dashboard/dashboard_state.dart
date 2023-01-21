@@ -33,7 +33,7 @@ class DashboardState extends Equatable {
   AsyncValue<List<Study>> get visibleStudies {
     return studies.when(
         data: (studies) => AsyncValue.data(_filterAndSortStudies(studies)),
-        error: (error, _) => AsyncValue.error(error),
+        error: (error, _) => AsyncValue.error(error, StackTrace.current),
         loading: () => const AsyncValue.loading(),
     );
   }

@@ -191,7 +191,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
       state = const AsyncValue.loading();
       return await authRepository.signUp(email: email, password: password);
     } catch (e) {
-      state = AsyncValue.error(e);
+      state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -215,7 +215,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
       }
       return true;
     } catch (e) {
-      state = AsyncValue.error(e);
+      state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -228,7 +228,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
       state = const AsyncValue.loading();
       return authRepository.signOut();
     } catch (e) {
-      state = AsyncValue.error(e);
+      state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -239,7 +239,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
       state = const AsyncValue.loading();
       return await authRepository.resetPasswordForEmail(email: email);
     } catch (e) {
-      state = AsyncValue.error(e);
+      state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }
@@ -276,7 +276,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
       state = const AsyncValue.loading();
       return await authRepository.updateUser(newPassword: newPassword);
     } catch (e) {
-      state = AsyncValue.error(e);
+      state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }

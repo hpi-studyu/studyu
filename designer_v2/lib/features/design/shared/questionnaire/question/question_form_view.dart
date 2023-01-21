@@ -111,9 +111,9 @@ class _SurveyQuestionFormViewState
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                                  size: iconTheme?.size,
-                                  color: iconTheme?.color,
-                                  shadows: iconTheme?.shadows)
+                                  size: iconTheme.size,
+                                  color: iconTheme.color,
+                                  shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)
