@@ -97,7 +97,7 @@ class RouterConf {
   static final root = GoRoute(
     path: "/",
     name: "root",
-    redirect: (GoRouterState state) => state.namedLocation(studies.name!),
+    redirect: (BuildContext context, GoRouterState state) => state.namedLocation(studies.name!),
   );
 
   static final studies = GoRoute(
@@ -118,7 +118,7 @@ class RouterConf {
   static final study = GoRoute(
     path: "/studies/:${RouteParams.studyId}",
     name: "study",
-    redirect: (GoRouterState state) => state.namedLocation(
+    redirect: (BuildContext context, GoRouterState state) => state.namedLocation(
         studyEdit.name!,
         params: {
           RouteParams.studyId: state.params[RouteParams.studyId]!
@@ -129,7 +129,7 @@ class RouterConf {
   static final studyEdit = GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: "studyEdit",
-      redirect: (GoRouterState state) => state.namedLocation(
+      redirect: (BuildContext context, GoRouterState state) => state.namedLocation(
           studyEditInfo.name!,
           params: {
             RouteParams.studyId: state.params[RouteParams.studyId]!
@@ -349,7 +349,7 @@ class RouterConf {
   static final accountSettings = GoRoute(
       path: "/settings",
       name: "accountSettings",
-      pageBuilder: (context, state) {
+      pageBuilder: (BuildContext context, GoRouterState state) {
         return buildModalTransitionPage(context, state,
           const AccountSettingsDialog(),
         );
@@ -359,7 +359,7 @@ class RouterConf {
   static final splash = GoRoute(
     path: "/splash",
     name: "splash",
-    builder: (context, state) => const SplashPage(),
+    builder: (context, state) => const  SplashPage(),
   );
 
   static final login = GoRoute(

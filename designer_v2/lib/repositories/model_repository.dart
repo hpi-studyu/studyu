@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
-import 'package:studyu_designer_v2/utils/behaviour_subject.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
@@ -32,7 +31,7 @@ class WrappedModel<T> {
   DateTime? lastUpdated;
 
   markWithError(Object error, {StackTrace? stackTrace}) {
-    asyncValue = AsyncError<T>(error).copyWithPrevious(asyncValue);
+    asyncValue = AsyncError<T>(error, StackTrace.current).copyWithPrevious(asyncValue);
   }
 
   markAsLoading() {
