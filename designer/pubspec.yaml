@@ -16,7 +16,7 @@ dependencies:
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
   email_validator: ^2.1.17
-  fl_chart: ^0.46.0 # breaking
+  fl_chart: ^0.55.2 # breaking
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.0
