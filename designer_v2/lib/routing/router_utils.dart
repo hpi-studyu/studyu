@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 extension RouterConvencienceX on GoRouter {
-  get currentPath => routerDelegate.currentConfiguration.path;
+  get currentPath => routerDelegate.currentConfiguration.fullpath;
 
   bool isOn(String routeName) {
     return namedLocation(routeName) == currentPath;
@@ -22,7 +22,7 @@ mixin GoRouteParamEnum {
 }
 
 RouteSettings readCurrentRouteSettingsFrom(BuildContext context) {
-  late final currentRouteSettings;
+  late final RouteSettings currentRouteSettings;
   Navigator.popUntil(context, (route) {
     currentRouteSettings = route.settings;
     //_currentRoute = route.settings.name;

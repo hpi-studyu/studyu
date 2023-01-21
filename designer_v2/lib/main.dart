@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
+import 'package:flutter_web_plugins/url_strategy.dart';
+
 Future<void> main() async {
   await loadEnv();
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -22,6 +24,8 @@ Future<void> main() async {
       print("Exception: ${errorDetails.exception.toString()}");
       print("Stack: ${errorDetails.stack.toString()}");
     };
+    // Turn off the # in the URLs on the web
+    usePathUrlStrategy();
 
     runApp(
       // Make dependencies managed by Riverpod available in Widget.build methods

@@ -28,7 +28,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void initState() {
     super.initState();
     controller = ref.read(dashboardControllerProvider.notifier);
-    controller.setStudiesFilter(widget.filter);
+    runAsync(() => controller.setStudiesFilter(widget.filter));
   }
 
   @override
