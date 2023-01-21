@@ -260,7 +260,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     if (fetchOnSubscribe) {
       fetchAll();
     }
-    return _allModelsStreamController.stream;
+    return _allModelsStreamController;
   }
 
   /// Returns a stream that emits the model of type [T] identified by the
@@ -312,12 +312,12 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       }
     }
 
-    return modelController.stream;
+    return modelController;
   }
 
   @override
   Stream<ModelEvent<T>> watchAllChanges() {
-    return _allModelEventsStreamController.stream;
+    return _allModelEventsStreamController;
   }
 
   @override
@@ -334,7 +334,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       modelEventsStreamControllers,
       selectModelChangeEvent
     );
-    return modelEventsController.stream;
+    return modelEventsController;
   }
 
   _buildModelSpecificController<A, M>(
@@ -345,7 +345,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     ) {
     // Reuse existing stream if any
     if (modelSpecificControllers.containsKey(modelId)) {
-      return modelSpecificControllers[modelId]!.stream;
+      return modelSpecificControllers[modelId]!;
     }
 
     // Construct a transformed stream that selects the corresponding object of
@@ -360,7 +360,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     // itself when it's no longer needed.
     final BehaviorSubject<M> modelSpecificController = BehaviorSubject();
 
-    final subscription = allController.stream.listen((event) {
+    final subscription = allController.listen((event) {
       final M? outputEvent = selectReduceEvent(event);
       if (outputEvent != null) {
         if (!modelSpecificController.isClosed) {
