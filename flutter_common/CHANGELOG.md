@@ -1,3 +1,16 @@
+## 1.4.0-dev.0
+
+ - **FIX**: upgrade deps. ([4b011445](https://github.com/hpi-studyu/studyu/commit/4b011445bb2390570c536646bb119b5a00a809ab))
+ - **FIX**: .env file. ([9129ae84](https://github.com/hpi-studyu/studyu/commit/9129ae84790906bbeffaba382af8171592192722))
+ - **FIX**: set correct app link. ([da56b363](https://github.com/hpi-studyu/studyu/commit/da56b3637f61b98fb792da571b31383329ac275a))
+ - **FIX**: adapt temp urls to current PR. ([f2360b5d](https://github.com/hpi-studyu/studyu/commit/f2360b5df9ff9b900ed08b958bdfcd822d86ab96))
+ - **FIX**: TEMPORARY designerDeepLink fix. ([cb401860](https://github.com/hpi-studyu/studyu/commit/cb401860f8945803be5dfaab0603a3e2f2761ddf))
+ - **FIX**: Add .env.staging and fix workflow build. ([5f6138a3](https://github.com/hpi-studyu/studyu/commit/5f6138a3351396aaec0d93b2f55f8a7f4104e9a0))
+ - **FEAT**: dont record participant progress for launched studies in test mode. ([2dc6a8ca](https://github.com/hpi-studyu/studyu/commit/2dc6a8ca72785d8929b3ecf3451d352c893fabde))
+ - **FEAT**: add selective preview for eligibility check. ([af96450f](https://github.com/hpi-studyu/studyu/commit/af96450f0d98afd719acc1bce09b9148dc924123))
+ - **FEAT**: TEMPORARILY change designer deep link. ([362d08bf](https://github.com/hpi-studyu/studyu/commit/362d08bfa016cb5750ab34b454e140f31a47ae46))
+ - **FEAT**: decouple preview app state from live app. ([82b0e3c4](https://github.com/hpi-studyu/studyu/commit/82b0e3c4b0dfe9d957a11563546fbb3ae328731e))
+
 ## 1.3.22
 
  - **FIX**: upgrade deps. ([d221eae7](https://github.com/hpi-studyu/studyu/commit/d221eae7ea55fa8761d7ff7625f92eaa3488148e))
