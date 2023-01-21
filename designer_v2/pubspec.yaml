@@ -20,8 +20,8 @@ dependencies:
   shared_preferences: ^2.0.17
   equatable: ^2.0.5
   rxdart: ^0.27.7
-  supabase: ^0.3.6 # breaking
-  supabase_flutter: ^0.3.3 # breaking
+  supabase: ^0.3.6
+  supabase_flutter: ^0.3.3
   url_launcher: ^6.1.8
   reactive_forms: ^14.1.0
   uuid: ^3.0.7
