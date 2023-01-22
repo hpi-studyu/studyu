@@ -51,8 +51,7 @@ class AuthRepository implements IAuthRepository {
   GoTrueClient get authClient => supabaseClient.auth;
 
   @override
-  //Session? get session => authClient.session();
-  late Session? session;
+  Session? get session => authClient.currentSession;
 
   AuthRepository({
     required this.supabaseClient,
@@ -66,7 +65,6 @@ class AuthRepository implements IAuthRepository {
   void _registerAuthListener() {
     _authSubscription = supabaseClient.auth.onAuthStateChange.listen((data) {
       final AuthChangeEvent event = data.event;
-      session = data.session;
 
       // handle auth state change
       switch (event) {
@@ -225,14 +223,14 @@ final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
 });
 
 final currentUserProvider = riverpod.Provider<User?>((ref) {
-  // todo is executed permanently
-  print("currentUserProvider");
   final authRepository = ref.watch(authRepositoryProvider);
   authRepository
       .watchAuthStateChanges(emitLastEvent: false)
       .listen((event) {
-    //print("currentUserProvider.dispose");
-    // ref.invalidateSelf();
+        print("currentUserProvider.dispose: ${event?.email}");
+        // todo will create loop, needs further evaluation
+        // ref.invalidateSelf();
   });
+  print("currentUserProvider: ${authRepository.currentUser?.email}");
   return authRepository.currentUser;
 });
