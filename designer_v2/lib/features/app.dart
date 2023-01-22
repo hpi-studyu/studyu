@@ -11,20 +11,18 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/services/notification_dispatcher.dart';
 import 'package:studyu_designer_v2/theme.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import 'auth/auth_state.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
+/// Entry widget of the app.
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  _AppState createState() => _AppState();
+  State<App> createState() => _AppState();
 }
 
-class _AppState extends AuthState<App> {
+class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return const AppContent();
@@ -33,7 +31,10 @@ class _AppState extends AuthState<App> {
   @override
   void initState() {
     super.initState();
-    // todo move this to appController.onAppStart()
+
+    /*
+    // is this handled by supabase internally?
+    // move this to appController.onAppStart()
     final uriParameters = SupabaseAuth.instance.parseUriParameters(Uri.base);
     if (uriParameters.containsKey('access_token') &&
         uriParameters.containsKey('refresh_token') &&
@@ -41,7 +42,7 @@ class _AppState extends AuthState<App> {
       /// Uri.base is a auth redirect link
       /// Call recoverSessionFromUrl to continue
       recoverSessionFromUrl(Uri.base);
-    }
+    }*/
   }
 }
 

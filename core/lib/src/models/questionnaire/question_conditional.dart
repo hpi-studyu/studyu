@@ -7,7 +7,7 @@ part 'question_conditional.g.dart';
 @JsonSerializable()
 class QuestionConditional<V> {
   static const String keyDefaultValue = 'defaultValue';
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   V? defaultValue;
   late Expression condition;
 

@@ -13,4 +13,9 @@ class ReportSpecification {
 
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);
+
+  @override
+  String toString() {
+    return 'ReportSpecification{primary: $primary, secondary: $secondary}';
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,12 +18,16 @@ Future<void> storeFakeUserEmailAndPassword(String email, String password) async 
 Future<bool> signInParticipant() async {
   final prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
-    final res = await Supabase.instance.client.auth
-        .signIn(email: await getFakeUserEmail(), password: await getFakeUserPassword());
-    if (res.error == null && Supabase.instance.client.auth.session() != null) {
-      return true;
+    try {
+      await Supabase.instance.client.auth
+          .signInWithPassword(email: await getFakeUserEmail(),
+          password: (await getFakeUserPassword())!,);
+      if (Supabase.instance.client.auth.currentSession != null) {
+        return true;
+      }
+    } catch(error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
     }
-    print(res.error!.message);
   }
   return false;
 }
@@ -31,13 +36,15 @@ Future<bool> signInParticipant() async {
 Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
-  final res = await Supabase.instance.client.auth.signUp(fakeUserEmail, fakeUserPassword);
-
-  if (res.error == null) {
+  try {
+    await Supabase.instance.client.auth.signUp(
+        email: fakeUserEmail, password: fakeUserPassword);
     await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
     return signInParticipant();
+  } catch(error, stacktrace) {
+    SupabaseQuery.catchSupabaseException(error, stacktrace);
+    return false;
   }
-  return false;
 }
 
 Future<String?> getFakeUserEmail() async {
@@ -51,7 +58,7 @@ Future<String?> getFakeUserPassword() async {
 }
 
 bool isUserLoggedIn() {
-  return Supabase.instance.client.auth.session() != null;
+  return Supabase.instance.client.auth.currentSession != null;
 }
 
 Future<String?> getActiveSubjectId() async {

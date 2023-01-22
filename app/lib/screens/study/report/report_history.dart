@@ -19,7 +19,7 @@ class ReportHistoryScreen extends StatelessWidget {
         ),
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
-        tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.user().id),
+        tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.currentUser.id),
         successBuilder: (BuildContext context, List<StudySubject> pastStudies) {
           return ListView.builder(
             itemCount: pastStudies.length,

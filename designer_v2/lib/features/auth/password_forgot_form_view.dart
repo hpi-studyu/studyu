@@ -6,27 +6,12 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
-import 'package:studyu_designer_v2/features/auth/auth_state.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class PasswordForgotForm extends StatefulWidget {
+class PasswordForgotForm extends FormConsumerRefWidget {
   const PasswordForgotForm({Key? key}) : super(key: key);
-
-  @override
-  _PasswordRecoveryPageState createState() => _PasswordRecoveryPageState();
-}
-
-class _PasswordRecoveryPageState extends AuthState<PasswordForgotForm> {
-  @override
-  Widget build(BuildContext context) {
-    return const _PasswordForgotFormBody();
-  }
-}
-
-class _PasswordForgotFormBody extends FormConsumerRefWidget {
-  const _PasswordForgotFormBody({Key? key}) : super(key: key);
 
   final AuthFormKey formKey = AuthFormKey.passwordForgot;
 

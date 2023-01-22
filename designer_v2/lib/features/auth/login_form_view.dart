@@ -7,13 +7,12 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
-import 'package:studyu_designer_v2/features/auth/auth_required_state.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class _LoginFormBody extends FormConsumerRefWidget {
-  const _LoginFormBody({Key? key}) : super(key: key);
+class LoginForm extends FormConsumerRefWidget {
+  const LoginForm({Key? key}) : super(key: key);
 
   final AuthFormKey formKey = AuthFormKey.login;
 
@@ -99,19 +98,5 @@ class _LoginFormBody extends FormConsumerRefWidget {
         )
       ],
     );
-  }
-}
-
-class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
-
-  @override
-  _LoginFormState createState() => _LoginFormState();
-}
-
-class _LoginFormState extends AuthRequiredState<LoginForm> {
-  @override
-  Widget build(BuildContext context) {
-    return const _LoginFormBody();
   }
 }

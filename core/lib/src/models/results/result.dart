@@ -12,7 +12,7 @@ class Result<T> {
   String type;
 
   static const String keyResult = 'result';
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late T result;
 
   Result(this.type);

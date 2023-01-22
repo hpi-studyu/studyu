@@ -82,7 +82,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final appState = context.read<AppState>();
     appState.activeSubject = StudySubject.fromStudy(
       appState.selectedStudy,
-      Supabase.instance.client.auth.user().id,
+      Supabase.instance.client.auth.currentUser.id,
       selectedInterventionIds,
       appState.inviteCode,
     );

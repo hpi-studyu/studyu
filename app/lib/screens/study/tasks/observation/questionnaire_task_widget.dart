@@ -30,7 +30,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
       }
       if (!mounted) return;
       Navigator.pop(context, true);
-    } on PostgrestError {
+    } on PostgrestException {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context).could_not_save_results),

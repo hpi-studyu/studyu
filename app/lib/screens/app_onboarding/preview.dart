@@ -39,8 +39,11 @@ class Preview {
     if (!containsQuery('studyid') && !containsQuery('session')) return false;
 
     final String session = Uri.decodeComponent(queryParameters['session']);
-    final recovery = await Supabase.instance.client.auth.recoverSession(session,);
-    if (recovery.error != null) return false;
+    try {
+      await Supabase.instance.client.auth.recoverSession(session,);
+    } catch(_) {
+      return false;
+    }
 
     if (containsQuery('data')) {
       final data = jsonDecode(queryParameters['data']) as Map<String, dynamic>;
@@ -182,7 +185,7 @@ class Preview {
     }
     subject = StudySubject.fromStudy(
       study,
-      Supabase.instance.client.auth.user().id,
+      Supabase.instance.client.auth.currentUser.id,
       getInterventionIds(),
       null, // no invite code
     );

@@ -67,6 +67,11 @@ class StudySchedule {
         return 'Random';
     }
   }
+
+  @override
+  String toString() {
+    return 'StudySchedule{numberOfCycles: $numberOfCycles, phaseDuration: $phaseDuration, includeBaseline: $includeBaseline, sequence: $sequence}';
+  }
 }
 
 enum PhaseSequence {

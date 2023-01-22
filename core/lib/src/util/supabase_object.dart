@@ -56,46 +56,62 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   }
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().execute(),
+        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().select<Map<String,dynamic>>(),
       );
 
   Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).execute()).single;
+    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select()).single;
   }
 }
 
 // ignore: avoid_classes_with_only_static_members
 class SupabaseQuery {
-  static Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async =>
-      extractSupabaseList(await env.client.from(tableName(T)).select(selectedColumns.join(',')).execute());
+  static Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async {
+    try {
+      return extractSupabaseList(await env.client.from(tableName(T)).select(selectedColumns.join(',')));
+    } catch (error, stacktrace) {
+      catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
 
-  static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async =>
-      extractSupabaseSingleRow(
-        await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single().execute(),
+  static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async {
+    try {
+      return extractSupabaseSingleRow(
+        await env.client.from(tableName(T)).select(selectedColumns.join(','))
+            .eq('id', id).single() as Map<String, dynamic>,
       );
+    } catch (error, stacktrace) {
+      catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
 
   static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
-      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).execute());
+      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
 
-  static List<T> extractSupabaseList<T extends SupabaseObject>(PostgrestResponse response) {
-    catchPostgrestError(response);
+  static List<T> extractSupabaseList<T extends SupabaseObject>(List<Map<String, dynamic>> response) {
     return List<T>.from(
-      List<Map<String, dynamic>>.from(response.data as List).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
+      List<Map<String, dynamic>>.from(response).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
     );
   }
 
-  static T extractSupabaseSingleRow<T extends SupabaseObject>(PostgrestResponse response) {
-    catchPostgrestError(response);
-    return SupabaseObjectFunctions.fromJson<T>(response.data as Map<String, dynamic>);
+  static T extractSupabaseSingleRow<T extends SupabaseObject>(Map<String, dynamic> response) {
+      return SupabaseObjectFunctions.fromJson<T>(response);
   }
 
-  static void catchPostgrestError(PostgrestResponse response) {
-    if (response.error != null) {
-      print('Data: ${response.data}');
-      print('Status: ${response.status}');
-      print('Error: ${response.error!.message}');
-      // ignore: only_throw_errors
-      throw response.error!.message;
+  static void catchSupabaseException(Object error, StackTrace stacktrace) {
+    if (error is PostgrestException) {
+      print('Message: ${error.message}');
+      print('Hint: ${error.hint}');
+      print('Details: ${error.details}');
+      print('Code: ${error.code}');
+      print('Stacktrace: $stacktrace');
+      throw error;
+    } else {
+      print('Error: $error');
+      print('Stacktrace: $stacktrace');
+      throw error;
     }
   }
 }

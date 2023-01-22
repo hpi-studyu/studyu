@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,12 +46,13 @@ class AuthRepository implements IAuthRepository {
       SuppressedBehaviorSubject(_authStateStreamController);
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
-  // late final GotrueSubscription _authSubscription;
+  late final StreamSubscription<AuthState> _authSubscription;
 
   GoTrueClient get authClient => supabaseClient.auth;
 
   @override
-  Session? get session => authClient.session();
+  //Session? get session => authClient.session();
+  late Session? session;
 
   AuthRepository({
     required this.supabaseClient,
@@ -61,7 +64,11 @@ class AuthRepository implements IAuthRepository {
   /// Register as a listener on [SupabaseClient] to re-expose auth state
   /// changes on the repository's stream
   void _registerAuthListener() {
-    /* _authSubscription =*/ authClient.onAuthStateChange((event, session) {
+    _authSubscription = supabaseClient.auth.onAuthStateChange.listen((data) {
+      final AuthChangeEvent event = data.event;
+      session = data.session;
+
+      // handle auth state change
       switch (event) {
         case AuthChangeEvent.signedIn:
           // Update stream with logged in user
@@ -85,6 +92,10 @@ class AuthRepository implements IAuthRepository {
         case AuthChangeEvent.tokenRefreshed:
           _persistSession();
           break;
+        case AuthChangeEvent.userDeleted:
+          break;
+        case AuthChangeEvent.mfaChallengeVerified:
+          break;
       }
     });
   }
@@ -106,53 +117,53 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<bool> signUp({required String email, required String password}) async {
-    final res = await authClient.signUp(email, password);
-    if (res.error != null) {
-      throw StudyUException(res.error!.message);
+    try {
+      await authClient.signUp(email: email, password: password);
+      return true;
+    } catch(error) {
+      throw StudyUException(error.toString());
     }
-    return true;
   }
 
   @override
   Future<bool> signInWith(
       {required String email, required String password}) async {
-    final res = await authClient.signIn(email: email, password: password);
-    if (res.error != null) {
-      throw StudyUException(res.error!.message);
+    try {
+      await authClient.signInWithPassword(email: email, password: password);
+      return true;
+    } catch(error) {
+      throw StudyUException(error.toString());
     }
-    return true;
   }
 
   @override
   Future<bool> signOut() async {
-    final res = await authClient.signOut();
-    if (res.error != null) {
-      throw StudyUException(res.error!.message);
+    try {
+      await authClient.signOut();
+      return true;
+    } catch(error) {
+      throw StudyUException(error.toString());
     }
-    return true;
   }
 
   @override
   Future<bool> resetPasswordForEmail({required String email}) async {
-    final res = await authClient.api.resetPasswordForEmail(email,
-        options: AuthOptions(redirectTo: env.authRedirectToUrl));
-    if (res.error != null) {
-      throw StudyUException(res.error!.message);
+    try {
+      await authClient.resetPasswordForEmail(email, redirectTo: env.authRedirectToUrl);
+      return true;
+    } catch(error) {
+      throw StudyUException(error.toString());
     }
-    return true;
   }
 
   @override
   Future<bool> updateUser({required String newPassword}) async {
-    if (session != null) {
-      final res = await authClient.api.updateUser(
-          session!.accessToken, UserAttributes(password: newPassword));
-      if (res.error != null) {
-        throw StudyUException(res.error!.message);
-      }
+    try {
+      await authClient.updateUser(UserAttributes(password: newPassword));
       return true;
+    } catch(error) {
+      throw StudyUException(error.toString());
     }
-    return false;
   }
 
   Future<void> _persistSession() async {
@@ -175,19 +186,22 @@ class AuthRepository implements IAuthRepository {
       return false;
     }
     final jsonStr = sharedPreferences.getString(PERSIST_SESSION_KEY)!;
-    final response = await authClient.recoverSession(jsonStr);
-    if (response.error != null) {
-      debugLog('Failed to recover user session: ${response.error.toString()}');
+    try {
+      final response = await authClient.recoverSession(jsonStr);
+      debugLog('Hydrated user session: ${response.user ?? 'None'}');
+      return true;
+    } catch(error) {
+      debugLog('Failed to recover user session: ${error.toString()}');
       return false;
     }
-    debugLog('Hydrated user session: ${response.user ?? 'None'}');
-    return true;
+
   }
 
   @override
   void dispose() {
     _authStateStreamController.close();
     _authStateSuppressedController.close();
+    _authSubscription.cancel();
   }
 
   // - IAppDelegate

@@ -17,7 +17,7 @@ class SupabaseQueryError implements Exception {
       {required this.statusCode, required this.message, this.details});
 
   /// Status code of the erroneous [PostgrestResponse]
-  final int? statusCode;
+  final String? statusCode;
 
   /// The [PostgrestError] message associated with the [PostgrestResponse]
   final String message;
@@ -28,39 +28,35 @@ class SupabaseQueryError implements Exception {
 
 typedef PostgrestDataCallback = Object Function(dynamic data);
 
-extension PostgrestResponseX on PostgrestResponse {
-  /// Processes the [data] with the given [callback] if there are no errors.
-  /// Throws a [SupabaseQueryError] otherwise.
-  guarded(PostgrestDataCallback callback) {
-    if (hasError) {
-      throw SupabaseQueryError(
-          statusCode: status, message: error!.message, details: error!.details);
-    }
-    return callback(data); // TODO: resolve synchronous error in future
-  }
-}
-
 /// Mixes in networking & deserialization logic into a [SupabaseClientDependant]
 mixin SupabaseQueryMixin on SupabaseClientDependant {
   // - Networking
 
   Future<List<T>> deleteAll<T extends SupabaseObject>(
       Map<String, dynamic> selectionCriteria) async {
-    final PostgrestResponse res = await supabaseClient
-        .from(tableName(T))
-        .delete()
-        .match(selectionCriteria)
-        .execute();
-    return res.guarded((data) => deserializeList<T>(data));
+    try {
+      final data = await supabaseClient
+          .from(tableName(T))
+          .delete()
+          .match(selectionCriteria);
+      return deserializeList<T>(data);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+          statusCode: error.code, message: error.message, details: error.details);
+    }
   }
 
   Future<List<T>> getAll<T extends SupabaseObject>(
       {List<String> selectedColumns = const ['*']}) async {
-    final PostgrestResponse res = await supabaseClient
+    try {
+    final data = await supabaseClient
         .from(tableName(T))
-        .select(selectedColumns.join(','))
-        .execute();
-    return res.guarded((data) => deserializeList<T>(data));
+        .select(selectedColumns.join(','));
+    return deserializeList<T>(data);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+          statusCode: error.code, message: error.message, details: error.details);
+    }
   }
 
   Future<T> getById<T extends SupabaseObject>(String id,
@@ -70,13 +66,17 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
   Future<T> getByColumn<T extends SupabaseObject>(String colName, String value,
       {List<String> selectedColumns = const ['*']}) async {
-    final PostgrestResponse res = await supabaseClient
-        .from(tableName(T))
-        .select(selectedColumns.join(','))
-        .eq(colName, value)
-        .single()
-        .execute();
-    return res.guarded((data) => deserializeObject<T>(data));
+    try {
+      final data = await supabaseClient
+          .from(tableName(T))
+          .select(selectedColumns.join(','))
+          .eq(colName, value)
+          .single();
+      return deserializeObject<T>(data);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+          statusCode: error.code, message: error.message, details: error.details);
+    }
   }
 
   // - Deserialization

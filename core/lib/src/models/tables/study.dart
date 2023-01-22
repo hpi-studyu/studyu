@@ -69,28 +69,28 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(name: 'fhir_questionnaire')
   Questionnaire? fhirQuestionnaire;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: true, includeFromJson: false)
   int participantCount = 0;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int endedCount = 0;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int activeSubjectCount = 0;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<int> missedDays = [];
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   Repo? repo;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<StudyInvite>? invites;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<StudySubject>? participants;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<SubjectProgress>? participantsProgress;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   DateTime? createdAt;
 
   Study(this.id, this.userId);
@@ -164,13 +164,18 @@ class Study extends SupabaseObjectFunctions<Study> {
       );
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  static Future<List<Study>> publishedPublicStudies() async =>
-      SupabaseQuery.extractSupabaseList<Study>(
+  static Future<List<Study>> publishedPublicStudies() async {
+    try {
+      return SupabaseQuery.extractSupabaseList<Study>(
         await env.client
             .from(tableName)
-            .select()
-            .execute(),
+            .select(),
       );
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
 
   bool isOwner(User? user) => user != null && userId == user.id;
 
@@ -189,14 +194,18 @@ class Study extends SupabaseObjectFunctions<Study> {
       totalMissedDays / (participantCount * schedule.length);
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
-    final res = await env.client
-        .from('study_progress')
-        .select()
-        .eq('study_id', studyId)
-        .execute();
-    SupabaseQuery.catchPostgrestError(res);
+    final List res;
+    try {
+      res = await env.client
+          .from('study_progress')
+          .select()
+          .eq('study_id', studyId) as List;
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
 
-    final jsonList = List<Map<String, dynamic>>.from(res.data as List);
+    final jsonList = List<Map<String, dynamic>>.from(res);
     if (jsonList.isEmpty) return '';
     final tableHeadersSet = jsonList[0].keys.toSet();
     final flattenedQuestions = jsonList.map((progress) {
@@ -216,7 +225,8 @@ class Study extends SupabaseObjectFunctions<Study> {
       tableHeaders,
       ...flattenedQuestions.map((progress) => tableHeaders
           .map((header) => progress[header] ?? '')
-          .toList(growable: false))
+          .toList(growable: false),
+      )
     ];
     return const ListToCsvConverter().convert(resultsTable);
   }
@@ -237,5 +247,10 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   bool isReadonly(User user) {
     return status != StudyStatus.draft || !canEdit(user);
+  }
+
+  @override
+  String toString() {
+    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, fhirQuestionnaire: $fhirQuestionnaire, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 }
