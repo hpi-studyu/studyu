@@ -18,6 +18,8 @@ class SuppressedBehaviorSubject<T> {
         return;
       }
       if (!subject.isClosed) {
+        // todo delme
+        print("BehaviourSubject push event: $event");
         controller.add(event);
       }
     });
