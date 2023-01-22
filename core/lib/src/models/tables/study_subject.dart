@@ -34,10 +34,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @JsonKey(name: 'is_deleted')
   bool isDeleted = false;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late Study study;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late List<SubjectProgress> progress = [];
 
   StudySubject(this.id, this.studyId, this.userId, this.selectedInterventionIds);
@@ -48,6 +48,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     final Map<String, dynamic>? study = json['study'] as Map<String, dynamic>?;
     if (study != null) {
       subject.study = Study.fromJson(study);
+      print("StudySubject: Got study");
+      //print("StudySubject: Got subject.study: " + subject.study.toString());
+    } else {
+      print("StudySubject: Study is null");
+      //print("StudySubject: StudySubject is: " + subject.toString());
     }
 
     final List? progress = json['subject_progress'] as List?;
@@ -55,6 +60,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       subject.progress = progress
           .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
           .toList();
+      print("StudySubject: Progress");
+    } else {
+      print("StudySubject: Progress is null");
     }
 
     return subject;
@@ -251,28 +259,41 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   @override
   Future<StudySubject> save() async {
-    final response = await env.client.from(tableName).upsert(toJson()).execute();
-
-    SupabaseQuery.catchPostgrestError(response);
-    final json = List<Map<String, dynamic>>.from(response.data as List).single;
-    json['study'] = study.toJson();
-    json['subject_progress'] = progress.map((p) => p.toJson()).toList();
-    return StudySubject.fromJson(json);
+    try {
+      final response = await env.client.from(tableName).upsert(toJson()).select<List>();
+      final json = List<Map<String, dynamic>>.from(response)
+          .single;
+      json['study'] = study.toJson();
+      json['subject_progress'] = progress.map((p) => p.toJson()).toList();
+      return StudySubject.fromJson(json);
+    } catch (e, stack) {
+      SupabaseQuery.catchSupabaseException(e, stack);
+      rethrow;
+    }
   }
 
-  Future<void> deleteProgress() async => SupabaseQuery.catchPostgrestError(
-        await env.client.from(SubjectProgress.tableName).delete().eq('subject_id', id).execute(),
-      );
+  Future<void> deleteProgress() async {
+    try {
+      await env.client.from(SubjectProgress.tableName).delete().eq('subject_id', id);
+    } catch(error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
 
   @override
   Future<StudySubject> delete() async {
     await deleteProgress();
-    final response = await env.client.from(tableName).delete().eq('id', id).single().execute();
-
-    SupabaseQuery.catchPostgrestError(response);
-    final json = response.data as Map<String, dynamic>;
-    json['study'] = study.toJson();
-    return StudySubject.fromJson(json);
+    try {
+      final response = await env.client.from(tableName).delete()
+          .eq('id', id)
+          .single().select<Map<String,dynamic>>();
+      response['study'] = study.toJson();
+      return StudySubject.fromJson(response);
+    } catch(error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
   }
 
   Future<StudySubject> softDelete() {
@@ -285,8 +306,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         await env.client
             .from(tableName)
             .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-            .eq('study_id', study.id)
-            .execute(),
+            .eq('study_id', study.id).select(),
       );
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async {
@@ -294,8 +314,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       await env.client
           .from(tableName)
           .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-          .eq('user_id', userId)
-          .execute(),
+          .eq('user_id', userId).select(),
     );
+  }
+
+  @override
+  String toString() {
+    return 'StudySubject{id: $id, studyId: $studyId, userId: $userId, startedAt: $startedAt, selectedInterventionIds: $selectedInterventionIds, inviteCode: $inviteCode, isDeleted: $isDeleted, study: $study, progress: $progress}';
   }
 }

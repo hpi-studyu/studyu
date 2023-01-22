@@ -22,7 +22,7 @@ class ScaleQuestion extends SliderQuestion
   @JsonKey(name: 'max_color')
   int? maxColor;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   double _step = 0; // autogenerate intermediate values by default
 
   @override
@@ -31,12 +31,12 @@ class ScaleQuestion extends SliderQuestion
   @override
   set step(double value) => _step = value;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   bool get isAutostep => _step == 0;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int get autostep =>
-      getAutostepSize(scaleMaxValue: maximum.toInt(), numValuesGenerated: 10);
+      getAutostepSize(scaleMaxValue: maximum.toInt());
 
   ScaleQuestion() : super(questionType);
 
@@ -83,11 +83,11 @@ class ScaleQuestion extends SliderQuestion
   @override
   Map<String, dynamic> toJson() => _$ScaleQuestionToJson(this);
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<Annotation> get annotationsSorted =>
       annotations.sorted((a, b) => a.value.compareTo(b.value));
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   Annotation? get minAnnotation {
     final firstOrNull = annotationsSorted.firstOrNull;
     if (firstOrNull?.value == minimum) {
@@ -96,7 +96,7 @@ class ScaleQuestion extends SliderQuestion
     return null;
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   Annotation? get maxAnnotation {
     final lastOrNull = annotationsSorted.lastOrNull;
     if (lastOrNull?.value == maximum) {
@@ -105,10 +105,10 @@ class ScaleQuestion extends SliderQuestion
     return null;
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String? get minLabel => minAnnotation?.annotation;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String? get maxLabel => maxAnnotation?.annotation;
 
   set minLabel(String? newLabel) {
@@ -131,7 +131,7 @@ class ScaleQuestion extends SliderQuestion
     }
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<Annotation> get midAnnotations => annotationsSorted
       .where((a) => a.value != minimum && a.value != maximum)
       .toList();
@@ -152,11 +152,11 @@ class ScaleQuestion extends SliderQuestion
     this.annotations = newAnnotations;
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<String> get midLabels =>
       midAnnotations.map((a) => a.annotation).toList();
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<double> get midValues =>
       midAnnotations.map((a) => a.value.toDouble()).toList();
 
@@ -184,7 +184,7 @@ class ScaleQuestion extends SliderQuestion
     addAnnotation(value: atValue.toInt(), label: newLabel);
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<double> get values {
     final List<double> values = [];
     for (double value = minimum; value < maximum; value += step) {
@@ -197,24 +197,24 @@ class ScaleQuestion extends SliderQuestion
   // - VisualAnalogueQuestion
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String get minimumAnnotation =>
       minAnnotation?.annotation ?? minimum.toString();
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String get maximumAnnotation =>
       maxAnnotation?.annotation ?? maximum.toString();
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int get maximumColor => maxColor ?? 0xFFFFFFFF;
 
   @override
   set maximumColor(int value) => maxColor = value;
 
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int get minimumColor => minColor ?? 0xFFFFFFFF;
 
   @override
@@ -252,8 +252,7 @@ class ScaleQuestion extends SliderQuestion
     required int scaleMaxValue,
     int numValuesGenerated = 10,
   }) {
-    final int midValueStepSize = getAutostepSize(
-        scaleMaxValue: scaleMinValue, numValuesGenerated: numValuesGenerated);
+    final int midValueStepSize = getAutostepSize(scaleMaxValue: scaleMinValue, numValuesGenerated: numValuesGenerated);
     final List<int> midValues = [];
 
     for (int midValue = scaleMinValue + midValueStepSize;

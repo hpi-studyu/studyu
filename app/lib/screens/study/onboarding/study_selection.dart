@@ -141,17 +141,20 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             icon: const Icon(Icons.arrow_forward),
             label: Text(AppLocalizations.of(context).next),
             onPressed: () async {
-              final res = await Supabase.instance.client
-                  .rpc('get_study_from_invite',
+              Map<String,dynamic> result;
+              try {
+                result = await Supabase.instance.client
+                    .rpc('get_study_from_invite',
                   params: {'invite_code': _controller.text},
-              ).single().execute();
-
-              if (res.error != null) {
-                print(res.error.message);
+                ).single().select<Map<String,dynamic>>();
+              } on PostgrestException catch(error) {
+                print(error.message);
                 setState(() {
-                  _errorMessage = res.error.message;
+                  _errorMessage = error.message;
                 });
-              } else if (res.data == null) {
+              }
+
+              if (result == null) {
                 setState(() {
                   _errorMessage = AppLocalizations.of(context).invalid_invite_code;
                 });
@@ -160,18 +163,20 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   _errorMessage = null;
                 });
 
-                final result = res.data as Map<String, dynamic>;
-                final studyRes = await Supabase.instance.client
-                    .rpc('get_study_record_from_invite',
-                  params: {'invite_code': _controller.text},
-                ).single().execute();
-
-                if (studyRes.error != null) {
-                  print(studyRes.error.message);
+                Map<String,dynamic> studyRes;
+                try {
+                  await Supabase.instance.client
+                      .rpc('get_study_record_from_invite',
+                    params: {'invite_code': _controller.text},
+                  ).single();
+                } on PostgrestException catch(error) {
+                  print(error.message);
                   setState(() {
-                    _errorMessage = studyRes.error.message;
+                    _errorMessage = error.message;
                   });
-                } else if (studyRes.data == null) {
+                }
+
+                if (studyRes == null) {
                   setState(() {
                     _errorMessage = AppLocalizations.of(context).error;
                   });
@@ -180,7 +185,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     _errorMessage = null;
                   });
 
-                  final study = Study.fromJson(studyRes.data as Map<String, dynamic>);
+                  final study = Study.fromJson(studyRes);
 
                   if (!mounted) return;
                   Navigator.pop(context);

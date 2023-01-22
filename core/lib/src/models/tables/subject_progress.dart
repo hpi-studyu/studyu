@@ -24,7 +24,7 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   String resultType;
   Result result;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   DateTime? startedAt;
 
   SubjectProgress({

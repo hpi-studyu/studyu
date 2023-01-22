@@ -13,7 +13,7 @@ dependencies:
   fhir: ^0.4.7 # breaking
   json_annotation: ^4.8.0
   quiver: ^3.2.1
-  supabase: ^0.3.6 # breaking
+  supabase: ^1.4.0
   uuid: ^3.0.7
 
 dev_dependencies:

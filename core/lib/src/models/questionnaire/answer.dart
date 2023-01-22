@@ -11,7 +11,7 @@ class Answer<V> {
   DateTime timestamp;
 
   static const String keyResponse = 'response';
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late V response;
 
   Answer(this.question, this.timestamp);

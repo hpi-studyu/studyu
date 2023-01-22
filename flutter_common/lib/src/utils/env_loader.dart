@@ -13,8 +13,8 @@ String envFilePath() {
 
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
-  final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL'];
-  final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY'];
+  final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL']!;
+  final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!;
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,

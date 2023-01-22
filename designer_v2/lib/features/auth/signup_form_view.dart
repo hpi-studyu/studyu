@@ -7,7 +7,6 @@ import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
-import 'package:studyu_designer_v2/features/auth/auth_state.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/repositories/app_repository.dart';
@@ -15,8 +14,8 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class _SignupFormBody extends FormConsumerRefWidget {
-  _SignupFormBody({Key? key}) : super(key: key);
+class SignupForm extends FormConsumerRefWidget {
+  const SignupForm({Key? key}) : super(key: key);
 
   final AuthFormKey formKey = AuthFormKey.signup;
 
@@ -149,19 +148,5 @@ class _SignupFormBody extends FormConsumerRefWidget {
           Uri.parse(value.designerPrivacy[locale.languageCode] ?? ""),
       orElse: () => Uri.parse(''),
     ));
-  }
-}
-
-class SignupForm extends StatefulWidget {
-  const SignupForm({Key? key}) : super(key: key);
-
-  @override
-  _SignupFormState createState() => _SignupFormState();
-}
-
-class _SignupFormState extends AuthState<SignupForm> {
-  @override
-  Widget build(BuildContext context) {
-    return _SignupFormBody();
   }
 }

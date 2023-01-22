@@ -31,7 +31,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy,
-        Supabase.instance.client.auth.user().id,
+        Supabase.instance.client.auth.currentUser.id,
         appState.preselectedInterventionIds,
         appState.inviteCode,
       );
@@ -40,7 +40,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
       // No need to select interventions if there are only 2 or less
       appState.activeSubject = StudySubject.fromStudy(
         appState.selectedStudy,
-        Supabase.instance.client.auth.user().id,
+        Supabase.instance.client.auth.currentUser.id,
         study.interventions.map((i) => i.id).toList(),
         appState.inviteCode,
       );

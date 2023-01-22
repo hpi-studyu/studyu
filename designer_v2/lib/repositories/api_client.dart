@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_subject.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
-import 'package:supabase/src/supabase.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class StudyUApi {
   Future<Study> saveStudy(Study study);
@@ -211,6 +211,6 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 }
 
-final apiClientProvider = Provider<StudyUApi>((ref) => StudyUApiClient(
+final apiClientProvider = riverpod.Provider<StudyUApi>((ref) => StudyUApiClient(
       supabaseClient: ref.watch(supabaseClientProvider),
     ));
