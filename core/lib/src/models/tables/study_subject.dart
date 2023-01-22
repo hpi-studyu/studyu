@@ -4,12 +4,11 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/collection.dart';
+import 'package:studyu_core/src/env/env.dart' as env;
+import 'package:studyu_core/src/models/models.dart';
+import 'package:studyu_core/src/util/extensions.dart';
+import 'package:studyu_core/src/util/supabase_object.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../env/env.dart' as env;
-import '../../util/extensions.dart';
-import '../../util/supabase_object.dart';
-import '../models.dart';
 
 part 'study_subject.g.dart';
 
@@ -48,11 +47,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     final Map<String, dynamic>? study = json['study'] as Map<String, dynamic>?;
     if (study != null) {
       subject.study = Study.fromJson(study);
-      print("StudySubject: Got study");
-      //print("StudySubject: Got subject.study: " + subject.study.toString());
-    } else {
-      print("StudySubject: Study is null");
-      //print("StudySubject: StudySubject is: " + subject.toString());
     }
 
     final List? progress = json['subject_progress'] as List?;
@@ -60,9 +54,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       subject.progress = progress
           .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
           .toList();
-      print("StudySubject: Progress");
-    } else {
-      print("StudySubject: Progress is null");
     }
 
     return subject;

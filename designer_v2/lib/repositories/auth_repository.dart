@@ -194,7 +194,6 @@ class AuthRepository implements IAuthRepository {
       debugLog('Failed to recover user session: ${error.toString()}');
       return false;
     }
-
   }
 
   @override
@@ -226,13 +225,14 @@ final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
 });
 
 final currentUserProvider = riverpod.Provider<User?>((ref) {
+  // todo is executed permanently
   print("currentUserProvider");
   final authRepository = ref.watch(authRepositoryProvider);
   authRepository
       .watchAuthStateChanges(emitLastEvent: false)
       .listen((event) {
-    print("currentUserProvider.dispose");
-    ref.invalidateSelf();
+    //print("currentUserProvider.dispose");
+    // ref.invalidateSelf();
   });
   return authRepository.currentUser;
 });
