@@ -5,7 +5,7 @@ abstract class ValueExpression<V> extends Expression {
   static const String expressionType = 'value';
   String? target;
 
-  ValueExpression(String type) : super(type);
+  ValueExpression(String super.type);
 
   bool checkValue(V value);
 

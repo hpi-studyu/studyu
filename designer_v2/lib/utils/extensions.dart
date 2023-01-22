@@ -19,8 +19,7 @@ extension StringX on String {
     label ??= kCopySuffix;
 
     final regexStr = r"\((?:" + label + r")\s*(\d*)\)$";
-    final suffixFactory =
-        (n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
+    suffixFactory(n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
     final regex = RegExp(regexStr);
 
     Iterable<RegExpMatch> matches = regex.allMatches(this);

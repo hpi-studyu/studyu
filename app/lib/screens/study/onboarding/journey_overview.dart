@@ -91,7 +91,7 @@ class Timeline extends StatelessWidget {
             date: now.add(Duration(days: index * subject.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
-        }).toList(),
+        }),
         InterventionTile(
           title: AppLocalizations.of(context).journey_results_available,
           iconName: 'flagCheckered',

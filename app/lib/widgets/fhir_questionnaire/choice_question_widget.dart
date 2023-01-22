@@ -66,7 +66,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
       choiceWidgets.add(
         ElevatedButton(
           onPressed: confirm,
-          style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
+          style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
           child: Text(AppLocalizations.of(context).confirm),
         ),
       );
