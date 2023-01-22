@@ -120,8 +120,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // INTERVENTION [i]
         if (preview.selectedRoute == '/intervention') {
           // todo not sure which includeBaseline statement is needed.
-          // todo Either one of here or in preview.createFakeSubject
-          // todo maybe remove
+          // Either one of here or in preview.createFakeSubject
+          // maybe remove
           state.selectedStudy.schedule.includeBaseline = false;
           state.activeSubject.study.schedule.includeBaseline = false;
           // print("[PreviewApp]: Route preview");
@@ -174,37 +174,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
       previewSubjectIdKey();
     }
 
-    // todo temp debug
-    //await storeFakeUserEmailAndPassword('a2a04eae-70ee-47d7-875b-22fb3e191073@fake-studyu-email-domain.com', "f7ec7b54-f59c-4ab4-aa89-2c34265cb63b");
-    //signInParticipant();
-    //await storeActiveSubjectId("dabb4a04-77a0-44ff-b82a-389f059410f3");
-
     final selectedStudyObjectId = await getActiveSubjectId();
     print('Selected study: $selectedStudyObjectId');
-/*
-    try {
-     final test =
-      // await SupabaseClient('https://rzxnjlfzycwnaayubbeo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6eG5qbGZ6eWN3bmFheXViYmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTY1MTM1MTcsImV4cCI6MTk3MjA4OTUxN30.OGqe_zCQIUImHc5YwN5S0PljMTdhT4Jtb8VK9eGtE-4')
-      await Supabase.instance.client
-          .from('study_subject')
-          .select('*, study!study_subject_studyId_fkey(*), subject_progress(*)')
-          .eq('id', selectedStudyObjectId)
-          .single();
-          //.select<List<Map<String, dynamic>>>();
-          //.select<Map<String, dynamic>>();
-      /*    subject = await SupabaseQuery.getById<StudySubject>(
-        selectedStudyObjectId,
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-      );*/
-      print("test3: " + test.toString());
-    } catch(e) {
-      print("ERROR: " + e.toString());
-    }
-    exit(1);*/
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
@@ -246,7 +217,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
-      // print("Subject: " + subject.toString()); // todo remove me
       state.activeSubject = subject;
       if (!kIsWeb) {
         // Notifications not supported on web
