@@ -29,20 +29,18 @@ class _TaskScreenState extends State<TaskScreen> {
     final subject = context.watch<AppState>().activeSubject;
     if (widget.task != null) {
       final tasks = <Task>[
-    ...subject.study.observations.where((observation) => observation.id == widget.task.id).toList(),
+    ...subject.study.observations.where((observation) => observation.id == widget.task.id),
     ...subject.selectedInterventions
         .map((intervention) => intervention.tasks.where((task) => task.id == widget.task.id))
         .expand((task) => task)
-        .toList()
       ];
       task = tasks.first;
     } else if (widget.taskId != null) {
       final tasks = <Task>[
-        ...subject.study.observations.where((observation) => observation.id == widget.taskId).toList(),
+        ...subject.study.observations.where((observation) => observation.id == widget.taskId),
         ...subject.selectedInterventions
             .map((intervention) => intervention.tasks.where((task) => task.id == widget.taskId))
             .expand((task) => task)
-            .toList()
       ];
       if (tasks.isEmpty) {
         print('No task found with ID ${widget.taskId}');

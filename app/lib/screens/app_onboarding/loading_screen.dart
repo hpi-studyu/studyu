@@ -33,6 +33,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
     if (widget.sessionString == null) {
+      // print("initstudy");
       initStudy();
     }
   }
@@ -53,7 +54,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
 
       // Authorize
       if (!await preview.handleAuthorization()) {
-        print("[PreviewApp]: Preview authorization error");
+        // print('[PreviewApp]: Preview authorization error');
         return;
       }
       state.selectedStudy = preview.study;
@@ -63,13 +64,13 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       iFrameHelper.listen(state);
 
       if (preview.hasRoute()) {
-        print("[PreviewApp]: Found preview route:: " + preview.selectedRoute);
+        // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');
 
         // ELIGIBILITY CHECK
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
           // if we remove the await, we can push multiple times. warning: do not run in while(true)
-          final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
+          await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
           // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
           iFrameHelper.postRouteFinished();
           return;
@@ -78,7 +79,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // INTERVENTION SELECTION
         if (preview.selectedRoute == Routes.interventionSelection) {
           if (!mounted) return;
-          final interventionSelected = await Navigator.pushNamed(context, Routes.interventionSelection);
+          await Navigator.pushNamed(context, Routes.interventionSelection);
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -88,7 +89,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
           if (!mounted) return;
-          final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+          await Navigator.pushNamed<bool>(context, Routes.consent);
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -128,10 +129,10 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         if (preview.selectedRoute == '/observation') {
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra).toList(),
+            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
-          final result = await Navigator.push<bool>(context, TaskScreen.routeFor(task: tasks.first));
+          await Navigator.push<bool>(context, TaskScreen.routeFor(task: tasks.first));
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -190,6 +191,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         ],
       );
     } catch (e) {
+      print("Try signing in again $e");
       try {
         // Try signing in again. Needed if JWT is expired
         await signInParticipant();
@@ -202,7 +204,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
           ],
         );
       } catch (e) {
-        print("Error when trying to login and retrieve the study subject");
+        print('Error when trying to login and retrieve the study subject');
       }
     }
     if (!mounted) return;

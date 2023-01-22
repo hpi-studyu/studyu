@@ -119,6 +119,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
   final _controller = TextEditingController();
   String _errorMessage;
 
+  _InviteCodeDialogState();
+
   @override
   void dispose() {
     _controller.dispose();

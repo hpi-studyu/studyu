@@ -8,9 +8,9 @@ abstract class Observation extends Task {
     QuestionnaireTask.taskType: (json) => QuestionnaireTask.fromJson(json),
   };
 
-  Observation(String type) : super(type);
+  Observation(super.type);
 
-  Observation.withId(String type) : super.withId(type);
+  Observation.withId(super.type) : super.withId();
 
   factory Observation.fromJson(Map<String, dynamic> data) => taskTypes[data[Task.keyType]]!(data);
 }

@@ -105,7 +105,6 @@ class InterventionPerformanceBar extends StatelessWidget {
                     total: subject.totalTaskCountFor(task),
                   ),
                 )
-                .toList()
           ],
         ),
       ),

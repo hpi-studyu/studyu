@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/theme.dart';
-import 'package:studyu_app/util/color.dart';
 import 'package:studyu_app/widgets/questionnaire/annotated_scale_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -80,22 +79,20 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              (isColored)
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              if (isColored) Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Container(
                         height: sliderHeight,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
                           gradient: LinearGradient(
                             colors: [minColor, maxColor],
                           ),
                         ),
                       ),
-                    )
-                  : const SizedBox.shrink(),
+                    ) else const SizedBox.shrink(),
               Theme(
-                data: (isColored)
+                data: isColored
                     ? theme.copyWith(
                         sliderTheme: SliderThemeData(
                           overlayColor: thumbColor.withOpacity(0.5),

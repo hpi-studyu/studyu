@@ -86,7 +86,7 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               icon: const Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context).opt_out),
-              style: ElevatedButton.styleFrom(primary: Colors.orange[800]),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
               },
@@ -95,7 +95,7 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context).delete_data),
-              style: ElevatedButton.styleFrom(primary: Colors.red),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog(subject: subject));
               },
@@ -127,9 +127,9 @@ class OptOutAlertDialog extends StatelessWidget {
               style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const TextSpan(
-              text: " and won't be able recover it. Previously completed "
-                  "studies will not be deleted.\nYour anonymized data up to this "
-                  "point may still be used for research purposes.",
+              text: " and won't be able to recover it. Previously completed "
+                  'studies will not be deleted.\nYour anonymized data up to this '
+                  'point may still be used for research purposes.',
             ),
           ],
         ),
@@ -138,7 +138,7 @@ class OptOutAlertDialog extends StatelessWidget {
         ElevatedButton.icon(
           icon: const Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context).opt_out),
-          style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800], elevation: 0),
           onPressed: () async {
             await subject.softDelete();
             await deleteActiveStudyReference();
@@ -167,7 +167,7 @@ class DeleteAlertDialog extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context).delete_data),
-            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
             onPressed: () async {
               await subject.delete(); // hard-delete
               await deleteLocalData();

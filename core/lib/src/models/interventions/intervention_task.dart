@@ -8,9 +8,9 @@ abstract class InterventionTask extends Task {
     CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json),
   };
 
-  InterventionTask(String type) : super(type);
+  InterventionTask(super.type);
 
-  InterventionTask.withId(String type) : super.withId(type);
+  InterventionTask.withId(super.type) : super.withId();
 
   factory InterventionTask.fromJson(Map<String, dynamic> data) => taskTypes[data[Task.keyType]]!(data);
 }

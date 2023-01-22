@@ -7,9 +7,9 @@ abstract class SliderQuestion extends Question<num> {
   double initial = 0;
   double step = 1;
 
-  SliderQuestion(String type) : super(type);
+  SliderQuestion(super.type);
 
-  SliderQuestion.withId(String type) : super.withId(type);
+  SliderQuestion.withId(super.type) : super.withId();
 
   Answer<num> constructAnswer(double response) => Answer.forQuestion(this, response);
 }
