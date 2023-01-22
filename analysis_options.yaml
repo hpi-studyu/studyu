@@ -8,17 +8,17 @@ analyzer:
 linter:
   rules:
     # STYLE
-    cascade_invocations: true # May has issues: https://github.com/dart-lang/linter/issues/1589
-    prefer_foreach: true
-    prefer_int_literals: true
-    prefer_single_quotes: true
-    use_raw_strings: true
+    # cascade_invocations: true # May has issues: https://github.com/dart-lang/linter/issues/1589
+    # prefer_foreach: true
+    # prefer_int_literals: true
+    # prefer_single_quotes: true
+    # use_raw_strings: true
 
     # DISABLE
     # We have prints for better debugging. Maybe not the best option.
     avoid_print: false
     # Highlights localization imports and others which are annoying to fix
-    depend_on_referenced_packages: false
+    # depend_on_referenced_packages: false
     # I prefer the distinction between local source files and imported packages.
     # Apparently package imports are preferred because they allow for easy find and replace
-    always_use_package_imports: false
+    # always_use_package_imports: false
