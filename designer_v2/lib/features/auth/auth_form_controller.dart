@@ -317,12 +317,20 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
 
 final _authFormControllerProvider =
     StateNotifierProvider<AuthFormController, AsyncValue<void>>((ref) {
-  return AuthFormController(
+  final authFormController = AuthFormController(
     authRepository: ref.watch(authRepositoryProvider),
     sharedPreferences: ref.watch(sharedPreferencesProvider),
     notificationService: ref.watch(notificationServiceProvider),
     router: ref.watch(routerProvider),
   );
+  authFormController.addListener((state) {
+    print("_authFormController.state updated");
+  });
+  ref.onDispose(() {
+    print("_authFormControllerProviderProvider.DISPOSE");
+  });
+  print("_authFormControllerProvider");
+  return authFormController;
 });
 
 final authFormControllerProvider = StateNotifierProvider.family
@@ -331,5 +339,12 @@ final authFormControllerProvider = StateNotifierProvider.family
   final authFormController = ref.read(_authFormControllerProvider.notifier);
   authFormController.formKey = formKey;
   authFormController.resetControlsFor(formKey);
+  authFormController.addListener((state) {
+    print("authFormController.state updated");
+  });
+  ref.onDispose(() {
+    print("authFormControllerProvider.DISPOSE");
+  });
+  print("authFormControllerProvider");
   return authFormController;
 });

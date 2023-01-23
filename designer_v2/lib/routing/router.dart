@@ -19,6 +19,7 @@ import 'router_config.dart';
 /// route changes in the app. See router_intent.dart for more details.
 
 final routerProvider = Provider<GoRouter>((ref) {
+  print("routerProvider");
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
   final defaultLocation = RouterConf.studies.path;
@@ -32,7 +33,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: defaultLocation,
     routes: RouterConf.topLevelRoutes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
-    redirect: (_, state) {
+    redirect: (context, state) {
       final loginLocation = RouterConf.login.path;
       final signupLocation = RouterConf.signup.path;
       final splashLocation = RouterConf.splash.path;
@@ -67,6 +68,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         if (from != null && from != '/') { // if (from != null && from != '/' && from != defaultLocation) {
           qParams["from"] = from;
         }
+        // return GoRouter.of(context).namedLocation(name, queryParams: qParams);
         return state.namedLocation(name, queryParams: qParams);
       }
 

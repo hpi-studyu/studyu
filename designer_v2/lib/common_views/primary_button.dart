@@ -55,8 +55,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryStyle = ElevatedButton.styleFrom(
-      onPrimary: theme.colorScheme.onPrimary,
-      primary: theme.colorScheme.primary,
+      foregroundColor: theme.colorScheme.onPrimary,
+      backgroundColor: theme.colorScheme.primary,
       minimumSize: widget.minimumSize,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 

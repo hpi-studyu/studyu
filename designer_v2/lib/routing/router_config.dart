@@ -97,7 +97,7 @@ class RouterConf {
   static final root = GoRoute(
     path: "/",
     name: "root",
-    redirect: (BuildContext context, GoRouterState state) => state.namedLocation(studies.name!),
+    redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context).namedLocation(studies.name!),
   );
 
   static final studies = GoRoute(
@@ -118,7 +118,7 @@ class RouterConf {
   static final study = GoRoute(
     path: "/studies/:${RouteParams.studyId}",
     name: "study",
-    redirect: (BuildContext context, GoRouterState state) => state.namedLocation(
+    redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context).namedLocation(
         studyEdit.name!,
         params: {
           RouteParams.studyId: state.params[RouteParams.studyId]!
@@ -129,6 +129,7 @@ class RouterConf {
   static final studyEdit = GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: "studyEdit",
+      // GoRouter.of(context).namedLocation
       redirect: (BuildContext context, GoRouterState state) => state.namedLocation(
           studyEditInfo.name!,
           params: {

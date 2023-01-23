@@ -31,7 +31,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
     /*
     // is this handled by supabase internally?
     // move this to appController.onAppStart()

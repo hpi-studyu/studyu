@@ -36,6 +36,7 @@ class DashboardController extends StateNotifier<DashboardState>
 
   _subscribeStudies() {
     _studiesSubscription = studyRepository.watchAll().listen((wrappedModels) {
+      print("studyRepository.update");
       // Update the controller's state when new studies are available in the repository
       final studies = wrappedModels.map((study) => study.model).toList();
       state = state.copyWith(
@@ -76,10 +77,18 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 }
 
-final dashboardControllerProvider =
-    StateNotifierProvider.autoDispose<DashboardController, DashboardState>(
-        (ref) => DashboardController(
-              studyRepository: ref.watch(studyRepositoryProvider),
-              authRepository: ref.watch(authRepositoryProvider),
-              router: ref.watch(routerProvider),
-            ));
+final dashboardControllerProvider = StateNotifierProvider
+    .autoDispose<DashboardController, DashboardState>((ref) {
+  final dashboardController = DashboardController(
+    studyRepository: ref.watch(studyRepositoryProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    router: ref.watch(routerProvider),
+  );
+  dashboardController.addListener((state) {
+    print("dashboardController.state updated");
+  });
+  ref.onDispose(() {
+    print("dashboardControllerProvider.DISPOSE");
+  });
+  return dashboardController;
+});
