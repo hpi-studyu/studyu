@@ -63,11 +63,22 @@ class AppController extends StateNotifier<AppControllerState> {
   }
 }
 
-final appControllerProvider = StateNotifierProvider<AppController, AppControllerState>((ref) => AppController(
-    sharedPreferences: ref.watch(sharedPreferencesProvider),
-    appDelegates: [
-      /// Register [IAppDelegate]s here for invocation of app lifecycle methods
-      ref.watch(authRepositoryProvider),
-    ]
-  )
+final appControllerProvider = StateNotifierProvider<AppController, AppControllerState>((ref) {
+  final appController = AppController(
+      sharedPreferences: ref.watch(sharedPreferencesProvider),
+      appDelegates: [
+
+        /// Register [IAppDelegate]s here for invocation of app lifecycle methods
+        ref.watch(authRepositoryProvider),
+      ]
+  );
+  appController.addListener((state) {
+    print("appController.state updated");
+  });
+  ref.onDispose(() {
+    print("appControllerProvider.DISPOSE");
+  });
+  print("appControllerProvider");
+  return appController;
+}
 );

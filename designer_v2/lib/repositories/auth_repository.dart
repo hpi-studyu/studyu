@@ -69,30 +69,37 @@ class AuthRepository implements IAuthRepository {
       // handle auth state change
       switch (event) {
         case AuthChangeEvent.signedIn:
+          print("authRepo signedIn");
           // Update stream with logged in user
           _authStateStreamController.add(authClient.currentUser);
           _persistSession();
           break;
         case AuthChangeEvent.signedOut:
+          print("authRepo signedOut");
           // Send null to indicate that no user is available (logged out)
           _authStateStreamController.add(null);
           _resetPersistedSession();
           break;
         case AuthChangeEvent.userUpdated:
+          print("authRepo userUpdated");
           // Update stream with new user object
           _authStateStreamController.add(authClient.currentUser);
           _persistSession();
           break;
         case AuthChangeEvent.passwordRecovery:
+          print("authRepo passwordRecovery");
           //router.dispatch(RoutingIntents.passwordRecovery);
           allowPasswordReset = true;
           break;
         case AuthChangeEvent.tokenRefreshed:
+          print("authRepo tokenRefreshed");
           _persistSession();
           break;
         case AuthChangeEvent.userDeleted:
+          print("authRepo userDeleted");
           break;
         case AuthChangeEvent.mfaChallengeVerified:
+          print("authRepo mfaChallengeVerified");
           break;
       }
     });
