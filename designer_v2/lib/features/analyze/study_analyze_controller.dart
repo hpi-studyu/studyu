@@ -32,7 +32,7 @@ final studyAnalyzeControllerProvider = StateNotifierProvider.autoDispose
         (ref, studyId) {
   return StudyAnalyzeController(
     studyId: studyId,
-    currentUser: ref.watch(currentUserProvider),
+    currentUser: ref.watch(authRepositoryProvider).currentUser,
     studyRepository: ref.watch(studyRepositoryProvider),
     router: ref.watch(routerProvider),
   );

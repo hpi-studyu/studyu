@@ -112,7 +112,7 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
   final controller = StudyController(
     studyId: studyId,
     studyRepository: ref.watch(studyRepositoryProvider),
-    currentUser: ref.watch(currentUserProvider),
+    currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
     notificationService: ref.watch(notificationServiceProvider),
     //ref: ref,

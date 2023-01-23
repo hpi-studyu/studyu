@@ -80,7 +80,7 @@ final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
     return StudyRecruitController(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
-      currentUser: ref.watch(currentUserProvider),
+      currentUser: ref.watch(authRepositoryProvider).currentUser,
       router: ref.watch(routerProvider),
       inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
     );

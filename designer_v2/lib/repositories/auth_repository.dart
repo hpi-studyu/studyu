@@ -221,16 +221,3 @@ final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
   });
   return authRepository;
 });
-
-final currentUserProvider = riverpod.Provider<User?>((ref) {
-  final authRepository = ref.watch(authRepositoryProvider);
-  authRepository
-      .watchAuthStateChanges(emitLastEvent: false)
-      .listen((event) {
-        print("currentUserProvider.dispose: ${event?.email}");
-        // todo will create loop, needs further evaluation
-        // ref.invalidateSelf();
-  });
-  print("currentUserProvider: ${authRepository.currentUser?.email}");
-  return authRepository.currentUser;
-});

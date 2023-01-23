@@ -38,7 +38,7 @@ final studyTestControllerProvider = StateNotifierProvider
   final controller = StudyTestController(
     studyId: studyId,
     studyRepository: studyRepository,
-    currentUser: ref.watch(currentUserProvider),
+    currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
     authRepository: ref.watch(authRepositoryProvider),
     languageCode: ref.watch(localeProvider).languageCode,
