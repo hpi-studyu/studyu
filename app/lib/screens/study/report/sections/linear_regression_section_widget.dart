@@ -151,12 +151,12 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       text = AppLocalizations.of(context).report_outcome_neither;
     } else if (factorA > factorB) {
       //TODO: This if else might be problematic if a baseline is present and A and B are an improvement over it
-      text = AppLocalizations.of(context)
-          .report_outcome_one
+      text = (AppLocalizations.of(context)
+          .report_outcome_one as String)
           .replaceAll('{intervention}', interventionNames[interventionA]);
     } else {
-      text = AppLocalizations.of(context)
-          .report_outcome_one
+      text = (AppLocalizations.of(context)
+          .report_outcome_one as String)
           .replaceAll('{intervention}', interventionNames[interventionB]);
     }
 
