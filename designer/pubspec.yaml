@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   email_validator: ^2.1.17
   fl_chart: ^0.46.0 # breaking
+  flex_color_picker: ^3.0.2
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.0
@@ -25,7 +26,6 @@ dependencies:
     git: https://github.com/dmhuisma/FlutterIconPicker.git
   flutter_localizations:
     sdk: flutter
-  form_builder_extra_fields: ^8.3.0
   form_builder_validators: ^8.4.0
   http: ^0.13.5
   intl: ^0.17.0
