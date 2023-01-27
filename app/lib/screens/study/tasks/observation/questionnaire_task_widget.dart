@@ -20,6 +20,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
+  bool responseValidator;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     final activeStudy = context.read<AppState>().activeSubject;
@@ -43,26 +44,27 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     final fhirQuestionnaire = context.read<AppState>().activeSubject.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
-            context.read<AppState>().activeSubject.study.fhirQuestionnaire,
-            onComplete: (response) => setState(() {
-              response = response;
-            }),
-          )
+      context.read<AppState>().activeSubject.study.fhirQuestionnaire,
+      onComplete: (responseLocal) => setState(() {
+        response = responseLocal;
+      }),
+    )
         : QuestionnaireWidget(
-            widget.task.questions.questions,
-            header: widget.task.header,
-            footer: widget.task.footer,
-            onComplete: (qs) => setState(() {
-              response = qs;
-            }),
-          );
+      widget.task.questions.questions,
+      header: widget.task.header,
+      footer: widget.task.footer,
+      onChange: _responseValidator,
+      onComplete: (qs) => setState(() {
+        response = qs;
+      }),
+    );
     return Expanded(
       child: Column(
         children: [
           Expanded(
             child: questionnaireWidget,
           ),
-          if (response != null)
+          if (response != null && responseValidator)
             ElevatedButton.icon(
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
               onPressed: () {
@@ -84,5 +86,17 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         ],
       ),
     );
+  }
+
+  void _responseValidator(QuestionnaireState qs) {
+    if (qs.answers.length == widget.task.questions.questions.length) {
+      setState(() {
+        responseValidator = true;
+      });
+    } else {
+      setState(() {
+        responseValidator = false;
+      });
+    }
   }
 }
