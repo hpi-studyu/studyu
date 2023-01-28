@@ -130,6 +130,8 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
 
+  List<Task> get taskList => [...interventions.expand((e) => e.tasks), ...observations];
+
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final res = await env.client.from('study_progress').select().eq('study_id', studyId).execute();
     SupabaseQuery.catchPostgrestError(res);

@@ -50,14 +50,23 @@ class AppState {
     );
   }
 
-  Future selectNotification(String taskId) async {
-    if (taskId != null) {
+  Future selectNotification(String periodId) async {
+    if (periodId != null) {
+      TimedTask taskToRun;
+      for (final Task task in selectedStudy.taskList) {
+        final CompletionPeriod period =
+        task.schedule.completionPeriods.firstWhere(
+                (period) => period.id == periodId,);
+        if (period != null) {
+          taskToRun = TimedTask(task, period);
+          break;
+        }
+      }
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => TaskScreen(
-            task: null,
-            taskId: taskId,
+            timedTask: taskToRun,
           ),
         ),
       );
