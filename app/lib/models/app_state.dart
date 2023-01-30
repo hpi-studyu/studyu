@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
 
 import '../screens/study/tasks/task_screen.dart';
@@ -23,51 +24,73 @@ class AppState {
 
   Future<FlutterLocalNotificationsPlugin> initNotificationsPlugin() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    const initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
-    final initializationSettingsIOS =
-        IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    final initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: selectNotification);
-    return flutterLocalNotificationsPlugin;
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('app_icon');
+    final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(defaultActionName: 'Open notification');
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsDarwin,
+        macOS: initializationSettingsDarwin,
+        linux: initializationSettingsLinux,
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
+  return flutterLocalNotificationsPlugin;
   }
 
-  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
-    // display a dialog with the notification details, tap ok to go to another page
+  Future<void> onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
     showDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
+      builder: (BuildContext context) => CupertinoAlertDialog(
         title: Text(title),
         content: Text(body),
         actions: [
           CupertinoDialogAction(
             isDefaultAction: true,
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
             child: const Text('Ok'),
+            onPressed: () async {
+              Navigator.of(context, rootNavigator: true).pop();
+            },
           )
         ],
       ),
     );
   }
 
-  Future selectNotification(String periodId) async {
-    if (periodId != null) {
-      TimedTask taskToRun;
-      for (final Task task in selectedStudy.taskList) {
-        final CompletionPeriod period =
-        task.schedule.completionPeriods.firstWhere(
-                (period) => period.id == periodId,);
-        if (period != null) {
-          taskToRun = TimedTask(task, period);
-          break;
+  Future onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+    final String taskId = notificationResponse.payload;
+    if (notificationResponse.payload != null) {
+      debugPrint('notification payload: $taskId');
+    }
+    final now = StudyUTimeOfDay.now();
+    TimedTask taskToRun;
+    for (final Task task in selectedStudy.taskList) {
+      if (task.id == taskId) {
+        for (final CompletionPeriod cp in task.schedule.completionPeriods) {
+          if (cp.contains(now)) {
+            taskToRun = TimedTask(task, cp);
+          }
         }
       }
+    }
+    if (taskToRun != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TaskScreen(
-            timedTask: taskToRun,
-          ),
+          builder: (context) =>
+              TaskScreen(
+                timedTask: taskToRun,
+              ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DashboardScreen(),
         ),
       );
     }

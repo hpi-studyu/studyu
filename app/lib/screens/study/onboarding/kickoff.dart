@@ -27,7 +27,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       await storeActiveSubjectId(subject.id);
       if (!mounted) return;
       if (!kIsWeb) {
-        scheduleStudyNotifications(context);
+        scheduleNotifications(context);
       }
 
       setState(() => ready = true);
@@ -78,7 +78,7 @@ class _KickoffScreen extends State<KickoffScreen> {
                     const SizedBox(height: 32),
                     Text(
                       _getStatusText(context),
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
                     OutlinedButton(

@@ -70,7 +70,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       model.activeSubject = subject;
       if (!kIsWeb) {
         // Notifications not supported on web
-        scheduleStudyNotifications(context);
+        scheduleNotifications(context);
       }
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
@@ -88,7 +88,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             children: [
               Text(
                 '${AppLocalizations.of(context).loading}...',
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const CircularProgressIndicator(),
             ],

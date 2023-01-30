@@ -37,50 +37,43 @@ extension Reminders on FlutterLocalNotificationsPlugin {
   }
 }
 
-Future<void> scheduleStudyNotifications(BuildContext context) async {
+Future<void> scheduleNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
-  const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU main');
-  const iOSPlatformChannelSpecifics = IOSNotificationDetails();
-  const platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+  const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU');
+  const platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
   final subject = appState.activeSubject;
+  final notificationsPlugin = await appState.notificationsPlugin;
+  if (subject == null) return;
 
-  if (subject != null) {
-    final interventionTaskLists =
-        subject.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
-    var interventionTasks = [];
-    if (interventionTaskLists.isNotEmpty) {
-      interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
+  final interventionTaskLists =
+      subject.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
+  var interventionTasks = [];
+  if (interventionTaskLists.isNotEmpty) {
+    interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
+  }
+  final tasks = [...subject.study.observations, ...interventionTasks,];
+  if (tasks.isEmpty) return;
+
+  var id = 0;
+  for (int index; index <= 3; index++) {
+    final date = DateTime.now().add(Duration(days: index));
+    for (final observation in subject.study.observations) {
+      notificationsPlugin.scheduleReminderForDate(
+        id, observation, date, platformChannelSpecifics,
+      );
+      id += observation.schedule.reminders.length;
     }
-    final tasks = [
-      ...subject.study.observations,
-      ...interventionTasks,
-    ];
-    if (tasks.isEmpty) return;
-    var id = 0;
-    for (final index in List.generate(3, (index) => index)) {
-      final date = DateTime.now().add(Duration(days: index));
-      for (final observation in subject.study.observations) {
-        (await appState.notificationsPlugin).scheduleReminderForDate(
-          id - observation.schedule.reminders.length,
-          observation,
-          date,
-          platformChannelSpecifics,
-        );
-        id += observation.schedule.reminders.length;
+    for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {
+      if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
+        if (intervention.tasks.isNotEmpty) {
+          id += intervention.tasks.map((task) => task.schedule.reminders.length).reduce((a, b) => a + b);
+        }
+        continue;
       }
-      for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {
-        if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
-          if (intervention.tasks.isNotEmpty) {
-            id += intervention.tasks.map((task) => task.schedule.reminders.length).reduce((a, b) => a + b);
-          }
-          continue;
-        }
-        for (final task in intervention.tasks) {
-          (await appState.notificationsPlugin).scheduleReminderForDate(id, task, date, platformChannelSpecifics);
-          id += task.schedule.reminders.length;
-        }
+      for (final task in intervention.tasks) {
+        notificationsPlugin.scheduleReminderForDate(id, task, date, platformChannelSpecifics);
+        id += task.schedule.reminders.length;
       }
     }
   }
