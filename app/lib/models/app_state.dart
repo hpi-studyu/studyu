@@ -61,11 +61,15 @@ class AppState {
 
   Future onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
     final String taskId = notificationResponse.payload;
-    if (notificationResponse.payload != null) {
+    /* if (notificationResponse.payload != null) {
       debugPrint('notification payload: $taskId');
-    }
+    } */
     final now = StudyUTimeOfDay.now();
     TimedTask taskToRun;
+    // figure out which TimedTask corresponds to the given taskId
+    // Attention: If there are multiple tasks with overlapping completionPeriods
+    // this might select the wrong task instance!
+    // todo this needs refactoring if periodIds are directly passed to the notification
     for (final Task task in selectedStudy.taskList) {
       if (task.id == taskId) {
         for (final CompletionPeriod cp in task.schedule.completionPeriods) {
