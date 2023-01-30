@@ -40,8 +40,6 @@ class _TaskBoxState extends State<TaskBox> {
   @override
   Widget build(BuildContext context) {
     final completed = context.watch<AppState>().activeSubject.isTimedTaskFinished(widget.timedTask.task.id, widget.timedTask.completionPeriod, DateTime.now());
-    final now = DateTime.now();
-    final nowTime = StudyUTimeOfDay(hour: now.hour, minute: now.minute);
     return Card(
       elevation: 2,
       child: InkWell(
@@ -54,7 +52,7 @@ class _TaskBoxState extends State<TaskBox> {
                 title: Text(widget.timedTask.task.title ?? ''),
               ),
             ),
-            if (widget.timedTask.completionPeriod.contains(nowTime) || completed)
+            if (widget.timedTask.completionPeriod.contains(StudyUTimeOfDay.now()) || completed)
               drawCheckbox(completed: completed)
             else
               Padding(

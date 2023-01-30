@@ -43,7 +43,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       AppLocalizations.of(context).performance_overview_interventions,
-                      style: theme.textTheme.headline6.copyWith(color: theme.primaryColor),
+                      style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ),
@@ -60,7 +60,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       AppLocalizations.of(context).performance_overview_observations,
-                      style: theme.textTheme.headline6.copyWith(color: theme.primaryColor),
+                      style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ),
@@ -105,7 +105,6 @@ class InterventionPerformanceBar extends StatelessWidget {
                     total: subject.totalTaskCountFor(task),
                   ),
                 )
-                .toList()
           ],
         ),
       ),
