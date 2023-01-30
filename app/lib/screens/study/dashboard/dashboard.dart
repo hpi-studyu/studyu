@@ -14,6 +14,12 @@ import '../report/report_details.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final String error;
+
+  const DashboardScreen({
+    this.error,
+  });
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -35,16 +41,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     subject = context.read<AppState>().activeSubject;
-    if (subject != null) {
-      scheduleToday = subject.scheduleFor(DateTime.now());
+    // if (subject != null) {
+    scheduleToday = subject.scheduleFor(DateTime.now());
+    // }
+    if (widget.error != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (subject == null) {
+    /* if (subject == null) {
       return const Scaffold();
-    }
+    } */
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
@@ -15,13 +15,16 @@ class Notifications {
   StudySubject subject;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
-  final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
+  final StreamController<
+      ReceivedNotification> didReceiveLocalNotificationStream =
   StreamController<ReceivedNotification>.broadcast();
   final StreamController<String> selectNotificationStream =
   StreamController<String>.broadcast();
+  String taskAlreadyCompleted;
 
   /// Private constructor
   Notifications._create(this.subject, this.context) {
+    taskAlreadyCompleted = AppLocalizations.of(context).task_already_completed;
     // todo test permission requests
     _initNotificationsPlugin();
     _requestPermissions();
@@ -31,7 +34,10 @@ class Notifications {
   }
 
   /// Public factory
-  static Future<Notifications> create(StudySubject activeSubject, BuildContext context) async {
+  static Future<Notifications> create(
+      StudySubject activeSubject,
+      BuildContext context,
+  ) async {
     final notifications = Notifications._create(activeSubject, context);
     return notifications;
   }
@@ -39,7 +45,8 @@ class Notifications {
   Future<void> _isAndroidPermissionGranted() async {
     if (Platform.isAndroid) {
       //final bool granted =
-      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation
       <AndroidFlutterLocalNotificationsPlugin>().areNotificationsEnabled();
     }
   }
@@ -77,36 +84,37 @@ class Notifications {
         .listen((ReceivedNotification receivedNotification) async {
       await showDialog(
         context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: receivedNotification.title != null
-              ? Text(receivedNotification.title)
-              : null,
-          content: receivedNotification.body != null
-              ? Text(receivedNotification.body)
-              : null,
-          actions: <Widget>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () async {
-                Navigator.of(context, rootNavigator: true).pop();
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        DashboardScreen(),
-                  ),
-                );
-              },
-              child: const Text('Ok'),
-            )
-          ],
-        ),
+        builder: (BuildContext context) =>
+            CupertinoAlertDialog(
+              title: receivedNotification.title != null
+                  ? Text(receivedNotification.title)
+                  : null,
+              content: receivedNotification.body != null
+                  ? Text(receivedNotification.body)
+                  : null,
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  onPressed: () async {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const DashboardScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('Ok'),
+                )
+              ],
+            ),
       );
     });
   }
 
   void _configureSelectNotificationSubject() {
     selectNotificationStream.stream.listen((String payload) async {
-      handleStudyNotificationResponse(payload);
+      handleNotificationResponse(payload);
     });
   }
 
@@ -116,17 +124,19 @@ class Notifications {
     AndroidInitializationSettings('@drawable/ic_launcher');
     final DarwinInitializationSettings initializationSettingsDarwin =
     DarwinInitializationSettings(
-        onDidReceiveLocalNotification: (int id, String title, String body, String payload) async {
-          didReceiveLocalNotificationStream.add(
-            ReceivedNotification(
-              id: id,
-              title: title,
-              body: body,
-              payload: payload,
-            ),
-          );
-        },);
-    const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(defaultActionName: 'Open notification');
+      onDidReceiveLocalNotification: (int id, String title, String body,
+          String payload,) async {
+        didReceiveLocalNotificationStream.add(
+          ReceivedNotification(
+            id: id,
+            title: title,
+            body: body,
+            payload: payload,
+          ),
+        );
+      },);
+    const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(
+        defaultActionName: 'Open notification',);
     final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
@@ -141,7 +151,7 @@ class Notifications {
             selectNotificationStream.add(notificationResponse.payload);
             break;
           case NotificationResponseType.selectedNotificationAction:
-            /*if (notificationResponse.actionId == navigationActionId) {
+          /*if (notificationResponse.actionId == navigationActionId) {
               selectNotificationStream.add(notificationResponse.payload);
             }*/
             break;
@@ -151,8 +161,9 @@ class Notifications {
     );
   }
 
-  Future handleStudyNotificationResponse(String taskId) async {
-    final now = StudyUTimeOfDay.now();
+  Future handleNotificationResponse(String taskId) async {
+    final nowDt = DateTime.now();
+    final now = StudyUTimeOfDay.fromDateTime(nowDt);
     TimedTask taskToRun;
     // figure out which TimedTask corresponds to the given taskId
     // Attention: If there are multiple tasks with overlapping completionPeriods
@@ -161,17 +172,26 @@ class Notifications {
     for (final Task task in subject.study.taskList) {
       if (task.id == taskId) {
         for (final CompletionPeriod cp in task.schedule.completionPeriods) {
-          if (cp.contains(now) || kDebugMode) {
+          if (cp.contains(now) /*|| kDebugMode*/) {
             taskToRun = TimedTask(task, cp);
           }
         }
       }
     }
-
+    final completed = subject.isTimedTaskFinished(
+        taskToRun.task.id, taskToRun.completionPeriod, nowDt,
+    );
     if (taskToRun != null) {
-      navigatorKey.currentState.push<bool>(MaterialPageRoute(builder: (context) => TaskScreen(timedTask: taskToRun)));
-    } else {
-      await navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => DashboardScreen(),),);
+      if (!completed /*|| !kDebugMode*/) {
+        navigatorKey.currentState.push<bool>(MaterialPageRoute(
+            builder: (_) => TaskScreen(timedTask: taskToRun),),);
+      } else {
+        navigatorKey.currentState.push(
+          MaterialPageRoute(builder: (_) =>
+              DashboardScreen(error: taskAlreadyCompleted),
+          ),
+        );
+      }
     }
   }
 }

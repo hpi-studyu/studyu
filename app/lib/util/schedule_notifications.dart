@@ -12,8 +12,8 @@ extension Reminders on FlutterLocalNotificationsPlugin {
   // to open the exact task instance when the notification is clicked.
   // This will break backwards compatibility for older databases!
   Future<int> scheduleReminderForDate(
-    BuildContext context,
     int id,
+    String body,
     Task task,
     DateTime date,
     NotificationDetails notificationDetails,
@@ -21,7 +21,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     var currentId = id;
     for (final reminder in task.schedule.reminders) {
       if (date.isSameDate(DateTime.now()) && !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)
-          || task.title.isEmpty ?? true) {
+          || task.title == null) {
         break;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
@@ -29,7 +29,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
       zonedSchedule(
         currentId,
         task.title,
-        '${AppLocalizations.of(context).study_notification_body}',
+        body,
         reminderTime,
         notificationDetails,
         payload: task.id,
@@ -37,17 +37,17 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         androidAllowWhileIdle: true,
       );
       // DEBUG
-      if (currentId == 0) {
+      /*if (currentId == 0 || currentId == 1 || currentId == 2) {
         await show(
           /*******************/
           currentId,
           task.title,
-          '${AppLocalizations.of(context).study_notification_body}',
+          body,
           /*******************/
           notificationDetails,
           payload: task.id,
         );
-      }
+      }*/
       // print('Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}');
       currentId++;
     }
@@ -57,13 +57,15 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 
 Future<void> scheduleNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
-  const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU');
-  const notificationDetails = NotificationDetails(android: androidPlatformChannelSpecifics);
-
   final subject = appState.activeSubject;
-  final notificationsPlugin = await appState.notificationsPlugin;
   if (subject == null) return;
 
+  String body;
+  if (context.mounted) body = AppLocalizations.of(context).study_notification_body;
+
+  const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU');
+  const notificationDetails = NotificationDetails(android: androidPlatformChannelSpecifics);
+  final notificationsPlugin = await appState.notificationsPlugin;
   await notificationsPlugin.cancelAll();
 
   final interventionTaskLists =
@@ -94,8 +96,8 @@ Future<void> scheduleNotifications(BuildContext context) async {
   var id = 0;
   for (final SendNotification notification in sendNotificationList) {
     final currentId = await notificationsPlugin.scheduleReminderForDate(
-      context,
       id,
+      body,
       notification.task,
       notification.date,
       notification.notificationDetails,

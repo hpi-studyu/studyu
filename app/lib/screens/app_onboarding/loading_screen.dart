@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
-import '../../util/study_notifications.dart';
+import '../../util/schedule_notifications.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String sessionString;
@@ -32,6 +32,8 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
   }
 
   Future<void> initStudy() async {
+    // todo diagnose why context in AppState is null
+    context.read<AppState>().context = context;
     final model = context.read<AppState>();
     final selectedStudyObjectId = await getActiveSubjectId();
     print('Selected study: $selectedStudyObjectId');

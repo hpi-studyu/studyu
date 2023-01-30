@@ -29,7 +29,8 @@
   "please_select_interventions_description": "Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
-  "study_notification_body": "Eine neue Aufgabe benötigt deine Aufmerksamkeit ",
+  "task_already_completed": "Die Aufgabe wurde bereits bearbeitet",
+  "study_notification_body": "Eine neue Aufgabe benötigt deine Aufmerksamkeit",
 
   "intervention_phase_duration": "Länge der Interventionphasen",
   "days": "Tage",
