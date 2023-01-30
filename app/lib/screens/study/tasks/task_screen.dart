@@ -14,7 +14,6 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  //Task task;
 
   @override
   void didChangeDependencies() {
@@ -38,7 +37,7 @@ class _TaskScreenState extends State<TaskScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.timedTask.task.title),
+        title: Text(widget.timedTask.task.title ?? ''),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -46,7 +45,7 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.timedTask.task.title, style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
+              Text(widget.timedTask.task.title ?? '', style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
               const SizedBox(height: 20),
               _buildTask(),
             ],
