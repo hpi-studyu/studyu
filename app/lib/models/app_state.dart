@@ -25,7 +25,7 @@ class AppState {
   Future<FlutterLocalNotificationsPlugin> initNotificationsPlugin() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('app_icon');
+    AndroidInitializationSettings('@drawable/ic_launcher');
     final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(defaultActionName: 'Open notification');
     final InitializationSettings initializationSettings = InitializationSettings(
