@@ -60,6 +60,12 @@ class StudyUTimeOfDay {
     minute = date.toLocal().minute;
   }
 
+  StudyUTimeOfDay.now() {
+    final now = StudyUTimeOfDay.fromDateTime(DateTime.now());
+    hour = now.hour;
+    minute = now.minute;
+  }
+
   StudyUTimeOfDay.fromJson(String value) {
     final elements = value.split(':').map(int.parse);
     hour = elements.elementAt(0);

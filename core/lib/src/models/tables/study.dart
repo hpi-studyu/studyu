@@ -126,6 +126,8 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
 
+  bool get hasConsentCheck => consent.isNotEmpty;
+
   int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
