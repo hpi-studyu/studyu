@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
@@ -43,7 +44,7 @@ class _TaskBoxState extends State<TaskBox> {
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: completed /*|| !widget.completionPeriod.contains(nowTime)*/ ? () {} : _navigateToTaskScreen,
+        onTap: (completed || !widget.timedTask.completionPeriod.contains(StudyUTimeOfDay.now())) && !kDebugMode ? () {} : _navigateToTaskScreen,
         child: Row(
           children: [
             Expanded(
