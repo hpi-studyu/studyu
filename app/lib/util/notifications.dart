@@ -1,83 +1,191 @@
-import 'package:flutter/widgets.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:provider/provider.dart';
+import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
-import 'package:timezone/timezone.dart' as tz;
 
-import '../models/app_state.dart';
+import '../main.dart';
+import '../screens/study/tasks/task_screen.dart';
 
-extension Reminders on FlutterLocalNotificationsPlugin {
-  // todo we should pass TimedTasks to this method instead of Tasks
-  // to open the exact task instance when the notification is clicked.
-  // This will break backwards compatibility for older databases!
-  Future<void> scheduleReminderForDate(
-    int initialId,
-    Task task,
-    DateTime date,
-    NotificationDetails notificationDetails,
-  ) async {
-    var id = initialId;
-    for (final reminder in task.schedule.reminders) {
-      if (date.isSameDate(DateTime.now()) &&
-          !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)) {
-        break;
-      }
+class Notifications {
+  StudySubject subject;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  BuildContext context;
+  final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
+  StreamController<ReceivedNotification>.broadcast();
+  final StreamController<String> selectNotificationStream =
+  StreamController<String>.broadcast();
 
-      final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
-      zonedSchedule(
-        id,
-        task.title,
-        'A new task awaits your attention until ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder))}',
-        reminderTime,
-        notificationDetails,
-        payload: task.id,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
-        androidAllowWhileIdle: true,
+  /// Private constructor
+  Notifications._create(this.subject, this.context) {
+    // todo test permission requests
+    _initNotificationsPlugin();
+    _requestPermissions();
+    _isAndroidPermissionGranted();
+    _configureDidReceiveLocalNotificationSubject();
+    _configureSelectNotificationSubject();
+  }
+
+  /// Public factory
+  static Future<Notifications> create(StudySubject activeSubject, BuildContext context) async {
+    final notifications = Notifications._create(activeSubject, context);
+    return notifications;
+  }
+
+  Future<void> _isAndroidPermissionGranted() async {
+    if (Platform.isAndroid) {
+      //final bool granted =
+      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation
+      <AndroidFlutterLocalNotificationsPlugin>().areNotificationsEnabled();
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS || Platform.isMacOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
       );
-      // print('Notification #$id: ${task.title}, $reminderTime, $notificationDetails, ${task.id}');
-      id++;
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin androidImplementation =
+      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+
+      //final bool granted =
+      await androidImplementation?.requestPermission();
+    }
+  }
+
+  void _configureDidReceiveLocalNotificationSubject() {
+    didReceiveLocalNotificationStream.stream
+        .listen((ReceivedNotification receivedNotification) async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: receivedNotification.title != null
+              ? Text(receivedNotification.title)
+              : null,
+          content: receivedNotification.body != null
+              ? Text(receivedNotification.body)
+              : null,
+          actions: <Widget>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () async {
+                Navigator.of(context, rootNavigator: true).pop();
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) =>
+                        DashboardScreen(),
+                  ),
+                );
+              },
+              child: const Text('Ok'),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  void _configureSelectNotificationSubject() {
+    selectNotificationStream.stream.listen((String payload) async {
+      handleStudyNotificationResponse(payload);
+    });
+  }
+
+  void _initNotificationsPlugin() {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@drawable/ic_launcher');
+    final DarwinInitializationSettings initializationSettingsDarwin =
+    DarwinInitializationSettings(
+        onDidReceiveLocalNotification: (int id, String title, String body, String payload) async {
+          didReceiveLocalNotificationStream.add(
+            ReceivedNotification(
+              id: id,
+              title: title,
+              body: body,
+              payload: payload,
+            ),
+          );
+        },);
+    const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(defaultActionName: 'Open notification');
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+      macOS: initializationSettingsDarwin,
+      linux: initializationSettingsLinux,
+    );
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            selectNotificationStream.add(notificationResponse.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            /*if (notificationResponse.actionId == navigationActionId) {
+              selectNotificationStream.add(notificationResponse.payload);
+            }*/
+            break;
+        }
+      },
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+  }
+
+  Future handleStudyNotificationResponse(String taskId) async {
+    final now = StudyUTimeOfDay.now();
+    TimedTask taskToRun;
+    // figure out which TimedTask corresponds to the given taskId
+    // Attention: If there are multiple tasks with overlapping completionPeriods
+    // this might select the wrong task instance!
+    // todo this needs refactoring if periodIds are directly passed to the notification
+    for (final Task task in subject.study.taskList) {
+      if (task.id == taskId) {
+        for (final CompletionPeriod cp in task.schedule.completionPeriods) {
+          if (cp.contains(now) || kDebugMode) {
+            taskToRun = TimedTask(task, cp);
+          }
+        }
+      }
+    }
+
+    if (taskToRun != null) {
+      navigatorKey.currentState.push<bool>(MaterialPageRoute(builder: (context) => TaskScreen(timedTask: taskToRun)));
+    } else {
+      await navigatorKey.currentState.push(MaterialPageRoute(builder: (context) => DashboardScreen(),),);
     }
   }
 }
 
-Future<void> scheduleNotifications(BuildContext context) async {
-  final appState = context.read<AppState>();
-  const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU');
-  const platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+class ReceivedNotification {
+  ReceivedNotification({
+    this.id,
+    this.title,
+    this.body,
+    this.payload,
+  });
 
-  final subject = appState.activeSubject;
-  final notificationsPlugin = await appState.notificationsPlugin;
-  if (subject == null) return;
-
-  final interventionTaskLists =
-      subject.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
-  var interventionTasks = [];
-  if (interventionTaskLists.isNotEmpty) {
-    interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
-  }
-  final tasks = [...subject.study.observations, ...interventionTasks,];
-  if (tasks.isEmpty) return;
-
-  var id = 0;
-  for (int index = 0; index <= 3; index++) {
-    final date = DateTime.now().add(Duration(days: index));
-    for (final observation in subject.study.observations) {
-      notificationsPlugin.scheduleReminderForDate(
-        id, observation, date, platformChannelSpecifics,
-      );
-      id += observation.schedule.reminders.length;
-    }
-    for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {
-      if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
-        if (intervention.tasks.isNotEmpty) {
-          id += intervention.tasks.map((task) => task.schedule.reminders.length).reduce((a, b) => a + b);
-        }
-        continue;
-      }
-      for (final task in intervention.tasks) {
-        notificationsPlugin.scheduleReminderForDate(id, task, date, platformChannelSpecifics);
-        id += task.schedule.reminders.length;
-      }
-    }
-  }
+  final int id;
+  final String title;
+  final String body;
+  final String payload;
 }

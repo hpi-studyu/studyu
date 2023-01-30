@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
-import '../../util/notifications.dart';
+import '../../util/study_notifications.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String sessionString;
@@ -20,6 +20,7 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
+
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();

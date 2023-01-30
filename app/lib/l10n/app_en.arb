@@ -28,6 +28,7 @@
   "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study.",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
+  "study_notification_body": "A new task awaits your attention",
 
   "intervention_phase_duration": "Intervention phase duration",
   "days": "days",

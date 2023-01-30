@@ -8,7 +8,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
-import '../../../util/notifications.dart';
+import '../../../util/study_notifications.dart';
 
 class KickoffScreen extends StatefulWidget {
   @override

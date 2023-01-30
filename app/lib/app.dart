@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
+import 'main.dart';
 import 'models/app_state.dart';
 import 'routes.dart';
 import 'theme.dart';
@@ -13,6 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +38,7 @@ class _MyAppState extends State<MyApp> {
             locale: model.appLocal,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
+            navigatorKey: navigatorKey,
           );
         },
       ),
