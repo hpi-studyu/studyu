@@ -6,6 +6,7 @@ import 'package:studyu_core/core.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../models/app_state.dart';
+import 'study_notifications.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
   // todo we should pass TimedTasks to this method instead of Tasks
@@ -58,15 +59,17 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 Future<void> scheduleNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
-  if (subject == null) return;
+  final studyNotifications = context.read<AppState>().studyNotifications ??
+      await StudyNotifications.create(subject, context);
+
+  final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
+  await notificationsPlugin.cancelAll();
 
   String body;
   if (context.mounted) body = AppLocalizations.of(context).study_notification_body;
 
   const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU');
   const notificationDetails = NotificationDetails(android: androidPlatformChannelSpecifics);
-  final notificationsPlugin = await appState.notificationsPlugin;
-  await notificationsPlugin.cancelAll();
 
   final interventionTaskLists =
       subject.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];

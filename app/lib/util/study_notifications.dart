@@ -11,7 +11,7 @@ import 'package:studyu_core/core.dart';
 import '../main.dart';
 import '../screens/study/tasks/task_screen.dart';
 
-class Notifications {
+class StudyNotifications {
   StudySubject subject;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
@@ -23,7 +23,7 @@ class Notifications {
   String taskAlreadyCompleted;
 
   /// Private constructor
-  Notifications._create(this.subject, this.context) {
+  StudyNotifications._create(this.subject, this.context) {
     taskAlreadyCompleted = AppLocalizations.of(context).task_already_completed;
     // todo test permission requests
     _initNotificationsPlugin();
@@ -34,11 +34,11 @@ class Notifications {
   }
 
   /// Public factory
-  static Future<Notifications> create(
+  static Future<StudyNotifications> create(
       StudySubject activeSubject,
       BuildContext context,
   ) async {
-    final notifications = Notifications._create(activeSubject, context);
+    final notifications = StudyNotifications._create(activeSubject, context);
     return notifications;
   }
 
@@ -99,8 +99,7 @@ class Notifications {
                     Navigator.of(context, rootNavigator: true).pop();
                     await Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const DashboardScreen(),
+                        builder: (BuildContext context) => const DashboardScreen(),
                       ),
                     );
                   },
