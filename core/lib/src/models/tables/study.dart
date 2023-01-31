@@ -69,7 +69,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(name: 'fhir_questionnaire')
   Questionnaire? fhirQuestionnaire;
 
-  @JsonKey(includeToJson: true, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
   @JsonKey(includeToJson: false, includeFromJson: false)
   int endedCount = 0;
