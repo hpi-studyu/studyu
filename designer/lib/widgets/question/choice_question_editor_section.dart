@@ -62,7 +62,7 @@ class _ChoiceQuestionEditorSectionState extends State<ChoiceQuestionEditorSectio
             ElevatedButton.icon(
               onPressed: _addChoice,
               icon: const Icon(Icons.add),
-              style: ElevatedButton.styleFrom(primary: Colors.green),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               label: Text(AppLocalizations.of(context).add_choice),
             ),
             const Spacer()

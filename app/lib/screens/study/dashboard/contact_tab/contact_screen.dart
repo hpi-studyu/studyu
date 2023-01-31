@@ -76,9 +76,9 @@ class ContactWidget extends StatelessWidget {
       return Container();
     }
 
-    final titles = [Text(title, style: theme.textTheme.headline6.copyWith(color: color))];
+    final titles = [Text(title, style: theme.textTheme.titleLarge.copyWith(color: color))];
     if (subtitle != null && subtitle.isNotEmpty) {
-      titles.add(Text(subtitle, style: theme.textTheme.subtitle1.copyWith(fontSize: 14)));
+      titles.add(Text(subtitle, style: theme.textTheme.titleMedium.copyWith(fontSize: 14)));
     }
 
     return Column(

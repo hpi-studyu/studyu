@@ -83,7 +83,7 @@ class _AboutDesignerState extends State<AboutDesigner> {
                       ],
                     ),
                     const SizedBox(height: 32),
-                    Text(AppLocalizations.of(context).contact_details, style: theme.textTheme.headline6),
+                    Text(AppLocalizations.of(context).contact_details, style: theme.textTheme.titleLarge),
                     FormBuilderTextField(
                       onChanged: _saveFormChanges,
                       name: 'organization',

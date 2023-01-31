@@ -58,7 +58,7 @@ class Routes {
       case loading:
         return MaterialPageRoute(builder: (_) => const LoadingScreen(), settings: settings);
       case dashboard:
-        return MaterialPageRoute(builder: (_) => DashboardScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const DashboardScreen(), settings: settings);
       case welcome:
         return MaterialPageRoute(builder: (_) => WelcomeScreen(), settings: settings);
       case about:

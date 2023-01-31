@@ -176,7 +176,7 @@ class _HeaderState extends State<Header> {
             const SizedBox(width: 8),
             Icon(MdiIcons.fromString(widget.study.iconName), color: theme.colorScheme.secondary),
             const SizedBox(width: 8),
-            Text(widget.study.title, style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary)),
+            Text(widget.study.title, style: theme.textTheme.titleLarge.copyWith(color: theme.colorScheme.secondary)),
             // VerticalDivider(indent: 8, endIndent: 8),
           ],
         ),
@@ -258,7 +258,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
             },
             icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context).delete),
-            style: ElevatedButton.styleFrom(primary: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
           )
         ],
       );

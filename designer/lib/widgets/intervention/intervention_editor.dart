@@ -117,7 +117,7 @@ class _InterventionEditorState extends State<InterventionEditor> {
                     ElevatedButton.icon(
                       onPressed: _addCheckMarkTask,
                       icon: const Icon(Icons.add),
-                      style: ElevatedButton.styleFrom(primary: Colors.green),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                       label: Text(AppLocalizations.of(context).add_task),
                     ),
                   ],

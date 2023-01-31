@@ -39,7 +39,7 @@ class StudySelectionScreen extends StatelessWidget {
                   children: [
                     Text(
                       AppLocalizations.of(context).study_selection_description,
-                      style: theme.textTheme.headline5,
+                      style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     RichText(
@@ -47,15 +47,15 @@ class StudySelectionScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: AppLocalizations.of(context).study_selection_single,
-                            style: theme.textTheme.subtitle2,
+                            style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
                             text: ' ',
-                            style: theme.textTheme.subtitle2,
+                            style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
                             text: AppLocalizations.of(context).study_selection_single_why,
-                            style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
+                            style: theme.textTheme.titleSmall.copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,

@@ -54,8 +54,7 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
                             consentItem: entry.value,
                             remove: () => _removeConsentItem(entry.key),
                           ),
-                        )
-                        .toList(),
+                        ),
                     const SizedBox(height: 200)
                   ],
                 ),

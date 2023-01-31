@@ -96,7 +96,7 @@ class Timeline extends StatelessWidget {
             date: now.add(Duration(days: index * subject.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
-        }).toList(),
+        }),
         InterventionTile(
           title: AppLocalizations.of(context).journey_results_available,
           iconName: 'flagCheckered',
@@ -144,7 +144,7 @@ class InterventionTile extends StatelessWidget {
       beforeLineStyle: LineStyle(color: theme.primaryColor),
       afterLineStyle: LineStyle(color: theme.primaryColor),
       endChild: TimelineChild(
-        child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
+        child: Text(title, style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor)),
       ),
       startChild: TimelineChild(
         child: Text(DateFormat('dd-MM-yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),

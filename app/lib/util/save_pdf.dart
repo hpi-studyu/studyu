@@ -29,7 +29,7 @@ Future<String> savePDF(BuildContext context, String title, List<pw.Widget> conte
 
     return filePath.split(':')[1];
   } catch (e) {
-    print('Error saving file with FileDialog ${e.toString()}');
+    print('Error saving file with FileDialog $e');
     return null;
   }
 }

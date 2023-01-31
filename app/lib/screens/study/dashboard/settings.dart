@@ -80,13 +80,13 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 24),
             Text(
               '${AppLocalizations.of(context).study_current} ${subject.study.title}',
-              style: theme.textTheme.headline6,
+              style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
               icon: const Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context).opt_out),
-              style: ElevatedButton.styleFrom(primary: Colors.orange[800]),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
               },
@@ -95,7 +95,7 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context).delete_data),
-              style: ElevatedButton.styleFrom(primary: Colors.red),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog());
               },
@@ -136,7 +136,7 @@ class OptOutAlertDialog extends StatelessWidget {
         ElevatedButton.icon(
           icon: const Icon(MdiIcons.exitToApp),
           label: const Text('Opt-out'),
-          style: ElevatedButton.styleFrom(primary: Colors.orange[800], elevation: 0),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800], elevation: 0),
           onPressed: () async {
             subject.delete();
             deleteActiveStudyReference();
@@ -159,7 +159,7 @@ class DeleteAlertDialog extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: const Text('Delete all local data'),
-            style: ElevatedButton.styleFrom(primary: Colors.red, elevation: 0),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
             onPressed: () async {
               deleteLocalData();
               Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);

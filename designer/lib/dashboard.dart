@@ -124,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
                   child: TextButton.icon(
                     label: const Text('Upload'),
                     icon: const Icon(MdiIcons.upload),
-                    style: TextButton.styleFrom(primary: Colors.white),
+                    style: TextButton.styleFrom(foregroundColor: Colors.white),
                     onPressed: () async {
                       final controller = TextEditingController();
                       final wasUploaded = await showDialog<bool>(

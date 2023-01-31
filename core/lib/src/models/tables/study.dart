@@ -50,19 +50,19 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(name: 'fhir_questionnaire')
   Questionnaire? fhirQuestionnaire;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int endedCount = 0;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int activeSubjectCount = 0;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<int> missedDays = [];
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   Repo? repo;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<StudyInvite>? invites;
 
   Study(this.id, this.userId);

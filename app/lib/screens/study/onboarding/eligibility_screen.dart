@@ -77,7 +77,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           color: Colors.green,
           size: 32,
         ),
-        content: Text(AppLocalizations.of(context).eligible_yes, style: Theme.of(context).textTheme.subtitle1),
+        content: Text(AppLocalizations.of(context).eligible_yes, style: Theme.of(context).textTheme.titleMedium),
         actions: [Container()],
         forceActionsBelow: true,
         backgroundColor: Colors.green[50],
@@ -92,7 +92,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context).eligible_no, style: Theme.of(context).textTheme.subtitle1),
+            Text(AppLocalizations.of(context).eligible_no, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(activeResult.firstFailed.reason),
             const SizedBox(height: 4),
@@ -125,7 +125,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
             padding: const EdgeInsets.all(8),
             child: Text(
               AppLocalizations.of(context).please_answer_eligibility,
-              style: theme.textTheme.subtitle1,
+              style: theme.textTheme.titleMedium,
             ),
           ),
           Expanded(

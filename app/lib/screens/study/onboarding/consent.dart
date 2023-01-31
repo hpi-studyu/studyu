@@ -103,15 +103,15 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     children: [
                       TextSpan(
                         text: AppLocalizations.of(context).please_give_consent,
-                        style: theme.textTheme.subtitle1,
+                        style: theme.textTheme.titleMedium,
                       ),
                       TextSpan(
                         text: ' ',
-                        style: theme.textTheme.subtitle1,
+                        style: theme.textTheme.titleMedium,
                       ),
                       TextSpan(
                         text: AppLocalizations.of(context).please_give_consent_why,
-                        style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
+                        style: theme.textTheme.titleSmall.copyWith(color: theme.primaryColor),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => showDialog(
                                 context: context,
@@ -212,7 +212,7 @@ class ConsentCard extends StatelessWidget {
             children: [
               Icon(MdiIcons.fromString(consent.iconName), size: 60, color: Colors.blue),
               const SizedBox(height: 10),
-              Text(consent.title, style: Theme.of(context).textTheme.subtitle2),
+              Text(consent.title, style: Theme.of(context).textTheme.titleSmall),
             ],
           ),
         ),

@@ -9,7 +9,7 @@ class DeleteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
-      style: TextButton.styleFrom(primary: Colors.red),
+      style: TextButton.styleFrom(foregroundColor: Colors.red),
       icon: const Icon(Icons.delete),
       onPressed: onPressed,
       label: Text(AppLocalizations.of(context).delete),

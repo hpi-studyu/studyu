@@ -11,7 +11,7 @@ class QuestionHeader extends StatelessWidget {
     if (subtitle == null) return [];
     return [
       const SizedBox(height: 8),
-      Text(subtitle, style: Theme.of(context).textTheme.caption),
+      Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
     ];
   }
 
@@ -44,7 +44,7 @@ class QuestionHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(prompt, style: Theme.of(context).textTheme.subtitle1),
+              Text(prompt, style: Theme.of(context).textTheme.titleMedium),
               ..._buildSubtitle(context),
             ],
           ),

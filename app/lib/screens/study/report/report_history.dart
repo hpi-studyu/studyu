@@ -61,7 +61,7 @@ class ReportHistoryItem extends StatelessWidget {
                 ),
                 Text(
                   subject.study.title,
-                  style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                  style: theme.textTheme.headlineSmall.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
                 ),
               ],
             ),

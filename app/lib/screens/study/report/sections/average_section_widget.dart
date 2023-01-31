@@ -67,7 +67,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           charts.ChartTitle(
             AppLocalizations.of(context).report_axis_phase,
             behaviorPosition: charts.BehaviorPosition.bottom,
-            titleStyleSpec: convertTextTheme(Theme.of(context).textTheme.caption),
+            titleStyleSpec: convertTextTheme(Theme.of(context).textTheme.bodySmall),
           )
       ],
       domainAxis: charts.NumericAxisSpec(

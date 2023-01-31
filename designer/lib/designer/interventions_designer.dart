@@ -54,8 +54,7 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                               intervention: entry.value,
                               remove: () => _removeIntervention(entry.key),
                             ),
-                          )
-                          .toList(),
+                          ),
                       const SizedBox(height: 200)
                     ],
                   ),

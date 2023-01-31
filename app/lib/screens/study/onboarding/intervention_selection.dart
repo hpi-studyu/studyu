@@ -33,12 +33,12 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         children: [
           Text(
             AppLocalizations.of(context).please_select_interventions,
-            style: theme.textTheme.subtitle1,
+            style: theme.textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).please_select_interventions_description,
-            style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+            style: theme.textTheme.bodyMedium.copyWith(color: theme.textTheme.bodySmall.color),
           ),
         ],
       ),

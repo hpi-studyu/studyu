@@ -30,7 +30,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
   }
 
   Widget _constructAnnotationWidgetFor(Annotation annotation, BuildContext context) {
-    return Text(annotation.annotation, style: Theme.of(context).textTheme.headline6);
+    return Text(annotation.annotation, style: Theme.of(context).textTheme.titleLarge);
   }
 
   List<Widget> _generateAnnotations(BuildContext context) {

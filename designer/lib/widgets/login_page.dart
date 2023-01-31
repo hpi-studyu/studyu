@@ -78,7 +78,7 @@ class _LoginPageState extends SupabaseAuthState<LoginPage> {
                 ),
                 if (appState.authError != null) ...[
                   const SizedBox(height: 24),
-                  Text(appState.authError, style: theme.textTheme.subtitle1.copyWith(color: Colors.red)),
+                  Text(appState.authError, style: theme.textTheme.titleMedium.copyWith(color: Colors.red)),
                 ],
                 const SizedBox(height: 32),
                 Row(
@@ -114,14 +114,14 @@ class _LoginPageState extends SupabaseAuthState<LoginPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                Text('Login with', style: theme.textTheme.headline5),
+                Text('Login with', style: theme.textTheme.headlineSmall),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     OutlinedButton.icon(
                       label: const Text('GitLab'),
-                      style: OutlinedButton.styleFrom(primary: gitlabColor),
+                      style: OutlinedButton.styleFrom(foregroundColor: gitlabColor),
                       icon: const Icon(MdiIcons.gitlab),
                       onPressed: () => appState.signInWithProvider(
                         Provider.gitlab,

@@ -67,8 +67,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
                             remove: () => _removeResult(entry.key),
                             changeResultType: (newType) => _changeResultsType(entry.key, newType),
                           ),
-                        )
-                        .toList(),
+                        ),
                     const SizedBox(height: 200)
                   ],
                 ),

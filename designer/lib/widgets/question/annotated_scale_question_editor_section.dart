@@ -48,7 +48,7 @@ class _AnnotatedScaleQuestionEditorSectionState extends State<AnnotatedScaleQues
             ElevatedButton.icon(
               onPressed: _addAnnotation,
               icon: const Icon(Icons.add),
-              style: ElevatedButton.styleFrom(primary: Colors.green),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               label: Text(AppLocalizations.of(context).add_annotation),
             ),
             const Spacer()

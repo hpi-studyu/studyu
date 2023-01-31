@@ -28,7 +28,7 @@ class _QuestionnaireTaskEditorState extends State<QuestionnaireTaskEditorSection
         ElevatedButton.icon(
           onPressed: _addQuestion,
           icon: const Icon(Icons.add),
-          style: ElevatedButton.styleFrom(primary: Colors.green),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           label: Text(AppLocalizations.of(context).add_question),
         )
       ],

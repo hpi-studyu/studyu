@@ -66,8 +66,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
                 question: entry.value,
                 questionTypes: widget.questionTypes,
               ),
-            )
-            .toList(),
+            ),
       ],
     );
   }

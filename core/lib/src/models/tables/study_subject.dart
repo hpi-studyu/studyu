@@ -32,10 +32,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @JsonKey(name: 'invite_code')
   String? inviteCode;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late Study study;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late List<SubjectProgress> progress = [];
 
   StudySubject(this.id, this.studyId, this.userId, this.selectedInterventionIds);
