@@ -244,6 +244,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     if (activeIntervention == null) return taskSchedule;
 
     for (final task in activeIntervention.tasks) {
+      if (task.title == null) continue;
       for (final completionPeriod in task.schedule.completionPeriods) {
         taskSchedule.add(TimedTask(task, completionPeriod));
       }

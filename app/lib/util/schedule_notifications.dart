@@ -21,8 +21,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
   ) async {
     var currentId = id;
     for (final reminder in task.schedule.reminders) {
-      if (date.isSameDate(DateTime.now()) && !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)
-          || task.title == null) {
+      if (date.isSameDate(DateTime.now()) && !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)) {
         break;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
@@ -92,7 +91,9 @@ Future<void> scheduleNotifications(BuildContext context) async {
         continue;
       }
       for (final task in intervention.tasks) {
-        sendNotificationList.add(SendNotification(task, date, notificationDetails));
+        if (task.title != null) {
+          sendNotificationList.add(SendNotification(task, date, notificationDetails));
+        }
       }
     }
   }
