@@ -419,11 +419,10 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      name: studyu_core
-      sha256: "964e16c8def97cdfc15aecfed6c602de1ab8580ea56b5c4181945c245c60016e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.7.15"
+      path: "../core"
+      relative: true
+    source: path
+    version: "3.8.0"
   supabase:
     dependency: transitive
     description:
