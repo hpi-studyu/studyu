@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -190,8 +191,11 @@ class StudyNotifications {
     );
     if (taskToRun != null) {
       if (!completed /*|| !kDebugMode*/) {
-        navigatorKey.currentState.push<bool>(MaterialPageRoute(
-            builder: (_) => TaskScreen(timedTask: taskToRun),),);
+        navigatorKey.currentState.push(
+          MaterialPageRoute(builder: (_) =>
+              TaskScreen(timedTask: taskToRun),
+          ),
+        );
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(builder: (_) =>
@@ -199,6 +203,12 @@ class StudyNotifications {
           ),
         );
       }
+    } else {
+      navigatorKey.currentState.push(
+        MaterialPageRoute(builder: (_) =>
+            const DashboardScreen(error: 'Task could not be found'),
+        ),
+      );
     }
   }
 }

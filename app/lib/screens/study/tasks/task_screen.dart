@@ -15,11 +15,6 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   Widget _buildTask() {
     switch (widget.timedTask.task.runtimeType) {
       case CheckmarkTask:

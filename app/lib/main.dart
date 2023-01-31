@@ -29,6 +29,7 @@ Future<void> main() async {
   //WidgetsFlutterBinding.ensureInitialized();
   await loadEnv();
   await _configureLocalTimeZone();
+
   runApp(MyApp());
 }
 

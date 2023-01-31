@@ -6,7 +6,7 @@ import 'package:studyu_core/core.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../models/app_state.dart';
-import 'study_notifications.dart';
+import 'notifications.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
   // todo we should pass TimedTasks to this method instead of Tasks

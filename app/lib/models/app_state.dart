@@ -1,4 +1,4 @@
-import 'package:studyu_app/util/study_notifications.dart';
+import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
 
 class AppState {
