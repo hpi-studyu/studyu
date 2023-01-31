@@ -39,6 +39,14 @@ class StudyNotifications {
       BuildContext context,
   ) async {
     final notifications = StudyNotifications._create(activeSubject, context);
+
+    final NotificationAppLaunchDetails notificationAppLaunchDetails = !kIsWeb &&
+        Platform.isLinux ? null : await notifications.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      final selectedNotificationPayload = notificationAppLaunchDetails.notificationResponse.payload;
+      notifications.handleNotificationResponse(selectedNotificationPayload);
+    }
+
     return notifications;
   }
 
