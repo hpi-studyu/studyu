@@ -9,8 +9,9 @@ import '../../../../models/app_state.dart';
 
 class CheckmarkTaskWidget extends StatefulWidget {
   final CheckmarkTask task;
+  final CompletionPeriod completionPeriod;
 
-  const CheckmarkTaskWidget({this.task, Key key}) : super(key: key);
+  const CheckmarkTaskWidget({this.task, this.completionPeriod, Key key}) : super(key: key);
 
   @override
   State<CheckmarkTaskWidget> createState() => _CheckmarkTaskWidgetState();
@@ -21,7 +22,7 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
     final model = context.read<AppState>();
     final activeStudy = model.activeSubject;
     try {
-      await activeStudy.addResult<bool>(taskId: widget.task.id, result: true);
+      await activeStudy.addResult<bool>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true);
       await animation;
       if (!mounted) return;
       Navigator.pop(context, true);

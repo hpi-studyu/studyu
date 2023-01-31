@@ -11,8 +11,9 @@ import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
+  final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
+  const QuestionnaireTaskWidget({@required this.task, @required this.completionPeriod, Key key}) : super(key: key);
 
   @override
   _QuestionnaireTaskWidgetState createState() => _QuestionnaireTaskWidgetState();
@@ -25,7 +26,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     final activeStudy = context.read<AppState>().activeSubject;
     try {
-      await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
+      await activeStudy.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
       if (!mounted) return;
       Navigator.pop(context, true);
     } on PostgrestError {

@@ -2,8 +2,8 @@ name: Deploy apps
 
 on:
   push:
-    tags:
-      - 'studyu_app-v*'
+    branches:
+      - release-staging
   workflow_dispatch:
 
 jobs:

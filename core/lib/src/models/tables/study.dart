@@ -126,9 +126,13 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
 
+  bool get hasConsentCheck => consent.isNotEmpty;
+
   int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
+
+  List<Task> get taskList => [...interventions.expand((e) => e.tasks), ...observations];
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final res = await env.client.from('study_progress').select().eq('study_id', studyId).execute();

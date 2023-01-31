@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer/widgets/buttons.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../models/app_state.dart';
 import '../util/helper.dart';
 import 'questionnaire_task_editor_section.dart';
 import 'task_schedule_editor_section.dart';
@@ -24,6 +27,7 @@ class _TaskEditorState extends State<TaskEditor> {
   @override
   Widget build(BuildContext context) {
     final taskBody = buildTaskBody();
+    final draftStudy = context.read<AppState>().draftStudy;
 
     return Card(
       margin: const EdgeInsets.all(10),
@@ -52,7 +56,7 @@ class _TaskEditorState extends State<TaskEditor> {
                     children: <Widget>[
                       FormBuilderTextField(
                         onChanged: (value) {
-                          saveFormChanges();
+                          saveFormChanges(draftStudy);
                         },
                         name: 'title',
                         decoration: InputDecoration(labelText: AppLocalizations.of(context).title),
@@ -60,7 +64,7 @@ class _TaskEditorState extends State<TaskEditor> {
                       ),
                       FormBuilderTextField(
                         onChanged: (value) {
-                          saveFormChanges();
+                          saveFormChanges(draftStudy);
                         },
                         name: 'header',
                         decoration: const InputDecoration(labelText: 'Header'),
@@ -68,7 +72,7 @@ class _TaskEditorState extends State<TaskEditor> {
                       ),
                       FormBuilderTextField(
                         onChanged: (value) {
-                          saveFormChanges();
+                          saveFormChanges(draftStudy);
                         },
                         name: 'footer',
                         decoration: const InputDecoration(labelText: 'Footer'),
@@ -101,12 +105,17 @@ class _TaskEditorState extends State<TaskEditor> {
     }
   }
 
-  void saveFormChanges() {
+  void saveFormChanges(Study draftStudy) {
     _editFormKey.currentState.save();
     if (_editFormKey.currentState.validate()) {
+      // Do not allow duplicate Task IDs
+      String taskId = (_editFormKey.currentState.value['title'] as String).toId();
+      if(draftStudy.taskList.any((task) => task.id == taskId)) {
+        taskId = '${taskId}_${const Uuid().v4().substring(0, 8)}';
+      }
       setState(() {
         widget.task.title = _editFormKey.currentState.value['title'] as String;
-        widget.task.id = (_editFormKey.currentState.value['title'] as String).toId();
+        widget.task.id = taskId;
         widget.task.header = _editFormKey.currentState.value['header'] as String;
         widget.task.footer = _editFormKey.currentState.value['footer'] as String;
 //        task.hour = int.parse(_editFormKey.currentState.value['hour']);

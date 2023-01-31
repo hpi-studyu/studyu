@@ -24,8 +24,8 @@ class PerformanceSection extends GenericSection {
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
     }).toList();
     return interventions.length != 2 || subject.study.reportSpecification?.primary == null
-        ? const Center(
-            child: Text('ERROR!'),
+        ? Center(
+            child: Text(AppLocalizations.of(context).performance),
           )
         : Column(
             children: [
@@ -33,7 +33,7 @@ class PerformanceSection extends GenericSection {
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
                   '${AppLocalizations.of(context).current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               ListView.builder(

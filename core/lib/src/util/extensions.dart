@@ -1,16 +1,20 @@
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
-    return year == other.year && month == other.month && day == other.day;
+    final otherUtc = other.toUtc();
+    return toUtc().year == otherUtc.year &&
+        toUtc().month == otherUtc.month &&
+        toUtc().day == otherUtc.day;
   }
 
   bool isEarlierDateThan(DateTime other) {
-    if (year < other.year) {
+    final otherUtc = other.toUtc();
+    if (toUtc().year < otherUtc.year) {
       return true;
-    } else if (year == other.year) {
-      if (month < other.month) {
+    } else if (toUtc().year == otherUtc.year) {
+      if (toUtc().month < otherUtc.month) {
         return true;
-      } else if (month == other.month) {
-        if (day < other.day) {
+      } else if (toUtc().month == otherUtc.month) {
+        if (toUtc().day < otherUtc.day) {
           return true;
         }
       }
@@ -22,10 +26,7 @@ extension DateOnlyCompare on DateTime {
     return !(isSameDate(other) || isEarlierDateThan(other));
   }
 
-  // needed for models
-  Duration differenceInDays(DateTime other) {
-    final currentZero = DateTime(year, month, day);
-    final otherZero = DateTime(other.year, other.month, other.day);
-    return currentZero.difference(otherZero);
+  int differenceInDays(DateTime other) {
+    return difference(other).inDays;
   }
 }

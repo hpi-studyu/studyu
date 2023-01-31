@@ -10,6 +10,8 @@ part 'result.g.dart';
 class Result<T> {
   static const keyType = 'type';
   String type;
+  // Todo make non-nullable (breaks backwards compatibility)
+  String? periodId;
 
   static const String keyResult = 'result';
   @JsonKey(ignore: true)
@@ -17,7 +19,7 @@ class Result<T> {
 
   Result(this.type);
 
-  Result.app({required this.type, required this.result});
+  Result.app({required this.type, required this.periodId, required this.result});
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 

@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - dev
+      - release-staging
     paths:
       - "app/**"
       - "core/**"

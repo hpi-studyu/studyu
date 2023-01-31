@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
-import '../../util/notifications.dart';
+import '../../util/schedule_notifications.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String sessionString;
@@ -20,15 +20,14 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
+
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     final hasRecovered = await recoverSupabaseSession();
-
     if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
-
     initStudy();
   }
 
@@ -72,7 +71,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       model.activeSubject = subject;
       if (!kIsWeb) {
         // Notifications not supported on web
-        scheduleStudyNotifications(context);
+        scheduleNotifications(context);
       }
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
@@ -90,7 +89,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
             children: [
               Text(
                 '${AppLocalizations.of(context).loading}...',
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const CircularProgressIndicator(),
             ],
