@@ -1,3 +1,7 @@
+## 1.3.23
+
+ - Update a dependency to the latest release.
+
 ## 1.3.22
 
  - **FIX**: upgrade to flutter 3.7.0. ([2aa80015](https://github.com/hpi-studyu/studyu/commit/2aa80015a22161773649790edf2c38742809c45b))

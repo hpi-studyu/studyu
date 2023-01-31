@@ -1,3 +1,7 @@
+## 3.8.1
+
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+
 ## 3.8.0
 
  - **FIX**: do not show interventions with empty titles. ([2a9abe76](https://github.com/hpi-studyu/studyu/commit/2a9abe764d245062548cff5a1a43251a9fc14a4f))

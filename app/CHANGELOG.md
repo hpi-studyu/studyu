@@ -1,3 +1,7 @@
+## 1.11.1
+
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+
 ## 1.11.0
 
  - **FIX**: show correct screen when app is launched by a notification. ([77c22707](https://github.com/hpi-studyu/studyu/commit/77c227078fa70e78e29ee7bf810b2bc20cb45657))
