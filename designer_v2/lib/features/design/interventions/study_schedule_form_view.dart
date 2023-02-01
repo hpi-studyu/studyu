@@ -15,6 +15,29 @@ class StudyScheduleFormView extends FormConsumerWidget {
 
   final StudyScheduleControls formViewModel;
 
+  FormTableRow _renderCustomSequence() {
+    if (!formViewModel.isSequencingCustom()) {
+      return FormTableRow(input: const SizedBox.shrink());
+    } else {
+      return FormTableRow(
+          control: formViewModel.sequenceTypeCustomControl,
+          label: "Custom Sequence", // todo translate
+          labelHelpText: "Enter a custom sequence by using the letters A and B", // todo translate
+          input: ReactiveTextField(
+            formControl: formViewModel.sequenceTypeCustomControl,
+            keyboardType: TextInputType.text,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.singleLineFormatter,
+              LengthLimitingTextInputFormatter(10),
+              StudySequenceFormatter(),
+            ],
+            validationMessages:
+            formViewModel.sequenceTypeCustomControl.validationMessages,
+          )
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, FormGroup form) {
     return Column(
@@ -41,6 +64,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
               formViewModel.sequenceTypeControl.validationMessages,
             ),
           ),
+          _renderCustomSequence(),
           FormTableRow(
             control: formViewModel.phaseDurationControl,
             label: tr.form_field_crossover_schedule_phase_length,
