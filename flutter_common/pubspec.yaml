@@ -25,4 +25,4 @@ flutter:
     - packages/studyu_flutter_common/envs/.env
     - packages/studyu_flutter_common/envs/.env.local
     - packages/studyu_flutter_common/envs/.env.selfhost
-    # - packages/studyu_flutter_common/envs/.env.staging
+    - packages/studyu_flutter_common/envs/.env.staging
