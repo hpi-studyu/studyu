@@ -54,7 +54,7 @@ class NotebookViewer extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         notebook.replaceAll(RegExp(r'\.\w*$'), ''),
-                        style: theme.textTheme.headline6.copyWith(color: theme.colorScheme.secondary),
+                        style: theme.textTheme.titleLarge.copyWith(color: theme.colorScheme.secondary),
                       ),
                       // VerticalDivider(indent: 8, endIndent: 8),
                     ],
