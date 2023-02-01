@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/common_views/badge.dart';
+import 'package:studyu_designer_v2/common_views/badge.dart' as studybadge;
 import 'package:studyu_designer_v2/domain/participation.dart';
 
 class StudyParticipationBadge extends StatelessWidget {
   const StudyParticipationBadge(
       {required this.participation,
-        this.type = BadgeType.plain,
+        this.type = studybadge.BadgeType.plain,
         this.showPrefixIcon = true,
         Key? key})
       : super(key: key);
 
   final Participation participation;
-  final BadgeType type;
+  final studybadge.BadgeType type;
   final bool showPrefixIcon;
 
   @override
@@ -32,7 +32,7 @@ class StudyParticipationBadge extends StatelessWidget {
 
     switch (participation) {
       case Participation.open:
-        return inTooltip(Badge(
+        return inTooltip(studybadge.Badge(
           label: participation.whoShort,
           color: colorScheme.primary.withOpacity(0.8),
           type: type,
@@ -40,7 +40,7 @@ class StudyParticipationBadge extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0)
         ));
       case Participation.invite:
-        return inTooltip(Badge(
+        return inTooltip(studybadge.Badge(
           label: participation.whoShort,
           color: colorScheme.onPrimaryContainer.withOpacity(0.6),
           type: type,

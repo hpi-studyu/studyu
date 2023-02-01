@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/common_views/badge.dart';
+import 'package:studyu_designer_v2/common_views/badge.dart' as StudyUBadge;
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -19,7 +19,7 @@ class EnrolledBadge extends StatelessWidget {
     if (enrolledCount == 0) {
       return Tooltip(
         message: tr.enrolled_count_tooltip(enrolledCount),
-        child: Badge(
+        child: StudyUBadge.Badge(
           icon: null,
           label: "-",
           color: mutedTextStyle.color,
@@ -29,7 +29,7 @@ class EnrolledBadge extends StatelessWidget {
 
     return Tooltip(
         message: tr.enrolled_count_tooltip(enrolledCount),
-        child: Badge(
+        child: StudyUBadge.Badge(
           icon: Icons.check_circle_rounded,
           iconSize: theme.iconTheme.size,
           label: (enrolledCount > 1) ? enrolledCount.toString() : "",
