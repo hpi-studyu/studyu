@@ -49,8 +49,7 @@ enum AuthFormKey {
   }
 }
 
-class AuthFormController extends StateNotifier<AsyncValue<void>>
-    implements IFormGroupController {
+class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFormGroupController {
   AuthFormController({
     required this.authRepository,
     required this.sharedPreferences,
@@ -95,8 +94,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
     'passwordConfirmation': passwordConfirmationControl,
     'termsOfService': termsOfServiceControl,
   }, validators: [
-    mustMatch(
-        control: passwordControl, matchingControl: passwordConfirmationControl)
+    mustMatch(control: passwordControl, matchingControl: passwordConfirmationControl)
   ]);
 
   late final FormGroup passwordForgotForm = FormGroup({
@@ -107,12 +105,10 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
     'password': passwordControl,
     'passwordConfirmation': passwordConfirmationControl,
   }, validators: [
-    mustMatch(
-        control: passwordControl, matchingControl: passwordConfirmationControl)
+    mustMatch(control: passwordControl, matchingControl: passwordConfirmationControl)
   ]);
 
-  late final Map<AuthFormKey, Map<FormControl, List<ValidatorFunction>>>
-      controlValidatorsByForm = {
+  late final Map<AuthFormKey, Map<FormControl, List<ValidatorFunction>>> controlValidatorsByForm = {
     AuthFormKey._signupSubmit: {
       emailControl: [Validators.required, Validators.email],
       passwordControl: [Validators.required, Validators.minLength(8)],
@@ -260,14 +256,12 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
     }
     return updateUser(passwordControl.value!)
         .then((value) {
-          final shouldRemember =
-              sharedPreferences.getBool("remember_me") ?? false;
+          final shouldRemember = sharedPreferences.getBool("remember_me") ?? false;
           if (shouldRemember) {
             sharedPreferences.setString('password', passwordControl.value!);
           }
         })
-        .then(
-            (_) => notificationService.show(Notifications.passwordResetSuccess))
+        .then((_) => notificationService.show(Notifications.passwordResetSuccess))
         .then((_) => router.dispatch(RoutingIntents.studies));
   }
 
@@ -315,8 +309,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>>
   }
 }
 
-final _authFormControllerProvider =
-    StateNotifierProvider<AuthFormController, AsyncValue<void>>((ref) {
+final _authFormControllerProvider = StateNotifierProvider<AuthFormController, AsyncValue<void>>((ref) {
   final authFormController = AuthFormController(
     authRepository: ref.watch(authRepositoryProvider),
     sharedPreferences: ref.watch(sharedPreferencesProvider),
@@ -333,9 +326,8 @@ final _authFormControllerProvider =
   return authFormController;
 });
 
-final authFormControllerProvider = StateNotifierProvider.family
-    <AuthFormController, AsyncValue<void>, AuthFormKey>(
-        (ref, formKey) {
+final authFormControllerProvider =
+    StateNotifierProvider.family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
   final authFormController = ref.read(_authFormControllerProvider.notifier);
   authFormController.formKey = formKey;
   authFormController.resetControlsFor(formKey);

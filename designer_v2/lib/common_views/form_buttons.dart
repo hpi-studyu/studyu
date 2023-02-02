@@ -10,11 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 /// A cancel / dismiss button for use with [FormScaffold] [showFormSideSheet)
 /// Heavily inspired by [CloseButton]
 class DismissButton extends StatelessWidget {
-  const DismissButton({
-    this.text,
-    this.onPressed,
-    Key? key
-  }) : super(key: key);
+  const DismissButton({this.text, this.onPressed, Key? key}) : super(key: key);
 
   /// An override callback to perform instead of the default behavior which is
   /// to pop the [Navigator].
@@ -50,55 +46,48 @@ class DismissButton extends StatelessWidget {
               Navigator.maybePop(context);
             }
           },
-        )
-    );
+        ));
   }
 }
 
 List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
   final modifyActionButtons = [
-    ReactiveFormConsumer( // enable re-rendering based on form validation status
+    ReactiveFormConsumer(// enable re-rendering based on form validation status
         builder: (context, form, child) {
-          return retainSizeInAppBar(DismissButton(
-            onPressed: () =>
-                formViewModel.cancel().then(
-                        (_) => Navigator.maybePop(context)),
-          ));
-        }
-    ),
-    ReactiveFormConsumer( // enable re-rendering based on form validation status
+      return retainSizeInAppBar(DismissButton(
+        onPressed: () => formViewModel.cancel().then((_) => Navigator.maybePop(context)),
+      ));
+    }),
+    ReactiveFormConsumer(// enable re-rendering based on form validation status
         builder: (context, form, child) {
-          return retainSizeInAppBar(PrimaryButton(
-            text: tr.dialog_save,
-            tooltipDisabled: "${tr.form_invalid_prompt}\n\n${formViewModel.form.validationErrorSummary}",
-            icon: null,
-            enabled: formViewModel.isValid,
-            onPressedFuture: (formViewModel.isValid) ?
-              () => formViewModel.save().then(
-                // Close the form (side sheet or scaffold route) if future
-                // completed successfully
-                (value) => Navigator.maybePop(context)
-              ) : null,
-          ));
-        }
-    ),
+      return retainSizeInAppBar(PrimaryButton(
+        text: tr.dialog_save,
+        tooltipDisabled: "${tr.form_invalid_prompt}\n\n${formViewModel.form.validationErrorSummary}",
+        icon: null,
+        enabled: formViewModel.isValid,
+        onPressedFuture: (formViewModel.isValid) ? () => formViewModel.save().then(
+            // Close the form (side sheet or scaffold route) if future
+            // completed successfully
+            (value) => Navigator.maybePop(context)) : null,
+      ));
+    }),
   ];
   final readonlyActionButtons = [
-    ReactiveFormConsumer( // enable re-rendering based on form validation status
+    ReactiveFormConsumer(// enable re-rendering based on form validation status
         builder: (context, form, child) {
-          return retainSizeInAppBar(DismissButton(
-            text: tr.dialog_close,
-            onPressed: () => Navigator.maybePop(context),
-          ));
-        }
-    ),
+      return retainSizeInAppBar(DismissButton(
+        text: tr.dialog_close,
+        onPressed: () => Navigator.maybePop(context),
+      ));
+    }),
   ];
 
   final defaultActionButtons = {
-    FormMode.create: modifyActionButtons,
-    FormMode.edit: modifyActionButtons,
-    FormMode.readonly: readonlyActionButtons,
-  }[formViewModel.formMode] ?? modifyActionButtons;
+        FormMode.create: modifyActionButtons,
+        FormMode.edit: modifyActionButtons,
+        FormMode.readonly: readonlyActionButtons,
+      }[formViewModel.formMode] ??
+      modifyActionButtons;
 
   return defaultActionButtons;
 }

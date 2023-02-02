@@ -25,8 +25,7 @@ class NavbarTab {
   final bool enabled;
 }
 
-typedef OnTabSelectCallback<T extends NavbarTab> = void Function(
-    int tabIdx, T tab);
+typedef OnTabSelectCallback<T extends NavbarTab> = void Function(int tabIdx, T tab);
 
 class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
   const TabbedNavbar({
@@ -65,12 +64,10 @@ class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
   final Color? unselectedLabelColorHover;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _TabbedNavbarState<T>();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TabbedNavbarState<T>();
 }
 
-class _TabbedNavbarState<T extends NavbarTab>
-    extends ConsumerState<TabbedNavbar>
+class _TabbedNavbarState<T extends NavbarTab> extends ConsumerState<TabbedNavbar>
     with TickerProviderStateMixin
     implements Listenable {
   /// A [TabController] that has its index synced to the currently selected
@@ -78,8 +75,7 @@ class _TabbedNavbarState<T extends NavbarTab>
   /// via a router
   late final TabController _tabController;
 
-  late int _selectedTabIndex =
-      widget.selectedTab?.index ?? _findFirstEnabledTabIndex();
+  late int _selectedTabIndex = widget.selectedTab?.index ?? _findFirstEnabledTabIndex();
   int get selectedTabIndex => _selectedTabIndex;
   set selectedTabIndex(int idx) {
     final tab = widget.tabs[idx];
@@ -186,8 +182,7 @@ class _TabbedNavbarState<T extends NavbarTab>
         cursor: SystemMouseCursors.basic,
       );
       if (widget.disabledTooltipText != null) {
-        return Tooltip(
-            message: widget.disabledTooltipText!, child: disablePointerCursor);
+        return Tooltip(message: widget.disabledTooltipText!, child: disablePointerCursor);
       }
       return disablePointerCursor;
     }
@@ -219,11 +214,7 @@ class _TabbedNavbarState<T extends NavbarTab>
 
   Widget _buildTabContent(context, T t) {
     final theme = Theme.of(context);
-    final indicatorHeight = (theme.tabBarTheme.indicator as BoxDecoration)
-            .border
-            ?.dimensions
-            .vertical ??
-        0.0;
+    final indicatorHeight = (theme.tabBarTheme.indicator as BoxDecoration).border?.dimensions.vertical ?? 0.0;
 
     return Container(
       decoration: (!t.enabled)
@@ -240,26 +231,18 @@ class _TabbedNavbarState<T extends NavbarTab>
               final isHovered = states.contains(MaterialState.hovered);
 
               TextStyle actualTextStyle = (isSelected)
-                  ? theme.tabBarTheme.labelStyle ??
-                      TextStyle(color: theme.tabBarTheme.labelColor)
-                  : theme.tabBarTheme.unselectedLabelStyle ??
-                      TextStyle(color: theme.tabBarTheme.unselectedLabelColor);
+                  ? theme.tabBarTheme.labelStyle ?? TextStyle(color: theme.tabBarTheme.labelColor)
+                  : theme.tabBarTheme.unselectedLabelStyle ?? TextStyle(color: theme.tabBarTheme.unselectedLabelColor);
 
-              final mergeColorStyle = TextStyle(
-                  color: (isSelected)
-                      ? widget.labelColorHover
-                      : widget.unselectedLabelColorHover);
-              actualTextStyle = (isHovered)
-                  ? actualTextStyle.merge(mergeColorStyle)
-                  : actualTextStyle;
+              final mergeColorStyle =
+                  TextStyle(color: (isSelected) ? widget.labelColorHover : widget.unselectedLabelColorHover);
+              actualTextStyle = (isHovered) ? actualTextStyle.merge(mergeColorStyle) : actualTextStyle;
 
               return Align(
                 alignment: Alignment.center,
                 child: Text(
                   t.title,
-                  style: (!t.enabled)
-                      ? TextStyle(color: theme.disabledColor.faded(0.5))
-                      : actualTextStyle,
+                  style: (!t.enabled) ? TextStyle(color: theme.disabledColor.faded(0.5)) : actualTextStyle,
                 ),
               );
             },

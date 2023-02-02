@@ -15,8 +15,7 @@ abstract class IScreenerQuestionLogicFormViewModel {
 }
 
 class ScreenerQuestionLogicFormView extends FormConsumerWidget {
-  const ScreenerQuestionLogicFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const ScreenerQuestionLogicFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final ScreenerQuestionFormViewModel formViewModel;
 
@@ -50,10 +49,8 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
             padding: const EdgeInsets.only(top: 12.0),
             child: BannerBox(
               style: BannerStyle.info,
-              body: TextParagraph(
-                  text: tr.form_array_screener_question_logic_dirty_banner),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
+              body: TextParagraph(text: tr.form_array_screener_question_logic_dirty_banner),
+              padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,
               isDismissed: !formViewModel.isMidValuesClearedInfoVisible,
               dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
@@ -83,8 +80,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
           onSelectItem: (_) => {}, // no-op
           buildCellsAt: (context, item, rowIdx, __) {
             final optionControl = item as FormControl<dynamic>;
-            final logicControl = formViewModel.responseOptionsLogicControls
-                .controls[rowIdx] as FormControl<bool>;
+            final logicControl = formViewModel.responseOptionsLogicControls.controls[rowIdx] as FormControl<bool>;
             return _buildOptionLogicRow(context, optionControl, logicControl);
           },
           cellSpacing: 4.0,
@@ -98,8 +94,8 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     );
   }
 
-  List<Widget> _buildOptionLogicRow(BuildContext context,
-      FormControl<dynamic> optionControl, FormControl<bool> logicControl) {
+  List<Widget> _buildOptionLogicRow(
+      BuildContext context, FormControl<dynamic> optionControl, FormControl<bool> logicControl) {
     final theme = Theme.of(context);
 
     // Use a UniqueKey to prevent carry-over of control states to other
@@ -108,9 +104,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     final iconWidget = optionCells[0];
     final optionWidget = optionCells[1];
     final logicWidget = Theme(
-      data: theme.copyWith(
-          inputDecorationTheme:
-              ThemeConfig.dropdownInputDecorationTheme(theme)),
+      data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
       child: ReactiveDropdownField<bool>(
         formControl: logicControl,
         items: formViewModel.logicControlOptions.map((option) {

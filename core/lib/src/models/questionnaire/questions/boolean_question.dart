@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../answer.dart';
-import '../question.dart';
-import '../question_conditional.dart';
+import 'package:studyu_core/src/models/questionnaire/answer.dart';
+import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 
 part 'boolean_question.g.dart';
 

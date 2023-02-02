@@ -42,4 +42,3 @@ String translateLocaleName({required Locale locale}) {
       }
   }
 }
-

@@ -34,12 +34,9 @@ class PasswordForgotForm extends FormConsumerRefWidget {
               text: tr.action_button_password_reset,
               isLoading: state.isLoading,
               enabled: form.valid,
-              onPressedFuture: () => ref
-                  .read(authFormControllerProvider(formKey).notifier)
-                  .sendPasswordResetLink(),
+              onPressedFuture: () => ref.read(authFormControllerProvider(formKey).notifier).sendPasswordResetLink(),
               tooltipDisabled: tr.form_invalid_prompt,
-              innerPadding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
+              innerPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             ),
           );
         }),
@@ -53,8 +50,7 @@ class PasswordForgotForm extends FormConsumerRefWidget {
             const SizedBox(width: 4.0),
             Hyperlink(
               text: tr.link_login,
-              onClick: () =>
-                  ref.read(routerProvider).dispatch(RoutingIntents.login),
+              onClick: () => ref.read(routerProvider).dispatch(RoutingIntents.login),
             ),
           ],
         )

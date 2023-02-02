@@ -1,6 +1,5 @@
+import 'package:studyu_core/src/models/models.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models.dart';
 
 abstract class Task {
   static const String keyType = 'type';

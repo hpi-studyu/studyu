@@ -23,14 +23,12 @@ abstract class IStudyRepository implements ModelRepository<Study> {
 //Future<void> deleteProgress(Study study);
 }
 
-class StudyRepository extends ModelRepository<Study>
-    implements IStudyRepository {
+class StudyRepository extends ModelRepository<Study> implements IStudyRepository {
   StudyRepository({
     required this.apiClient,
     required this.authRepository,
     required this.ref,
-  }) : super(StudyRepositoryDelegate(
-            apiClient: apiClient, authRepository: authRepository));
+  }) : super(StudyRepositoryDelegate(apiClient: apiClient, authRepository: authRepository));
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -83,13 +81,13 @@ class StudyRepository extends ModelRepository<Study>
     final publishedCopy = study.asNewlyPublished();
 
     final publishOperation = OptimisticUpdate(
-        applyOptimistic: () => {}, // nothing to do here
-        apply: () => save(publishedCopy, runOptimistically: false),
-        rollback: () {}, // nothing to do here
-        onUpdate: () => emitUpdate(),
-        onError: (e, stackTrace) {
-          emitError(modelStreamControllers[study.id], e, stackTrace);
-        },
+      applyOptimistic: () => {}, // nothing to do here
+      apply: () => save(publishedCopy, runOptimistically: false),
+      rollback: () {}, // nothing to do here
+      onUpdate: () => emitUpdate(),
+      onError: (e, stackTrace) {
+        emitError(modelStreamControllers[study.id], e, stackTrace);
+      },
     );
 
     deleteParticipants(study);
@@ -97,16 +95,11 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  List<ModelAction> availableActions(Study study) {
+  List<ModelAction> availableActions(Study model) {
     Future<void> onDeleteCallback() {
-      return delete(study.id)
-          .then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies))
-          .then((value) => Future.delayed(
-              const Duration(milliseconds: 200),
-              () => ref
-                  .read(notificationServiceProvider)
-                  .show(Notifications.studyDeleted)));
+      return delete(model.id).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
+          Future.delayed(const Duration(milliseconds: 200),
+              () => ref.read(notificationServiceProvider).show(Notifications.studyDeleted)));
     }
 
     final currentUser = authRepository.currentUser!;
@@ -117,27 +110,26 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.edit,
         label: StudyActionType.edit.string,
         onExecute: () {
-          ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(study.id));
+          ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(model.id));
         },
-        isAvailable: study.canEditDraft(currentUser),
+        isAvailable: model.canEditDraft(currentUser),
       ),
-      ModelAction( // same as "Copy" but for non-drafts
+      ModelAction(
+        // same as "Copy" but for non-drafts
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
         onExecute: () {
-          return duplicateAndSave(study).then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
-        isAvailable: study.status != StudyStatus.draft && study.canCopy(currentUser),
+        isAvailable: model.status != StudyStatus.draft && model.canCopy(currentUser),
       ),
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
         onExecute: () {
-          return duplicateAndSave(study).then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
-        isAvailable: study.status == StudyStatus.draft && study.canCopy(currentUser),
+        isAvailable: model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
       /*
       TODO re-implement this properly
@@ -154,26 +146,24 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.export,
         label: StudyActionType.export.string,
         onExecute: () {
-          runAsync(() => study.exportData.downloadAsZip());
+          runAsync(() => model.exportData.downloadAsZip());
         },
-        isAvailable: study.canExport(currentUser),
+        isAvailable: model.canExport(currentUser),
       ),
       ModelAction(
-          type: StudyActionType.delete,
-          label: StudyActionType.delete.string,
-          onExecute: () {
-            return ref.read(notificationServiceProvider).show(
-                Notifications
-                    .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-                actions: [
-                  NotificationAction(
-                      label: StudyActionType.delete.string,
-                      onSelect: onDeleteCallback,
-                      isDestructive: true),
-                ]);
-          },
-          isAvailable: study.canDelete(currentUser),
-          isDestructive: true,
+        type: StudyActionType.delete,
+        label: StudyActionType.delete.string,
+        onExecute: () {
+          return ref
+              .read(notificationServiceProvider)
+              .show(Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+                  actions: [
+                NotificationAction(
+                    label: StudyActionType.delete.string, onSelect: onDeleteCallback, isDestructive: true),
+              ]);
+        },
+        isAvailable: model.canDelete(currentUser),
+        isDestructive: true,
       ),
     ];
 
@@ -182,8 +172,7 @@ class StudyRepository extends ModelRepository<Study>
 }
 
 class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
-  StudyRepositoryDelegate(
-      {required this.apiClient, required this.authRepository});
+  StudyRepositoryDelegate({required this.apiClient, required this.authRepository});
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;

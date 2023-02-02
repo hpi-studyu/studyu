@@ -26,12 +26,11 @@ class LanguagePicker extends ConsumerStatefulWidget {
 }
 
 class _LanguagePickerState extends ConsumerState<LanguagePicker> {
-
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(localeStateProvider.notifier);
     final currentLocalization = ref.watch(localeProvider.select((value) => value));
-    switch(widget.languagePickerType) {
+    switch (widget.languagePickerType) {
       case LanguagePickerType.field:
         final FormGroup localeForm = FormGroup({
           'localization': FormControl<Locale>(
@@ -51,8 +50,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
                 icon: Icon(Icons.language, color: widget.iconColor),
                 onChanged: (locale) => controller.setLocale(locale.value!),
               ),
-            )
-        );
+            ));
       case LanguagePickerType.icon:
         return PopupMenuButton<Locale>(
           tooltip: tr.language_select_tooltip,

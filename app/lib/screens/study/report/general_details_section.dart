@@ -5,7 +5,8 @@ import '../../../widgets/study_tile.dart';
 import 'generic_section.dart';
 
 class GeneralDetailsSection extends GenericSection {
-  const GeneralDetailsSection(StudySubject subject, {GestureTapCallback onTap}) : super(subject, onTap: onTap);
+  const GeneralDetailsSection(StudySubject subject, {Key key, GestureTapCallback onTap})
+      : super(subject, key: key, onTap: onTap);
 
   @override
   Widget buildContent(BuildContext context) => Column(

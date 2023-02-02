@@ -26,10 +26,8 @@ class StudyAnalyzeScreen extends StudyPageWidget {
                 TextParagraph(
                   text: tr.banner_text_study_analyze_draft,
                 ),
-              ]
-          ),
-          style: BannerStyle.info
-      );
+              ]),
+          style: BannerStyle.info);
     }
 
     return null;
@@ -38,8 +36,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final controller =
-        ref.watch(studyAnalyzeControllerProvider(studyId).notifier);
+    final controller = ref.watch(studyAnalyzeControllerProvider(studyId).notifier);
     final state = ref.watch(studyAnalyzeControllerProvider(studyId));
 
     return Column(
@@ -49,13 +46,13 @@ class StudyAnalyzeScreen extends StudyPageWidget {
           color: ThemeConfig.containerColor(theme),
           width: double.infinity,
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
+            padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                SelectableText(tr.action_button_study_export_prompt,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                SelectableText(
+                  tr.action_button_study_export_prompt,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 24.0),
                 PrimaryButton(
@@ -71,13 +68,12 @@ class StudyAnalyzeScreen extends StudyPageWidget {
         ),
         const SizedBox(height: 32.0),
         Container(
-          width: double.infinity,
-          color: theme.colorScheme.secondary.withOpacity(0.03),
-          height: 300,
-          child: const Center(
-            child: UnderConstruction(),
-          )
-        )
+            width: double.infinity,
+            color: theme.colorScheme.secondary.withOpacity(0.03),
+            height: 300,
+            child: const Center(
+              child: UnderConstruction(),
+            ))
       ],
     );
   }

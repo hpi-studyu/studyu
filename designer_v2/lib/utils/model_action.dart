@@ -9,14 +9,13 @@ class ModelAction<T> {
   final bool isAvailable;
   final bool isDestructive;
 
-  ModelAction({
-    required this.type,
-    required this.label,
-    required this.onExecute,
-    this.isAvailable = true,
-    this.isDestructive = false,
-    this.icon
-  });
+  ModelAction(
+      {required this.type,
+      required this.label,
+      required this.onExecute,
+      this.isAvailable = true,
+      this.isDestructive = false,
+      this.icon});
 }
 
 abstract class IModelActionProvider<V> {
@@ -66,9 +65,7 @@ Map<ModelActionType, IconData> modelActionIcons = {
 
 /// Decorates a list of [actions] with their corresponding icon
 /// Helps us keep presentational data & business logic separate
-List<ModelAction<T>> withIcons<T>(
-    List<ModelAction<T>> actions,
-    Map<T,IconData> iconMap) {
+List<ModelAction<T>> withIcons<T>(List<ModelAction<T>> actions, Map<T, IconData> iconMap) {
   for (final action in actions) {
     if (iconMap.containsKey(action.type)) {
       action.icon = iconMap[action.type];

@@ -25,6 +25,8 @@ Future<void> navigateToStudyOverview(
 }
 
 class StudySelectionScreen extends StatelessWidget {
+  const StudySelectionScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -39,7 +41,7 @@ class StudySelectionScreen extends StatelessWidget {
                   children: [
                     Text(
                       AppLocalizations.of(context).study_selection_description,
-                      style: theme.textTheme.headline5,
+                      style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     RichText(
@@ -47,15 +49,15 @@ class StudySelectionScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: AppLocalizations.of(context).study_selection_single,
-                            style: theme.textTheme.subtitle2,
+                            style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
                             text: ' ',
-                            style: theme.textTheme.subtitle2,
+                            style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
                             text: AppLocalizations.of(context).study_selection_single_why,
-                            style: theme.textTheme.subtitle2.copyWith(color: theme.primaryColor),
+                            style: theme.textTheme.titleSmall.copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
@@ -96,7 +98,7 @@ class StudySelectionScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   icon: const Icon(MdiIcons.key),
                   onPressed: () async {
-                    await showDialog(context: context, builder: (_) => InviteCodeDialog());
+                    await showDialog(context: context, builder: (_) => const InviteCodeDialog());
                   },
                   label: Text(AppLocalizations.of(context).invite_code_button),
                 ),
@@ -111,8 +113,10 @@ class StudySelectionScreen extends StatelessWidget {
 }
 
 class InviteCodeDialog extends StatefulWidget {
+  const InviteCodeDialog({Key key}) : super(key: key);
+
   @override
-  _InviteCodeDialogState createState() => _InviteCodeDialogState();
+  State<InviteCodeDialog> createState() => _InviteCodeDialogState();
 }
 
 class _InviteCodeDialogState extends State<InviteCodeDialog> {
@@ -141,13 +145,16 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             icon: const Icon(Icons.arrow_forward),
             label: Text(AppLocalizations.of(context).next),
             onPressed: () async {
-              Map<String,dynamic> result;
+              Map<String, dynamic> result;
               try {
                 result = await Supabase.instance.client
-                    .rpc('get_study_from_invite',
-                  params: {'invite_code': _controller.text},
-                ).single().select<Map<String,dynamic>>();
-              } on PostgrestException catch(error) {
+                    .rpc(
+                      'get_study_from_invite',
+                      params: {'invite_code': _controller.text},
+                    )
+                    .single()
+                    .select<Map<String, dynamic>>();
+              } on PostgrestException catch (error) {
                 print(error.message);
                 setState(() {
                   _errorMessage = error.message;
@@ -163,13 +170,13 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   _errorMessage = null;
                 });
 
-                Map<String,dynamic> studyRes;
+                Map<String, dynamic> studyRes;
                 try {
-                  await Supabase.instance.client
-                      .rpc('get_study_record_from_invite',
+                  await Supabase.instance.client.rpc(
+                    'get_study_record_from_invite',
                     params: {'invite_code': _controller.text},
                   ).single();
-                } on PostgrestException catch(error) {
+                } on PostgrestException catch (error) {
                   print(error.message);
                   setState(() {
                     _errorMessage = error.message;
@@ -193,7 +200,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   if (result.containsKey('preselected_intervention_ids') &&
                       result['preselected_intervention_ids'] != null) {
                     final preselectedIds = List<String>.from(
-                        result['preselected_intervention_ids'] as List,
+                      result['preselected_intervention_ids'] as List,
                     );
                     await navigateToStudyOverview(
                       context,
@@ -203,7 +210,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     );
                   } else {
                     await navigateToStudyOverview(
-                        context, study, inviteCode: _controller.text,
+                      context,
+                      study,
+                      inviteCode: _controller.text,
                     );
                   }
                 }

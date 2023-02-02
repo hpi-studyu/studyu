@@ -74,7 +74,7 @@ class AppDrawer extends ConsumerStatefulWidget {
   final double logoSectionMaxHeight;
 
   @override
-  _AppDrawerState createState() => _AppDrawerState();
+  ConsumerState<AppDrawer> createState() => _AppDrawerState();
 }
 
 class _AppDrawerState extends ConsumerState<AppDrawer> {
@@ -116,16 +116,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         localizedTitle: () => tr.navlink_logout,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
-          ref
-              .read(authFormControllerProvider(AuthFormKey.login).notifier)
-              .signOut();
+          ref.read(authFormControllerProvider(AuthFormKey.login).notifier).signOut();
         },
       ),
     ],
   ];
 
-  List<DrawerEntry> get allEntries =>
-      [...topEntries, ...bottomEntries].expand((e) => e).toList();
+  List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries].expand((e) => e).toList();
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
@@ -203,15 +200,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     // final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      constraints: BoxConstraints(
-          minHeight: widget.logoSectionMinHeight,
-          maxHeight: widget.logoSectionMaxHeight),
+      constraints: BoxConstraints(minHeight: widget.logoSectionMinHeight, maxHeight: widget.logoSectionMaxHeight),
       child: Container(
         constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: widget.logoPaddingHorizontal,
-              vertical: widget.logoPaddingVertical),
+          padding: EdgeInsets.symmetric(horizontal: widget.logoPaddingHorizontal, vertical: widget.logoPaddingVertical),
           child: GestureDetector(
             onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
             child: Container(
@@ -280,7 +273,11 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       leading: Icon(
         entry.icon,
         size: theme.iconTheme.size! * 1.2,
-        color: (isSelected) ? null : (entry.enabled) ? theme.iconTheme.color!.faded(0.75) : theme.iconTheme.color!.faded(0.3),
+        color: (isSelected)
+            ? null
+            : (entry.enabled)
+                ? theme.iconTheme.color!.faded(0.75)
+                : theme.iconTheme.color!.faded(0.3),
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(

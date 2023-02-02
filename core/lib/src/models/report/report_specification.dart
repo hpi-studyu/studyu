@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'report_section.dart';
+import 'package:studyu_core/src/models/report/report_section.dart';
 
 part 'report_specification.g.dart';
 

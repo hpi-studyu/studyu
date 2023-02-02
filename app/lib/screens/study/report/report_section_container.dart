@@ -19,14 +19,15 @@ class ReportSectionContainer extends StatelessWidget {
   final bool primary;
   final GestureTapCallback onTap;
 
-  const ReportSectionContainer(this.section, {@required this.subject, this.onTap, this.primary = false});
+  const ReportSectionContainer(this.section, {Key key, @required this.subject, this.onTap, this.primary = false})
+      : super(key: key);
 
   ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType](section, subject);
 
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
           AppLocalizations.of(context).report_primary_result.toUpperCase(),
-          style: theme.textTheme.overline.copyWith(color: theme.colorScheme.secondary),
+          style: theme.textTheme.labelSmall.copyWith(color: theme.colorScheme.secondary),
         ),
         const SizedBox(height: 4),
       ];
@@ -45,12 +46,12 @@ class ReportSectionContainer extends StatelessWidget {
               if (primary) ...buildPrimaryHeader(context, theme),
               Text(
                 section.title,
-                style: theme.textTheme.headline5,
+                style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 4),
               Text(
                 section.description,
-                style: theme.textTheme.bodyText2,
+                style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),
               buildContents(context),

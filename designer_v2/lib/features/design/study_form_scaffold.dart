@@ -7,12 +7,9 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 
 class StudyFormScaffold<T extends FormViewModel> extends ConsumerWidget {
-  const StudyFormScaffold({
-    required this.studyId,
-    required this.formViewModelBuilder,
-    required this.formViewBuilder,
-    Key? key
-  }) : super(key: key);
+  const StudyFormScaffold(
+      {required this.studyId, required this.formViewModelBuilder, required this.formViewBuilder, Key? key})
+      : super(key: key);
 
   final StudyID studyId;
   final FormViewModelBuilder<T> formViewModelBuilder;

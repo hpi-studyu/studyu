@@ -6,8 +6,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
 
 class BoolQuestionFormView extends ConsumerWidget {
-  const BoolQuestionFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const BoolQuestionFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final QuestionFormViewModel formViewModel;
 
@@ -29,8 +28,7 @@ class BoolQuestionFormView extends ConsumerWidget {
                   columnWidth: FlexColumnWidth()),
             ],
             onSelectItem: (_) => {}, // no-op
-            buildCellsAt: (context, control, _, __) =>
-                buildChoiceOptionRow(context, control),
+            buildCellsAt: (context, control, _, __) => buildChoiceOptionRow(context, control),
             trailingActionsAt: (control, _) => [],
             cellSpacing: 0.0,
             rowSpacing: 8.0,

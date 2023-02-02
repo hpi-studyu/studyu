@@ -26,8 +26,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.read(interventionsFormViewModelProvider(studyId));
+        final formViewModel = ref.read(interventionsFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -35,7 +34,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                  text: tr.form_study_design_interventions_description,
+                text: tr.form_study_design_interventions_description,
               ),
               const SizedBox(height: 8.0),
               Hyperlink(
@@ -53,11 +52,9 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                   builder: (context, formArray, child) {
                     return FormArrayTable<InterventionFormViewModel>(
                       control: formViewModel.interventionsArray,
-                      items:
-                          formViewModel.interventionsCollection.formViewModels,
+                      items: formViewModel.interventionsCollection.formViewModels,
                       onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                       onNewItem: formViewModel.onNewItem,
                       onNewItemLabel: tr.form_array_interventions_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',
@@ -73,9 +70,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                             Text(
                               ''.alphabetLetterFrom(rowIdx).toUpperCase(),
                               style: TextStyle(
-                                color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .color,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -92,7 +87,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                 children: [
                   Text(
                     tr.form_section_crossover_schedule,
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   (formViewModel.canTestStudySchedule)
                       ? Opacity(

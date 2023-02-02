@@ -28,16 +28,14 @@ class ScaleQuestionFormView extends ConsumerStatefulWidget {
   final QuestionFormViewModel formViewModel;
 
   @override
-  ConsumerState<ScaleQuestionFormView> createState() =>
-      _ScaleQuestionFormViewState();
+  ConsumerState<ScaleQuestionFormView> createState() => _ScaleQuestionFormViewState();
 }
 
 class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
   QuestionFormViewModel get formViewModel => widget.formViewModel;
 
   late bool isMinMaxColorsVisible =
-      formViewModel.scaleMinColorControl.value != null ||
-          formViewModel.scaleMaxColorControl.value != null;
+      formViewModel.scaleMinColorControl.value != null || formViewModel.scaleMaxColorControl.value != null;
 
   @override
   Widget build(BuildContext context) {
@@ -120,9 +118,9 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
             rowLayout: FormTableRowLayout.vertical,
             rows: [
               _buildColorControlRow(
-                  context,
-                  formViewModel.scaleMinColorControl,
-                  tr.form_field_response_scale_color_min,
+                context,
+                formViewModel.scaleMinColorControl,
+                tr.form_field_response_scale_color_min,
               ),
             ],
           ),
@@ -134,9 +132,9 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
             rowLayout: FormTableRowLayout.vertical,
             rows: [
               _buildColorControlRow(
-                  context,
-                  formViewModel.scaleMaxColorControl,
-                  tr.form_field_response_scale_color_max,
+                context,
+                formViewModel.scaleMaxColorControl,
+                tr.form_field_response_scale_color_max,
               ),
             ],
           ),
@@ -145,8 +143,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
     );
   }
 
-  FormTableRow _buildColorControlRow(
-      BuildContext context, FormControl<Color> control, String labelText) {
+  FormTableRow _buildColorControlRow(BuildContext context, FormControl<Color> control, String labelText) {
     final theme = Theme.of(context);
     return FormTableRow(
       control: control,
@@ -162,8 +159,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                   opacity: ThemeConfig.kMuteFadeFactor,
                   child: Hyperlink(
                     text: "+ ${tr.form_field_response_scale_color_add}",
-                    onClick: () => control.value = SerializableColor(
-                        ThemeConfig.colorPickerInitialColor(theme).value),
+                    onClick: () => control.value = SerializableColor(ThemeConfig.colorPickerInitialColor(theme).value),
                     visitedColor: null,
                   ),
                 )
@@ -175,7 +171,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               formControl: control,
               //hexInputBar: true,
               enableAlpha: false,
-              showLabel: false,
+              labelTypes: const [],
               pickerHsvColor: HSVColor.fromColor(control.value ?? ThemeConfig.colorPickerInitialColor(theme)),
             )
           : Opacity(
@@ -199,10 +195,8 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: BannerBox(
                       style: BannerStyle.info,
-                      body: TextParagraph(
-                          text: tr.form_array_response_scale_mid_values_dirty_banner),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0, vertical: 12.0),
+                      body: TextParagraph(text: tr.form_array_response_scale_mid_values_dirty_banner),
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
                       noPrefix: true,
                       isDismissed: !formViewModel.isMidValuesClearedInfoVisible,
                       dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
@@ -221,10 +215,8 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(formArray.controls.length, (i) {
-                final valueControl = formViewModel
-                    .scaleMidValueControls.controls[i] as FormControl;
-                final labelControl = formViewModel
-                    .scaleMidLabelControls.controls[i] as FormControl;
+                final valueControl = formViewModel.scaleMidValueControls.controls[i] as FormControl;
+                final labelControl = formViewModel.scaleMidLabelControls.controls[i] as FormControl;
 
                 return _buildLabelValueControlsPair(
                   labelControl: labelControl,

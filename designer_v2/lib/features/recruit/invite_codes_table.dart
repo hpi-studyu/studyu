@@ -34,23 +34,18 @@ class StudyInvitesTable extends StatelessWidget {
     return StandardTable<StudyInvite>(
       items: invites,
       columns: [
-        StandardTableColumn(
-            label: '#', columnWidth: const FixedColumnWidth(60)),
+        const StandardTableColumn(label: '#', columnWidth: FixedColumnWidth(60)),
         StandardTableColumn(
             label: tr.code_list_header_code,
-            columnWidth: const MaxColumnWidth(
-                FixedColumnWidth(200), FlexColumnWidth(1.6))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
         StandardTableColumn(
-            label: tr.studies_list_header_participants_enrolled,
-            columnWidth: const FixedColumnWidth(100)),
+            label: tr.studies_list_header_participants_enrolled, columnWidth: const FixedColumnWidth(100)),
         StandardTableColumn(
             label: tr.form_field_preconfigured_schedule_intervention_a,
-            columnWidth: const MaxColumnWidth(
-                FixedColumnWidth(150), FlexColumnWidth(1))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
         StandardTableColumn(
             label: tr.form_field_preconfigured_schedule_intervention_b,
-            columnWidth: const MaxColumnWidth(
-                FixedColumnWidth(150), FlexColumnWidth(1))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
         //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
       ],
       onSelectItem: onSelect,
@@ -62,16 +57,14 @@ class StudyInvitesTable extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx,
-      Set<MaterialState> states) {
+  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx, Set<MaterialState> states) {
     final theme = Theme.of(context);
     final mutedTextStyle = ThemeConfig.bodyTextBackground(theme);
 
     Intervention? interventionA;
     Intervention? interventionB;
 
-    if (item.preselectedInterventionIds != null &&
-        item.preselectedInterventionIds!.isNotEmpty) {
+    if (item.preselectedInterventionIds != null && item.preselectedInterventionIds!.isNotEmpty) {
       interventionA = getIntervention(item.preselectedInterventionIds![0]);
       interventionB = getIntervention(item.preselectedInterventionIds![1]);
     }

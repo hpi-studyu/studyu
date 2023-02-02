@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../core.dart';
-import '../../util/supabase_object.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_core/src/util/supabase_object.dart';
 
 part 'repo.g.dart';
 

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:html' as html;
 import 'dart:js' as js;
 import 'dart:ui' as ui;
@@ -51,7 +53,7 @@ class WebController extends PlatformController {
   activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    print("Register view with: " + previewSrc);
+    print("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -64,10 +66,7 @@ class WebController extends PlatformController {
       ..style.border = 'none';
 
     // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory(
-        '$studyId$key',
-            (int viewId) => iFrameElement
-    );
+    ui.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
   }
 
   @override
@@ -98,12 +97,12 @@ class WebController extends PlatformController {
 
     //html.IFrameElement? frame = html.document.getElementById("studyu_app_preview") as html.IFrameElement?;
     //if (frame != null) {
-      // iFrameElement = frame;
-      if (iFrameElement.src != previewSrc) {
-        print("*********NAVIGATE TO: $previewSrc");
-        iFrameElement.src = previewSrc;
-        //iFrameElement.src = newPrev;
-      } /* else {
+    // iFrameElement = frame;
+    if (iFrameElement.src != previewSrc) {
+      print("*********NAVIGATE TO: $previewSrc");
+      iFrameElement.src = previewSrc;
+      //iFrameElement.src = newPrev;
+    } /* else {
        print("Same link detected");
       } */
     // }

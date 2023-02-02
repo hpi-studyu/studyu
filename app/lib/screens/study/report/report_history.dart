@@ -10,6 +10,8 @@ import '../../../models/app_state.dart';
 import 'report_details.dart';
 
 class ReportHistoryScreen extends StatelessWidget {
+  const ReportHistoryScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +38,7 @@ class ReportHistoryScreen extends StatelessWidget {
 class ReportHistoryItem extends StatelessWidget {
   final StudySubject subject;
 
-  const ReportHistoryItem(this.subject);
+  const ReportHistoryItem(this.subject, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class ReportHistoryItem extends StatelessWidget {
                 ),
                 Text(
                   subject.study.title,
-                  style: theme.textTheme.headline5.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                  style: theme.textTheme.headlineSmall.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
                 ),
               ],
             ),

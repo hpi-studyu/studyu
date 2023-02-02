@@ -14,12 +14,10 @@ downloadFile({required String fileContent, required String filename}) {
 
 downloadBytes({required List<int> bytes, required String filename}) {
   if (!kIsWeb) {
-    throw Exception(
-        "The StudyU designer only support the web platform".hardcoded);
+    throw Exception("The StudyU designer only support the web platform".hardcoded);
   }
   final content = base64Encode(bytes);
-  final anchor = AnchorElement(
-      href: "data:application/octet-stream;charset=utf-16le;base64,$content")
+  final anchor = AnchorElement(href: "data:application/octet-stream;charset=utf-16le;base64,$content")
     ..style.display = 'none'
     ..download = filename;
   document.body?.append(anchor);
@@ -51,8 +49,7 @@ class CSVStringEncoder extends FileFormatEncoder {
     final dataRows = records.map((record) {
       final row = [];
       for (final columnName in headerRow) {
-        final cellValue =
-            record[columnName] ?? ''; // fill missing columns with empty string
+        final cellValue = record[columnName] ?? ''; // fill missing columns with empty string
         row.add(cellValue);
       }
       return row;
@@ -69,4 +66,3 @@ class JsonStringEncoder extends FileFormatEncoder {
     return prettyJson(records);
   }
 }
-

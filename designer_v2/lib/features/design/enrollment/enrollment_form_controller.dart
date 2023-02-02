@@ -56,18 +56,13 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   final FormControl<Participation> enrollmentTypeControl = FormControl();
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
-      Participation.values
-          .map((v) =>
-              FormControlOption(v, v.string, description: v.designDescription))
-          .toList();
+      Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
 
   late final FormArray consentItemArray = FormArray([]);
-  late final FormViewModelCollection<ConsentItemFormViewModel,
-          ConsentItemFormData> consentItemFormViewModels =
+  late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> consentItemFormViewModels =
       FormViewModelCollection([], consentItemArray);
 
-  List<ConsentItemFormViewModel> get consentItemModels =>
-      consentItemFormViewModels.formViewModels;
+  List<ConsentItemFormViewModel> get consentItemModels => consentItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get validationConfig => {
@@ -123,20 +118,17 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model,
-        isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availablePopupActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model,
-        isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableInlineActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -159,8 +151,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     );
   }
 
-  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(
-      QuestionFormViewModel model) {
+  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModel model) {
     return ScreenerQuestionFormRouteArgs(
       studyId: study.id,
       questionId: model.questionId,
@@ -174,8 +165,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     );
   }
 
-  ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(
-      ConsentItemFormViewModel model) {
+  ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(ConsentItemFormViewModel model) {
     return ConsentItemFormRouteArgs(
       studyId: study.id,
       consentId: model.consentId,
@@ -183,27 +173,22 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   testScreener() {
-    router.dispatch(
-        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.eligibility));
+    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.eligibility));
   }
 
   testConsent() {
-    router.dispatch(
-        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
+    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
   }
 
-  bool get canTestScreener =>
-      !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
-  bool get canTestConsent =>
-      !consentItemArray.disabled &&
-      (consentItemArray.value?.isNotEmpty ?? false);
+  bool get canTestScreener => !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
+  bool get canTestConsent => !consentItemArray.disabled && (consentItemArray.value?.isNotEmpty ?? false);
 
   @override
   Map<FormMode, LocalizedStringResolver> get questionTitles => {
-    FormMode.create: () => tr.form_screener_question_create,
-    FormMode.edit: () => tr.form_screener_question_edit,
-    FormMode.readonly: () => tr.form_screener_question_readonly,
-  };
+        FormMode.create: () => tr.form_screener_question_create,
+        FormMode.edit: () => tr.form_screener_question_edit,
+        FormMode.readonly: () => tr.form_screener_question_readonly,
+      };
 
   @override
   ScreenerQuestionFormViewModel provideQuestionFormViewModel(QuestionFormData? formData) {
@@ -220,8 +205,7 @@ class EnrollmentFormConsentItemDelegate
     implements
         IFormViewModelDelegate<ConsentItemFormViewModel>,
         IListActionProvider<ConsentItemFormViewModel>,
-        IProviderArgsResolver<ConsentItemFormViewModel,
-            ConsentItemFormRouteArgs> {
+        IProviderArgsResolver<ConsentItemFormViewModel, ConsentItemFormRouteArgs> {
   EnrollmentFormConsentItemDelegate({
     required this.formViewModels,
     required this.owner,
@@ -229,8 +213,7 @@ class EnrollmentFormConsentItemDelegate
     this.propagateOnSave = true,
   });
 
-  final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData>
-      formViewModels;
+  final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> formViewModels;
   final EnrollmentFormViewModel owner;
   final bool propagateOnSave;
   final FormValidationSetEnum? validationSet;
@@ -267,8 +250,7 @@ class EnrollmentFormConsentItemDelegate
       return viewModel;
     }
 
-    final viewModel =
-        formViewModels.findWhere((vm) => vm.consentId == args.consentId);
+    final viewModel = formViewModels.findWhere((vm) => vm.consentId == args.consentId);
     if (viewModel == null) {
       throw ConsentItemNotFoundException(); // TODO handle 404 not found
     }

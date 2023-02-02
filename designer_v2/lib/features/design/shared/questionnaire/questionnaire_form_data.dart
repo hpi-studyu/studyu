@@ -16,10 +16,7 @@ class QuestionnaireFormData implements IFormData {
           .map((question) => QuestionFormData.fromDomainModel(
                 question,
                 // Collect all eligibility criteria for this question
-                eligibilityCriteria
-                    .where((c) =>
-                        (c.condition as ValueExpression).target == question.id)
-                    .toList(),
+                eligibilityCriteria.where((c) => (c.condition as ValueExpression).target == question.id).toList(),
               ))
           .toList(),
     );
@@ -27,9 +24,8 @@ class QuestionnaireFormData implements IFormData {
 
   StudyUQuestionnaire toQuestionnaire() {
     final questionnaire = StudyUQuestionnaire();
-    questionnaire.questions = (questionsData != null)
-        ? questionsData!.map((formData) => formData.toQuestion()).toList()
-        : [];
+    questionnaire.questions =
+        (questionsData != null) ? questionsData!.map((formData) => formData.toQuestion()).toList() : [];
     return questionnaire;
   }
 

@@ -5,7 +5,6 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 class DashboardState extends Equatable {
   static const defaultFilter = StudiesFilter.owned;
 
@@ -32,24 +31,22 @@ class DashboardState extends Equatable {
   /// but resolves to a different subset of studies based on the [studiesFilter]
   AsyncValue<List<Study>> get visibleStudies {
     return studies.when(
-        data: (studies) => AsyncValue.data(_filterAndSortStudies(studies)),
-        error: (error, _) => AsyncValue.error(error, StackTrace.current),
-        loading: () => const AsyncValue.loading(),
+      data: (studies) => AsyncValue.data(_filterAndSortStudies(studies)),
+      error: (error, _) => AsyncValue.error(error, StackTrace.current),
+      loading: () => const AsyncValue.loading(),
     );
   }
 
   List<Study> _filterAndSortStudies(List<Study> studies) {
-    final filteredStudies = studiesFilter.apply(
-        studies: studies, user: currentUser).toList();
-    filteredStudies.sort(
-            (study, other) => study.title!.compareTo(other.title!));
+    final filteredStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
+    filteredStudies.sort((study, other) => study.title!.compareTo(other.title!));
     return filteredStudies;
   }
 
   DashboardState copyWith({
     AsyncValue<List<Study>> Function()? studies,
-    StudiesFilter Function() ? studiesFilter,
-    User Function() ? currentUser,
+    StudiesFilter Function()? studiesFilter,
+    User Function()? currentUser,
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
@@ -66,7 +63,7 @@ class DashboardState extends Equatable {
 
 extension DashboardStateSafeViewProps on DashboardState {
   String get visibleListTitle {
-    switch(studiesFilter) {
+    switch (studiesFilter) {
       case StudiesFilter.public:
         return tr.navlink_public_studies;
       case StudiesFilter.owned:

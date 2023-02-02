@@ -22,10 +22,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
   static const defaultPublishedToRegistry = true;
   static const defaultPublishedToRegistryResults = false;
 
-  final FormControl<bool> isPublishedToRegistryControl =
-      FormControl(value: defaultPublishedToRegistry);
-  final FormControl<bool> isPublishedToRegistryResultsControl =
-      FormControl(value: defaultPublishedToRegistryResults);
+  final FormControl<bool> isPublishedToRegistryControl = FormControl(value: defaultPublishedToRegistry);
+  final FormControl<bool> isPublishedToRegistryResultsControl = FormControl(value: defaultPublishedToRegistryResults);
 
   @override
   late final FormGroup form = FormGroup({
@@ -44,9 +42,7 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
     final study = formData!.exactDuplicate();
 
     study.registryPublished = isPublishedToRegistryControl.value!;
-    study.resultSharing = (isPublishedToRegistryResultsControl.value!)
-        ? ResultSharing.public
-        : ResultSharing.private;
+    study.resultSharing = (isPublishedToRegistryResultsControl.value!) ? ResultSharing.public : ResultSharing.private;
 
     return study;
   }
@@ -77,8 +73,7 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 
   setLaunchDefaults() {
     isPublishedToRegistryControl.value = defaultPublishedToRegistry;
-    isPublishedToRegistryResultsControl.value =
-        defaultPublishedToRegistryResults;
+    isPublishedToRegistryResultsControl.value = defaultPublishedToRegistryResults;
   }
 }
 
@@ -86,8 +81,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final studySettingsFormViewModelProvider = Provider.autoDispose
-    .family<StudySettingsFormViewModel, StudyID>((ref, studyId) {
+final studySettingsFormViewModelProvider =
+    Provider.autoDispose.family<StudySettingsFormViewModel, StudyID>((ref, studyId) {
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),

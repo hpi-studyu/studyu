@@ -29,16 +29,13 @@ class StudiesTable extends StatelessWidget {
       columns: [
         StandardTableColumn(
             label: tr.studies_list_header_title,
-            columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4))),
         StandardTableColumn(
             label: tr.studies_list_header_status,
-            columnWidth:
-            const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
         StandardTableColumn(
             label: tr.studies_list_header_participation,
-            columnWidth: const MaxColumnWidth(
-                FixedColumnWidth(130), IntrinsicColumnWidth())),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth())),
         StandardTableColumn(
           label: tr.studies_list_header_created_at,
           columnWidth: const FlexColumnWidth(1),
@@ -63,8 +60,7 @@ class StudiesTable extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(
-      BuildContext context, Study item, int rowIdx, Set<MaterialState> states) {
+  List<Widget> _buildRow(BuildContext context, Study item, int rowIdx, Set<MaterialState> states) {
     final theme = Theme.of(context);
 
     TextStyle? mutedTextStyleIfZero(int value) {
@@ -82,12 +78,9 @@ class StudiesTable extends StatelessWidget {
         participation: item.participation,
       ),
       Text(item.createdAt?.toTimeAgoString() ?? ''),
-      Text(item.participantCount.toString(),
-          style: mutedTextStyleIfZero(item.participantCount)),
-      Text(item.activeSubjectCount.toString(),
-          style: mutedTextStyleIfZero(item.activeSubjectCount)),
-      Text(item.endedCount.toString(),
-          style: mutedTextStyleIfZero(item.endedCount)),
+      Text(item.participantCount.toString(), style: mutedTextStyleIfZero(item.participantCount)),
+      Text(item.activeSubjectCount.toString(), style: mutedTextStyleIfZero(item.activeSubjectCount)),
+      Text(item.endedCount.toString(), style: mutedTextStyleIfZero(item.endedCount)),
     ];
   }
 }

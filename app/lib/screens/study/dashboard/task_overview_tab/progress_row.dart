@@ -13,7 +13,7 @@ class ProgressRow extends StatefulWidget {
   const ProgressRow({Key key, this.subject}) : super(key: key);
 
   @override
-  _ProgressRowState createState() => _ProgressRowState();
+  State<ProgressRow> createState() => _ProgressRowState();
 }
 
 class _ProgressRowState extends State<ProgressRow> {

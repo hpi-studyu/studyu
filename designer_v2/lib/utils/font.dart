@@ -1,4 +1,3 @@
-
 String getEmojiFlag(String country) {
   country = country.toUpperCase();
 

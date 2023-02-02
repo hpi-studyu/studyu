@@ -30,8 +30,7 @@ extension StudyExportZipX on StudyExportData {
 
   List<int>? get encodedZip => ZipEncoder().encode(archive);
 
-  String get defaultFilename =>
-      '${study.title?.toKey() ?? ''}_${DateTime.now()}';
+  String get defaultFilename => '${study.title?.toKey() ?? ''}_${DateTime.now()}';
 
   downloadAsZip({String? filename}) {
     filename ??= defaultFilename;
@@ -43,8 +42,7 @@ extension StudyExportZipX on StudyExportData {
 }
 
 extension StudyExportX on Study {
-  bool canExport(User user) =>
-      !exportData.isEmpty && (canEdit(user) || publishedToRegistryResults);
+  bool canExport(User user) => !exportData.isEmpty && (canEdit(user) || publishedToRegistryResults);
 
   String? exportDisabledReason(User user) {
     if (canExport(user)) return null;

@@ -18,8 +18,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-class MeasurementSurveyFormViewModel
-    extends ManagedFormViewModel<MeasurementSurveyFormData>
+class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSurveyFormData>
     with WithQuestionnaireControls, WithScheduleControls
     implements
         IFormViewModelDelegate<QuestionFormViewModel>,
@@ -36,10 +35,8 @@ class MeasurementSurveyFormViewModel
 
   // - Form fields
 
-  final FormControl<MeasurementID> measurementIdControl = FormControl(
-      value: const Uuid().v4()); // hidden
-  final FormControl<String> surveyTitleControl = FormControl(
-      value: MeasurementSurveyFormData.kDefaultTitle);
+  final FormControl<MeasurementID> measurementIdControl = FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<String> surveyTitleControl = FormControl(value: MeasurementSurveyFormData.kDefaultTitle);
   final FormControl<String> surveyIntroTextControl = FormControl(value: '');
   final FormControl<String> surveyOutroTextControl = FormControl(value: '');
 
@@ -47,28 +44,23 @@ class MeasurementSurveyFormViewModel
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [titleRequired, atLeastOneQuestion],
-    StudyFormValidationSet.publish: [titleRequired, atLeastOneQuestion],
-    StudyFormValidationSet.test: [titleRequired, atLeastOneQuestion],
-  };
+        StudyFormValidationSet.draft: [titleRequired, atLeastOneQuestion],
+        StudyFormValidationSet.publish: [titleRequired, atLeastOneQuestion],
+        StudyFormValidationSet.test: [titleRequired, atLeastOneQuestion],
+      };
 
-  get titleRequired => FormControlValidation(
-      control: surveyTitleControl,
-      validators: [Validators.required],
-      validationMessages: {
+  get titleRequired => FormControlValidation(control: surveyTitleControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_measurement_survey_title_required,
-      }
-  );
+      });
 
-  get atLeastOneQuestion => FormControlValidation(
-      control: questionsArray,
-      validators: [Validators.minLength(1)],
-      validationMessages: {
+  get atLeastOneQuestion => FormControlValidation(control: questionsArray, validators: [
+        Validators.minLength(1)
+      ], validationMessages: {
         ValidationMessage.minLength: (error) =>
-            tr.form_array_measurement_survey_questions_minlength(
-                (error as Map)['requiredLength']),
-      }
-  );
+            tr.form_array_measurement_survey_questions_minlength((error as Map)['requiredLength']),
+      });
 
   @override
   late final FormGroup form = FormGroup({
@@ -109,10 +101,7 @@ class MeasurementSurveyFormViewModel
   }
 
   String get breadcrumbsTitle {
-    final components = [
-      study.title,
-      formData?.title ?? MeasurementSurveyFormData.kDefaultTitle
-    ];
+    final components = [study.title, formData?.title ?? MeasurementSurveyFormData.kDefaultTitle];
     return components.join(kPathSeparator);
   }
 
@@ -127,20 +116,17 @@ class MeasurementSurveyFormViewModel
 
   @override
   List<ModelAction> availableActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model,
-        isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availablePopupActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model,
-        isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableInlineActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -180,9 +166,6 @@ class MeasurementSurveyFormViewModel
   @override
   MeasurementSurveyFormViewModel createDuplicate() {
     return MeasurementSurveyFormViewModel(
-        study: study,
-        delegate: delegate,
-        formData: formData?.copy(),
-        validationSet: validationSet);
+        study: study, delegate: delegate, formData: formData?.copy(), validationSet: validationSet);
   }
 }

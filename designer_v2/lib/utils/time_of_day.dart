@@ -20,9 +20,7 @@ class Time extends TimeOfDay {
 class TimeValueAccessor extends ControlValueAccessor<Time, String> {
   @override
   String modelToViewValue(Time? modelValue) {
-    return modelValue == null
-        ? ''
-        : '${modelValue.hour}:${_addLeadingZeroIfNeeded(modelValue.minute)}';
+    return modelValue == null ? '' : '${modelValue.hour}:${_addLeadingZeroIfNeeded(modelValue.minute)}';
   }
 
   @override
@@ -42,6 +40,5 @@ class TimeValueAccessor extends ControlValueAccessor<Time, String> {
     );
   }
 
-  String _addLeadingZeroIfNeeded(int value) =>
-      (value < 10) ? '0$value' : value.toString();
+  String _addLeadingZeroIfNeeded(int value) => (value < 10) ? '0$value' : value.toString();
 }

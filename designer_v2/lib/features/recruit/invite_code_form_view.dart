@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
@@ -9,8 +8,7 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class InviteCodeFormView extends FormConsumerWidget {
-  const InviteCodeFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const InviteCodeFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final InviteCodeFormViewModel formViewModel;
 

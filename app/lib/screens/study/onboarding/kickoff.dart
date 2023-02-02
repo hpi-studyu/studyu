@@ -11,8 +11,10 @@ import '../../../routes.dart';
 import '../../../util/notifications.dart';
 
 class KickoffScreen extends StatefulWidget {
+  const KickoffScreen({Key key}) : super(key: key);
+
   @override
-  _KickoffScreen createState() => _KickoffScreen();
+  State<KickoffScreen> createState() => _KickoffScreen();
 }
 
 class _KickoffScreen extends State<KickoffScreen> {
@@ -78,7 +80,7 @@ class _KickoffScreen extends State<KickoffScreen> {
                     const SizedBox(height: 32),
                     Text(
                       _getStatusText(context),
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
                     OutlinedButton(

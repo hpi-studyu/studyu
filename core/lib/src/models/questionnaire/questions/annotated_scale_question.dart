@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../question_conditional.dart';
-import 'slider_question.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
+import 'package:studyu_core/src/models/questionnaire/questions/slider_question.dart';
 
 part 'annotated_scale_question.g.dart';
 

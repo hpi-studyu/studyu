@@ -10,8 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ChoiceQuestionFormView extends ConsumerWidget {
-  const ChoiceQuestionFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const ChoiceQuestionFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final QuestionFormViewModel formViewModel;
 
@@ -44,10 +43,8 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                     columnWidth: FlexColumnWidth()),
               ],
               onSelectItem: (_) => {}, // no-op
-              buildCellsAt: (context, control, _, __) =>
-                  buildChoiceOptionRow(context, control),
-              trailingActionsAt: (control, _) =>
-                  formViewModel.availableActions(control),
+              buildCellsAt: (context, control, _, __) => buildChoiceOptionRow(context, control),
+              trailingActionsAt: (control, _) => formViewModel.availableActions(control),
               cellSpacing: 0.0,
               rowSpacing: 8.0,
               minRowHeight: null,
@@ -55,8 +52,7 @@ class ChoiceQuestionFormView extends ConsumerWidget {
               rowStyle: StandardTableStyle.plain,
               trailingActionsMenuType: ActionMenuType.inline,
               disableRowInteractions: true,
-              trailingWidget: (formViewModel.isAddOptionButtonVisible &&
-                      !formViewModel.isReadonly)
+              trailingWidget: (formViewModel.isAddOptionButtonVisible && !formViewModel.isReadonly)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Opacity(

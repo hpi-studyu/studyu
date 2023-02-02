@@ -10,7 +10,7 @@ class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
   final Function(Answer) onDone;
 
-  ScaleQuestionWidget({@required this.question, this.onDone});
+  const ScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
 
   @override
   State<ScaleQuestionWidget> createState() => _ScaleQuestionWidgetState();
@@ -33,17 +33,11 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final sliderRange =
-        (widget.question.maximum - widget.question.minimum).abs();
-    final divisions = (widget.question.maximum - widget.question.minimum) ~/
-        widget.question.step;
+    final sliderRange = (widget.question.maximum - widget.question.minimum).abs();
+    final divisions = (widget.question.maximum - widget.question.minimum) ~/ widget.question.step;
 
-    Color minColor = widget.question.minColor != null
-        ? Color(widget.question.minColor)
-        : null;
-    Color maxColor = widget.question.maxColor != null
-        ? Color(widget.question.maxColor)
-        : null;
+    Color minColor = widget.question.minColor != null ? Color(widget.question.minColor) : null;
+    Color maxColor = widget.question.maxColor != null ? Color(widget.question.maxColor) : null;
 
     final isColored = minColor != null || maxColor != null;
     if (isColored) {
@@ -54,13 +48,9 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
 
     final theme = Theme.of(context);
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
-    final thumbColor = isColored
-        ? Color.lerp(minColor, maxColor, value / sliderRange).withOpacity(1)
-        : null;
-    final activeTrackColor =
-        isColored ? coloredSliderTheme.activeTrackColor : null;
-    final inactiveTrackColor =
-        isColored ? coloredSliderTheme.inactiveTrackColor : null;
+    final thumbColor = isColored ? Color.lerp(minColor, maxColor, value / sliderRange).withOpacity(1) : null;
+    final activeTrackColor = isColored ? coloredSliderTheme.activeTrackColor : null;
+    final inactiveTrackColor = isColored ? coloredSliderTheme.inactiveTrackColor : null;
 
     const sliderHeight = 12.0;
 
@@ -79,18 +69,21 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              if (isColored) Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        height: sliderHeight,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
-                          gradient: LinearGradient(
-                            colors: [minColor, maxColor],
-                          ),
-                        ),
+              if (isColored)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    height: sliderHeight,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      gradient: LinearGradient(
+                        colors: [minColor, maxColor],
                       ),
-                    ) else const SizedBox.shrink(),
+                    ),
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
               Theme(
                 data: isColored
                     ? theme.copyWith(
@@ -116,8 +109,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
-            onPressed: () =>
-                widget.onDone(widget.question.constructAnswer(value)),
+            onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
             child: Text(AppLocalizations.of(context).done),
           ),
         )

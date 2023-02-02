@@ -1,12 +1,11 @@
+import 'package:studyu_core/src/env/env.dart' as env;
+import 'package:studyu_core/src/models/tables/app_config.dart';
+import 'package:studyu_core/src/models/tables/repo.dart';
+import 'package:studyu_core/src/models/tables/study.dart';
+import 'package:studyu_core/src/models/tables/study_invite.dart';
+import 'package:studyu_core/src/models/tables/study_subject.dart';
+import 'package:studyu_core/src/models/tables/subject_progress.dart';
 import 'package:supabase/supabase.dart';
-
-import '../env/env.dart' as env;
-import '../models/tables/app_config.dart';
-import '../models/tables/repo.dart';
-import '../models/tables/study.dart';
-import '../models/tables/study_invite.dart';
-import '../models/tables/study_subject.dart';
-import '../models/tables/subject_progress.dart';
 
 abstract class SupabaseObject {
   Map<String, dynamic> get primaryKeys;
@@ -56,11 +55,12 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   }
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().select<Map<String,dynamic>>(),
+        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().select<Map<String, dynamic>>(),
       );
 
   Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select()).single;
+    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
+        .single;
   }
 }
 
@@ -78,8 +78,8 @@ class SupabaseQuery {
   static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async {
     try {
       return extractSupabaseSingleRow(
-        await env.client.from(tableName(T)).select(selectedColumns.join(','))
-            .eq('id', id).single() as Map<String, dynamic>,
+        await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single()
+            as Map<String, dynamic>,
       );
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
@@ -97,7 +97,7 @@ class SupabaseQuery {
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(Map<String, dynamic> response) {
-      return SupabaseObjectFunctions.fromJson<T>(response);
+    return SupabaseObjectFunctions.fromJson<T>(response);
   }
 
   static void catchSupabaseException(Object error, StackTrace stacktrace) {

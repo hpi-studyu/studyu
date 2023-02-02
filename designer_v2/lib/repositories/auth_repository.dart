@@ -30,6 +30,7 @@ abstract class IAuthRepository extends IAppDelegate {
 
 class AuthRepository implements IAuthRepository {
   /// The key used for persisting the user session in local storage
+  // ignore: constant_identifier_names
   static const PERSIST_SESSION_KEY = 'auth/session';
 
   /// Reference to the Supabase API client injected via Riverpod
@@ -40,10 +41,8 @@ class AuthRepository implements IAuthRepository {
 
   /// A stream controller for broadcasting the currently logged in user
   /// Broadcasts null if the user is logged out
-  final BehaviorSubject<User?> _authStateStreamController =
-      BehaviorSubject.seeded(null);
-  late final _authStateSuppressedController =
-      SuppressedBehaviorSubject(_authStateStreamController);
+  final BehaviorSubject<User?> _authStateStreamController = BehaviorSubject.seeded(null);
+  late final _authStateSuppressedController = SuppressedBehaviorSubject(_authStateStreamController);
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
   late final StreamSubscription<AuthState> _authSubscription;
@@ -116,27 +115,24 @@ class AuthRepository implements IAuthRepository {
 
   @override
   BehaviorSubject<User?> watchAuthStateChanges({emitLastEvent = true}) =>
-      (emitLastEvent)
-          ? _authStateStreamController
-          : _authStateSuppressedController.subject;
+      (emitLastEvent) ? _authStateStreamController : _authStateSuppressedController.subject;
 
   @override
   Future<bool> signUp({required String email, required String password}) async {
     try {
       await authClient.signUp(email: email, password: password);
       return true;
-    } catch(error) {
+    } catch (error) {
       throw StudyUException(error.toString());
     }
   }
 
   @override
-  Future<bool> signInWith(
-      {required String email, required String password}) async {
+  Future<bool> signInWith({required String email, required String password}) async {
     try {
       await authClient.signInWithPassword(email: email, password: password);
       return true;
-    } catch(error) {
+    } catch (error) {
       throw StudyUException(error.toString());
     }
   }
@@ -146,7 +142,7 @@ class AuthRepository implements IAuthRepository {
     try {
       await authClient.signOut();
       return true;
-    } catch(error) {
+    } catch (error) {
       throw StudyUException(error.toString());
     }
   }
@@ -156,7 +152,7 @@ class AuthRepository implements IAuthRepository {
     try {
       await authClient.resetPasswordForEmail(email, redirectTo: env.authRedirectToUrl);
       return true;
-    } catch(error) {
+    } catch (error) {
       throw StudyUException(error.toString());
     }
   }
@@ -166,15 +162,14 @@ class AuthRepository implements IAuthRepository {
     try {
       await authClient.updateUser(UserAttributes(password: newPassword));
       return true;
-    } catch(error) {
+    } catch (error) {
       throw StudyUException(error.toString());
     }
   }
 
   Future<void> _persistSession() async {
     if (session != null) {
-      sharedPreferences.setString(
-          PERSIST_SESSION_KEY, session!.persistSessionString);
+      sharedPreferences.setString(PERSIST_SESSION_KEY, session!.persistSessionString);
       debugLog("Saving session key ${session!.persistSessionString}");
     }
   }
@@ -195,7 +190,7 @@ class AuthRepository implements IAuthRepository {
       final response = await authClient.recoverSession(jsonStr);
       debugLog('Hydrated user session: ${response.user ?? 'None'}');
       return true;
-    } catch(error) {
+    } catch (error) {
       debugLog('Failed to recover user session: ${error.toString()}');
       return false;
     }

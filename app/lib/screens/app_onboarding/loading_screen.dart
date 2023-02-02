@@ -35,7 +35,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (widget.sessionString == null)
       initStudy();
     */
-    if (widget.sessionString != null && widget.sessionString.isNotEmpty && Supabase.instance.client.auth.currentSession == null) {
+    if (widget.sessionString != null &&
+        widget.sessionString.isNotEmpty &&
+        Supabase.instance.client.auth.currentSession == null) {
       // print("recover session");
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
@@ -239,13 +241,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${AppLocalizations
-                    .of(context)
-                    .loading}...',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline4,
+                '${AppLocalizations.of(context).loading}...',
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const CircularProgressIndicator(),
             ],

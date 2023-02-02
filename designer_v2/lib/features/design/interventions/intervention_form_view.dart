@@ -15,8 +15,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class InterventionFormView extends ConsumerWidget {
-  const InterventionFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const InterventionFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final InterventionFormViewModel formViewModel;
 
@@ -39,8 +38,7 @@ class InterventionFormView extends ConsumerWidget {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(200),
                       ],
-                      validationMessages: formViewModel
-                          .interventionTitleControl.validationMessages,
+                      validationMessages: formViewModel.interventionTitleControl.validationMessages,
                     ),
                   ),
                   ReactiveFormConsumer(builder: (context, form, child) {
@@ -66,13 +64,12 @@ class InterventionFormView extends ConsumerWidget {
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
-                validationMessages: formViewModel
-                    .interventionDescriptionControl.validationMessages,
+                validationMessages: formViewModel.interventionDescriptionControl.validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
                 decoration: InputDecoration(
-                    hintText: tr.form_field_intervention_description_hint,
+                  hintText: tr.form_field_intervention_description_hint,
                 ),
               ),
             ),
@@ -89,10 +86,8 @@ class InterventionFormView extends ConsumerWidget {
               return FormArrayTable<InterventionTaskFormViewModel>(
                 control: formViewModel.interventionTasksArray,
                 items: formViewModel.tasksCollection.formViewModels,
-                onSelectItem: (viewModel) =>
-                    _onSelectItem(viewModel, context, ref),
-                getActionsAt: (viewModel, _) =>
-                    formViewModel.availablePopupActions(viewModel),
+                onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
+                getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                 onNewItem: () => _onNewItem(context, ref),
                 onNewItemLabel: tr.form_array_intervention_tasks_new,
                 rowTitle: (viewModel) => viewModel.formData?.taskTitle ?? '',
@@ -114,22 +109,18 @@ class InterventionFormView extends ConsumerWidget {
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
-  _onSelectItem(
-      InterventionTaskFormViewModel item, BuildContext context, WidgetRef ref) {
+  _onSelectItem(InterventionTaskFormViewModel item, BuildContext context, WidgetRef ref) {
     final routeArgs = formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-  _showSidesheetWithArgs(InterventionTaskFormRouteArgs routeArgs,
-      BuildContext context, WidgetRef ref) {
-    final interventionTaskFormViewModel =
-        ref.read(interventionTaskFormViewModelProvider(routeArgs));
+  _showSidesheetWithArgs(InterventionTaskFormRouteArgs routeArgs, BuildContext context, WidgetRef ref) {
+    final interventionTaskFormViewModel = ref.read(interventionTaskFormViewModelProvider(routeArgs));
     showFormSideSheet<InterventionTaskFormViewModel>(
       context: context,
       formViewModel: interventionTaskFormViewModel,
-      formViewBuilder: (formViewModel) =>
-          InterventionTaskFormView(formViewModel: formViewModel),
+      formViewBuilder: (formViewModel) => InterventionTaskFormView(formViewModel: formViewModel),
       ignoreAppBar: true,
     );
   }

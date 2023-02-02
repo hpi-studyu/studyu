@@ -49,7 +49,7 @@ class AppContent extends ConsumerStatefulWidget {
   const AppContent({Key? key}) : super(key: key);
 
   @override
-  _AppContentState createState() => _AppContentState();
+  ConsumerState<AppContent> createState() => _AppContentState();
 }
 
 class _AppContentState extends ConsumerState<AppContent> {

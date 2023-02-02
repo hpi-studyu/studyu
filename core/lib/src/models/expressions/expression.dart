@@ -1,5 +1,5 @@
-import '../questionnaire/questionnaire_state.dart';
-import 'types/types.dart';
+import 'package:studyu_core/src/models/expressions/types/types.dart';
+import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
 typedef ExpressionParser = Expression Function(Map<String, dynamic> data);
 

@@ -10,8 +10,10 @@ import '../../../routes.dart';
 import '../../../util/localization.dart';
 
 class Settings extends StatefulWidget {
+  const Settings({Key key}) : super(key: key);
+
   @override
-  _SettingsState createState() => _SettingsState();
+  State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
@@ -80,7 +82,7 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 24),
             Text(
               '${AppLocalizations.of(context).study_current} ${subject.study.title}',
-              style: theme.textTheme.headline6,
+              style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
@@ -110,7 +112,7 @@ class _SettingsState extends State<Settings> {
 class OptOutAlertDialog extends StatelessWidget {
   final StudySubject subject;
 
-  const OptOutAlertDialog({@required this.subject}) : super();
+  const OptOutAlertDialog({Key key, @required this.subject}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +144,7 @@ class OptOutAlertDialog extends StatelessWidget {
           onPressed: () async {
             await subject.softDelete();
             await deleteActiveStudyReference();
-            Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
+            if (context.mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
           },
         )
       ],
@@ -153,7 +155,7 @@ class OptOutAlertDialog extends StatelessWidget {
 class DeleteAlertDialog extends StatelessWidget {
   final StudySubject subject;
 
-  const DeleteAlertDialog({@required this.subject}) : super();
+  const DeleteAlertDialog({Key key, @required this.subject}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => AlertDialog(
@@ -171,7 +173,7 @@ class DeleteAlertDialog extends StatelessWidget {
             onPressed: () async {
               await subject.delete(); // hard-delete
               await deleteLocalData();
-              Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+              if (context.mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
             },
           )
         ],

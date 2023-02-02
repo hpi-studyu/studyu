@@ -22,8 +22,8 @@ class PublishSuccessDialog extends StudyPageWidget {
           const SizedBox(height: 24.0),
           EmptyBody(
             leading: Text("\u{1f389}".hardcoded,
-                style: theme.textTheme.headline1?.copyWith(
-                  fontSize: (theme.textTheme.headline1?.fontSize ?? 48.0) * 1.5,
+                style: theme.textTheme.displayLarge?.copyWith(
+                  fontSize: (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
                 )),
             title: tr.study_launch_success_title,
             description: tr.study_launch_success_description,
@@ -38,8 +38,7 @@ class PublishSuccessDialog extends StudyPageWidget {
           children: [
             PrimaryButton(
               text: tr.action_button_post_launch_followup,
-              onPressed: () => Navigator.maybePop(context)
-                  .whenComplete(() => controller.onAddParticipants()),
+              onPressed: () => Navigator.maybePop(context).whenComplete(() => controller.onAddParticipants()),
             ),
             const SizedBox(height: 8.0),
             Opacity(

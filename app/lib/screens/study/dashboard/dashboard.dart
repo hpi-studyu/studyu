@@ -15,8 +15,10 @@ import '../report/report_details.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({Key key}) : super(key: key);
+
   @override
-  _DashboardScreenState createState() => _DashboardScreenState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class OverflowMenuItem {
@@ -91,6 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                    if (!mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
@@ -150,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: subject.completedStudy
-          ? StudyFinishedPlaceholder()
+          ? const StudyFinishedPlaceholder()
           : TaskOverview(
               subject: subject,
               scheduleToday: scheduleToday,
@@ -173,6 +176,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 class StudyFinishedPlaceholder extends StatelessWidget {
   static const space = SizedBox(height: 80);
+
+  const StudyFinishedPlaceholder({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -18,7 +18,7 @@ class TaskOverview extends StatefulWidget {
   const TaskOverview({@required this.subject, @required this.scheduleToday, Key key, this.interventionIcon})
       : super(key: key);
   @override
-  _TaskOverviewState createState() => _TaskOverviewState();
+  State<TaskOverview> createState() => _TaskOverviewState();
 }
 
 class _TaskOverviewState extends State<TaskOverview> {
@@ -43,7 +43,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                   const SizedBox(width: 8),
                   Text(
                     completionPeriod.toString(),
-                    style: theme.textTheme.subtitle2.copyWith(fontSize: 16, color: theme.primaryColor),
+                    style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
                   ),
                 ],
               ),
@@ -81,7 +81,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.headline6),
+                  Text(AppLocalizations.of(context).intervention_current, style: theme.textTheme.titleLarge),
                   const Spacer(),
                   Text(
                     '${widget.subject.daysLeftForPhase(widget.subject.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context).days_left}',
@@ -92,7 +92,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               const SizedBox(height: 8),
               InterventionCardTitle(intervention: widget.subject.getInterventionForDate(DateTime.now())),
               const SizedBox(height: 8),
-              Text(AppLocalizations.of(context).today_tasks, style: theme.textTheme.headline6)
+              Text(AppLocalizations.of(context).today_tasks, style: theme.textTheme.titleLarge)
             ],
           ),
         ),

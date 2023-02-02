@@ -27,8 +27,7 @@ class IconPack {
     return iconOptions;
   }();
 
-  static IconOption? resolveIconByName(String? name,
-      {List<IconOption>? iconPack}) {
+  static IconOption? resolveIconByName(String? name, {List<IconOption>? iconPack}) {
     iconPack ??= IconPack.defaultPack;
     if (name == null || name.isEmpty) {
       return null;
@@ -52,8 +51,7 @@ class IconOption extends Equatable {
   static IconOption fromJson(String json) => IconOption(json);
 }
 
-class ReactiveIconPicker
-    extends ReactiveFocusableFormField<IconOption, IconOption> {
+class ReactiveIconPicker extends ReactiveFocusableFormField<IconOption, IconOption> {
   ReactiveIconPicker({
     required iconOptions,
     selectedIconSize = 20.0,
@@ -86,16 +84,16 @@ class ReactiveIconPicker
 }
 
 class IconPicker extends StatelessWidget {
-  const IconPicker(
-      {required this.iconOptions,
-      this.selectedOption,
-      this.selectedIconSize,
-      this.galleryIconSize = 28.0,
-      this.onSelect,
-      this.isDisabled = false,
-      this.focusNode,
-      Key? key,})
-      : super(key: key);
+  const IconPicker({
+    required this.iconOptions,
+    this.selectedOption,
+    this.selectedIconSize,
+    this.galleryIconSize = 28.0,
+    this.onSelect,
+    this.isDisabled = false,
+    this.focusNode,
+    Key? key,
+  }) : super(key: key);
 
   final List<IconOption> iconOptions;
   final IconOption? selectedOption;
@@ -147,21 +145,15 @@ class IconPickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actualGalleryIconSize =
-        galleryIconSize ?? Theme.of(context).iconTheme.size ?? 24.0;
-    final actualSelectedIconSize =
-        selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
+    final actualGalleryIconSize = galleryIconSize ?? Theme.of(context).iconTheme.size ?? 24.0;
+    final actualSelectedIconSize = selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
 
-    final openIconPicker = () => showIconPickerDialog(context,
-        iconOptions: iconOptions,
-        galleryIconSize: actualGalleryIconSize,
-        onSelect: onSelect);
+    openIconPicker() => showIconPickerDialog(context,
+        iconOptions: iconOptions, galleryIconSize: actualGalleryIconSize, onSelect: onSelect);
 
     if (selectedOption != null && !selectedOption!.isEmpty) {
-      final selectedIcon = selectedOption?.icon ??
-          IconPack.resolveIconByName(selectedOption!.name,
-                  iconPack: iconOptions)!
-              .icon;
+      final selectedIcon =
+          selectedOption?.icon ?? IconPack.resolveIconByName(selectedOption!.name, iconPack: iconOptions)!.icon;
       return IconButton(
           tooltip: tr.iconpicker_nonempty_prompt,
           splashRadius: actualSelectedIconSize,
@@ -179,11 +171,7 @@ class IconPickerField extends StatelessWidget {
 }
 
 class IconPickerGallery extends StatelessWidget {
-  const IconPickerGallery(
-      {required this.iconOptions,
-      required this.iconSize,
-      this.onSelect,
-      Key? key})
+  const IconPickerGallery({required this.iconOptions, required this.iconSize, this.onSelect, Key? key})
       : super(key: key);
 
   final List<IconOption> iconOptions;
@@ -198,9 +186,7 @@ class IconPickerGallery extends StatelessWidget {
           builder: (context, state) {
             final isHovered = state.contains(MaterialState.hovered);
             return Container(
-              color: isHovered
-                  ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                  : null,
+              color: isHovered ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : null,
               child: Icon(iconOption.icon!, size: iconSize),
             );
           },
@@ -237,17 +223,15 @@ Future<void> showIconPickerDialog(
           body: SizedBox(
             width: max(dialogWidth, minWidth),
             height: max(dialogHeight, minHeight),
-            child: IconPickerGallery(
-                iconOptions: iconOptions, iconSize: galleryIconSize ?? 48.0),
+            child: IconPickerGallery(iconOptions: iconOptions, iconSize: galleryIconSize ?? 48.0),
           ),
           title: SelectableText(
             tr.iconpicker_dialog_title,
-            style: theme.textTheme.headline5?.copyWith(
+            style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.normal,
               color: theme.colorScheme.onPrimaryContainer,
             ),
-          )
-      );
+          ));
     },
   );
 

@@ -3,16 +3,16 @@ import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class ActionMenuInline extends StatelessWidget {
-  const ActionMenuInline({
-    required this.actions,
-    this.splashRadius = 18.0,
-    this.iconSize,
-    this.iconColor,
-    this.visible = true,
-    this.paddingHorizontal = 2.0,
-    this.paddingVertical = 0.0,
-    Key? key
-  }) : super(key: key);
+  const ActionMenuInline(
+      {required this.actions,
+      this.splashRadius = 18.0,
+      this.iconSize,
+      this.iconColor,
+      this.visible = true,
+      this.paddingHorizontal = 2.0,
+      this.paddingVertical = 0.0,
+      Key? key})
+      : super(key: key);
 
   final List<ModelAction> actions;
   final MaterialStateProperty<Color>? iconColor;
@@ -47,21 +47,13 @@ class ActionMenuInline extends StatelessWidget {
                 splashRadius: splashRadius,
                 onPressed: () => action.onExecute(),
                 iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
-                icon: Icon(
-                    action.icon,
-                    color: iconColor?.resolve(state) ?? (
-                        action.isDestructive ? Colors.red : defaultIconColor(state))
-                )
-            );
-          })
-      );
+                icon: Icon(action.icon,
+                    color: iconColor?.resolve(state) ?? (action.isDestructive ? Colors.red : defaultIconColor(state))));
+          }));
     }).toList();
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: paddingHorizontal ?? 0,
-          vertical: paddingVertical ?? 0
-      ),
+      padding: EdgeInsets.symmetric(horizontal: paddingHorizontal ?? 0, vertical: paddingVertical ?? 0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: actionButtons,

@@ -9,8 +9,7 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
-class StudyAnalyzeController
-    extends StudyBaseController<StudyAnalyzeControllerState> {
+class StudyAnalyzeController extends StudyBaseController<StudyAnalyzeControllerState> {
   StudyAnalyzeController({
     required super.studyId,
     required super.studyRepository,
@@ -28,8 +27,7 @@ class StudyAnalyzeController
 }
 
 final studyAnalyzeControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyAnalyzeController, StudyAnalyzeControllerState, StudyID>(
-        (ref, studyId) {
+    .family<StudyAnalyzeController, StudyAnalyzeControllerState, StudyID>((ref, studyId) {
   return StudyAnalyzeController(
     studyId: studyId,
     currentUser: ref.watch(authRepositoryProvider).currentUser,

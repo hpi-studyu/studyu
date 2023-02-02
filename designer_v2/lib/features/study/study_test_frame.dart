@@ -35,7 +35,7 @@ class PreviewFrame extends ConsumerStatefulWidget {
   final String? route;
 
   @override
-  _PreviewFrameState createState() => _PreviewFrameState();
+  ConsumerState<PreviewFrame> createState() => _PreviewFrameState();
 }
 
 class _PreviewFrameState extends ConsumerState<PreviewFrame> {
@@ -54,13 +54,11 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   }
 
   _subscribeStudyChanges() {
-    final formViewModelCurrent =
-        ref.read(studyFormViewModelProvider(widget.studyId));
+    final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyId));
 
     formViewModelCurrent.form.valueChanges.listen((event) {
       if (frameController != null) {
-        final formJson =
-            jsonEncode(formViewModelCurrent.buildFormData().toJson());
+        final formJson = jsonEncode(formViewModelCurrent.buildFormData().toJson());
         frameController!.send(formJson);
       }
     });
@@ -74,16 +72,11 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
       if (widget.routeArgs is InterventionFormRouteArgs) {
         route = 'intervention';
-        frameController!.generateUrl(
-            route: route,
-            extra:
-                (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+        frameController!
+            .generateUrl(route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
       } else if (widget.routeArgs is MeasurementFormRouteArgs) {
         route = 'observation';
-        frameController!.generateUrl(
-            route: route,
-            extra:
-                (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+        frameController!.generateUrl(route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
       } else {
         frameController!.generateUrl();
       }
@@ -96,8 +89,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyId));
 
     // Rebuild iframe component & url
-    frameController =
-        ref.read(studyTestPlatformControllerProvider(widget.studyId));
+    frameController = ref.read(studyTestPlatformControllerProvider(widget.studyId));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
@@ -146,7 +138,7 @@ class Interceptor extends ConsumerStatefulWidget {
   const Interceptor({super.key});
 
   @override
-  _InterceptorState createState() => _InterceptorState();
+  ConsumerState<Interceptor> createState() => _InterceptorState();
 }
 
 class _InterceptorState extends ConsumerState<Interceptor> {
@@ -168,8 +160,7 @@ class _InterceptorState extends ConsumerState<Interceptor> {
   }
 
   Future<void> _createListener() async {
-    SchedulerBinding.instance
-        .addPostFrameCallback((_) => router.addListener(_interceptListener));
+    SchedulerBinding.instance.addPostFrameCallback((_) => router.addListener(_interceptListener));
   }
 
   void _interceptListener() {

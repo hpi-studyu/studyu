@@ -1,8 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../tables/subject_progress.dart';
-import '../../tasks/schedule.dart';
-import '../intervention_task.dart';
+import 'package:studyu_core/src/models/interventions/intervention_task.dart';
+import 'package:studyu_core/src/models/tables/subject_progress.dart';
+import 'package:studyu_core/src/models/tasks/schedule.dart';
 
 part 'checkmark_task.g.dart';
 
@@ -21,7 +20,7 @@ class CheckmarkTask extends InterventionTask {
 
   @override
   Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults) {
-    throw ArgumentError("${runtimeType.toString()} does not have a property named '$property'.");
+    throw ArgumentError("$runtimeType does not have a property named '$property'.");
   }
 
   @override

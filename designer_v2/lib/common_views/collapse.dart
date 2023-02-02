@@ -5,8 +5,7 @@ import 'package:studyu_designer_v2/common_views/utils.dart';
 
 import '../theme.dart';
 
-typedef CollapsibleSectionBuilder = Widget Function(
-    BuildContext context, bool isCollapsed);
+typedef CollapsibleSectionBuilder = Widget Function(BuildContext context, bool isCollapsed);
 
 /// Simple non-animated & more customizable alternative to [ExpansionPanel]
 /// and [ExpansionTile]
@@ -22,9 +21,7 @@ class Collapsible extends StatefulWidget {
     this.isCollapsed = true,
     this.maintainState = true,
     Key? key,
-  })  : assert(
-            (headerBuilder != null && title == null) ||
-                (headerBuilder == null && title != null),
+  })  : assert((headerBuilder != null && title == null) || (headerBuilder == null && title != null),
             "Must provide either headerBuilder or title"),
         super(key: key);
 
@@ -52,9 +49,9 @@ class _CollapsibleState extends State<Collapsible> {
             final isHovered = states.contains(MaterialState.hovered);
 
             // Use [TabBarThemeData] colors for default header styling
-            Color? actualColor = isHovered
+            /*Color? actualColor = isHovered
                 ? theme.tabBarTheme.labelColor
-                : theme.tabBarTheme.unselectedLabelColor;
+                : theme.tabBarTheme.unselectedLabelColor;*/
 
             return Opacity(
               opacity: isHovered ? ThemeConfig.kHoverFadeFactor : 1.0,
@@ -66,11 +63,8 @@ class _CollapsibleState extends State<Collapsible> {
                   ),
                   const SizedBox(width: 4.0),
                   Icon(
-                    isCollapsed
-                        ? Icons.keyboard_arrow_right_rounded
-                        : Icons.keyboard_arrow_down_rounded,
-                    color: theme.tabBarTheme.labelColor
-                        ?.faded(ThemeConfig.kMuteFadeFactor),
+                    isCollapsed ? Icons.keyboard_arrow_right_rounded : Icons.keyboard_arrow_down_rounded,
+                    color: theme.tabBarTheme.labelColor?.faded(ThemeConfig.kMuteFadeFactor),
                   ),
                 ],
               ),

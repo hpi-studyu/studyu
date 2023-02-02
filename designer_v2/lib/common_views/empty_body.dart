@@ -27,9 +27,7 @@ class EmptyBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           (leading != null) ? leading! : const SizedBox.shrink(),
-          (leading != null)
-              ? SizedBox(height: leadingSpacing!)
-              : const SizedBox.shrink(),
+          (leading != null) ? SizedBox(height: leadingSpacing!) : const SizedBox.shrink(),
           (icon != null)
               ? Padding(
                   padding: const EdgeInsets.only(bottom: 0.0),
@@ -45,15 +43,15 @@ class EmptyBody extends StatelessWidget {
                   child: SelectableText(
                     title!,
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.headline4,
+                    style: theme.textTheme.headlineMedium,
                   ),
                 )
               : const SizedBox.shrink(),
           (description != null)
               ? SelectableText(description!,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyText2?.copyWith(
-                    color: theme.textTheme.bodyText2?.color?.faded(0.9),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.textTheme.bodyMedium?.color?.faded(0.9),
                   ))
               : const SizedBox.shrink(),
           (button != null)

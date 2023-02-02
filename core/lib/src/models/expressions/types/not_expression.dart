@@ -1,8 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../questionnaire/questionnaire_state.dart';
-import '../expression.dart';
-import 'boolean_expression.dart';
+import 'package:studyu_core/src/models/expressions/expression.dart';
+import 'package:studyu_core/src/models/expressions/types/boolean_expression.dart';
+import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
 part 'not_expression.g.dart';
 

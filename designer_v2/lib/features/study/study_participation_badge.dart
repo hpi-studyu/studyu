@@ -5,10 +5,7 @@ import 'package:studyu_designer_v2/domain/participation.dart';
 
 class StudyParticipationBadge extends StatelessWidget {
   const StudyParticipationBadge(
-      {required this.participation,
-        this.type = studybadge.BadgeType.plain,
-        this.showPrefixIcon = true,
-        Key? key})
+      {required this.participation, this.type = studybadge.BadgeType.plain, this.showPrefixIcon = true, Key? key})
       : super(key: key);
 
   final Participation participation;
@@ -33,12 +30,11 @@ class StudyParticipationBadge extends StatelessWidget {
     switch (participation) {
       case Participation.open:
         return inTooltip(studybadge.Badge(
-          label: participation.whoShort,
-          color: colorScheme.primary.withOpacity(0.8),
-          type: type,
-          icon: showPrefixIcon ? Icons.people_rounded : null,
-          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0)
-        ));
+            label: participation.whoShort,
+            color: colorScheme.primary.withOpacity(0.8),
+            type: type,
+            icon: showPrefixIcon ? Icons.people_rounded : null,
+            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0)));
       case Participation.invite:
         return inTooltip(studybadge.Badge(
           label: participation.whoShort,
@@ -47,7 +43,6 @@ class StudyParticipationBadge extends StatelessWidget {
           icon: showPrefixIcon ? Icons.lock_rounded : null,
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
         ));
-        return const SizedBox.shrink();
     }
   }
 }

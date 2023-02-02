@@ -1,4 +1,4 @@
-import 'answer.dart';
+import 'package:studyu_core/src/models/questionnaire/answer.dart';
 
 class QuestionnaireState {
   Map<String, Answer> answers;
@@ -21,7 +21,7 @@ class QuestionnaireState {
     if (answer is Answer<T>) {
       return answer.response;
     } else {
-      throw ArgumentError("'Answer<${T.toString()}>' requested but found '${answer.runtimeType.toString()}'.");
+      throw ArgumentError("'Answer<$T>' requested but found '${answer.runtimeType}'.");
     }
   }
 }

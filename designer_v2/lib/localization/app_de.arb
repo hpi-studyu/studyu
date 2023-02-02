@@ -214,7 +214,7 @@
   "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {max} betragen",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "max": {}
+      "count": {}
     }
   },
 

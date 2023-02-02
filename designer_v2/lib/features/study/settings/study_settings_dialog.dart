@@ -14,8 +14,7 @@ class StudySettingsDialog extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
 
     return ReactiveForm(
       formGroup: formViewModel.form,
@@ -31,30 +30,32 @@ class StudySettingsDialog extends StudyPageWidget {
             TextParagraph(text: tr.navlink_public_studies_description),
             const SizedBox(height: 24.0),
             ReactiveFormConsumer(builder: (context, form, child) {
-              return FormTableLayout(rows: [
-                FormTableRow(
-                    label: tr.study_settings_publish_study,
-                    labelHelpText: tr.study_settings_publish_study_tooltip,
-                    input: Align(
-                      alignment: Alignment.centerRight,
-                      child: ReactiveSwitch(
-                        formControl: formViewModel.isPublishedToRegistryControl,
-                      ),
-                    )),
-                FormTableRow(
-                    label: tr.study_settings_publish_results,
-                    labelHelpText: tr.study_settings_publish_results_tooltip,
-                    input: Align(
-                      alignment: Alignment.centerRight,
-                      child: ReactiveSwitch(
-                        formControl:
-                            formViewModel.isPublishedToRegistryResultsControl,
-                      ),
-                    )),
-              ], columnWidths: {
-                0: IntrinsicColumnWidth(),
-                1: FlexColumnWidth(),
-              },);
+              return FormTableLayout(
+                rows: [
+                  FormTableRow(
+                      label: tr.study_settings_publish_study,
+                      labelHelpText: tr.study_settings_publish_study_tooltip,
+                      input: Align(
+                        alignment: Alignment.centerRight,
+                        child: ReactiveSwitch(
+                          formControl: formViewModel.isPublishedToRegistryControl,
+                        ),
+                      )),
+                  FormTableRow(
+                      label: tr.study_settings_publish_results,
+                      labelHelpText: tr.study_settings_publish_results_tooltip,
+                      input: Align(
+                        alignment: Alignment.centerRight,
+                        child: ReactiveSwitch(
+                          formControl: formViewModel.isPublishedToRegistryResultsControl,
+                        ),
+                      )),
+                ],
+                columnWidths: const {
+                  0: IntrinsicColumnWidth(),
+                  1: FlexColumnWidth(),
+                },
+              );
             }),
             const SizedBox(height: 12.0),
           ],

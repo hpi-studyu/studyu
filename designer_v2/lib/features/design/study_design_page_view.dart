@@ -15,22 +15,20 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
 
     if (viewModel.isStudyReadonly) {
       return BannerBox(
-        noPrefix: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextParagraph(
-              text: tr.banner_study_readonly_title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextParagraph(
-                text: tr.banner_study_readonly_description,
-            ),
-          ]
-        ),
-        style: BannerStyle.info
-      );
+          noPrefix: true,
+          body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextParagraph(
+                  text: tr.banner_study_readonly_title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextParagraph(
+                  text: tr.banner_study_readonly_description,
+                ),
+              ]),
+          style: BannerStyle.info);
     }
 
     return null;

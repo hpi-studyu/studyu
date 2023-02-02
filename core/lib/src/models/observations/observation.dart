@@ -1,5 +1,5 @@
-import '../tasks/task.dart';
-import 'tasks/tasks.dart';
+import 'package:studyu_core/src/models/observations/tasks/tasks.dart';
+import 'package:studyu_core/src/models/tasks/task.dart';
 
 typedef ObservationTaskParser = Observation Function(Map<String, dynamic> data);
 

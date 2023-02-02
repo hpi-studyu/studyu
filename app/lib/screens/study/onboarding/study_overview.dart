@@ -13,8 +13,10 @@ import '../dashboard/contact_tab/contact_screen.dart';
 import 'eligibility_screen.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
+  const StudyOverviewScreen({Key key}) : super(key: key);
+
   @override
-  _StudyOverviewScreen createState() => _StudyOverviewScreen();
+  State<StudyOverviewScreen> createState() => _StudyOverviewScreen();
 }
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {

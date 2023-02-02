@@ -9,10 +9,10 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudyBaseController<T extends StudyControllerBaseState> extends StateNotifier<T> {
-  StudyBaseController(T state, {
+  StudyBaseController(
+    T state, {
     required this.studyId,
     required this.studyRepository,
     required this.router,
@@ -31,14 +31,12 @@ class StudyBaseController<T extends StudyControllerBaseState> extends StateNotif
     if (studySubscription != null) {
       studySubscription!.cancel();
     }
-    studySubscription = studyRepository.watch(studyId).listen(
-        onStudySubscriptionUpdate, onError: onStudySubscriptionError);
+    studySubscription =
+        studyRepository.watch(studyId).listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
-    state = state.copyWith(
-      studyWithMetadata: wrappedModel
-    ) as T;
+    state = state.copyWith(studyWithMetadata: wrappedModel) as T;
   }
 
   onStudySubscriptionError(Object error) {

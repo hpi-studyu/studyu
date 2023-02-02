@@ -5,9 +5,9 @@ const accentColor = Colors.orange;
 
 class ThemeConfig {
   static SliderThemeData coloredSliderTheme(ThemeData theme) => SliderThemeData(
-    activeTrackColor: Colors.white.withOpacity(0.4),
-    inactiveTrackColor: Colors.white.withOpacity(0),
-  );
+        activeTrackColor: Colors.white.withOpacity(0.4),
+        inactiveTrackColor: Colors.white.withOpacity(0),
+      );
 }
 
 ThemeData get theme => ThemeData(

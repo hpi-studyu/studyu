@@ -15,7 +15,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
 
   @override
-  _QuestionnaireTaskWidgetState createState() => _QuestionnaireTaskWidgetState();
+  State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
 }
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {

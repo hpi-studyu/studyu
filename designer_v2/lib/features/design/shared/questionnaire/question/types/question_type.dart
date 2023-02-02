@@ -3,7 +3,9 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 enum SurveyQuestionType {
-  choice, bool, scale;
+  choice,
+  bool,
+  scale;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -14,8 +16,7 @@ enum SurveyQuestionType {
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
     };
     if (!typeMapping.containsKey(question.type)) {
-      throw UnimplementedError(
-          "Missing SurveyQuestionType for question of type: ${question.type}");
+      throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
     }
     return typeMapping[question.type]!;
   }

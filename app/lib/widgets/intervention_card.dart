@@ -72,7 +72,7 @@ class InterventionCardTitle extends StatelessWidget {
       dense: true,
       title: Row(
         children: [
-          Expanded(child: Text(intervention.name, style: theme.textTheme.headline6)),
+          Expanded(child: Text(intervention.name, style: theme.textTheme.titleLarge)),
           if (showDescriptionButton)
             IconButton(
               icon: const Icon(Icons.info_outline),
@@ -85,7 +85,7 @@ class InterventionCardTitle extends StatelessWidget {
                     title: ListTile(
                       leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
                       dense: true,
-                      title: Text(intervention.name, style: theme.textTheme.headline6),
+                      title: Text(intervention.name, style: theme.textTheme.titleLarge),
                     ),
                     content: Text(description ?? ''),
                   );
@@ -114,7 +114,7 @@ class InterventionCardDescription extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         description,
-        style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+        style: theme.textTheme.bodyMedium.copyWith(color: theme.textTheme.bodySmall.color),
       ),
     );
   }
@@ -141,7 +141,7 @@ class _TaskList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context).tasks_daily, style: theme.textTheme.bodyText2),
+              Text(AppLocalizations.of(context).tasks_daily, style: theme.textTheme.bodyMedium),
             ],
           ),
         ),
@@ -156,15 +156,15 @@ class _TaskList extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     children: [
-                      Expanded(child: Text(task.title, style: theme.textTheme.bodyText2)),
+                      Expanded(child: Text(task.title, style: theme.textTheme.bodyMedium)),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 16, color: theme.textTheme.caption.color),
+                          Icon(Icons.access_time, size: 16, color: theme.textTheme.bodySmall.color),
                           const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
-                            style:
-                                theme.textTheme.bodyText2.copyWith(fontSize: 12, color: theme.textTheme.caption.color),
+                            style: theme.textTheme.bodyMedium
+                                .copyWith(fontSize: 12, color: theme.textTheme.bodySmall.color),
                           ),
                         ],
                       ),

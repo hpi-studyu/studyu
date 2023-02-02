@@ -4,17 +4,17 @@ import 'package:studyu_designer_v2/common_views/utils.dart';
 enum BadgeType { filled, outlined, outlineFill, plain }
 
 class Badge extends StatelessWidget {
-  const Badge(
-      {required this.label,
-        this.labelStyle,
-      this.icon = Icons.circle_rounded,
-      this.iconSize,
-      this.color,
-      this.borderRadius = 12.0,
-      this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-      this.type = BadgeType.plain,
-      Key? key,})
-      : super(key: key);
+  const Badge({
+    required this.label,
+    this.labelStyle,
+    this.icon = Icons.circle_rounded,
+    this.iconSize,
+    this.color,
+    this.borderRadius = 12.0,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+    this.type = BadgeType.plain,
+    Key? key,
+  }) : super(key: key);
 
   final IconData? icon;
   final Color? color;
@@ -54,19 +54,19 @@ class Badge extends StatelessWidget {
                       color: _getLabelColor(theme)?.faded(0.65),
                     )
                   : const SizedBox.shrink(),
-              (icon != null)
-                  ? const SizedBox(width: 8.0)
-                  : const SizedBox.shrink(),
+              (icon != null) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
               Text(
                 label,
                 softWrap: false,
                 maxLines: 1,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.caption?.copyWith(
-                  fontSize: (theme.textTheme.caption?.fontSize ?? 14.0) * 0.95,
-                  color: _getLabelColor(theme),
-                  fontWeight: FontWeight.bold,
-                ).merge(labelStyle),
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(
+                      fontSize: (theme.textTheme.bodySmall?.fontSize ?? 14.0) * 0.95,
+                      color: _getLabelColor(theme),
+                      fontWeight: FontWeight.bold,
+                    )
+                    .merge(labelStyle),
               ),
             ],
           ),
@@ -110,7 +110,7 @@ class Badge extends StatelessWidget {
 
     switch (type) {
       case BadgeType.filled:
-        return theme.textTheme.button?.color?.withOpacity(0.6);
+        return theme.textTheme.labelLarge?.color?.withOpacity(0.6);
       case BadgeType.outlineFill:
         return actualColor.faded(0.8);
       case BadgeType.outlined:

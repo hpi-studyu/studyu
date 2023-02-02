@@ -9,12 +9,12 @@ class StudyMonitorScreen extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-        width: double.infinity,
-        color: Theme.of(context).colorScheme.secondary.withOpacity(0.03),
-        height: 300,
-        child: const Center(
-          child: UnderConstruction(),
-        ),
+      width: double.infinity,
+      color: Theme.of(context).colorScheme.secondary.withOpacity(0.03),
+      height: 300,
+      child: const Center(
+        child: UnderConstruction(),
+      ),
     );
   }
 }

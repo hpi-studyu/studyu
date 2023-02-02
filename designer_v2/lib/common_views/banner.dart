@@ -13,8 +13,7 @@ class BannerBox extends StatefulWidget {
   const BannerBox(
       {required this.body,
       required this.style,
-      this.padding =
-          const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
+      this.padding = const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
       this.prefixIcon,
       this.noPrefix = false,
       this.isDismissed,
@@ -77,9 +76,7 @@ class _BannerBoxState extends State<BannerBox> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   (widget.noPrefix) ? const SizedBox.shrink() : icon,
-                  (widget.noPrefix)
-                      ? const SizedBox.shrink()
-                      : const SizedBox(width: 24.0),
+                  (widget.noPrefix) ? const SizedBox.shrink() : const SizedBox(width: 24.0),
                   Opacity(
                     opacity: 0.85,
                     child: widget.body,
@@ -91,8 +88,7 @@ class _BannerBoxState extends State<BannerBox> {
                 child: Opacity(
                   opacity: 0.5,
                   child: IconButton(
-                    icon:
-                        Icon(Icons.close_rounded, size: widget.dismissIconSize),
+                    icon: Icon(Icons.close_rounded, size: widget.dismissIconSize),
                     splashRadius: widget.dismissIconSize,
                     onPressed: () => setState(() {
                       isDismissed = true;

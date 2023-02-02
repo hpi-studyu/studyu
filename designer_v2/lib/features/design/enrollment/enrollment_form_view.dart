@@ -32,8 +32,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.read(enrollmentFormViewModelProvider(studyId));
+        final formViewModel = ref.read(enrollmentFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -41,8 +40,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                TextParagraph(
-                    text: tr.form_study_design_enrollment_description),
+                TextParagraph(text: tr.form_study_design_enrollment_description),
                 const SizedBox(height: 24.0),
                 FormTableLayout(
                   rows: [
@@ -52,29 +50,24 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                         input: Column(
                           children: formViewModel.enrollmentTypeControlOptions
-                              .map((option) =>
-                          ReactiveRadioListTile<Participation>(
-                            formControl:
-                            formViewModel.enrollmentTypeControl,
-                            value: option.value,
-                            title: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Text(option.value.whoShort,
-                                    style: theme.textTheme.bodyText1),
-                                const SizedBox(height: 2.0),
-                              ],
-                            ),
-                            subtitle: (option.description) != null
-                                ? TextParagraph(
-                              text: option.description!,
-                              selectable: false,
-                              style:
-                              ThemeConfig.bodyTextMuted(theme),
-                            )
-                                : null,
-                          ) as Widget)
+                              .map<Widget>((option) => ReactiveRadioListTile<Participation>(
+                                    formControl: formViewModel.enrollmentTypeControl,
+                                    value: option.value,
+                                    title: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(option.value.whoShort, style: theme.textTheme.bodyLarge),
+                                        const SizedBox(height: 2.0),
+                                      ],
+                                    ),
+                                    subtitle: (option.description) != null
+                                        ? TextParagraph(
+                                            text: option.description!,
+                                            selectable: false,
+                                            style: ThemeConfig.bodyTextMuted(theme),
+                                          )
+                                        : null,
+                                  ))
                               .toList()
                               .separatedBy(() => const SizedBox(height: 8.0)),
                         )),
@@ -92,18 +85,13 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
-                        final routeArgs = formViewModel
-                            .buildScreenerQuestionFormRouteArgs(viewModel);
-                        _showScreenerQuestionSidesheetWithArgs(
-                            routeArgs, context, ref);
+                        final routeArgs = formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
+                        _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                       onNewItem: () {
-                        final routeArgs =
-                        formViewModel.buildNewScreenerQuestionFormRouteArgs();
-                        _showScreenerQuestionSidesheetWithArgs(
-                            routeArgs, context, ref);
+                        final routeArgs = formViewModel.buildNewScreenerQuestionFormRouteArgs();
+                        _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
                       sectionDescription: tr.form_array_screener_questions_description,
                       onNewItemLabel: tr.form_array_screener_questions_new,
@@ -113,18 +101,17 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         children: [
                           Text(
                             tr.form_array_screener_questions_title,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           (formViewModel.canTestScreener)
                               ? Opacity(
-                            opacity: ThemeConfig.kMuteFadeFactor,
-                            child: TextButton.icon(
-                              onPressed: formViewModel.testScreener,
-                              icon: const Icon(
-                                  Icons.play_circle_outline_rounded),
-                              label: Text(tr.form_array_screener_questions_test),
-                            ),
-                          )
+                                  opacity: ThemeConfig.kMuteFadeFactor,
+                                  child: TextButton.icon(
+                                    onPressed: formViewModel.testScreener,
+                                    icon: const Icon(Icons.play_circle_outline_rounded),
+                                    label: Text(tr.form_array_screener_questions_test),
+                                  ),
+                                )
                               : const SizedBox.shrink(),
                         ],
                       ),
@@ -133,13 +120,10 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           children: [
                             Tooltip(
                               message: viewModel.questionType.string,
-                              child: Icon(viewModel.questionType.icon,
-                                color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .color,
-                                size: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .size,
+                              child: Icon(
+                                viewModel.questionType.icon,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+                                size: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.size,
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -157,19 +141,13 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       control: formViewModel.consentItemArray,
                       items: formViewModel.consentItemModels,
                       onSelectItem: (viewModel) {
-                        final routeArgs = formViewModel
-                            .buildConsentItemFormRouteArgs(viewModel);
-                        _showConsentItemSidesheetWithArgs(
-                            routeArgs, context, ref);
+                        final routeArgs = formViewModel.buildConsentItemFormRouteArgs(viewModel);
+                        _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) => formViewModel
-                          .consentItemDelegate
-                          .availableActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.consentItemDelegate.availableActions(viewModel),
                       onNewItem: () {
-                        final routeArgs =
-                        formViewModel.buildNewConsentItemFormRouteArgs();
-                        _showConsentItemSidesheetWithArgs(
-                            routeArgs, context, ref);
+                        final routeArgs = formViewModel.buildNewConsentItemFormRouteArgs();
+                        _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
                       },
                       sectionDescription: tr.form_array_consent_items_description,
                       onNewItemLabel: tr.form_array_consent_items_new,
@@ -179,18 +157,17 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         children: [
                           Text(
                             tr.form_array_consent_items_title,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           (formViewModel.canTestConsent)
                               ? Opacity(
-                            opacity: ThemeConfig.kMuteFadeFactor,
-                            child: TextButton.icon(
-                              onPressed: formViewModel.testConsent,
-                              icon: const Icon(
-                                  Icons.play_circle_outline_rounded),
-                              label: Text(tr.form_array_consent_items_test),
-                            ),
-                          )
+                                  opacity: ThemeConfig.kMuteFadeFactor,
+                                  child: TextButton.icon(
+                                    onPressed: formViewModel.testConsent,
+                                    icon: const Icon(Icons.play_circle_outline_rounded),
+                                    label: Text(tr.form_array_consent_items_test),
+                                  ),
+                                )
                               : const SizedBox.shrink(),
                         ],
                       ),
@@ -211,8 +188,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final formViewModel =
-        ref.read(screenerQuestionFormViewModelProvider(routeArgs));
+    final formViewModel = ref.read(screenerQuestionFormViewModelProvider(routeArgs));
 
     showFormSideSheet<ScreenerQuestionFormViewModel>(
       context: context,
@@ -221,14 +197,12 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
         FormSideSheetTab(
           title: tr.navlink_screener_question_content,
           index: 0,
-          formViewBuilder: (formViewModel) =>
-              SurveyQuestionFormView(formViewModel: formViewModel),
+          formViewBuilder: (formViewModel) => SurveyQuestionFormView(formViewModel: formViewModel),
         ),
         FormSideSheetTab(
           title: tr.navlink_screener_question_logic,
           index: 1,
-          formViewBuilder: (formViewModel) =>
-              ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+          formViewBuilder: (formViewModel) => ScreenerQuestionLogicFormView(formViewModel: formViewModel),
         ),
       ],
     );
@@ -245,8 +219,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     showFormSideSheet<ConsentItemFormViewModel>(
       context: context,
       formViewModel: formViewModel,
-      formViewBuilder: (formViewModel) =>
-          ConsentItemFormView(formViewModel: formViewModel),
+      formViewBuilder: (formViewModel) => ConsentItemFormView(formViewModel: formViewModel),
     );
   }
 }

@@ -1,26 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 
-
 /// A wrapper widgets that is subscribed to the [NotificationService] and
 /// automatically dispatches its [NotificationIntent]s to show a Snackbar.
 class NotificationDispatcher extends ConsumerStatefulWidget {
-  const NotificationDispatcher({
-    required this.child,
-    this.scaffoldMessengerKey,
-    this.navigatorKey,
-    this.snackbarWidth,
-    this.snackbarInnerPadding = 16.0,
-    this.snackbarBehavior = SnackBarBehavior.fixed,
-    this.snackbarDefaultDuration = 2500,
-    Key? key
-  }) : super(key: key);
+  const NotificationDispatcher(
+      {required this.child,
+      this.scaffoldMessengerKey,
+      this.navigatorKey,
+      this.snackbarWidth,
+      this.snackbarInnerPadding = 16.0,
+      this.snackbarBehavior = SnackBarBehavior.fixed,
+      this.snackbarDefaultDuration = 2500,
+      Key? key})
+      : super(key: key);
 
   /// Pass-through widget that is rendered as is
   final Widget? child;
@@ -53,9 +51,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
   @override
   void initState() {
     super.initState();
-    _subscription = ref.read(notificationServiceProvider)
-        .watchNotifications()
-        .listen(_handleNotification);
+    _subscription = ref.read(notificationServiceProvider).watchNotifications().listen(_handleNotification);
   }
 
   ScaffoldMessengerState _getMessengerState() {
@@ -67,12 +63,10 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
         messengerState = ScaffoldMessenger.of(context);
       }
     } catch (_) {
-      throw Exception(
-          "NotificationDispatcher could not obtain reference to "
+      throw Exception("NotificationDispatcher could not obtain reference to "
           "ScaffoldMessengerState. Make sure the widget is placed below "
           "a Scaffold or MaterialApp in the widget tree, or provide a reference "
-          "via the scaffoldMessengerKey global key."
-      );
+          "via the scaffoldMessengerKey global key.");
     }
     return messengerState;
   }
@@ -89,41 +83,32 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
         navigatorState = Navigator.of(context);
       }
     } catch (_) {
-      throw Exception(
-          "NotificationDispatcher context could not obtain reference to "
+      throw Exception("NotificationDispatcher context could not obtain reference to "
           "NavigatorState. Make sure the NotificationDispatcher is placed below "
           "a Navigator in the widget tree, or provide a reference via the "
-          "navigatorKey global key."
-      );
+          "navigatorKey global key.");
     }
     return navigatorState;
   }
 
   void _handleNotification(NotificationIntent notification) {
-    switch(notification.type) {
+    switch (notification.type) {
       case NotificationType.snackbar:
         final messengerState = _getMessengerState();
-        messengerState.showSnackBar(
-          _buildSnackbar(
-              notification as SnackbarIntent, messengerState)
-        );
+        messengerState.showSnackBar(_buildSnackbar(notification as SnackbarIntent, messengerState));
         break;
       case NotificationType.alert:
         final navigatorState = _getNavigatorState()!;
         showDialog(
-          context: navigatorState.context,
-          builder: (BuildContext context) => _buildAlertDialog(
-              notification as AlertIntent, navigatorState)
-        );
+            context: navigatorState.context,
+            builder: (BuildContext context) => _buildAlertDialog(notification as AlertIntent, navigatorState));
         break;
       default:
-        throw UnimplementedError(
-            "Failed to handle NotificationIntent of unexpected type.");
+        throw UnimplementedError("Failed to handle NotificationIntent of unexpected type.");
     }
   }
 
-  AlertDialog _buildAlertDialog(AlertIntent notification,
-      NavigatorState navigatorState) {
+  AlertDialog _buildAlertDialog(AlertIntent notification, NavigatorState navigatorState) {
     final textTheme = Theme.of(context).textTheme;
 
     final List<Widget> actions = [];
@@ -137,37 +122,29 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
             }
             action.onSelect();
           },
-          child: Text(
-            action.label,
-            style: (action.isDestructive)
-                ? textTheme.labelLarge!.copyWith(color: Colors.redAccent)
-                : textTheme.labelLarge!
-          ),
+          child: Text(action.label,
+              style: (action.isDestructive)
+                  ? textTheme.labelLarge!.copyWith(color: Colors.redAccent)
+                  : textTheme.labelLarge!),
         ));
       }
     }
 
     return AlertDialog(
-      title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(notification.icon),
-            Text("️ ${notification.title}", style: textTheme.headline3),
-          ]
-      ),
+      title: Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(notification.icon),
+        Text("️ ${notification.title}", style: textTheme.displaySmall),
+      ]),
       content: ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: 300,
             maxWidth: MediaQuery.of(context).size.width * 0.33,
           ),
-          child: Row(
-              children: [
-                Flexible(
-                    child: notificationContent(notification.message, notification.customContent),
-                ),
-              ]
-          )
-      ),
+          child: Row(children: [
+            Flexible(
+              child: notificationContent(notification.message, notification.customContent),
+            ),
+          ])),
       actions: actions,
     );
   }
@@ -180,33 +157,28 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
     }
   }
 
-  SnackBar _buildSnackbar(SnackbarIntent notification,
-      ScaffoldMessengerState messengerState) {
+  SnackBar _buildSnackbar(SnackbarIntent notification, ScaffoldMessengerState messengerState) {
     final theme = Theme.of(context);
 
     return SnackBar(
-      width: (widget.snackbarBehavior == SnackBarBehavior.floating)
-          ? widget.snackbarWidth : null,
+      width: (widget.snackbarBehavior == SnackBarBehavior.floating) ? widget.snackbarWidth : null,
       content: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          (notification.icon != null) ?
-            Padding(
-              padding: EdgeInsets.all(0.5*widget.snackbarInnerPadding),
-              child: Icon(notification.icon,
-                  size: 2/3*widget.snackbarInnerPadding,
-                  color: theme.snackBarTheme.actionTextColor),
-            ) : const SizedBox(),
-          Text(notification.message!, style: theme.textTheme.titleMedium!
-              .copyWith(color: theme.colorScheme.onPrimary))
+          (notification.icon != null)
+              ? Padding(
+                  padding: EdgeInsets.all(0.5 * widget.snackbarInnerPadding),
+                  child: Icon(notification.icon,
+                      size: 2 / 3 * widget.snackbarInnerPadding, color: theme.snackBarTheme.actionTextColor),
+                )
+              : const SizedBox(),
+          Text(notification.message!, style: theme.textTheme.titleMedium!.copyWith(color: theme.colorScheme.onPrimary))
         ],
       ),
-      duration: Duration(
-          milliseconds: notification.duration ?? widget.snackbarDefaultDuration),
-      padding: EdgeInsets.fromLTRB(
-          2.5*widget.snackbarInnerPadding, widget.snackbarInnerPadding,
-          1.5*widget.snackbarInnerPadding, widget.snackbarInnerPadding),
+      duration: Duration(milliseconds: notification.duration ?? widget.snackbarDefaultDuration),
+      padding: EdgeInsets.fromLTRB(2.5 * widget.snackbarInnerPadding, widget.snackbarInnerPadding,
+          1.5 * widget.snackbarInnerPadding, widget.snackbarInnerPadding),
       behavior: widget.snackbarBehavior,
       action: SnackBarAction(
         label: "X".hardcoded,
@@ -231,8 +203,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
       _getMessengerState();
       _getNavigatorState();
       // Remember validation for future builds avoiding setState during build
-      Future.delayed(const Duration(milliseconds: 0), () =>
-          setState(() => _isValidated = true));
+      Future.delayed(const Duration(milliseconds: 0), () => setState(() => _isValidated = true));
     }
     return widget.child ?? Container();
   }

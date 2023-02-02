@@ -16,15 +16,15 @@ typedef FormViewBuilder<T extends FormViewModel> = Widget Function(T formViewMod
 typedef FormViewModelBuilder<T extends FormViewModel> = T Function(WidgetRef ref);
 
 class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
-  const FormScaffold({
-    required this.formViewModel,
-    required this.body,
-    this.actions,
-    this.drawer,
-    this.actionsSpacing = 8.0,
-    this.actionsPadding = 24.0,
-    Key? key
-  }) : super(key: key);
+  const FormScaffold(
+      {required this.formViewModel,
+      required this.body,
+      this.actions,
+      this.drawer,
+      this.actionsSpacing = 8.0,
+      this.actionsPadding = 24.0,
+      Key? key})
+      : super(key: key);
 
   final T formViewModel;
   final List<Widget>? actions;
@@ -74,8 +74,7 @@ class _FormScaffoldState<T extends FormViewModel> extends ConsumerState<FormScaf
 
   @override
   Widget build(BuildContext context) {
-    final defaultActionButtons = buildFormButtons(
-        formViewModel, formViewModel.formMode);
+    final defaultActionButtons = buildFormButtons(formViewModel, formViewModel.formMode);
 
     // Wraps the whole side sheet in a [ReactiveForm] widget
     Widget inForm(widget) {
@@ -95,8 +94,7 @@ class _FormScaffoldState<T extends FormViewModel> extends ConsumerState<FormScaf
             maxLines: 1,
             style: Theme.of(context).textTheme.titleSmall,
             overflow: TextOverflow.ellipsis,
-            softWrap: false
-        ),
+            softWrap: false),
         actions: withSpacing(
           widget.actions ?? defaultActionButtons,
           spacing: widget.actionsSpacing,

@@ -10,8 +10,10 @@ import '../../routes.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
+  const TermsScreen({Key key}) : super(key: key);
+
   @override
-  _TermsScreenState createState() => _TermsScreenState();
+  State<TermsScreen> createState() => _TermsScreenState();
 }
 
 class _TermsScreenState extends State<TermsScreen> {
@@ -113,7 +115,7 @@ class LegalSection extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Text(title, style: theme.textTheme.headline4.copyWith(color: theme.primaryColor)),
+        Text(title, style: theme.textTheme.headlineMedium.copyWith(color: theme.primaryColor)),
         const SizedBox(height: 20),
         Text(description),
         const SizedBox(height: 20),

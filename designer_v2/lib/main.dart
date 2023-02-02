@@ -28,15 +28,11 @@ Future<void> main() async {
     usePathUrlStrategy();
 
     runApp(
-      // Make dependencies managed by Riverpod available in Widget.build methods
-      // by wrapping the app in a [ProviderScope]
-      ProviderScope(
-          overrides: [
-            sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-          ],
-          child: const App()
-      )
-    );
+        // Make dependencies managed by Riverpod available in Widget.build methods
+        // by wrapping the app in a [ProviderScope]
+        ProviderScope(overrides: [
+      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+    ], child: const App()));
   }, (error, stackTrace) {
     // TODO: top-level error handling
     print("Exception: ${error.toString()}");

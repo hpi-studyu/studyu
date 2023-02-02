@@ -47,7 +47,8 @@ extension ParticipationFormatted on Participation {
     }
   }
 
-  String get asAdjective { // used when launching the study
+  String get asAdjective {
+    // used when launching the study
     switch (this) {
       case Participation.open:
         return tr.participation_open_as_adjective;

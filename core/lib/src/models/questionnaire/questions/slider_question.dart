@@ -1,5 +1,5 @@
-import '../answer.dart';
-import '../question.dart';
+import 'package:studyu_core/src/models/questionnaire/answer.dart';
+import 'package:studyu_core/src/models/questionnaire/question.dart';
 
 abstract class SliderQuestion extends Question<num> {
   double minimum = 0;

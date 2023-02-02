@@ -46,7 +46,7 @@ class OptimisticUpdate {
         await apply();
       }
       _runUpdateHandlerIfAny();
-    } catch(e, stackTrace) {
+    } catch (e, stackTrace) {
       if (onError != null) {
         onError!(e, stackTrace);
       }

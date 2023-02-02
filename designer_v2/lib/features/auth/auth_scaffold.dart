@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_core/src/models/tables/app_config.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/studyu_logo.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
@@ -72,30 +72,29 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                     // adjust for whitespace in logo
                     padding: const EdgeInsets.only(left: 12.0),
                     child: Container(
-                      constraints:
-                      BoxConstraints(maxWidth: widget.leftContentMinWidth - 24.0),
+                      constraints: BoxConstraints(maxWidth: widget.leftContentMinWidth - 24.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SelectableText(
                             formKey.title,
-                            style: theme.textTheme.headline3!,
+                            style: theme.textTheme.displaySmall!,
                           ),
                           const SizedBox(height: 8.0),
-                          (formKey.description != null) ?
-                          TextParagraph(
-                            text: formKey.description,
-                            style: ThemeConfig.bodyTextMuted(theme),
-                          ) : const SizedBox.shrink(),
+                          (formKey.description != null)
+                              ? TextParagraph(
+                                  text: formKey.description,
+                                  style: ThemeConfig.bodyTextMuted(theme),
+                                )
+                              : const SizedBox.shrink(),
                           const SizedBox(height: 24.0),
                           Flexible(
                             child: SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 24.0),
-                                child: widget.body,
-                              )
-                            ),
+                                child: Padding(
+                              padding: const EdgeInsets.only(right: 24.0),
+                              child: widget.body,
+                            )),
                           )
                         ],
                       ),
@@ -107,8 +106,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                   // adjust for whitespace in logo
                   padding: const EdgeInsets.only(left: 12.0),
                   child: Container(
-                    constraints:
-                    BoxConstraints(maxWidth: widget.leftPanelMinWidth - 12 * 2),
+                    constraints: BoxConstraints(maxWidth: widget.leftPanelMinWidth - 12 * 2),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,

@@ -19,12 +19,10 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
     required this.authRepository,
     required this.languageCode,
   }) : super(StudyTestControllerState(
-      currentUser: currentUser,
-      languageCode: languageCode,
-  )) {
-    state = state.copyWith(
-      serializedSession: authRepository.session?.persistSessionString ?? ''
-    );
+          currentUser: currentUser,
+          languageCode: languageCode,
+        )) {
+    state = state.copyWith(serializedSession: authRepository.session?.persistSessionString ?? '');
   }
 
   final IAuthRepository authRepository;
@@ -32,8 +30,8 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyTestControllerProvider = StateNotifierProvider
-    .family<StudyTestController, StudyTestControllerState, StudyID>((ref, studyId) {
+final studyTestControllerProvider =
+    StateNotifierProvider.family<StudyTestController, StudyTestControllerState, StudyID>((ref, studyId) {
   final studyRepository = ref.watch(studyRepositoryProvider);
   final controller = StudyTestController(
     studyId: studyId,
@@ -55,15 +53,13 @@ final studyTestControllerProvider = StateNotifierProvider
   return controller;
 });
 
-final studyTestPlatformControllerProvider = Provider
-    .family<PlatformController, StudyID>((ref, studyId) {
+final studyTestPlatformControllerProvider = Provider.family<PlatformController, StudyID>((ref, studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
 
   PlatformController platformController;
   if (!kIsWeb) {
     // Mobile could be built with the webview_flutter package
-    throw Exception(
-        "The StudyU designer only support the web platform".hardcoded);
+    throw Exception("The StudyU designer only support the web platform".hardcoded);
   } else {
     // Desktop and Web
     platformController = WebController(state.appUrl, studyId);

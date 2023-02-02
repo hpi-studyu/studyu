@@ -21,7 +21,7 @@ Widget setup(Widget child) {
 
 void main() {
   testWidgets('Counter increments smoke test', (tester) async {
-    await tester.pumpWidget(setup(WelcomeScreen()));
+    await tester.pumpWidget(setup(const WelcomeScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Get started'), findsOneWidget);

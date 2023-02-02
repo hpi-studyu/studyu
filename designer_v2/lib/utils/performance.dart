@@ -6,7 +6,7 @@ import 'dart:ui';
 /// See https://github.com/flutter/flutter/issues/42586
 prefetchEmojiFont() {
   ParagraphBuilder pb = ParagraphBuilder(ParagraphStyle(locale: window.locale));
-  pb.addText('\ud83d\ude01');  // smiley face emoji
+  pb.addText('\ud83d\ude01'); // smiley face emoji
   pb.build().layout(const ParagraphConstraints(width: 100));
 }
 

@@ -11,16 +11,11 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewModel<D>
-    implements
-        IFormViewModelDelegate<Q>,
-        IProviderArgsResolver<Q, QuestionFormRouteArgs> {
+    implements IFormViewModelDelegate<Q>, IProviderArgsResolver<Q, QuestionFormRouteArgs> {
   late final FormArray questionsArray = FormArray([]);
-  late final questionFormViewModels =
-      FormViewModelCollection<Q, QuestionFormData>(
-          [], questionsArray);
+  late final questionFormViewModels = FormViewModelCollection<Q, QuestionFormData>([], questionsArray);
 
-  List<Q> get questionModels =>
-      questionFormViewModels.formViewModels;
+  List<Q> get questionModels => questionFormViewModels.formViewModels;
 
   late final questionnaireControls = {
     'questions': questionsArray,
@@ -28,9 +23,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
 
   void setQuestionnaireControlsFrom(QuestionnaireFormData data) {
     if (data.questionsData != null) {
-      final viewModels = data.questionsData!
-          .map((data) => provideQuestionFormViewModel(data))
-          .toList();
+      final viewModels = data.questionsData!.map((data) => provideQuestionFormViewModel(data)).toList();
       questionFormViewModels.reset(viewModels);
     }
   }
@@ -86,8 +79,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
       return viewModel;
     }
 
-    final viewModel = questionFormViewModels
-        .findWhere((vm) => vm.questionId == args.questionId);
+    final viewModel = questionFormViewModels.findWhere((vm) => vm.questionId == args.questionId);
     if (viewModel == null) {
       throw QuestionNotFoundException(); // TODO handle 404 not found
     }

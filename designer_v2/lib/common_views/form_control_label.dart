@@ -5,14 +5,9 @@ import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 typedef FormControlVoidCallback<T> = void Function(AbstractControl<T> formControl);
 
 class FormControlLabel extends StatelessWidget {
-  const FormControlLabel({
-    required this.formControl,
-    required this.text,
-    this.textStyle,
-    this.isClickable = true,
-    this.onClick,
-    Key? key
-  }) : super(key: key);
+  const FormControlLabel(
+      {required this.formControl, required this.text, this.textStyle, this.isClickable = true, this.onClick, Key? key})
+      : super(key: key);
 
   final AbstractControl<dynamic> formControl;
   final String text;
@@ -23,34 +18,32 @@ class FormControlLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final stateColorStyle = (formControl.disabled)
-        ? TextStyle(color: theme.disabledColor)
-        : null;
+    final stateColorStyle = (formControl.disabled) ? TextStyle(color: theme.disabledColor) : null;
 
     return MouseEventsRegion(
       builder: (context, states) {
         return Text(
-            text,
-            style: theme.textTheme.caption?.merge(textStyle)
-                .merge(stateColorStyle),
+          text,
+          style: theme.textTheme.bodySmall?.merge(textStyle).merge(stateColorStyle),
           overflow: TextOverflow.clip,
         );
       },
-      onTap: (!isClickable || formControl.disabled) ? null : () {
-        if (onClick != null) {
-          onClick!(formControl);
-        } else {
-          if (formControl is AbstractControl<bool>) {
-            // Auto-toggle boolean controls
-            formControl.value = (formControl.value != null)
-                ? !(formControl.value!) : true;
-            formControl.markAsDirty();
-          } else {
-            // Otherwise just focus the control
-            formControl.focus();
-          }
-        }
-      },
+      onTap: (!isClickable || formControl.disabled)
+          ? null
+          : () {
+              if (onClick != null) {
+                onClick!(formControl);
+              } else {
+                if (formControl is AbstractControl<bool>) {
+                  // Auto-toggle boolean controls
+                  formControl.value = (formControl.value != null) ? !(formControl.value!) : true;
+                  formControl.markAsDirty();
+                } else {
+                  // Otherwise just focus the control
+                  formControl.focus();
+                }
+              }
+            },
     );
   }
 }

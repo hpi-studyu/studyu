@@ -11,13 +11,13 @@ class TaskScreen extends StatefulWidget {
   final String taskId;
 
   static MaterialPageRoute<bool> routeFor({@required Task task}) => MaterialPageRoute(
-    builder: (_) => TaskScreen(task: task),
-  );
+        builder: (_) => TaskScreen(task: task),
+      );
 
   const TaskScreen({@required this.task, this.taskId, Key key}) : super(key: key);
 
   @override
-  _TaskScreenState createState() => _TaskScreenState();
+  State<TaskScreen> createState() => _TaskScreenState();
 }
 
 class _TaskScreenState extends State<TaskScreen> {
@@ -29,10 +29,10 @@ class _TaskScreenState extends State<TaskScreen> {
     final subject = context.watch<AppState>().activeSubject;
     if (widget.task != null) {
       final tasks = <Task>[
-    ...subject.study.observations.where((observation) => observation.id == widget.task.id),
-    ...subject.selectedInterventions
-        .map((intervention) => intervention.tasks.where((task) => task.id == widget.task.id))
-        .expand((task) => task)
+        ...subject.study.observations.where((observation) => observation.id == widget.task.id),
+        ...subject.selectedInterventions
+            .map((intervention) => intervention.tasks.where((task) => task.id == widget.task.id))
+            .expand((task) => task)
       ];
       task = tasks.first;
     } else if (widget.taskId != null) {
@@ -80,7 +80,7 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(task.title, style: theme.textTheme.headline4.copyWith(fontSize: 24)),
+              Text(task.title, style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
               const SizedBox(height: 20),
               _buildTask(),
             ],

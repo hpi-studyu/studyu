@@ -9,10 +9,8 @@ abstract class IClipboardService {
 class ClipboardService implements IClipboardService {
   @override
   Future<String> copy(String text) {
-    return Clipboard.setData(ClipboardData(text: text))
-        .then((value) => text);
+    return Clipboard.setData(ClipboardData(text: text)).then((value) => text);
   }
 }
 
-final clipboardServiceProvider = Provider<IClipboardService>(
-        (ref) => ClipboardService());
+final clipboardServiceProvider = Provider<IClipboardService>((ref) => ClipboardService());

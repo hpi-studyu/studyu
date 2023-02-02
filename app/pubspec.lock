@@ -195,7 +195,7 @@ packages:
     source: hosted
     version: "2.0.1"
   fhir:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: fhir
       sha256: "03c1d5299b639d48bc64071f654e20a558ef94ee07f3d1d6478e9604c6301392"
@@ -882,7 +882,7 @@ packages:
     source: hosted
     version: "2.0.0"
   timezone:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: timezone
       sha256: "57b35f6e8ef731f18529695bffc62f92c6189fac2e52c12d478dec1931afb66e"

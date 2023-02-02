@@ -13,7 +13,7 @@ class UnsavedChangesDialog extends StatelessWidget {
     return StandardDialog(
       titleText: tr.dialog_unsaved_changes_title,
       body: TextParagraph(
-          text: tr.dialog_unsaved_changes_description,
+        text: tr.dialog_unsaved_changes_description,
       ),
       actionButtons: [
         PrimaryButton(

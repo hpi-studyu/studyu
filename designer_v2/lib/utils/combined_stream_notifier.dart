@@ -16,7 +16,7 @@ class CombinedStreamNotifier extends ChangeNotifier {
     for (final stream in streams) {
       final subscription = stream.asBroadcastStream().listen(
             (dynamic _) => notifyListeners(),
-      );
+          );
       _subscriptions.add(subscription);
     }
   }

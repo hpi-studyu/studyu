@@ -14,9 +14,7 @@ class LocaleState {
   final Locale locale;
 
   LocaleState copyWith({Locale? locale}) {
-    return LocaleState(
-      locale ?? this.locale
-    );
+    return LocaleState(locale ?? this.locale);
   }
 }
 
@@ -73,13 +71,13 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
   /// Restore Locale from Storage
   Future<bool> restoreFromStorage() async {
     try {
-      LocaleState? _state = await load();
-      if (_state == null) {
+      LocaleState? state = await load();
+      if (state == null) {
         return false;
       }
-      state = _state;
+      state = state;
       return true;
-    } catch (e, s) {
+    } catch (e) {
       return false;
     }
   }

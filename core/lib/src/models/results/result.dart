@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 
-import '../questionnaire/questionnaire_state.dart';
+import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
 part 'result.g.dart';
 

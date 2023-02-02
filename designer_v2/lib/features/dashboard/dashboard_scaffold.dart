@@ -12,19 +12,18 @@ class DashboardScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
-      appBar: null, // default app bar not suitable for our layout
-      body: TwoColumnLayout(
-        leftWidget: AppDrawer(title: tr.studyu),
-        rightWidget: body,
-        dividerWidget: const VerticalDivider(
-          width: 1,
-          thickness: 0.3,
-        ),
-        scrollLeft: false,
-        scrollRight: true,
-        paddingLeft: null,
-      )
-    );
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
+        appBar: null, // default app bar not suitable for our layout
+        body: TwoColumnLayout(
+          leftWidget: AppDrawer(title: tr.studyu),
+          rightWidget: body,
+          dividerWidget: const VerticalDivider(
+            width: 1,
+            thickness: 0.3,
+          ),
+          scrollLeft: false,
+          scrollRight: true,
+          paddingLeft: null,
+        ));
   }
 }

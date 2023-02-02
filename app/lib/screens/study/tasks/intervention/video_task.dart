@@ -6,7 +6,7 @@ import 'package:video_player/video_player.dart';
 class VideoTask extends StatefulWidget {
   final String _asset;
 
-  const VideoTask(this._asset);
+  const VideoTask(this._asset, {Key key}) : super(key: key);
 
   @override
   State<VideoTask> createState() => _VideoTaskState();

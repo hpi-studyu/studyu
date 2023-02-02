@@ -58,33 +58,33 @@ class Routes {
       case loading:
         return MaterialPageRoute(builder: (_) => LoadingScreen(queryParameters: queryParameters), settings: settings);
       case dashboard:
-        return MaterialPageRoute(builder: (_) => DashboardScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const DashboardScreen(), settings: settings);
       case welcome:
-        return MaterialPageRoute(builder: (_) => WelcomeScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const WelcomeScreen(), settings: settings);
       case about:
-        return MaterialPageRoute(builder: (_) => AboutScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const AboutScreen(), settings: settings);
       case terms:
-        return MaterialPageRoute(builder: (_) => TermsScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const TermsScreen(), settings: settings);
       case studySelection:
-        return MaterialPageRoute(builder: (_) => StudySelectionScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const StudySelectionScreen(), settings: settings);
       case studyOverview:
-        return MaterialPageRoute(builder: (_) => StudyOverviewScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const StudyOverviewScreen(), settings: settings);
       case interventionSelection:
-        return MaterialPageRoute(builder: (_) => InterventionSelectionScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const InterventionSelectionScreen(), settings: settings);
       case journey:
-        return MaterialPageRoute(builder: (_) => JourneyOverviewScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const JourneyOverviewScreen(), settings: settings);
       case consent:
-        return MaterialPageRoute<bool>(builder: (_) => ConsentScreen(), settings: settings);
+        return MaterialPageRoute<bool>(builder: (_) => const ConsentScreen(), settings: settings);
       case kickoff:
-        return MaterialPageRoute(builder: (_) => KickoffScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const KickoffScreen(), settings: settings);
       case contact:
-        return MaterialPageRoute(builder: (_) => ContactScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const ContactScreen(), settings: settings);
       case faq:
-        return MaterialPageRoute(builder: (_) => FAQ(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const FAQ(), settings: settings);
       case appSettings:
-        return MaterialPageRoute(builder: (_) => Settings(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const Settings(), settings: settings);
       case reportHistory:
-        return MaterialPageRoute(builder: (_) => ReportHistoryScreen(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const ReportHistoryScreen(), settings: settings);
       default:
         final potentialSessionString = Uri.decodeComponent(settings.name.replaceFirst('/', ''));
         return MaterialPageRoute(builder: (_) => LoadingScreen(sessionString: potentialSessionString));

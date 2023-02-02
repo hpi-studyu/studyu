@@ -7,8 +7,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class ScreenerQuestionFormViewModel extends QuestionFormViewModel
-    implements IScreenerQuestionLogicFormViewModel {
+class ScreenerQuestionFormViewModel extends QuestionFormViewModel implements IScreenerQuestionLogicFormViewModel {
   ScreenerQuestionFormViewModel({
     super.formData,
     super.delegate,
@@ -24,21 +23,18 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   late final FormArray responseOptionsDisabledArray =
       FormArray(_copyFormControls(answerOptionsArray.controls), disabled: true);
   late final FormArray<bool> responseOptionsLogicControls = FormArray(
-    List.generate(answerOptionsArray.controls.length,
-        (index) => FormControl(value: defaultResponseOptionValidity)),
+    List.generate(answerOptionsArray.controls.length, (index) => FormControl(value: defaultResponseOptionValidity)),
   );
-  late final FormArray<String> responseOptionsLogicDescriptionControls =
-      FormArray(
+  late final FormArray<String> responseOptionsLogicDescriptionControls = FormArray(
     List.generate(answerOptionsArray.controls.length, (index) => FormControl()),
   );
 
-  List<AbstractControl> get responseOptionsDisabledControls =>
-      responseOptionsDisabledArray.controls;
+  List<AbstractControl> get responseOptionsDisabledControls => responseOptionsDisabledArray.controls;
 
   List<FormControlOption<bool>> get logicControlOptions => [
-    FormControlOption(true, tr.form_screener_question_logic_qualify),
-    FormControlOption(false, tr.form_screener_question_logic_disqualify)
-  ];
+        FormControlOption(true, tr.form_screener_question_logic_qualify),
+        FormControlOption(false, tr.form_screener_question_logic_disqualify)
+      ];
 
   late final _questionBaseControls = {
     ...super.questionBaseControls,
@@ -47,8 +43,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   };
 
   @override
-  Map<String, AbstractControl> get questionBaseControls =>
-      _questionBaseControls;
+  Map<String, AbstractControl> get questionBaseControls => _questionBaseControls;
 
   List<AbstractControl> prevResponseOptionControls = [];
   late List<dynamic> prevResponseOptionValues = [];
@@ -62,29 +57,17 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     // Build new form arrays consolidated with previous values (if any)
     final newLogicControls = responseOptionControls.map((newControl) {
       // Consolidate with previous value (if any)
-      final idx = prevResponseOptionControls
-          .map((c) => c.value)
-          .toList()
-          .indexOf(newControl.value);
-      final newValue = (idx != -1)
-          ? responseOptionsLogicControls.controls[idx].value
-          : defaultResponseOptionValidity;
+      final idx = prevResponseOptionControls.map((c) => c.value).toList().indexOf(newControl.value);
+      final newValue = (idx != -1) ? responseOptionsLogicControls.controls[idx].value : defaultResponseOptionValidity;
       return FormControl<bool>(value: newValue);
     }).toList();
-    final newLogicDescriptionControls =
-        responseOptionControls.map((newControl) {
+    final newLogicDescriptionControls = responseOptionControls.map((newControl) {
       // Consolidate with previous value (if any)
-      final idx = prevResponseOptionControls
-          .map((c) => c.value)
-          .toList()
-          .indexOf(newControl.value);
-      final newValue = (idx != -1)
-          ? responseOptionsLogicDescriptionControls.controls[idx].value
-          : null;
+      final idx = prevResponseOptionControls.map((c) => c.value).toList().indexOf(newControl.value);
+      final newValue = (idx != -1) ? responseOptionsLogicDescriptionControls.controls[idx].value : null;
       return FormControl<String>(value: newValue);
     }).toList();
-    final newResponseOptionsControls =
-        _copyFormControls(responseOptionControls);
+    final newResponseOptionsControls = _copyFormControls(responseOptionControls);
 
     // Keep disabled controls in sync with actual response option controls
     responseOptionsDisabledArray.clear();
@@ -110,8 +93,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     for (final entry in data.responseOptionsValidity.entries) {
       final responseOption = entry.key;
       final responseValidity = entry.value;
-      final logicControl =
-          _findAssociatedLogicControlFor(responseOption: responseOption);
+      final logicControl = _findAssociatedLogicControlFor(responseOption: responseOption);
       if (logicControl != null) {
         logicControl.value = responseValidity;
       }
@@ -126,8 +108,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     for (var i = 0; i < answerOptionsControls.length; i++) {
       final optionControl = answerOptionsControls[i];
       final logicControl = responseOptionsLogicControls.controls[i];
-      responseOptionsValidity[optionControl.value] =
-          logicControl.value ?? defaultResponseOptionValidity;
+      responseOptionsValidity[optionControl.value] = logicControl.value ?? defaultResponseOptionValidity;
     }
     data.responseOptionsValidity = responseOptionsValidity;
 
@@ -136,10 +117,9 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
 
   List<FormControl> _copyFormControls(List<AbstractControl> controls) {
     return controls
-        .map((control) =>
-            FormControl<String>(
-                value: control.value?.toString() ?? '',
-                disabled: control.disabled,
+        .map((control) => FormControl<String>(
+              value: control.value?.toString() ?? '',
+              disabled: control.disabled,
             ))
         .toList();
   }
@@ -179,6 +159,6 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   // - IScreenerQuestionLogicFormViewModel
 
   @override
-  bool get isDirtyOptionsBannerVisible => !prevResponseOptionValues
-      .equals(answerOptionsControls.map((c) => c.value).toList());
+  bool get isDirtyOptionsBannerVisible =>
+      !prevResponseOptionValues.equals(answerOptionsControls.map((c) => c.value).toList());
 }

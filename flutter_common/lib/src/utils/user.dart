@@ -19,13 +19,14 @@ Future<bool> signInParticipant() async {
   final prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
     try {
-      await Supabase.instance.client.auth
-          .signInWithPassword(email: await getFakeUserEmail(),
-          password: (await getFakeUserPassword())!,);
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: await getFakeUserEmail(),
+        password: (await getFakeUserPassword())!,
+      );
       if (Supabase.instance.client.auth.currentSession != null) {
         return true;
       }
-    } catch(error, stacktrace) {
+    } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
     }
   }
@@ -37,11 +38,10 @@ Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
   try {
-    await Supabase.instance.client.auth.signUp(
-        email: fakeUserEmail, password: fakeUserPassword);
+    await Supabase.instance.client.auth.signUp(email: fakeUserEmail, password: fakeUserPassword);
     await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
     return signInParticipant();
-  } catch(error, stacktrace) {
+  } catch (error, stacktrace) {
     SupabaseQuery.catchSupabaseException(error, stacktrace);
     return false;
   }
@@ -84,5 +84,5 @@ Future<void> deleteLocalData() async {
 }
 
 void previewSubjectIdKey() {
-    selectedSubjectIdKey = 'preview_$selectedSubjectIdKey';
+  selectedSubjectIdKey = 'preview_$selectedSubjectIdKey';
 }

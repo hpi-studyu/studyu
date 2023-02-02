@@ -19,13 +19,11 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
 
-class InterventionFormViewModel
-    extends ManagedFormViewModel<InterventionFormData>
+class InterventionFormViewModel extends ManagedFormViewModel<InterventionFormData>
     implements
         IFormViewModelDelegate<InterventionTaskFormViewModel>,
         IListActionProvider<InterventionTaskFormViewModel>,
-        IProviderArgsResolver<InterventionTaskFormViewModel,
-            InterventionTaskFormRouteArgs> {
+        IProviderArgsResolver<InterventionTaskFormViewModel, InterventionTaskFormRouteArgs> {
   InterventionFormViewModel({
     required this.study,
     super.delegate,
@@ -37,45 +35,37 @@ class InterventionFormViewModel
 
   // - Form fields
 
-  final FormControl<InterventionID> interventionIdControl = FormControl(
-      value: const Uuid().v4()); // hidden
-  final FormControl<String> interventionTitleControl =
-      FormControl(value: InterventionFormData.kDefaultTitle);
+  final FormControl<InterventionID> interventionIdControl = FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<String> interventionTitleControl = FormControl(value: InterventionFormData.kDefaultTitle);
   final FormControl<IconOption> interventionIconControl = FormControl();
   final FormControl<String> interventionDescriptionControl = FormControl();
 
   final FormArray interventionTasksArray = FormArray([]);
 
-  late final tasksCollection = FormViewModelCollection<
-      InterventionTaskFormViewModel,
-      InterventionTaskFormData>([], interventionTasksArray);
+  late final tasksCollection =
+      FormViewModelCollection<InterventionTaskFormViewModel, InterventionTaskFormData>([], interventionTasksArray);
 
   InterventionID get interventionId => interventionIdControl.value!;
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [titleRequired, atLeastOneTask],
-    StudyFormValidationSet.publish: [titleRequired, atLeastOneTask],
-    StudyFormValidationSet.test: [titleRequired, atLeastOneTask],
-  };
+        StudyFormValidationSet.draft: [titleRequired, atLeastOneTask],
+        StudyFormValidationSet.publish: [titleRequired, atLeastOneTask],
+        StudyFormValidationSet.test: [titleRequired, atLeastOneTask],
+      };
 
-  get titleRequired => FormControlValidation(
-      control: interventionTitleControl,
-      validators: [Validators.required],
-      validationMessages: {
+  get titleRequired => FormControlValidation(control: interventionTitleControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_intervention_title_required,
-      }
-  );
+      });
 
-  get atLeastOneTask => FormControlValidation(
-      control: interventionTasksArray,
-      validators: [Validators.minLength(1)],
-      validationMessages: {
+  get atLeastOneTask => FormControlValidation(control: interventionTasksArray, validators: [
+        Validators.minLength(1)
+      ], validationMessages: {
         ValidationMessage.minLength: (error) =>
-            tr.form_array_intervention_tasks_minlength(
-                (error as Map)['requiredLength']),
-      }
-  );
+            tr.form_array_intervention_tasks_minlength((error as Map)['requiredLength']),
+      });
 
   @override
   late final FormGroup form = FormGroup({
@@ -136,21 +126,17 @@ class InterventionFormViewModel
 
   @override
   List<ModelAction> availableActions(InterventionTaskFormViewModel model) {
-    final actions = tasksCollection.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = tasksCollection.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(InterventionTaskFormViewModel model) {
-    final actions =
-        tasksCollection.availablePopupActions(model, isReadOnly: isReadonly);
+    final actions = tasksCollection.availablePopupActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(
-      InterventionTaskFormViewModel model) {
-    final actions =
-        tasksCollection.availableInlineActions(model, isReadOnly: isReadonly);
+  List<ModelAction> availableInlineActions(InterventionTaskFormViewModel model) {
+    final actions = tasksCollection.availableInlineActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -169,14 +155,12 @@ class InterventionFormViewModel
   // - IFormViewModelDelegate
 
   @override
-  void onCancel(
-      InterventionTaskFormViewModel formViewModel, FormMode prevFormMode) {
+  void onCancel(InterventionTaskFormViewModel formViewModel, FormMode prevFormMode) {
     return; // no-op
   }
 
   @override
-  Future onSave(
-      InterventionTaskFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(InterventionTaskFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       tasksCollection.commit(formViewModel);
@@ -201,8 +185,7 @@ class InterventionFormViewModel
       return viewModel;
     }
 
-    final viewModel =
-        tasksCollection.findWhere((vm) => vm.taskId == args.taskId);
+    final viewModel = tasksCollection.findWhere((vm) => vm.taskId == args.taskId);
     if (viewModel == null) {
       throw InterventionTaskNotFoundException(); // TODO handle 404 not found
     }
@@ -219,8 +202,7 @@ class InterventionFormViewModel
     );
   }
 
-  InterventionTaskFormRouteArgs buildFormRouteArgs(
-      InterventionTaskFormViewModel model) {
+  InterventionTaskFormRouteArgs buildFormRouteArgs(InterventionTaskFormViewModel model) {
     final args = InterventionTaskFormRouteArgs(
       studyId: study.id,
       interventionId: interventionId,
@@ -234,9 +216,6 @@ class InterventionFormViewModel
   @override
   InterventionFormViewModel createDuplicate() {
     return InterventionFormViewModel(
-        study: study,
-        delegate: delegate,
-        formData: formData?.copy(),
-        validationSet: validationSet);
+        study: study, delegate: delegate, formData: formData?.copy(), validationSet: validationSet);
   }
 }

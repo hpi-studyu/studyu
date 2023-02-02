@@ -9,8 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../models/app_state.dart';
 
 class ContactScreen extends StatefulWidget {
+  const ContactScreen({Key key}) : super(key: key);
+
   @override
-  _ContactScreenState createState() => _ContactScreenState();
+  State<ContactScreen> createState() => _ContactScreenState();
 }
 
 class _ContactScreenState extends State<ContactScreen> {
@@ -76,9 +78,9 @@ class ContactWidget extends StatelessWidget {
       return Container();
     }
 
-    final titles = [Text(title, style: theme.textTheme.headline6.copyWith(color: color))];
+    final titles = [Text(title, style: theme.textTheme.titleLarge.copyWith(color: color))];
     if (subtitle != null && subtitle.isNotEmpty) {
-      titles.add(Text(subtitle, style: theme.textTheme.subtitle1.copyWith(fontSize: 14)));
+      titles.add(Text(subtitle, style: theme.textTheme.titleMedium.copyWith(fontSize: 14)));
     }
 
     return Column(

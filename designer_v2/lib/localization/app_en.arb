@@ -217,7 +217,7 @@
     "form_array_response_options_scale_rangevalid_max": "The maximum difference between the high and low values of the scale is {count}",
     "@form_array_response_options_scale_rangevalid_max": {
         "placeholders": {
-            "max": {}
+            "count": {}
         }
     },
 

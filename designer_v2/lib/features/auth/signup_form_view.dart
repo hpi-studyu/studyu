@@ -68,8 +68,8 @@ class SignupForm extends FormConsumerRefWidget {
                     text: tr.signup_tos_terms_of_service,
                     onClick: () => _onClickTermsOfUse(ref),
                     style: TextStyle(
-                      fontSize: theme.textTheme.caption!.fontSize,
-                      height: theme.textTheme.caption!.height,
+                      fontSize: theme.textTheme.bodySmall!.fontSize,
+                      height: theme.textTheme.bodySmall!.height,
                     ),
                   ),
                   FormControlLabel(
@@ -80,8 +80,8 @@ class SignupForm extends FormConsumerRefWidget {
                     text: tr.signup_tos_privacy_policy,
                     onClick: () => _onClickPrivacyPolicy(ref),
                     style: TextStyle(
-                      fontSize: theme.textTheme.caption!.fontSize,
-                      height: theme.textTheme.caption!.height,
+                      fontSize: theme.textTheme.bodySmall!.fontSize,
+                      height: theme.textTheme.bodySmall!.height,
                     ),
                   ),
                   FormControlLabel(
@@ -100,12 +100,9 @@ class SignupForm extends FormConsumerRefWidget {
               text: tr.action_button_signup,
               isLoading: state.isLoading,
               enabled: form.valid,
-              onPressedFuture: () => ref
-                  .read(authFormControllerProvider(formKey).notifier)
-                  .signUp(),
+              onPressedFuture: () => ref.read(authFormControllerProvider(formKey).notifier).signUp(),
               tooltipDisabled: tr.form_invalid_prompt,
-              innerPadding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
+              innerPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             ),
           );
         }),
@@ -119,8 +116,7 @@ class SignupForm extends FormConsumerRefWidget {
             const SizedBox(width: 4.0),
             Hyperlink(
               text: tr.link_login,
-              onClick: () =>
-                  ref.read(routerProvider).dispatch(RoutingIntents.login),
+              onClick: () => ref.read(routerProvider).dispatch(RoutingIntents.login),
             ),
           ],
         )
@@ -133,8 +129,7 @@ class SignupForm extends FormConsumerRefWidget {
     final locale = ref.watch(localeProvider);
 
     launchUrl(appConfig.maybeWhen(
-      data: (value) =>
-          Uri.parse(value.designerTerms[locale.languageCode] ?? ""),
+      data: (value) => Uri.parse(value.designerTerms[locale.languageCode] ?? ""),
       orElse: () => Uri.parse(''),
     ));
   }
@@ -144,8 +139,7 @@ class SignupForm extends FormConsumerRefWidget {
     final locale = ref.watch(localeProvider);
 
     launchUrl(appConfig.maybeWhen(
-      data: (value) =>
-          Uri.parse(value.designerPrivacy[locale.languageCode] ?? ""),
+      data: (value) => Uri.parse(value.designerPrivacy[locale.languageCode] ?? ""),
       orElse: () => Uri.parse(''),
     ));
   }

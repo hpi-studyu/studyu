@@ -17,8 +17,7 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
 }
 
-class InviteCodeRepository extends ModelRepository<StudyInvite>
-    implements IInviteCodeRepository {
+class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInviteCodeRepository {
   InviteCodeRepository({
     required this.studyId,
     required this.apiClient,
@@ -26,10 +25,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     required this.studyRepository,
     required this.ref,
   }) : super(InviteCodeRepositoryDelegate(
-    study: studyRepository.get(studyId)!.model,
-    apiClient: apiClient,
-    studyRepository: studyRepository
-  ));
+            study: studyRepository.get(studyId)!.model, apiClient: apiClient, studyRepository: studyRepository));
 
   /// The [Study] this repository operates on
   final StudyID studyId;
@@ -64,27 +60,23 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         type: ModelActionType.clipboard,
         label: ModelActionType.clipboard.string,
         onExecute: () => {
-          ref.read(clipboardServiceProvider).copy(model.code)
-            .then((value) => ref.read(notificationServiceProvider)
-              .show(Notifications.inviteCodeClipped))
+          ref
+              .read(clipboardServiceProvider)
+              .copy(model.code)
+              .then((value) => ref.read(notificationServiceProvider).show(Notifications.inviteCodeClipped))
         },
       ),
       ModelAction(
-        type: ModelActionType.delete,
-        label: ModelActionType.delete.string,
-        onExecute: () {
-          return delete(getKey(model))
-              .then((value) => ref.read(routerProvider).dispatch(
-                  RoutingIntents.studyRecruit(model.studyId)))
-              .then((value) => Future.delayed(
-                  const Duration(milliseconds: 200),
-                  () => ref.read(notificationServiceProvider).show(
-                      Notifications.inviteCodeDeleted)
-          ));
-        },
-        isAvailable: study.isOwner(authRepository.currentUser!),
-        isDestructive: true
-      ),
+          type: ModelActionType.delete,
+          label: ModelActionType.delete.string,
+          onExecute: () {
+            return delete(getKey(model))
+                .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studyRecruit(model.studyId)))
+                .then((value) => Future.delayed(const Duration(milliseconds: 200),
+                    () => ref.read(notificationServiceProvider).show(Notifications.inviteCodeDeleted)));
+          },
+          isAvailable: study.isOwner(authRepository.currentUser!),
+          isDestructive: true),
     ];
 
     return actions.where((action) => action.isAvailable).toList();
@@ -128,9 +120,11 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
     final saveOperation = OptimisticUpdate(
       applyOptimistic: () {
         final inviteIdx = study.invites!.indexWhere((i) => i.code == model.code);
-        if (inviteIdx == -1) { // add new code
+        if (inviteIdx == -1) {
+          // add new code
           study.invites!.add(model);
-        } else { // replace existing code
+        } else {
+          // replace existing code
           study.invites![inviteIdx] = model;
         }
         studyRepository.upsertLocally(study);
@@ -192,21 +186,20 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   }
 }
 
-final inviteCodeRepositoryProvider = Provider.autoDispose
-  .family<IInviteCodeRepository,StudyID>((ref, studyId) {
-    print("inviteCodeRepositoryProvider(${studyId}");
-    // Initialize repository for a given study
-    final repository = InviteCodeRepository(
-      studyId: studyId,
-      apiClient: ref.watch(apiClientProvider),
-      authRepository: ref.watch(authRepositoryProvider),
-      studyRepository: ref.watch(studyRepositoryProvider),
-      ref: ref,
-    );
-    // Bind lifecycle to Riverpod
-    ref.onDispose(() {
-      print("inviteCodeRepositoryProvider(${studyId}.DISPOSE");
-      repository.dispose();
-    });
-    return repository;
+final inviteCodeRepositoryProvider = Provider.autoDispose.family<IInviteCodeRepository, StudyID>((ref, studyId) {
+  print("inviteCodeRepositoryProvider($studyId");
+  // Initialize repository for a given study
+  final repository = InviteCodeRepository(
+    studyId: studyId,
+    apiClient: ref.watch(apiClientProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    studyRepository: ref.watch(studyRepositoryProvider),
+    ref: ref,
+  );
+  // Bind lifecycle to Riverpod
+  ref.onDispose(() {
+    print("inviteCodeRepositoryProvider($studyId.DISPOSE");
+    repository.dispose();
+  });
+  return repository;
 });

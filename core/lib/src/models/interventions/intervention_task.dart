@@ -1,5 +1,5 @@
-import '../tasks/task.dart';
-import 'tasks/checkmark_task.dart';
+import 'package:studyu_core/src/models/interventions/tasks/checkmark_task.dart';
+import 'package:studyu_core/src/models/tasks/task.dart';
 
 typedef InterventionTaskParser = InterventionTask Function(Map<String, dynamic> data);
 

@@ -8,8 +8,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ConsentItemFormView extends StatelessWidget {
-  const ConsentItemFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const ConsentItemFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final ConsentItemFormViewModel formViewModel;
 
@@ -33,8 +32,7 @@ class ConsentItemFormView extends StatelessWidget {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(100),
                       ],
-                      validationMessages:
-                          formViewModel.titleControl.validationMessages,
+                      validationMessages: formViewModel.titleControl.validationMessages,
                       decoration: InputDecoration(
                         hintText: tr.form_field_consent_title_hint,
                       ),
@@ -65,8 +63,7 @@ class ConsentItemFormView extends StatelessWidget {
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(10000),
                 ],
-                validationMessages:
-                    formViewModel.descriptionControl.validationMessages,
+                validationMessages: formViewModel.descriptionControl.validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 10,
                 maxLines: 30,

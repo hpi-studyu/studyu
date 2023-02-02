@@ -126,8 +126,7 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       return Scrollbar(
         thumbVisibility: true,
         controller: _scrollController,
-        child:
-            SingleChildScrollView(controller: _scrollController, child: child),
+        child: SingleChildScrollView(controller: _scrollController, child: child),
       );
     }
 

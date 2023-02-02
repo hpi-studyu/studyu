@@ -5,8 +5,8 @@ import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:studyu_core/env.dart' as env;
 
-import 'utils/generator.dart';
-import 'utils/gitlab.dart';
+import 'package:studyu_repo_generator/utils/generator.dart';
+import 'package:studyu_repo_generator/utils/gitlab.dart';
 
 // For Google Cloud Run, set _hostname to '0.0.0.0'.
 const _hostname = '0.0.0.0';
@@ -31,10 +31,10 @@ Future<HttpServer> startServer(List<String> args) async {
     'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': '*',
   };
-  shelf.Response? _options(shelf.Request request) =>
+  shelf.Response? options(shelf.Request request) =>
       (request.method == 'OPTIONS') ? shelf.Response.ok(null, headers: corsHeaders) : null;
-  shelf.Response _cors(shelf.Response response) => response.change(headers: corsHeaders);
-  final fixCORS = shelf.createMiddleware(requestHandler: _options, responseHandler: _cors);
+  shelf.Response cors(shelf.Response response) => response.change(headers: corsHeaders);
+  final fixCORS = shelf.createMiddleware(requestHandler: options, responseHandler: cors);
 
   final handler =
       const shelf.Pipeline().addMiddleware(fixCORS).addMiddleware(shelf.logRequests()).addHandler(serverHandler);

@@ -1,31 +1,35 @@
 import 'package:csv/csv.dart';
 import 'package:fhir/r4.dart' show Questionnaire;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/env/env.dart' as env;
+import 'package:studyu_core/src/models/models.dart';
+import 'package:studyu_core/src/util/supabase_object.dart';
 import 'package:supabase/supabase.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../env/env.dart' as env;
-import '../../util/supabase_object.dart';
-import '../models.dart';
 
 part 'study.g.dart';
 
 enum StudyStatus {
-  draft, running, closed;
+  draft,
+  running,
+  closed;
 
   String toJson() => name;
   static StudyStatus fromJson(String json) => values.byName(json);
 }
 
 enum Participation {
-  open, invite;
+  open,
+  invite;
 
   String toJson() => name;
   static Participation fromJson(String json) => values.byName(json);
 }
 
 enum ResultSharing {
-  public, private, organization;
+  public,
+  private,
+  organization;
 
   String toJson() => name;
   static ResultSharing fromJson(String json) => values.byName(json);
@@ -101,28 +105,22 @@ class Study extends SupabaseObjectFunctions<Study> {
     final study = _$StudyFromJson(json);
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
-      study.repo =
-          Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+      study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
     }
     final List? invites = json['study_invite'] as List?;
     if (invites != null) {
-      study.invites = invites
-          .map((json) => StudyInvite.fromJson(json as Map<String, dynamic>))
-          .toList();
+      study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
     }
     final List? participants = json['study_subject'] as List?;
     if (participants != null) {
-      study.participants = participants
-          .map((json) => StudySubject.fromJson(json as Map<String, dynamic>))
-          .toList();
+      study.participants = participants.map((json) => StudySubject.fromJson(json as Map<String, dynamic>)).toList();
     }
     List? participantsProgress = json['study_progress'] as List?;
     participantsProgress = json['study_progress_export'] as List?;
     participantsProgress ??= json['subject_progress'] as List?;
     if (participantsProgress != null) {
-      study.participantsProgress = participantsProgress
-          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
-          .toList();
+      study.participantsProgress =
+          participantsProgress.map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>)).toList();
     }
     final int? participantCount = json['study_participant_count'] as int?;
     if (participantCount != null) {
@@ -151,8 +149,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
-      SupabaseQuery.getAll<Study>(
+  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
           'repo(*)',
@@ -167,9 +164,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   static Future<List<Study>> publishedPublicStudies() async {
     try {
       return SupabaseQuery.extractSupabaseList<Study>(
-        await env.client
-            .from(tableName)
-            .select(),
+        await env.client.from(tableName).select(),
       );
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
@@ -183,23 +178,16 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
-  bool get hasEligibilityCheck =>
-      eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
+  bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
 
-  int get totalMissedDays => missedDays.isNotEmpty
-      ? missedDays.reduce((total, days) => total += days)
-      : 0;
+  int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
-  double get percentageMissedDays =>
-      totalMissedDays / (participantCount * schedule.length);
+  double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;
     try {
-      res = await env.client
-          .from('study_progress')
-          .select()
-          .eq('study_id', studyId) as List;
+      res = await env.client.from('study_progress').select().eq('study_id', studyId) as List;
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
@@ -210,8 +198,7 @@ class Study extends SupabaseObjectFunctions<Study> {
     final tableHeadersSet = jsonList[0].keys.toSet();
     final flattenedQuestions = jsonList.map((progress) {
       if (progress['result_type'] == 'QuestionnaireState') {
-        for (final result
-            in List<Map<String, dynamic>>.from(progress['result'] as List)) {
+        for (final result in List<Map<String, dynamic>>.from(progress['result'] as List)) {
           progress[result['question'] as String] = result['response'];
           tableHeadersSet.add(result['question'] as String);
         }
@@ -223,9 +210,8 @@ class Study extends SupabaseObjectFunctions<Study> {
     // Convert to List and fill empty cells with empty string
     final resultsTable = [
       tableHeaders,
-      ...flattenedQuestions.map((progress) => tableHeaders
-          .map((header) => progress[header] ?? '')
-          .toList(growable: false),
+      ...flattenedQuestions.map(
+        (progress) => tableHeaders.map((header) => progress[header] ?? '').toList(growable: false),
       )
     ];
     return const ListToCsvConverter().convert(resultsTable);

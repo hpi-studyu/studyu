@@ -1,9 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../data/data_reference.dart';
-import '../../tables/study.dart';
-import '../../tables/study_subject.dart';
-import '../study_result.dart';
+import 'package:studyu_core/src/models/data/data_reference.dart';
+import 'package:studyu_core/src/models/study_results/study_result.dart';
+import 'package:studyu_core/src/models/tables/study.dart';
+import 'package:studyu_core/src/models/tables/study_subject.dart';
 
 part 'numeric_result.g.dart';
 

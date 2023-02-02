@@ -42,15 +42,14 @@ class StudyInfoFormData implements IStudyFormData {
 }
 
 class StudyContactInfoFormData implements IStudyFormData {
-  StudyContactInfoFormData({
-    this.organization,
-    this.institutionalReviewBoard,
-    this.institutionalReviewBoardNumber,
-    this.researchers,
-    this.email,
-    this.website,
-    this.phone
-  });
+  StudyContactInfoFormData(
+      {this.organization,
+      this.institutionalReviewBoard,
+      this.institutionalReviewBoardNumber,
+      this.researchers,
+      this.email,
+      this.website,
+      this.phone});
 
   final String? organization;
   final String? institutionalReviewBoard;
@@ -69,8 +68,7 @@ class StudyContactInfoFormData implements IStudyFormData {
         researchers: contact.researchers ?? '',
         email: contact.email,
         website: contact.website,
-        phone: contact.phone
-    );
+        phone: contact.phone);
   }
 
   @override
@@ -81,8 +79,8 @@ class StudyContactInfoFormData implements IStudyFormData {
     contact.institutionalReviewBoardNumber = institutionalReviewBoardNumber;
     contact.researchers = researchers;
     contact.email = email ?? '';
-    contact.website = website  ?? '';
-    contact.phone = phone  ?? '';
+    contact.website = website ?? '';
+    contact.phone = phone ?? '';
     study.contact = contact;
     return study;
   }

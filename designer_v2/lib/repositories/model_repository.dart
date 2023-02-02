@@ -40,8 +40,7 @@ class WrappedModel<T> {
 
   markAsFetched() {
     if (isDirty) {
-      throw Exception(
-          "Dirty model marked as fetched, potentially resulting in "
+      throw Exception("Dirty model marked as fetched, potentially resulting in "
           "loss of unsaved changes.");
     }
     isLocalOnly = false;
@@ -56,6 +55,7 @@ class WrappedModel<T> {
 }
 
 class ModelRepositoryException implements Exception {}
+
 class ModelNotFoundException implements ModelRepositoryException {}
 
 abstract class IModelRepository<T> implements IModelActionProvider<T> {
@@ -66,7 +66,7 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   Future<WrappedModel<T>?> save(T model); // upsert
   Future<void> delete(ModelID modelId);
   Future<void> duplicateAndSave(T model);
-  Future<void> duplicateAndSaveFromRemote(ModelID model);
+  Future<void> duplicateAndSaveFromRemote(ModelID modelId);
   Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true});
   Stream<List<WrappedModel<T>>> watchAll({fetchOnSubscribe = true});
   Stream<ModelEvent<T>> watchChanges(ModelID modelId);
@@ -126,7 +126,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       for (final wrappedModel in wrappedModels) {
         wrappedModel.markAsFetched();
       }
-    } catch(e, stackTrace) {
+    } catch (e, stackTrace) {
       emitError(_allModelsStreamController, e, stackTrace);
       rethrow;
     }
@@ -151,7 +151,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       wrappedModel = upsertLocally(model);
       wrappedModel.markAsFetched();
       emitModelEvent(IsFetched(modelId, model));
-    } catch(e, stackTrace) {
+    } catch (e, stackTrace) {
       // Associate error with existing object if possible, otherwise bubble up
       if (existingWrappedModel != null) {
         existingWrappedModel.markWithError(e);
@@ -184,9 +184,11 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         emitModelEvent(IsSaved(modelId, model));
       },
       rollback: () {
-        if (prevModel == null) { // didn't exist previously
+        if (prevModel == null) {
+          // didn't exist previously
           _allModels.remove(modelId);
-        } else { // undo any changes
+        } else {
+          // undo any changes
           final wrappedModel = get(modelId);
           wrappedModel!.model = prevModel;
         }
@@ -294,12 +296,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       return null;
     }
 
-    final modelController = _buildModelSpecificController(
-      modelId,
-      _allModelsStreamController,
-      modelStreamControllers,
-      selectModel
-    );
+    final modelController =
+        _buildModelSpecificController(modelId, _allModelsStreamController, modelStreamControllers, selectModel);
 
     if (fetchOnSubscribe) {
       if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
@@ -328,21 +326,18 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       }
       return null;
     }
+
     final modelEventsController = _buildModelSpecificController(
-      modelId,
-      _allModelEventsStreamController,
-      modelEventsStreamControllers,
-      selectModelChangeEvent
-    );
+        modelId, _allModelEventsStreamController, modelEventsStreamControllers, selectModelChangeEvent);
     return modelEventsController;
   }
 
   _buildModelSpecificController<A, M>(
-      ModelID modelId,
-      BehaviorSubject<A> allController,
-      Map<ModelID, BehaviorSubject<M>> modelSpecificControllers,
-      M? Function(A) selectReduceEvent,
-    ) {
+    ModelID modelId,
+    BehaviorSubject<A> allController,
+    Map<ModelID, BehaviorSubject<M>> modelSpecificControllers,
+    M? Function(A) selectReduceEvent,
+  ) {
     // Reuse existing stream if any
     if (modelSpecificControllers.containsKey(modelId)) {
       return modelSpecificControllers[modelId]!;
@@ -419,9 +414,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   emitUpdate() {
     if (!_allModelsStreamController.isClosed) {
       _allModelsStreamController.add(
-        // Filter out models marked as deleted
-          _allModels.values.where((model) => !model.isDeleted).toList()
-      );
+          // Filter out models marked as deleted
+          _allModels.values.where((model) => !model.isDeleted).toList());
     }
   }
 

@@ -10,7 +10,7 @@ import '../util/plot_utilities.dart';
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
 
-  const AverageSectionWidget(StudySubject subject, this.section) : super(subject);
+  const AverageSectionWidget(StudySubject subject, this.section, {Key key}) : super(subject, key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           charts.ChartTitle(
             AppLocalizations.of(context).report_axis_phase,
             behaviorPosition: charts.BehaviorPosition.bottom,
-            titleStyleSpec: convertTextTheme(Theme.of(context).textTheme.caption),
+            titleStyleSpec: convertTextTheme(Theme.of(context).textTheme.bodySmall),
           )
       ],
       domainAxis: charts.NumericAxisSpec(
@@ -78,10 +78,10 @@ class AverageSectionWidget extends ReportSectionWidget {
     );
   }
 
-  Iterable<_DiagramDatum> getAggregatedData() {
+  Iterable<DiagramDatum> getAggregatedData() {
     final values = section.resultProperty.retrieveFromResults(subject);
     final data = values.entries.map(
-      (e) => _DiagramDatum(
+      (e) => DiagramDatum(
         subject.getDayOfStudyFor(e.key),
         e.value,
         e.key,
@@ -93,7 +93,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       return data
           .groupBy((e) => e.x)
           .aggregateWithKey(
-            (data, day) => _DiagramDatum(
+            (data, day) => DiagramDatum(
               day,
               foldAggregateMean()(data.map((e) => e.value)),
               null,
@@ -105,7 +105,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       return data
           .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp))
           .aggregateWithKey(
-            (data, phase) => _DiagramDatum(
+            (data, phase) => DiagramDatum(
               phase,
               foldAggregateMean()(data.map((e) => e.value)),
               null,
@@ -118,7 +118,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey(
-            (data, intervention) => _DiagramDatum(
+            (data, intervention) => DiagramDatum(
               order[intervention],
               foldAggregateMean()(data.map((e) => e.value)),
               null,
@@ -129,14 +129,14 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
-  List<charts.Series<_DiagramDatum, num>> getBarData() {
+  List<charts.Series<DiagramDatum, num>> getBarData() {
     final colorPalette = getInterventionPalette(subject.selectedInterventions);
     final interventionNames = getInterventionNames(subject.selectedInterventions);
 
     return getAggregatedData()
         .groupBy((datum) => datum.intervention)
         .map(
-          (entry) => charts.Series<_DiagramDatum, num>(
+          (entry) => charts.Series<DiagramDatum, num>(
             id: entry.key,
             displayName: interventionNames[entry.key],
             seriesColor: colorPalette[entry.key],
@@ -149,11 +149,11 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 }
 
-class _DiagramDatum {
+class DiagramDatum {
   final num x;
   final num value;
   final DateTime timestamp;
   final String intervention;
 
-  _DiagramDatum(this.x, this.value, this.timestamp, this.intervention);
+  DiagramDatum(this.x, this.value, this.timestamp, this.intervention);
 }

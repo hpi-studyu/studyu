@@ -17,43 +17,34 @@ class ThemeConfig {
   static const double kHoverFadeFactor = 0.7;
   static const double kMuteFadeFactor = 0.8;
 
-  static bodyBackgroundColor(ThemeData theme) =>
-      theme.scaffoldBackgroundColor.faded(0.5);
+  static bodyBackgroundColor(ThemeData theme) => theme.scaffoldBackgroundColor.faded(0.5);
 
-  static Color modalBarrierColor(ThemeData theme) =>
-      theme.colorScheme.secondary.withOpacity(0.4);
+  static Color modalBarrierColor(ThemeData theme) => theme.colorScheme.secondary.withOpacity(0.4);
 
-  static Color containerColor(ThemeData theme) =>
-      theme.colorScheme.secondaryContainer.withOpacity(0.3);
+  static Color containerColor(ThemeData theme) => theme.colorScheme.secondaryContainer.withOpacity(0.3);
 
-  static Color colorPickerInitialColor(ThemeData theme) =>
-      theme.colorScheme.primary;
+  static Color colorPickerInitialColor(ThemeData theme) => theme.colorScheme.primary;
 
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: theme.textTheme.bodyText1?.color?.faded(0.65),
+        color: theme.textTheme.bodyLarge?.color?.faded(0.65),
       );
 
-  static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
-      fontSize: 14.0,
-      height: 1.35,
-      color: theme.colorScheme.onSurface.withOpacity(0.25));
+  static TextStyle bodyTextBackground(ThemeData theme) =>
+      TextStyle(fontSize: 14.0, height: 1.35, color: theme.colorScheme.onSurface.withOpacity(0.25));
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
 
-  static Color sidesheetBackgroundColor(ThemeData theme) =>
-      theme.scaffoldBackgroundColor.withOpacity(0.15);
+  static Color sidesheetBackgroundColor(ThemeData theme) => theme.scaffoldBackgroundColor.withOpacity(0.15);
 
-  static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) =>
-      theme.inputDecorationTheme.copyWith(
+  static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) => theme.inputDecorationTheme.copyWith(
         contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
       );
 
-  static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
-      DropdownMenuItemTheme(
+  static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) => DropdownMenuItemTheme(
         iconTheme: IconThemeData(
-          color: theme.textTheme.bodyText1?.color?.faded(0.4),
+          color: theme.textTheme.bodyLarge?.color?.faded(0.4),
           // theme.iconTheme.color?.faded(0.75)
           size: 18.0,
         ),
@@ -78,21 +69,14 @@ class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
 class WebTransitionBuilder extends PageTransitionsBuilder {
   const WebTransitionBuilder();
   @override
-  Widget buildTransitions<T>(
-      PageRoute<T> route,
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    final opacityOldTween =
-        Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
-    final opacityNewTween =
-        Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
+  Widget buildTransitions<T>(PageRoute<T> route, BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    final opacityOldTween = Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
+    final opacityNewTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
 
     return FadeTransition(
       opacity: opacityOldTween.animate(secondaryAnimation),
-      child: FadeTransition(
-          opacity: opacityNewTween.animate(animation), child: child),
+      child: FadeTransition(opacity: opacityNewTween.animate(animation), child: child),
     );
   }
 }
@@ -104,11 +88,7 @@ class ThemeSettingChange extends Notification {
 
 class ThemeProvider extends InheritedWidget {
   ThemeProvider(
-      {Key? key,
-      required this.settings,
-      required this.lightDynamic,
-      required this.darkDynamic,
-      required Widget child})
+      {Key? key, required this.settings, required this.lightDynamic, required this.darkDynamic, required Widget child})
       : super(key: key, child: child);
 
   final ValueNotifier<ThemeSettings> settings;
@@ -119,8 +99,7 @@ class ThemeProvider extends InheritedWidget {
     builders: kIsWeb
         ? <TargetPlatform, PageTransitionsBuilder>{
             // Animation when running on Web
-            for (final platform in TargetPlatform.values)
-              platform: const WebTransitionBuilder(),
+            for (final platform in TargetPlatform.values) platform: const WebTransitionBuilder(),
           }
         : const <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
@@ -140,8 +119,7 @@ class ThemeProvider extends InheritedWidget {
   }
 
   Color blend(Color targetColor) {
-    return Color(
-        Blend.harmonize(targetColor.value, settings.value.sourceColor.value));
+    return Color(Blend.harmonize(targetColor.value, settings.value.sourceColor.value));
   }
 
   Color source(Color? target) {
@@ -153,9 +131,7 @@ class ThemeProvider extends InheritedWidget {
   }
 
   ColorScheme colors(Brightness brightness, Color? targetColor) {
-    final dynamicPrimary = brightness == Brightness.light
-        ? lightDynamic?.primary
-        : darkDynamic?.primary;
+    final dynamicPrimary = brightness == Brightness.light ? lightDynamic?.primary : darkDynamic?.primary;
     return ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
       brightness: brightness,
@@ -325,36 +301,17 @@ class ThemeProvider extends InheritedWidget {
     final headlineColor = colors.onSurfaceVariant;
 
     return TextTheme(
-      button:
-          TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
-      caption: TextStyle(
-          fontSize: 14.0,
-          height: 1.35,
-          color: colors.onSurface.withOpacity(0.9)), // Form Labels
-      subtitle1: TextStyle(
-          fontSize: 14.0,
-          height: 1.35,
-          color: colors.onSurface.withOpacity(0.9)), // TextInput
-      bodyText1: TextStyle(
-          fontSize: 14.0,
-          height: 1.35,
-          color: colors.onSurface.withOpacity(0.9)),
-      bodyText2: TextStyle(
-          fontSize: 14.0,
-          height: 1.35,
-          color: colors.onSurface.withOpacity(0.8)),
-      headline6: TextStyle(
-          fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline5: TextStyle(
-          fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline4: TextStyle(
-          fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline3: TextStyle(
-          fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline2: TextStyle(
-          fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headline1: TextStyle(
-          fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
+      labelLarge: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
+      bodySmall: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // Form Labels
+      titleMedium: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // TextInput
+      bodyLarge: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)),
+      bodyMedium: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.8)),
+      titleLarge: TextStyle(fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headlineSmall: TextStyle(fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
+      headlineMedium: TextStyle(fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
+      displaySmall: TextStyle(fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold),
+      displayMedium: TextStyle(fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
+      displayLarge: TextStyle(fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
     );
   }
 
@@ -404,8 +361,7 @@ class ThemeProvider extends InheritedWidget {
   RadioThemeData radioTheme(ColorScheme colors) {
     return RadioThemeData(
       splashRadius: 18.0,
-      fillColor: MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
+      fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
         if (states.contains(MaterialState.disabled)) {
           return null;
         }
@@ -420,22 +376,20 @@ class ThemeProvider extends InheritedWidget {
   TooltipThemeData tooltipTheme(ColorScheme colors) {
     return TooltipThemeData(
       padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
-      textStyle: textTheme(colors).caption!.copyWith(color: colors.onPrimary),
-      decoration: BoxDecoration(
-          color: colors.secondary.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(2.0),
-          boxShadow: [
-            BoxShadow(
-              color: colors.primaryContainer.withOpacity(0.1),
-              blurRadius: 1,
-              spreadRadius: 2,
-            ),
-            BoxShadow(
-              color: colors.secondary.withOpacity(0.3),
-              blurRadius: 3,
-              spreadRadius: 0,
-            )
-          ]),
+      textStyle: textTheme(colors).bodySmall!.copyWith(color: colors.onPrimary),
+      decoration:
+          BoxDecoration(color: colors.secondary.withOpacity(0.9), borderRadius: BorderRadius.circular(2.0), boxShadow: [
+        BoxShadow(
+          color: colors.primaryContainer.withOpacity(0.1),
+          blurRadius: 1,
+          spreadRadius: 2,
+        ),
+        BoxShadow(
+          color: colors.secondary.withOpacity(0.3),
+          blurRadius: 3,
+          spreadRadius: 0,
+        )
+      ]),
     );
   }
 
@@ -504,9 +458,7 @@ class ThemeProvider extends InheritedWidget {
 
   ThemeData theme(BuildContext context, [Color? targetColor]) {
     final brightness = MediaQuery.of(context).platformBrightness;
-    return brightness == Brightness.light
-        ? light(targetColor)
-        : dark(targetColor);
+    return brightness == Brightness.light ? light(targetColor) : dark(targetColor);
   }
 
   static ThemeProvider of(BuildContext context) {

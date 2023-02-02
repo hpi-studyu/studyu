@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../data/data_reference.dart';
-import '../report_section.dart';
+import 'package:studyu_core/src/models/data/data_reference.dart';
+import 'package:studyu_core/src/models/report/report_section.dart';
 
 part 'linear_regression_section.g.dart';
 

@@ -11,7 +11,7 @@ import '../util/plot_utilities.dart';
 class LinearRegressionSectionWidget extends ReportSectionWidget {
   final LinearRegressionSection section;
 
-  const LinearRegressionSectionWidget(StudySubject subject, this.section) : super(subject);
+  const LinearRegressionSectionWidget(StudySubject subject, this.section, {Key key}) : super(subject, key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +151,10 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
       text = AppLocalizations.of(context).report_outcome_neither;
     } else if (factorA > factorB) {
       //TODO: This if else might be problematic if a baseline is present and A and B are an improvement over it
-      text = (AppLocalizations.of(context)
-          .report_outcome_one as String)
+      text = (AppLocalizations.of(context).report_outcome_one as String)
           .replaceAll('{intervention}', interventionNames[interventionA]);
     } else {
-      text = (AppLocalizations.of(context)
-          .report_outcome_one as String)
+      text = (AppLocalizations.of(context).report_outcome_one as String)
           .replaceAll('{intervention}', interventionNames[interventionB]);
     }
 

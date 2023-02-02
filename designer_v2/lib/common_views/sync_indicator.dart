@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -31,8 +30,7 @@ class SyncIndicator<T> extends StatefulWidget {
   State<SyncIndicator> createState() => _SyncIndicatorState();
 }
 
-class _SyncIndicatorState extends State<SyncIndicator>
-    with SingleTickerProviderStateMixin {
+class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<double> _animation;
 

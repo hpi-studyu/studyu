@@ -8,7 +8,8 @@ import 'package:studyu_core/core.dart';
 import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {
-  const PerformanceSection(StudySubject subject, {GestureTapCallback onTap}) : super(subject, onTap: onTap);
+  const PerformanceSection(StudySubject subject, {Key key, GestureTapCallback onTap})
+      : super(subject, key: key, onTap: onTap);
 
   // TODO move to model
   double get minimumRatio => 0.1;
@@ -33,7 +34,7 @@ class PerformanceSection extends GenericSection {
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
                   '${AppLocalizations.of(context).current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               ListView.builder(

@@ -28,9 +28,7 @@ class StudyControllerBaseState extends Equatable {
 
   bool get isDraft => study.value?.status == StudyStatus.draft;
 
-  StudyControllerBaseState copyWith({
-    WrappedModel<Study>? studyWithMetadata
-  }) {
+  StudyControllerBaseState copyWith({WrappedModel<Study>? studyWithMetadata}) {
     return StudyControllerBaseState(
       studyWithMetadata: studyWithMetadata ?? this.studyWithMetadata,
       currentUser: currentUser,

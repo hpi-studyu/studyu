@@ -6,10 +6,10 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 
-import 'cli.dart';
-import 'database.dart';
-import 'file.dart';
-import 'gitlab.dart';
+import 'package:studyu_repo_generator/utils/cli.dart';
+import 'package:studyu_repo_generator/utils/database.dart';
+import 'package:studyu_repo_generator/utils/file.dart';
+import 'package:studyu_repo_generator/utils/gitlab.dart';
 
 Future<void> generateRepo(GitlabClient gl, String studyId) async {
   print('Generating repo...');

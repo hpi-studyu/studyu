@@ -8,8 +8,7 @@ class TwoColumnLayout extends StatefulWidget {
     this.headerWidget,
     this.dividerWidget = defaultDivider,
     this.flexLeft,
-    this.flexRight =
-        1, // expand right column to fill available space by default
+    this.flexRight = 1, // expand right column to fill available space by default
     this.constraintsLeft,
     this.constraintsRight,
     this.scrollLeft = true,
@@ -113,12 +112,10 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
     }
 
     if (widget.backgroundColorLeft != null) {
-      leftWidget =
-          Material(color: widget.backgroundColorLeft, child: leftWidget);
+      leftWidget = Material(color: widget.backgroundColorLeft, child: leftWidget);
     }
     if (widget.backgroundColorRight != null) {
-      rightWidget =
-          Material(color: widget.backgroundColorRight, child: rightWidget);
+      rightWidget = Material(color: widget.backgroundColorRight, child: rightWidget);
     }
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -137,23 +134,20 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
         leftWidget = Scrollbar(
           thumbVisibility: true,
           controller: _scrollControllerLeft,
-          child: SingleChildScrollView(
-              controller: _scrollControllerLeft, child: leftWidget),
+          child: SingleChildScrollView(controller: _scrollControllerLeft, child: leftWidget),
         );
       }
       if (widget.scrollRight) {
         rightWidget = Scrollbar(
           thumbVisibility: true,
           controller: _scrollControllerRight,
-          child: SingleChildScrollView(
-              controller: _scrollControllerRight, child: rightWidget),
+          child: SingleChildScrollView(controller: _scrollControllerRight, child: rightWidget),
         );
       }
 
       if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
         if (widget.constraintsLeft != null) {
-          leftWidget = Container(
-              constraints: widget.constraintsLeft!, child: leftWidget);
+          leftWidget = Container(constraints: widget.constraintsLeft!, child: leftWidget);
         }
         if (widget.flexLeft != null) {
           leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
@@ -162,8 +156,7 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
 
       if (!(widget.constraintsRight != null && widget.flexRight != null)) {
         if (widget.constraintsRight != null) {
-          rightWidget = Container(
-              constraints: widget.constraintsRight!, child: rightWidget);
+          rightWidget = Container(constraints: widget.constraintsRight!, child: rightWidget);
         }
         if (widget.flexRight != null) {
           rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);

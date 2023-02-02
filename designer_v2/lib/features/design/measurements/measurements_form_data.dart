@@ -12,16 +12,15 @@ class MeasurementsFormData implements IStudyFormData {
 
   factory MeasurementsFormData.fromStudy(Study study) {
     return MeasurementsFormData(
-        surveyMeasurements: (study.observations).map(
-                (observation) => MeasurementSurveyFormData.fromDomainModel(
-                observation as QuestionnaireTask)).toList()
-    );
+        surveyMeasurements: (study.observations)
+            .map((observation) => MeasurementSurveyFormData.fromDomainModel(observation as QuestionnaireTask))
+            .toList());
   }
 
   @override
   Study apply(Study study) {
-    final List<QuestionnaireTask> surveys = surveyMeasurements.map(
-            (formData) => formData.toQuestionnaireTask()).toList();
+    final List<QuestionnaireTask> surveys =
+        surveyMeasurements.map((formData) => formData.toQuestionnaireTask()).toList();
     study.observations = surveys;
     return study;
   }

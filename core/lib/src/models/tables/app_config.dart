@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../core.dart';
+import 'package:studyu_core/core.dart';
 
 part 'app_config.g.dart';
 

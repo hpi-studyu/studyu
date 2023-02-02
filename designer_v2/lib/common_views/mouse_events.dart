@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-typedef MouseEventsRegionBuilder = Widget Function(BuildContext context,
-    Set<MaterialState> state);
+typedef MouseEventsRegionBuilder = Widget Function(BuildContext context, Set<MaterialState> state);
 
 typedef MaterialStatesChangedCallback = void Function(Set<MaterialState> state);
 
@@ -10,17 +9,17 @@ typedef MaterialStatesChangedCallback = void Function(Set<MaterialState> state);
 /// for the widget it contains while exposing the current interaction state
 /// as a [WidgetInteractionState] to the child widget [builder]
 class MouseEventsRegion extends StatefulWidget {
-  const MouseEventsRegion({
-    required this.builder,
-    this.onStateChanged,
-    this.onHover,
-    this.onTap,
-    this.onEnter,
-    this.onExit,
-    this.cursor = defaultCursor,
-    this.autoselectCursor = true,
-    Key? key
-  }) : super(key: key);
+  const MouseEventsRegion(
+      {required this.builder,
+      this.onStateChanged,
+      this.onHover,
+      this.onTap,
+      this.onEnter,
+      this.onExit,
+      this.cursor = defaultCursor,
+      this.autoselectCursor = true,
+      Key? key})
+      : super(key: key);
 
   final MouseEventsRegionBuilder builder;
   final MaterialStatesChangedCallback? onStateChanged;
@@ -56,7 +55,7 @@ class _MouseEventsRegionState extends State<MouseEventsRegion> {
       widget.onStateChanged!(statesController.value);
     }
     // Force a rebuild to resolve MaterialStateProperty properties
-    setState(() { });
+    setState(() {});
   }
 
   @override
@@ -92,8 +91,7 @@ class _MouseEventsRegionState extends State<MouseEventsRegion> {
               widget.onExit!(e);
             }
           },
-          child: widget.builder(context, statesController.value)
-      ),
+          child: widget.builder(context, statesController.value)),
     );
   }
 

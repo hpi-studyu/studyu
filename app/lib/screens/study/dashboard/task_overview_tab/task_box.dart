@@ -14,11 +14,12 @@ class TaskBox extends StatefulWidget {
   final Function() onCompleted;
 
   const TaskBox({
+    Key key,
     @required this.task,
     @required this.completionPeriod,
     @required this.icon,
     @required this.onCompleted,
-  });
+  }) : super(key: key);
 
   @override
   State<TaskBox> createState() => _TaskBoxState();
@@ -41,7 +42,9 @@ class _TaskBoxState extends State<TaskBox> {
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: completed || !widget.completionPeriod.contains(nowTime) || !context.read<AppState>().isPreview ? () {} : _navigateToTaskScreen,
+        onTap: completed || !widget.completionPeriod.contains(nowTime) || !context.read<AppState>().isPreview
+            ? () {}
+            : _navigateToTaskScreen,
         child: Row(
           children: [
             Expanded(

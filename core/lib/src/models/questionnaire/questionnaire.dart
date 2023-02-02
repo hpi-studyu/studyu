@@ -1,4 +1,4 @@
-import 'question.dart';
+import 'package:studyu_core/src/models/questionnaire/question.dart';
 
 // TODO: We might want to make this @JsonSerializable() as well, but it does not support list types
 class StudyUQuestionnaire {

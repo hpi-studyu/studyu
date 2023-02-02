@@ -8,7 +8,7 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
   final Function(Answer) onDone;
 
-  AnnotatedScaleQuestionWidget({@required this.question, this.onDone});
+  const AnnotatedScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
 
   @override
   State<AnnotatedScaleQuestionWidget> createState() => _AnnotatedScaleQuestionWidgetState();
@@ -30,7 +30,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
   }
 
   Widget _constructAnnotationWidgetFor(Annotation annotation, BuildContext context) {
-    return Text(annotation.annotation, style: Theme.of(context).textTheme.headline6);
+    return Text(annotation.annotation, style: Theme.of(context).textTheme.titleLarge);
   }
 
   List<Widget> _generateAnnotations(BuildContext context) {

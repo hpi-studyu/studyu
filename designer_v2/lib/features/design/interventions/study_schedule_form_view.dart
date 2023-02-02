@@ -10,8 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
 class StudyScheduleFormView extends FormConsumerWidget {
-  const StudyScheduleFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const StudyScheduleFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final StudyScheduleControls formViewModel;
 
@@ -20,111 +19,110 @@ class StudyScheduleFormView extends FormConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            control: formViewModel.sequenceTypeControl,
-            label: tr.form_field_crossover_schedule_sequence,
-            labelHelpText: tr.form_field_crossover_schedule_sequence_tooltip,
-            input: ReactiveDropdownField(
-              formControl: formViewModel.sequenceTypeControl,
-              decoration: InputDecoration(
-                helperText: tr.form_field_crossover_schedule_sequence_description,
-                helperMaxLines: 5,
+        FormTableLayout(
+          rows: [
+            FormTableRow(
+              control: formViewModel.sequenceTypeControl,
+              label: tr.form_field_crossover_schedule_sequence,
+              labelHelpText: tr.form_field_crossover_schedule_sequence_tooltip,
+              input: ReactiveDropdownField(
+                formControl: formViewModel.sequenceTypeControl,
+                decoration: InputDecoration(
+                  helperText: tr.form_field_crossover_schedule_sequence_description,
+                  helperMaxLines: 5,
+                ),
+                items: formViewModel.sequenceTypeControlOptions
+                    .map((option) => DropdownMenuItem(
+                          value: option.value,
+                          child: Text(option.label),
+                        ))
+                    .toList(),
+                validationMessages: formViewModel.sequenceTypeControl.validationMessages,
               ),
-              items: formViewModel.sequenceTypeControlOptions
-                  .map((option) => DropdownMenuItem(
-                value: option.value,
-                child: Text(option.label),
-              ))
-                  .toList(),
-              validationMessages:
-              formViewModel.sequenceTypeControl.validationMessages,
             ),
-          ),
-          FormTableRow(
-            control: formViewModel.phaseDurationControl,
-            label: tr.form_field_crossover_schedule_phase_length,
-            labelHelpText: tr.form_field_crossover_schedule_phase_length_tooltip,
-            input: Row(
-              children: [
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 70),
-                  child: ReactiveTextField(
-                    formControl: formViewModel.phaseDurationControl,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(3),
-                      NumericalRangeFormatter(
+            FormTableRow(
+              control: formViewModel.phaseDurationControl,
+              label: tr.form_field_crossover_schedule_phase_length,
+              labelHelpText: tr.form_field_crossover_schedule_phase_length_tooltip,
+              input: Row(
+                children: [
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 70),
+                    child: ReactiveTextField(
+                      formControl: formViewModel.phaseDurationControl,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(3),
+                        NumericalRangeFormatter(
                           min: StudyScheduleControls.kPhaseDurationMin,
                           max: StudyScheduleControls.kPhaseDurationMax,
-                      ),
-                    ],
-                    validationMessages:
-                        formViewModel.phaseDurationControl.validationMessages,
+                        ),
+                      ],
+                      validationMessages: formViewModel.phaseDurationControl.validationMessages,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8.0),
-                FormControlLabel(
-                  formControl: formViewModel.phaseDurationControl,
-                  text: tr.form_field_amount_days,
-                ),
-              ],
+                  const SizedBox(width: 8.0),
+                  FormControlLabel(
+                    formControl: formViewModel.phaseDurationControl,
+                    text: tr.form_field_amount_days,
+                  ),
+                ],
+              ),
             ),
-          ),
-          FormTableRow(
-            control: formViewModel.numCyclesControl,
-            label: tr.form_field_crossover_schedule_num_cycles,
-            labelHelpText: tr.form_field_crossover_schedule_num_cycles_tooltip,
-            input: Row(
-              children: [
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 70),
-                  child: ReactiveTextField(
+            FormTableRow(
+              control: formViewModel.numCyclesControl,
+              label: tr.form_field_crossover_schedule_num_cycles,
+              labelHelpText: tr.form_field_crossover_schedule_num_cycles_tooltip,
+              input: Row(
+                children: [
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 70),
+                    child: ReactiveTextField(
+                      formControl: formViewModel.numCyclesControl,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2),
+                        NumericalRangeFormatter(
+                          min: StudyScheduleControls.kNumCyclesMin,
+                          max: StudyScheduleControls.kNumCyclesMax,
+                        ),
+                      ],
+                      validationMessages: formViewModel.numCyclesControl.validationMessages,
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  FormControlLabel(
                     formControl: formViewModel.numCyclesControl,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(2),
-                      NumericalRangeFormatter(
-                        min: StudyScheduleControls.kNumCyclesMin,
-                        max: StudyScheduleControls.kNumCyclesMax,
-                      ),
-                    ],
-                    validationMessages:
-                        formViewModel.numCyclesControl.validationMessages,
+                    text: tr.form_field_amount_crossover_schedule_num_cycles,
                   ),
-                ),
-                const SizedBox(width: 8.0),
-                FormControlLabel(
-                  formControl: formViewModel.numCyclesControl,
-                  text: tr.form_field_amount_crossover_schedule_num_cycles,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          FormTableRow(
-            control: formViewModel.includeBaselineControl,
-            label: tr.form_field_crossover_schedule_include_baseline,
-            labelHelpText: tr.form_field_crossover_schedule_include_baseline_tooltip,
-            input: Row(
-              children: [
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 70),
-                  child: ReactiveCheckbox(
+            FormTableRow(
+              control: formViewModel.includeBaselineControl,
+              label: tr.form_field_crossover_schedule_include_baseline,
+              labelHelpText: tr.form_field_crossover_schedule_include_baseline_tooltip,
+              input: Row(
+                children: [
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 70),
+                    child: ReactiveCheckbox(
+                      formControl: formViewModel.includeBaselineControl,
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  FormControlLabel(
                     formControl: formViewModel.includeBaselineControl,
+                    text: tr.form_field_crossover_schedule_include_baseline_label,
                   ),
-                ),
-                const SizedBox(width: 8.0),
-                FormControlLabel(
-                  formControl: formViewModel.includeBaselineControl,
-                  text: tr.form_field_crossover_schedule_include_baseline_label,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // TODO washout
-        ], columnWidths: const {
+            // TODO washout
+          ],
+          columnWidths: const {
             0: MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth()),
             1: FlexColumnWidth(),
           },

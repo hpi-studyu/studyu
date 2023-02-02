@@ -3,12 +3,11 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 
 class StudyScheduleFormData implements IStudyFormData {
-  StudyScheduleFormData({
-    required this.sequenceType,
-    required this.numCycles,
-    required this.phaseDuration,
-    required this.includeBaseline
-  });
+  StudyScheduleFormData(
+      {required this.sequenceType,
+      required this.numCycles,
+      required this.phaseDuration,
+      required this.includeBaseline});
 
   final PhaseSequence sequenceType;
   final int numCycles;

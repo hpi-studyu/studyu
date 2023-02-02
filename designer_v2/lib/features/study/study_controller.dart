@@ -34,8 +34,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     if (studyEventsSubscription != null) {
       studyEventsSubscription?.cancel();
     }
-    studyEventsSubscription =
-        studyRepository.watchChanges(studyId).listen((event) {
+    studyEventsSubscription = studyRepository.watchChanges(studyId).listen((event) {
       if (event is IsSaving) {
         state = state.copyWith(
           syncState: const AsyncValue.loading(),
@@ -73,10 +72,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository
-            .availableActions(study)
-            .where((action) => action.type != StudyActionType.edit)
-            .toList(),
+        studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
         studyActionIcons);
   }
 
@@ -106,8 +102,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
+final studyControllerProvider =
+    StateNotifierProvider.autoDispose.family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
   print("studyControllerProvider($studyId)");
   final controller = StudyController(
     studyId: studyId,

@@ -10,7 +10,7 @@ class BooleanQuestionWidget extends QuestionWidget {
   final fhir.QuestionnaireItem question;
   final Function(fhir.QuestionnaireResponseItem) onDone;
 
-  BooleanQuestionWidget({@required this.question, this.onDone});
+  const BooleanQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
 
   @override
   State<BooleanQuestionWidget> createState() => _BooleanQuestionWidgetState();

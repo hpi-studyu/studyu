@@ -45,7 +45,7 @@ class StudyTile extends StatelessWidget {
         ListTile(
           contentPadding: contentPadding,
           onTap: onTap,
-          title: Center(child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor))),
+          title: Center(child: Text(title, style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor))),
           subtitle: Center(child: Text(description ?? '')),
           leading: Icon(MdiIcons.fromString(iconName ?? 'accountHeart'), color: theme.primaryColor),
         ),

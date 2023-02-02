@@ -3,15 +3,15 @@ import 'package:flutter/widgets.dart';
 /// Taken from
 /// https://stackoverflow.com/questions/56417186/specific-min-and-max-size-for-expanded-widgets-in-column
 class ConstrainedWidthFlexible extends StatelessWidget {
-  const ConstrainedWidthFlexible({
-    required this.minWidth,
-    required this.maxWidth,
-    required this.flex,
-    required this.flexSum,
-    required this.outerConstraints,
-    required this.child,
-    Key? key
-  }) : super(key: key);
+  const ConstrainedWidthFlexible(
+      {required this.minWidth,
+      required this.maxWidth,
+      required this.flex,
+      required this.flexSum,
+      required this.outerConstraints,
+      required this.child,
+      Key? key})
+      : super(key: key);
 
   final double minWidth;
   final double maxWidth;
@@ -27,12 +27,11 @@ class ConstrainedWidthFlexible extends StatelessWidget {
         minWidth: minWidth,
         maxWidth: maxWidth,
       ),
-      child: Container(
+      child: SizedBox(
         width: _getWidth(outerConstraints.maxWidth),
         child: child,
       ),
     );
-
   }
 
   double _getWidth(double outerContainerWidth) {

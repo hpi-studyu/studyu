@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FAQ extends StatelessWidget {
+  const FAQ({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // TODO(Manisha): Transfer strings to translation files
@@ -248,7 +250,7 @@ final data_de = <Entry>[
 ];
 
 class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry);
+  const EntryItem(this.entry, {Key key}) : super(key: key);
 
   final Entry entry;
 

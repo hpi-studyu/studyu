@@ -39,8 +39,7 @@ class PrimaryButton extends StatefulWidget {
 
   final EdgeInsets innerPadding;
 
-  bool get isDisabled =>
-      !enabled || (onPressed == null && onPressedFuture == null);
+  bool get isDisabled => !enabled || (onPressed == null && onPressedFuture == null);
 
   final Size? minimumSize;
 
@@ -60,8 +59,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       minimumSize: widget.minimumSize,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 
-    final tooltipMessage =
-        (!widget.isDisabled) ? widget.tooltip : widget.tooltipDisabled;
+    final tooltipMessage = (!widget.isDisabled) ? widget.tooltip : widget.tooltipDisabled;
 
     onButtonPressed() {
       widget.onPressed?.call();
@@ -73,8 +71,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
             });
           }
         });
-        Future.delayed(
-            Duration(milliseconds: widget.showLoadingEarliestAfterMs), () {
+        Future.delayed(Duration(milliseconds: widget.showLoadingEarliestAfterMs), () {
           if (mounted) {
             setState(() {
               trackedFuture = future;
@@ -84,7 +81,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       }
     }
 
-    FutureBuilder _trackedFutureBuilder({
+    FutureBuilder trackedFutureBuilder({
       required WidgetBuilder otherwise,
       required WidgetBuilder whenActive,
     }) {
@@ -99,9 +96,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       );
     }
 
-    Widget _visibilityDuringLoading(WidgetBuilder child, {visible = true}) {
+    Widget visibilityDuringLoading(WidgetBuilder child, {visible = true}) {
       final loadingAlpha = visible ? 1.0 : 0.0;
-      return _trackedFutureBuilder(
+      return trackedFutureBuilder(
         whenActive: (context) => Opacity(
           opacity: loadingAlpha,
           child: child(context),
@@ -133,7 +130,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
               child: child,
             ),
             IgnorePointer(
-              child: _visibilityDuringLoading(
+              child: visibilityDuringLoading(
                 (context) => Center(child: loadingIndicator),
                 visible: true,
               ),
@@ -150,14 +147,14 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           ElevatedButton(
             style: primaryStyle,
             onPressed: (widget.isDisabled) ? null : onButtonPressed,
-            child: _visibilityDuringLoading(
+            child: visibilityDuringLoading(
               (context) => Padding(
                 padding: widget.innerPadding,
                 child: Row(
                   children: [
                     Container(
-                      child: _visibilityDuringLoading(
-                            (context) => Icon(widget.icon),
+                      child: visibilityDuringLoading(
+                        (context) => Icon(widget.icon),
                         visible: false,
                       ),
                     ),
@@ -179,7 +176,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
         ElevatedButton(
           style: primaryStyle,
           onPressed: (widget.isDisabled) ? null : onButtonPressed,
-          child: _visibilityDuringLoading(
+          child: visibilityDuringLoading(
             (context) => Padding(
               padding: widget.innerPadding,
               child: Text(widget.text, textAlign: TextAlign.center),

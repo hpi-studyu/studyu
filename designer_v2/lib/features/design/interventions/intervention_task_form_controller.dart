@@ -11,9 +11,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
 
-class InterventionTaskFormViewModel
-    extends ManagedFormViewModel<InterventionTaskFormData>
-    with WithScheduleControls {
+class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTaskFormData> with WithScheduleControls {
   InterventionTaskFormViewModel({
     super.formData,
     super.delegate,
@@ -24,10 +22,8 @@ class InterventionTaskFormViewModel
 
   // - Form fields
 
-  final FormControl<TaskID> taskIdControl = FormControl(
-      value: const Uuid().v4()); // hidden
-  final FormControl<String> taskTitleControl = FormControl(
-      value: InterventionTaskFormData.kDefaultTitle);
+  final FormControl<TaskID> taskIdControl = FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<String> taskTitleControl = FormControl(value: InterventionTaskFormData.kDefaultTitle);
   final FormControl<String> taskDescriptionControl = FormControl();
   final FormControl<bool> markAsCompletedControl = FormControl(value: true);
 
@@ -35,10 +31,10 @@ class InterventionTaskFormViewModel
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [titleRequired],
-    StudyFormValidationSet.publish: [titleRequired],
-    StudyFormValidationSet.test: [titleRequired],
-  };
+        StudyFormValidationSet.draft: [titleRequired],
+        StudyFormValidationSet.publish: [titleRequired],
+        StudyFormValidationSet.test: [titleRequired],
+      };
 
   @override
   late final FormGroup form = FormGroup({
@@ -49,13 +45,11 @@ class InterventionTaskFormViewModel
     ...scheduleFormControls
   });
 
-  get titleRequired => FormControlValidation(
-      control: taskTitleControl,
-      validators: [Validators.required],
-      validationMessages: {
+  get titleRequired => FormControlValidation(control: taskTitleControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_intervention_task_title_required,
-      }
-  );
+      });
 
   @override
   void setControlsFrom(InterventionTaskFormData data) {
@@ -90,9 +84,6 @@ class InterventionTaskFormViewModel
 
   @override
   InterventionTaskFormViewModel createDuplicate() {
-    return InterventionTaskFormViewModel(
-        delegate: delegate,
-        formData: formData?.copy(),
-        validationSet: validationSet);
+    return InterventionTaskFormViewModel(delegate: delegate, formData: formData?.copy(), validationSet: validationSet);
   }
 }

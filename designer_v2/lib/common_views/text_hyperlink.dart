@@ -20,9 +20,7 @@ class Hyperlink extends StatefulWidget {
     this.icon,
     this.iconSize,
     Key? key,
-  })  : assert(
-            (url != null && onClick == null) ||
-                (url == null && onClick != null),
+  })  : assert((url != null && onClick == null) || (url == null && onClick != null),
             "Must provide either url or onClick handler"),
         super(key: key);
 
@@ -57,19 +55,14 @@ class _HyperlinkState extends State<Hyperlink> {
         final isHovered = states.contains(MaterialState.hovered);
 
         final visitedColor = widget.visitedColor ?? widget.linkColor;
-        final visitedHoverColor = widget.hoverColor ??
-            visitedColor.faded(ThemeConfig.kHoverFadeFactor);
-        final hoverColor = widget.hoverColor ??
-            widget.linkColor.faded(ThemeConfig.kHoverFadeFactor);
+        final visitedHoverColor = widget.hoverColor ?? visitedColor.faded(ThemeConfig.kHoverFadeFactor);
+        final hoverColor = widget.hoverColor ?? widget.linkColor.faded(ThemeConfig.kHoverFadeFactor);
 
-        final actualColor = isVisited
-            ? (isHovered ? visitedHoverColor : visitedColor)
-            : (isHovered ? hoverColor : widget.linkColor);
+        final actualColor =
+            isVisited ? (isHovered ? visitedHoverColor : visitedColor) : (isHovered ? hoverColor : widget.linkColor);
 
-        final textTheme =
-            theme.textTheme.titleSmall ?? theme.textTheme.bodyText1;
-        TextStyle? actualStyle =
-            textTheme?.copyWith(color: actualColor).merge(widget.style);
+        final textTheme = theme.textTheme.titleSmall ?? theme.textTheme.bodyLarge;
+        TextStyle? actualStyle = textTheme?.copyWith(color: actualColor).merge(widget.style);
 
         if (isVisited) {
           actualStyle = actualStyle?.merge(widget.visitedStyle);
@@ -84,9 +77,7 @@ class _HyperlinkState extends State<Hyperlink> {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(widget.icon,
-                  color: actualColor,
-                  size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
+              Icon(widget.icon, color: actualColor, size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
               const SizedBox(width: 2.0),
               textWidget
             ],

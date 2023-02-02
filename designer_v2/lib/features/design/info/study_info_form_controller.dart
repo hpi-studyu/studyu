@@ -26,8 +26,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> descriptionControl = FormControl();
   final FormControl<String> organizationControl = FormControl();
   final FormControl<String> reviewBoardControl = FormControl();
-  final FormControl<String> reviewBoardNumberControl =
-      FormControl();
+  final FormControl<String> reviewBoardNumberControl = FormControl();
   final FormControl<String> researchersControl = FormControl();
   final FormControl<String> emailControl = FormControl();
   final FormControl<String> websiteControl = FormControl();
@@ -53,10 +52,8 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     iconControl.value = IconOption(data.iconName);
     descriptionControl.value = data.description;
     organizationControl.value = data.contactInfoFormData.organization;
-    reviewBoardControl.value =
-        data.contactInfoFormData.institutionalReviewBoard;
-    reviewBoardNumberControl.value =
-        data.contactInfoFormData.institutionalReviewBoardNumber;
+    reviewBoardControl.value = data.contactInfoFormData.institutionalReviewBoard;
+    reviewBoardNumberControl.value = data.contactInfoFormData.institutionalReviewBoardNumber;
     researchersControl.value = data.contactInfoFormData.researchers;
     emailControl.value = data.contactInfoFormData.email;
     websiteControl.value = data.contactInfoFormData.website;
@@ -66,20 +63,18 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   @override
   StudyInfoFormData buildFormData() {
     return StudyInfoFormData(
-      title: titleControl.value!, // required
-      iconName: iconControl.value?.name ?? '',
-      description: descriptionControl.value,
-      contactInfoFormData: StudyContactInfoFormData(
-        organization: organizationControl.value,
-        institutionalReviewBoard: reviewBoardControl.value,
-        institutionalReviewBoardNumber:
-            reviewBoardNumberControl.value,
-        researchers: researchersControl.value,
-        email: emailControl.value,
-        website: websiteControl.value,
-        phone: phoneControl.value,
-      )
-    );
+        title: titleControl.value!, // required
+        iconName: iconControl.value?.name ?? '',
+        description: descriptionControl.value,
+        contactInfoFormData: StudyContactInfoFormData(
+          organization: organizationControl.value,
+          institutionalReviewBoard: reviewBoardControl.value,
+          institutionalReviewBoardNumber: reviewBoardNumberControl.value,
+          researchers: researchersControl.value,
+          email: emailControl.value,
+          website: websiteControl.value,
+          phone: phoneControl.value,
+        ));
   }
 
   @override
@@ -89,96 +84,77 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
 
   @override
   FormValidationConfigSet get validationConfig => {
-    // TODO phoneFormat
-    StudyFormValidationSet.draft: [
-      titleRequired, emailFormat, websiteFormat
-    ],
-    StudyFormValidationSet.publish: [
-      titleRequired, descriptionRequired, iconRequired, organizationRequired,
-      reviewBoardRequired, reviewBoardNumberRequired, researchersRequired,
-      emailRequired, phoneRequired,
-      emailFormat, websiteFormat
-    ],
-    StudyFormValidationSet.test: [
-      titleRequired
-    ],
-  };
+        // TODO phoneFormat
+        StudyFormValidationSet.draft: [titleRequired, emailFormat, websiteFormat],
+        StudyFormValidationSet.publish: [
+          titleRequired,
+          descriptionRequired,
+          iconRequired,
+          organizationRequired,
+          reviewBoardRequired,
+          reviewBoardNumberRequired,
+          researchersRequired,
+          emailRequired,
+          phoneRequired,
+          emailFormat,
+          websiteFormat
+        ],
+        StudyFormValidationSet.test: [titleRequired],
+      };
 
-  get titleRequired => FormControlValidation(
-      control: titleControl,
-      validators: [Validators.required],
-      validationMessages: {
+  get titleRequired => FormControlValidation(control: titleControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_study_title_required,
-      }
-  );
-  get descriptionRequired => FormControlValidation(
-      control: descriptionControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get descriptionRequired => FormControlValidation(control: descriptionControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_study_description_required,
-      }
-  );
-  get iconRequired => FormControlValidation(
-      control: iconControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get iconRequired => FormControlValidation(control: iconControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_study_icon_required,
-      }
-  );
-  get organizationRequired => FormControlValidation(
-      control: organizationControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get organizationRequired => FormControlValidation(control: organizationControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_organization_required,
-      }
-  );
-  get reviewBoardRequired => FormControlValidation(
-      control: reviewBoardControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get reviewBoardRequired => FormControlValidation(control: reviewBoardControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_review_board_required,
-      }
-  );
-  get reviewBoardNumberRequired => FormControlValidation(
-      control: reviewBoardNumberControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get reviewBoardNumberRequired => FormControlValidation(control: reviewBoardNumberControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_review_board_number_required,
-      }
-  );
-  get researchersRequired => FormControlValidation(
-      control: researchersControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get researchersRequired => FormControlValidation(control: researchersControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_researchers_required,
-      }
-  );
-  get emailRequired => FormControlValidation(
-      control: emailControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get emailRequired => FormControlValidation(control: emailControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_contact_email_required,
-      }
-  );
-  get phoneRequired => FormControlValidation(
-      control: phoneControl,
-      validators: [Validators.required],
-      validationMessages: {
+      });
+  get phoneRequired => FormControlValidation(control: phoneControl, validators: [
+        Validators.required
+      ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_contact_phone_required,
-      }
-  );
-  get emailFormat => FormControlValidation(
-      control: emailControl,
-      validators: [Validators.email],
-      validationMessages: {
+      });
+  get emailFormat => FormControlValidation(control: emailControl, validators: [
+        Validators.email
+      ], validationMessages: {
         'email': (error) => tr.form_field_contact_email_email,
-      }
-  );
-  get websiteFormat => FormControlValidation(
-      control: websiteControl,
-      validators: [Validators.pattern(Patterns.url)],
-      validationMessages: {
+      });
+  get websiteFormat => FormControlValidation(control: websiteControl, validators: [
+        Validators.pattern(Patterns.url)
+      ], validationMessages: {
         'pattern': (error) => tr.form_field_website_pattern,
-      }
-  );
+      });
 }

@@ -5,19 +5,19 @@ import 'package:studyu_designer_v2/theme.dart';
 class StandardDialog extends StatelessWidget {
   const StandardDialog({
     this.title,
-      this.titleText,
-      required this.body,
-      this.width,
-      this.height,
-      this.padding = const EdgeInsets.fromLTRB(42.0, 36.0, 42.0, 36.0),
-      this.minWidth = 400,
-      this.minHeight = 300,
-      this.maxWidth,
-      this.maxHeight,
-      this.actionButtons = const [],
-      this.backgroundColor,
-      this.borderRadius = 20.0,
-      Key? key,
+    this.titleText,
+    required this.body,
+    this.width,
+    this.height,
+    this.padding = const EdgeInsets.fromLTRB(42.0, 36.0, 42.0, 36.0),
+    this.minWidth = 400,
+    this.minHeight = 300,
+    this.maxWidth,
+    this.maxHeight,
+    this.actionButtons = const [],
+    this.backgroundColor,
+    this.borderRadius = 20.0,
+    Key? key,
   }) : super(key: key);
 
   final Widget? title;
@@ -47,7 +47,7 @@ class StandardDialog extends StatelessWidget {
         ((titleText != null)
             ? SelectableText(
                 titleText!,
-                style: theme.textTheme.headline3?.copyWith(
+                style: theme.textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.normal,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),
@@ -85,31 +85,27 @@ class StandardDialog extends StatelessWidget {
             height: height,
             child: IntrinsicHeight(
               child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    padding.left,
-                    padding.top,
-                    padding.right,
-                    padding.bottom,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      (titleWidget != null)
-                          ? titleWidget
-                          : const SizedBox.shrink(),
-                      (titleWidget != null)
-                          ? SizedBox(height: padding.top * 2/3)
-                          : const SizedBox.shrink(),
-                      Expanded(
-                        child: SingleChildScrollView(child: body),
-                      ),
-                      SizedBox(height: padding.bottom * 3/4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: withSpacing(actionButtons, spacing: 8.0),
-                      ),
-                    ],
-                  ),
+                padding: EdgeInsets.fromLTRB(
+                  padding.left,
+                  padding.top,
+                  padding.right,
+                  padding.bottom,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    (titleWidget != null) ? titleWidget : const SizedBox.shrink(),
+                    (titleWidget != null) ? SizedBox(height: padding.top * 2 / 3) : const SizedBox.shrink(),
+                    Expanded(
+                      child: SingleChildScrollView(child: body),
+                    ),
+                    SizedBox(height: padding.bottom * 3 / 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: withSpacing(actionButtons, spacing: 8.0),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

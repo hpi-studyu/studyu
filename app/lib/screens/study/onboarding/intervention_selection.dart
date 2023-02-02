@@ -12,8 +12,10 @@ import '../../../widgets/intervention_card.dart';
 import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
+  const InterventionSelectionScreen({Key key}) : super(key: key);
+
   @override
-  _InterventionSelectionScreenState createState() => _InterventionSelectionScreenState();
+  State<InterventionSelectionScreen> createState() => _InterventionSelectionScreenState();
 }
 
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
@@ -33,12 +35,12 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
         children: [
           Text(
             AppLocalizations.of(context).please_select_interventions,
-            style: theme.textTheme.subtitle1,
+            style: theme.textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context).please_select_interventions_description,
-            style: theme.textTheme.bodyText2.copyWith(color: theme.textTheme.caption.color),
+            style: theme.textTheme.bodyMedium.copyWith(color: theme.textTheme.bodySmall.color),
           ),
         ],
       ),

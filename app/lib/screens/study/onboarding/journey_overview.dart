@@ -12,8 +12,10 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
+  const JourneyOverviewScreen({Key key}) : super(key: key);
+
   @override
-  _JourneyOverviewScreen createState() => _JourneyOverviewScreen();
+  State<JourneyOverviewScreen> createState() => _JourneyOverviewScreen();
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
@@ -139,7 +141,7 @@ class InterventionTile extends StatelessWidget {
       beforeLineStyle: LineStyle(color: theme.primaryColor),
       afterLineStyle: LineStyle(color: theme.primaryColor),
       endChild: TimelineChild(
-        child: Text(title, style: theme.textTheme.headline6.copyWith(color: theme.primaryColor)),
+        child: Text(title, style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor)),
       ),
       startChild: TimelineChild(
         child: Text(DateFormat('dd-MM-yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),

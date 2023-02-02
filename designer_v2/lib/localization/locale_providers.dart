@@ -9,7 +9,6 @@ import 'locale_state.dart';
 /// Platform Locale Provider
 /// Returns the locale of the Platform.localeName
 final platformLocaleProvider = Provider<Locale>((_) {
-
   // Get the platform language using platform specific implementations
   Locale platformLocale = PlatformLocale().getPlatformLocale();
 
@@ -28,6 +27,4 @@ final localeProvider = Provider<Locale>((ref) {
   return ref.watch(localeStateProvider).locale;
 });
 
-final localeStateProvider = StateNotifierProvider<LocaleStateNotifier, LocaleState>(
-        (ref) => LocaleStateNotifier(ref)
-);
+final localeStateProvider = StateNotifierProvider<LocaleStateNotifier, LocaleState>((ref) => LocaleStateNotifier(ref));

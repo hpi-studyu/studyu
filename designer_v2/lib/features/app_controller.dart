@@ -6,7 +6,6 @@ import 'package:studyu_designer_v2/features/app_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
 
-
 /// Interface for implementation by any resources that want to bind themselves
 /// to the application lifecycle
 abstract class IAppDelegate {
@@ -25,28 +24,22 @@ class AppController extends StateNotifier<AppControllerState> {
 
   /// A dummy [Future] used for setting a lower bound on app initialization
   /// (so that the splash screen is shown during this time)
-  late final _delayedFuture = Future.delayed(
-      const Duration(milliseconds: Config.minSplashTime), () => true
-  );
+  late final _delayedFuture = Future.delayed(const Duration(milliseconds: Config.minSplashTime), () => true);
 
-  AppController({
-    required this.sharedPreferences,
-    required this.appDelegates}) : super(const AppControllerState());
+  AppController({required this.sharedPreferences, required this.appDelegates}) : super(const AppControllerState());
 
   get isInitialized => state.status == AppStatus.initialized;
 
   Future<bool> onAppStart() async {
     // Forward onAppStart to all registered delegates so that they can
     // e.g. read some data from local storage for initialization
-    final result = await _callDelegates(
-            (delegate) => delegate.onAppStart(), withMinDelay: true);
+    final result = await _callDelegates((delegate) => delegate.onAppStart(), withMinDelay: true);
     state = const AppControllerState(status: AppStatus.initialized);
     return result;
   }
 
   /// Executes the given callback for all registered delegates concurrently
-  Future<bool> _callDelegates(_DelegateCallback function,
-      {withMinDelay = false}) async {
+  Future<bool> _callDelegates(_DelegateCallback function, {withMinDelay = false}) async {
     final List<Future<bool>> delegateFutures = [];
     // Collect all delegated futures
     for (final delegate in appDelegates) {
@@ -64,14 +57,10 @@ class AppController extends StateNotifier<AppControllerState> {
 }
 
 final appControllerProvider = StateNotifierProvider<AppController, AppControllerState>((ref) {
-  final appController = AppController(
-      sharedPreferences: ref.watch(sharedPreferencesProvider),
-      appDelegates: [
-
-        /// Register [IAppDelegate]s here for invocation of app lifecycle methods
-        ref.watch(authRepositoryProvider),
-      ]
-  );
+  final appController = AppController(sharedPreferences: ref.watch(sharedPreferencesProvider), appDelegates: [
+    /// Register [IAppDelegate]s here for invocation of app lifecycle methods
+    ref.watch(authRepositoryProvider),
+  ]);
   appController.addListener((state) {
     print("appController.state updated");
   });
@@ -80,5 +69,4 @@ final appControllerProvider = StateNotifierProvider<AppController, AppController
   });
   print("appControllerProvider");
   return appController;
-}
-);
+});

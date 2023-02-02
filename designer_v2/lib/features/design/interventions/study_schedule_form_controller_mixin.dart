@@ -12,12 +12,9 @@ mixin StudyScheduleControls {
   static const defaultNumCycles = 2;
   static const defaultPeriodLength = 7;
 
-  final FormControl<PhaseSequence> sequenceTypeControl =
-      FormControl(value: defaultScheduleType);
-  final FormControl<int> phaseDurationControl =
-      FormControl(value: defaultPeriodLength);
-  final FormControl<int> numCyclesControl =
-      FormControl(value: defaultNumCycles);
+  final FormControl<PhaseSequence> sequenceTypeControl = FormControl(value: defaultScheduleType);
+  final FormControl<int> phaseDurationControl = FormControl(value: defaultPeriodLength);
+  final FormControl<int> numCyclesControl = FormControl(value: defaultNumCycles);
   final FormControl<bool> includeBaselineControl = FormControl(value: true);
 
   List<FormControlOption<PhaseSequence>> get sequenceTypeControlOptions =>
@@ -47,17 +44,11 @@ mixin StudyScheduleControls {
         ],
         validationMessages: {
           ValidationMessage.required: (error) =>
-              tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax
-              ),
+              tr.form_field_crossover_schedule_num_cycles_range(kNumCyclesMin, kNumCyclesMax),
           ValidationMessage.min: (error) =>
-              tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax
-              ),
+              tr.form_field_crossover_schedule_num_cycles_range(kNumCyclesMin, kNumCyclesMax),
           ValidationMessage.max: (error) =>
-              tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax
-              ),
+              tr.form_field_crossover_schedule_num_cycles_range(kNumCyclesMin, kNumCyclesMax),
         },
       );
 
@@ -65,24 +56,14 @@ mixin StudyScheduleControls {
   static int kPhaseDurationMax = 365;
   get phaseDurationRange => FormControlValidation(
         control: phaseDurationControl,
-        validators: [
-          Validators.required,
-          Validators.min(kPhaseDurationMin),
-          Validators.max(kPhaseDurationMax)
-        ],
+        validators: [Validators.required, Validators.min(kPhaseDurationMin), Validators.max(kPhaseDurationMax)],
         validationMessages: {
           ValidationMessage.required: (error) =>
-              tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax
-              ),
+              tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
           ValidationMessage.min: (error) =>
-              tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax
-              ),
+              tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
           ValidationMessage.max: (error) =>
-              tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax
-              ),
+              tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
         },
       );
 

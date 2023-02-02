@@ -33,11 +33,9 @@ abstract class FormConsumerWidget extends StatefulWidget {
 class _FormConsumerWidgetState extends State<FormConsumerWidget> {
   @override
   Widget build(BuildContext context) {
-    return ReactiveFormConsumer(
-        builder: (context, form, _) {
-          return widget.build(context, form);
-        }
-    );
+    return ReactiveFormConsumer(builder: (context, form, _) {
+      return widget.build(context, form);
+    });
   }
 }
 
@@ -55,10 +53,8 @@ abstract class FormConsumerRefWidget extends ConsumerStatefulWidget {
 class _FormConsumerRefWidgetState extends ConsumerState<FormConsumerRefWidget> {
   @override
   Widget build(BuildContext context) {
-    return ReactiveFormConsumer(
-        builder: (context, form, _) {
-          return widget.build(context, form, ref);
-        }
-    );
+    return ReactiveFormConsumer(builder: (context, form, _) {
+      return widget.build(context, form, ref);
+    });
   }
 }

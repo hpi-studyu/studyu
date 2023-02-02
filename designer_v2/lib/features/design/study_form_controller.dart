@@ -22,10 +22,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
-
-class StudyFormViewModel extends FormViewModel<Study>
-    implements
-        IFormViewModelDelegate<FormViewModel> {
+class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
@@ -45,8 +42,7 @@ class StudyFormViewModel extends FormViewModel<Study>
   final IAuthRepository authRepository;
   final GoRouter router;
 
-  bool get isStudyReadonly =>
-      formData?.isReadonly(authRepository.currentUser!) ?? false;
+  bool get isStudyReadonly => formData?.isReadonly(authRepository.currentUser!) ?? false;
 
   late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
     formData: StudyInfoFormData.fromStudy(formData!),
@@ -81,10 +77,10 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [], // defined in subforms
-    StudyFormValidationSet.publish: [], // defined in subforms
-    StudyFormValidationSet.test: [], // defined in subforms
-  };
+        StudyFormValidationSet.draft: [], // defined in subforms
+        StudyFormValidationSet.publish: [], // defined in subforms
+        StudyFormValidationSet.test: [], // defined in subforms
+      };
 
   @override
   late final FormGroup form = FormGroup({
@@ -146,8 +142,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
     // Flush the on-write study copy to the repository & clear it
-    return studyRepository.save(studyDirtyCopy!)
-        .then((study) => studyDirtyCopy = null);
+    return studyRepository.save(studyDirtyCopy!).then((study) => studyDirtyCopy = null);
   }
 }
 
@@ -156,8 +151,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final studyFormViewModelProvider = Provider.autoDispose
-    .family<StudyFormViewModel, StudyID>((ref, studyId) {
+final studyFormViewModelProvider = Provider.autoDispose.family<StudyFormViewModel, StudyID>((ref, studyId) {
   print("studyFormViewModelProvider");
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudyFormViewModel(

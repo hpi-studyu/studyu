@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -16,7 +15,6 @@ import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class StudyTestScreen extends StudyPageWidget {
   const StudyTestScreen(
@@ -32,8 +30,7 @@ class StudyTestScreen extends StudyPageWidget {
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
     final canTest = !formViewModel.form.hasErrors;
 
-    final frameController =
-        ref.watch(studyTestPlatformControllerProvider(studyId));
+    final frameController = ref.watch(studyTestPlatformControllerProvider(studyId));
     frameController.generateUrl();
     frameController.activate();
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
@@ -73,8 +70,7 @@ class StudyTestScreen extends StudyPageWidget {
                 onPressed: (!canTest)
                     ? null
                     : () {
-                        frameController.navigate(
-                            route: TestAppRoutes.eligibility);
+                        frameController.navigate(route: TestAppRoutes.eligibility);
                       },
               ),
               TextButton.icon(
@@ -83,8 +79,7 @@ class StudyTestScreen extends StudyPageWidget {
                 onPressed: (!canTest)
                     ? null
                     : () {
-                        frameController.navigate(
-                            route: TestAppRoutes.intervention);
+                        frameController.navigate(route: TestAppRoutes.intervention);
                       },
               ),
               TextButton.icon(
@@ -111,8 +106,7 @@ class StudyTestScreen extends StudyPageWidget {
                 onPressed: (!canTest)
                     ? null
                     : () {
-                        frameController.navigate(
-                            route: TestAppRoutes.dashboard);
+                        frameController.navigate(route: TestAppRoutes.dashboard);
                       },
               ),
             ],
@@ -142,22 +136,19 @@ class StudyTestScreen extends StudyPageWidget {
       return null;
     }
     return BannerBox(
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextParagraph(
-              text: tr.banner_study_test_unavailable,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            ReactiveForm(
-                formGroup: formViewModel.form,
-                child: ReactiveFormConsumer(builder: (context, form, child) {
-                  return TextParagraph(
-                    text: form.validationErrorSummary,
-                  );
-                })),
-          ]),
+      body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        TextParagraph(
+          text: tr.banner_study_test_unavailable,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        ReactiveForm(
+            formGroup: formViewModel.form,
+            child: ReactiveFormConsumer(builder: (context, form, child) {
+              return TextParagraph(
+                text: form.validationErrorSummary,
+              );
+            })),
+      ]),
       style: BannerStyle.warning,
     );
   }
@@ -196,10 +187,9 @@ class StudyTestScreen extends StudyPageWidget {
           Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                  "\n${tr.dialog_study_test_section_tips}\n",
-                  style: theme.textTheme.headline5,
-              )
-          ),
+                "\n${tr.dialog_study_test_section_tips}\n",
+                style: theme.textTheme.headlineSmall,
+              )),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,17 +210,17 @@ class StudyTestScreen extends StudyPageWidget {
             ],
           ),
           Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                  "\n${tr.dialog_study_test_section_notice}\n",
-                  style: theme.textTheme.headline5,
-              ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "\n${tr.dialog_study_test_section_notice}\n",
+              style: theme.textTheme.headlineSmall,
+            ),
           ),
           Align(
-              alignment: Alignment.centerLeft,
-              child: TextParagraph(
-                text: tr.dialog_study_test_section_notice_text,
-              ),
+            alignment: Alignment.centerLeft,
+            child: TextParagraph(
+              text: tr.dialog_study_test_section_notice_text,
+            ),
           ),
         ],
       ),

@@ -54,16 +54,16 @@ class PhoneContainer extends StatelessWidget {
   static const double defaultWidth = 300.0;
   static const double defaultHeight = 600.0;
 
-  const PhoneContainer({
-    required this.innerContent,
-    this.width = PhoneContainer.defaultWidth,
-    this.height = PhoneContainer.defaultHeight,
-    this.borderColor = Colors.black,
-    this.borderWidth = 6.0,
-    this.borderRadius = 25.0,
-    this.innerContentBackgroundColor = Colors.white,
-    Key? key
-  }) : super(key: key);
+  const PhoneContainer(
+      {required this.innerContent,
+      this.width = PhoneContainer.defaultWidth,
+      this.height = PhoneContainer.defaultHeight,
+      this.borderColor = Colors.black,
+      this.borderWidth = 6.0,
+      this.borderRadius = 25.0,
+      this.innerContentBackgroundColor = Colors.white,
+      Key? key})
+      : super(key: key);
 
   final double width;
   final double height;
@@ -95,24 +95,23 @@ class PhoneContainer extends StatelessWidget {
                   ),
                 ),
               ),
-              ClipRRect( // opaque border so that we can draw on top with other colors
+              ClipRRect(
+                // opaque border so that we can draw on top with other colors
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                       border: Border.all(width: borderWidth, color: Colors.white),
-                      shape: BoxShape.rectangle
-                  ),
+                      shape: BoxShape.rectangle),
                 ),
               ),
             ],
           ),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-              border: Border.all(width: borderWidth, color: borderColor),
-              shape: BoxShape.rectangle
-            ),
+                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+                border: Border.all(width: borderWidth, color: borderColor),
+                shape: BoxShape.rectangle),
           ),
         ],
       ),
@@ -155,22 +154,19 @@ Widget? previewBanner(WidgetRef ref, String studyId) {
     return null;
   }
   return BannerBox(
-    body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextParagraph(
-            text: tr.banner_study_preview_unavailable,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(builder: (context, form, child) {
-                return TextParagraph(
-                  text: form.validationErrorSummary,
-                );
-              })),
-        ]),
+    body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      TextParagraph(
+        text: tr.banner_study_preview_unavailable,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      ReactiveForm(
+          formGroup: formViewModel.form,
+          child: ReactiveFormConsumer(builder: (context, form, child) {
+            return TextParagraph(
+              text: form.validationErrorSummary,
+            );
+          })),
+    ]),
     style: BannerStyle.warning,
   );
 }

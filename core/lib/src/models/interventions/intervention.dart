@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/models/interventions/intervention_task.dart';
 import 'package:uuid/uuid.dart';
-
-import 'intervention_task.dart';
 
 part 'intervention.g.dart';
 

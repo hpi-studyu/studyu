@@ -10,7 +10,9 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final Function(fhir.QuestionnaireResponseItem) onDone;
   final String multiSelectionText;
 
-  ChoiceQuestionWidget({@required this.question, @required this.onDone, @required this.multiSelectionText});
+  const ChoiceQuestionWidget(
+      {Key key, @required this.question, @required this.onDone, @required this.multiSelectionText})
+      : super(key: key);
 
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();

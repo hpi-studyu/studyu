@@ -6,9 +6,9 @@ class SerializableColor extends Color {
   SerializableColor(super.value);
 
   JsonMap toJson() => {
-    "value": super.value,
-  };
+        "value": super.value,
+      };
   static SerializableColor fromJson(JsonMap json) => SerializableColor(
-    int.parse(json["value"].toString()),
-  );
+        int.parse(json["value"].toString()),
+      );
 }

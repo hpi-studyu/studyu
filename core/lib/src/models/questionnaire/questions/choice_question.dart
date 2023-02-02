@@ -1,9 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/models/questionnaire/answer.dart';
+import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 import 'package:uuid/uuid.dart';
-
-import '../answer.dart';
-import '../question.dart';
-import '../question_conditional.dart';
 
 part 'choice_question.g.dart';
 

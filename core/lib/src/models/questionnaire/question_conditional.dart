@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../expressions/expression.dart';
+import 'package:studyu_core/src/models/expressions/expression.dart';
 
 part 'question_conditional.g.dart';
 

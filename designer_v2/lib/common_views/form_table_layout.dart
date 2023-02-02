@@ -47,8 +47,8 @@ class FormTableLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // Flutter uses "theme.textTheme.subtitle1" for input fields by default
-    final inputTextTheme = theme.textTheme.subtitle1!;
+    // Flutter uses "theme.textTheme.titleMedium" for input fields by default
+    final inputTextTheme = theme.textTheme.titleMedium!;
 
     final List<TableRow> tableRows = [];
 
@@ -57,24 +57,19 @@ class FormTableLayout extends StatelessWidget {
       final isTrailing = i == rows.length - 1;
 
       final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
-      final stateColorStyle = (row.control != null && row.control!.disabled)
-          ? TextStyle(color: theme.disabledColor)
-          : null;
-      final actualRowLayout =
-          row.layout ?? rowLayout ?? FormTableRowLayout.horizontal;
+      final stateColorStyle =
+          (row.control != null && row.control!.disabled) ? TextStyle(color: theme.disabledColor) : null;
+      final actualRowLayout = row.layout ?? rowLayout ?? FormTableRowLayout.horizontal;
 
       final labelWidget = (row.labelBuilder != null)
           ? row.labelBuilder!(context)
           : Wrap(
               children: [
-                (actualRowLayout == FormTableRowLayout.vertical)
-                    ? const SizedBox(width: 2.0)
-                    : const SizedBox.shrink(),
+                (actualRowLayout == FormTableRowLayout.vertical) ? const SizedBox(width: 2.0) : const SizedBox.shrink(),
                 FormLabel(
                   labelText: row.label,
                   helpText: row.labelHelpText,
-                  labelTextStyle:
-                      rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
+                  labelTextStyle: rowLabelStyle?.merge(row.labelStyle) ?? row.labelStyle,
                   layout: row.layout,
                 ),
               ],
@@ -85,9 +80,7 @@ class FormTableLayout extends StatelessWidget {
         // Unfortunately need to override the theme here as a workaround to
         // change the text color for disabled controls
         child: Theme(
-          data: theme.copyWith(
-              textTheme:
-                  TextTheme(subtitle1: inputTextTheme.merge(stateColorStyle))),
+          data: theme.copyWith(textTheme: TextTheme(titleMedium: inputTextTheme.merge(stateColorStyle))),
           child: row.input,
         ),
       );
@@ -97,17 +90,14 @@ class FormTableLayout extends StatelessWidget {
       if (actualRowLayout == FormTableRowLayout.horizontal) {
         tableRow = TableRow(
           children: [
-            Container(
-                child: Padding(
-              padding:
-                  EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
+            Padding(
+              padding: EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
               child: labelWidget,
-            )),
-            Container(
-                child: Padding(
+            ),
+            Padding(
               padding: EdgeInsets.only(bottom: bottomSpacing),
               child: contentWidget,
-            )),
+            ),
           ],
         );
       } else {
@@ -140,13 +130,12 @@ class FormTableLayout extends StatelessWidget {
     }
 
     return Table(
-      columnWidths:
-          (rowLayout != null && rowLayout == FormTableRowLayout.vertical)
-              ? const {
-                  0: FlexColumnWidth(),
-                  1: FixedColumnWidth(0.0),
-                }
-              : columnWidths,
+      columnWidths: (rowLayout != null && rowLayout == FormTableRowLayout.vertical)
+          ? const {
+              0: FlexColumnWidth(),
+              1: FixedColumnWidth(0.0),
+            }
+          : columnWidths,
       children: tableRows,
     );
   }
@@ -170,7 +159,7 @@ class FormSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = Theme.of(context).textTheme.headline6!;
+    final titleStyle = Theme.of(context).textTheme.titleLarge!;
 
     return Column(
       children: [
@@ -217,13 +206,10 @@ class FormLabel extends StatelessWidget {
         (labelText != null)
             ? Text(
                 labelText!,
-                style:
-                    Theme.of(context).textTheme.caption?.merge(labelTextStyle),
+                style: Theme.of(context).textTheme.bodySmall?.merge(labelTextStyle),
               )
             : const SizedBox.shrink(),
-        (helpText != null)
-            ? const SizedBox(width: 8.0)
-            : const SizedBox.shrink(),
+        (helpText != null) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
         (helpText != null)
             ? Padding(
                 padding: const EdgeInsets.only(top: 2.0),

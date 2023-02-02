@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'value_expression.dart';
+import 'package:studyu_core/src/models/expressions/types/value_expression.dart';
 
 part 'boolean_expression.g.dart';
 

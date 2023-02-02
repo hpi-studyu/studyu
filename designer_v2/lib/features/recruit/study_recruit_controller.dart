@@ -13,7 +13,6 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyRecruitController extends StudyBaseController<StudyRecruitControllerState>
     implements IModelActionProvider<StudyInvite> {
-
   StudyRecruitController({
     required super.studyId,
     required super.studyRepository,
@@ -55,14 +54,18 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
   @override
   List<ModelAction> availableActions(StudyInvite model) {
-    final actions = inviteCodeRepository.availableActions(model)
-        .where((action) => action.type != ModelActionType.clipboard).toList();
+    final actions = inviteCodeRepository
+        .availableActions(model)
+        .where((action) => action.type != ModelActionType.clipboard)
+        .toList();
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(StudyInvite model) {
-    final actions = inviteCodeRepository.availableActions(model)
-        .where((action) => action.type == ModelActionType.clipboard).toList();
+    final actions = inviteCodeRepository
+        .availableActions(model)
+        .where((action) => action.type == ModelActionType.clipboard)
+        .toList();
     return withIcons(actions, modelActionIcons);
   }
 
@@ -76,12 +79,12 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
-  .family<StudyRecruitController, StudyRecruitControllerState, StudyID>((ref, studyId) {
-    return StudyRecruitController(
-      studyId: studyId,
-      studyRepository: ref.watch(studyRepositoryProvider),
-      currentUser: ref.watch(authRepositoryProvider).currentUser,
-      router: ref.watch(routerProvider),
-      inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
-    );
+    .family<StudyRecruitController, StudyRecruitControllerState, StudyID>((ref, studyId) {
+  return StudyRecruitController(
+    studyId: studyId,
+    studyRepository: ref.watch(studyRepositoryProvider),
+    currentUser: ref.watch(authRepositoryProvider).currentUser,
+    router: ref.watch(routerProvider),
+    inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
+  );
 });

@@ -1,5 +1,5 @@
-import '../../questionnaire/questionnaire_state.dart';
-import '../expression.dart';
+import 'package:studyu_core/src/models/expressions/expression.dart';
+import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
 abstract class ValueExpression<V> extends Expression {
   static const String expressionType = 'value';

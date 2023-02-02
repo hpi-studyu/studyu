@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../util/supabase_object.dart';
-import '../results/result.dart';
+import 'package:studyu_core/src/models/results/result.dart';
+import 'package:studyu_core/src/util/supabase_object.dart';
 
 part 'subject_progress.g.dart';
 

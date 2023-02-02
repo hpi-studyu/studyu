@@ -58,8 +58,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 onPressed: controller.onClickNewStudy,
               ),
               const SizedBox(width: 28.0),
-              SelectableText(state.visibleListTitle,
-                  style: theme.textTheme.headline4),
+              SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
@@ -69,8 +68,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               studies: visibleStudies,
               onSelect: controller.onSelectStudy,
               getActions: controller.availableActions,
-              emptyWidget: (widget.filter == null ||
-                      widget.filter == StudiesFilter.owned)
+              emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 24.0),
                       child: EmptyBody(

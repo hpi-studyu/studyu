@@ -57,8 +57,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         child: ReactiveIconPicker(
                           formControl: formViewModel.iconControl,
                           iconOptions: IconPack.material,
-                          validationMessages:
-                              formViewModel.iconControl.validationMessages,
+                          validationMessages: formViewModel.iconControl.validationMessages,
                         ),
                       )
                     ],
@@ -70,16 +69,14 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   labelHelpText: tr.form_field_study_description_tooltip,
                   input: ReactiveTextField(
                     formControl: formViewModel.descriptionControl,
-                    validationMessages:
-                        formViewModel.descriptionControl.validationMessages,
+                    validationMessages: formViewModel.descriptionControl.validationMessages,
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(500),
                     ],
-                    decoration: InputDecoration(
-                        hintText: tr.form_field_study_description_hint),
+                    decoration: InputDecoration(hintText: tr.form_field_study_description_hint),
                   ),
                 ),
               ], columnWidths: const {
@@ -100,8 +97,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                        formViewModel.organizationControl.validationMessages,
+                    validationMessages: formViewModel.organizationControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -112,22 +108,18 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages: formViewModel
-                        .reviewBoardControl.validationMessages,
+                    validationMessages: formViewModel.reviewBoardControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.reviewBoardNumberControl,
                   label: tr.form_field_review_board_number,
                   input: ReactiveTextField(
-                    formControl:
-                        formViewModel.reviewBoardNumberControl,
+                    formControl: formViewModel.reviewBoardNumberControl,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages: formViewModel
-                        .reviewBoardNumberControl
-                        .validationMessages,
+                    validationMessages: formViewModel.reviewBoardNumberControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -138,8 +130,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                    formViewModel.researchersControl.validationMessages,
+                    validationMessages: formViewModel.researchersControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -150,8 +141,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(300),
                     ],
-                    validationMessages:
-                        formViewModel.websiteControl.validationMessages,
+                    validationMessages: formViewModel.websiteControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -162,8 +152,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                        formViewModel.emailControl.validationMessages,
+                    validationMessages: formViewModel.emailControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -174,8 +163,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50),
                     ],
-                    validationMessages:
-                        formViewModel.phoneControl.validationMessages,
+                    validationMessages: formViewModel.phoneControl.validationMessages,
                   ),
                 ),
               ], columnWidths: const {

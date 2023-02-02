@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../models.dart';
+import 'package:studyu_core/src/models/models.dart';
 
 part 'questionnaire_task.g.dart';
 

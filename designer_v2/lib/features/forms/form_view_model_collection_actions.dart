@@ -1,4 +1,3 @@
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -6,15 +5,12 @@ import 'package:studyu_designer_v2/utils/typings.dart';
 
 /// Extension that implements a set of standard actions for elements of a
 /// [FormViewModelCollection]
-extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
-    D extends IFormData> on FormViewModelCollection<T, D> {
+extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>, D extends IFormData>
+    on FormViewModelCollection<T, D> {
   // implements IListActionProvider<T>
 
   List<ModelAction> availableActions(T formViewModel,
-      {VoidCallbackOn<T>? onEdit,
-      VoidCallbackOn<T>? onDuplicate,
-      VoidCallbackOn<T>? onDelete,
-      isReadOnly = false}) {
+      {VoidCallbackOn<T>? onEdit, VoidCallbackOn<T>? onDuplicate, VoidCallbackOn<T>? onDelete, isReadOnly = false}) {
     final actions = [
       ModelAction(
         type: ModelActionType.edit,
@@ -28,8 +24,7 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
         onExecute: (onDuplicate != null)
             ? () => onDuplicate(formViewModel)
             : () {
-                final duplicateFormViewModel =
-                    formViewModel.createDuplicate() as T;
+                final duplicateFormViewModel = formViewModel.createDuplicate() as T;
                 add(duplicateFormViewModel);
               },
         isAvailable: !isReadOnly,
@@ -40,8 +35,7 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
         isDestructive: true,
         onExecute: (onDelete != null)
             ? () => onDelete(formViewModel)
-            : () =>
-                removeWhere((e) => formViewModel.formData!.id == e.formData?.id),
+            : () => removeWhere((e) => formViewModel.formData!.id == e.formData?.id),
         isAvailable: !isReadOnly,
       ),
     ].where((action) => action.isAvailable).toList();

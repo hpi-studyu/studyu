@@ -1,9 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/models/expressions/expression.dart';
+import 'package:studyu_core/src/models/expressions/types/boolean_expression.dart';
+import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 import 'package:uuid/uuid.dart';
-
-import '../expressions/expression.dart';
-import '../expressions/types/boolean_expression.dart';
-import '../questionnaire/questionnaire_state.dart';
 
 part 'eligibility_criterion.g.dart';
 

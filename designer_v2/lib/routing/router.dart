@@ -27,8 +27,8 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
-      appController.stream,                    // initialization events
-      authRepository.watchAuthStateChanges()  // authentication events
+      appController.stream, // initialization events
+      authRepository.watchAuthStateChanges() // authentication events
     ]),
     initialLocation: defaultLocation,
     routes: RouterConf.topLevelRoutes,
@@ -64,8 +64,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
       // Helper to generate routes carrying the 'from' param (if any)
       namedLocForwarded(String name) {
-        final Map<String,String> qParams = {};
-        if (from != null && from != '/') { // if (from != null && from != '/' && from != defaultLocation) {
+        final Map<String, String> qParams = {};
+        if (from != null && from != '/') {
+          // if (from != null && from != '/' && from != defaultLocation) {
           qParams["from"] = from;
         }
         // return GoRouter.of(context).namedLocation(name, queryParams: qParams);
@@ -74,8 +75,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       if (!isInitialized) {
         // Redirect to splash screen while app is pending initialization
-        return (isOnSplashPage)
-            ? null : namedLocForwarded(RouterConf.splash.name!);
+        return (isOnSplashPage) ? null : namedLocForwarded(RouterConf.splash.name!);
       }
 
       /*print("***NEW ROUTER***");
@@ -98,7 +98,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       if (!isLoggedIn) {
-        if (from != null) {  /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
+        if (from != null) {
+          /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
           // Only allow access to public pages...
           if (!isOnSplashPage && isOnPublicPage) {
             return null;
@@ -109,7 +110,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
         // Redirect to login page as default
         return (isOnLoginPage) ? null : namedLocForwarded(RouterConf.login.name!);
-
       } else {
         // If the user is authenticated, forward to where
         // they were going initially...
@@ -128,4 +128,3 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: kDebugMode,
   );
 });
-

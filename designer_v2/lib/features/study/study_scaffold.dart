@@ -21,8 +21,7 @@ import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-abstract class IStudyAppBarViewModel
-    implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
+abstract class IStudyAppBarViewModel implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
   bool get isSyncIndicatorVisible;
   bool get isStatusBadgeVisible;
   bool get isPublishVisible;
@@ -79,8 +78,6 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final state = ref.watch(studyControllerProvider(widget.studyId));
-    final controller =
-        ref.watch(studyControllerProvider(widget.studyId).notifier);
 
     final tabs = widget.tabs ?? StudyNav.tabs(widget.studyId, state);
 
@@ -136,9 +133,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
-                    (state.isSyncIndicatorVisible)
-                        ? const SizedBox(width: 8.0)
-                        : const SizedBox.shrink(),
+                    (state.isSyncIndicatorVisible) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
                     (state.isSyncIndicatorVisible)
                         ? IntrinsicWidth(
                             child: SyncIndicator(
@@ -184,9 +179,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                                   showPrefixIcon: true,
                                 )
                               : const SizedBox.shrink(),
-                          (state.isStatusBadgeVisible)
-                              ? const SizedBox(width: 12.0)
-                              : const SizedBox.shrink(),
+                          (state.isStatusBadgeVisible) ? const SizedBox(width: 12.0) : const SizedBox.shrink(),
                           ...actionButtons(context),
                         ],
                         spacing: widget.actionsSpacing,
@@ -220,13 +213,11 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     List<Widget> actionButtons = [];
 
     final theme = Theme.of(context);
-    final controller =
-        ref.watch(studyControllerProvider(widget.studyId).notifier);
+    final controller = ref.watch(studyControllerProvider(widget.studyId).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
-      final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyId));
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
@@ -234,8 +225,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             builder: (context, form, child) {
           return PrimaryButton(
             text: tr.action_button_study_launch,
-            tooltipDisabled:
-                "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
+            tooltipDisabled: "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
             icon: null,
             enabled: formViewModel.isValid,
             onPressed: () => showPublishDialog(context, widget.studyId),

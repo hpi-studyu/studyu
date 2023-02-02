@@ -10,9 +10,7 @@ class EmailTextField extends StatefulWidget {
     this.formControl,
     hintText,
     Key? key,
-  })  : assert(
-            (formControlName != null && formControl == null) ||
-                (formControlName == null && formControl != null),
+  })  : assert((formControlName != null && formControl == null) || (formControlName == null && formControl != null),
             "Must provide either formControlName or formControl"),
         labelText = labelText ?? tr.form_field_email,
         hintText = hintText ?? tr.form_field_email_hint,
@@ -24,7 +22,7 @@ class EmailTextField extends StatefulWidget {
   final FormControl? formControl;
 
   @override
-  _EmailTextFieldState createState() => _EmailTextFieldState();
+  State<EmailTextField> createState() => _EmailTextFieldState();
 }
 
 class _EmailTextFieldState extends State<EmailTextField> {
@@ -56,10 +54,8 @@ class PasswordTextField extends StatefulWidget {
     this.formControl,
     hintText,
     Key? key,
-  })  : assert(
-  (formControlName != null && formControl == null) ||
-      (formControlName == null && formControl != null),
-  "Must provide either formControlName or formControl"),
+  })  : assert((formControlName != null && formControl == null) || (formControlName == null && formControl != null),
+            "Must provide either formControlName or formControl"),
         labelText = labelText ?? tr.form_field_password,
         hintText = hintText ?? tr.form_field_password_hint,
         super(key: key);
@@ -70,7 +66,7 @@ class PasswordTextField extends StatefulWidget {
   final FormControl? formControl;
 
   @override
-  _PasswordTextFieldState createState() => _PasswordTextFieldState();
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
 }
 
 class _PasswordTextFieldState extends State<PasswordTextField> {
@@ -95,9 +91,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               ),
               focusNode: FocusNode(skipTraversal: true),
               child: Icon(
-                passwordVisibility
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
+                passwordVisibility ? Icons.visibility_outlined : Icons.visibility_off_outlined,
               ),
             ),
           ),

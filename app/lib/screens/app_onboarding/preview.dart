@@ -18,7 +18,9 @@ class Preview {
   String selectedStudyObjectId;
   StudySubject subject;
 
-  Preview(this.queryParameters, this.appLanguage) { handleQueries(); }
+  Preview(this.queryParameters, this.appLanguage) {
+    handleQueries();
+  }
 
   void handleQueries() {
     selectedRoute = getSelectedRoute();
@@ -40,8 +42,10 @@ class Preview {
 
     final String session = Uri.decodeComponent(queryParameters['session']);
     try {
-      await Supabase.instance.client.auth.recoverSession(session,);
-    } catch(_) {
+      await Supabase.instance.client.auth.recoverSession(
+        session,
+      );
+    } catch (_) {
       return false;
     }
 
@@ -61,8 +65,7 @@ class Preview {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
       if (selectedStudyObjectId != null) {
-        final StudySubject subject =
-        await SupabaseQuery.getById<StudySubject>(
+        final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
           selectedStudyObjectId,
           selectedColumns: [
             '*',
@@ -80,7 +83,7 @@ class Preview {
   String getSelectedRoute() {
     // check if route is allowed and can be handled
     for (final k in queryParameters.keys) {
-      if('route' == k) {
+      if ('route' == k) {
         switch (queryParameters[k]) {
           case 'consent':
             return Routes.consent;
@@ -117,8 +120,7 @@ class Preview {
     if (selectedStudyObjectId != null) {
       try {
         if (selectedRoute == '/intervention') {
-          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<
-              StudySubject>(
+          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<StudySubject>(
             selectedColumns: [
               '*',
               'study!study_subject_studyId_fkey(*)',
@@ -129,15 +131,16 @@ class Preview {
           // and we need to find the last one they created for the study
           // with the correct interventions
           subject = studySubjects.lastWhere(
-                (foundSubject) {
-                  // todo baseline
-                  foundSubject.study.schedule.includeBaseline = false;
-                  return foundSubject.userId ==
-                      Supabase.instance.client.auth.currentUser.id
-                      && foundSubject.studyId == study.id
-                      && listEquals(foundSubject.selectedInterventions
-                          .map((i) => i.id).toList(), getInterventionIds(),);
-                },
+            (foundSubject) {
+              // todo baseline
+              foundSubject.study.schedule.includeBaseline = false;
+              return foundSubject.userId == Supabase.instance.client.auth.currentUser.id &&
+                  foundSubject.studyId == study.id &&
+                  listEquals(
+                    foundSubject.selectedInterventions.map((i) => i.id).toList(),
+                    getInterventionIds(),
+                  );
+            },
           );
           // We switch the currently selected study subject with the one we found
           // that has fitting interventions in the correct order
@@ -210,10 +213,12 @@ class Preview {
     // If we have a specific intervention we want to show, select that and another one
     if (selectedRoute == '/intervention' && extra != null) {
       final String intId = interventionList.firstWhere((id) => id == extra);
-      newInterventionList..add(intId)..add(
-        interventionList.firstWhere((id) => id != intId),
-      );
-      assert (newInterventionList.length == 2);
+      newInterventionList
+        ..add(intId)
+        ..add(
+          interventionList.firstWhere((id) => id != intId),
+        );
+      assert(newInterventionList.length == 2);
     } else {
       // just take the first two
       newInterventionList = interventionList.sublist(0, 2);

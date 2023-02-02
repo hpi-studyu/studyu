@@ -57,10 +57,8 @@ class LoginForm extends FormConsumerRefWidget {
             ),
             Hyperlink(
               text: tr.link_forgot_password,
-              style: TextStyle(fontSize: theme.textTheme.caption!.fontSize),
-              onClick: () => ref
-                  .read(routerProvider)
-                  .dispatch(RoutingIntents.passwordForgot),
+              style: TextStyle(fontSize: theme.textTheme.bodySmall!.fontSize),
+              onClick: () => ref.read(routerProvider).dispatch(RoutingIntents.passwordForgot),
             ),
           ],
         ),
@@ -72,12 +70,9 @@ class LoginForm extends FormConsumerRefWidget {
               text: tr.action_button_login,
               isLoading: state.isLoading,
               enabled: form.valid,
-              onPressedFuture: () => ref
-                  .read(authFormControllerProvider(formKey).notifier)
-                  .signIn(),
+              onPressedFuture: () => ref.read(authFormControllerProvider(formKey).notifier).signIn(),
               tooltipDisabled: tr.form_invalid_prompt,
-              innerPadding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
+              innerPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
             ),
           );
         }),
@@ -91,8 +86,7 @@ class LoginForm extends FormConsumerRefWidget {
             const SizedBox(width: 4.0),
             Hyperlink(
               text: tr.link_signup,
-              onClick: () =>
-                  ref.read(routerProvider).dispatch(RoutingIntents.signup),
+              onClick: () => ref.read(routerProvider).dispatch(RoutingIntents.signup),
             ),
           ],
         )

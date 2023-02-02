@@ -24,12 +24,11 @@ class CountWhereValidator<T> extends Validator<T> {
       return null;
     }
     if (control is! FormArray<T>) {
-      throw Exception(
-          "CountWhereValidator must be used with AbstractControl of "
+      throw Exception("CountWhereValidator must be used with AbstractControl of "
           "type FormArray.");
     }
 
-    final List<T?> collection = (control as FormArray<T>).value!;
+    final List<T?> collection = control.value!;
     int countPredicateTrue = 0;
 
     for (final value in collection) {
@@ -59,18 +58,15 @@ ValidatorFunction mustMatch({
   AbstractControl? matchingControl,
   String? matchingControlName,
 }) {
-  if ((controlName == null && control == null) ||
-      (matchingControlName == null && matchingControl == null)) {
-    throw Exception(
-        "Must provide either the control's reference or name for each control");
+  if ((controlName == null && control == null) || (matchingControlName == null && matchingControl == null)) {
+    throw Exception("Must provide either the control's reference or name for each control");
   }
 
   return (AbstractControl<dynamic> form) {
     form = form as FormGroup;
 
     final formControl = control ?? form.control(controlName!);
-    final matchingFormControl =
-        matchingControl ?? form.control(matchingControlName!);
+    final matchingFormControl = matchingControl ?? form.control(matchingControlName!);
 
     if (formControl.value != matchingFormControl.value) {
       matchingFormControl.setErrors({'mustMatch': true});
@@ -102,8 +98,6 @@ class Patterns {
   /// Regex pattern for hh:mm time format (with or without leading zero)
   //static const timeFormatString = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$';
   static const timeFormatString = r'^[ab]$';
-  static const emailFormatString =
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-  static const url =
-      r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
+  static const emailFormatString = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+  static const url = r'[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
 }

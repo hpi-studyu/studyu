@@ -10,15 +10,13 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
   final Function(Answer) onDone;
 
-  AnnotatedScaleQuestionWidget({@required this.question, this.onDone});
+  const AnnotatedScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
 
   @override
-  State<AnnotatedScaleQuestionWidget> createState() =>
-      _AnnotatedScaleQuestionWidgetState();
+  State<AnnotatedScaleQuestionWidget> createState() => _AnnotatedScaleQuestionWidgetState();
 }
 
-class _AnnotatedScaleQuestionWidgetState
-    extends State<AnnotatedScaleQuestionWidget> {
+class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWidget> {
   double value;
 
   @override
@@ -49,14 +47,12 @@ class _AnnotatedScaleQuestionWidgetState
           onChanged: changed,
           min: widget.question.minimum,
           max: widget.question.maximum,
-          divisions: (widget.question.maximum - widget.question.minimum) ~/
-              widget.question.step,
+          divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
-            onPressed: () =>
-                widget.onDone(widget.question.constructAnswer(value)),
+            onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
             child: Text(AppLocalizations.of(context).done),
           ),
         )
@@ -94,24 +90,20 @@ List<Widget> buildAnnotations(
   final List<Widget> labelWidgets = [];
 
   final textTheme = Theme.of(context).textTheme;
-  final labelTextStyle = textTheme.bodyText1;
+  final labelTextStyle = textTheme.bodyLarge;
 
   int flexSum = 0;
 
   for (var i = 0; i < annotations.length; i++) {
     final Annotation current = annotations[i];
-    final Annotation next =
-        (i + 1 < annotations.length) ? annotations[i + 1] : null;
+    final Annotation next = (i + 1 < annotations.length) ? annotations[i + 1] : null;
 
     final scaleRange = question.maximum - question.minimum;
     assert(scaleRange != 0);
-    final flex = (next != null)
-        ? ((next.value - current.value) / scaleRange * 100).toInt()
-        : 100 - flexSum;
+    final flex = (next != null) ? ((next.value - current.value) / scaleRange * 100).toInt() : 100 - flexSum;
     flexSum += flex;
     final midValue = question.minimum + 0.5 * scaleRange;
-    final midValueDistance =
-        (current.value - midValue).abs() / (scaleRange / 2);
+    final midValueDistance = (current.value - midValue).abs() / (scaleRange / 2);
     final labelOffsetFactor = lerpDouble(-1.0, -0.5, midValueDistance);
     final labelOffset = labelOffsetFactor * labelMaxWidth / 2;
 

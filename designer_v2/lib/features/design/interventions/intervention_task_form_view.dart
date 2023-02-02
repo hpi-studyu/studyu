@@ -9,8 +9,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class InterventionTaskFormView extends StatelessWidget {
-  const InterventionTaskFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const InterventionTaskFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final InterventionTaskFormViewModel formViewModel;
 
@@ -46,7 +45,7 @@ class InterventionTaskFormView extends StatelessWidget {
               minLines: 5,
               maxLines: 5,
               decoration: InputDecoration(
-                  hintText: tr.form_field_intervention_task_description_hint,
+                hintText: tr.form_field_intervention_task_description_hint,
               ),
             ),
           ),
@@ -59,8 +58,8 @@ class InterventionTaskFormView extends StatelessWidget {
             ),
             const SizedBox(width: 3.0),
             FormControlLabel(
-                formControl: formViewModel.markAsCompletedControl,
-                text: tr.form_field_intervention_task_mark_as_completed_label,
+              formControl: formViewModel.markAsCompletedControl,
+              text: tr.form_field_intervention_task_mark_as_completed_label,
             ),
           ]);
         }),
