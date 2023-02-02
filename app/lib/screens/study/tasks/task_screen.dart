@@ -18,10 +18,14 @@ class _TaskScreenState extends State<TaskScreen> {
     switch (widget.timedTask.task.runtimeType) {
       case CheckmarkTask:
         return CheckmarkTaskWidget(
-            task: widget.timedTask.task as CheckmarkTask, completionPeriod: widget.timedTask.completionPeriod);
+          task: widget.timedTask.task as CheckmarkTask,
+          completionPeriod: widget.timedTask.completionPeriod,
+        );
       case QuestionnaireTask:
         return QuestionnaireTaskWidget(
-            task: widget.timedTask.task as QuestionnaireTask, completionPeriod: widget.timedTask.completionPeriod);
+          task: widget.timedTask.task as QuestionnaireTask,
+          completionPeriod: widget.timedTask.completionPeriod,
+        );
       default:
         print('${widget.timedTask.task.runtimeType} is not a supported Task!');
         return null;

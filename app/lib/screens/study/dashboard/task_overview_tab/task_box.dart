@@ -26,7 +26,9 @@ class TaskBox extends StatefulWidget {
 class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     await Navigator.push<bool>(
-        context, MaterialPageRoute(builder: (context) => TaskScreen(timedTask: widget.timedTask)));
+      context,
+      MaterialPageRoute(builder: (context) => TaskScreen(timedTask: widget.timedTask)),
+    );
     widget.onCompleted();
     // Rebuild widget
     setState(() {});

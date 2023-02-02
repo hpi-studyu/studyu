@@ -61,8 +61,10 @@ class _TermsScreenState extends State<TermsScreen> {
                     const SizedBox(height: 30),
                     OutlinedButton.icon(
                       icon: const Icon(MdiIcons.scaleBalance),
-                      onPressed: () => launchUrl(Uri.parse(appConfig.imprint[appLocale.toString()]),
-                          mode: LaunchMode.externalApplication),
+                      onPressed: () => launchUrl(
+                        Uri.parse(appConfig.imprint[appLocale.toString()]),
+                        mode: LaunchMode.externalApplication,
+                      ),
                       label: Text(AppLocalizations.of(context).imprint_read),
                     ),
                   ],
