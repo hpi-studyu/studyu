@@ -190,11 +190,12 @@ class StudyNotifications {
     );
     if (taskToRun != null) {
       if (!completed /*|| !kDebugMode*/) {
-        navigatorKey.currentState.push(
+        await navigatorKey.currentState.push(
           MaterialPageRoute(
             builder: (_) => TaskScreen(timedTask: taskToRun),
           ),
         );
+        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.dashboard, (_) => false);
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(
