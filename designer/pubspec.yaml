@@ -5,7 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 publish_to: 'none'
 
-version: 1.6.1
+version: 1.6.2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

@@ -1,3 +1,7 @@
+## 1.6.2
+
+ - **FIX**: deprecated stuff. ([12e1632b](https://github.com/hpi-studyu/studyu/commit/12e1632ba48a98259855c88eeaf6fd771beb893b))
+
 ## 1.6.1
 
  - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))

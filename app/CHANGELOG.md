@@ -1,3 +1,11 @@
+## 1.11.2
+
+ - **FIX**: after notification task completed reload dashboard. ([ed571950](https://github.com/hpi-studyu/studyu/commit/ed571950398de32ccbfb3ba26bd4b26022f8f344))
+ - **FIX**: do not handle notification twice. ([2c61b868](https://github.com/hpi-studyu/studyu/commit/2c61b8688cb7a133bf66271ca932a31f4a590843))
+ - **FIX**: do not allow to pop navigator after kickoff. ([65159a19](https://github.com/hpi-studyu/studyu/commit/65159a19d87b6fa0eb39189eca86ac4af1d928c1))
+ - **FIX**: added missing deps and desugar v2.0.0. ([081241ca](https://github.com/hpi-studyu/studyu/commit/081241ca61d32d2f4f60f4b9d22973f174bbae79))
+ - **FIX**: terms not showing correctly on android. ([b0fed23c](https://github.com/hpi-studyu/studyu/commit/b0fed23c5413cec0dde3874383b16a3c31d0a2db))
+
 ## 1.11.1
 
  - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
