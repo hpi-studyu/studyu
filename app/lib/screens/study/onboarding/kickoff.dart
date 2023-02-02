@@ -31,7 +31,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       }
 
       setState(() => ready = true);
-      Navigator.pushNamed(context, Routes.dashboard);
+      Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {
       print('Failed creating subject: $e');
     }
