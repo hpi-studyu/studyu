@@ -1,9 +1,7 @@
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
     final otherUtc = other.toUtc();
-    return toUtc().year == otherUtc.year &&
-        toUtc().month == otherUtc.month &&
-        toUtc().day == otherUtc.day;
+    return toUtc().year == otherUtc.year && toUtc().month == otherUtc.month && toUtc().day == otherUtc.day;
   }
 
   bool isEarlierDateThan(DateTime other) {

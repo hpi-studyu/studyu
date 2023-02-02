@@ -97,14 +97,13 @@ class InterventionPerformanceBar extends StatelessWidget {
           children: [
             InterventionCard(intervention, showTasks: false, showDescription: false),
             const SizedBox(height: 8),
-            ...intervention.tasks
-                .map(
-                  (task) => PerformanceBar(
-                    task: task,
-                    completed: subject.completedTasksFor(task),
-                    total: subject.totalTaskCountFor(task),
-                  ),
-                )
+            ...intervention.tasks.map(
+              (task) => PerformanceBar(
+                task: task,
+                completed: subject.completedTasksFor(task),
+                total: subject.totalTaskCountFor(task),
+              ),
+            )
           ],
         ),
       ),

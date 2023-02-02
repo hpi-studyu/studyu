@@ -20,7 +20,6 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
-
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();

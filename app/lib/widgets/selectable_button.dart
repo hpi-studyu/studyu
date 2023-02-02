@@ -20,7 +20,8 @@ class SelectableButton extends StatelessWidget {
       height: 48,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          foregroundColor: _getTextColor(theme), backgroundColor: _getFillColor(theme),
+          foregroundColor: _getTextColor(theme),
+          backgroundColor: _getFillColor(theme),
         ),
         onPressed: onTap,
         child: child,

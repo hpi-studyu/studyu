@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    if(!mounted) return;
+                    if (!mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: const Image(image: AssetImage('assets/images/icon.png'), height: 32),

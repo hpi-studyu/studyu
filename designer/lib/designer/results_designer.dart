@@ -57,10 +57,7 @@ class _ResultsDesignerState extends State<ResultsDesigner> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    ..._results
-                        .asMap()
-                        .entries
-                        .map(
+                    ..._results.asMap().entries.map(
                           (entry) => StudyResultEditor(
                             key: UniqueKey(),
                             result: entry.value,

@@ -21,7 +21,8 @@ extension Reminders on FlutterLocalNotificationsPlugin {
   ) async {
     var currentId = id;
     for (final reminder in task.schedule.reminders) {
-      if (date.isSameDate(DateTime.now()) && !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)) {
+      if (date.isSameDate(DateTime.now()) &&
+          !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)) {
         break;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
@@ -58,8 +59,8 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 Future<void> scheduleNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
-  final studyNotifications = context.read<AppState>().studyNotifications ??
-      await StudyNotifications.create(subject, context);
+  final studyNotifications =
+      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
 
   final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
@@ -76,7 +77,10 @@ Future<void> scheduleNotifications(BuildContext context) async {
   if (interventionTaskLists.isNotEmpty) {
     interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
   }
-  final tasks = [...subject.study.observations, ...interventionTasks,];
+  final tasks = [
+    ...subject.study.observations,
+    ...interventionTasks,
+  ];
   if (tasks.isEmpty) return;
 
   final List<SendNotification> sendNotificationList = [];

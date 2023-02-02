@@ -10,7 +10,6 @@ import 'question_widget.dart';
 import 'visual_analogue_question_widget.dart';
 
 class QuestionContainer extends StatefulWidget {
-
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
@@ -22,7 +21,6 @@ class QuestionContainer extends StatefulWidget {
 }
 
 class _QuestionContainerState extends State<QuestionContainer> with AutomaticKeepAliveClientMixin {
-
   void _onDone(Answer answer) {
     widget.onDone(answer, widget.index);
   }

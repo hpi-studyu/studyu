@@ -71,10 +71,7 @@ class _ReportDesignerState extends State<ReportDesigner> {
                         remove: () => _removeSection(-1),
                         updateSection: (section) => _replaceSection(-1, section),
                       ),
-                    ..._reportSpecification.secondary
-                        .asMap()
-                        .entries
-                        .map(
+                    ..._reportSpecification.secondary.asMap().entries.map(
                           (entry) => ReportSectionEditor(
                             key: UniqueKey(),
                             section: entry.value,

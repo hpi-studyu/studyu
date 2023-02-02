@@ -25,7 +25,8 @@ class TaskBox extends StatefulWidget {
 
 class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
-    await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => TaskScreen(timedTask: widget.timedTask)));
+    await Navigator.push<bool>(
+        context, MaterialPageRoute(builder: (context) => TaskScreen(timedTask: widget.timedTask)));
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
@@ -40,11 +41,16 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
-    final completed = context.watch<AppState>().activeSubject.isTimedTaskFinished(widget.timedTask.task.id, widget.timedTask.completionPeriod, DateTime.now());
+    final completed = context
+        .watch<AppState>()
+        .activeSubject
+        .isTimedTaskFinished(widget.timedTask.task.id, widget.timedTask.completionPeriod, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: (completed || !widget.timedTask.completionPeriod.contains(StudyUTimeOfDay.now())) && !kDebugMode ? () {} : _navigateToTaskScreen,
+        onTap: (completed || !widget.timedTask.completionPeriod.contains(StudyUTimeOfDay.now())) && !kDebugMode
+            ? () {}
+            : _navigateToTaskScreen,
         child: Row(
           children: [
             Expanded(

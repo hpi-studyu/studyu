@@ -45,20 +45,20 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     final fhirQuestionnaire = context.read<AppState>().activeSubject.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
-      context.read<AppState>().activeSubject.study.fhirQuestionnaire,
-      onComplete: (responseLocal) => setState(() {
-        response = responseLocal;
-      }),
-    )
+            context.read<AppState>().activeSubject.study.fhirQuestionnaire,
+            onComplete: (responseLocal) => setState(() {
+              response = responseLocal;
+            }),
+          )
         : QuestionnaireWidget(
-      widget.task.questions.questions,
-      header: widget.task.header,
-      footer: widget.task.footer,
-      onChange: _responseValidator,
-      onComplete: (qs) => setState(() {
-        response = qs;
-      }),
-    );
+            widget.task.questions.questions,
+            header: widget.task.header,
+            footer: widget.task.footer,
+            onChange: _responseValidator,
+            onComplete: (qs) => setState(() {
+              response = qs;
+            }),
+          );
     return Expanded(
       child: Column(
         children: [

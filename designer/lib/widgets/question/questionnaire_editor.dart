@@ -55,10 +55,7 @@ class _QuestionnaireEditorState extends State<QuestionnaireEditor> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        ...widget.questionnaire.questions
-            .asMap()
-            .entries
-            .map(
+        ...widget.questionnaire.questions.asMap().entries.map(
               (entry) => QuestionEditor(
                 key: UniqueKey(),
                 remove: () => _removeQuestion(entry.key),

@@ -31,8 +31,10 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
           final Color newColor = await showColorPickerDialog(
             context,
             color,
-            title: Text(title,
-                style: Theme.of(context).textTheme.titleLarge,),
+            title: Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             width: 40,
             height: 40,
             spacing: 0,
@@ -51,7 +53,10 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
               dialogActionButtons: false,
             ),
             constraints: const BoxConstraints(
-              minHeight: 480, minWidth: 320, maxWidth: 320,),
+              minHeight: 480,
+              minWidth: 320,
+              maxWidth: 320,
+            ),
           );
           onSelect(newColor);
         },
@@ -76,32 +81,24 @@ class _VisualAnalogueQuestionEditorSectionState extends State<VisualAnalogueQues
             decoration: InputDecoration(labelText: AppLocalizations.of(context).minimum_annotation),
             initialValue: widget.question.minimumAnnotation,
           ),
-          colorPickerRow(
-              AppLocalizations.of(context).minimum_color,
-              minimumColor,
-                  (Color newColor) {
-                    setState(() {
-                      minimumColor = newColor;
-                    });
-                    _saveFormChanges(null);
-                  }
-          ),
+          colorPickerRow(AppLocalizations.of(context).minimum_color, minimumColor, (Color newColor) {
+            setState(() {
+              minimumColor = newColor;
+            });
+            _saveFormChanges(null);
+          }),
           FormBuilderTextField(
             onChanged: _saveFormChanges,
             name: 'maximumAnnotation',
             decoration: InputDecoration(labelText: AppLocalizations.of(context).maximum_annotation),
             initialValue: widget.question.maximumAnnotation,
           ),
-          colorPickerRow(
-              AppLocalizations.of(context).maximum_color,
-              maximumColor,
-                  (Color newColor) {
-                    setState(() {
-                      maximumColor = newColor;
-                    });
-                    _saveFormChanges(null);
-                  }
-          ),
+          colorPickerRow(AppLocalizations.of(context).maximum_color, maximumColor, (Color newColor) {
+            setState(() {
+              maximumColor = newColor;
+            });
+            _saveFormChanges(null);
+          }),
         ],
       ),
     );

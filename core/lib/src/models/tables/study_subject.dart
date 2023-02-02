@@ -181,9 +181,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Get all results for a given task
   List<SubjectProgress> getTaskProgressForDay(String taskId, DateTime dateTime) {
     final List<SubjectProgress> thisTaskProgressToday = [];
-    for(final SubjectProgress sp in resultsFor(taskId)) {
+    for (final SubjectProgress sp in resultsFor(taskId)) {
       if (sp.subjectId == id // not sure if necessary
-          && sp.completedAt!.isSameDate(dateTime)) {
+          &&
+          sp.completedAt!.isSameDate(dateTime)) {
         thisTaskProgressToday.add(sp);
       }
     }
@@ -193,8 +194,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Check if TimedTask was completed at a given day
   bool isTimedTaskFinished(String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
     if (completionPeriod.id != null) {
-      return getTaskProgressForDay(taskId, dateTime).any((progress) =>
-      progress.result.periodId == completionPeriod.id,);
+      return getTaskProgressForDay(taskId, dateTime).any(
+        (progress) => progress.result.periodId == completionPeriod.id,
+      );
     } else {
       // fallback to support databases without periodIds
       return resultsFor(taskId).any((progress) => progress.completedAt!.isSameDate(dateTime));
@@ -204,16 +206,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Check if a task was completed in all of its time periods at a given day
   bool isTaskFinishedForDay(String taskId, DateTime dateTime) {
     // Get the completionPeriod for given taskId
-    return study.taskList.where((task) => task.id == taskId).single
-        .schedule.completionPeriods.any((period) =>
-        isTimedTaskFinished(taskId, period, dateTime),);
+    return study.taskList.where((task) => task.id == taskId).single.schedule.completionPeriods.any(
+          (period) => isTimedTaskFinished(taskId, period, dateTime),
+        );
   }
 
   int completedTasksFor(Task task) => resultsFor(task.id).length;
 
-  bool allTasksCompletedFor(DateTime dateTime) =>
-      scheduleFor(dateTime).every((timedTask) =>
-          isTaskFinishedForDay(timedTask.task.id, dateTime),);
+  bool allTasksCompletedFor(DateTime dateTime) => scheduleFor(dateTime).every(
+        (timedTask) => isTaskFinishedForDay(timedTask.task.id, dateTime),
+      );
 
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {

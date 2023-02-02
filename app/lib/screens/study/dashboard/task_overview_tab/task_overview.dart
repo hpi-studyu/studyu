@@ -32,30 +32,33 @@ class _TaskOverviewState extends State<TaskOverview> {
     final theme = Theme.of(context);
     final List<Widget> list = [];
     for (final timedTask in widget.scheduleToday) {
-      list..add(Padding(
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-              child: Row(
-                children: [
-                  Icon(Icons.access_time, color: theme.primaryColor),
-                  const SizedBox(width: 8),
-                  Text(
-                    timedTask.completionPeriod.toString(),
-                    style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
-                  ),
-                ],
-              ),
-            ),)
-      ..add(
-        TaskBox(
-          timedTask: timedTask,
-          onCompleted: () => _navigateToReportIfStudyCompleted(context),
-          icon: Icon(
-            timedTask.task is Observation
-                ? MdiIcons.orderBoolAscendingVariant
-                : MdiIcons.fromString(widget.interventionIcon),
+      list
+        ..add(
+          Padding(
+            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+            child: Row(
+              children: [
+                Icon(Icons.access_time, color: theme.primaryColor),
+                const SizedBox(width: 8),
+                Text(
+                  timedTask.completionPeriod.toString(),
+                  style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
+        )
+        ..add(
+          TaskBox(
+            timedTask: timedTask,
+            onCompleted: () => _navigateToReportIfStudyCompleted(context),
+            icon: Icon(
+              timedTask.task is Observation
+                  ? MdiIcons.orderBoolAscendingVariant
+                  : MdiIcons.fromString(widget.interventionIcon),
+            ),
+          ),
+        );
     }
     return list;
   }

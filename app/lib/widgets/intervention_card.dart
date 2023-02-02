@@ -163,8 +163,8 @@ class _TaskList extends StatelessWidget {
                           const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
-                            style:
-                                theme.textTheme.bodyMedium.copyWith(fontSize: 12, color: theme.textTheme.bodySmall.color),
+                            style: theme.textTheme.bodyMedium
+                                .copyWith(fontSize: 12, color: theme.textTheme.bodySmall.color),
                           ),
                         ],
                       ),

@@ -110,7 +110,7 @@ class _TaskEditorState extends State<TaskEditor> {
     if (_editFormKey.currentState.validate()) {
       // Do not allow duplicate Task IDs
       String taskId = (_editFormKey.currentState.value['title'] as String).toId();
-      if(draftStudy.taskList.any((task) => task.id == taskId)) {
+      if (draftStudy.taskList.any((task) => task.id == taskId)) {
         taskId = '${taskId}_${const Uuid().v4().substring(0, 8)}';
       }
       setState(() {
