@@ -10,6 +10,7 @@ import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
 
 import '../main.dart';
+import '../routes.dart';
 import '../screens/study/tasks/task_screen.dart';
 
 class StudyNotifications {
@@ -20,6 +21,8 @@ class StudyNotifications {
       StreamController<ReceivedNotification>.broadcast();
   final StreamController<String> selectNotificationStream = StreamController<String>.broadcast();
   String taskAlreadyCompleted;
+  // do not launch notification action twice if user subscribes to a new study
+  static bool wasNotificationActionHandled = false;
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
@@ -38,15 +41,14 @@ class StudyNotifications {
     BuildContext context,
   ) async {
     final notifications = StudyNotifications._create(activeSubject, context);
-
     final NotificationAppLaunchDetails notificationAppLaunchDetails = !kIsWeb && Platform.isLinux
         ? null
         : await notifications.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    if ((notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) && !wasNotificationActionHandled) {
+      wasNotificationActionHandled = true;
       final selectedNotificationPayload = notificationAppLaunchDetails.notificationResponse.payload;
       notifications.handleNotificationResponse(selectedNotificationPayload);
     }
-
     return notifications;
   }
 
