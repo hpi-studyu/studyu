@@ -40,6 +40,8 @@ import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
 
+import '../constants.dart';
+
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
   static const authKey = ValueKey("auth"); // shared key for auth pages
@@ -54,162 +56,46 @@ class RouteParams {
 }
 
 /// The route configuration passed to [GoRouter] during instantiation.
-///
-/// Any route that should be accessible from the app must be registered as
-/// a [topLevelRoutes] (or as a subroute of a top-level route)
-///
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConf {
-  /// Public routes can be accessed without login
-  static final topLevelPublicRoutes = [
-    root,
-    splash,
-    error,
-    login,
-    signup,
-    passwordForgot,
-  ];
-
-  /// Private routes can only be accessed after login
-  static final topLevelPrivateRoutes = [
-    studies,
-    study,
-    studyEdit,
-    studyEditInfo,
-    studyEditEnrollment,
-    studyEditInterventions,
-    studyEditMeasurements,
-    studyTest,
-    studyMonitor,
-    studyRecruit,
-    studyAnalyze,
-    studySettings,
-    accountSettings,
-    passwordRecovery,
-  ];
-
-  /// This list is provided to [GoRouter.routes] during instantiation.
-  /// See router.dart
-  static final topLevelRoutes = topLevelPublicRoutes + topLevelPrivateRoutes;
-
-  static final root = GoRoute(
-    path: "/",
-    name: "root",
-    redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context).namedLocation(studies.name!),
-  );
-
-  static final studies = GoRoute(
-    path: "/studies",
-    name: "studies",
-    builder: (context, state) => DashboardScreen(filter: () {
-      if (state.queryParams[RouteParams.studiesFilter] == null) {
-        return null;
-      }
-      final idx = StudiesFilter.values
-          .map((v) => v.toShortString())
-          .toList()
-          .indexOf(state.queryParams[RouteParams.studiesFilter]!);
-      return (idx != -1) ? StudiesFilter.values[idx] : null;
-    }() // call anonymous closure to resolve param to enum
-        ),
-  );
-
-  static final study = GoRoute(
-    path: "/studies/:${RouteParams.studyId}",
-    name: "study",
-    redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context)
-        .namedLocation(studyEdit.name!, params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
-  );
-
-  static final studyEdit = GoRoute(
-    path: "/studies/:${RouteParams.studyId}/edit",
-    name: "studyEdit",
-    // GoRouter.of(context).namedLocation
-    redirect: (BuildContext context, GoRouterState state) =>
-        state.namedLocation(studyEditInfo.name!, params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
-  );
-
-  static final studyEditInfo = GoRoute(
-    path: "/studies/:${RouteParams.studyId}/edit/info",
-    name: "studyEditInfo",
-    pageBuilder: (context, state) {
-      final studyId = state.params[RouteParams.studyId]!;
-      return MaterialPage(
-          key: RouterKeys.studyKey,
-          child: StudyScaffold(
-            studyId: studyId,
-            tabsSubnav: StudyDesignNav.tabs(studyId),
-            selectedTab: StudyNav.edit(studyId),
-            selectedTabSubnav: StudyDesignNav.info(studyId),
-            body: StudyDesignInfoFormView(studyId),
-            layoutType: SingleColumnLayoutType.boundedNarrow,
-          ));
-    },
-  );
-
-  static final studyEditEnrollment = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/edit/enrollment",
-      name: "studyEditEnrollment",
-      pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              tabsSubnav: StudyDesignNav.tabs(studyId),
-              selectedTab: StudyNav.edit(studyId),
-              selectedTabSubnav: StudyDesignNav.enrollment(studyId),
-              body: StudyDesignEnrollmentFormView(studyId),
-              layoutType: SingleColumnLayoutType.boundedNarrow,
-            ));
-      });
-
-  static final studyEditInterventions = GoRoute(
-    path: "/studies/:${RouteParams.studyId}/edit/interventions",
-    name: "studyEditInterventions",
-    pageBuilder: (context, state) {
-      final studyId = state.params[RouteParams.studyId]!;
-      return MaterialPage(
-          key: RouterKeys.studyKey,
-          child: StudyScaffold(
-            studyId: studyId,
-            tabsSubnav: StudyDesignNav.tabs(studyId),
-            selectedTab: StudyNav.edit(studyId),
-            selectedTabSubnav: StudyDesignNav.interventions(studyId),
-            body: StudyDesignInterventionsFormView(studyId),
-            layoutType: SingleColumnLayoutType.boundedNarrow,
-          ));
-    },
-    routes: [studyEditIntervention],
-  );
-
-  static final studyEditIntervention = GoRoute(
-      path: ":${RouteParams.interventionId}",
-      name: "studyEditIntervention",
-      pageBuilder: (context, state) {
-        final routeArgs = InterventionFormRouteArgs(
-            studyId: state.params[RouteParams.studyId]!, interventionId: state.params[RouteParams.interventionId]!);
-        return MaterialPage(
-            child: StudyFormScaffold<InterventionFormViewModel>(
-          studyId: routeArgs.studyId,
-          formViewModelBuilder: (ref) => ref.read(interventionFormViewModelProvider(routeArgs)),
-          formViewBuilder: (formViewModel) => TwoColumnLayout.split(
-            leftWidget: InterventionFormView(formViewModel: formViewModel),
-            rightWidget: InterventionPreview(routeArgs: routeArgs),
-            flexLeft: 7,
-            flexRight: 8,
-            constraintsLeft: const BoxConstraints(minWidth: 500.0),
-            scrollLeft: true,
-            scrollRight: false,
-            paddingRight: null,
+  static final List<GoRoute> routes = [
+    GoRoute(
+      path: "/",
+      name: rootRouteName,
+      redirect: (BuildContext context, GoRouterState state) => context.namedLocation('studies'),
+    ),
+    GoRoute(
+      path: "/studies",
+      name: studiesRouteName,
+      builder: (context, state) => DashboardScreen(filter: () {
+        if (state.queryParams[RouteParams.studiesFilter] == null) {
+          return null;
+        }
+        final idx = StudiesFilter.values
+            .map((v) => v.toShortString())
+            .toList()
+            .indexOf(state.queryParams[RouteParams.studiesFilter]!);
+        return (idx != -1) ? StudiesFilter.values[idx] : null;
+      }() // call anonymous closure to resolve param to enum
           ),
-        ));
-      });
-
-  static final studyEditMeasurements = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/edit/measurements",
-      name: "studyEditMeasurements",
+    ),
+    GoRoute(
+      path: "/studies/:${RouteParams.studyId}",
+      name: studyRouteName,
+      redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context)
+          .namedLocation('studyEdit', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+    ),
+    GoRoute(
+      path: "/studies/:${RouteParams.studyId}/edit",
+      name: studyEditRouteName,
+      // GoRouter.of(context).namedLocation
+      redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context)
+          .namedLocation('studyEditInfo', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+    ),
+    GoRoute(
+      path: "/studies/:${RouteParams.studyId}/edit/info",
+      name: studyEditInfoRouteName,
       pageBuilder: (context, state) {
         final studyId = state.params[RouteParams.studyId]!;
         return MaterialPage(
@@ -218,181 +104,248 @@ class RouterConf {
               studyId: studyId,
               tabsSubnav: StudyDesignNav.tabs(studyId),
               selectedTab: StudyNav.edit(studyId),
-              selectedTabSubnav: StudyDesignNav.measurements(studyId),
-              body: StudyDesignMeasurementsFormView(studyId),
+              selectedTabSubnav: StudyDesignNav.info(studyId),
+              body: StudyDesignInfoFormView(studyId),
               layoutType: SingleColumnLayoutType.boundedNarrow,
             ));
       },
-      routes: [studyEditMeasurement]);
+    ),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/edit/enrollment",
+        name: studyEditEnrollmentRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                tabsSubnav: StudyDesignNav.tabs(studyId),
+                selectedTab: StudyNav.edit(studyId),
+                selectedTabSubnav: StudyDesignNav.enrollment(studyId),
+                body: StudyDesignEnrollmentFormView(studyId),
+                layoutType: SingleColumnLayoutType.boundedNarrow,
+              ));
+        }),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/edit/interventions",
+        name: studyEditInterventionsRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                tabsSubnav: StudyDesignNav.tabs(studyId),
+                selectedTab: StudyNav.edit(studyId),
+                selectedTabSubnav: StudyDesignNav.interventions(studyId),
+                body: StudyDesignInterventionsFormView(studyId),
+                layoutType: SingleColumnLayoutType.boundedNarrow,
+              ));
+        },
+        routes: [
+          GoRoute(
+              path: ":${RouteParams.interventionId}",
+              name: studyEditInterventionRouteName,
+              pageBuilder: (context, state) {
+                final routeArgs = InterventionFormRouteArgs(
+                    studyId: state.params[RouteParams.studyId]!,
+                    interventionId: state.params[RouteParams.interventionId]!);
+                return MaterialPage(
+                    child: StudyFormScaffold<InterventionFormViewModel>(
+                  studyId: routeArgs.studyId,
+                  formViewModelBuilder: (ref) => ref.read(interventionFormViewModelProvider(routeArgs)),
+                  formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+                    leftWidget: InterventionFormView(formViewModel: formViewModel),
+                    rightWidget: InterventionPreview(routeArgs: routeArgs),
+                    flexLeft: 7,
+                    flexRight: 8,
+                    constraintsLeft: const BoxConstraints(minWidth: 500.0),
+                    scrollLeft: true,
+                    scrollRight: false,
+                    paddingRight: null,
+                  ),
+                ));
+              }),
+        ]),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/edit/measurements",
+        name: studyEditMeasurementsRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                tabsSubnav: StudyDesignNav.tabs(studyId),
+                selectedTab: StudyNav.edit(studyId),
+                selectedTabSubnav: StudyDesignNav.measurements(studyId),
+                body: StudyDesignMeasurementsFormView(studyId),
+                layoutType: SingleColumnLayoutType.boundedNarrow,
+              ));
+        },
+        routes: [
+          GoRoute(
+              path: ":${RouteParams.measurementId}",
+              name: studyEditMeasurementRouteName,
+              pageBuilder: (context, state) {
+                final routeArgs = MeasurementFormRouteArgs(
+                    studyId: state.params[RouteParams.studyId]!,
+                    measurementId: state.params[RouteParams.measurementId]!);
+                return MaterialPage(
+                    child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
+                  studyId: routeArgs.studyId,
+                  formViewModelBuilder: (ref) => ref.read(surveyFormViewModelProvider(routeArgs)),
+                  formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+                    leftWidget: MeasurementSurveyFormView(formViewModel: formViewModel),
+                    rightWidget: SurveyPreview(routeArgs: routeArgs),
+                    flexLeft: 7,
+                    flexRight: 8,
+                    constraintsLeft: const BoxConstraints(minWidth: 500.0),
+                    scrollLeft: true,
+                    scrollRight: false,
+                    paddingRight: null,
+                  ),
+                ));
+              }),
+        ]),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/test",
+        name: studyTestRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          final appRoute = state.queryParams[RouteParams.testAppRoute];
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                selectedTab: StudyNav.test(studyId),
+                body: StudyTestScreen(studyId, previewRoute: appRoute),
+                layoutType: SingleColumnLayoutType.stretched,
+              ));
+        }),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/recruit",
+        name: studyRecruitRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                selectedTab: StudyNav.recruit(studyId),
+                body: StudyRecruitScreen(studyId),
+                layoutType: SingleColumnLayoutType.boundedWide,
+              ));
+        }),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/monitor",
+        name: studyMonitorRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                selectedTab: StudyNav.monitor(studyId),
+                body: StudyMonitorScreen(studyId),
+                layoutType: SingleColumnLayoutType.boundedWide,
+              ));
+        }),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/analyze",
+        name: studyAnalyzeRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                selectedTab: StudyNav.analyze(studyId),
+                body: StudyAnalyzeScreen(studyId),
+                layoutType: SingleColumnLayoutType.boundedWide,
+              ));
+        }),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/settings",
+        name: studySettingsRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return buildModalTransitionPage(
+            context,
+            state,
+            StudySettingsDialog(studyId),
+          );
+        }),
+    GoRoute(
+        path: "/settings",
+        name: accountSettingsRouteName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildModalTransitionPage(
+            context,
+            state,
+            const AccountSettingsDialog(),
+          );
+        }),
+    GoRoute(
+      path: "/splash",
+      name: splashRouteName,
+      builder: (context, state) => const SplashPage(),
+    ),
+    GoRoute(
+        path: "/login",
+        name: loginRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.login,
+                body: LoginForm(),
+              ),
+            )),
+    GoRoute(
+        path: "/signup",
+        name: signupRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.signup,
+                body: SignupForm(),
+              ),
+            )),
+    GoRoute(
+        path: "/forgot_password",
+        name: forgotPasswordRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.passwordForgot,
+                body: PasswordForgotForm(),
+              ),
+            )),
+    GoRoute(
+        path: "/password_recovery",
+        name: recoverPasswordRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.passwordRecovery,
+                body: PasswordRecoveryForm(),
+              ),
+            )),
+    GoRoute(
+      path: "/error",
+      name: errorRouteName,
+      builder: (context, state) => ErrorPage(error: state.extra as Exception),
+    ),
+  ];
 
-  static final studyEditMeasurement = GoRoute(
-      path: ":${RouteParams.measurementId}",
-      name: "studyEditMeasurement",
-      pageBuilder: (context, state) {
-        final routeArgs = MeasurementFormRouteArgs(
-            studyId: state.params[RouteParams.studyId]!, measurementId: state.params[RouteParams.measurementId]!);
-        return MaterialPage(
-            child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
-          studyId: routeArgs.studyId,
-          formViewModelBuilder: (ref) => ref.read(surveyFormViewModelProvider(routeArgs)),
-          formViewBuilder: (formViewModel) => TwoColumnLayout.split(
-            leftWidget: MeasurementSurveyFormView(formViewModel: formViewModel),
-            rightWidget: SurveyPreview(routeArgs: routeArgs),
-            flexLeft: 7,
-            flexRight: 8,
-            constraintsLeft: const BoxConstraints(minWidth: 500.0),
-            scrollLeft: true,
-            scrollRight: false,
-            paddingRight: null,
-          ),
-        ));
-      });
-
-  static final studyTest = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/test",
-      name: "studyTest",
-      pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        final appRoute = state.queryParams[RouteParams.testAppRoute];
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              selectedTab: StudyNav.test(studyId),
-              body: StudyTestScreen(studyId, previewRoute: appRoute),
-              layoutType: SingleColumnLayoutType.stretched,
-            ));
-      });
-
-  static final studyRecruit = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/recruit",
-      name: "studyRecruit",
-      pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              selectedTab: StudyNav.recruit(studyId),
-              body: StudyRecruitScreen(studyId),
-              layoutType: SingleColumnLayoutType.boundedWide,
-            ));
-      });
-
-  static final studyMonitor = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/monitor",
-      name: "studyMonitor",
-      pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              selectedTab: StudyNav.monitor(studyId),
-              body: StudyMonitorScreen(studyId),
-              layoutType: SingleColumnLayoutType.boundedWide,
-            ));
-      });
-
-  static final studyAnalyze = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/analyze",
-      name: "studyAnalyze",
-      pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        return MaterialPage(
-            key: RouterKeys.studyKey,
-            child: StudyScaffold(
-              studyId: studyId,
-              selectedTab: StudyNav.analyze(studyId),
-              body: StudyAnalyzeScreen(studyId),
-              layoutType: SingleColumnLayoutType.boundedWide,
-            ));
-      });
-
-  static final studySettings = GoRoute(
-      path: "/studies/:${RouteParams.studyId}/settings",
-      name: "studySettings",
-      pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
-        return buildModalTransitionPage(
-          context,
-          state,
-          StudySettingsDialog(studyId),
-        );
-      });
-
-  static final accountSettings = GoRoute(
-      path: "/settings",
-      name: "accountSettings",
-      pageBuilder: (BuildContext context, GoRouterState state) {
-        return buildModalTransitionPage(
-          context,
-          state,
-          const AccountSettingsDialog(),
-        );
-      });
-
-  static final splash = GoRoute(
-    path: "/splash",
-    name: "splash",
-    builder: (context, state) => const SplashPage(),
-  );
-
-  static final login = GoRoute(
-      path: "/login",
-      name: "login",
-      pageBuilder: (context, state) => const MaterialPage(
-            key: RouterKeys.authKey,
-            child: AuthScaffold(
-              formKey: AuthFormKey.login,
-              body: LoginForm(),
-            ),
-          ));
-
-  static final signup = GoRoute(
-      path: "/signup",
-      name: "signup",
-      pageBuilder: (context, state) => const MaterialPage(
-            key: RouterKeys.authKey,
-            child: AuthScaffold(
-              formKey: AuthFormKey.signup,
-              body: SignupForm(),
-            ),
-          ));
-
-  static final passwordForgot = GoRoute(
-      path: "/forgot_password",
-      name: "forgotPassword",
-      pageBuilder: (context, state) => const MaterialPage(
-            key: RouterKeys.authKey,
-            child: AuthScaffold(
-              formKey: AuthFormKey.passwordForgot,
-              body: PasswordForgotForm(),
-            ),
-          ));
-
-  static final passwordRecovery = GoRoute(
-      path: "/password_recovery",
-      name: "recoverPassword",
-      pageBuilder: (context, state) => const MaterialPage(
-            key: RouterKeys.authKey,
-            child: AuthScaffold(
-              formKey: AuthFormKey.passwordRecovery,
-              body: PasswordRecoveryForm(),
-            ),
-          ));
-
-  static final error = GoRoute(
-    path: "/error",
-    name: "error",
-    builder: (context, state) => ErrorPage(error: state.extra as Exception),
-  );
+  static route(String name) => routes.firstWhere((e) => e.name == name);
 }
 
 // - Route Args
 
 abstract class StudyFormRouteArgs {
   StudyFormRouteArgs({required this.studyId});
+
   final StudyID studyId;
 }
 

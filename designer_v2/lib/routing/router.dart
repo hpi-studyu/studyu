@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -22,7 +23,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   print("routerProvider");
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
-  final defaultLocation = RouterConf.studies.path;
+  const defaultLocation = studiesRouteName;
 
   return GoRouter(
     refreshListenable: CombinedStreamNotifier([
@@ -31,19 +32,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       authRepository.watchAuthStateChanges() // authentication events
     ]),
     initialLocation: defaultLocation,
-    routes: RouterConf.topLevelRoutes,
+    routes: RouterConf.routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (context, state) {
-      final loginLocation = RouterConf.login.path;
-      final signupLocation = RouterConf.signup.path;
-      final splashLocation = RouterConf.splash.path;
-      final passwordRecoveryLocation = RouterConf.passwordRecovery.path;
-      final isOnDefaultPage = state.subloc == defaultLocation;
+      final loginLocation = context.namedLocation(loginRouteName);
+      final signupLocation = context.namedLocation(signupRouteName);
+      final splashLocation = context.namedLocation(splashRouteName);
+      final passwordRecoveryLocation = context.namedLocation(recoverPasswordRouteName);
+      final isOnDefaultPage = state.subloc == context.namedLocation(defaultLocation);
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
       final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
-      final isOnPublicPage = RouterConf.topLevelPublicRoutes.any((element) => element.path == state.subloc);
+      //final isOnPublicPage = RouterConf.topLevelPublicRoutes.any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
@@ -70,12 +71,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           qParams["from"] = from;
         }
         // return GoRouter.of(context).namedLocation(name, queryParams: qParams);
-        return state.namedLocation(name, queryParams: qParams);
+        return GoRouter.of(context).namedLocation(name, queryParams: qParams);
       }
 
       if (!isInitialized) {
         // Redirect to splash screen while app is pending initialization
-        return (isOnSplashPage) ? null : namedLocForwarded(RouterConf.splash.name!);
+        return (isOnSplashPage) ? null : namedLocForwarded(splashRouteName);
       }
 
       /*print("***NEW ROUTER***");
@@ -93,7 +94,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           authRepository.allowPasswordReset = false;
           return null;
         } else {
-          return namedLocForwarded(RouterConf.passwordRecovery.name!);
+          return namedLocForwarded(recoverPasswordRouteName);
         }
       }
 
@@ -101,7 +102,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         if (from != null) {
           /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
           // Only allow access to public pages...
-          if (!isOnSplashPage && isOnPublicPage) {
+          if (!isOnSplashPage /*&& isOnPublicPage*/) {
             return null;
             // ... else send user to their origin location
           } else if (from != state.subloc) {
@@ -109,7 +110,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           }
         }
         // Redirect to login page as default
-        return (isOnLoginPage) ? null : namedLocForwarded(RouterConf.login.name!);
+        return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
       } else {
         // If the user is authenticated, forward to where
         // they were going initially...

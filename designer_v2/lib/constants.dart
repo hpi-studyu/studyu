@@ -22,3 +22,26 @@ class Config {
 }
 
 const kPathSeparator = '   /   ';
+
+const String rootRouteName = 'root';
+const String studiesRouteName = 'studies';
+const String studyRouteName = 'study';
+const String studyEditRouteName = 'studyEdit';
+const String studyEditInfoRouteName = 'studyEditInfo';
+const String studyEditEnrollmentRouteName = 'studyEditEnrollment';
+const String studyEditInterventionsRouteName = 'studyEditInterventions';
+const String studyEditInterventionRouteName = 'studyEditIntervention';
+const String studyEditMeasurementsRouteName = 'studyEditMeasurements';
+const String studyEditMeasurementRouteName = 'studyEditMeasurement';
+const String studyTestRouteName = 'studyTest';
+const String studyRecruitRouteName = 'studyRecruit';
+const String studyMonitorRouteName = 'studyMonitor';
+const String studyAnalyzeRouteName = 'studyAnalyze';
+const String studySettingsRouteName = 'studySettings';
+const String accountSettingsRouteName = 'accountSettings';
+const String splashRouteName = 'splash';
+const String loginRouteName = 'login';
+const String signupRouteName = 'signup';
+const String forgotPasswordRouteName = 'forgotPassword';
+const String recoverPasswordRouteName = 'recoverPassword';
+const String errorRouteName = 'error';
