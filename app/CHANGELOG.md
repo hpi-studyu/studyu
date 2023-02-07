@@ -1,3 +1,7 @@
+## 1.11.3
+
+ - **FIX**: notification reloading bug on intervention change. ([b5a52bb9](https://github.com/hpi-studyu/studyu/commit/b5a52bb906226f3b98d000d5d36f167a5094a95a))
+
 ## 1.11.2
 
  - **FIX**: after notification task completed reload dashboard. ([ed571950](https://github.com/hpi-studyu/studyu/commit/ed571950398de32ccbfb3ba26bd4b26022f8f344))
