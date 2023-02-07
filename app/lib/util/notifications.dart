@@ -195,7 +195,7 @@ class StudyNotifications {
             builder: (_) => TaskScreen(timedTask: taskToRun),
           ),
         );
-        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.dashboard, (_) => false);
+        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(
