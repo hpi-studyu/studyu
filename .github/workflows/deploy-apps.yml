@@ -3,7 +3,7 @@ name: Deploy apps
 on:
   push:
     branches:
-      - release-staging
+      - release-apps
   workflow_dispatch:
 
 jobs:
