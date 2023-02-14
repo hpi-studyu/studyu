@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -26,10 +25,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       context.read<AppState>().activeSubject = subject;
       await storeActiveSubjectId(subject.id);
       if (!mounted) return;
-      if (!kIsWeb) {
-        scheduleNotifications(context);
-      }
-
+      scheduleNotifications(context);
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -32,6 +33,7 @@ class _TaskBoxState extends State<TaskBox> {
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
+    if (mounted) scheduleNotifications(context);
   }
 
   Widget drawCheckbox({bool completed}) {

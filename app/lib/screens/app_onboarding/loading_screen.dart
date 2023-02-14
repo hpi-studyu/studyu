@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -68,10 +67,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!mounted) return;
     if (subject != null) {
       model.activeSubject = subject;
-      if (!kIsWeb) {
-        // Notifications not supported on web
-        scheduleNotifications(context);
-      }
+      scheduleNotifications(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, Routes.welcome);

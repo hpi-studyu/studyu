@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -57,6 +58,8 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 }
 
 Future<void> scheduleNotifications(BuildContext context) async {
+  // Notifications not supported on web
+  if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
   final studyNotifications =
