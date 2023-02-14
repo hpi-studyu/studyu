@@ -34,7 +34,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         SnackBar(
           content: Text(AppLocalizations.of(context).could_not_save_results),
           duration: const Duration(seconds: 10),
-          action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResult(response, context)),
+          action: SnackBarAction(label: 'Retry', onPressed: () => _addQuestionnaireResult(response, context)),
         ),
       );
     }
@@ -82,7 +82,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                 }
               },
               icon: const Icon(Icons.check),
-              label: const Text('Complete'),
+              label: Text(AppLocalizations.of(context).complete),
             )
         ],
       ),
