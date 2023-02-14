@@ -1,3 +1,7 @@
+## 1.11.4
+
+ - **FIX**: reschedule notifications after a task was completed. ([ab92651d](https://github.com/hpi-studyu/studyu/commit/ab92651de93b225b47c5aeef9d46690bb2050187))
+
 ## 1.11.3
 
  - **FIX**: notification reloading bug on intervention change. ([b5a52bb9](https://github.com/hpi-studyu/studyu/commit/b5a52bb906226f3b98d000d5d36f167a5094a95a))
