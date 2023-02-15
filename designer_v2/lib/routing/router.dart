@@ -35,11 +35,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: RouterConf.routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (context, state) {
-      final loginLocation = context.namedLocation(loginRouteName);
-      final signupLocation = context.namedLocation(signupRouteName);
-      final splashLocation = context.namedLocation(splashRouteName);
-      final passwordRecoveryLocation = context.namedLocation(recoverPasswordRouteName);
-      final isOnDefaultPage = state.subloc == context.namedLocation(defaultLocation);
+      final loginLocation = state.namedLocation(loginRouteName);
+      final signupLocation = state.namedLocation(signupRouteName);
+      final splashLocation = state.namedLocation(splashRouteName);
+      final passwordRecoveryLocation = state.namedLocation(recoverPasswordRouteName);
+      final isOnDefaultPage = state.subloc == state.namedLocation(defaultLocation);
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
@@ -57,7 +57,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (state.queryParams.containsKey('from')) {
         from = state.queryParams['from'];
       } else {
-        if (!(isOnDefaultPage | isOnSplashPage)) {
+        if (state.subloc.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
           from = state.subloc;
         } else {
           from = null;
@@ -70,8 +70,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           // if (from != null && from != '/' && from != defaultLocation) {
           qParams["from"] = from;
         }
-        // return GoRouter.of(context).namedLocation(name, queryParams: qParams);
-        return GoRouter.of(context).namedLocation(name, queryParams: qParams);
+        return state.namedLocation(name, queryParams: qParams);
       }
 
       if (!isInitialized) {
@@ -120,7 +119,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         // ...or send them to the default location if they just authenticated
         // and weren't going anywhere
         if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
-          return defaultLocation;
+          return '/$defaultLocation';
         }
       }
       // don't redirect in all other cases

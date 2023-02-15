@@ -13,7 +13,7 @@ abstract class IStudyNavViewModel {
 }
 
 class StudyNav {
-  static tabs(StudyID studyId, IStudyNavViewModel viewModel) => [
+  static tabs(StudyID studyId, IStudyNavViewModel viewModel) => <NavbarTab>[
         edit(studyId, enabled: viewModel.isEditTabEnabled),
         test(studyId, enabled: viewModel.isTestTabEnabled),
         recruit(studyId, enabled: viewModel.isRecruitTabEnabled),
@@ -54,7 +54,7 @@ class StudyNav {
 }
 
 class StudyDesignNav {
-  static tabs(studyId) => [
+  static tabs(studyId) => <NavbarTab>[
         info(studyId),
         enrollment(studyId),
         interventions(studyId),

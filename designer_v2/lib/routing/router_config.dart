@@ -83,14 +83,13 @@ class RouterConf {
     GoRoute(
       path: "/studies/:${RouteParams.studyId}",
       name: studyRouteName,
-      redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context)
+      redirect: (BuildContext context, GoRouterState state) => state
           .namedLocation('studyEdit', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: studyEditRouteName,
-      // GoRouter.of(context).namedLocation
-      redirect: (BuildContext context, GoRouterState state) => GoRouter.of(context)
+      redirect: (BuildContext context, GoRouterState state) => state
           .namedLocation('studyEditInfo', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
     ),
     GoRoute(

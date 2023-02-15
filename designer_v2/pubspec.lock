@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: dynamic_color
-      sha256: "0ff251e8a31f54adde9ab4d4b301c94df46dcd34e4fbd6d7623631ed174b205e"
+      sha256: c4a508284b14ec4dda5adba2c28b2cdd34fbae1afead7e8c52cad87d51c5405b
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0"
+    version: "1.6.2"
   equatable:
     dependency: "direct main"
     description:
@@ -215,10 +215,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_riverpod
-      sha256: "0c997763ce06359ee4686553b74def84062e9d6929ac63f61fa02465c1f8e32c"
+      sha256: "46a27b7a11dc13738054093076f2dc65692ddcd463979b15092accf5681aea20"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.3"
+    version: "2.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -257,10 +257,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: b789ead597d3e9cd5d114cdb7af12440712da5599743f9a2358c43aa3f5e9d3e
+      sha256: "6dd6b05db749756996b727521b9b9b4ee0968ea4aeb59af2e59383683d6ef34f"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.7"
   gotrue:
     dependency: transitive
     description:
@@ -529,10 +529,10 @@ packages:
     dependency: transitive
     description:
       name: riverpod
-      sha256: "0f43c64f1f79c2112c843305a879a746587fb7c1e388f1d4717737796756e2c4"
+      sha256: "59a48de9c757aa61aa28e9fd625ffb360d43b6b54606f12536622c55be9e8c4b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.3"
+    version: "2.2.0"
   rxdart:
     dependency: "direct main"
     description:
@@ -630,10 +630,10 @@ packages:
     dependency: transitive
     description:
       name: storage_client
-      sha256: "6d5b7e3f8101d9f010fa05e56d426264052feb8241bebc8d471449cc510246ea"
+      sha256: "58eebe33fba221499afc18008b4e8ea4205cc0d4024021c0badd6d662bcdb87c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   stream_channel:
     dependency: transitive
     description:
@@ -668,18 +668,18 @@ packages:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: cee310e3cbdd067d0e639b87be41ec4633de3f6dee739b5cd96200c162200f0f
+      sha256: "14a36f512596abec7a59ea8ed63e4b98ea18db80299dcf9576fd53fea5f3e5b4"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.1"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "6b883f4b3f7c85a550bea601aa5664c90cafb0e7884461136de7a3b775467acf"
+      sha256: "29249c8a2c358de4c04bc455afc88cd063ef04520e466a991091059666b53b88"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "1.4.0"
   term_glyph:
     dependency: transitive
     description:
@@ -716,10 +716,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "698fa0b4392effdc73e9e184403b627362eb5fbf904483ac9defbb1c2191d809"
+      sha256: e8f2efc804810c0f2f5b485f49e7942179f56eabcfe81dce3387fec4bb55876b
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.8"
+    version: "6.1.9"
   url_launcher_android:
     dependency: transitive
     description:
