@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -23,7 +23,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     var currentId = id;
     for (final reminder in task.schedule.reminders) {
       if (date.isSameDate(DateTime.now()) &&
-          !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder)) {
+          !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
         break;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
@@ -38,8 +38,9 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
         androidAllowWhileIdle: true,
       );
-      // DEBUG
-      /*if (currentId == 0 || currentId == 1 || currentId == 2) {
+
+      // DEBUG: Show test notifications
+      /*if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
         await show(
           /*******************/
           currentId,
@@ -50,7 +51,11 @@ extension Reminders on FlutterLocalNotificationsPlugin {
           payload: task.id,
         );
       }*/
-      // print('Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}');
+      // DEBUG: List scheduled notifications
+      if (StudyNotifications.debug) {
+        print(
+            '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}');
+      }
       currentId++;
     }
     return currentId;

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +22,7 @@ class StudyNotifications {
   String taskAlreadyCompleted;
   // do not launch notification action twice if user subscribes to a new study
   static bool wasNotificationActionHandled = false;
+  static const bool debug = false; //kDebugMode;
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
@@ -177,7 +177,7 @@ class StudyNotifications {
     for (final Task task in subject.study.taskList) {
       if (task.id == taskId) {
         for (final CompletionPeriod cp in task.schedule.completionPeriods) {
-          if (cp.contains(now) /*|| kDebugMode*/) {
+          if (cp.contains(now) || debug) {
             taskToRun = TimedTask(task, cp);
           }
         }
@@ -189,7 +189,7 @@ class StudyNotifications {
       nowDt,
     );
     if (taskToRun != null) {
-      if (!completed /*|| !kDebugMode*/) {
+      if (!completed || !debug) {
         await navigatorKey.currentState.push(
           MaterialPageRoute(
             builder: (_) => TaskScreen(timedTask: taskToRun),

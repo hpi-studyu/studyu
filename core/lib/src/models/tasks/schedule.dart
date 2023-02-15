@@ -77,7 +77,10 @@ class StudyUTimeOfDay {
   @override
   String toString() => '$hour:${minute.toString().padLeft(2, '0')}';
 
-  bool earlierThan(StudyUTimeOfDay time) {
+  bool earlierThan(StudyUTimeOfDay time, {bool exact = false}) {
+    if (exact) {
+      return hour < time.hour || hour == time.hour && minute < time.minute;
+    }
     return hour < time.hour || hour == time.hour && minute <= time.minute;
   }
 }
