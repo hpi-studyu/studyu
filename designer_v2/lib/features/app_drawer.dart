@@ -110,7 +110,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         localizedTitle: () => tr.navlink_account_settings,
         icon: Icons.settings_rounded,
         intent: RoutingIntents.accountSettings,
-        enabled: false,
       ),
       DrawerEntry(
         localizedTitle: () => tr.navlink_logout,
