@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
-import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 
@@ -38,13 +38,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       final loginLocation = state.namedLocation(loginRouteName);
       final signupLocation = state.namedLocation(signupRouteName);
       final splashLocation = state.namedLocation(splashRouteName);
-      final passwordRecoveryLocation = state.namedLocation(recoverPasswordRouteName);
-      final isOnDefaultPage = state.subloc == state.namedLocation(defaultLocation);
+      final passwordRecoveryLocation =
+          state.namedLocation(recoverPasswordRouteName);
+      final isOnDefaultPage =
+          state.subloc == state.namedLocation(defaultLocation);
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
       final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
-      //final isOnPublicPage = RouterConf.topLevelPublicRoutes.any((element) => element.path == state.subloc);
+      final isOnPublicPage = RouterConf.publicRoutes
+          .any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;
@@ -101,7 +104,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         if (from != null) {
           /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
           // Only allow access to public pages...
-          if (!isOnSplashPage /*&& isOnPublicPage*/) {
+          if (!isOnSplashPage && isOnPublicPage) {
             return null;
             // ... else send user to their origin location
           } else if (from != state.subloc) {
@@ -111,13 +114,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         // Redirect to login page as default
         return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
       } else {
-        // If the user is authenticated, forward to where
-        // they were going initially...
+        // If the user is authenticated, forward to where they were going initially...
         if (from != null && from != state.subloc) {
           return from;
         }
-        // ...or send them to the default location if they just authenticated
-        // and weren't going anywhere
+        // ...or send them to the default location if they just authenticated and weren't going anywhere
         if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
           return '/$defaultLocation';
         }

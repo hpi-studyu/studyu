@@ -146,7 +146,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   }
 }
 
-/// Provides the the [FormViewModel] that is responsible for displaying &
+/// Provides the [FormViewModel] that is responsible for displaying and
 /// editing the survey design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built

@@ -59,11 +59,67 @@ class RouteParams {
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConf {
-  static final List<GoRoute> routes = [
+  static final List<GoRoute> routes = publicRoutes + privateRoutes;
+
+  static final List<GoRoute> publicRoutes = [
+    GoRoute(
+      path: "/splash",
+      name: splashRouteName,
+      builder: (context, state) => const SplashPage(),
+    ),
+    GoRoute(
+        path: "/login",
+        name: loginRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.login,
+                body: LoginForm(),
+              ),
+            )),
+    GoRoute(
+        path: "/signup",
+        name: signupRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.signup,
+                body: SignupForm(),
+              ),
+            )),
+    GoRoute(
+        path: "/forgot_password",
+        name: forgotPasswordRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.passwordForgot,
+                body: PasswordForgotForm(),
+              ),
+            )),
+    GoRoute(
+        path: "/password_recovery",
+        name: recoverPasswordRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.passwordRecovery,
+                body: PasswordRecoveryForm(),
+              ),
+            )),
+    GoRoute(
+      path: "/error",
+      name: errorRouteName,
+      builder: (context, state) => ErrorPage(error: state.extra as Exception),
+    ),
+  ];
+
+  static final List<GoRoute> privateRoutes = [
     GoRoute(
       path: "/",
       name: rootRouteName,
-      redirect: (BuildContext context, GoRouterState state) => context.namedLocation('studies'),
+      redirect: (BuildContext context, GoRouterState state) =>
+          context.namedLocation('studies'),
     ),
     GoRoute(
       path: "/studies",
@@ -285,56 +341,6 @@ class RouterConf {
             const AccountSettingsDialog(),
           );
         }),
-    GoRoute(
-      path: "/splash",
-      name: splashRouteName,
-      builder: (context, state) => const SplashPage(),
-    ),
-    GoRoute(
-        path: "/login",
-        name: loginRouteName,
-        pageBuilder: (context, state) => const MaterialPage(
-              key: RouterKeys.authKey,
-              child: AuthScaffold(
-                formKey: AuthFormKey.login,
-                body: LoginForm(),
-              ),
-            )),
-    GoRoute(
-        path: "/signup",
-        name: signupRouteName,
-        pageBuilder: (context, state) => const MaterialPage(
-              key: RouterKeys.authKey,
-              child: AuthScaffold(
-                formKey: AuthFormKey.signup,
-                body: SignupForm(),
-              ),
-            )),
-    GoRoute(
-        path: "/forgot_password",
-        name: forgotPasswordRouteName,
-        pageBuilder: (context, state) => const MaterialPage(
-              key: RouterKeys.authKey,
-              child: AuthScaffold(
-                formKey: AuthFormKey.passwordForgot,
-                body: PasswordForgotForm(),
-              ),
-            )),
-    GoRoute(
-        path: "/password_recovery",
-        name: recoverPasswordRouteName,
-        pageBuilder: (context, state) => const MaterialPage(
-              key: RouterKeys.authKey,
-              child: AuthScaffold(
-                formKey: AuthFormKey.passwordRecovery,
-                body: PasswordRecoveryForm(),
-              ),
-            )),
-    GoRoute(
-      path: "/error",
-      name: errorRouteName,
-      builder: (context, state) => ErrorPage(error: state.extra as Exception),
-    ),
   ];
 
   static route(String name) {
