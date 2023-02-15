@@ -23,7 +23,7 @@ flutter:
   generate: true
   assets:
     - packages/studyu_flutter_common/envs/.env
-    # todo when building the mobile app this fails sometimes, not sure why
+    # todo when building the mobile app this fails, not sure why
     # - packages/studyu_flutter_common/envs/.env.staging
     - packages/studyu_flutter_common/envs/.env.local
     - packages/studyu_flutter_common/envs/.env.selfhost
