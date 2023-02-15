@@ -79,7 +79,7 @@
   "phase_sequence_alternating": "Alternating (AB AB)",
   "phase_sequence_counterbalanced": "Counterbalanced (AB BA)",
   "phase_sequence_random": "Random",
-  "form_enrollment_option_open": "Open",
+"phase_sequence_custom": "Custom",  "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
   "notification_code_deleted": "Access code deleted",
   "notification_code_clipboard": "Code copied to clipboard",

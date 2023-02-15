@@ -86,7 +86,8 @@ class _ScheduleDesignerState extends State<ScheduleDesigner> {
           ..numberOfCycles = int.parse(_editFormKey.currentState.value['numberOfCycles'] as String)
           ..phaseDuration = int.parse(_editFormKey.currentState.value['phaseDuration'] as String)
           ..includeBaseline = _editFormKey.currentState.value['includeBaseline'] as bool
-          ..sequence = _editFormKey.currentState.value['sequence'] as PhaseSequence;
+          ..sequence = _editFormKey.currentState.value['sequence'] as PhaseSequence
+          ..sequenceCustom = _editFormKey.currentState.value['sequenceCustom'] as String;
       });
     }
   }

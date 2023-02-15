@@ -7,7 +7,9 @@ part of 'study_schedule.dart';
 // **************************************************************************
 
 StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) =>
-    StudySchedule()
+    StudySchedule(
+      sequenceCustom: json['sequenceCustom'] as String? ?? 'ABAB',
+    )
       ..numberOfCycles = json['numberOfCycles'] as int
       ..phaseDuration = json['phaseDuration'] as int
       ..includeBaseline = json['includeBaseline'] as bool
@@ -19,10 +21,12 @@ Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
       'phaseDuration': instance.phaseDuration,
       'includeBaseline': instance.includeBaseline,
       'sequence': instance.sequence.toJson(),
+      'sequenceCustom': instance.sequenceCustom,
     };
 
 const _$PhaseSequenceEnumMap = {
   PhaseSequence.alternating: 'alternating',
   PhaseSequence.counterBalanced: 'counterBalanced',
   PhaseSequence.randomized: 'randomized',
+  PhaseSequence.customized: 'customized',
 };

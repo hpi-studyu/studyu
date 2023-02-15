@@ -9,10 +9,13 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 mixin StudyScheduleControls {
   static const defaultScheduleType = PhaseSequence.alternating;
+  static const defaultScheduleTypeSequence = 'ABAB';
   static const defaultNumCycles = 2;
   static const defaultPeriodLength = 7;
 
   final FormControl<PhaseSequence> sequenceTypeControl = FormControl(value: defaultScheduleType);
+  final FormControl<String> sequenceTypeCustomControl =
+      FormControl(value: defaultScheduleTypeSequence);
   final FormControl<int> phaseDurationControl = FormControl(value: defaultPeriodLength);
   final FormControl<int> numCyclesControl = FormControl(value: defaultNumCycles);
   final FormControl<bool> includeBaselineControl = FormControl(value: true);
@@ -22,6 +25,7 @@ mixin StudyScheduleControls {
 
   late final studyScheduleControls = {
     'sequenceType': sequenceTypeControl,
+    'sequenceTypeCustom': sequenceTypeCustomControl,
     'numCycles': numCyclesControl,
     'phaseDuration': phaseDurationControl,
     'includeBaseline': includeBaselineControl,
@@ -29,8 +33,8 @@ mixin StudyScheduleControls {
 
   FormValidationConfigSet get studyScheduleValidationConfig => {
         StudyFormValidationSet.draft: [],
-        StudyFormValidationSet.publish: [numCyclesRange, phaseDurationRange],
-        StudyFormValidationSet.test: [numCyclesRange, phaseDurationRange],
+        StudyFormValidationSet.publish: [customSequenceRequired, numCyclesRange, phaseDurationRange],
+        StudyFormValidationSet.test: [customSequenceRequired, numCyclesRange, phaseDurationRange],
       };
 
   static int kNumCyclesMin = 1;
@@ -65,10 +69,18 @@ mixin StudyScheduleControls {
           ValidationMessage.max: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
         },
-      );
+  );
+  get customSequenceRequired => FormControlValidation(
+      control: sequenceTypeCustomControl,
+      validators: [Validators.required],
+      validationMessages: {
+        ValidationMessage.required: (error) => 'Custom sequence needs to be specified.',
+      }
+  );
 
   void setStudyScheduleControlsFrom(StudyScheduleFormData data) {
     sequenceTypeControl.value = data.sequenceType;
+    sequenceTypeCustomControl.value = data.sequenceTypeCustom;
     numCyclesControl.value = data.numCycles;
     phaseDurationControl.value = data.phaseDuration;
     includeBaselineControl.value = data.includeBaseline;
@@ -77,9 +89,14 @@ mixin StudyScheduleControls {
   StudyScheduleFormData buildStudyScheduleFormData() {
     return StudyScheduleFormData(
       sequenceType: sequenceTypeControl.value!, // required
+      sequenceTypeCustom: sequenceTypeCustomControl.value!, // required
       numCycles: numCyclesControl.value!, // required
       phaseDuration: phaseDurationControl.value!, // required
       includeBaseline: includeBaselineControl.value!, // required
     );
+  }
+
+  bool isSequencingCustom() {
+    return sequenceTypeControl.value == PhaseSequence.customized;
   }
 }

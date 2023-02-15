@@ -5,11 +5,13 @@ import 'package:studyu_designer_v2/features/forms/form_data.dart';
 class StudyScheduleFormData implements IStudyFormData {
   StudyScheduleFormData(
       {required this.sequenceType,
-      required this.numCycles,
+      required this.sequenceTypeCustom,
+    required this.numCycles,
       required this.phaseDuration,
       required this.includeBaseline});
 
   final PhaseSequence sequenceType;
+  final String sequenceTypeCustom;
   final int numCycles;
   final int phaseDuration;
   final bool includeBaseline;
@@ -17,6 +19,7 @@ class StudyScheduleFormData implements IStudyFormData {
   factory StudyScheduleFormData.fromDomainModel(StudySchedule schedule) {
     return StudyScheduleFormData(
       sequenceType: schedule.sequence,
+      sequenceTypeCustom: schedule.sequenceCustom,
       numCycles: schedule.numberOfCycles,
       phaseDuration: schedule.phaseDuration,
       includeBaseline: schedule.includeBaseline,
@@ -26,6 +29,7 @@ class StudyScheduleFormData implements IStudyFormData {
   StudySchedule toStudySchedule() {
     final schedule = StudySchedule();
     schedule.sequence = sequenceType;
+    schedule.sequenceCustom = sequenceTypeCustom;
     schedule.numberOfCycles = numCycles;
     schedule.phaseDuration = phaseDuration;
     schedule.includeBaseline = includeBaseline;
