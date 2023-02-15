@@ -30,7 +30,7 @@ dependencies:
   csv: ^5.0.1
   archive: ^3.3.6
   async: ^2.10.0
-  flutter_dropzone: ^3.0.5 # replacement for non-working pointer_interceptor
+  pointer_interceptor: ^0.9.3+4
   material_color_utilities: ^0.2.0
   flutter_colorpicker: ^1.0.3
   material_design_icons_flutter: ^6.0.7096

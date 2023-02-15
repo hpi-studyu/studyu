@@ -64,7 +64,7 @@ class StandardTable<T> extends StatefulWidget {
   }
 
   final List<T> items;
-  late final List<StandardTableColumn> columns;
+  late List<StandardTableColumn> columns;
   final OnSelectHandler<T> onSelectItem;
   final ActionsProviderAt<T>? trailingActionsAt;
   final ActionMenuType? trailingActionsMenuType;
