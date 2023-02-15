@@ -54,7 +54,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
       // DEBUG: List scheduled notifications
       if (StudyNotifications.debug) {
         print(
-            '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}',
+          '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}',
         );
       }
       currentId++;
