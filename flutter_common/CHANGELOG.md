@@ -1,3 +1,7 @@
+## 1.3.27
+
+ - **FIX**: remove staging. ([24b6dfa9](https://github.com/hpi-studyu/studyu/commit/24b6dfa9c2eb8649c896d95620064c8a6feb1b4f))
+
 ## 1.3.26
 
  - Update a dependency to the latest release.

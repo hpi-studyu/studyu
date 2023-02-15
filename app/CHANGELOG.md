@@ -1,3 +1,7 @@
+## 1.11.6
+
+ - Update a dependency to the latest release.
+
 ## 1.11.5
 
  - **FIX**: notification debug mode, do not schedule past notifications. ([366d6886](https://github.com/hpi-studyu/studyu/commit/366d68867811f9d5332a7be41b48e5db30441aca))
