@@ -337,7 +337,17 @@ class RouterConf {
     ),
   ];
 
-  static route(String name) => routes.firstWhere((e) => e.name == name);
+  static route(String name) {
+    searchRouteNames(List<GoRoute> subRoutes) {
+      if (subRoutes.isEmpty) return null;
+      for (GoRoute route in subRoutes) {
+        if (route.name == name) return route;
+        GoRoute? newRoute = searchRouteNames(List<GoRoute>.from(route.routes));
+        if (newRoute != null) return newRoute;
+      }
+    }
+    return searchRouteNames(routes);
+  }
 }
 
 // - Route Args
