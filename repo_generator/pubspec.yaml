@@ -1,6 +1,6 @@
 name: studyu_repo_generator
 description: A web server to generate/update Gitlab repos
-version: 1.4.22
+version: 1.4.23
 homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
 
@@ -14,7 +14,7 @@ dependencies:
   path: ^1.8.3
   pretty_json: ^2.0.0
   shelf: ^1.4.0
-  studyu_core: ^3.8.1
+  studyu_core: ^3.8.2
   supabase: ^0.3.6 # breaking
 
 dev_dependencies:

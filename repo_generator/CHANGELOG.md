@@ -1,3 +1,7 @@
+## 1.4.23
+
+ - Update a dependency to the latest release.
+
 ## 1.4.22
 
  - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))

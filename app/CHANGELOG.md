@@ -1,3 +1,7 @@
+## 1.11.5
+
+ - **FIX**: notification debug mode, do not schedule past notifications. ([366d6886](https://github.com/hpi-studyu/studyu/commit/366d68867811f9d5332a7be41b48e5db30441aca))
+
 ## 1.11.4
 
  - **FIX**: reschedule notifications after a task was completed. ([ab92651d](https://github.com/hpi-studyu/studyu/commit/ab92651de93b225b47c5aeef9d46690bb2050187))

@@ -1,3 +1,7 @@
+## 3.8.2
+
+ - **FIX**: notification debug mode, do not schedule past notifications. ([366d6886](https://github.com/hpi-studyu/studyu/commit/366d68867811f9d5332a7be41b48e5db30441aca))
+
 ## 3.8.1
 
  - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))

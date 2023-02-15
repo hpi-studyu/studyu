@@ -1,3 +1,7 @@
+## 1.6.3
+
+ - Update a dependency to the latest release.
+
 ## 1.6.2
 
  - **FIX**: deprecated stuff. ([12e1632b](https://github.com/hpi-studyu/studyu/commit/12e1632ba48a98259855c88eeaf6fd771beb893b))

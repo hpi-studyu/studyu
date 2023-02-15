@@ -5,7 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 publish_to: 'none'
 
-version: 1.6.2
+version: 1.6.3
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -32,8 +32,8 @@ dependencies:
   material_design_icons_flutter: ^6.0.7096
   pretty_json: ^2.0.0
   provider: ^6.0.5
-  studyu_core: ^3.8.1
-  studyu_flutter_common: ^1.3.25
+  studyu_core: ^3.8.2
+  studyu_flutter_common: ^1.3.26
   supabase: ^0.3.6 # breaking
   supabase_flutter: ^0.3.3 # breaking
   universal_html: ^2.0.8
