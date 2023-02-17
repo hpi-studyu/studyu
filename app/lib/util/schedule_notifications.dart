@@ -24,10 +24,13 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     for (final reminder in task.schedule.reminders) {
       if (date.isSameDate(DateTime.now()) &&
           !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
-        print(
-          '${DateTime.now()} NOT Scheduled Notification #$currentId: ${task.title}, ${date.day}, $reminder, $notificationDetails, ${task.id}',
-        );
-        print(task.schedule.reminders);
+        if (StudyNotifications.debug) {
+          print(
+            '${DateTime.now()} Skip Notification #$currentId: '
+            '${task.title}, ${date.day}, $reminder, $notificationDetails, '
+            '${task.id}',
+          );
+        }
         continue;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
@@ -42,7 +45,6 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
         androidAllowWhileIdle: true,
       );
-
       // DEBUG: Show test notifications
       /*if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
         await show(
@@ -56,11 +58,12 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         );
       }*/
       // DEBUG: List scheduled notifications
-      //if (StudyNotifications.debug) {
-      print(
-          '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}',
+      if (StudyNotifications.debug) {
+        print(
+          '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, '
+          '$reminderTime, $notificationDetails, ${task.id}',
         );
-      //}
+      }
       currentId++;
     }
     return currentId;
