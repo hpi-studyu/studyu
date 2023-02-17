@@ -24,6 +24,9 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     for (final reminder in task.schedule.reminders) {
       if (date.isSameDate(DateTime.now()) &&
           !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
+        print(
+          '${DateTime.now()} NOT Scheduled Notification #$currentId: ${task.title}, $date, $reminder, $notificationDetails, ${task.id}',
+        );
         break;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
