@@ -25,9 +25,10 @@ extension Reminders on FlutterLocalNotificationsPlugin {
       if (date.isSameDate(DateTime.now()) &&
           !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
         print(
-          '${DateTime.now()} NOT Scheduled Notification #$currentId: ${task.title}, $date, $reminder, $notificationDetails, ${task.id}',
+          '${DateTime.now()} NOT Scheduled Notification #$currentId: ${task.title}, ${date.day}, $reminder, $notificationDetails, ${task.id}',
         );
-        break;
+        print(task.schedule.reminders);
+        continue;
       }
       // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
       final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
@@ -55,11 +56,11 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         );
       }*/
       // DEBUG: List scheduled notifications
-      if (StudyNotifications.debug) {
-        print(
+      //if (StudyNotifications.debug) {
+      print(
           '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, $reminderTime, $notificationDetails, ${task.id}',
         );
-      }
+      //}
       currentId++;
     }
     return currentId;

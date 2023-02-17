@@ -32,7 +32,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
   Future<void> initStudy() async {
     final model = context.read<AppState>();
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('Selected study: $selectedStudyObjectId');
+    print('Subject ID: $selectedStudyObjectId');
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
