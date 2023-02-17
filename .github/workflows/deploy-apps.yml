@@ -38,8 +38,8 @@ jobs:
         with:
           lane: 'internal'
           subdirectory: 'android'
-          env:
-            PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
+        env:
+          PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
   app-store-release:
     name: Create App Store Release
