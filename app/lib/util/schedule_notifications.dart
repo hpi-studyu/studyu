@@ -80,32 +80,22 @@ Future<void> scheduleNotifications(BuildContext context) async {
   const androidPlatformChannelSpecifics = AndroidNotificationDetails('0', 'StudyU');
   const notificationDetails = NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  final interventionTaskLists =
-      subject.selectedInterventions?.map((intervention) => intervention.tasks)?.toList() ?? [];
-  var interventionTasks = [];
-  if (interventionTaskLists.isNotEmpty) {
-    interventionTasks = interventionTaskLists.reduce((firstList, secondList) => [...firstList, ...secondList]) ?? [];
-  }
-  final tasks = [
-    ...subject.study.observations,
-    ...interventionTasks,
-  ];
-  if (tasks.isEmpty) return;
-
   final List<SendNotification> sendNotificationList = [];
-
   for (int index = 0; index <= 3; index++) {
     final date = DateTime.now().add(Duration(days: index));
     for (final observation in subject.study.observations) {
-      sendNotificationList.add(SendNotification(observation, date, notificationDetails));
+      sendNotificationList
+          .add(SendNotification(observation, date, notificationDetails));
     }
-    for (final intervention in subject.selectedInterventions ?? <Intervention>[]) {
-      if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
+    for (final intervention in subject.selectedInterventions) {
+      if (intervention.id == null ||
+          intervention.id != subject.getInterventionForDate(date)?.id) {
         continue;
       }
       for (final task in intervention.tasks) {
         if (task.title != null) {
-          sendNotificationList.add(SendNotification(task, date, notificationDetails));
+          sendNotificationList
+              .add(SendNotification(task, date, notificationDetails));
         }
       }
     }
