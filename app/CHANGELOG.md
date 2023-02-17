@@ -1,3 +1,7 @@
+## 1.11.7
+
+ - **FIX**: notification debug. ([483120fb](https://github.com/hpi-studyu/studyu/commit/483120fb9c4810721ad087f60d28ad8716153716))
+
 ## 1.11.6
 
  - Update a dependency to the latest release.
