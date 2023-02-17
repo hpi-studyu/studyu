@@ -21,7 +21,6 @@ jobs:
         with:
           ruby-version: 3.2.1
           bundler-cache: true
-          cache-version: 1
       - name: Decrypt files
         id: decrypt_files
         run: |
