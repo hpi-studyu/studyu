@@ -84,18 +84,15 @@ Future<void> scheduleNotifications(BuildContext context) async {
   for (int index = 0; index <= 3; index++) {
     final date = DateTime.now().add(Duration(days: index));
     for (final observation in subject.study.observations) {
-      sendNotificationList
-          .add(SendNotification(observation, date, notificationDetails));
+      sendNotificationList.add(SendNotification(observation, date, notificationDetails));
     }
     for (final intervention in subject.selectedInterventions) {
-      if (intervention.id == null ||
-          intervention.id != subject.getInterventionForDate(date)?.id) {
+      if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
         continue;
       }
       for (final task in intervention.tasks) {
         if (task.title != null) {
-          sendNotificationList
-              .add(SendNotification(task, date, notificationDetails));
+          sendNotificationList.add(SendNotification(task, date, notificationDetails));
         }
       }
     }
