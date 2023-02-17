@@ -22,10 +22,6 @@ jobs:
           echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
           gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
           echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -33,7 +29,7 @@ jobs:
         run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Upload app bundle
-        run: cd app/android && fastlane internal
+        run: cd app/android && gem install bundler && bundle install && bundle exec fastlane internal
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
