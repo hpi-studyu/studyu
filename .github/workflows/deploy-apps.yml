@@ -21,7 +21,7 @@ jobs:
         with:
           ruby-version: 3.2.1
           bundler-cache: true
-          working-directory: 'android'
+          working-directory: './app/android'
       - name: Decrypt files
         id: decrypt_files
         run: |
@@ -37,7 +37,7 @@ jobs:
       - uses: maierj/fastlane-action@v3.0.0
         with:
           lane: 'internal'
-          subdirectory: 'android'
+          subdirectory: './app/android'
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
