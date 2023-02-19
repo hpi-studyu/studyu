@@ -45,12 +45,12 @@ class ReportSectionContainer extends StatelessWidget {
             children: [
               if (primary) ...buildPrimaryHeader(context, theme),
               Text(
-                section.title,
+                section.title ?? '',
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 4),
               Text(
-                section.description,
+                section.description ?? '',
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),

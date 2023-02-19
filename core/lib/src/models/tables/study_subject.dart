@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quiver/collection.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/models.dart';
 import 'package:studyu_core/src/util/extensions.dart';
@@ -319,22 +318,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return save();
   }
 
-  static Future<List<StudySubject>> getUserStudiesFor(Study study) async =>
-      SupabaseQuery.extractSupabaseList<StudySubject>(
-        await env.client
-            .from(tableName)
-            .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-            .eq('study_id', study.id)
-            .select(),
-      );
-
   static Future<List<StudySubject>> getStudyHistory(String userId) async {
     return SupabaseQuery.extractSupabaseList<StudySubject>(
       await env.client
           .from(tableName)
-          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
-          .eq('user_id', userId)
-          .select(),
+          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
     );
   }
 
