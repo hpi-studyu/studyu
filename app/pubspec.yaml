@@ -19,7 +19,7 @@ dependencies:
   extended_math:
     git:
       url: https://github.com/nstrelow/extended_math.git
-  fhir: ^0.4.7 # breaking due to studyu_core
+  fhir: ^0.4.7
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.0
@@ -29,10 +29,10 @@ dependencies:
   flutter_timezone: ^1.0.4
   grizzly_distuv: ^1.0.0
   intersperse: ^2.0.0
-  intl: ^0.17.0
+  intl: ^0.17.0 # flutter_localizations sdk
   material_design_icons_flutter: ^6.0.7096
-  package_info_plus: ^3.0.2
-  pdf: ^3.8.0
+  package_info_plus: ^3.0.3
+  pdf: ^3.8.0 # flutter_launcher_icons <= 0.11.0
   pimp_my_button: ^1.0.0
   provider: ^6.0.5
   quiver: ^3.2.1
@@ -40,10 +40,10 @@ dependencies:
   shared_preferences: ^2.0.17
   studyu_core: ^4.0.0-dev.0
   studyu_flutter_common: ^1.4.0-dev.0
-  supabase: ^1.4.0
-  supabase_flutter: ^1.3.1
+  supabase: ^1.5.1
+  supabase_flutter: ^1.4.0
   timeline_tile: ^2.0.0
-  url_launcher: ^6.1.8
+  url_launcher: ^6.1.9
   uuid: ^3.0.7
   video_player: ^2.5.1
 

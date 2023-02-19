@@ -16,7 +16,7 @@ dependencies:
   dynamic_color: ^1.6.2
   studyu_core: ^4.0.0-dev.0
   studyu_flutter_common: ^1.4.0-dev.0
-  go_router: ^6.0.7
+  go_router: ^6.0.9
   shared_preferences: ^2.0.17
   equatable: ^2.0.5
   rxdart: ^0.27.7
