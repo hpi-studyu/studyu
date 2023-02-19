@@ -1,5 +1,6 @@
 xcode_select("/Applications/Xcode_13.4.1.app")
 
+opt_out_usage
 update_fastlane
 
 def delete_temp_keychain(name)
