@@ -59,7 +59,7 @@ class PhoneContainer extends StatelessWidget {
       this.width = PhoneContainer.defaultWidth,
       this.height = PhoneContainer.defaultHeight,
       this.borderColor = Colors.black,
-      this.borderWidth = 6.0,
+      this.borderWidth = 8.0,
       this.borderRadius = 25.0,
       this.innerContentBackgroundColor = Colors.white,
       Key? key})
@@ -83,25 +83,30 @@ class PhoneContainer extends StatelessWidget {
         children: <Widget>[
           Stack(
             children: [
-              ClipRRect(
+              // Not working https://github.com/flutter/flutter/issues/91191
+              // Workaround with increased borderWidth
+              /* ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                child: Padding(
-                  padding: EdgeInsets.all(borderWidth),
-                  child: Stack(
-                    children: [
-                      Container(color: innerContentBackgroundColor),
-                      innerContent,
-                    ],
-                  ),
+                child: */
+              Padding(
+                padding: EdgeInsets.all(borderWidth),
+                child: Stack(
+                  children: [
+                    Container(color: innerContentBackgroundColor),
+                    innerContent,
+                  ],
                 ),
               ),
+              // ),
               ClipRRect(
                 // opaque border so that we can draw on top with other colors
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                      border: Border.all(width: borderWidth, color: Colors.white),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(borderRadius)),
+                      border:
+                          Border.all(width: borderWidth, color: Colors.white),
                       shape: BoxShape.rectangle),
                 ),
               ),
