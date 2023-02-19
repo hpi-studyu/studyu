@@ -1,3 +1,5 @@
+xcode_select("/Applications/Xcode_13.4.1.app")
+
 update_fastlane
 
 def delete_temp_keychain(name)
@@ -40,7 +42,7 @@ platform :ios do
       keychain_password: keychain_password 
     )
     build_app(
-      export_method: "app-store",
+      export_method: "app-store"
     )
     pilot
 
