@@ -170,9 +170,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   _errorMessage = null;
                 });
 
-                Map<String, dynamic> studyRes;
+                Map<String, dynamic> studyResult;
                 try {
-                  await Supabase.instance.client.rpc(
+                  studyResult = await Supabase.instance.client.rpc(
                     'get_study_record_from_invite',
                     params: {'invite_code': _controller.text},
                   ).single();
@@ -183,7 +183,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   });
                 }
 
-                if (studyRes == null) {
+                if (studyResult == null) {
                   setState(() {
                     _errorMessage = AppLocalizations.of(context).error;
                   });
@@ -192,7 +192,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     _errorMessage = null;
                   });
 
-                  final study = Study.fromJson(studyRes);
+                  final study = Study.fromJson(studyResult);
 
                   if (!mounted) return;
                   Navigator.pop(context);
