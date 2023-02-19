@@ -97,7 +97,7 @@ class _DesignerState extends State<Designer> {
               child: TextButton.icon(
                 icon: const Icon(Icons.publish),
                 label: Text(AppLocalizations.of(context).publish_study),
-                style: TextButton.styleFrom(primary: Colors.white),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
                 onPressed: () async {
                   final newStudy = await saveStudy(context, study, publish: true);
                   if (!mounted) return;
@@ -110,7 +110,7 @@ class _DesignerState extends State<Designer> {
               child: TextButton.icon(
                 icon: const Icon(Icons.save),
                 label: Text(AppLocalizations.of(context).save_draft),
-                style: TextButton.styleFrom(primary: Colors.white),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
                 onPressed: () async {
                   final newDraftStudy = await saveStudy(context, study, publish: false);
                   if (!mounted) return;
@@ -123,7 +123,7 @@ class _DesignerState extends State<Designer> {
               child: TextButton.icon(
                 icon: const Icon(MdiIcons.testTube),
                 label: const Text('Try draft study'),
-                style: TextButton.styleFrom(primary: Colors.white),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
                 onPressed: () => launchUrl(
                   Uri.parse(
                     '${env.appUrl}${Uri.encodeComponent(Supabase.instance.client.auth.session().persistSessionString)}',
@@ -312,7 +312,7 @@ class PublishAlertDialog extends StatelessWidget {
             Navigator.pop(context, true);
           },
           icon: const Icon(Icons.publish),
-          style: ElevatedButton.styleFrom(primary: Colors.green, elevation: 0),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green, elevation: 0),
           label: Text('${AppLocalizations.of(context).publish} $studyTitle'),
         )
       ],

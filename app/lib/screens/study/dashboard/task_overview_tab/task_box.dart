@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -8,15 +10,13 @@ import '../../../../widgets/round_checkbox.dart';
 import '../../tasks/task_screen.dart';
 
 class TaskBox extends StatefulWidget {
-  final Task task;
-  final CompletionPeriod completionPeriod;
+  final TimedTask timedTask;
   final Icon icon;
   final Function() onCompleted;
 
   const TaskBox({
     Key key,
-    @required this.task,
-    @required this.completionPeriod,
+    @required this.timedTask,
     @required this.icon,
     @required this.onCompleted,
   }) : super(key: key);
@@ -27,22 +27,33 @@ class TaskBox extends StatefulWidget {
 
 class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
-    await Navigator.push<bool>(context, MaterialPageRoute(builder: (context) => TaskScreen(task: widget.task)));
+    await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (context) => TaskScreen(timedTask: widget.timedTask)),
+    );
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
+    if (mounted) scheduleNotifications(context);
+  }
+
+  Widget drawCheckbox({bool completed}) {
+    return RoundCheckbox(
+      value: completed,
+      onChanged: (value) => completed ? () {} : _navigateToTaskScreen(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final completed = context.watch<AppState>().activeSubject.isTaskFinishedFor(widget.task.id, DateTime.now());
-    final now = DateTime.now();
-    final nowTime = StudyUTimeOfDay(hour: now.hour, minute: now.minute);
-
+    final completed = context
+        .watch<AppState>()
+        .activeSubject
+        .isTimedTaskFinished(widget.timedTask.task.id, widget.timedTask.completionPeriod, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: completed || !widget.completionPeriod.contains(nowTime) || !context.read<AppState>().isPreview
+        onTap: (completed  || !context.read<AppState>().isPreview || !widget.timedTask.completionPeriod.contains(StudyUTimeOfDay.now())) && !kDebugMode
             ? () {}
             : _navigateToTaskScreen,
         child: Row(
@@ -50,11 +61,11 @@ class _TaskBoxState extends State<TaskBox> {
             Expanded(
               child: ListTile(
                 leading: widget.icon,
-                title: Text(widget.task.title),
+                title: Text(widget.timedTask.task.title ?? ''),
                 onTap: completed ? null : () => _navigateToTaskScreen(),
               ),
             ),
-            if (widget.completionPeriod.contains(nowTime) || context.read<AppState>().isPreview)
+            if (widget.timedTask.completionPeriod.contains(StudyUTimeOfDay.now()) || context.read<AppState>().isPreview || completed)
               RoundCheckbox(
                 value: completed, //_isCompleted,
                 onChanged: (value) => completed ? {} : _navigateToTaskScreen(),

@@ -1,3 +1,21 @@
+## 3.8.2
+
+ - **FIX**: notification debug mode, do not schedule past notifications. ([366d6886](https://github.com/hpi-studyu/studyu/commit/366d68867811f9d5332a7be41b48e5db30441aca))
+
+## 3.8.1
+
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+
+## 3.8.0
+
+ - **FIX**: do not show interventions with empty titles. ([2a9abe76](https://github.com/hpi-studyu/studyu/commit/2a9abe764d245062548cff5a1a43251a9fc14a4f))
+ - **FIX**: Skip consentCheck if study doesn't have one. ([5675d92a](https://github.com/hpi-studyu/studyu/commit/5675d92af89849bf8fb22ee99bfcf5a61408b5a4))
+ - **FIX**: upgrade to flutter 3.7.0. ([2aa80015](https://github.com/hpi-studyu/studyu/commit/2aa80015a22161773649790edf2c38742809c45b))
+ - **FIX**: remove form_builder_extra_fields in favor of flex_color_picker due to flutter version incompatibility. ([1e21b738](https://github.com/hpi-studyu/studyu/commit/1e21b738fcc3f0e1a13beb62ccd08c752d35930e))
+ - **FIX**: upgrade deps. ([1b411140](https://github.com/hpi-studyu/studyu/commit/1b41114080e405c385c15b7beb8d140193656e6a))
+ - **FIX**: answer parse error. ([a47e1fb3](https://github.com/hpi-studyu/studyu/commit/a47e1fb3521cbc5b2a40ebb3dd3a9e3020699f56))
+ - **FEAT**: - Results of tasks with multiple completion periods are now saved uniquely. ([bf9e2818](https://github.com/hpi-studyu/studyu/commit/bf9e2818b5dc88102f69a7e773b5f9ccea0e7c73))
+
 ## 4.0.0-dev.0
 
 > Note: This release has breaking changes.

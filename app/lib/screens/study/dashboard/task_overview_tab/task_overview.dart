@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:quiver/collection.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
@@ -12,7 +11,7 @@ import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
   final StudySubject subject;
-  final Multimap<CompletionPeriod, Task> scheduleToday;
+  final List<TimedTask> scheduleToday;
   final String interventionIcon;
 
   const TaskOverview({@required this.subject, @required this.scheduleToday, Key key, this.interventionIcon})
@@ -31,38 +30,37 @@ class _TaskOverviewState extends State<TaskOverview> {
 
   List<Widget> buildScheduleToday(BuildContext context) {
     final theme = Theme.of(context);
-
-    return widget.scheduleToday.keys
-        .expand(
-          (completionPeriod) => [
-            Padding(
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-              child: Row(
-                children: [
-                  Icon(Icons.access_time, color: theme.primaryColor),
-                  const SizedBox(width: 8),
-                  Text(
-                    completionPeriod.toString(),
-                    style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
-                  ),
-                ],
-              ),
-            ),
-            ...widget.scheduleToday[completionPeriod].map(
-              (task) => TaskBox(
-                task: task,
-                completionPeriod: completionPeriod,
-                onCompleted: () => _navigateToReportIfStudyCompleted(context),
-                icon: Icon(
-                  task is Observation
-                      ? MdiIcons.orderBoolAscendingVariant
-                      : MdiIcons.fromString(widget.interventionIcon),
+    final List<Widget> list = [];
+    for (final timedTask in widget.scheduleToday) {
+      list
+        ..add(
+          Padding(
+            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+            child: Row(
+              children: [
+                Icon(Icons.access_time, color: theme.primaryColor),
+                const SizedBox(width: 8),
+                Text(
+                  timedTask.completionPeriod.toString(),
+                  style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
                 ),
-              ),
-            )
-          ],
+              ],
+            ),
+          ),
         )
-        .toList();
+        ..add(
+          TaskBox(
+            timedTask: timedTask,
+            onCompleted: () => _navigateToReportIfStudyCompleted(context),
+            icon: Icon(
+              timedTask.task is Observation
+                  ? MdiIcons.orderBoolAscendingVariant
+                  : MdiIcons.fromString(widget.interventionIcon),
+            ),
+          ),
+        );
+    }
+    return list;
   }
 
   @override

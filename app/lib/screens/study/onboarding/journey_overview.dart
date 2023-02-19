@@ -22,7 +22,12 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   StudySubject subject;
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
-    final consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+    bool consentGiven;
+    if (subject.study.hasConsentCheck) {
+      consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
+    } else {
+      consentGiven = true;
+    }
     if (!mounted) return;
     if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.kickoff);

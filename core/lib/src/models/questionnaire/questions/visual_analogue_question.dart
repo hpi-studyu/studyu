@@ -9,8 +9,8 @@ part 'visual_analogue_question.g.dart';
 class VisualAnalogueQuestion extends SliderQuestion {
   static const String questionType = 'visualAnalogue';
 
-  int minimumColor = 0xFFFFFFFF;
-  int maximumColor = 0xFFFFFFFF;
+  int minimumColor = 0xFF0000FF;
+  int maximumColor = 0xFFFF0000;
 
   String minimumAnnotation = '';
   String maximumAnnotation = '';

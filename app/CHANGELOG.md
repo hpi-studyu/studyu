@@ -1,3 +1,56 @@
+## 1.11.7
+
+ - **FIX**: notification debug. ([483120fb](https://github.com/hpi-studyu/studyu/commit/483120fb9c4810721ad087f60d28ad8716153716))
+
+## 1.11.6
+
+ - Update a dependency to the latest release.
+
+## 1.11.5
+
+ - **FIX**: notification debug mode, do not schedule past notifications. ([366d6886](https://github.com/hpi-studyu/studyu/commit/366d68867811f9d5332a7be41b48e5db30441aca))
+
+## 1.11.4
+
+ - **FIX**: reschedule notifications after a task was completed. ([ab92651d](https://github.com/hpi-studyu/studyu/commit/ab92651de93b225b47c5aeef9d46690bb2050187))
+
+## 1.11.3
+
+ - **FIX**: notification reloading bug on intervention change. ([b5a52bb9](https://github.com/hpi-studyu/studyu/commit/b5a52bb906226f3b98d000d5d36f167a5094a95a))
+
+## 1.11.2
+
+ - **FIX**: after notification task completed reload dashboard. ([ed571950](https://github.com/hpi-studyu/studyu/commit/ed571950398de32ccbfb3ba26bd4b26022f8f344))
+ - **FIX**: do not handle notification twice. ([2c61b868](https://github.com/hpi-studyu/studyu/commit/2c61b8688cb7a133bf66271ca932a31f4a590843))
+ - **FIX**: do not allow to pop navigator after kickoff. ([65159a19](https://github.com/hpi-studyu/studyu/commit/65159a19d87b6fa0eb39189eca86ac4af1d928c1))
+ - **FIX**: added missing deps and desugar v2.0.0. ([081241ca](https://github.com/hpi-studyu/studyu/commit/081241ca61d32d2f4f60f4b9d22973f174bbae79))
+ - **FIX**: terms not showing correctly on android. ([b0fed23c](https://github.com/hpi-studyu/studyu/commit/b0fed23c5413cec0dde3874383b16a3c31d0a2db))
+
+## 1.11.1
+
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+
+## 1.11.0
+
+ - **FIX**: show correct screen when app is launched by a notification. ([77c22707](https://github.com/hpi-studyu/studyu/commit/77c227078fa70e78e29ee7bf810b2bc20cb45657))
+ - **FIX**: do not show interventions with empty titles. ([2a9abe76](https://github.com/hpi-studyu/studyu/commit/2a9abe764d245062548cff5a1a43251a9fc14a4f))
+ - **FIX**: tasks cannot be completed multiple times via notifications + localization. ([d9974911](https://github.com/hpi-studyu/studyu/commit/d997491127016fed840a6b9b336db9b98583c051))
+ - **FIX**: restructure notifications. ([e6627f5a](https://github.com/hpi-studyu/studyu/commit/e6627f5a4ae635465a1b805338b8b2f122704d03))
+ - **FIX**: report screen null exceptions. ([38c59426](https://github.com/hpi-studyu/studyu/commit/38c5942626d042d6287fec8c5d603999c421193a))
+ - **FIX**: keep alive question item states on scrolling. ([c27881f8](https://github.com/hpi-studyu/studyu/commit/c27881f8102f27a3200fc3e3ad7828ef1061edda))
+ - **FIX**: tasks could be accessed outside of their completion times. ([d6fcd920](https://github.com/hpi-studyu/studyu/commit/d6fcd920af2f14ed57235111b7382f736cffbb55))
+ - **FIX**: task screen empty title null exception. ([f8527dd4](https://github.com/hpi-studyu/studyu/commit/f8527dd41f16ec16ec7d8c5a8f36eb7e15775f0b))
+ - **FIX**: notification icon. ([523e6396](https://github.com/hpi-studyu/studyu/commit/523e6396d143962e50eaaccc91fd2fc0cc7adb44))
+ - **FIX**: notification not being delivered, add notification body. ([ed8e440b](https://github.com/hpi-studyu/studyu/commit/ed8e440ba66e04e0c06e98b4e1c0770927855377))
+ - **FIX**: Skip consentCheck if study doesn't have one. ([5675d92a](https://github.com/hpi-studyu/studyu/commit/5675d92af89849bf8fb22ee99bfcf5a61408b5a4))
+ - **FIX**: Remove error message at performance section. ([6a5b5905](https://github.com/hpi-studyu/studyu/commit/6a5b5905bc2aa765e550c37225f111603b692aa1))
+ - **FIX**: upgrade to flutter 3.7.0. ([2aa80015](https://github.com/hpi-studyu/studyu/commit/2aa80015a22161773649790edf2c38742809c45b))
+ - **FIX**: refactor questionnaire widget for eligibility and related tasks. ([b9639bcc](https://github.com/hpi-studyu/studyu/commit/b9639bcce5607b975b592683dc0c5d9a552f3927))
+ - **FIX**: upgrade deps. ([1b411140](https://github.com/hpi-studyu/studyu/commit/1b41114080e405c385c15b7beb8d140193656e6a))
+ - **FIX**: lint errors. ([6007e46e](https://github.com/hpi-studyu/studyu/commit/6007e46e45c36e77932930ce94c634499d57a444))
+ - **FEAT**: Upgrade notifications & deps. ([08be0c3a](https://github.com/hpi-studyu/studyu/commit/08be0c3ac3bcffabd9ad6b518cbc0e4067183424))
+ - **FEAT**: - Results of tasks with multiple completion periods are now saved uniquely. ([bf9e2818](https://github.com/hpi-studyu/studyu/commit/bf9e2818b5dc88102f69a7e773b5f9ccea0e7c73))
+
 ## 2.0.0-dev.0
 
 > Note: This release has breaking changes.

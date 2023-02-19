@@ -2,8 +2,8 @@ name: Deploy apps
 
 on:
   push:
-    tags:
-      - 'studyu_app-v*'
+    branches:
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -15,24 +15,29 @@ jobs:
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+      - name: Set up ruby env
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.1
+          bundler-cache: true
+          working-directory: './app/android'
       - name: Decrypt files
         id: decrypt_files
         run: |
           echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
           gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
           echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '11.x'
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: stable
       - name: Build StudyU app bundle
         run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
         working-directory: ./app
-      - name: Upload app bundle
-        run: cd app/android && fastlane internal
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+          lane: 'internal'
+          subdirectory: './app/android'
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
@@ -42,15 +47,23 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1
+        uses: actions/checkout@v3
+      - name: Set up ruby env
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.1
+          bundler-cache: true
+          working-directory: './app/ios'
+      - uses: subosito/flutter-action@v2
         with:
           channel: stable
       - name: Build StudyU ios without codesign
         run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
         working-directory: ./app
-      - name: Upload app bundle
-        run: cd app/ios && fastlane upload_testflight
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+          lane: 'upload_testflight'
+          subdirectory: './app/ios'
         env:
           FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
           FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}

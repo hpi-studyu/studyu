@@ -45,17 +45,13 @@ class _ConsentDesignerState extends State<ConsentDesigner> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    ..._consent
-                        .asMap()
-                        .entries
-                        .map(
+                    ..._consent.asMap().entries.map(
                           (entry) => ConsentItemEditor(
                             key: UniqueKey(),
                             consentItem: entry.value,
                             remove: () => _removeConsentItem(entry.key),
                           ),
-                        )
-                        .toList(),
+                        ),
                     const SizedBox(height: 200)
                   ],
                 ),

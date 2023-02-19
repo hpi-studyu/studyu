@@ -45,17 +45,13 @@ class _InterventionsDesignerState extends State<InterventionsDesigner> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      ..._interventions
-                          .asMap()
-                          .entries
-                          .map(
+                      ..._interventions.asMap().entries.map(
                             (entry) => InterventionEditor(
                               key: UniqueKey(),
                               intervention: entry.value,
                               remove: () => _removeIntervention(entry.key),
                             ),
-                          )
-                          .toList(),
+                          ),
                       const SizedBox(height: 200)
                     ],
                   ),

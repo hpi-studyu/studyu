@@ -123,6 +123,7 @@ class OptOutAlertDialog extends StatelessWidget {
         text: TextSpan(
           style: const TextStyle(color: Colors.black),
           children: [
+            // todo translate
             const TextSpan(text: 'You will lose your progress in '),
             TextSpan(
               text: subject.study.title,
@@ -160,7 +161,8 @@ class DeleteAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text('${AppLocalizations.of(context).delete_data} ?'),
-        content: const Text(
+    // todo translate
+    content: const Text(
           'You are about to delete all data from your device & our servers. '
           'You will not be able to restore your data.\nYour anonymized data will '
           'not be available for research purposes anymore.',

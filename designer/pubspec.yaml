@@ -16,34 +16,34 @@ dependencies:
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
   email_validator: ^2.1.17
-  fl_chart: ^0.46.0 # migrate to ^0.50.5
+  fl_chart: ^0.46.0 # breaking
+  flex_color_picker: ^3.0.2
   flutter:
     sdk: flutter
-  flutter_file_dialog: ^2.3.0
-  flutter_form_builder: ^7.5.0
+  flutter_file_dialog: ^3.0.0
+  flutter_form_builder: ^7.7.0
   flutter_iconpicker:
     git: https://github.com/dmhuisma/FlutterIconPicker.git
   flutter_localizations:
     sdk: flutter
-  form_builder_extra_fields: ^8.3.0
-  form_builder_validators: ^8.3.0
-  http: ^0.13.4
-  intl: 0.17.0
-  material_design_icons_flutter: ^5.0.6996
+  form_builder_validators: ^8.4.0
+  http: ^0.13.5
+  intl: ^0.17.0
+  material_design_icons_flutter: ^6.0.7096
   pretty_json: ^2.0.0
   provider: ^6.0.5
-  studyu_core: ^4.0.0-dev.0
-  studyu_flutter_common: ^1.4.0-dev.0
-  supabase: ^0.3.6
-  supabase_flutter: ^0.3.3
+  studyu_core: ^3.8.2
+  studyu_flutter_common: ^1.3.27
+  supabase: ^0.3.6 # breaking
+  supabase_flutter: ^0.3.3 # breaking
   universal_html: ^2.0.8
   url_launcher: ^6.1.8
   uuid: ^3.0.7
-  webview_flutter: ^3.0.4
-  webview_flutter_web: ^0.1.0+4
+  webview_flutter: ^3.0.4 # breaking
+  webview_flutter_web: ^0.1.0+4 # breaking
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.9.3
+  flutter_launcher_icons: ^0.11.0
   flutter_test:
     sdk: flutter
   lint: ^2.0.1

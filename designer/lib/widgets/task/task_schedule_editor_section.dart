@@ -28,7 +28,7 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
 
   void _addCompletionPeriod() {
     final completionPeriod =
-        CompletionPeriod(unlockTime: StudyUTimeOfDay(hour: 8), lockTime: StudyUTimeOfDay(hour: 20));
+        CompletionPeriod.withId(unlockTime: StudyUTimeOfDay(hour: 8), lockTime: StudyUTimeOfDay(hour: 20));
     setState(() {
       widget.task.schedule.completionPeriods.add(completionPeriod);
     });
@@ -48,10 +48,10 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
       children: [
         Text(
           'Scheduling',
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
-        Text('Participants can complete one task from', style: theme.textTheme.bodyText1),
+        Text('Participants can complete one task from', style: theme.textTheme.bodyLarge),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -68,13 +68,13 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
         ),
         const SizedBox(height: 8),
         ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(primary: Colors.green),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           icon: const Icon(Icons.add),
           onPressed: _addCompletionPeriod,
           label: const Text('Add completion period'),
         ),
         const SizedBox(height: 32),
-        Text('Remind participant at', style: theme.textTheme.bodyText1),
+        Text('Remind participant at', style: theme.textTheme.bodyLarge),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -90,7 +90,7 @@ class _TaskScheduleEditorSectionState extends State<TaskScheduleEditorSection> {
         ),
         const SizedBox(height: 8),
         ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(primary: Colors.green),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           icon: const Icon(Icons.add),
           onPressed: _addReminder,
           label: const Text('Add reminder time'),

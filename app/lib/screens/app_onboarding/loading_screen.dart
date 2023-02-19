@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
+import '../../util/schedule_notifications.dart';
 import '../../util/notifications.dart';
 import 'preview.dart';
 
@@ -24,25 +24,23 @@ class LoadingScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     /*
-    final hasRecovered = await recoverSupabaseSession();
-    if (!hasRecovered)
+        final hasRecovered = await recoverSupabaseSession();
+    if (!hasRecovered) {
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
-    if (widget.sessionString == null)
-      initStudy();
-    */
+    }
+    initStudy();
+     */
     if (widget.sessionString != null &&
         widget.sessionString.isNotEmpty &&
         Supabase.instance.client.auth.currentSession == null) {
-      // print("recover session");
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
     if (widget.sessionString == null) {
-      // print("initstudy");
       initStudy();
     }
   }
@@ -177,15 +175,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('Selected study: $selectedStudyObjectId');
+    print('Subject ID: $selectedStudyObjectId');
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
-        // print("Go to study selection");
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }
-      // print("Go to welcome2");
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -219,15 +215,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
-      state.activeSubject = subject;
-      if (!kIsWeb) {
-        // Notifications not supported on web
-        scheduleStudyNotifications(context);
-      }
-      // print("push to dashboard2");
+      model.activeSubject = subject;
+      scheduleNotifications(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      // print("push to welcome3");
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
@@ -251,4 +242,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
       ),
     );
   }
+
+  @override
+  void onAuthenticated(Session session) {}
+
+  @override
+  void onErrorAuthenticating(String message) {}
+
+  @override
+  void onPasswordRecovery(Session session) {}
+
+  @override
+  void onUnauthenticated() {}
 }

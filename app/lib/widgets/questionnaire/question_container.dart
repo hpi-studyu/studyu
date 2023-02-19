@@ -10,28 +10,33 @@ import 'question_header.dart';
 import 'question_widget.dart';
 import 'visual_analogue_question_widget.dart';
 
-class QuestionContainer extends StatelessWidget {
+class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
 
   const QuestionContainer({@required this.onDone, @required this.question, this.index, Key key}) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => _QuestionContainerState();
+}
+
+class _QuestionContainerState extends State<QuestionContainer> with AutomaticKeepAliveClientMixin {
   void _onDone(Answer answer) {
-    onDone(answer, index);
+    widget.onDone(answer, widget.index);
   }
 
   QuestionWidget getQuestionBody(BuildContext context) {
-    switch (question.runtimeType) {
+    switch (widget.question.runtimeType) {
       case ChoiceQuestion:
         return ChoiceQuestionWidget(
-          question: question as ChoiceQuestion,
+          question: widget.question as ChoiceQuestion,
           onDone: _onDone,
           multiSelectionText: AppLocalizations.of(context).eligible_choice_multi_selection,
         );
       case BooleanQuestion:
         return BooleanQuestionWidget(
-          question: question as BooleanQuestion,
+          question: widget.question as BooleanQuestion,
           onDone: _onDone,
         );
       case ScaleQuestion:
@@ -41,12 +46,12 @@ class QuestionContainer extends StatelessWidget {
         );
       case VisualAnalogueQuestion:
         return VisualAnalogueQuestionWidget(
-          question: question as VisualAnalogueQuestion,
+          question: widget.question as VisualAnalogueQuestion,
           onDone: _onDone,
         );
       case AnnotatedScaleQuestion:
         return AnnotatedScaleQuestionWidget(
-          question: question as AnnotatedScaleQuestion,
+          question: widget.question as AnnotatedScaleQuestion,
           onDone: _onDone,
         );
       default:
@@ -57,6 +62,7 @@ class QuestionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final questionBody = getQuestionBody(context);
 
     return Card(
@@ -67,9 +73,9 @@ class QuestionContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             QuestionHeader(
-              prompt: question.prompt,
+              prompt: widget.question.prompt,
               subtitle: questionBody.subtitle,
-              rationale: question.rationale,
+              rationale: widget.question.rationale,
             ),
             const SizedBox(height: 24),
             questionBody,
@@ -78,4 +84,7 @@ class QuestionContainer extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

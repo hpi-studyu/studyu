@@ -39,14 +39,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final QuestionnaireState qs = QuestionnaireState();
   int _nextQuestionIndex = 1;
 
-  void _finishQuestionnaire() => widget.onComplete?.call(qs);
+  void _finishQuestionnaire(QuestionnaireState result) => widget.onComplete?.call(result);
 
+  // if question with lower index than current question is answered, remove all downstream answers
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
       final startIndex = widget.questions.indexWhere((question) => question.id == shownQuestions[index].question.id);
       widget.questions.skip(startIndex + 1).forEach((question) => qs.answers.remove(question.id));
       while (index + 1 < shownQuestions.length) {
-        final end = shownQuestions.length - 1;
+        final end = shownQuestions.length;
         final lastQuestion = shownQuestions.removeLast();
         _listKey.currentState.removeItem(
           end,
@@ -75,8 +76,14 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     _nextQuestionIndex = widget.questions.indexWhere((question) => question.id == answer.question) + 1;
     qs.answers[answer.question] = answer;
     widget.onChange?.call(qs);
+
+    // check if index of the next question is in range
     if (widget.questions.length > _nextQuestionIndex) {
+      // we still have questions left
+
       if (!(widget.shouldContinue?.call(qs) ?? true)) return;
+
+      // check for conditional questions
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
         _onQuestionDone(widget.questions[_nextQuestionIndex].getDefaultAnswer(), shownQuestions.length);
         return;
@@ -85,8 +92,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       _listKey.currentState.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
       _nextQuestionIndex++;
     } else {
-      _listKey.currentState.insertItem(shownQuestions.length, duration: const Duration(milliseconds: 300));
-      _finishQuestionnaire();
+      // we ran out of questions
+      _finishQuestionnaire(qs);
     }
 
     // Scroll to bottom
@@ -117,7 +124,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         }
         index -= 1;
         if (index == shownQuestions.length) {
-          return widget.footer != null && widget.header.isNotEmpty ? TextBox(widget.footer) : Container();
+          return widget.footer != null && widget.footer.isNotEmpty ? TextBox(widget.footer) : Container();
+        }
+        if (index > shownQuestions.length - 1) {
+          index -= 1;
         }
         if (index > shownQuestions.length) {
           return Container();

@@ -45,13 +45,13 @@ class ReportDetailsScreen extends StatelessWidget {
               subject,
               onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(subject: subject)),
             ),
-            if (subject.completedStudy || kDebugMode)
+            if (subject.completedStudy || subject.study.reportSpecification.primary != null && kDebugMode)
               ReportSectionContainer(
                 subject.study.reportSpecification.primary,
                 subject: subject,
                 primary: true,
               ),
-            if (subject.completedStudy || kDebugMode)
+            if (subject.completedStudy || subject.study.reportSpecification.secondary != null && kDebugMode)
               ...subject.study.reportSpecification.secondary
                   .map((section) => ReportSectionContainer(section, subject: subject))
           ],

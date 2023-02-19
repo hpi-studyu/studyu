@@ -120,7 +120,7 @@ class _InvitesDialogState extends State<InvitesDialog> {
             const Spacer(),
             Text(
               'Preselect interventions (Order: ${widget.study.schedule.nameOfSequence})',
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             Switch(
               value: _preselectInterventions,

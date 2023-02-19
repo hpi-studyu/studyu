@@ -1,3 +1,17 @@
+## 1.4.23
+
+ - Update a dependency to the latest release.
+
+## 1.4.22
+
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+
+## 1.4.21
+
+ - **FIX**: upgrade to flutter 3.7.0. ([2aa80015](https://github.com/hpi-studyu/studyu/commit/2aa80015a22161773649790edf2c38742809c45b))
+ - **FIX**: upgrade deps. ([1b411140](https://github.com/hpi-studyu/studyu/commit/1b41114080e405c385c15b7beb8d140193656e6a))
+ - **FIX**: lint errors. ([6007e46e](https://github.com/hpi-studyu/studyu/commit/6007e46e45c36e77932930ce94c634499d57a444))
+
 ## 1.4.21-dev.0
 
  - **FIX**: upgrade deps. ([4b011445](https://github.com/hpi-studyu/studyu/commit/4b011445bb2390570c536646bb119b5a00a809ab))

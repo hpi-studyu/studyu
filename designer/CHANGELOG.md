@@ -1,3 +1,27 @@
+## 1.6.4
+
+ - Update a dependency to the latest release.
+
+## 1.6.3
+
+ - Update a dependency to the latest release.
+
+## 1.6.2
+
+ - **FIX**: deprecated stuff. ([12e1632b](https://github.com/hpi-studyu/studyu/commit/12e1632ba48a98259855c88eeaf6fd771beb893b))
+
+## 1.6.1
+
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+
+## 1.6.0
+
+ - **FIX**: upgrade to flutter 3.7.0. ([2aa80015](https://github.com/hpi-studyu/studyu/commit/2aa80015a22161773649790edf2c38742809c45b))
+ - **FIX**: remove form_builder_extra_fields in favor of flex_color_picker due to flutter version incompatibility. ([1e21b738](https://github.com/hpi-studyu/studyu/commit/1e21b738fcc3f0e1a13beb62ccd08c752d35930e))
+ - **FIX**: upgrade deps. ([1b411140](https://github.com/hpi-studyu/studyu/commit/1b41114080e405c385c15b7beb8d140193656e6a))
+ - **FIX**: lint errors. ([6007e46e](https://github.com/hpi-studyu/studyu/commit/6007e46e45c36e77932930ce94c634499d57a444))
+ - **FEAT**: - Results of tasks with multiple completion periods are now saved uniquely. ([bf9e2818](https://github.com/hpi-studyu/studyu/commit/bf9e2818b5dc88102f69a7e773b5f9ccea0e7c73))
+
 ## 1.6.0-dev.0
 
  - **FIX**: upgrade deps. ([4b011445](https://github.com/hpi-studyu/studyu/commit/4b011445bb2390570c536646bb119b5a00a809ab))

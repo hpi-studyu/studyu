@@ -11,8 +11,9 @@ import '../../../../widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
+  final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({@required this.task, Key key}) : super(key: key);
+  const QuestionnaireTaskWidget({@required this.task, @required this.completionPeriod, Key key}) : super(key: key);
 
   @override
   State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
@@ -20,22 +21,23 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
+  bool responseValidator;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     final state = context.read<AppState>();
     final activeStudy = state.activeSubject;
     try {
       if (state.trackParticipantProgress) {
-        await activeStudy.addResult<T>(taskId: widget.task.id, result: response);
+        await activeStudy.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
       }
       if (!mounted) return;
       Navigator.pop(context, true);
-    } on PostgrestException {
+    } on PostgrestError {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context).could_not_save_results),
           duration: const Duration(seconds: 10),
-          action: SnackBarAction(label: 'retry', onPressed: () => _addQuestionnaireResult(response, context)),
+          action: SnackBarAction(label: 'Retry', onPressed: () => _addQuestionnaireResult(response, context)),
         ),
       );
     }
@@ -47,14 +49,15 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
             fhirQuestionnaire,
-            onComplete: (response) => setState(() {
-              response = response;
+            onComplete: (responseLocal) => setState(() {
+              response = responseLocal;
             }),
           )
         : QuestionnaireWidget(
             widget.task.questions.questions,
             header: widget.task.header,
             footer: widget.task.footer,
+            onChange: _responseValidator,
             onComplete: (qs) => setState(() {
               response = qs;
             }),
@@ -65,7 +68,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           Expanded(
             child: questionnaireWidget,
           ),
-          if (response != null)
+          if (response != null && responseValidator)
             ElevatedButton.icon(
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
               onPressed: () {
@@ -82,10 +85,22 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                 }
               },
               icon: const Icon(Icons.check),
-              label: const Text('Complete'),
+              label: Text(AppLocalizations.of(context).complete),
             )
         ],
       ),
     );
+  }
+
+  void _responseValidator(QuestionnaireState qs) {
+    if (qs.answers.length == widget.task.questions.questions.length) {
+      setState(() {
+        responseValidator = true;
+      });
+    } else {
+      setState(() {
+        responseValidator = false;
+      });
+    }
   }
 }

@@ -24,10 +24,19 @@ CompletionPeriod _$CompletionPeriodFromJson(Map<String, dynamic> json) =>
     CompletionPeriod(
       unlockTime: StudyUTimeOfDay.fromJson(json['unlockTime'] as String),
       lockTime: StudyUTimeOfDay.fromJson(json['lockTime'] as String),
-    );
+    )..id = json['id'] as String?;
 
-Map<String, dynamic> _$CompletionPeriodToJson(CompletionPeriod instance) =>
-    <String, dynamic>{
-      'unlockTime': instance.unlockTime.toJson(),
-      'lockTime': instance.lockTime.toJson(),
-    };
+Map<String, dynamic> _$CompletionPeriodToJson(CompletionPeriod instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['unlockTime'] = instance.unlockTime.toJson();
+  val['lockTime'] = instance.lockTime.toJson();
+  return val;
+}

@@ -1,4 +1,4 @@
-# N of 1 app built at HPI with ❤
+# StudyU built at HPI with ❤
 
 We have 6 different Flutter/Dart packages all contained in this monorepo.
 
@@ -9,10 +9,10 @@ We have 6 different Flutter/Dart packages all contained in this monorepo.
 - Core: shared code for all 4 applications
 - Flutter Common: shared code for all Flutter apps (App, Designer)
 
-## App Test Instances
+## Try it yourself
 
-- StudyU App [Instance](https://studyu-app-v1.web.app)
-- StudyU Study Designer [Instance](https://studyu-designer-v1.web.app)
+- [StudyU App](https://app.studyu.health)
+- [StudyU Designer](https://designer.studyu.health)
 
 ## App Stores
 

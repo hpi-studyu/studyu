@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -8,7 +7,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
-import '../../../util/notifications.dart';
+import '../../../util/schedule_notifications.dart';
 
 class KickoffScreen extends StatefulWidget {
   const KickoffScreen({Key key}) : super(key: key);
@@ -28,12 +27,9 @@ class _KickoffScreen extends State<KickoffScreen> {
       context.read<AppState>().activeSubject = subject;
       await storeActiveSubjectId(subject.id);
       if (!mounted) return;
-      if (!kIsWeb) {
-        scheduleStudyNotifications(context);
-      }
-
+      scheduleNotifications(context);
       setState(() => ready = true);
-      Navigator.pushNamed(context, Routes.dashboard);
+      Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {
       print('Failed creating subject: $e');
     }

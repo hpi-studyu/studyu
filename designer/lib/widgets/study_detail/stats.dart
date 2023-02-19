@@ -41,19 +41,19 @@ class Stats extends StatelessWidget {
         ),
         children: [
           IconLabel(
-            label: '${study.participantCount.toString()} total participants',
+            label: '$study.participantCount total participants',
             iconData: MdiIcons.accountGroup,
             color: Colors.red,
           ),
           const SizedBox(height: 16),
           IconLabel(
-            label: '${study.endedCount.toString()} studies have ended.',
+            label: '${study.endedCount} studies have ended.',
             iconData: MdiIcons.flagCheckered,
             color: Colors.black,
           ),
           const SizedBox(height: 16),
           IconLabel(
-            label: '${study.activeSubjectCount.toString()} participants have completed a task in the last 3 days',
+            label: '${study.activeSubjectCount} participants have completed a task in the last 3 days',
             iconData: MdiIcons.run,
             color: Colors.green,
           ),

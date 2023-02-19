@@ -25,6 +25,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @JsonKey(name: 'user_id')
   String userId;
   @JsonKey(name: 'started_at')
+  // stored in UTC format, be careful when comparing dates
   DateTime? startedAt;
   @JsonKey(name: 'selected_intervention_ids')
   List<String> selectedInterventionIds;
@@ -88,22 +89,23 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
-  Future<void> addResult<T>({required String taskId, required T result}) async {
+  Future<void> addResult<T>({required String taskId, required String periodId, required T result}) async {
     late final Result<T> resultObject;
     switch (T) {
       case QuestionnaireState:
-        resultObject = Result<T>.app(type: 'QuestionnaireState', result: result);
+        resultObject = Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result);
         break;
       case fhir.QuestionnaireResponse:
-        resultObject = Result<T>.app(type: 'fhir.QuestionnaireResponse', result: result);
+        resultObject = Result<T>.app(type: 'fhir.QuestionnaireResponse', periodId: periodId, result: result);
         break;
       case bool:
-        resultObject = Result<T>.app(type: 'bool', result: result);
+        resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);
         break;
       default:
         print('Unsupported question type: $T');
-        resultObject = Result<T>.app(type: 'unknown', result: result);
+        resultObject = Result<T>.app(type: 'unknown', periodId: periodId, result: result);
     }
+
     final p = await SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,
@@ -129,12 +131,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   DateTime endDate(DateTime dt) => dt.add(Duration(days: interventionOrder.length * study.schedule.phaseDuration));
 
   int getDayOfStudyFor(DateTime date) {
-    final day = date.differenceInDays(startedAt!).inDays;
+    final day = date.differenceInDays(startedAt!);
     return day;
   }
 
   int getInterventionIndexForDate(DateTime date) {
-    final test = date.differenceInDays(startedAt!).inDays;
+    final test = date.differenceInDays(startedAt!);
     return test ~/ study.schedule.phaseDuration;
   }
 
@@ -173,8 +175,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int daysLeftForPhase(int index) {
     final start = startOfPhase(index);
-    final startDate = DateTime(start.year, start.month, start.day);
-    return study.schedule.phaseDuration - DateTime.now().differenceInDays(startDate).inDays;
+    return study.schedule.phaseDuration - DateTime.now().differenceInDays(start);
   }
 
   double percentCompletedForPhase(int index) {
@@ -185,23 +186,52 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     if (startOfPhase(index).isAfter(date)) return 0;
 
     final missedInPhase =
-        min(date.differenceInDays(startOfPhase(index)).inDays, study.schedule.phaseDuration) - completedForPhase(index);
+        min(date.differenceInDays(startOfPhase(index)), study.schedule.phaseDuration) - completedForPhase(index);
     return missedInPhase / study.schedule.phaseDuration;
   }
 
-  // TODO: Add index to support same task multiple times per day
-  bool isTaskFinishedFor(String taskId, DateTime dateTime) =>
-      resultsFor(taskId).any((p) => p.completedAt!.isSameDate(dateTime));
+  // Get all results for a given task
+  List<SubjectProgress> getTaskProgressForDay(String taskId, DateTime dateTime) {
+    final List<SubjectProgress> thisTaskProgressToday = [];
+    for (final SubjectProgress sp in resultsFor(taskId)) {
+      if (sp.subjectId == id // not sure if necessary
+          &&
+          sp.completedAt!.isSameDate(dateTime)) {
+        thisTaskProgressToday.add(sp);
+      }
+    }
+    return thisTaskProgressToday;
+  }
+
+  // Check if TimedTask was completed at a given day
+  bool isTimedTaskFinished(String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
+    if (completionPeriod.id != null) {
+      return getTaskProgressForDay(taskId, dateTime).any(
+        (progress) => progress.result.periodId == completionPeriod.id,
+      );
+    } else {
+      // fallback to support databases without periodIds
+      return resultsFor(taskId).any((progress) => progress.completedAt!.isSameDate(dateTime));
+    }
+  }
+
+  // Check if a task was completed in all of its time periods at a given day
+  bool isTaskFinishedForDay(String taskId, DateTime dateTime) {
+    // Get the completionPeriod for given taskId
+    return study.taskList.where((task) => task.id == taskId).single.schedule.completionPeriods.any(
+          (period) => isTimedTaskFinished(taskId, period, dateTime),
+        );
+  }
 
   int completedTasksFor(Task task) => resultsFor(task.id).length;
 
-  // TODO: Add index to support same task multiple times per day
-  bool allTasksCompletedFor(DateTime dateTime) =>
-      scheduleFor(dateTime).values.every((task) => isTaskFinishedFor(task.id, dateTime));
+  bool allTasksCompletedFor(DateTime dateTime) => scheduleFor(dateTime).every(
+        (timedTask) => isTaskFinishedForDay(timedTask.task.id, dateTime),
+      );
 
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
-    final diff = DateTime.now().differenceInDays(startedAt!).inDays;
+    final diff = DateTime.now().differenceInDays(startedAt!);
     return diff >= interventionOrder.length * study.schedule.phaseDuration - 1;
   }
 
@@ -219,21 +249,23 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return daysCount * task.schedule.completionPeriods.length;
   }
 
-  Multimap<CompletionPeriod, Task> scheduleFor(DateTime dateTime) {
+  List<TimedTask> scheduleFor(DateTime dateTime) {
     final activeIntervention = getInterventionForDate(dateTime);
 
-    final Multimap<CompletionPeriod, Task> taskSchedule = Multimap<CompletionPeriod, Task>();
+    // final Multimap<CompletionPeriod, Task> taskSchedule = Multimap<CompletionPeriod, Task>();
+    final List<TimedTask> taskSchedule = [];
 
     if (activeIntervention == null) return taskSchedule;
 
     for (final task in activeIntervention.tasks) {
+      if (task.title == null) continue;
       for (final completionPeriod in task.schedule.completionPeriods) {
-        taskSchedule.add(completionPeriod, task);
+        taskSchedule.add(TimedTask(task, completionPeriod));
       }
     }
     for (final observation in study.observations) {
       for (final completionPeriod in observation.schedule.completionPeriods) {
-        taskSchedule.add(completionPeriod, observation);
+        taskSchedule.add(TimedTask(observation, completionPeriod));
       }
     }
     return taskSchedule;

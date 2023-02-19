@@ -10,7 +10,7 @@ environment:
 dependencies:
   collection: ^1.16.0
   csv: ^5.0.1
-  fhir: ^0.4.7 # breaking
+  fhir: ^0.4.7 # 0.6.0
   json_annotation: ^4.8.0
   quiver: ^3.2.1
   supabase: ^1.4.0

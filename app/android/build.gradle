@@ -1,13 +1,17 @@
 buildscript {
-    ext.kotlin_version = '1.6.21'
+    ext.kotlin_version = '1.7.21'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.4.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // Enabling desugaring may result in a Flutter apps crashing on Android 12L
+        // One possible fix is adding the WindowManager library as a dependency
+        // implementation 'androidx.window:window:1.0.0'
+        // implementation 'androidx.window:window-java:1.0.0'
     }
 }
 
