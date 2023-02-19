@@ -80,7 +80,7 @@ USING (( SELECT can_edit(uid(), study.*) AS can_edit FROM study WHERE (study.id 
 -- Name: study Everybody can view (published and open) studies; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
-CREATE POLICY "Everybody can view (published and open) studies" ON public.study FOR SELECT USING ((published = true) AND (participation = 'open'::public.participation));
+CREATE POLICY "Everybody can view (published and open) studies" ON public.study FOR SELECT USING (published = true) AND (participation = 'open'::public.participation);
 
 -- ======================== FOREIGN KEY CONTRAINTS ======================================================
 
