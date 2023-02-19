@@ -240,7 +240,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   };
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get validationConfig =>
+      {
         StudyFormValidationSet.draft:
             _getValidationConfig(StudyFormValidationSet.draft),
         StudyFormValidationSet.publish:
@@ -421,7 +422,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   @override
-  Map<FormMode, String> get titles => {
+  Map<FormMode, String> get titles =>
+      {
         FormMode.create:
             _titles?[FormMode.create]?.call() ?? tr.form_question_create,
         FormMode.edit: _titles?[FormMode.edit]?.call() ?? tr.form_question_edit,

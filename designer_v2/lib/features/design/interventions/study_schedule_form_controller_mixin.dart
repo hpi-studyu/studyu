@@ -62,7 +62,7 @@ mixin StudyScheduleControls {
   static int kPhaseDurationMin = 1;
   static int kPhaseDurationMax = 365;
   get phaseDurationRange => FormControlValidation(
-    control: phaseDurationControl,
+        control: phaseDurationControl,
         validators: [
           Validators.required,
           Validators.min(kPhaseDurationMin),

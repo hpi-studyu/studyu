@@ -161,8 +161,8 @@ class DeleteAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text('${AppLocalizations.of(context).delete_data} ?'),
-    // todo translate
-    content: const Text(
+        // todo translate
+        content: const Text(
           'You are about to delete all data from your device & our servers. '
           'You will not be able to restore your data.\nYour anonymized data will '
           'not be available for research purposes anymore.',
@@ -171,7 +171,8 @@ class DeleteAlertDialog extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context).delete_data),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, elevation: 0),
             onPressed: () async {
               await subject.delete(); // hard-delete
               await deleteLocalData();

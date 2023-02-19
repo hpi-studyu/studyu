@@ -63,12 +63,14 @@ class _TaskScreenState extends State<TaskScreen> {
     switch (widget.timedTask.task.runtimeType) {
       case CheckmarkTask:
         return CheckmarkTaskWidget(
-          task: widget.timedTask.task as CheckmarkTask, key: UniqueKey(),
+          task: widget.timedTask.task as CheckmarkTask,
+          key: UniqueKey(),
           completionPeriod: widget.timedTask.completionPeriod,
         );
       case QuestionnaireTask:
         return QuestionnaireTaskWidget(
-          task: widget.timedTask.task as QuestionnaireTask, key: UniqueKey(),
+          task: widget.timedTask.task as QuestionnaireTask,
+          key: UniqueKey(),
           completionPeriod: widget.timedTask.completionPeriod,
         );
       default:
