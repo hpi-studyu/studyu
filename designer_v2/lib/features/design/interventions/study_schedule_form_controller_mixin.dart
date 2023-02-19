@@ -13,11 +13,14 @@ mixin StudyScheduleControls {
   static const defaultNumCycles = 2;
   static const defaultPeriodLength = 7;
 
-  final FormControl<PhaseSequence> sequenceTypeControl = FormControl(value: defaultScheduleType);
+  final FormControl<PhaseSequence> sequenceTypeControl =
+      FormControl(value: defaultScheduleType);
   final FormControl<String> sequenceTypeCustomControl =
       FormControl(value: defaultScheduleTypeSequence);
-  final FormControl<int> phaseDurationControl = FormControl(value: defaultPeriodLength);
-  final FormControl<int> numCyclesControl = FormControl(value: defaultNumCycles);
+  final FormControl<int> phaseDurationControl =
+      FormControl(value: defaultPeriodLength);
+  final FormControl<int> numCyclesControl =
+      FormControl(value: defaultNumCycles);
   final FormControl<bool> includeBaselineControl = FormControl(value: true);
 
   List<FormControlOption<PhaseSequence>> get sequenceTypeControlOptions =>
@@ -59,24 +62,32 @@ mixin StudyScheduleControls {
   static int kPhaseDurationMin = 1;
   static int kPhaseDurationMax = 365;
   get phaseDurationRange => FormControlValidation(
-        control: phaseDurationControl,
-        validators: [Validators.required, Validators.min(kPhaseDurationMin), Validators.max(kPhaseDurationMax)],
+    control: phaseDurationControl,
+        validators: [
+          Validators.required,
+          Validators.min(kPhaseDurationMin),
+          Validators.max(kPhaseDurationMax)
+        ],
         validationMessages: {
           ValidationMessage.required: (error) =>
-              tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
+              tr.form_field_crossover_schedule_phase_length_range(
+                  kPhaseDurationMin, kPhaseDurationMax),
           ValidationMessage.min: (error) =>
-              tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
+              tr.form_field_crossover_schedule_phase_length_range(
+                  kPhaseDurationMin, kPhaseDurationMax),
           ValidationMessage.max: (error) =>
-              tr.form_field_crossover_schedule_phase_length_range(kPhaseDurationMin, kPhaseDurationMax),
+              tr.form_field_crossover_schedule_phase_length_range(
+                  kPhaseDurationMin, kPhaseDurationMax),
         },
-  );
-  get customSequenceRequired => FormControlValidation(
-      control: sequenceTypeCustomControl,
-      validators: [Validators.required],
-      validationMessages: {
-        ValidationMessage.required: (error) => 'Custom sequence needs to be specified.',
-      }
-  );
+      );
+
+  get customSequenceRequired =>
+      FormControlValidation(control: sequenceTypeCustomControl, validators: [
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) =>
+            'Custom sequence needs to be specified.',
+      });
 
   void setStudyScheduleControlsFrom(StudyScheduleFormData data) {
     sequenceTypeControl.value = data.sequenceType;

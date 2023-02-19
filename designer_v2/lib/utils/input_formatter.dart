@@ -30,12 +30,14 @@ class NumericalRangeFormatter extends TextInputFormatter {
 class StudySequenceFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text == '') {
       return newValue.copyWith(text: newValue.text.toUpperCase());
-    } else if (newValue.text.replaceAll(' ', '').contains(RegExp(r'^[abAB]+$'))) {
+    } else if (newValue.text
+        .replaceAll(' ', '')
+        .contains(RegExp(r'^[abAB]+$'))) {
       return newValue.copyWith(text: newValue.text.toUpperCase());
     } else {
       return oldValue;

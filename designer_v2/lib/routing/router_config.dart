@@ -140,13 +140,17 @@ class RouterConf {
       path: "/studies/:${RouteParams.studyId}",
       name: studyRouteName,
       redirect: (BuildContext context, GoRouterState state) => state
-          .namedLocation('studyEdit', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+          .namedLocation('studyEdit', params: {
+        RouteParams.studyId: state.params[RouteParams.studyId]!
+      }),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: studyEditRouteName,
       redirect: (BuildContext context, GoRouterState state) => state
-          .namedLocation('studyEditInfo', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+          .namedLocation('studyEditInfo', params: {
+        RouteParams.studyId: state.params[RouteParams.studyId]!
+      }),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit/info",
@@ -352,6 +356,7 @@ class RouterConf {
         if (newRoute != null) return newRoute;
       }
     }
+
     return searchRouteNames(routes);
   }
 }

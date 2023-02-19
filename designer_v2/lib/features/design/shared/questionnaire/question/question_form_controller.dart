@@ -1,18 +1,19 @@
 import 'dart:math';
-import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
-import 'package:studyu_designer_v2/features/forms/form_control.dart';
-import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/utils/color.dart';
-import 'package:uuid/uuid.dart';
+
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_control.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/utils/color.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
+import 'package:uuid/uuid.dart';
 
 // TODO: refactor break up into separate classes for each type
 class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>

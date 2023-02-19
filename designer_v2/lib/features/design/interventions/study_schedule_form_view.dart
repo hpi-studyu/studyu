@@ -20,8 +20,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
     } else {
       return FormTableRow(
           control: formViewModel.sequenceTypeCustomControl,
-          label: "Custom Sequence", // todo translate
-          labelHelpText: "Enter a custom sequence by using the letters A and B", // todo translate
+          label: "Custom Sequence",
+          // todo translate
+          labelHelpText: "Enter a custom sequence by using the letters A and B",
+          // todo translate
           input: ReactiveTextField(
             formControl: formViewModel.sequenceTypeCustomControl,
             keyboardType: TextInputType.text,
@@ -31,9 +33,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
               StudySequenceFormatter(),
             ],
             validationMessages:
-            formViewModel.sequenceTypeCustomControl.validationMessages,
-          )
-      );
+                formViewModel.sequenceTypeCustomControl.validationMessages,
+          ));
     }
   }
 

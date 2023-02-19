@@ -90,8 +90,10 @@ class StudySchedule {
 enum PhaseSequence {
   alternating,
   counterBalanced,
-  randomized, customized;
+  randomized,
+  customized;
 
   String toJson() => name;
+
   static PhaseSequence fromJson(String json) => values.byName(json);
 }
