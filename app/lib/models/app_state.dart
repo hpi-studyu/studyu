@@ -1,7 +1,7 @@
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
 
-class AppState with ChangeNotifier {
+class AppState {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
   StudySubject activeSubject;
@@ -19,20 +19,6 @@ class AppState with ChangeNotifier {
 
   AppState();
 
-  Future selectNotification(String taskId) async {
-    if (taskId != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TaskScreen(
-            task: null,
-            taskId: taskId,
-          ),
-        ),
-      );
-    }
-  }
-
   void updateStudy(Study study) {
     // todo baseline
     study.schedule.includeBaseline = false;
@@ -40,6 +26,6 @@ class AppState with ChangeNotifier {
     if (activeSubject.study.id == study.id) {
       activeSubject.study = study;
     }
-    notifyListeners();
+    // notifyListeners();
   }
 }

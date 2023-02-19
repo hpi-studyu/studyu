@@ -11,7 +11,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/app_state.dart';
 import '../../routes.dart';
 import '../../util/schedule_notifications.dart';
-import '../../util/notifications.dart';
 import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -24,7 +23,7 @@ class LoadingScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _LoadingScreenState();
 }
 
-class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
+class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
@@ -136,10 +135,15 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
         if (preview.selectedRoute == '/observation') {
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy.observations
+                .where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
-          await Navigator.push<bool>(context, TaskScreen.routeFor(task: tasks.first));
+          await Navigator.push<bool>(
+              context,
+              TaskScreen.routeFor(
+                  timedTask: TimedTask(tasks.first,
+                      tasks.first.schedule.completionPeriods.first)));
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -215,7 +219,7 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
-      model.activeSubject = subject;
+      state.activeSubject = subject;
       scheduleNotifications(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
@@ -242,16 +246,4 @@ class _LoadingScreenState extends SupabaseAuthState<LoadingScreen> {
       ),
     );
   }
-
-  @override
-  void onAuthenticated(Session session) {}
-
-  @override
-  void onErrorAuthenticating(String message) {}
-
-  @override
-  void onPasswordRecovery(Session session) {}
-
-  @override
-  void onUnauthenticated() {}
 }

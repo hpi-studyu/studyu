@@ -26,7 +26,7 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_native_timezone: ^2.0.0
+  flutter_timezone: ^1.0.4
   grizzly_distuv: ^1.0.0
   intersperse: ^2.0.0
   intl: ^0.17.0

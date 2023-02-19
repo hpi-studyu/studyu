@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
 
+import '../../../models/app_state.dart';
 import 'intervention/checkmark_task_widget.dart';
 import 'observation/questionnaire_task_widget.dart';
 
 class TaskScreen extends StatefulWidget {
   final TimedTask timedTask;
 
-  static MaterialPageRoute<bool> routeFor({@required Task task}) => MaterialPageRoute(
-        builder: (_) => TaskScreen(task: task),
+  static MaterialPageRoute<bool> routeFor({@required TimedTask timedTask}) =>
+      MaterialPageRoute(
+        builder: (_) => TaskScreen(timedTask: timedTask),
       );
 
   const TaskScreen({@required this.timedTask, Key key}) : super(key: key);
@@ -24,25 +27,29 @@ class _TaskScreenState extends State<TaskScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final subject = context.watch<AppState>().activeSubject;
-    if (widget.task != null) {
+    if (widget.timedTask != null) {
       final tasks = <Task>[
-        ...subject.study.observations.where((observation) => observation.id == widget.task.id),
+        ...subject.study.observations
+            .where((observation) => observation.id == widget.timedTask.task.id),
         ...subject.selectedInterventions
-            .map((intervention) => intervention.tasks.where((task) => task.id == widget.task.id))
+            .map((intervention) => intervention.tasks
+                .where((task) => task.id == widget.timedTask.task.id))
             .expand((task) => task)
       ];
       task = tasks.first;
-    } else if (widget.taskId != null) {
+    } else if (widget.timedTask != null) {
       final tasks = <Task>[
-        ...subject.study.observations.where((observation) => observation.id == widget.taskId),
+        ...subject.study.observations
+            .where((observation) => observation.id == widget.timedTask),
         ...subject.selectedInterventions
-            .map((intervention) => intervention.tasks.where((task) => task.id == widget.taskId))
+            .map((intervention) =>
+                intervention.tasks.where((task) => task.id == widget.timedTask))
             .expand((task) => task)
       ];
       if (tasks.isEmpty) {
-        print('No task found with ID ${widget.taskId}');
+        print('No task found with ID ${widget.timedTask.task.id}');
       } else if (tasks.length > 1) {
-        print('Too many tasks found with ID ${widget.taskId}');
+        print('Too many tasks found with ID ${widget.timedTask.task.id}');
       } else {
         task = tasks.first;
       }

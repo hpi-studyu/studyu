@@ -41,7 +41,7 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
         );
       case ScaleQuestion:
         return ScaleQuestionWidget(
-          question: question as ScaleQuestion,
+          question: widget.question as ScaleQuestion,
           onDone: _onDone,
         );
       case VisualAnalogueQuestion:
