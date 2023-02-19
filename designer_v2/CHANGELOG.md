@@ -1,3 +1,18 @@
+## 1.1.0-dev.1
+
+ - **FIX**: merge issues. ([8a560314](https://github.com/hpi-studyu/studyu/commit/8a560314c14fcf3e37e9d40f7129a4db483e8a8a))
+ - **FIX**: iframe preview now working with safari. ([2ceb7e4d](https://github.com/hpi-studyu/studyu/commit/2ceb7e4d25c17ef6b7d654ce9cdb88492dd452b0))
+ - **FIX**: enable settings again. ([a070a04d](https://github.com/hpi-studyu/studyu/commit/a070a04d4da820973d36a58281df78e1015516e3))
+ - **FIX**: logout null value. ([46894669](https://github.com/hpi-studyu/studyu/commit/468946697afc21e26f65b26d83ae2cd7df858fc1))
+ - **FIX**: use pointerinterceptor. ([1cf8ad69](https://github.com/hpi-studyu/studyu/commit/1cf8ad69a6b150077f59ee5d88702e0522f7d001))
+ - **FIX**: quickfix router and upgrade deps. ([024303ec](https://github.com/hpi-studyu/studyu/commit/024303ec08edb7a703fd30139920055c909a4a47))
+ - **FIX**: l10n error. ([8d922181](https://github.com/hpi-studyu/studyu/commit/8d9221810a421d2686a8e70f85f9aeae33cf9812))
+ - **FIX**: router errors. ([1bd34ec3](https://github.com/hpi-studyu/studyu/commit/1bd34ec36937366c08ef9c4fe7d75a38d4be4507))
+ - **FIX**: update outdated stuff and dart generate. ([82b58bdc](https://github.com/hpi-studyu/studyu/commit/82b58bdcbf6f077003398b1a19813aa35a36bd91))
+ - **FIX**: badge issue. ([44df2912](https://github.com/hpi-studyu/studyu/commit/44df29120fe2f0f5ea1308d79bab4d91c9b8dbe9))
+ - **FIX**: upgrade supabase_flutter (^1.3.1) and supabase (^1.4.0). ([88e6dad4](https://github.com/hpi-studyu/studyu/commit/88e6dad4cbf6f5847fe382e7969ec2e13a1dee44))
+ - **FEAT**: early release customSequence. ([f65c64d7](https://github.com/hpi-studyu/studyu/commit/f65c64d7a828125c7f36e3dcf08262e42f78ba29))
+
 ## 1.1.0-dev.0
 
  - **REFACTOR**: resolve new study issues & make repository logic more robust. ([ba06ca15](https://github.com/hpi-studyu/studyu/commit/ba06ca158f21fdf1f80c46778e1143cf655ff07b))

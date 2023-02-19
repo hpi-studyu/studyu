@@ -1,3 +1,14 @@
+## 1.4.0-dev.1
+
+ - **FIX**: merge issues. ([8a560314](https://github.com/hpi-studyu/studyu/commit/8a560314c14fcf3e37e9d40f7129a4db483e8a8a))
+ - **FIX**: remove staging. ([24b6dfa9](https://github.com/hpi-studyu/studyu/commit/24b6dfa9c2eb8649c896d95620064c8a6feb1b4f))
+ - **FIX**: update outdated stuff and dart generate. ([82b58bdc](https://github.com/hpi-studyu/studyu/commit/82b58bdcbf6f077003398b1a19813aa35a36bd91))
+ - **FIX**: upgrade supabase_flutter (^1.3.1) and supabase (^1.4.0). ([88e6dad4](https://github.com/hpi-studyu/studyu/commit/88e6dad4cbf6f5847fe382e7969ec2e13a1dee44))
+ - **FIX**: remove staging. ([059c39a0](https://github.com/hpi-studyu/studyu/commit/059c39a096e807074d13d54021cfe838a2227d77))
+ - **FIX**: migration. ([3ac8f192](https://github.com/hpi-studyu/studyu/commit/3ac8f192d4191eed640340e1292bcdd1c64ece98))
+ - **FIX**: upgrade to flutter 3.7.0. ([2aa80015](https://github.com/hpi-studyu/studyu/commit/2aa80015a22161773649790edf2c38742809c45b))
+ - **FIX**: upgrade deps. ([1b411140](https://github.com/hpi-studyu/studyu/commit/1b41114080e405c385c15b7beb8d140193656e6a))
+
 ## 1.3.27
 
  - **FIX**: remove staging. ([24b6dfa9](https://github.com/hpi-studyu/studyu/commit/24b6dfa9c2eb8649c896d95620064c8a6feb1b4f))
