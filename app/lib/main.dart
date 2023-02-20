@@ -26,7 +26,7 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
 
 Future<void> main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await loadEnv();
   await _configureLocalTimeZone();
 
