@@ -33,7 +33,6 @@ class _TaskBoxState extends State<TaskBox> {
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
-    if (mounted) scheduleNotifications(context);
   }
 
   Widget drawCheckbox({bool completed}) {
@@ -45,6 +44,7 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
+    scheduleNotifications(context);
     final completed = context
         .watch<AppState>()
         .activeSubject
