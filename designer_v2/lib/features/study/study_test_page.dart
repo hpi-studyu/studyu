@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
@@ -176,7 +177,8 @@ class StudyTestScreen extends StudyPageWidget {
 
   showHelp(WidgetRef ref, BuildContext context) {
     final theme = Theme.of(context);
-    Widget previewHelp = StandardDialog(
+    Widget previewHelp = PointerInterceptor(
+        child: StandardDialog(
       titleText: tr.dialog_study_test_help_title,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -233,7 +235,7 @@ class StudyTestScreen extends StudyPageWidget {
       ],
       maxWidth: 650,
       minWidth: 550,
-    );
+    ));
     showDialog(
       context: context,
       barrierColor: ThemeConfig.modalBarrierColor(theme),
