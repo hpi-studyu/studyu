@@ -48,7 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final state = context.read<AppState>();
     final preview = Preview(
       widget.queryParameters ?? {},
-      context.read<AppLanguage>(),
+      context.watch<AppLanguage>(),
     );
 
     // print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
