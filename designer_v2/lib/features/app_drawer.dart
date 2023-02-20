@@ -8,6 +8,8 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
 
+import 'account/account_settings.dart';
+
 typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
 class DrawerEntry {
@@ -106,16 +108,21 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
   final List<List<DrawerEntry>> bottomEntries = [
     [
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_account_settings,
-        icon: Icons.settings_rounded,
-        intent: RoutingIntents.accountSettings,
-      ),
+      DrawerEntry(
+          localizedTitle: () => tr.navlink_account_settings,
+          icon: Icons.settings_rounded,
+          onSelected: (context, ref) {
+            showDialog(
+                context: context,
+                builder: (context) => const AccountSettingsDialog());
+          }),
       DrawerEntry(
         localizedTitle: () => tr.navlink_logout,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
-          ref.read(authFormControllerProvider(AuthFormKey.login).notifier).signOut();
+          ref
+              .read(authFormControllerProvider(AuthFormKey.login).notifier)
+              .signOut();
         },
       ),
     ],
