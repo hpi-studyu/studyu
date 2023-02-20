@@ -37,19 +37,13 @@ class _TaskBoxState extends State<TaskBox> {
     if (mounted) scheduleNotifications(context);
   }
 
-  Widget drawCheckbox({bool completed}) {
-    return RoundCheckbox(
-      value: completed,
-      onChanged: (value) => completed ? () {} : _navigateToTaskScreen(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final completed = context
         .watch<AppState>()
         .activeSubject
-        .isTimedTaskFinished(widget.timedTask.task.id, widget.timedTask.completionPeriod, DateTime.now());
+        .isTimedTaskFinished(widget.timedTask.task.id,
+            widget.timedTask.completionPeriod, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(
