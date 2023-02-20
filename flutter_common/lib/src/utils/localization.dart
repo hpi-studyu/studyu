@@ -16,6 +16,7 @@ class AppLanguage extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final languageCode = prefs.getString('language_code');
     _appLocale = languageCode != null ? Locale(languageCode) : null;
+    notifyListeners();
   }
 
   Future<void> changeLanguage(Locale? locale) async {
