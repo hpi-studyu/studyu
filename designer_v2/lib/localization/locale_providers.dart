@@ -23,7 +23,6 @@ final supportedLocalesProvider = Provider<List<Locale>>((_) {
 /// Locale Provider
 /// Provides the current locale, and automatically updates when the locale changes.
 final localeProvider = Provider<Locale>((ref) {
-  print("localeProvider");
   return ref.watch(localeStateProvider).locale;
 });
 
