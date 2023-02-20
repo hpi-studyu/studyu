@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
@@ -12,8 +13,8 @@ class AccountSettingsDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: fix the localization mechanism to rebuild on change
-    return StandardDialog(
+    return PointerInterceptor(
+        child: StandardDialog(
       titleText: tr.navlink_account_settings,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -25,7 +26,8 @@ class AccountSettingsDialog extends ConsumerWidget {
             rows: [
               FormTableRow(
                 label: tr.language,
-                input: const Align(alignment: Alignment.centerRight, child: LanguagePicker()),
+                input: const Align(
+                    alignment: Alignment.centerRight, child: LanguagePicker()),
               ),
             ],
           ),
@@ -35,6 +37,6 @@ class AccountSettingsDialog extends ConsumerWidget {
       minWidth: 650,
       maxWidth: 750,
       minHeight: 450,
-    );
+    ));
   }
 }
