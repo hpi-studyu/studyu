@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -21,24 +22,31 @@ class SurveyQuestionFormView extends ConsumerStatefulWidget {
   final QuestionFormViewModel formViewModel;
 
   @override
-  ConsumerState<SurveyQuestionFormView> createState() => _SurveyQuestionFormViewState();
+  ConsumerState<SurveyQuestionFormView> createState() =>
+      _SurveyQuestionFormViewState();
 }
 
-class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView> {
+class _SurveyQuestionFormViewState
+    extends ConsumerState<SurveyQuestionFormView> {
   QuestionFormViewModel get formViewModel => widget.formViewModel;
 
-  late bool isQuestionHelpTextFieldVisible = formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
+  late bool isQuestionHelpTextFieldVisible =
+      formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
 
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
-      SurveyQuestionType.choice: (_) => ChoiceQuestionFormView(formViewModel: formViewModel),
-      SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel),
-      SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.choice: (_) =>
+          ChoiceQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.bool: (_) =>
+          BoolQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.scale: (_) =>
+          ScaleQuestionFormView(formViewModel: formViewModel),
     };
     final questionType = formViewModel.questionType;
 
     if (!questionTypeWidgets.containsKey(questionType)) {
-      throw Exception("Failed to build widget for SurveyQuestionType $questionType because"
+      throw Exception(
+          "Failed to build widget for SurveyQuestionType $questionType because"
           "there is no registered WidgetBuilder");
     }
     final builder = questionTypeWidgets[questionType]!;
@@ -54,7 +62,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       // Note: if this becomes a performance issue, remove the
       // ReactiveFormConsumer here & use consumers / listeners selectively for
       // the UI parts that need to be rebuild
-      return Column(
+      return PointerInterceptor(
+          child: Column(
         children: [
           _buildQuestionText(context),
           (isQuestionHelpTextFieldVisible)
@@ -70,7 +79,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           const SizedBox(height: 16.0),
           questionTypeBodyBuilder(context),
         ],
-      );
+      ));
     });
   }
 
@@ -87,12 +96,16 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(
+                    inputDecorationTheme:
+                        ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
                   items: formViewModel.questionTypeControlOptions.map((option) {
-                    final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
-                    final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
+                    final menuItemTheme =
+                        ThemeConfig.dropdownMenuItemTheme(theme);
+                    final iconTheme =
+                        menuItemTheme.iconTheme ?? theme.iconTheme;
 
                     return DropdownMenuItem(
                       value: option.value,
@@ -100,7 +113,9 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
+                                  size: iconTheme.size,
+                                  color: iconTheme.color,
+                                  shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)
@@ -154,7 +169,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           ),
           input: ReactiveTextField(
             formControl: formViewModel.questionTextControl,
-            validationMessages: formViewModel.questionTextControl.validationMessages,
+            validationMessages:
+                formViewModel.questionTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,
           ),
@@ -173,7 +189,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           labelHelpText: tr.form_field_question_help_text_tooltip,
           input: ReactiveTextField(
             formControl: formViewModel.questionInfoTextControl,
-            validationMessages: formViewModel.questionInfoTextControl.validationMessages,
+            validationMessages:
+                formViewModel.questionInfoTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,
             decoration: InputDecoration(

@@ -109,7 +109,7 @@ class SupabaseQuery {
       print('Stacktrace: $stacktrace');
       throw error;
     } else {
-      print('Error: $error');
+      print('Caught Supabase Error: $error');
       print('Stacktrace: $stacktrace');
       throw error;
     }
