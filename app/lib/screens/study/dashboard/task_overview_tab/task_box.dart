@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -34,7 +34,9 @@ class _TaskBoxState extends State<TaskBox> {
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
-    if (mounted) scheduleNotifications(context);
+    // if (mounted) scheduleNotifications(context);
+    // todo nur loading screen zeigen, wenn study phase abgeschlossen wurde, damit dashboard neu lädt
+    Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
   }
 
   @override
