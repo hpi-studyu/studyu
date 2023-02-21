@@ -16,7 +16,7 @@ dependencies:
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
   email_validator: ^2.1.17
-  fl_chart: ^0.46.0 # breaking
+  fl_chart: ^0.61.0 # breaking
   flex_color_picker: ^3.0.2
   flutter:
     sdk: flutter
