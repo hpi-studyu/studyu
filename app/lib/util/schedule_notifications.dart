@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
@@ -71,14 +71,22 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 }
 
 Future<void> scheduleNotifications(BuildContext context) async {
+  if (StudyNotifications.debug) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Schedule Notifications'),
+      ),
+    );
+  }
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
-  final studyNotifications =
-      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
+  final studyNotifications = context.read<AppState>().studyNotifications ??
+      await StudyNotifications.create(subject, context);
 
-  final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
+  final notificationsPlugin =
+      studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
 
   String body;

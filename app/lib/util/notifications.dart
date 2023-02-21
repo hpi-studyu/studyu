@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,16 @@ class StudyNotifications {
   StudySubject subject;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
-  final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
+  final StreamController<ReceivedNotification>
+      didReceiveLocalNotificationStream =
       StreamController<ReceivedNotification>.broadcast();
-  final StreamController<String> selectNotificationStream = StreamController<String>.broadcast();
+  final StreamController<String> selectNotificationStream =
+      StreamController<String>.broadcast();
   String taskAlreadyCompleted;
+
   // do not launch notification action twice if user subscribes to a new study
   static bool wasNotificationActionHandled = false;
-  static const bool debug = false; //kDebugMode;
+  static const bool debug = true; //kDebugMode;
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
@@ -171,7 +175,7 @@ class StudyNotifications {
     final now = StudyUTimeOfDay.fromDateTime(nowDt);
     TimedTask taskToRun;
     // figure out which TimedTask corresponds to the given taskId
-    // Attention: If there are multiple tasks with overlapping completionPeriods
+    // Warning: If there are multiple tasks with overlapping completionPeriods
     // this might select the wrong task instance!
     // todo this needs refactoring if periodIds are directly passed to the notification
     for (final Task task in subject.study.taskList) {
