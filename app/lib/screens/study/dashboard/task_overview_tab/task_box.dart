@@ -10,13 +10,13 @@ import '../../../../widgets/round_checkbox.dart';
 import '../../tasks/task_screen.dart';
 
 class TaskBox extends StatefulWidget {
-  final TimedTask timedTask;
+  final TaskInstance taskInstance;
   final Icon icon;
   final Function() onCompleted;
 
   const TaskBox({
     Key key,
-    @required this.timedTask,
+    @required this.taskInstance,
     @required this.icon,
     @required this.onCompleted,
   }) : super(key: key);
@@ -29,7 +29,8 @@ class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (context) => TaskScreen(timedTask: widget.timedTask)),
+      MaterialPageRoute(
+          builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
     );
     widget.onCompleted();
     // Rebuild widget
@@ -42,14 +43,14 @@ class _TaskBoxState extends State<TaskBox> {
     final completed = context
         .watch<AppState>()
         .activeSubject
-        .isTimedTaskFinished(widget.timedTask.task.id,
-            widget.timedTask.completionPeriod, DateTime.now());
+        .completedTaskInstanceForDay(widget.taskInstance.task.id,
+            widget.taskInstance.completionPeriod, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(
         onTap: (completed ||
                     !context.read<AppState>().isPreview ||
-                    !widget.timedTask.completionPeriod
+                    !widget.taskInstance.completionPeriod
                         .contains(StudyUTimeOfDay.now())) &&
                 !kDebugMode
             ? () {}
@@ -59,11 +60,11 @@ class _TaskBoxState extends State<TaskBox> {
             Expanded(
               child: ListTile(
                 leading: widget.icon,
-                title: Text(widget.timedTask.task.title ?? ''),
+                title: Text(widget.taskInstance.task.title ?? ''),
                 onTap: completed ? null : () => _navigateToTaskScreen(),
               ),
             ),
-            if (widget.timedTask.completionPeriod
+            if (widget.taskInstance.completionPeriod
                     .contains(StudyUTimeOfDay.now()) ||
                 context.read<AppState>().isPreview ||
                 completed)

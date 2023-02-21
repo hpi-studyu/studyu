@@ -189,43 +189,48 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return missedInPhase / study.schedule.phaseDuration;
   }
 
-  // Get all results for a given task
-  List<SubjectProgress> getTaskProgressForDay(String taskId, DateTime dateTime) {
+  List<SubjectProgress> getTaskProgressForDay(
+      String taskId, DateTime dateTime) {
     final List<SubjectProgress> thisTaskProgressToday = [];
     for (final SubjectProgress sp in resultsFor(taskId)) {
-      if (sp.subjectId == id // not sure if necessary
-          &&
-          sp.completedAt!.isSameDate(dateTime)) {
+      if (sp.subjectId == id && sp.completedAt!.isSameDate(dateTime)) {
         thisTaskProgressToday.add(sp);
       }
     }
     return thisTaskProgressToday;
   }
 
-  // Check if TimedTask was completed at a given day
-  bool isTimedTaskFinished(String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
-    if (completionPeriod.id != null) {
-      return getTaskProgressForDay(taskId, dateTime).any(
-        (progress) => progress.result.periodId == completionPeriod.id,
-      );
-    } else {
-      // fallback to support databases without periodIds
-      return resultsFor(taskId).any((progress) => progress.completedAt!.isSameDate(dateTime));
-    }
+  /// Check if a task instance is completed
+  /// returns true if a given task has been completed for a specific
+  /// completionPeriod on a given day
+  bool completedTaskInstanceForDay(
+      String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
+    return getTaskProgressForDay(taskId, dateTime).any(
+      (progress) => progress.result.periodId == completionPeriod.id,
+    );
   }
 
-  // Check if a task was completed in all of its time periods at a given day
-  bool isTaskFinishedForDay(String taskId, DateTime dateTime) {
-    // Get the completionPeriod for given taskId
-    return study.taskList.where((task) => task.id == taskId).single.schedule.completionPeriods.any(
-          (period) => isTimedTaskFinished(taskId, period, dateTime),
+  /// Check if a task is fully completed for all task instances
+  /// returns true if a given task has been completed for all of its
+  /// completionPeriods on a given day
+  bool completedTaskForDay(String taskId, DateTime dateTime) {
+    return study.taskList
+        .where((task) => task.id == taskId)
+        .single
+        .schedule
+        .completionPeriods
+        .any(
+          (period) => completedTaskInstanceForDay(taskId, period, dateTime),
         );
   }
 
   int completedTasksFor(Task task) => resultsFor(task.id).length;
 
+  /// Check if all tasks are fully completed on a given day
+  /// returns true if all of of the tasks (interventions & observations)
+  /// have been completed on a given day
   bool allTasksCompletedFor(DateTime dateTime) => scheduleFor(dateTime).every(
-        (timedTask) => isTaskFinishedForDay(timedTask.task.id, dateTime),
+        (taskInstance) => completedTaskForDay(taskInstance.task.id, dateTime),
       );
 
   // Currently the end of the study, as there is no real minimum, just a set study length
@@ -248,23 +253,22 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return daysCount * task.schedule.completionPeriods.length;
   }
 
-  List<TimedTask> scheduleFor(DateTime dateTime) {
+  List<TaskInstance> scheduleFor(DateTime dateTime) {
     final activeIntervention = getInterventionForDate(dateTime);
 
-    // final Multimap<CompletionPeriod, Task> taskSchedule = Multimap<CompletionPeriod, Task>();
-    final List<TimedTask> taskSchedule = [];
+    final List<TaskInstance> taskSchedule = [];
 
     if (activeIntervention == null) return taskSchedule;
 
     for (final task in activeIntervention.tasks) {
       if (task.title == null) continue;
       for (final completionPeriod in task.schedule.completionPeriods) {
-        taskSchedule.add(TimedTask(task, completionPeriod));
+        taskSchedule.add(TaskInstance(task, completionPeriod.id));
       }
     }
     for (final observation in study.observations) {
       for (final completionPeriod in observation.schedule.completionPeriods) {
-        taskSchedule.add(TimedTask(observation, completionPeriod));
+        taskSchedule.add(TaskInstance(observation, completionPeriod.id));
       }
     }
     return taskSchedule;

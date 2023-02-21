@@ -33,7 +33,7 @@ class OverflowMenuItem {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   StudySubject subject;
-  List<TimedTask> scheduleToday;
+  List<TaskInstance> scheduleToday;
 
   @override
   void didChangeDependencies() {

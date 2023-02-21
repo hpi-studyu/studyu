@@ -170,36 +170,26 @@ class StudyNotifications {
     );
   }
 
-  Future handleNotificationResponse(String taskId) async {
+  Future handleNotificationResponse(String taskInstanceId) async {
     final nowDt = DateTime.now();
-    final now = StudyUTimeOfDay.fromDateTime(nowDt);
-    TimedTask taskToRun;
-    // figure out which TimedTask corresponds to the given taskId
-    // Warning: If there are multiple tasks with overlapping completionPeriods
-    // this might select the wrong task instance!
-    // todo this needs refactoring if periodIds are directly passed to the notification
-    for (final Task task in subject.study.taskList) {
-      if (task.id == taskId) {
-        for (final CompletionPeriod cp in task.schedule.completionPeriods) {
-          if (cp.contains(now) || debug) {
-            taskToRun = TimedTask(task, cp);
-          }
-        }
-      }
-    }
-    final completed = subject.isTimedTaskFinished(
+    final taskToRun =
+        TaskInstance.fromInstanceId(taskInstanceId, nowDt, subject);
+
+    final completed = subject.completedTaskInstanceForDay(
       taskToRun.task.id,
       taskToRun.completionPeriod,
       nowDt,
     );
+
     if (taskToRun != null) {
-      if (!completed || !debug) {
+      if (!completed) {
         await navigatorKey.currentState.push(
           MaterialPageRoute(
-            builder: (_) => TaskScreen(timedTask: taskToRun),
+            builder: (_) => TaskScreen(taskInstance: taskToRun),
           ),
         );
-        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
+        navigatorKey.currentState
+            .pushNamedAndRemoveUntil(Routes.loading, (_) => false);
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(

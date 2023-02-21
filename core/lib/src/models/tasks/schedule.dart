@@ -8,7 +8,7 @@ typedef ScheduleParser = Schedule Function(Map<String, dynamic> data);
 @JsonSerializable()
 class Schedule {
   List<CompletionPeriod> completionPeriods = [
-    CompletionPeriod.withId(
+    CompletionPeriod.noId(
       unlockTime: StudyUTimeOfDay(hour: 8),
       lockTime: StudyUTimeOfDay(hour: 20),
     )
@@ -29,15 +29,18 @@ class Schedule {
 
 @JsonSerializable()
 class CompletionPeriod {
-  // Todo make non-nullable (breaks backwards compatibility)
-  String? id;
+  String id;
   final StudyUTimeOfDay unlockTime;
   final StudyUTimeOfDay lockTime;
 
-  CompletionPeriod({required this.unlockTime, required this.lockTime});
-  CompletionPeriod.withId({required this.unlockTime, required this.lockTime}) : id = const Uuid().v4();
+  CompletionPeriod(
+      {required this.id, required this.unlockTime, required this.lockTime});
 
-  factory CompletionPeriod.fromJson(Map<String, dynamic> json) => _$CompletionPeriodFromJson(json);
+  CompletionPeriod.noId({required this.unlockTime, required this.lockTime})
+      : id = const Uuid().v4();
+
+  factory CompletionPeriod.fromJson(Map<String, dynamic> json) =>
+      _$CompletionPeriodFromJson(json);
 
   Map<String, dynamic> toJson() => _$CompletionPeriodToJson(this);
 

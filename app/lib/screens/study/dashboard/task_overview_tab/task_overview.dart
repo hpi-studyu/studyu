@@ -11,11 +11,16 @@ import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
   final StudySubject subject;
-  final List<TimedTask> scheduleToday;
+  final List<TaskInstance> scheduleToday;
   final String interventionIcon;
 
-  const TaskOverview({@required this.subject, @required this.scheduleToday, Key key, this.interventionIcon})
+  const TaskOverview(
+      {@required this.subject,
+      @required this.scheduleToday,
+      Key key,
+      this.interventionIcon})
       : super(key: key);
+
   @override
   State<TaskOverview> createState() => _TaskOverviewState();
 }
@@ -31,7 +36,7 @@ class _TaskOverviewState extends State<TaskOverview> {
   List<Widget> buildScheduleToday(BuildContext context) {
     final theme = Theme.of(context);
     final List<Widget> list = [];
-    for (final timedTask in widget.scheduleToday) {
+    for (final taskInstance in widget.scheduleToday) {
       list
         ..add(
           Padding(
@@ -41,8 +46,9 @@ class _TaskOverviewState extends State<TaskOverview> {
                 Icon(Icons.access_time, color: theme.primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  timedTask.completionPeriod.toString(),
-                  style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
+                  taskInstance.completionPeriod.toString(),
+                  style: theme.textTheme.titleSmall
+                      .copyWith(fontSize: 16, color: theme.primaryColor),
                 ),
               ],
             ),
@@ -50,10 +56,10 @@ class _TaskOverviewState extends State<TaskOverview> {
         )
         ..add(
           TaskBox(
-            timedTask: timedTask,
+            taskInstance: taskInstance,
             onCompleted: () => _navigateToReportIfStudyCompleted(context),
             icon: Icon(
-              timedTask.task is Observation
+              taskInstance.task is Observation
                   ? MdiIcons.orderBoolAscendingVariant
                   : MdiIcons.fromString(widget.interventionIcon),
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';

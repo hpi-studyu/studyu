@@ -5,14 +5,15 @@ import 'intervention/checkmark_task_widget.dart';
 import 'observation/questionnaire_task_widget.dart';
 
 class TaskScreen extends StatefulWidget {
-  final TimedTask timedTask;
+  final TaskInstance taskInstance;
 
-  static MaterialPageRoute<bool> routeFor({@required TimedTask timedTask}) =>
+  static MaterialPageRoute<bool> routeFor(
+          {@required TaskInstance taskInstance}) =>
       MaterialPageRoute(
-        builder: (_) => TaskScreen(timedTask: timedTask),
+        builder: (_) => TaskScreen(taskInstance: taskInstance),
       );
 
-  const TaskScreen({@required this.timedTask, Key key}) : super(key: key);
+  const TaskScreen({@required this.taskInstance, Key key}) : super(key: key);
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -20,21 +21,22 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   Widget _buildTask() {
-    switch (widget.timedTask.task.runtimeType) {
+    switch (widget.taskInstance.task.runtimeType) {
       case CheckmarkTask:
         return CheckmarkTaskWidget(
-          task: widget.timedTask.task as CheckmarkTask,
+          task: widget.taskInstance.task as CheckmarkTask,
           key: UniqueKey(),
-          completionPeriod: widget.timedTask.completionPeriod,
+          completionPeriod: widget.taskInstance.completionPeriod,
         );
       case QuestionnaireTask:
         return QuestionnaireTaskWidget(
-          task: widget.timedTask.task as QuestionnaireTask,
+          task: widget.taskInstance.task as QuestionnaireTask,
           key: UniqueKey(),
-          completionPeriod: widget.timedTask.completionPeriod,
+          completionPeriod: widget.taskInstance.completionPeriod,
         );
       default:
-        print('${widget.timedTask.task.runtimeType} is not a supported Task!');
+        print(
+            '${widget.taskInstance.task.runtimeType} is not a supported Task!');
         return null;
     }
   }
@@ -44,7 +46,7 @@ class _TaskScreenState extends State<TaskScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.timedTask.task.title ?? ''),
+        title: Text(widget.taskInstance.task.title ?? ''),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -52,7 +54,8 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.timedTask.task.title ?? '', style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
+              Text(widget.taskInstance.task.title ?? '',
+                  style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
               const SizedBox(height: 20),
               _buildTask(),
             ],

@@ -142,8 +142,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
           await Navigator.push<bool>(
               context,
               TaskScreen.routeFor(
-                  timedTask: TimedTask(tasks.first,
-                      tasks.first.schedule.completionPeriods.first)));
+                  taskInstance: TaskInstance(tasks.first,
+                      tasks.first.schedule.completionPeriods.first.id)));
           iFrameHelper.postRouteFinished();
           return;
         }
