@@ -16,8 +16,7 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class MeasurementSurveyFormView extends ConsumerWidget {
-  const MeasurementSurveyFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const MeasurementSurveyFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final MeasurementSurveyFormViewModel formViewModel;
 
@@ -37,8 +36,7 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(200),
               ],
-              validationMessages:
-                  formViewModel.surveyTitleControl.validationMessages,
+              validationMessages: formViewModel.surveyTitleControl.validationMessages,
             ),
           ),
           FormTableRow(
@@ -50,13 +48,11 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(2000),
               ],
-              validationMessages:
-                  formViewModel.surveyIntroTextControl.validationMessages,
+              validationMessages: formViewModel.surveyIntroTextControl.validationMessages,
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 5,
-              decoration: InputDecoration(
-                  hintText: tr.form_field_measurement_survey_intro_text_hint),
+              decoration: InputDecoration(hintText: tr.form_field_measurement_survey_intro_text_hint),
             ),
           ),
           FormTableRow(
@@ -68,13 +64,11 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(2000),
               ],
-              validationMessages:
-                  formViewModel.surveyOutroTextControl.validationMessages,
+              validationMessages: formViewModel.surveyOutroTextControl.validationMessages,
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 5,
-              decoration: InputDecoration(
-                  hintText: tr.form_field_measurement_survey_outro_text_hint),
+              decoration: InputDecoration(hintText: tr.form_field_measurement_survey_outro_text_hint),
             ),
           ),
         ]),
@@ -89,19 +83,15 @@ class MeasurementSurveyFormView extends ConsumerWidget {
               return FormArrayTable<QuestionFormViewModel>(
                 control: formViewModel.questionsArray,
                 items: formViewModel.questionModels,
-                onSelectItem: (viewModel) =>
-                    _onSelectItem(viewModel, context, ref),
-                getActionsAt: (viewModel, _) =>
-                    formViewModel.availablePopupActions(viewModel),
+                onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
+                getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                 onNewItem: () => _onNewItem(context, ref),
                 onNewItemLabel: tr.form_array_measurement_survey_questions_new,
                 rowTitle: (viewModel) => viewModel.formData?.questionText ?? '',
                 sectionTitle: tr.form_array_measurement_survey_questions,
                 emptyIcon: Icons.content_paste_off_rounded,
-                emptyTitle:
-                    tr.form_array_measurement_survey_questions_empty_title,
-                emptyDescription: tr
-                    .form_array_measurement_survey_questions_empty_description,
+                emptyTitle: tr.form_array_measurement_survey_questions_empty_title,
+                emptyDescription: tr.form_array_measurement_survey_questions_empty_description,
                 hideLeadingTrailingWhenEmpty: true,
                 rowPrefix: (context, viewModel, rowIdx) {
                   return Row(
@@ -110,12 +100,8 @@ class MeasurementSurveyFormView extends ConsumerWidget {
                         message: viewModel.questionType.string,
                         child: Icon(
                           viewModel.questionType.icon,
-                          color: ThemeConfig.dropdownMenuItemTheme(theme)
-                              .iconTheme!
-                              .color,
-                          size: ThemeConfig.dropdownMenuItemTheme(theme)
-                              .iconTheme!
-                              .size,
+                          color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+                          size: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.size,
                         ),
                       ),
                       const SizedBox(width: 16.0),

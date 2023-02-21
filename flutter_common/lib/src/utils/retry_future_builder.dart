@@ -125,8 +125,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
               onPressed: reload,
               icon: const Icon(Icons.sync),
               label: const Text('Retry'),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.secondary),
+              style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.secondary),
             ),
             ...widget.extraWidgets
           ],

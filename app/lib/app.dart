@@ -26,9 +26,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppLanguage>(
-            create: (context) =>
-                AppLanguage(AppLocalizations.supportedLocales)),
+        ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
         Provider<AppState>(create: (context) => AppState()),
       ],
       child: Consumer<AppLanguage>(

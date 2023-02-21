@@ -28,10 +28,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     final activeStudy = state.activeSubject;
     try {
       if (state.trackParticipantProgress) {
-        await activeStudy.addResult<T>(
-            taskId: widget.task.id,
-            periodId: widget.completionPeriod.id,
-            result: response);
+        await activeStudy.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
       }
       if (!mounted) return;
       Navigator.pop(context, true);
@@ -40,9 +37,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         SnackBar(
           content: Text(AppLocalizations.of(context).could_not_save_results),
           duration: const Duration(seconds: 10),
-          action: SnackBarAction(
-              label: 'Retry',
-              onPressed: () => _addQuestionnaireResult(response, context)),
+          action: SnackBarAction(label: 'Retry', onPressed: () => _addQuestionnaireResult(response, context)),
         ),
       );
     }

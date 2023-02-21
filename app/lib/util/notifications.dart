@@ -17,11 +17,9 @@ class StudyNotifications {
   StudySubject subject;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
-  final StreamController<ReceivedNotification>
-      didReceiveLocalNotificationStream =
+  final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
       StreamController<ReceivedNotification>.broadcast();
-  final StreamController<String> selectNotificationStream =
-      StreamController<String>.broadcast();
+  final StreamController<String> selectNotificationStream = StreamController<String>.broadcast();
   String taskAlreadyCompleted;
 
   // do not launch notification action twice if user subscribes to a new study
@@ -172,8 +170,7 @@ class StudyNotifications {
 
   Future handleNotificationResponse(String taskInstanceId) async {
     final nowDt = DateTime.now();
-    final taskToRun =
-        TaskInstance.fromInstanceId(taskInstanceId, nowDt, subject);
+    final taskToRun = TaskInstance.fromInstanceId(taskInstanceId, nowDt, subject);
 
     final completed = subject.completedTaskInstanceForDay(
       taskToRun.task.id,
@@ -188,8 +185,7 @@ class StudyNotifications {
             builder: (_) => TaskScreen(taskInstance: taskToRun),
           ),
         );
-        navigatorKey.currentState
-            .pushNamedAndRemoveUntil(Routes.loading, (_) => false);
+        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(

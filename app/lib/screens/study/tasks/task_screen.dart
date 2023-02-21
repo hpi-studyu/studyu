@@ -7,9 +7,7 @@ import 'observation/questionnaire_task_widget.dart';
 class TaskScreen extends StatefulWidget {
   final TaskInstance taskInstance;
 
-  static MaterialPageRoute<bool> routeFor(
-          {@required TaskInstance taskInstance}) =>
-      MaterialPageRoute(
+  static MaterialPageRoute<bool> routeFor({@required TaskInstance taskInstance}) => MaterialPageRoute(
         builder: (_) => TaskScreen(taskInstance: taskInstance),
       );
 
@@ -35,8 +33,7 @@ class _TaskScreenState extends State<TaskScreen> {
           completionPeriod: widget.taskInstance.completionPeriod,
         );
       default:
-        print(
-            '${widget.taskInstance.task.runtimeType} is not a supported Task!');
+        print('${widget.taskInstance.task.runtimeType} is not a supported Task!');
         return null;
     }
   }
@@ -54,8 +51,7 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.taskInstance.task.title ?? '',
-                  style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
+              Text(widget.taskInstance.task.title ?? '', style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
               const SizedBox(height: 20),
               _buildTask(),
             ],

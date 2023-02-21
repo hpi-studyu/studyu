@@ -18,16 +18,16 @@ abstract class IFormDataWithSchedule implements IFormData {
     schedule.completionPeriods = (!isTimeLocked || (timeLockStart == null && timeLockEnd == null))
         ? [
             CompletionPeriod.noId(
-                    // default unrestricted period
-                    unlockTime: ScheduleX.unrestrictedTime[0],
-                    lockTime: ScheduleX.unrestrictedTime[1])
-              ]
+                // default unrestricted period
+                unlockTime: ScheduleX.unrestrictedTime[0],
+                lockTime: ScheduleX.unrestrictedTime[1])
+          ]
         : [
-      CompletionPeriod.noId(
-                    // user-defined period
-                    unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
-                    lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1])
-              ];
+            CompletionPeriod.noId(
+                // user-defined period
+                unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
+                lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1])
+          ];
     return schedule;
   }
 }

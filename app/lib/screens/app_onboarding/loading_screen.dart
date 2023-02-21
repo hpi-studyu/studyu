@@ -135,15 +135,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (preview.selectedRoute == '/observation') {
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations
-                .where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
           await Navigator.push<bool>(
               context,
               TaskScreen.routeFor(
-                  taskInstance: TaskInstance(tasks.first,
-                      tasks.first.schedule.completionPeriods.first.id)));
+                  taskInstance: TaskInstance(tasks.first, tasks.first.schedule.completionPeriods.first.id)));
           iFrameHelper.postRouteFinished();
           return;
         }

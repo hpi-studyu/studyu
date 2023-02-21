@@ -38,16 +38,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       final loginLocation = state.namedLocation(loginRouteName);
       final signupLocation = state.namedLocation(signupRouteName);
       final splashLocation = state.namedLocation(splashRouteName);
-      final passwordRecoveryLocation =
-          state.namedLocation(recoverPasswordRouteName);
-      final isOnDefaultPage =
-          state.subloc == state.namedLocation(defaultLocation);
+      final passwordRecoveryLocation = state.namedLocation(recoverPasswordRouteName);
+      final isOnDefaultPage = state.subloc == state.namedLocation(defaultLocation);
       final isOnLoginPage = state.subloc == loginLocation;
       final isOnSignupPage = state.subloc == signupLocation;
       final isOnSplashPage = state.subloc == splashLocation;
       final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
-      final isOnPublicPage = RouterConf.publicRoutes
-          .any((element) => element.path == state.subloc);
+      final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.subloc);
 
       // Read most recent app state on re-evaluation (see refreshListenable)
       final isLoggedIn = authRepository.isLoggedIn;

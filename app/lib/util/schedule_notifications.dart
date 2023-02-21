@@ -11,17 +11,13 @@ import 'notifications.dart';
 
 extension Reminders on FlutterLocalNotificationsPlugin {
   Future<int> scheduleReminderForDate(
-      int id,
-      String body,
-      StudyNotification studyNotification,
-      NotificationDetails notificationDetails) async {
+      int id, String body, StudyNotification studyNotification, NotificationDetails notificationDetails) async {
     var currentId = id;
     final task = studyNotification.taskInstance.task;
     final date = studyNotification.date;
     for (final reminder in task.schedule.reminders) {
       if (date.isSameDate(DateTime.now()) &&
-          !StudyUTimeOfDay(hour: date.hour, minute: date.minute)
-              .earlierThan(reminder, exact: true)) {
+          !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
         if (StudyNotifications.debug) {
           print(
             '${DateTime.now()} Skip Notification #$currentId: '
@@ -40,8 +36,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         reminderTime,
         notificationDetails,
         payload: studyNotification.taskInstance.taskInstanceId,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.wallClockTime,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
         androidAllowWhileIdle: true,
       );
       // DEBUG: Show test notifications
@@ -81,50 +76,40 @@ Future<void> scheduleNotifications(BuildContext context) async {
   if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
-  final studyNotifications = context.read<AppState>().studyNotifications ??
-      await StudyNotifications.create(subject, context);
+  final studyNotifications =
+      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
 
-  final notificationsPlugin =
-      studyNotifications.flutterLocalNotificationsPlugin;
+  final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
 
-  final notificationDetails =
-      NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
+  final notificationDetails = NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
   final List<StudyNotification> studyNotificationList = [];
 
   for (int index = 0; index <= 3; index++) {
     final date = DateTime.now().add(Duration(days: index));
-    studyNotificationList.addAll(
-        _buildNotificationList(subject, date, subject.study.observations));
+    studyNotificationList.addAll(_buildNotificationList(subject, date, subject.study.observations));
     for (final intervention in subject.selectedInterventions) {
-      if (intervention.id == null ||
-          intervention.id != subject.getInterventionForDate(date)?.id) {
+      if (intervention.id == null || intervention.id != subject.getInterventionForDate(date)?.id) {
         continue;
       }
-      studyNotificationList
-          .addAll(_buildNotificationList(subject, date, intervention.tasks));
+      studyNotificationList.addAll(_buildNotificationList(subject, date, intervention.tasks));
     }
   }
   var id = 0;
   for (final StudyNotification notification in studyNotificationList) {
     final currentId = await notificationsPlugin.scheduleReminderForDate(
-        id,
-        AppLocalizations.of(context).study_notification_body,
-        notification,
-        notificationDetails);
+        id, AppLocalizations.of(context).study_notification_body, notification, notificationDetails);
     id = currentId;
   }
 }
 
-List<StudyNotification> _buildNotificationList(
-    StudySubject subject, DateTime date, List<Task> tasks) {
+List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime date, List<Task> tasks) {
   List<StudyNotification> taskNotifications = [];
   for (Task task in tasks) {
     if (task.title == null || task.title.isEmpty) return [];
     for (final completionPeriod in task.schedule.completionPeriods) {
       TaskInstance taskInstance = TaskInstance(task, completionPeriod.id);
-      if (!subject.completedTaskInstanceForDay(
-          taskInstance.taskInstanceId, taskInstance.completionPeriod, date)) {
+      if (!subject.completedTaskInstanceForDay(taskInstance.taskInstanceId, taskInstance.completionPeriod, date)) {
         taskNotifications.add(StudyNotification(taskInstance, date));
       }
     }

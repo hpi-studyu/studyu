@@ -26,8 +26,7 @@ class AccountSettingsDialog extends ConsumerWidget {
             rows: [
               FormTableRow(
                 label: tr.language,
-                input: const Align(
-                    alignment: Alignment.centerRight, child: LanguagePicker()),
+                input: const Align(alignment: Alignment.centerRight, child: LanguagePicker()),
               ),
             ],
           ),

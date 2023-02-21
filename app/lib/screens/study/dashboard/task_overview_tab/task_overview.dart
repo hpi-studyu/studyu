@@ -14,11 +14,7 @@ class TaskOverview extends StatefulWidget {
   final List<TaskInstance> scheduleToday;
   final String interventionIcon;
 
-  const TaskOverview(
-      {@required this.subject,
-      @required this.scheduleToday,
-      Key key,
-      this.interventionIcon})
+  const TaskOverview({@required this.subject, @required this.scheduleToday, Key key, this.interventionIcon})
       : super(key: key);
 
   @override
@@ -47,8 +43,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(width: 8),
                 Text(
                   taskInstance.completionPeriod.toString(),
-                  style: theme.textTheme.titleSmall
-                      .copyWith(fontSize: 16, color: theme.primaryColor),
+                  style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
                 ),
               ],
             ),

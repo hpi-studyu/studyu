@@ -189,8 +189,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return missedInPhase / study.schedule.phaseDuration;
   }
 
-  List<SubjectProgress> getTaskProgressForDay(
-      String taskId, DateTime dateTime) {
+  List<SubjectProgress> getTaskProgressForDay(String taskId, DateTime dateTime) {
     final List<SubjectProgress> thisTaskProgressToday = [];
     for (final SubjectProgress sp in resultsFor(taskId)) {
       if (sp.subjectId == id && sp.completedAt!.isSameDate(dateTime)) {
@@ -203,8 +202,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// Check if a task instance is completed
   /// returns true if a given task has been completed for a specific
   /// completionPeriod on a given day
-  bool completedTaskInstanceForDay(
-      String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
+  bool completedTaskInstanceForDay(String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
     return getTaskProgressForDay(taskId, dateTime).any(
       (progress) => progress.result.periodId == completionPeriod.id,
     );
@@ -214,12 +212,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// returns true if a given task has been completed for all of its
   /// completionPeriods on a given day
   bool completedTaskForDay(String taskId, DateTime dateTime) {
-    return study.taskList
-        .where((task) => task.id == taskId)
-        .single
-        .schedule
-        .completionPeriods
-        .any(
+    return study.taskList.where((task) => task.id == taskId).single.schedule.completionPeriods.any(
           (period) => completedTaskInstanceForDay(taskId, period, dateTime),
         );
   }
@@ -324,9 +317,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async {
     return SupabaseQuery.extractSupabaseList<StudySubject>(
-      await env.client
-          .from(tableName)
-          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
+      await env.client.from(tableName).select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
     );
   }
 

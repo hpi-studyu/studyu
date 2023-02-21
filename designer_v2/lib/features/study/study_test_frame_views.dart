@@ -103,10 +103,8 @@ class PhoneContainer extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(borderRadius)),
-                      border:
-                          Border.all(width: borderWidth, color: Colors.white),
+                      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+                      border: Border.all(width: borderWidth, color: Colors.white),
                       shape: BoxShape.rectangle),
                 ),
               ),

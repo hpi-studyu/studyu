@@ -32,8 +32,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
               LengthLimitingTextInputFormatter(10),
               StudySequenceFormatter(),
             ],
-            validationMessages:
-                formViewModel.sequenceTypeCustomControl.validationMessages,
+            validationMessages: formViewModel.sequenceTypeCustomControl.validationMessages,
           ));
     }
   }

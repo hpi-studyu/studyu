@@ -171,8 +171,7 @@ class DeleteAlertDialog extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context).delete_data),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, elevation: 0),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
             onPressed: () async {
               await subject.delete(); // hard-delete
               await deleteLocalData();

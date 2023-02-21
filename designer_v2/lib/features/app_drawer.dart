@@ -112,17 +112,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           localizedTitle: () => tr.navlink_account_settings,
           icon: Icons.settings_rounded,
           onSelected: (context, ref) {
-            showDialog(
-                context: context,
-                builder: (context) => const AccountSettingsDialog());
+            showDialog(context: context, builder: (context) => const AccountSettingsDialog());
           }),
       DrawerEntry(
         localizedTitle: () => tr.navlink_logout,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
-          ref
-              .read(authFormControllerProvider(AuthFormKey.login).notifier)
-              .signOut();
+          ref.read(authFormControllerProvider(AuthFormKey.login).notifier).signOut();
         },
       ),
     ],

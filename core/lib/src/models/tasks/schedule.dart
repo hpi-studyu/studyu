@@ -33,14 +33,11 @@ class CompletionPeriod {
   final StudyUTimeOfDay unlockTime;
   final StudyUTimeOfDay lockTime;
 
-  CompletionPeriod(
-      {required this.id, required this.unlockTime, required this.lockTime});
+  CompletionPeriod({required this.id, required this.unlockTime, required this.lockTime});
 
-  CompletionPeriod.noId({required this.unlockTime, required this.lockTime})
-      : id = const Uuid().v4();
+  CompletionPeriod.noId({required this.unlockTime, required this.lockTime}) : id = const Uuid().v4();
 
-  factory CompletionPeriod.fromJson(Map<String, dynamic> json) =>
-      _$CompletionPeriodFromJson(json);
+  factory CompletionPeriod.fromJson(Map<String, dynamic> json) => _$CompletionPeriodFromJson(json);
 
   Map<String, dynamic> toJson() => _$CompletionPeriodToJson(this);
 

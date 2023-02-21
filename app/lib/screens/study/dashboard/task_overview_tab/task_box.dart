@@ -29,8 +29,7 @@ class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-          builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
+      MaterialPageRoute(builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
     );
     widget.onCompleted();
     // Rebuild widget
@@ -43,15 +42,13 @@ class _TaskBoxState extends State<TaskBox> {
     final completed = context
         .watch<AppState>()
         .activeSubject
-        .completedTaskInstanceForDay(widget.taskInstance.task.id,
-            widget.taskInstance.completionPeriod, DateTime.now());
+        .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
     return Card(
       elevation: 2,
       child: InkWell(
         onTap: (completed ||
                     !context.read<AppState>().isPreview ||
-                    !widget.taskInstance.completionPeriod
-                        .contains(StudyUTimeOfDay.now())) &&
+                    !widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now())) &&
                 !kDebugMode
             ? () {}
             : _navigateToTaskScreen,
@@ -64,8 +61,7 @@ class _TaskBoxState extends State<TaskBox> {
                 onTap: completed ? null : () => _navigateToTaskScreen(),
               ),
             ),
-            if (widget.taskInstance.completionPeriod
-                    .contains(StudyUTimeOfDay.now()) ||
+            if (widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now()) ||
                 context.read<AppState>().isPreview ||
                 completed)
               RoundCheckbox(
