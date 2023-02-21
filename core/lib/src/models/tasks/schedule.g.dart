@@ -22,21 +22,14 @@ Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
 
 CompletionPeriod _$CompletionPeriodFromJson(Map<String, dynamic> json) =>
     CompletionPeriod(
+      id: json['id'] as String,
       unlockTime: StudyUTimeOfDay.fromJson(json['unlockTime'] as String),
       lockTime: StudyUTimeOfDay.fromJson(json['lockTime'] as String),
-    )..id = json['id'] as String?;
+    );
 
-Map<String, dynamic> _$CompletionPeriodToJson(CompletionPeriod instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  val['unlockTime'] = instance.unlockTime.toJson();
-  val['lockTime'] = instance.lockTime.toJson();
-  return val;
-}
+Map<String, dynamic> _$CompletionPeriodToJson(CompletionPeriod instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'unlockTime': instance.unlockTime.toJson(),
+      'lockTime': instance.lockTime.toJson(),
+    };
