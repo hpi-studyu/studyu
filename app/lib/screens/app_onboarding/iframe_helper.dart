@@ -1,10 +1,9 @@
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
+import "package:universal_html/html.dart" as html;
 
 class IFrameHelper {
   void postRouteFinished() {

@@ -46,6 +46,7 @@ dependencies:
   url_launcher: ^6.1.9
   uuid: ^3.0.7
   video_player: ^2.5.1
+  universal_html: ^2.0.9
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0
