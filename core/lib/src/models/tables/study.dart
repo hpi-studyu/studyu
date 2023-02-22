@@ -186,8 +186,6 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
 
-  List<Task> get taskList => [...interventions.expand((e) => e.tasks), ...observations];
-
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;
     try {

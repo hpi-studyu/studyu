@@ -212,9 +212,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// returns true if a given task has been completed for all of its
   /// completionPeriods on a given day
   bool completedTaskForDay(String taskId, DateTime dateTime) {
-    return study.taskList.where((task) => task.id == taskId).single.schedule.completionPeriods.any(
+    return [...selectedInterventions.expand((e) => e.tasks), ...study.observations]
+        .where((task) => task.id == taskId).single.schedule.completionPeriods.any(
           (period) => completedTaskInstanceForDay(taskId, period, dateTime),
-        );
+    );
   }
 
   int completedTasksFor(Task task) => resultsFor(task.id).length;
