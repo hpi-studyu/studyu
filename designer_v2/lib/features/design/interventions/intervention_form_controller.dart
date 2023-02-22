@@ -49,9 +49,9 @@ class InterventionFormViewModel extends ManagedFormViewModel<InterventionFormDat
 
   @override
   FormValidationConfigSet get validationConfig => {
-        StudyFormValidationSet.draft: [titleRequired, atLeastOneTask],
-        StudyFormValidationSet.publish: [titleRequired, atLeastOneTask],
-        StudyFormValidationSet.test: [titleRequired, atLeastOneTask],
+        StudyFormValidationSet.draft: [titleRequired, /*atLeastOneTask*/],
+        StudyFormValidationSet.publish: [titleRequired, /*atLeastOneTask*/],
+        StudyFormValidationSet.test: [titleRequired, /*atLeastOneTask*/],
       };
 
   get titleRequired => FormControlValidation(control: interventionTitleControl, validators: [
