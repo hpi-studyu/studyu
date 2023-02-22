@@ -45,22 +45,20 @@ class _TaskBoxState extends State<TaskBox> {
         .watch<AppState>()
         .activeSubject
         .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
+    final isPreview = context.read<AppState>().isPreview;
+    final isInsidePeriod = widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
+    final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: (completed ||
-                    !context.read<AppState>().isPreview ||
-                    !widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now())) &&
-                !kDebugMode
-            ? () {}
-            : _navigateToTaskScreen,
+        onTap: (isTaskOpen) ? _navigateToTaskScreen : () {},
         child: Row(
           children: [
             Expanded(
               child: ListTile(
                 leading: widget.icon,
                 title: Text(widget.taskInstance.task.title ?? ''),
-                onTap: completed ? null : () => _navigateToTaskScreen(),
+                onTap: (isTaskOpen) ? _navigateToTaskScreen : () {},
               ),
             ),
             if (widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now()) ||
@@ -68,7 +66,7 @@ class _TaskBoxState extends State<TaskBox> {
                 completed)
               RoundCheckbox(
                 value: completed, //_isCompleted,
-                onChanged: (value) => completed ? {} : _navigateToTaskScreen(),
+                onChanged: (value) => (isTaskOpen) ? _navigateToTaskScreen : () {},
               )
             else
               Padding(
