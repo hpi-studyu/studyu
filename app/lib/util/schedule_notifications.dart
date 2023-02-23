@@ -16,19 +16,18 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     final task = studyNotification.taskInstance.task;
     final date = studyNotification.date;
     for (final reminder in task.schedule.reminders) {
+      // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
+      final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
       if (date.isSameDate(DateTime.now()) &&
           !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
         if (StudyNotifications.debug) {
           print(
-            '${DateTime.now()} Skip Notification #$currentId: '
-            '${task.title}, ${date.day}, $reminder, $notificationDetails, '
-            '${task.id}',
+            '${DateTime.now()} Skipped Notification #$currentId: ${task.title}, '
+                '$reminderTime, $notificationDetails, ${task.id}',
           );
         }
         continue;
       }
-      // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
-      final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
       zonedSchedule(
         currentId,
         task.title,
@@ -40,7 +39,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         androidAllowWhileIdle: true,
       );
       // DEBUG: Show test notifications
-      /*if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
+      if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
         await show(
           /*******************/
           currentId,
@@ -50,7 +49,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
           notificationDetails,
           payload: task.id,
         );
-      }*/
+      }
       // DEBUG: List scheduled notifications
       if (StudyNotifications.debug) {
         print(
@@ -65,17 +64,18 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 }
 
 Future<void> scheduleNotifications(BuildContext context) async {
-  if (StudyNotifications.debug) {
+  /*if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Schedule Notifications'),
       ),
     );
-  }
+  }*/
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
+  final body = AppLocalizations.of(context).study_notification_body;
   final studyNotifications =
       context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
 
@@ -98,7 +98,7 @@ Future<void> scheduleNotifications(BuildContext context) async {
   var id = 0;
   for (final StudyNotification notification in studyNotificationList) {
     final currentId = await notificationsPlugin.scheduleReminderForDate(
-        id, AppLocalizations.of(context).study_notification_body, notification, notificationDetails);
+        id, body, notification, notificationDetails);
     id = currentId;
   }
 }

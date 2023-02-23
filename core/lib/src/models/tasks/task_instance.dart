@@ -6,9 +6,15 @@ class TaskInstance {
 
   TaskInstance(this.task, this.taskInstanceId);
 
-  TaskInstance.fromInstanceId(this.taskInstanceId, DateTime now, StudySubject subject)
-      : task = subject.scheduleFor(now).firstWhere((element) => element.taskInstanceId == taskInstanceId).task;
+  factory TaskInstance.fromInstanceId(String taskInstanceId, DateTime now, StudySubject subject) {
+    final task = _taskFromInstanceId(taskInstanceId, now, subject);
+    return TaskInstance(task, taskInstanceId);
+  }
 
+  static Task _taskFromInstanceId(String id, DateTime now, StudySubject subject) {
+    return subject.scheduleFor(now).firstWhere((element) => element.taskInstanceId == id).task;
+  }
+  
   CompletionPeriod get completionPeriod =>
       task.schedule.completionPeriods.firstWhere((element) => element.id == taskInstanceId);
 }
