@@ -23,7 +23,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         if (StudyNotifications.debug) {
           print(
             '${DateTime.now()} Skipped Notification #$currentId: ${task.title}, '
-                '$reminderTime, $notificationDetails, ${task.id}',
+                '$reminderTime, ${studyNotification.taskInstance.id}',
           );
         }
         continue;
@@ -34,12 +34,12 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         body,
         reminderTime,
         notificationDetails,
-        payload: studyNotification.taskInstance.taskInstanceId,
+        payload: studyNotification.taskInstance.id,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
         androidAllowWhileIdle: true,
       );
       // DEBUG: Show test notifications
-      if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
+      /*if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
         await show(
           /*******************/
           currentId,
@@ -47,14 +47,14 @@ extension Reminders on FlutterLocalNotificationsPlugin {
           body,
           /*******************/
           notificationDetails,
-          payload: task.id,
+          payload: studyNotification.taskInstance.id,
         );
-      }
+      }*/
       // DEBUG: List scheduled notifications
       if (StudyNotifications.debug) {
         print(
           '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, '
-          '$reminderTime, $notificationDetails, ${task.id}',
+          '$reminderTime, ${studyNotification.taskInstance.id}',
         );
       }
       currentId++;
@@ -109,7 +109,7 @@ List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime da
     if (task.title == null || task.title.isEmpty) return [];
     for (final completionPeriod in task.schedule.completionPeriods) {
       TaskInstance taskInstance = TaskInstance(task, completionPeriod.id);
-      if (!subject.completedTaskInstanceForDay(taskInstance.taskInstanceId, taskInstance.completionPeriod, date)) {
+      if (!subject.completedTaskInstanceForDay(taskInstance.id, taskInstance.completionPeriod, date)) {
         taskNotifications.add(StudyNotification(taskInstance, date));
       }
     }

@@ -30,7 +30,7 @@ class StudyNotifications {
   final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
       StreamController<ReceivedNotification>.broadcast();
   final StreamController<String> selectNotificationStream = StreamController<String>.broadcast();
-  String _taskAlreadyCompleted;
+  String _taskCannotBeCompleted;
 
   static final NotificationValidators validator = NotificationValidators(false, false, false);
 
@@ -38,7 +38,7 @@ class StudyNotifications {
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
-    _taskAlreadyCompleted = AppLocalizations.of(context).task_already_completed;
+    _taskCannotBeCompleted = AppLocalizations.of(context).task_cannot_be_completed;
     // todo test permission requests
     _initNotificationsPlugin();
     _requestPermissions();
@@ -202,7 +202,7 @@ class StudyNotifications {
         navigatorKey.currentState.push(
           MaterialPageRoute(
             // todo change error "or not inside period"
-            builder: (_) => DashboardScreen(error: _taskAlreadyCompleted),
+            builder: (_) => DashboardScreen(error: _taskCannotBeCompleted),
           ),
         );
       }
