@@ -13,6 +13,16 @@ import '../main.dart';
 import '../routes.dart';
 import '../screens/study/tasks/task_screen.dart';
 
+class NotificationValidators {
+  bool didNotificationLaunchApp = false;
+  // do not launch notification action twice if user subscribes to a new study
+  bool wasNotificationActionHandled = false;
+  bool wasNotificationActionCompleted = false;
+
+  NotificationValidators(this.didNotificationLaunchApp,
+      this.wasNotificationActionHandled, this.wasNotificationActionCompleted);
+}
+
 class StudyNotifications {
   StudySubject subject;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -20,15 +30,15 @@ class StudyNotifications {
   final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
       StreamController<ReceivedNotification>.broadcast();
   final StreamController<String> selectNotificationStream = StreamController<String>.broadcast();
-  String taskAlreadyCompleted;
+  String _taskAlreadyCompleted;
 
-  // do not launch notification action twice if user subscribes to a new study
-  static bool wasNotificationActionHandled = false;
+  static final NotificationValidators validator = NotificationValidators(false, false, false);
+
   static const bool debug = true; //kDebugMode;
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
-    taskAlreadyCompleted = AppLocalizations.of(context).task_already_completed;
+    _taskAlreadyCompleted = AppLocalizations.of(context).task_already_completed;
     // todo test permission requests
     _initNotificationsPlugin();
     _requestPermissions();
@@ -46,8 +56,9 @@ class StudyNotifications {
     final NotificationAppLaunchDetails notificationAppLaunchDetails = !kIsWeb && Platform.isLinux
         ? null
         : await notifications.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    if ((notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) && !wasNotificationActionHandled) {
-      wasNotificationActionHandled = true;
+    StudyNotifications.validator.didNotificationLaunchApp = notificationAppLaunchDetails?.didNotificationLaunchApp ?? false;
+    if (StudyNotifications.validator.didNotificationLaunchApp && !StudyNotifications.validator.wasNotificationActionHandled) {
+      StudyNotifications.validator.wasNotificationActionHandled = true;
       final selectedNotificationPayload = notificationAppLaunchDetails.notificationResponse.payload;
       notifications.handleNotificationResponse(selectedNotificationPayload);
     }
@@ -179,7 +190,8 @@ class StudyNotifications {
     );
 
     if (taskToRun != null) {
-      if (!completed) {
+      final isInsidePeriod = taskToRun.completionPeriod.contains(StudyUTimeOfDay.now());
+      if (!completed && isInsidePeriod) {
         await navigatorKey.currentState.push(
           MaterialPageRoute(
             builder: (_) => TaskScreen(taskInstance: taskToRun),
@@ -189,7 +201,8 @@ class StudyNotifications {
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(
-            builder: (_) => DashboardScreen(error: taskAlreadyCompleted),
+            // todo change error "or not inside period"
+            builder: (_) => DashboardScreen(error: _taskAlreadyCompleted),
           ),
         );
       }
