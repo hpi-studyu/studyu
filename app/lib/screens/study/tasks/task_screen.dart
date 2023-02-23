@@ -84,7 +84,7 @@ class _TaskScreenState extends State<TaskScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.watch<AppState>().activeSubject.study.observations.first.title),
+        title: Text(taskInstance.task.title ?? ''),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

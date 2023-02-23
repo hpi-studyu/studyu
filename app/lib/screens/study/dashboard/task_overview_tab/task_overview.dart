@@ -42,7 +42,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                 Icon(Icons.access_time, color: theme.primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  taskInstance.completionPeriod.toString(),
+                  taskInstance.completionPeriod.formatted(),
                   style: theme.textTheme.titleSmall.copyWith(fontSize: 16, color: theme.primaryColor),
                 ),
               ],

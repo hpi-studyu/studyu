@@ -41,6 +41,8 @@ class CompletionPeriod {
 
   Map<String, dynamic> toJson() => _$CompletionPeriodToJson(this);
 
+  String formatted() => '$unlockTime - $lockTime';
+
   @override
   String toString() => '$id: $unlockTime - $lockTime';
 
