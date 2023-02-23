@@ -32,6 +32,7 @@ const String studyEditEnrollmentRouteName = 'studyEditEnrollment';
 const String studyEditInterventionsRouteName = 'studyEditInterventions';
 const String studyEditInterventionRouteName = 'studyEditIntervention';
 const String studyEditMeasurementsRouteName = 'studyEditMeasurements';
+const String studyEditReportsRouteName = 'studyEditReports';
 const String studyEditMeasurementRouteName = 'studyEditMeasurement';
 const String studyTestRouteName = 'studyTest';
 const String studyRecruitRouteName = 'studyRecruit';

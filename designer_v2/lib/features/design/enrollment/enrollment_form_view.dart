@@ -70,7 +70,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                   ))
                               .toList()
                               .separatedBy(() => const SizedBox(height: 8.0)),
-                        )),
+                        )
+                    ),
                   ],
                   columnWidths: const {
                     0: FixedColumnWidth(130.0),

@@ -59,6 +59,7 @@ class StudyDesignNav {
         enrollment(studyId),
         interventions(studyId),
         measurements(studyId),
+        reports(studyId),
       ];
 
   static info(studyId) =>
@@ -69,4 +70,6 @@ class StudyDesignNav {
       index: 2, title: tr.navlink_study_design_interventions, intent: RoutingIntents.studyEditInterventions(studyId));
   static measurements(studyId) => NavbarTab(
       index: 3, title: tr.navlink_study_design_measurements, intent: RoutingIntents.studyEditMeasurements(studyId));
+  static reports(studyId) => NavbarTab(
+      index: 4, title: "Reports", intent: RoutingIntents.studyEditReports(studyId));
 }

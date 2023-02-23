@@ -94,7 +94,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                       children: [
                         const SizedBox(width: 35.0),
                         Container(
-                          constraints: const BoxConstraints(maxWidth: 550),
+                          constraints: const BoxConstraints(maxWidth: 750),
                           child: TabbedNavbar(
                             tabs: widget.tabsSubnav!,
                             selectedTab: widget.selectedTabSubnav,

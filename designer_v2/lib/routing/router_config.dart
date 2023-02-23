@@ -29,6 +29,7 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
+import 'package:studyu_designer_v2/features/design/reports/reports_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/design/study_form_scaffold.dart';
 import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
@@ -262,6 +263,22 @@ class RouterConf {
                 ));
               }),
         ]),
+    GoRoute(
+        path: "/studies/:${RouteParams.studyId}/edit/reports",
+        name: studyEditReportsRouteName,
+        pageBuilder: (context, state) {
+          final studyId = state.params[RouteParams.studyId]!;
+          return MaterialPage(
+              key: RouterKeys.studyKey,
+              child: StudyScaffold(
+                studyId: studyId,
+                tabsSubnav: StudyDesignNav.tabs(studyId),
+                selectedTab: StudyNav.edit(studyId),
+                selectedTabSubnav: StudyDesignNav.reports(studyId),
+                body: StudyDesignReportsFormView(studyId),
+                layoutType: SingleColumnLayoutType.boundedNarrow,
+              ));
+        }),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/test",
         name: studyTestRouteName,

@@ -13,6 +13,8 @@ import 'package:studyu_designer_v2/features/design/interventions/interventions_f
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
+import 'package:studyu_designer_v2/features/design/reports/reports_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/reports/reports_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -61,6 +63,14 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
 
   late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
     formData: MeasurementsFormData.fromStudy(formData!),
+    delegate: this,
+    study: formData!,
+    router: router,
+    validationSet: validationSet,
+  );
+
+  late final ReportsFormViewModel reportsFormViewModel = ReportsFormViewModel(
+    formData: ReportsFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
     router: router,
