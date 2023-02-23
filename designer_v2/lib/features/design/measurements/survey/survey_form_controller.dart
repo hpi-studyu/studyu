@@ -1,16 +1,16 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/domain/schedule.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
-import 'package:studyu_designer_v2/domain/schedule.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -36,11 +36,13 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
   // - Form fields
 
   final FormControl<MeasurementID> measurementIdControl = FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<MeasurementID> instanceIdControl = FormControl(value: const Uuid().v4()); // hidden
   final FormControl<String> surveyTitleControl = FormControl(value: MeasurementSurveyFormData.kDefaultTitle);
   final FormControl<String> surveyIntroTextControl = FormControl(value: '');
   final FormControl<String> surveyOutroTextControl = FormControl(value: '');
 
   MeasurementID get measurementId => measurementIdControl.value!;
+  MeasurementID get instanceId => instanceIdControl.value!;
 
   @override
   FormValidationConfigSet get validationConfig => {
@@ -74,6 +76,7 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
 
   @override
   void setControlsFrom(MeasurementSurveyFormData data) {
+    instanceIdControl.value = data.instanceId;
     measurementIdControl.value = data.measurementId;
     surveyTitleControl.value = data.title;
     surveyIntroTextControl.value = data.introText ?? '';
@@ -87,6 +90,7 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
   MeasurementSurveyFormData buildFormData() {
     final data = MeasurementSurveyFormData(
       measurementId: measurementId, // required hidden
+      instanceId: instanceId,
       title: surveyTitleControl.value!, // required
       introText: surveyIntroTextControl.value,
       outroText: surveyOutroTextControl.value,

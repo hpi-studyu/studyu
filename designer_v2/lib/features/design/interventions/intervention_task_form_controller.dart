@@ -1,15 +1,16 @@
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/domain/schedule.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/task.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:uuid/uuid.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/domain/schedule.dart';
 
 class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTaskFormData> with WithScheduleControls {
   InterventionTaskFormViewModel({
@@ -23,11 +24,13 @@ class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTas
   // - Form fields
 
   final FormControl<TaskID> taskIdControl = FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<InstanceID> instanceIdControl = FormControl(value: const Uuid().v4()); // hidden
   final FormControl<String> taskTitleControl = FormControl(value: InterventionTaskFormData.kDefaultTitle);
   final FormControl<String> taskDescriptionControl = FormControl();
   final FormControl<bool> markAsCompletedControl = FormControl(value: true);
 
   TaskID get taskId => taskIdControl.value!;
+  TaskID get instanceId => instanceIdControl.value!;
 
   @override
   FormValidationConfigSet get validationConfig => {
@@ -70,6 +73,7 @@ class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTas
       timeLockEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
       hasReminder: hasReminderControl.value!, // required
       reminderTime: reminderTimeControl.value?.toStudyUTimeOfDay(),
+      instanceId: instanceId,
     );
   }
 

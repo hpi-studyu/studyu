@@ -27,6 +27,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
+    /*
+    final hasRecovered = await recoverSupabaseSession();
+    if (!hasRecovered)
+      await Supabase.instance.client.auth.recoverSession(widget.sessionString);
+    if (widget.sessionString == null)
+      initStudy();
+    */
     if (widget.sessionString != null &&
         widget.sessionString.isNotEmpty &&
         Supabase.instance.client.auth.currentSession == null) {

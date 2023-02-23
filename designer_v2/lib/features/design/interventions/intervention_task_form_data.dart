@@ -18,6 +18,7 @@ class InterventionTaskFormData extends IFormDataWithSchedule {
     super.timeLockEnd,
     required super.hasReminder,
     super.reminderTime,
+    required super.instanceId,
   });
 
   final TaskID taskId;
@@ -37,6 +38,7 @@ class InterventionTaskFormData extends IFormDataWithSchedule {
       timeLockEnd: task.schedule.restrictedTimeEnd,
       hasReminder: task.schedule.hasReminder,
       reminderTime: task.schedule.reminderTime,
+      instanceId: task.schedule.instanceId,
     );
   }
 
@@ -60,6 +62,7 @@ class InterventionTaskFormData extends IFormDataWithSchedule {
       timeLockEnd: timeLockEnd,
       hasReminder: hasReminder,
       reminderTime: reminderTime,
+      instanceId: instanceId,
     );
   }
 }

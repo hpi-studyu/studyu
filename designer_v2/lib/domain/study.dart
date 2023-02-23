@@ -1,7 +1,7 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
@@ -38,6 +38,7 @@ extension StudyActionTypeFormatted on StudyActionType {
 
 typedef StudyID = String;
 typedef MeasurementID = String;
+typedef InstanceID = String;
 
 typedef InterventionProvider = Intervention? Function(String id);
 

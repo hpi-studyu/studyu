@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
 
-class AppState {
+class AppState with ChangeNotifier {
   Study selectedStudy;
   List<Intervention> selectedInterventions;
   StudySubject activeSubject;
@@ -26,6 +27,6 @@ class AppState {
     if (activeSubject.study.id == study.id) {
       activeSubject.study = study;
     }
-    // notifyListeners();
+    notifyListeners();
   }
 }

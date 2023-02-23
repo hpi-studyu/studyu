@@ -28,7 +28,10 @@ extension TimeOfDayX on TimeOfDay {
   }
 }
 
+// todo make this compatible with multiple completionPeriods
 extension ScheduleX on Schedule {
+  String get instanceId => completionPeriods[0].id;
+
   static final unrestrictedTime = [
     StudyUTimeOfDay(hour: 0, minute: 0),
     StudyUTimeOfDay(hour: 23, minute: 59),

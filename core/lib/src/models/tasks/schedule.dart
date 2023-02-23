@@ -42,7 +42,7 @@ class CompletionPeriod {
   Map<String, dynamic> toJson() => _$CompletionPeriodToJson(this);
 
   @override
-  String toString() => '$unlockTime - $lockTime';
+  String toString() => '$id: $unlockTime - $lockTime';
 
   bool contains(StudyUTimeOfDay time) {
     return unlockTime.earlierThan(time) && time.earlierThan(lockTime);

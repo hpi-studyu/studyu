@@ -181,7 +181,7 @@ class StudyNotifications {
 
   Future handleNotificationResponse(String taskInstanceId) async {
     final nowDt = DateTime.now();
-    final taskToRun = TaskInstance.fromInstanceId(taskInstanceId, nowDt, subject);
+    final taskToRun = TaskInstance.fromInstanceId(taskInstanceId, subject: subject);
 
     final completed = subject.completedTaskInstanceForDay(
       taskToRun.task.id,
