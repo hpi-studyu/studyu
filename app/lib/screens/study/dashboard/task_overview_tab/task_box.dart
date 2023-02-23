@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/notifications.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -34,16 +36,22 @@ class _TaskBoxState extends State<TaskBox> {
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
-    // if (mounted) scheduleNotifications(context);
     // todo nur loading screen zeigen, wenn study phase abgeschlossen wurde, damit dashboard neu lädt
-    Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
+    // i.e. es ist erster tag einer neuen phase
+    //context.read<AppState>().activeSubject.progress
+    //context.read<AppState>().selectedStudy.schedule.
+    if (StudyNotifications.validator.wasNotificationActionHandled &&
+        !StudyNotifications.validator.wasNotificationActionCompleted) {
+      StudyNotifications.validator.wasNotificationActionCompleted = true;
+      Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
+    } else {
+      if (mounted) scheduleNotifications(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final completed = context
-        .watch<AppState>()
-        .activeSubject
+    final completed = context.watch<AppState>().activeSubject
         .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod = widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
