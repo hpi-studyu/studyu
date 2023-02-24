@@ -3,7 +3,6 @@ name: Deploy apps
 on:
   push:
     branches:
-      - dev
       - dev-designer_v2
   workflow_dispatch:
 
