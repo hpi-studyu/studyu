@@ -1,3 +1,7 @@
+## 1.4.0-dev.2
+
+ - **FIX**: preserve app language on reload. ([3603cd02](https://github.com/hpi-studyu/studyu/commit/3603cd029f1e40c660d843481bfe370a1240075d))
+
 ## 1.4.0-dev.1
 
  - **FIX**: merge issues. ([8a560314](https://github.com/hpi-studyu/studyu/commit/8a560314c14fcf3e37e9d40f7129a4db483e8a8a))

@@ -1,3 +1,16 @@
+## 1.1.0-dev.2
+
+ - **FIX**: designerV2 TaskInstance support for single completionperiods to restore live preview functionality. ([6a85f162](https://github.com/hpi-studyu/studyu/commit/6a85f16252b91f9d8dc3b92f7deb00fef293f032))
+ - **FIX**: notification have wrong ids. ([144b8d7d](https://github.com/hpi-studyu/studyu/commit/144b8d7dc834e0b0d38f5ae4a0f658300f4af073))
+ - **FIX**: do not require interventions to have at least one task anymore. ([2a656d57](https://github.com/hpi-studyu/studyu/commit/2a656d57d5d9d0750432c593e1d3e68fea8b25fa))
+ - **FIX**: pointerinterceptor settings. ([d81c5626](https://github.com/hpi-studyu/studyu/commit/d81c5626adad673f6c64883984eae1c9f05d1dad))
+ - **FIX**: pointerinterceptor test help modal. ([5f75eaac](https://github.com/hpi-studyu/studyu/commit/5f75eaacc884d3eaef0b9be40a375568c9ed912a))
+ - **FIX**: settings dialog. ([a8aba5b6](https://github.com/hpi-studyu/studyu/commit/a8aba5b62bcd45c51af21c194533e675e91d45c0))
+ - **FIX**: pointerinterceptor for survey. ([077290c0](https://github.com/hpi-studyu/studyu/commit/077290c016750df836be8765c82de0497cf35faf))
+ - **FEAT**: study reports sidesheet. ([456cc9f9](https://github.com/hpi-studyu/studyu/commit/456cc9f9a4c50aabb5c51da4c397edffaede4652))
+ - **FEAT**: implement study reports framework. ([5b39410b](https://github.com/hpi-studyu/studyu/commit/5b39410ba775a558be9f5b507dd4fef9545720f7))
+ - **FEAT**: rename TimedTask to TaskInstance and make it mandatory. ([42f4ee14](https://github.com/hpi-studyu/studyu/commit/42f4ee14dd1d30c0df11b8e3e221c842c3fcc8af))
+
 ## 1.1.0-dev.1
 
  - **FIX**: merge issues. ([8a560314](https://github.com/hpi-studyu/studyu/commit/8a560314c14fcf3e37e9d40f7129a4db483e8a8a))

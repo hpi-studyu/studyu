@@ -1,3 +1,13 @@
+## 4.0.0-dev.2
+
+ - **FIX**: designerV2 TaskInstance support for single completionperiods to restore live preview functionality. ([45792baf](https://github.com/hpi-studyu/studyu/commit/45792bafb0291914228ed4af058c821eb6be2f6d))
+ - **FIX**: designerV2 TaskInstance support for single completionperiods to restore live preview functionality. ([6a85f162](https://github.com/hpi-studyu/studyu/commit/6a85f16252b91f9d8dc3b92f7deb00fef293f032))
+ - **FIX**: notification have wrong ids. ([144b8d7d](https://github.com/hpi-studyu/studyu/commit/144b8d7dc834e0b0d38f5ae4a0f658300f4af073))
+ - **FIX**: task instance named constructor. ([c88094f1](https://github.com/hpi-studyu/studyu/commit/c88094f1d7eb007f1926c2f7281b7d89a4a4dc3d))
+ - **FIX**: only get selected intervention tasks for completed check. ([5f2ae32d](https://github.com/hpi-studyu/studyu/commit/5f2ae32d743c210fa4c2e780a0ec73b76d177360))
+ - **FIX**: pointerinterceptor for survey. ([077290c0](https://github.com/hpi-studyu/studyu/commit/077290c016750df836be8765c82de0497cf35faf))
+ - **FEAT**: rename TimedTask to TaskInstance and make it mandatory. ([42f4ee14](https://github.com/hpi-studyu/studyu/commit/42f4ee14dd1d30c0df11b8e3e221c842c3fcc8af))
+
 ## 4.0.0-dev.1
 
  - **FIX**: merge issues. ([8a560314](https://github.com/hpi-studyu/studyu/commit/8a560314c14fcf3e37e9d40f7129a4db483e8a8a))
