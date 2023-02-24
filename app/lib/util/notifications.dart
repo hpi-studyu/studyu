@@ -10,7 +10,6 @@ import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
 
 import '../main.dart';
-import '../routes.dart';
 import '../screens/study/tasks/task_screen.dart';
 
 class NotificationValidators {
@@ -197,7 +196,6 @@ class StudyNotifications {
             builder: (_) => TaskScreen(taskInstance: taskToRun),
           ),
         );
-        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(

@@ -46,14 +46,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
-    final preview = Preview(
-      widget.queryParameters ?? {},
-      context.watch<AppLanguage>(),
-    );
-
-    // print("[PreviewApp]: InitStudy called: " + widget.queryParameters.toString());
-
-    if (preview.containsQueryPair('mode', 'preview')) {
+    if (widget.queryParameters.containsKey('mode') && widget.queryParameters['mode'] == 'preview') {
+      var lang = context.watch<AppLanguage>();
+      final preview = Preview(
+        widget.queryParameters,
+        lang,
+      );
       final iFrameHelper = IFrameHelper();
       state.isPreview = true;
       await preview.init();
