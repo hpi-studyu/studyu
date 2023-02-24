@@ -51,7 +51,9 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
-    final completed = context.watch<AppState>().activeSubject
+    final completed = context
+        .watch<AppState>()
+        .activeSubject
         .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod = widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());

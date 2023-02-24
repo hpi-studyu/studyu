@@ -33,5 +33,4 @@ class ReportsFormData implements IStudyFormData {
 
   @override
   FormDataID get id => throw UnimplementedError();
-
 }

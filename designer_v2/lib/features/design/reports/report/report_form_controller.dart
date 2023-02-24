@@ -8,7 +8,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
     super.formData,
     //super.delegate,
     //super.validationSet = StudyFormValidationSet.draft,
-});
+  });
 
   get sectionId => '';
 
@@ -39,8 +39,8 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: 'Create',
-    FormMode.readonly: 'readonly',
-    FormMode.edit: 'edit',
-  };
+        FormMode.create: 'Create',
+        FormMode.readonly: 'readonly',
+        FormMode.edit: 'edit',
+      };
 }

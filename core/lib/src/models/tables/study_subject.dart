@@ -213,9 +213,13 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// completionPeriods on a given day
   bool completedTaskForDay(String taskId, DateTime dateTime) {
     return [...selectedInterventions.expand((e) => e.tasks), ...study.observations]
-        .where((task) => task.id == taskId).single.schedule.completionPeriods.any(
+        .where((task) => task.id == taskId)
+        .single
+        .schedule
+        .completionPeriods
+        .any(
           (period) => completedTaskInstanceForDay(taskId, period, dateTime),
-    );
+        );
   }
 
   int completedTasksFor(Task task) => resultsFor(task.id).length;

@@ -34,60 +34,55 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ReactiveFormConsumer(
-                // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
-                // By default, ReactiveFormArray only updates when adding/removing controls
+                  // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
+                  // By default, ReactiveFormArray only updates when adding/removing controls
                   builder: (context, form, child) {
-                    return ReactiveFormArray(
-                      formArray: formViewModel.reportsArray,
-                      builder: (context, formArray, child) {
-                        return FormArrayTable<ReportItemFormViewModel>(
-                          control: formViewModel.reportsArray,
-                          items: items,
-                          // onSelectItem: formViewModel.onSelectItem,
-                          onSelectItem: (viewModel) {
-                            final routeArgs = formViewModel.buildResultItemFormRouteArgs(viewModel);
-                            _showResultItemSidesheetWithArgs(routeArgs, context, ref);
-                          },
-                          getActionsAt: (viewModel, _) =>
-                              formViewModel.availablePopupActions(viewModel),
-                          // onNewItem: formViewModel.onNewItem,
-                          onNewItem: () {
-                            final routeArgs = formViewModel.buildNewResultItemFormRouteArgs();
-                            _showResultItemSidesheetWithArgs(routeArgs, context, ref);
-                          },
-                          onNewItemLabel: 'New Report',
-                          //tr.form_array_reports_new,
-                          rowTitle: (viewModel) =>
-                          viewModel.formData?.title ?? '',
-                          sectionTitle: 'Reports',
-                          //tr.form_array_reports,
-                          sectionTitleDivider: false,
-                          emptyIcon: Icons.content_paste_off_rounded,
-                          emptyTitle: 'Report Title',
-                          //tr.form_array_reports_empty_title,
-                          emptyDescription: 'Report Description',
-                          //tr.form_array_reports_empty_description,
-                          hideLeadingTrailingWhenEmpty: true,
-                          rowPrefix: (context, viewModel, rowIdx) {
-                            return Row(
-                              children: [
-                                Text(
-                                  ''.alphabetLetterFrom(rowIdx).toUpperCase(),
-                                  style: TextStyle(
-                                    color: ThemeConfig
-                                        .dropdownMenuItemTheme(theme)
-                                        .iconTheme!
-                                        .color,
-                                  ),
-                                ),
-                                const SizedBox(width: 16.0),
-                              ],
-                            );
-                          },
+                return ReactiveFormArray(
+                  formArray: formViewModel.reportsArray,
+                  builder: (context, formArray, child) {
+                    return FormArrayTable<ReportItemFormViewModel>(
+                      control: formViewModel.reportsArray,
+                      items: items,
+                      // onSelectItem: formViewModel.onSelectItem,
+                      onSelectItem: (viewModel) {
+                        final routeArgs = formViewModel.buildResultItemFormRouteArgs(viewModel);
+                        _showResultItemSidesheetWithArgs(routeArgs, context, ref);
+                      },
+                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
+                      // onNewItem: formViewModel.onNewItem,
+                      onNewItem: () {
+                        final routeArgs = formViewModel.buildNewResultItemFormRouteArgs();
+                        _showResultItemSidesheetWithArgs(routeArgs, context, ref);
+                      },
+                      onNewItemLabel: 'New Report',
+                      //tr.form_array_reports_new,
+                      rowTitle: (viewModel) => viewModel.formData?.title ?? '',
+                      sectionTitle: 'Reports',
+                      //tr.form_array_reports,
+                      sectionTitleDivider: false,
+                      emptyIcon: Icons.content_paste_off_rounded,
+                      emptyTitle: 'Report Title',
+                      //tr.form_array_reports_empty_title,
+                      emptyDescription: 'Report Description',
+                      //tr.form_array_reports_empty_description,
+                      hideLeadingTrailingWhenEmpty: true,
+                      rowPrefix: (context, viewModel, rowIdx) {
+                        return Row(
+                          children: [
+                            Text(
+                              ''.alphabetLetterFrom(rowIdx).toUpperCase(),
+                              style: TextStyle(
+                                color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                          ],
                         );
                       },
                     );
-                  }),
+                  },
+                );
+              }),
             ],
           ),
         );
@@ -96,10 +91,10 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
   }
 
   _showResultItemSidesheetWithArgs(
-      ReportItemFormRouteArgs routeArgs,
-      BuildContext context,
-      WidgetRef ref,
-      ) {
+    ReportItemFormRouteArgs routeArgs,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final formViewModel = ref.read(reportItemFormViewModelProvider(routeArgs));
 
     showFormSideSheet<ReportItemFormViewModel>(

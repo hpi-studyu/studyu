@@ -10,8 +10,7 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class ReportsFormViewModel extends FormViewModel<ReportsFormData>
-implements
-    IProviderArgsResolver<ReportItemFormViewModel, ReportItemFormRouteArgs> {
+    implements IProviderArgsResolver<ReportItemFormViewModel, ReportItemFormRouteArgs> {
   ReportsFormViewModel({
     required this.study,
     required this.router,
@@ -28,13 +27,10 @@ implements
   final FormControl<ReportSpecification> reportTypeControl = FormControl();
 
   final FormArray reportsArray = FormArray([]);
-  late final reportsCollection =
-  FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData>([], reportsArray);
+  late final reportsCollection = FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData>([], reportsArray);
 
   @override
-  FormGroup get form => FormGroup({
-    'report_specification': reportsArray
-  });
+  FormGroup get form => FormGroup({'report_specification': reportsArray});
 
   void onSelectItem(ReportItemFormViewModel reportFormViewModel) {
     // TODO: open sidesheet programmatically
@@ -79,19 +75,10 @@ implements
   }
 
   ReportItemFormRouteArgs buildNewResultItemFormRouteArgs() {
-    return ReportItemFormRouteArgs(
-        studyId: study.id,
-        sectionId: ''
-    );
+    return ReportItemFormRouteArgs(studyId: study.id, sectionId: '');
   }
 
   ReportItemFormRouteArgs buildResultItemFormRouteArgs(ReportItemFormViewModel viewModel) {
-    return ReportItemFormRouteArgs(
-        studyId: study.id,
-        sectionId: ''
-    );
+    return ReportItemFormRouteArgs(studyId: study.id, sectionId: '');
   }
-
-
-
 }

@@ -18,8 +18,8 @@ class NotificationValidators {
   bool wasNotificationActionHandled = false;
   bool wasNotificationActionCompleted = false;
 
-  NotificationValidators(this.didNotificationLaunchApp,
-      this.wasNotificationActionHandled, this.wasNotificationActionCompleted);
+  NotificationValidators(
+      this.didNotificationLaunchApp, this.wasNotificationActionHandled, this.wasNotificationActionCompleted);
 }
 
 class StudyNotifications {
@@ -55,8 +55,10 @@ class StudyNotifications {
     final NotificationAppLaunchDetails notificationAppLaunchDetails = !kIsWeb && Platform.isLinux
         ? null
         : await notifications.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    StudyNotifications.validator.didNotificationLaunchApp = notificationAppLaunchDetails?.didNotificationLaunchApp ?? false;
-    if (StudyNotifications.validator.didNotificationLaunchApp && !StudyNotifications.validator.wasNotificationActionHandled) {
+    StudyNotifications.validator.didNotificationLaunchApp =
+        notificationAppLaunchDetails?.didNotificationLaunchApp ?? false;
+    if (StudyNotifications.validator.didNotificationLaunchApp &&
+        !StudyNotifications.validator.wasNotificationActionHandled) {
       StudyNotifications.validator.wasNotificationActionHandled = true;
       final selectedNotificationPayload = notificationAppLaunchDetails.notificationResponse.payload;
       notifications.handleNotificationResponse(selectedNotificationPayload);

@@ -23,7 +23,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         if (StudyNotifications.debug) {
           print(
             '${DateTime.now()} Skipped Notification #$currentId: ${task.title}, '
-                '$reminderTime, ${studyNotification.taskInstance.id}',
+            '$reminderTime, ${studyNotification.taskInstance.id}',
           );
         }
         continue;
@@ -97,8 +97,7 @@ Future<void> scheduleNotifications(BuildContext context) async {
   }
   var id = 0;
   for (final StudyNotification notification in studyNotificationList) {
-    final currentId = await notificationsPlugin.scheduleReminderForDate(
-        id, body, notification, notificationDetails);
+    final currentId = await notificationsPlugin.scheduleReminderForDate(id, body, notification, notificationDetails);
     id = currentId;
   }
 }
