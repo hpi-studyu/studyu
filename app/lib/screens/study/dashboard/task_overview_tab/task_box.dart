@@ -43,7 +43,7 @@ class _TaskBoxState extends State<TaskBox> {
     if (StudyNotifications.validator.wasNotificationActionHandled &&
         !StudyNotifications.validator.wasNotificationActionCompleted) {
       StudyNotifications.validator.wasNotificationActionCompleted = true;
-      Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
+      if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
     } else {
       if (mounted) scheduleNotifications(context);
     }

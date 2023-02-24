@@ -247,6 +247,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.0"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      sha256: aeb0b80a8b3709709c9cc496cdc027c5b3216796bc0af0ce1007eaf24464fd4c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -414,11 +422,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
-  lint:
-    dependency: "direct dev"
+  lints:
+    dependency: transitive
     description:
-      name: lint
-      sha256: "3e9343b1cededcfb1e8b40d0dbd3592b7a1c6c0121545663a991433390c2bc97"
+      name: lints
+      sha256: "5e4a9cd06d447758280a8ac2405101e0e2094d2a1dbdd3756aec3fe7775ba593"
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
@@ -800,7 +808,7 @@ packages:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.4.0-dev.2"
+    version: "1.4.0-dev.3"
   supabase:
     dependency: "direct main"
     description:
@@ -842,7 +850,7 @@ packages:
     source: hosted
     version: "2.0.0"
   timezone:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: timezone
       sha256: "24c8fcdd49a805d95777a39064862133ff816ebfffe0ceff110fb5960e557964"

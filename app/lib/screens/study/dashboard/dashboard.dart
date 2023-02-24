@@ -16,7 +16,7 @@ import 'task_overview_tab/task_overview.dart';
 class DashboardScreen extends StatefulWidget {
   final String error;
 
-  const DashboardScreen({this.error});
+  const DashboardScreen({Key key, this.error}) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();

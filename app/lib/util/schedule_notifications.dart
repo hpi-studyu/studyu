@@ -82,7 +82,7 @@ Future<void> scheduleNotifications(BuildContext context) async {
   final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
 
-  final notificationDetails = NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
+  const notificationDetails = NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
   final List<StudyNotification> studyNotificationList = [];
 
   for (int index = 0; index <= 3; index++) {

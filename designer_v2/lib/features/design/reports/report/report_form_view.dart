@@ -21,7 +21,7 @@ class ReportItemFormView extends StatelessWidget {
                   label: 'ReportItemTitle',
                   labelHelpText: 'ReportItemTooltip',
                   input: Row(
-                      children: [
+                      children: const [
                         Text("Hi"),
                       ]
                   )

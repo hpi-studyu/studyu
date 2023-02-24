@@ -26,8 +26,9 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^1.0.4
   grizzly_distuv: ^1.0.0
+  timezone: ^0.9.1
+  flutter_timezone: ^1.0.4
   intersperse: ^2.0.0
   intl: ^0.17.0 # flutter_localizations sdk
   material_design_icons_flutter: ^6.0.7096
@@ -52,7 +53,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.11.0
   flutter_test:
     sdk: flutter
-  lint: ^2.0.1
+  flutter_lints: ^2.0.1
 
 flutter_icons:
   image_path: 'assets/images/icon.png'
