@@ -1,3 +1,7 @@
+## 1.4.0-dev.3
+
+ - **FIX**: add .env.staging to pubignore. ([4147cf94](https://github.com/hpi-studyu/studyu/commit/4147cf942e09bd2e86d6d6e96e5fe4da09182adc))
+
 ## 1.4.0-dev.2
 
  - **FIX**: preserve app language on reload. ([3603cd02](https://github.com/hpi-studyu/studyu/commit/3603cd029f1e40c660d843481bfe370a1240075d))

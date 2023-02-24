@@ -1,3 +1,7 @@
+## 2.0.0-dev.3
+
+ - Update a dependency to the latest release.
+
 ## 2.0.0-dev.2
 
  - **FIX**: didChangeDependencies executing twice on startup. ([9d33caf7](https://github.com/hpi-studyu/studyu/commit/9d33caf7c1f834a336cb962931150f96baed86d9))

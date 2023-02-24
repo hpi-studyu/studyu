@@ -1,3 +1,7 @@
+## 1.1.0-dev.3
+
+ - Update a dependency to the latest release.
+
 ## 1.1.0-dev.2
 
  - **FIX**: designerV2 TaskInstance support for single completionperiods to restore live preview functionality. ([6a85f162](https://github.com/hpi-studyu/studyu/commit/6a85f16252b91f9d8dc3b92f7deb00fef293f032))
