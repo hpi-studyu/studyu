@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
 
@@ -198,6 +199,7 @@ class StudyNotifications {
             builder: (_) => TaskScreen(taskInstance: taskToRun),
           ),
         );
+        navigatorKey.currentState.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
       } else {
         navigatorKey.currentState.push(
           MaterialPageRoute(

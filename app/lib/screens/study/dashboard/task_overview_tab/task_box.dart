@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studyu_app/routes.dart';
-import 'package:studyu_app/util/notifications.dart';
-import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -36,24 +33,26 @@ class _TaskBoxState extends State<TaskBox> {
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
-    // todo nur loading screen zeigen, wenn study phase abgeschlossen wurde, damit dashboard neu lädt
-    // i.e. es ist erster tag einer neuen phase
+    //if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
+
+    // todo only show loading screen if new phase has started to show updated dashboard
+    // i.e. it is first day of a new phase
+    // redirect to loading screen also happens after notification at notifications.dart:202
+
     //context.read<AppState>().activeSubject.progress
     //context.read<AppState>().selectedStudy.schedule.
-    if (StudyNotifications.validator.wasNotificationActionHandled &&
+    /*if (StudyNotifications.validator.wasNotificationActionHandled &&
         !StudyNotifications.validator.wasNotificationActionCompleted) {
       StudyNotifications.validator.wasNotificationActionCompleted = true;
       if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
     } else {
       if (mounted) scheduleNotifications(context);
-    }
+    }*/
   }
 
   @override
   Widget build(BuildContext context) {
-    final completed = context
-        .watch<AppState>()
-        .activeSubject
+    final completed = context.watch<AppState>().activeSubject
         .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod = widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
@@ -68,15 +67,13 @@ class _TaskBoxState extends State<TaskBox> {
               child: ListTile(
                 leading: widget.icon,
                 title: Text(widget.taskInstance.task.title ?? ''),
-                onTap: (isTaskOpen) ? _navigateToTaskScreen : () {},
+                onTap: isTaskOpen ? _navigateToTaskScreen : () {},
               ),
             ),
-            if (widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now()) ||
-                context.read<AppState>().isPreview ||
-                completed)
+            if (isInsidePeriod || isPreview || completed)
               RoundCheckbox(
                 value: completed, //_isCompleted,
-                onChanged: (value) => (isTaskOpen) ? _navigateToTaskScreen : () {},
+                onChanged: (value) => isTaskOpen ? _navigateToTaskScreen() : () {},
               )
             else
               Padding(
