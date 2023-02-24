@@ -74,7 +74,6 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
     delegate: this,
     study: formData!,
     router: router,
-    validationSet: validationSet,
   );
 
   late final InterventionsFormViewModel interventionsFormViewModel = InterventionsFormViewModel(

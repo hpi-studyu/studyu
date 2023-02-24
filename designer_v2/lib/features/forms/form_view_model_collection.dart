@@ -13,7 +13,7 @@ typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> = bool
 class FormViewModelNotFoundException implements Exception {}
 
 /// Wrapper around a list of [ManagedFormViewModel]s where each [FormViewModel.form]
-/// corresponds to a [FormGroup] in a [FormArray] & is automatically synchronized
+/// corresponds to a [FormGroup] in a [FormArray] and is automatically synchronized
 ///
 /// Enables reactive re-rendering of forms containing a [FormArray] that is
 /// derived from a list of [FormViewModel]s

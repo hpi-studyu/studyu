@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/features/design/interventions/intervention_ta
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/reports/report/report_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/reports_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
@@ -86,6 +87,12 @@ final surveyQuestionFormViewModelProvider =
 final reportsFormViewModelProvider =
 Provider.autoDispose.family<ReportsFormViewModel, StudyID>((ref, studyId) {
   return ref.watch(studyFormViewModelProvider(studyId)).reportsFormViewModel;
+});
+
+final reportItemFormViewModelProvider =
+Provider.autoDispose.family<ReportItemFormViewModel, ReportItemFormRouteArgs>((ref, args) {
+  final owner = ref.watch(reportsFormViewModelProvider(args.studyId));
+  return owner.provide(args);
 });
 
 // - Validators
