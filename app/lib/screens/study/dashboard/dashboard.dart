@@ -105,7 +105,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     showAboutDialog(
                       context: context,
                       applicationIcon: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
-                      applicationVersion: packageInfo.version,
+                      applicationVersion: '${packageInfo.version} - ${packageInfo.buildNumber}',
                       children: [
                         RichText(
                           text: TextSpan(

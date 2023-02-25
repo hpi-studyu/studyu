@@ -22,8 +22,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
           !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
         if (StudyNotifications.debug) {
           print(
-            '${DateTime.now()} Skipped Notification #$currentId: ${task.title}, '
-            '$reminderTime, ${studyNotification.taskInstance.id}',
+            '${DateTime.now()} Skipped Notification #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}',
           );
         }
         continue;
@@ -53,8 +52,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
       // DEBUG: List scheduled notifications
       if (StudyNotifications.debug) {
         print(
-          '${DateTime.now()} Scheduled Notification #$currentId: ${task.title}, '
-          '$reminderTime, ${studyNotification.taskInstance.id}',
+          '${DateTime.now()} Scheduled Notification #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}',
         );
       }
       currentId++;
@@ -64,13 +62,13 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 }
 
 Future<void> scheduleNotifications(BuildContext context) async {
-  /*if (StudyNotifications.debug) {
+  if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Schedule Notifications'),
       ),
     );
-  }*/
+  }
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();

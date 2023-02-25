@@ -39,7 +39,6 @@ class StudyNotifications {
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
     _taskCannotBeCompleted = AppLocalizations.of(context).task_cannot_be_completed;
-    // todo test permission requests
     _initNotificationsPlugin();
     _requestPermissions();
     _isAndroidPermissionGranted();

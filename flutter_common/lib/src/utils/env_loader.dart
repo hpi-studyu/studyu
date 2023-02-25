@@ -18,6 +18,7 @@ Future<void> loadEnv() async {
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
+    // todo adapt for v2
     authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
     debug: true, // optional
   );

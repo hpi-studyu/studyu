@@ -6,7 +6,6 @@ import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
@@ -34,18 +33,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (widget.sessionString == null)
       initStudy();
     */
-    if (widget.sessionString != null &&
+    /*if (widget.sessionString != null &&
         widget.sessionString.isNotEmpty &&
         Supabase.instance.client.auth.currentSession == null) {
+      print("recover session");
       await Supabase.instance.client.auth.recoverSession(widget.sessionString);
     }
-    if (widget.sessionString == null) {
+    if (widget.sessionString == null) {*/
       initStudy();
-    }
+    //}
   }
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
+
     if (widget.queryParameters.containsKey('mode') && widget.queryParameters['mode'] == 'preview') {
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
@@ -167,8 +168,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       }
     } // finish preview
-
-    // print("No preview");
     if (!mounted) return;
     if (context.read<AppState>().isPreview) {
       previewSubjectIdKey();
