@@ -108,7 +108,7 @@ List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime da
     if (task.title == null || task.title.isEmpty) return [];
     for (final completionPeriod in task.schedule.completionPeriods) {
       TaskInstance taskInstance = TaskInstance(task, completionPeriod.id);
-      if (!subject.completedTaskInstanceForDay(taskInstance.id, taskInstance.completionPeriod, date)) {
+      if (!subject.completedTaskInstanceForDay(task.id, taskInstance.completionPeriod, date)) {
         taskNotifications.add(StudyNotification(taskInstance, date));
       }
     }
