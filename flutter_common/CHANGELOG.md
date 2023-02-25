@@ -1,3 +1,7 @@
+## 1.4.0-dev.4
+
+ - **FIX**: deploy dev-designer_v2 to new V2 production database. ([5876a990](https://github.com/hpi-studyu/studyu/commit/5876a990d89d9aeb7d0e447f76c279bb93f76414))
+
 ## 1.4.0-dev.3
 
  - **FIX**: add .env.staging to pubignore. ([4147cf94](https://github.com/hpi-studyu/studyu/commit/4147cf942e09bd2e86d6d6e96e5fe4da09182adc))

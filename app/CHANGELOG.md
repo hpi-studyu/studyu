@@ -1,3 +1,8 @@
+## 2.0.0-dev.4
+
+ - **FIX**: do not show notifications for already completed tasks. ([39419c36](https://github.com/hpi-studyu/studyu/commit/39419c369907a046438900f77d5559c2606fb3d5))
+ - **FIX**: reload dashboard after notification task completed. ([5737f080](https://github.com/hpi-studyu/studyu/commit/5737f08044f185e34dadfc54e45637b82f038692))
+
 ## 2.0.0-dev.3
 
  - Update a dependency to the latest release.
