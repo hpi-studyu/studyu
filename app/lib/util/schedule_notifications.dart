@@ -62,8 +62,8 @@ extension Reminders on FlutterLocalNotificationsPlugin {
 }
 
 Future<void> scheduleNotifications(BuildContext context) async {
+  StudyNotifications.scheduledNotificationsDebug = DateTime.now().toString();
   if (StudyNotifications.debug) {
-    StudyNotifications.scheduledNotificationsDebug = DateTime.now().toString();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Schedule Notifications'),
