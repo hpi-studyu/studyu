@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -101,10 +102,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                    final Uri emailLaunchUri = Uri(
+                        scheme: 'mailto',
+                        path: subject.study.contact.email,
+                        queryParameters: {
+                          'subject': '[StudyU] Debug Information',
+                          'body': StudyNotifications.scheduledNotificationsDebug,
+                        }
+                    );
                     if (!mounted) return;
                     showAboutDialog(
                       context: context,
-                      applicationIcon: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                      applicationIcon: GestureDetector(
+                        onDoubleTap: () {
+                          showDialog(context: context, builder: (_) =>
+                              AlertDialog(
+                                  title: const SelectableText('Notification Log'),
+                                  content: Column(children: [
+                                    ElevatedButton(
+                                      onPressed: () => launchUrl(emailLaunchUri),
+                                      child: const Text('Send via email'),
+                                    ),
+                                    SelectableText(StudyNotifications.scheduledNotificationsDebug),
+                                  ],),
+                                  scrollable: true,
+                              )
+                          );
+                        },
+                        child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                      ),
                       applicationVersion: '${packageInfo.version} - ${packageInfo.buildNumber}',
                       children: [
                         RichText(

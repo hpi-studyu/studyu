@@ -35,6 +35,7 @@ class StudyNotifications {
   static final NotificationValidators validator = NotificationValidators(false, false, false);
 
   static const bool debug = true; //kDebugMode;
+  static String scheduledNotificationsDebug;
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
