@@ -4,4 +4,8 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS"/>
+
+    <!-- TODO Android will deny this by default unless the app's core functionality is affected -->
+    <!--<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>-->
 </manifest>

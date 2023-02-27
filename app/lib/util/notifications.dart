@@ -98,6 +98,16 @@ class StudyNotifications {
 
       //final bool granted =
       await androidImplementation?.requestPermission();
+
+      var status = await Permission.ignoreBatteryOptimizations.status;
+      if(status.isDenied){
+        if (await Permission.ignoreBatteryOptimizations.request().isGranted) {
+          print("Ignore battery optimization Permission is granted");
+        }else{
+          print("Ignore battery optimization Permission is denied.");
+        }
+      }
+
     }
   }
 
