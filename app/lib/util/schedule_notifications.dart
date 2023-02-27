@@ -9,9 +9,9 @@ import 'package:timezone/timezone.dart' as tz;
 import '../models/app_state.dart';
 import 'notifications.dart';
 
-extension Reminders on FlutterLocalNotificationsPlugin {
+//extension Reminders on FlutterLocalNotificationsPlugin {
   Future<int> scheduleReminderForDate(
-      int id, String body, StudyNotification studyNotification, NotificationDetails notificationDetails) async {
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, int id, String body, StudyNotification studyNotification, NotificationDetails notificationDetails) async {
     var currentId = id;
     final task = studyNotification.taskInstance.task;
     final date = studyNotification.date;
@@ -20,14 +20,14 @@ extension Reminders on FlutterLocalNotificationsPlugin {
       final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
       if (date.isSameDate(DateTime.now()) &&
           !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
-        String debugStr = 'Skipped Notification #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
+        String debugStr = 'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
         StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
         if (StudyNotifications.debug) {
           print(debugStr);
         }
         continue;
       }
-      zonedSchedule(
+      flutterLocalNotificationsPlugin.zonedSchedule(
         currentId,
         task.title,
         body,
@@ -50,7 +50,7 @@ extension Reminders on FlutterLocalNotificationsPlugin {
         );
       }*/
       // DEBUG: List scheduled notifications
-      String debugStr = 'Scheduled Notification #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
+      String debugStr = 'Scheduled #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
       StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       if (StudyNotifications.debug) {
         print(debugStr);
@@ -59,10 +59,11 @@ extension Reminders on FlutterLocalNotificationsPlugin {
     }
     return currentId;
   }
-}
+//}
 
 Future<void> scheduleNotifications(BuildContext context) async {
   StudyNotifications.scheduledNotificationsDebug = DateTime.now().toString();
+
   if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -96,7 +97,8 @@ Future<void> scheduleNotifications(BuildContext context) async {
   }
   var id = 0;
   for (final StudyNotification notification in studyNotificationList) {
-    final currentId = await notificationsPlugin.scheduleReminderForDate(id, body, notification, notificationDetails);
+    //final currentId = await notificationsPlugin.scheduleReminderForDate(id, body, notification, notificationDetails);
+    final currentId = await scheduleReminderForDate(notificationsPlugin, id, body, notification, notificationDetails);
     id = currentId;
   }
 }
@@ -109,6 +111,9 @@ List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime da
       TaskInstance taskInstance = TaskInstance(task, completionPeriod.id);
       if (!subject.completedTaskInstanceForDay(task.id, taskInstance.completionPeriod, date)) {
         taskNotifications.add(StudyNotification(taskInstance, date));
+      } else {
+        String debugStr = 'TaskInstance already completed: ${taskInstance.completionPeriod}, ${task.title}';
+        StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       }
     }
   }

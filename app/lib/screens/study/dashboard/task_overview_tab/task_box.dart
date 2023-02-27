@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -33,10 +34,11 @@ class _TaskBoxState extends State<TaskBox> {
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
-    //if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
+    if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
 
     // todo only show loading screen if new phase has started to show updated dashboard
     // i.e. it is first day of a new phase
+    // otherwise just reschedule notifications
     // redirect to loading screen also happens after notification at notifications.dart:202
 
     //context.read<AppState>().activeSubject.progress

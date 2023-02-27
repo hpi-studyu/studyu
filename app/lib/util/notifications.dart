@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_core/core.dart';
@@ -34,7 +35,7 @@ class StudyNotifications {
 
   static final NotificationValidators validator = NotificationValidators(false, false, false);
 
-  static const bool debug = false; //kDebugMode;
+  static const bool debug = true; //kDebugMode;
   static String scheduledNotificationsDebug;
 
   /// Private constructor

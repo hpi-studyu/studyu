@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -48,6 +49,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
       });
     }
+  }
+
+  Future<bool> receivePermission() async {
+    return await Permission.ignoreBatteryOptimizations.request().isGranted;
   }
 
   @override
@@ -117,15 +122,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         onDoubleTap: () {
                           showDialog(context: context, builder: (_) =>
                               AlertDialog(
-                                  title: const SelectableText('Notification Log'),
-                                  content: Column(children: [
-                                    ElevatedButton(
-                                      onPressed: () => launchUrl(emailLaunchUri),
-                                      child: const Text('Send via email'),
-                                    ),
-                                    SelectableText(StudyNotifications.scheduledNotificationsDebug),
-                                  ],),
-                                  scrollable: true,
+                                title: const SelectableText('Notification Log'),
+                                content: Column(children: [
+                                  ElevatedButton(
+                                    onPressed: () => launchUrl(emailLaunchUri),
+                                    child: const Text('Send via email'),
+                                  ),
+                                  FutureBuilder<bool>(
+                                      future: receivePermission(),
+                                      builder: (context, AsyncSnapshot<bool> snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text('ignoreBatteryOptimizations: ${snapshot.data.toString()}');
+                                        } else {
+                                          return const CircularProgressIndicator();
+                                        }
+                                      }
+                                  ),
+                                  SelectableText(StudyNotifications.scheduledNotificationsDebug),
+                                ],),
+                                scrollable: true,
                               )
                           );
                         },
