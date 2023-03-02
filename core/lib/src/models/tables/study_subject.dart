@@ -252,7 +252,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   List<TaskInstance> scheduleFor(DateTime dateTime) {
-    final activeIntervention = getInterventionForDate(dateTime);
+    final beforeStartedAtTime = DateTime.utc(dateTime.year, dateTime.month, dateTime.day, startedAt!.hour, startedAt!.minute + -1);
+    final activeIntervention = getInterventionForDate(beforeStartedAtTime);
 
     final List<TaskInstance> taskSchedule = [];
 
@@ -263,8 +264,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
     /* ************* WORKAROUND FIX START ***************** */
 
-    final laterStartedAtTime = DateTime.utc(dateTime.year, dateTime.month, dateTime.day, startedAt!.hour, startedAt!.minute + 1);
-    final interventionAfterStartedTime = getInterventionForDate(laterStartedAtTime);
+    final afterStartedAtTime = DateTime.utc(dateTime.year, dateTime.month, dateTime.day, startedAt!.hour, startedAt!.minute + 1);
+    final interventionAfterStartedTime = getInterventionForDate(afterStartedAtTime);
 
     // there is a cycle change during the day, i.e. the interventions change
     final cycleChange = interventionAfterStartedTime != activeIntervention && interventionAfterStartedTime != null;
@@ -278,10 +279,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         /* ************* WORKAROUND FIX START ***************** */
         if (cycleChange) {
           final lockTime = DateTime(
-            laterStartedAtTime.year, laterStartedAtTime.month, laterStartedAtTime.day,
+            afterStartedAtTime.year, afterStartedAtTime.month, afterStartedAtTime.day,
             completionPeriod.lockTime.hour, completionPeriod.lockTime.minute,
           );
-          if (lockTime.isBefore(laterStartedAtTime)) {
+          if (lockTime.isBefore(afterStartedAtTime)) {
             taskSchedule.add(TaskInstance(task, completionPeriod.id));
           }
         } else {
@@ -297,10 +298,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
         for (final completionPeriod in task.schedule.completionPeriods) {
           final openTime = DateTime(
-            laterStartedAtTime.year, laterStartedAtTime.month, laterStartedAtTime.day,
+            afterStartedAtTime.year, afterStartedAtTime.month, afterStartedAtTime.day,
             completionPeriod.unlockTime.hour, completionPeriod.unlockTime.minute,
           );
-          if (openTime.isAfter(laterStartedAtTime)) {
+          if (openTime.isAfter(afterStartedAtTime)) {
             taskSchedule.add(TaskInstance(task, completionPeriod.id));
           }
         }
