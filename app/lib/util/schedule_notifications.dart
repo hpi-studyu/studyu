@@ -20,7 +20,7 @@ Future<int> scheduleReminderForDate(
     if (date.isSameDate(DateTime.now()) &&
         !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
       String debugStr = 'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
-      StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
+      //StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       if (StudyNotifications.debug) {
         print(debugStr);
       }

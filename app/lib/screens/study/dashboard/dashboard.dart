@@ -136,6 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         }
                                       }
                                   ),
+                                  Text('SubjectID: ${subject.id}'),
                                   SelectableText(StudyNotifications.scheduledNotificationsDebug),
                                 ],),
                                 scrollable: true,
