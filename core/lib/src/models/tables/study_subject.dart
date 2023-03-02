@@ -258,12 +258,55 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
     if (activeIntervention == null) return taskSchedule;
 
+    // Workaround to display the dashboard correctly, until the trial starts
+    // at the next day for every participant
+
+    /* ************* WORKAROUND FIX START ***************** */
+
+    final laterStartedAtTime = DateTime.utc(dateTime.year, dateTime.month, dateTime.day, startedAt!.hour, startedAt!.minute + 1);
+    final interventionAfterStartedTime = getInterventionForDate(laterStartedAtTime);
+
+    // there is a cycle change during the day, i.e. the interventions change
+    final cycleChange = interventionAfterStartedTime != activeIntervention && interventionAfterStartedTime != null;
+
+    /* ************* WORKAROUND FIX END ***************** */
+
     for (final task in activeIntervention.tasks) {
       if (task.title == null) continue;
+
       for (final completionPeriod in task.schedule.completionPeriods) {
-        taskSchedule.add(TaskInstance(task, completionPeriod.id));
+        /* ************* WORKAROUND FIX START ***************** */
+        if (cycleChange) {
+          final lockTime = DateTime(
+            laterStartedAtTime.year, laterStartedAtTime.month, laterStartedAtTime.day,
+            completionPeriod.lockTime.hour, completionPeriod.lockTime.minute,
+          );
+          if (lockTime.isBefore(laterStartedAtTime)) {
+            taskSchedule.add(TaskInstance(task, completionPeriod.id));
+          }
+        } else {
+          /* ************* WORKAROUND FIX END ***************** */
+          taskSchedule.add(TaskInstance(task, completionPeriod.id));
+        }
       }
     }
+    /* ************* WORKAROUND FIX START ***************** */
+    if (cycleChange) {
+      for (final task in interventionAfterStartedTime.tasks) {
+        if (task.title == null) continue;
+
+        for (final completionPeriod in task.schedule.completionPeriods) {
+          final openTime = DateTime(
+            laterStartedAtTime.year, laterStartedAtTime.month, laterStartedAtTime.day,
+            completionPeriod.unlockTime.hour, completionPeriod.unlockTime.minute,
+          );
+          if (openTime.isAfter(laterStartedAtTime)) {
+            taskSchedule.add(TaskInstance(task, completionPeriod.id));
+          }
+        }
+      }
+    }
+    /* ************* WORKAROUND FIX END ***************** */
     for (final observation in study.observations) {
       for (final completionPeriod in observation.schedule.completionPeriods) {
         taskSchedule.add(TaskInstance(observation, completionPeriod.id));

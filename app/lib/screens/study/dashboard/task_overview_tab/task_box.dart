@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../models/app_state.dart';
@@ -29,27 +29,14 @@ class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
+      MaterialPageRoute(builder: (context) =>
+          TaskScreen(taskInstance: widget.taskInstance)
+      ),
     );
     widget.onCompleted();
     // Rebuild widget
     setState(() {});
-    if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
-
-    // todo only show loading screen if new phase has started to show updated dashboard
-    // i.e. it is first day of a new phase
-    // otherwise just reschedule notifications
-    // redirect to loading screen also happens after notification at notifications.dart:202
-
-    //context.read<AppState>().activeSubject.progress
-    //context.read<AppState>().selectedStudy.schedule.
-    /*if (StudyNotifications.validator.wasNotificationActionHandled &&
-        !StudyNotifications.validator.wasNotificationActionCompleted) {
-      StudyNotifications.validator.wasNotificationActionCompleted = true;
-      if (mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
-    } else {
-      if (mounted) scheduleNotifications(context);
-    }*/
+    if (mounted) scheduleNotifications(context);
   }
 
   @override

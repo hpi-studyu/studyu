@@ -41,9 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     subject = context.watch<AppState>().activeSubject;
-    // if (subject != null) {
     scheduleToday = subject.scheduleFor(DateTime.now());
-    // }
     if (widget.error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
