@@ -26,6 +26,14 @@ Future<int> scheduleReminderForDate(
       }
       continue;
     }
+
+    // todo we do not support overlapping completion periods, since otherwise we cannot identify the origin of the reminder exactly
+    // for now we just filter out all task instances where the reminder is outside of the completionPeriod
+    if (!task.schedule.completionPeriods.where((element) => element.id == studyNotification.taskInstance.id)
+        .single.contains(reminder)) {
+      continue;
+    }
+
     flutterLocalNotificationsPlugin.zonedSchedule(
       currentId,
       task.title,
