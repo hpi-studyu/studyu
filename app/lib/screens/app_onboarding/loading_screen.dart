@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
@@ -275,5 +277,36 @@ class _LoadingScreenState extends State<LoadingScreen> {
       },
       barrierDismissible: false,
     );
+  }
+
+  Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+    // todo move to user.dart
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
+      try {
+        // create new account
+        if (await anonymousSignUp()) {
+          // call supabase function to update user_id to new user id
+          // by matching a study_subject entry with the current subject ID
+          try {
+            await Supabase.instance.client.rpc(
+              'migrate_to_v2',
+              params: {
+                'participant_user_id': Supabase.instance.client.auth.currentUser?.id,
+                'participant_subject_id': selectedStudyObjectId,
+              },
+            ).single();
+          } on PostgrestException catch (error) {
+            print('Supabase migrate_to_v2 Error: ${error.message}');
+          }
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error, stacktrace) {
+        SupabaseQuery.catchSupabaseException(error, stacktrace);
+      }
+    }
+    return false;
   }
 }

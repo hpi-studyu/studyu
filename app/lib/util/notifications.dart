@@ -101,14 +101,13 @@ class StudyNotifications {
       await androidImplementation?.requestPermission();
 
       var status = await Permission.ignoreBatteryOptimizations.status;
-      if(status.isDenied){
+      if (status.isDenied) {
         if (await Permission.ignoreBatteryOptimizations.request().isGranted) {
           print("Ignore battery optimization Permission is granted");
-        }else{
+        } else {
           print("Ignore battery optimization Permission is denied.");
         }
       }
-
     }
   }
 
@@ -221,6 +220,7 @@ class StudyNotifications {
       }
     } else {
       navigatorKey.currentState.push(
+        // todo translate
         MaterialPageRoute(
           builder: (_) => const DashboardScreen(error: 'Task could not be found'),
         ),

@@ -27,36 +27,6 @@ class _TaskScreenState extends State<TaskScreen> {
     super.didChangeDependencies();
     final subject = context.watch<AppState>().activeSubject;
     taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id, study: subject.study);
-    /*if (widget.taskInstance != null) {
-      final tasks = <Task>[
-        ...subject.study.observations
-            .where((observation) => observation.id == widget.taskInstance.task.id),
-        ...subject.selectedInterventions
-            .map((intervention) => intervention.tasks
-                .where((task) => task.id == widget.taskInstance.task.id))
-            .expand((task) => task)
-      ];
-      task = tasks.first;
-    } else if (widget.taskInstance != null) {
-      final tasks = <Task>[
-        ...subject.study.observations
-            .where((observation) => observation.id == widget.taskInstance),
-        ...subject.selectedInterventions
-            .map((intervention) =>
-                intervention.tasks.where((task) => task.id == widget.taskInstance))
-            .expand((task) => task)
-      ];
-      if (tasks.isEmpty) {
-        print('No task found with ID ${widget.taskInstance.task.id}');
-      } else if (tasks.length > 1) {
-        print('Too many tasks found with ID ${widget.taskInstance.task.id}');
-      } else {
-        task = tasks.first;
-      }
-    }
-    if (task == null) {
-      Navigator.pop(context, false);
-    }*/
   }
 
   Widget _buildTask() {
