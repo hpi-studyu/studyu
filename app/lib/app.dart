@@ -20,10 +20,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    print("app.init");
   }
 
   @override
   Widget build(BuildContext context) {
+    print("app.build");
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),

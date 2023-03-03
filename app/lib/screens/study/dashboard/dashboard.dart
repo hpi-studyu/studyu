@@ -47,6 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
       });
     }
+    print("dashboard.dependencies");
   }
 
   Future<bool> receivePermission() async {
@@ -55,6 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("dashboard.build");
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier

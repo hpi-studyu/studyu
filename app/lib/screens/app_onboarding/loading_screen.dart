@@ -29,6 +29,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     initStudy();
+    print("loading.dependencies");
   }
 
   Future<void> initStudy() async {

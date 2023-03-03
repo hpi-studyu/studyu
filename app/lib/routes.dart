@@ -86,7 +86,6 @@ class Routes {
       case reportHistory:
         return MaterialPageRoute(builder: (_) => const ReportHistoryScreen(), settings: settings);
       default:
-        // todo MyApp().build is called twice on startup executing app init in loading screen twice
         //final potentialSessionString = Uri.decodeComponent(settings.name.replaceFirst('/', ''));
         //return MaterialPageRoute(builder: (_) => LoadingScreen(sessionString: potentialSessionString));
         // null will be handled by onUnknownRoute
