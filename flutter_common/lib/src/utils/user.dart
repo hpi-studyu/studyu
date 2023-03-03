@@ -33,6 +33,36 @@ Future<bool> signInParticipant() async {
   return false;
 }
 
+Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
+    try {
+      // create new account
+      if (await anonymousSignUp()) {
+        // call supabase function to update user_id to new user id
+        // by matching a study_subject entry with the current subject ID
+        try {
+          await Supabase.instance.client.rpc(
+            'migrate_to_v2',
+            params: {
+              'participant_user_id': Supabase.instance.client.auth.currentUser?.id,
+              'participant_subject_id': selectedStudyObjectId,
+            },
+          ).single();
+        } on PostgrestException catch (error) {
+          print('Supabase migrate_to_v2 Error: ${error.message}');
+        }
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+    }
+  }
+  return false;
+}
+
 // Using a fake user email to enable anonymous users, while working with row-level security on postgres
 Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';

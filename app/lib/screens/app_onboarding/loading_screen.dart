@@ -26,22 +26,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
-    /*
-    final hasRecovered = await recoverSupabaseSession();
-    if (!hasRecovered)
-      await Supabase.instance.client.auth.recoverSession(widget.sessionString);
-    if (widget.sessionString == null)
-      initStudy();
-    */
-    /*if (widget.sessionString != null &&
-        widget.sessionString.isNotEmpty &&
-        Supabase.instance.client.auth.currentSession == null) {
-      print("recover session");
-      await Supabase.instance.client.auth.recoverSession(widget.sessionString);
-    }
-    if (widget.sessionString == null) {*/
-      initStudy();
-    //}
+    initStudy();
   }
 
   Future<void> initStudy() async {
@@ -198,7 +183,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       print("Try signing in again $e");
       try {
         // Try signing in again. Needed if JWT is expired
-        await signInParticipant();
+        final signInRes = await signInParticipant();
+
+        if (!signInRes) {
+          await askUserForV2Migration(selectedStudyObjectId);
+          return;
+        }
+
         subject = await SupabaseQuery.getById<StudySubject>(
           selectedStudyObjectId,
           selectedColumns: [
@@ -239,6 +230,50 @@ class _LoadingScreenState extends State<LoadingScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> askUserForV2Migration(String selectedStudyObjectId) async {
+    // todo translate
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        // initStudy();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: const Text("Migrate my account"),
+      onPressed: () async {
+        final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
+        if (migrateRes) {
+          print("Successfully migrated to V2");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to V2')));
+        } else {
+          print("Error when trying to migrate to V2");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error when trying to migrate to V2')));
+        }
+        initStudy();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("StudyU Version 2"),
+      content: const Text("It seems like your account needs to be migrated to our new StudyU V2 platform."
+          "Would you like to continue and migrate your account? You will not be able to continue your study, until you migrate your account."
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+      barrierDismissible: false,
     );
   }
 }
