@@ -22,6 +22,8 @@
     <application
         android:label="StudyU"
         android:name="${applicationName}"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
