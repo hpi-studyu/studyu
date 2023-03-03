@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
-import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
-import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,7 +9,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/app_state.dart';
 import '../../routes.dart';
 import '../../util/schedule_notifications.dart';
-import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String sessionString;
@@ -35,7 +31,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> initStudy() async {
     final state = context.read<AppState>();
 
-    if (widget.queryParameters.containsKey('mode') && widget.queryParameters['mode'] == 'preview') {
+    /*if (widget.queryParameters.containsKey('mode') && widget.queryParameters['mode'] == 'preview') {
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,
@@ -159,7 +155,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
     if (context.read<AppState>().isPreview) {
       previewSubjectIdKey();
-    }
+    }*/
 
     final selectedStudyObjectId = await getActiveSubjectId();
     print('Subject ID: $selectedStudyObjectId');
