@@ -183,26 +183,27 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ],
       );
     } catch (e) {
-      print("Try signing in again $e");
+      print("Try signing in again\n$e");
+      bool signInRes = false;
       try {
         // Try signing in again. Needed if JWT is expired
-        final signInRes = await signInParticipant();
-
-        if (!signInRes) {
-          await askUserForV2Migration(selectedStudyObjectId);
-          return;
+        signInRes = await signInParticipant();
+        if (signInRes) {
+          subject = await SupabaseQuery.getById<StudySubject>(
+            selectedStudyObjectId,
+            selectedColumns: [
+              '*',
+              'study!study_subject_studyId_fkey(*)',
+              'subject_progress(*)',
+            ],
+          );
         }
-
-        subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
       } catch (e) {
         print('Error when trying to login and retrieve the study subject');
+      }
+      if (!signInRes) {
+        await askUserForV2Migration(selectedStudyObjectId);
+        return;
       }
     }
     if (!mounted) return;
