@@ -644,18 +644,18 @@ packages:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: "14a36f512596abec7a59ea8ed63e4b98ea18db80299dcf9576fd53fea5f3e5b4"
+      sha256: "1196edbfacbecf7c311fd7129f9ccacc73010e78fa31424ddf40939dd8db71a1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.1"
+    version: "1.6.0"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "29249c8a2c358de4c04bc455afc88cd063ef04520e466a991091059666b53b88"
+      sha256: "1227c23886f9b3454a2fdbeeedaab0cdf0efa2c5bae5b85ea9e25dd6e060f1ef"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.2"
   term_glyph:
     dependency: transitive
     description:
