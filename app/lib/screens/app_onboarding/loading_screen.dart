@@ -29,7 +29,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
     initStudy();
-    print("loading.dependencies");
   }
 
   Future<void> initStudy() async {
@@ -282,7 +281,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
-    // todo move to user.dart
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {

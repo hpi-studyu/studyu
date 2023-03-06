@@ -30,7 +30,6 @@ Future<void> main() async {
   await loadEnv();
   await _configureLocalTimeZone();
   final queryParameters = Uri.base.queryParameters;
-  print("main");
   runApp(MyApp(queryParameters));
 }
 
