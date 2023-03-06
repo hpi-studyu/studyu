@@ -119,10 +119,10 @@ packages:
     dependency: transitive
     description:
       name: functions_client
-      sha256: "843ce9dbd6bacb412893df7189d793642887fd3ed936a4ed38bcf4f47b1fa037"
+      sha256: e82e7325c0fc04d751aca9aaaf7b9e9d599e1e5cf869e0cb7c762a5f53784c71
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   gotrue:
     dependency: transitive
     description:
@@ -454,7 +454,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.0.0-dev.2"
+    version: "4.0.0-dev.3"
   supabase:
     dependency: transitive
     description:
