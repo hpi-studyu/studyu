@@ -201,7 +201,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
         print('Error when trying to login and retrieve the study subject');
       }
       if (!signInRes) {
-        await askUserForV2Migration(selectedStudyObjectId);
+        final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
+        if (migrateRes) {
+          print("Successfully migrated to V2");
+          // if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to V2')));
+        } else {
+          print("Error when trying to migrate to V2");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bei dem Wechsel zu Version 2 trat ein Fehler auf.')));
+        }
+        initStudy();
         return;
       }
     }
@@ -233,50 +241,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> askUserForV2Migration(String selectedStudyObjectId) async {
-    // todo translate
-    Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
-      onPressed: () {
-        // initStudy();
-      },
-    );
-    Widget continueButton = TextButton(
-      child: const Text("Migrate my account"),
-      onPressed: () async {
-        final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
-        if (migrateRes) {
-          print("Successfully migrated to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to V2')));
-        } else {
-          print("Error when trying to migrate to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error when trying to migrate to V2')));
-        }
-        initStudy();
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: const Text("StudyU Version 2"),
-      content: const Text("It seems like your account needs to be migrated to our new StudyU V2 platform."
-          "Would you like to continue and migrate your account? You will not be able to continue your study, until you migrate your account."
-      ),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-
-    // show the dialog
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-      barrierDismissible: false,
     );
   }
 
