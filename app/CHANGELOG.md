@@ -1,3 +1,7 @@
+## 2.0.0-dev.6
+
+ - Update a dependency to the latest release.
+
 ## 2.0.0-dev.5
 
  - **FIX**: show dashboard correctly for the day if intervention cycle occurs - match reminder to correct completionperiod. ([7532031a](https://github.com/hpi-studyu/studyu/commit/7532031a546b2ebfa1b5fd7904f6ef186327570d))

@@ -1,3 +1,7 @@
+## 4.0.0-dev.4
+
+ - **FIX**: fallback to check for progress without a periodId. ([146e1bae](https://github.com/hpi-studyu/studyu/commit/146e1bae80291bcd9d8fab853a2770a807da4393))
+
 ## 4.0.0-dev.3
 
  - **FIX**: choice expression v2 workaround. ([2368d8c8](https://github.com/hpi-studyu/studyu/commit/2368d8c8eb2a97f76bc38bfd374a4d59ad7efbb9))

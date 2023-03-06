@@ -1,3 +1,7 @@
+## 1.1.0-dev.6
+
+ - Update a dependency to the latest release.
+
 ## 1.1.0-dev.5
 
  - **FIX**: revert report changes. ([ce336c1a](https://github.com/hpi-studyu/studyu/commit/ce336c1a2afebf916c00fbb9ed649f89182e43ac))

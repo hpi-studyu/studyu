@@ -1,3 +1,7 @@
+## 1.4.0-dev.6
+
+ - Update a dependency to the latest release.
+
 ## 1.4.0-dev.5
 
  - **FEAT**: add migration option to app for studyu v2. ([82698517](https://github.com/hpi-studyu/studyu/commit/82698517843cfc4aad80c194a6e5f349343a182d))
