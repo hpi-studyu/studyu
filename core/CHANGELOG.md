@@ -1,3 +1,8 @@
+## 4.0.0-dev.3
+
+ - **FIX**: choice expression v2 workaround. ([2368d8c8](https://github.com/hpi-studyu/studyu/commit/2368d8c8eb2a97f76bc38bfd374a4d59ad7efbb9))
+ - **FIX**: show dashboard correctly for the day if intervention cycle occurs. ([f4eba956](https://github.com/hpi-studyu/studyu/commit/f4eba956be2509643c17530385f151d7e3937c0f))
+
 ## 4.0.0-dev.2
 
  - **FIX**: designerV2 TaskInstance support for single completionperiods to restore live preview functionality. ([45792baf](https://github.com/hpi-studyu/studyu/commit/45792bafb0291914228ed4af058c821eb6be2f6d))

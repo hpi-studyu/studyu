@@ -1,3 +1,7 @@
+## 1.4.0-dev.5
+
+ - **FEAT**: add migration option to app for studyu v2. ([82698517](https://github.com/hpi-studyu/studyu/commit/82698517843cfc4aad80c194a6e5f349343a182d))
+
 ## 1.4.0-dev.4
 
  - **FIX**: deploy dev-designer_v2 to new V2 production database. ([5876a990](https://github.com/hpi-studyu/studyu/commit/5876a990d89d9aeb7d0e447f76c279bb93f76414))

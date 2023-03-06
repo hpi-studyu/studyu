@@ -1,3 +1,12 @@
+## 2.0.0-dev.5
+
+ - **FIX**: show dashboard correctly for the day if intervention cycle occurs - match reminder to correct completionperiod. ([7532031a](https://github.com/hpi-studyu/studyu/commit/7532031a546b2ebfa1b5fd7904f6ef186327570d))
+ - **FIX**: show dashboard correctly for the day if intervention cycle occurs. ([f4eba956](https://github.com/hpi-studyu/studyu/commit/f4eba956be2509643c17530385f151d7e3937c0f))
+ - **FIX**: increase notification reliability. ([b384a83d](https://github.com/hpi-studyu/studyu/commit/b384a83dcf327a0f770ed5babe078e4ab54a95f3))
+ - **FIX**: request REQUEST_IGNORE_BATTERY_OPTIMIZATIONS on android for scheduled notifications. ([92f9f2b0](https://github.com/hpi-studyu/studyu/commit/92f9f2b064520454e0c9e6fbb1d45209f24ece3b))
+ - **FEAT**: add migration option to app for studyu v2. ([82698517](https://github.com/hpi-studyu/studyu/commit/82698517843cfc4aad80c194a6e5f349343a182d))
+ - **FEAT**: Notification debug dialog. ([dd9984e8](https://github.com/hpi-studyu/studyu/commit/dd9984e8ce2f0bd1e9a6de585a3cd4359be436cb))
+
 ## 2.0.0-dev.4
 
  - **FIX**: do not show notifications for already completed tasks. ([39419c36](https://github.com/hpi-studyu/studyu/commit/39419c369907a046438900f77d5559c2606fb3d5))
