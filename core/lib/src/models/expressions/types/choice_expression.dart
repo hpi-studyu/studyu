@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
 import 'package:studyu_core/src/models/expressions/types/value_expression.dart';
 
 part 'choice_expression.g.dart';
@@ -22,7 +21,11 @@ class ChoiceExpression extends ValueExpression<dynamic> {
   @override
   bool checkValue(dynamic value) {
     if (value is List) {
-      return value.any((element) => choices.contains(element));
+      if (value.isEmpty) { // workaround until not expression is implemented for V2
+        return true;
+      } else {
+        return value.any((element) => choices.contains(element));
+      }
     }
     return choices.contains(value);
   }
