@@ -204,7 +204,13 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// completionPeriod on a given day
   bool completedTaskInstanceForDay(String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
     return getTaskProgressForDay(taskId, dateTime).any(
-      (progress) => progress.result.periodId == completionPeriod.id,
+      (progress) {
+        if (progress.result.periodId == null) {
+          // fallback to support studies without periodIds
+          return progress.completedAt!.isSameDate(dateTime);
+        }
+        return progress.result.periodId == completionPeriod.id;
+      },
     );
   }
 
