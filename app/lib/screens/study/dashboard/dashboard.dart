@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -41,11 +42,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     subject = context.watch<AppState>().activeSubject;
-    scheduleToday = subject.scheduleFor(DateTime.now());
-    if (widget.error != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
-      });
+    if (subject != null) {
+      scheduleToday = subject.scheduleFor(DateTime.now());
+      if (widget.error != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(widget.error)));
+        });
+      }
     }
   }
 
@@ -55,6 +59,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (subject == null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.loading, (_) => false);
+      });
+      return const SizedBox.shrink();
+    }
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
@@ -200,13 +211,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: subject.completedStudy
-          ? const StudyFinishedPlaceholder()
-          : TaskOverview(
-              subject: subject,
-              scheduleToday: scheduleToday,
-              interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon,
-            ),
+      body: _buildBody(),
       bottomSheet: (kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy
           ? TextButton(
               onPressed: () async {
@@ -219,6 +224,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
             )
           : null,
     );
+  }
+
+  Widget _buildBody() {
+    if (subject.completedStudy) {
+      return const StudyFinishedPlaceholder();
+    } else if (subject.startedAt.isAfter(DateTime.now())) {
+      final theme = Theme.of(context);
+      return Center(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).study_not_started,
+                      style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
+                    )
+                  ]
+              )
+          )
+      );
+    } else {
+      return TaskOverview(
+        subject: subject,
+        scheduleToday: scheduleToday,
+        interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon,
+      );
+    }
   }
 }
 
