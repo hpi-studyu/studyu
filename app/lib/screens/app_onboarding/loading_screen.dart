@@ -204,10 +204,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
         if (migrateRes) {
           print("Successfully migrated to V2");
-          // if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to V2')));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Update erfolgreich. Vielen Dank für Ihre Mithilfe!')));
         } else {
           print("Error when trying to migrate to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bei dem Wechsel zu Version 2 trat ein Fehler auf.')));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bei dem Update trat ein Fehler auf. Bitte der Studienleitung melden!')));
         }
         initStudy();
         return;
