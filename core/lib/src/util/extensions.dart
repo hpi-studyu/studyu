@@ -21,10 +21,10 @@ extension DateOnlyCompare on DateTime {
   }
 
   bool isLaterDateThan(DateTime other) {
-    return !(isSameDate(other) || isEarlierDateThan(other));
+    return !(toUtc().isSameDate(other.toUtc()) || toUtc().isEarlierDateThan(other.toUtc()));
   }
 
   int differenceInDays(DateTime other) {
-    return difference(other).inDays;
+    return toUtc().difference(other.toUtc()).inDays;
   }
 }
