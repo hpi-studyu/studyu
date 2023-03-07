@@ -5,7 +5,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 publish_to: 'none'
 
-version: '2.0.0-dev.6'
+version: '2.0.0-dev.7'
 
 environment:
   # todo upgrade to null safety
@@ -42,8 +42,8 @@ dependencies:
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   shared_preferences: ^2.0.18
-  studyu_core: ^4.0.0-dev.4
-  studyu_flutter_common: ^1.4.0-dev.6
+  studyu_core: ^4.0.0-dev.5
+  studyu_flutter_common: ^1.4.0-dev.7
   supabase: ^1.6.0
   supabase_flutter: ^1.4.2
   timeline_tile: ^2.0.0

@@ -1,3 +1,9 @@
+## 4.0.0-dev.5
+
+ - **FIX**: do not schedule notifications for not started studies. ([b57f57c3](https://github.com/hpi-studyu/studyu/commit/b57f57c30a798030171a9bbcd32a5fb109bb20c0))
+ - **FIX**: use utc for all datetime comparisons. ([e20e6bd8](https://github.com/hpi-studyu/studyu/commit/e20e6bd8e4c5174a22cd97840fa45ddf663e2359))
+ - **FIX**: revert scheduleFor workaround. ([5bec03e9](https://github.com/hpi-studyu/studyu/commit/5bec03e9743e2db047db710361d3d2cecc10e25f))
+
 ## 4.0.0-dev.4
 
  - **FIX**: fallback to check for progress without a periodId. ([146e1bae](https://github.com/hpi-studyu/studyu/commit/146e1bae80291bcd9d8fab853a2770a807da4393))

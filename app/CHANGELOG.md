@@ -1,3 +1,8 @@
+## 2.0.0-dev.7
+
+ - **FIX**: reload dashboard if subject is null. ([42ccfc42](https://github.com/hpi-studyu/studyu/commit/42ccfc42ac437fb54d670f5c5cbbf557e6ef34f4))
+ - **FEAT**: start study at the next day for new participants. ([0445a1f4](https://github.com/hpi-studyu/studyu/commit/0445a1f4c137e3b4c07a945640e660e47e1d51a0))
+
 ## 2.0.0-dev.6
 
  - Update a dependency to the latest release.
