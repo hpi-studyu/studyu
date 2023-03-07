@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -30,6 +31,8 @@ Future<void> main() async {
   await loadEnv();
   await _configureLocalTimeZone();
   final queryParameters = Uri.base.queryParameters;
+  // Turn off the # in the URLs on the web
+  usePathUrlStrategy();
   runApp(MyApp(queryParameters));
 }
 
