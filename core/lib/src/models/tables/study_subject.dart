@@ -140,7 +140,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Intervention? getInterventionForDate(DateTime date) {
     final index = getInterventionIndexForDate(date);
-    if (startedAt!.isAfter(DateTime.now()) || index >= interventionOrder.length) {
+    if (startedAt!.isAfter(date) || index >= interventionOrder.length) {
       print('Study is over or has not begun.');
       return null;
     }
