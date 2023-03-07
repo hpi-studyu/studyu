@@ -22,6 +22,9 @@ class _KickoffScreen extends State<KickoffScreen> {
 
   Future<void> _storeUserStudy(BuildContext context) async {
     try {
+      // Start study at the next day
+      final now = DateTime.now();
+      subject.startedAt = DateTime(now.year, now.month, now.day + 1);
       subject = await subject.save();
       if (!mounted) return;
       context.read<AppState>().activeSubject = subject;

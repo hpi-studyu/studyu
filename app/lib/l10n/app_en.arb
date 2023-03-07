@@ -150,6 +150,7 @@
 
   "report_axis_phase": "Phase",
 
+  "study_not_started": "Your study has not started yet. Please check back tomorrow!",
   "completed_study": "You completed your last study. Look at past reports or start a new study.",
 
   "app_support": "App support",
