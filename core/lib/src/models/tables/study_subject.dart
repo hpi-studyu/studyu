@@ -255,89 +255,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   List<TaskInstance> scheduleFor(DateTime dateTime) {
-    /* ************* WORKAROUND FIX START ***************** */
-    Intervention? beforeIntervention;
-    // check if study starts day after registration is already in place
-    if (startedAt!.hour != 0 && startedAt!.minute != 0 && startedAt!.second != 0 && startedAt!.millisecond != 0) {
-      final beforeDateTime = DateTime.utc(
-          dateTime.year, dateTime.month, dateTime.day, startedAt!.hour,
-          startedAt!.minute + -1,
-      );
-      beforeIntervention = getInterventionForDate(beforeDateTime);
-      print("old subject");
-      /* ************* WORKAROUND FIX END ***************** */
-    } else {
-      beforeIntervention = getInterventionForDate(dateTime);
-      print("index: ${getInterventionIndexForDate(dateTime)}");
-      print("intervention: ${beforeIntervention!.tasks}");
-    }
-
+    final activeIntervention = getInterventionForDate(dateTime);
     final List<TaskInstance> taskSchedule = [];
+    if (activeIntervention == null) return taskSchedule;
 
-    if (beforeIntervention == null) return taskSchedule;
-
-    // Workaround to display the dashboard correctly, until the trial starts
-    // at the next day for every participant
-
-    /* ************* WORKAROUND FIX START ***************** */
-    // define placeholders
-    bool cycleChange = false;
-    DateTime afterDateTime = DateTime.now();
-    Intervention? afterIntervention;
-
-    // check if study starts day after registration is already in place
-    if (startedAt!.hour != 0 && startedAt!.minute != 0 && startedAt!.second != 0 && startedAt!.millisecond != 0) {
-      afterDateTime = DateTime.utc(
-          dateTime.year, dateTime.month, dateTime.day, startedAt!.hour,
-          startedAt!.minute + 1,
-      );
-      afterIntervention = getInterventionForDate(afterDateTime);
-
-      if (afterIntervention == null) return taskSchedule;
-
-      // there is a cycle change during the day, i.e. the interventions change
-      cycleChange = afterIntervention != beforeIntervention;
-      print("old subject. cyclechange $cycleChange");
-    }
-
-    /* ************* WORKAROUND FIX END ***************** */
-
-    for (final task in beforeIntervention.tasks) {
+    for (final task in activeIntervention.tasks) {
       if (task.title == null) continue;
-
       for (final completionPeriod in task.schedule.completionPeriods) {
-        /* ************* WORKAROUND FIX START ***************** */
-        if (cycleChange) {
-          final lockTime = DateTime(
-            afterDateTime.year, afterDateTime.month, afterDateTime.day,
-            completionPeriod.lockTime.hour, completionPeriod.lockTime.minute,
-          );
-          if (lockTime.isBefore(dateTime)) {
-            taskSchedule.add(TaskInstance(task, completionPeriod.id));
-          }
-        } else {
-          /* ************* WORKAROUND FIX END ***************** */
-          taskSchedule.add(TaskInstance(task, completionPeriod.id));
-        }
+        taskSchedule.add(TaskInstance(task, completionPeriod.id));
       }
     }
-    /* ************* WORKAROUND FIX START ***************** */
-    if (cycleChange) {
-      for (final task in afterIntervention!.tasks) {
-        if (task.title == null) continue;
-
-        for (final completionPeriod in task.schedule.completionPeriods) {
-          final openTime = DateTime(
-            afterDateTime.year, afterDateTime.month, afterDateTime.day,
-            completionPeriod.unlockTime.hour, completionPeriod.unlockTime.minute,
-          );
-          if (openTime.isAfter(dateTime)) {
-            taskSchedule.add(TaskInstance(task, completionPeriod.id));
-          }
-        }
-      }
-    }
-    /* ************* WORKAROUND FIX END ***************** */
     for (final observation in study.observations) {
       for (final completionPeriod in observation.schedule.completionPeriods) {
         taskSchedule.add(TaskInstance(observation, completionPeriod.id));
