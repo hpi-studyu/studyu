@@ -8,7 +8,7 @@ import 'performance.dart';
 abstract class ExecutionLimiter {
   ExecutionLimiter({this.milliseconds = 300});
   final int milliseconds;
-  Timer? _timer;
+  static Timer? _timer;
 
   void dispose() {
     _timer?.cancel();
@@ -51,15 +51,15 @@ class Debouncer extends ExecutionLimiter {
 
     final timerDuration = Duration(milliseconds: milliseconds);
 
-    if (leading && !(_timer?.isActive ?? false)) {
+    if (leading && !(ExecutionLimiter._timer?.isActive ?? false)) {
       startFutureOperation();
       // start a dummy timer so that subsequent calls fall through to the
       // else-branch
-      _timer = Timer(timerDuration, () => {});
+      ExecutionLimiter._timer = Timer(timerDuration, () => {});
     } else {
       _uncompletedFutureOperation?.cancel();
-      _timer?.cancel();
-      _timer = Timer(timerDuration, startFutureOperation);
+      ExecutionLimiter._timer?.cancel();
+      ExecutionLimiter._timer = Timer(timerDuration, startFutureOperation);
     }
   }
 }
@@ -68,9 +68,9 @@ class Throttler extends ExecutionLimiter {
   Throttler({super.milliseconds = 300});
 
   call(VoidCallback callback) {
-    if (_timer?.isActive ?? false) return;
-    _timer?.cancel();
+    if (ExecutionLimiter._timer?.isActive ?? false) return;
+    ExecutionLimiter._timer?.cancel();
     callback();
-    _timer = Timer(Duration(milliseconds: milliseconds), () {});
+    ExecutionLimiter._timer = Timer(Duration(milliseconds: milliseconds), () {});
   }
 }
