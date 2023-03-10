@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 enum ReportSectionType {
   average,
@@ -19,11 +20,9 @@ enum ReportSectionType {
   String get string {
     switch (this) {
       case ReportSectionType.average:
-        //return 'tr.reportSection_type_average';
-        return 'Average';
+        return tr.reportSection_type_average;
       case ReportSectionType.linearRegression:
-        //return 'tr.reportSection_type_linearRegression';
-        return 'LinearRegression';
+        return tr.reportSection_type_linearRegression;
       default:
         return "[Invalid ReportSectionType]";
     }
@@ -32,11 +31,9 @@ enum ReportSectionType {
   IconData? get icon {
     switch (this) {
       case ReportSectionType.average:
-        // todo
-        return Icons.format_list_bulleted_rounded;
+        return Icons.functions_rounded;
       case ReportSectionType.linearRegression:
-        // todo
-        return Icons.tune_rounded;
+        return Icons.insights_rounded;
       default:
         return null;
     }
@@ -44,4 +41,56 @@ enum ReportSectionType {
 
   String toJson() => name;
   static ReportSectionType fromJson(String json) => values.byName(json);
+}
+
+extension TemporalAggregationFormatted on TemporalAggregation {
+  String get string {
+    switch (this) {
+      case TemporalAggregation.day:
+        return tr.reportSection_type_temporalAggregation_day;
+      case TemporalAggregation.phase:
+        return tr.reportSection_type_temporalAggregation_phase;
+      case TemporalAggregation.intervention:
+        return tr.reportSection_type_temporalAggregation_intervention;
+      default:
+        return "[Invalid TemporalAggregation]";
+    }
+  }
+
+  IconData? get icon {
+    switch (this) {
+      case TemporalAggregation.day:
+        return Icons.calendar_month_rounded;
+      case TemporalAggregation.phase:
+        return Icons.fast_forward_rounded;
+      case TemporalAggregation.intervention:
+        return Icons.task_alt_rounded;
+      default:
+        return null;
+    }
+  }
+}
+
+extension ImprovementDirectionFormatted on ImprovementDirection {
+  String get string {
+    switch (this) {
+      case ImprovementDirection.positive:
+        return tr.reportSection_type_improvementDirection_positive;
+      case ImprovementDirection.negative:
+        return tr.reportSection_type_improvementDirection_negative;
+      default:
+        return "[Invalid ImprovementDirection]";
+    }
+  }
+
+  IconData? get icon {
+    switch (this) {
+      case ImprovementDirection.positive:
+        return Icons.arrow_upward_rounded;
+      case ImprovementDirection.negative:
+        return Icons.arrow_downward_rounded;
+      default:
+        return null;
+    }
+  }
 }

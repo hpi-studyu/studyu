@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/common_views/pages/splash_page.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/consent.dart';
 import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
@@ -42,7 +43,6 @@ import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
 
-import '../constants.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
@@ -455,11 +455,11 @@ class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
   final ReportID reportId;
 }*/
 
-class ReportSectionFormRouteArgs extends StudyFormRouteArgs {
-  ReportSectionFormRouteArgs({
-    required this.sectionId,
+class ReportItemFormRouteArgs extends StudyFormRouteArgs {
+  ReportItemFormRouteArgs({
     required super.studyId,
-    //required super.reportId,
+    required this.sectionId,
   });
+
   final SectionID sectionId;
 }

@@ -1,76 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
-class DataReferenceEditor<T> extends StatefulWidget {
-  final DataReference<T> reference;
-  final List<Task> availableTaks;
-  final void Function(DataReference<T> newReference) updateReference;
+import 'data_reference_identifier.dart';
 
+class DataReferenceEditor<T> {
   const DataReferenceEditor({
-    super.key,
-    required this.reference,
-    required this.availableTaks,
-    required this.updateReference,
+    required this.formControl,
+    required this.availableTasks,
   });
 
-  @override
-  DataReferenceEditorState<T> createState() => DataReferenceEditorState<T>();
-}
+  final FormControl<DataReferenceIdentifier<T>> formControl;
+  final List<Task> availableTasks;
 
-class DataReferenceEditorState<T> extends State<DataReferenceEditor<T>> {
-  void _changeTarget(_DataReferenceIdentifier? identifier) {
-    if (identifier == null) return;
-    final newReference = DataReference<T>(identifier.task, identifier.property);
+  ReactiveDropdownField get buildReactiveDropdownField =>
+      ReactiveDropdownField<DataReferenceIdentifier>(
+        formControl: formControl,
+        items: _dataReferenceItems(),
+        isExpanded: true,
+      );
 
-    widget.updateReference(newReference);
-  }
+  FormTableRow buildFormTableRow(ThemeData theme) =>
+      FormTableRow(
+        label: tr.form_field_report_data_source_title,
+        labelHelpText: tr.form_field_report_data_source_tooltip,
+        // TODO: extract custom dropdown component with theme + focus fix
+        input: Theme(
+            data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+            child: buildReactiveDropdownField,
+        ),
+      );
 
-  @override
-  Widget build(BuildContext context) {
-    final items = <DropdownMenuItem<_DataReferenceIdentifier>>[];
-    for (final task in widget.availableTaks) {
+  List<DropdownMenuItem<DataReferenceIdentifier>> _dataReferenceItems() {
+    final items = <DropdownMenuItem<DataReferenceIdentifier>>[];
+    for (final task in availableTasks) {
       for (final entry in task.getAvailableProperties().entries) {
         if (entry.value == T) {
           items.add(
-            DropdownMenuItem<_DataReferenceIdentifier>(
-              value: _DataReferenceIdentifier(task.id, entry.key),
-              child: Text('${task.title} > ${task.getHumanReadablePropertyName(entry.key)}'),
+            DropdownMenuItem<DataReferenceIdentifier<T>>(
+              value: DataReferenceIdentifier(task.id, entry.key),
+              child: Text('${task.title} > ${task.getHumanReadablePropertyName(entry.key)}', overflow: TextOverflow.ellipsis,),
             ),
           );
         }
       }
     }
-
-    return Row(
-      children: [
-        Text('AppLocalizations.of(context).data_source'),
-        DropdownButton<_DataReferenceIdentifier>(
-          value: widget.reference != null
-              ? _DataReferenceIdentifier(widget.reference.task, widget.reference.property)
-              : null,
-          onChanged: _changeTarget,
-          items: items,
-        ),
-      ],
-    );
+    return items;
   }
-}
-
-@immutable
-class _DataReferenceIdentifier {
-  final String task;
-  final String property;
-
-  const _DataReferenceIdentifier(this.task, this.property);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is _DataReferenceIdentifier &&
-              runtimeType == other.runtimeType &&
-              task == other.task &&
-              property == other.property;
-
-  @override
-  int get hashCode => task.hashCode ^ property.hashCode;
 }

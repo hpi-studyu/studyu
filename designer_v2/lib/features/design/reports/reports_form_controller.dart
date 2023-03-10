@@ -2,26 +2,27 @@ import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/features/design/reports/reports_form_data.dart';
-import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
+import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
+import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
+import 'reports_form_data.dart';
+import 'section/report_item_form_controller.dart';
+
 class ReportsFormViewModel extends FormViewModel<ReportsFormData>
-    //with WithQuestionnaireControls<EnrollmentFormData, ScreenerQuestionFormViewModel>
     implements
-        IFormViewModelDelegate<ReportSectionFormViewModel>,
-        IListActionProvider<ReportSectionFormViewModel>,
-        IProviderArgsResolver<ReportSectionFormViewModel, ReportSectionFormRouteArgs> {
+        IFormViewModelDelegate<ReportItemFormViewModel>,
+        IProviderArgsResolver<ReportItemFormViewModel, ReportItemFormRouteArgs> {
   ReportsFormViewModel({
     required this.study,
     required this.router,
@@ -29,169 +30,143 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
     super.formData,
     super.autosave = true,
     super.validationSet = StudyFormValidationSet.draft,
-  }) {
-    // automatically save when a managed child view model is saved
-    // propagateOnSave = true;
-  }
+  });
 
   final Study study;
   final GoRouter router;
 
-  late final reportSectionDelegate = ReportsFormSectionDelegate(
-    formViewModels: reportSectionFormViewModels,
+  late final reportItemDelegate = ReportFormItemDelegate(
+    formViewModelCollection: reportItemFormViewModels,
     owner: this,
     validationSet: super.validationSet,
   );
 
   // - Form fields
 
-  //final FormControl<Participation> enrollmentTypeControl = FormControl();
+  late final FormArray reportItemArray = FormArray([]);
+  late final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData> reportItemFormViewModels =
+  FormViewModelCollection([], reportItemArray);
 
-  /*
-    List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
-      Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
-  */
-
-  final FormArray reportsArray = FormArray([]);
-  late final reportSectionFormViewModels = FormViewModelCollection<
-      ReportSectionFormViewModel,
-      ReportSectionFormData>([], reportsArray);
-
-  List<ReportSectionFormViewModel> get reportSectionModels => reportSectionFormViewModels.formViewModels;
+  List<ReportItemFormViewModel> get reportItemModels => reportItemFormViewModels.formViewModels;
 
   @override
-  FormValidationConfigSet get validationConfig =>
-      {
-        StudyFormValidationSet.draft: [], // TODO
-        StudyFormValidationSet.publish: [], // TODO
-        StudyFormValidationSet.test: [], // TODO
-      };
+  FormValidationConfigSet get validationConfig => {
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
-  FormGroup get form =>
-      FormGroup({
-        'report_specification': reportsArray,
-        // ...questionnaireControls,
-      });
+  late final FormGroup form = FormGroup({
+    'report_specification': reportItemArray,
+  });
 
   @override
   void setControlsFrom(ReportsFormData data) {
-    final viewModels = data.reportsFormData.map((data) =>
-        ReportSectionFormViewModel(
+    final viewModels = data.reportItems.map((data) =>
+        ReportItemFormViewModel(
           formData: data,
-          //delegate: reportSectionDelegate,
+          delegate: reportItemDelegate,
         )).toList();
-    reportSectionFormViewModels.reset(viewModels);
+    reportItemFormViewModels.reset(viewModels);
   }
 
   @override
   ReportsFormData buildFormData() {
     return ReportsFormData(
-        reportsFormData: reportSectionFormViewModels.formData
+        reportItems: reportItemFormViewModels.formData
     );
   }
 
   @override
-  Map<FormMode, String> get titles => throw UnimplementedError();
+  Map<FormMode, String> get titles => throw UnimplementedError(); // no title
 
-  availablePopupActions(ReportSectionFormViewModel viewModel) {
-    final actions = reportSectionFormViewModels.availablePopupActions(viewModel, isReadOnly: isReadonly);
-    return withIcons(actions, modelActionIcons);
+  @override
+  void read([ReportsFormData? formData]) {
+    reportItemFormViewModels.read();
+    super.read(formData);
   }
-  ReportSectionFormRouteArgs buildNewResultItemFormRouteArgs() {
-    return ReportSectionFormRouteArgs(
+
+  ReportItemFormRouteArgs buildNewReportItemFormRouteArgs() {
+    return ReportItemFormRouteArgs(
       studyId: study.id,
       sectionId: Config.newModelId,
     );
   }
 
-  buildResultItemFormRouteArgs(ReportSectionFormViewModel viewModel) {
-    return ReportSectionFormRouteArgs(
+  ReportItemFormRouteArgs buildReportItemFormRouteArgs(ReportItemFormViewModel model) {
+    return ReportItemFormRouteArgs(
       studyId: study.id,
-      sectionId: viewModel.sectionId,
+      sectionId: model.sectionId,
     );
   }
 
+  testReport() {
+    // todo
+    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
+  }
+
+  bool get canTestConsent => !reportItemArray.disabled && (reportItemArray.value?.isNotEmpty ?? false);
+
   @override
-  List<ModelAction> availableActions(ReportSectionFormViewModel model) {
-    // TODO: implement availableActions
+  void onCancel(ReportItemFormViewModel formViewModel, FormMode prevFormMode) {
     throw UnimplementedError();
   }
 
   @override
-  void onCancel(ReportSectionFormViewModel formViewModel, FormMode prevFormMode) {
-    // TODO: implement onCancel
-  }
-
-  @override
-  Future onSave(ReportSectionFormViewModel formViewModel, FormMode prevFormMode) {
-    // TODO: implement onSave
+  Future onSave(ReportItemFormViewModel formViewModel, FormMode prevFormMode) {
     throw UnimplementedError();
   }
 
   @override
-  ReportSectionFormViewModel provide(ReportSectionFormRouteArgs args) {
+  ReportItemFormViewModel provide(ReportItemFormRouteArgs args) {
     if (args.sectionId.isNewId) {
-      // Eagerly add the managed viewmodel in case it needs to be [provide]d
-      // to a child controller
-      // delegate: null, delegate, reportSectionDelegate, this
-      final viewModel = ReportSectionFormViewModel(
-        formData: null,
-        delegate: reportSectionDelegate,
+      final viewModel = ReportItemFormViewModel(
+        formData: formData,
+        delegate: this,
       );
-      reportSectionFormViewModels.stage(viewModel);
+      reportItemFormViewModels.stage(viewModel);
       return viewModel;
     }
 
-    final viewModel = reportSectionFormViewModels.findWhere((vm) => vm.sectionId == args.sectionId);
+    final viewModel = reportItemFormViewModels.findWhere((vm) => vm.sectionId == args.sectionId);
     if (viewModel == null) {
-      print("not found1");
+      print("ReportSection not found");
       throw ReportSectionNotFoundException(); // TODO handle 404 not found
     }
     return viewModel;
   }
-
-  @override
-  void onSelectItem(ReportSectionFormViewModel item) {
-    // TODO: open sidesheet programmatically
-  }
-
-  @override
-  void onNewItem() {
-    // TODO: open sidesheet programmatically
-  }
 }
 
-
-class ReportsFormSectionDelegate
+class ReportFormItemDelegate
     implements
-        IFormViewModelDelegate<ReportSectionFormViewModel>,
-        IListActionProvider<ReportSectionFormViewModel>,
-        IProviderArgsResolver<ReportSectionFormViewModel, ReportSectionFormRouteArgs> {
-  ReportsFormSectionDelegate({
-    required this.formViewModels,
+        IFormViewModelDelegate<ReportItemFormViewModel>,
+        IListActionProvider<ReportItemFormViewModel>,
+        IProviderArgsResolver<ReportItemFormViewModel, ReportItemFormRouteArgs> {
+  ReportFormItemDelegate({
+    required this.formViewModelCollection,
     required this.owner,
     this.validationSet,
     this.propagateOnSave = true,
   });
 
-  final FormViewModelCollection<ReportSectionFormViewModel, ReportSectionFormData> formViewModels;
+  final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData> formViewModelCollection;
   final ReportsFormViewModel owner;
   final bool propagateOnSave;
   final FormValidationSetEnum? validationSet;
 
   @override
-  void onCancel(ReportSectionFormViewModel formViewModel, FormMode prevFormMode) {
+  void onCancel(ReportItemFormViewModel formViewModel, FormMode prevFormMode) {
     return; // no-op
   }
 
   @override
-  Future onSave(ReportSectionFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(ReportItemFormViewModel formViewModel, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
-      formViewModels.commit(formViewModel);
+      formViewModelCollection.commit(formViewModel);
     } else if (prevFormMode == FormMode.edit) {
-      // nothing to do here
+      // Do nothing
     }
     if (propagateOnSave) {
       await owner.save();
@@ -199,41 +174,63 @@ class ReportsFormSectionDelegate
   }
 
   @override
-  ReportSectionFormViewModel provide(ReportSectionFormRouteArgs args) {
+  ReportItemFormViewModel provide(ReportItemFormRouteArgs args) {
     if (args.sectionId.isNewId) {
-      // Eagerly add the managed viewmodel in case it needs to be [provide]d
-      // to a child controller
-      final viewModel = ReportSectionFormViewModel(
+      final viewModel = ReportItemFormViewModel(
         formData: null,
         delegate: this,
-        //validationSet: validationSet,
+        validationSet: validationSet,
       );
-      formViewModels.stage(viewModel);
+      formViewModelCollection.stage(viewModel);
       return viewModel;
     }
-    final viewModel = formViewModels.findWhere((vm) => vm.sectionId == args.sectionId);
+
+    final viewModel = formViewModelCollection.findWhere((vm) => vm.sectionId == args.sectionId);
     if (viewModel == null) {
-      print("not found");
       throw ReportSectionNotFoundException(); // TODO handle 404 not found
     }
     return viewModel;
-    }
+  }
 
   // - IListActionProvider
 
   @override
-  List<ModelAction> availableActions(ReportSectionFormViewModel model) {
-    // TODO: implement availableActions
-    throw UnimplementedError();
-  }
+  List<ModelAction> availableActions(ReportItemFormViewModel model) {
+    final actions = formViewModelCollection.availablePopupActions(
+      model,
+      isReadOnly: owner.isReadonly,
+    );
+    final modalAction = ModelAction(
+      type: ModelActionType.primary,
+      label: ModelActionType.primary.string,
+      isAvailable: !owner.isReadonly,
+      onExecute: () async {
+        for (var e in formViewModelCollection.formViewModels) {
+          if (e.formData!.isPrimary) {
+            // todo make this more efficient
+            e.formData!.isPrimary = false;
+            e.buildFormData().isPrimary = false;
+            formViewModelCollection.add(e);
+            e.save();
+          }
+        }
+        model.formData!.isPrimary = true;
+        model.save();
+        //await owner.save(); with propagateOnSave=false
+      },
+    );
+    actions.insert(0, modalAction);
 
-  @override
-  void onSelectItem(ReportSectionFormViewModel reportFormViewModel) {
-    // TODO: open sidesheet programmatically
+    return withIcons(actions, modelActionIcons);
   }
 
   @override
   void onNewItem() {
+    // TODO: open sidesheet programmatically
+  }
+
+  @override
+  void onSelectItem(ReportItemFormViewModel item) {
     // TODO: open sidesheet programmatically
   }
 }

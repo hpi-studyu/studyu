@@ -20,6 +20,7 @@ class FormArrayTable<T> extends StatelessWidget {
     required this.onNewItemLabel,
     required this.rowTitle,
     this.rowPrefix,
+    this.rowSuffix,
     this.leadingWidget,
     this.sectionTitle,
     this.sectionTitleDivider = true,
@@ -52,6 +53,7 @@ class FormArrayTable<T> extends StatelessWidget {
   final bool? sectionTitleDivider;
 
   final WidgetBuilderAt<T>? rowPrefix;
+  final WidgetBuilderAt<T>? rowSuffix;
 
   final Widget? leadingWidget;
 
@@ -131,21 +133,28 @@ class FormArrayTable<T> extends StatelessWidget {
   List<Widget> _buildRow(BuildContext context, T item, int rowIdx, Set<MaterialState> states) {
     final tableTextStyleSecondary = Theme.of(context).textTheme.bodyMedium;
     return [
-      SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
-            Text(
-              rowTitle(item),
-              style: tableTextStyleSecondary?.copyWith(
-                overflow: TextOverflow.ellipsis,
+      CustomScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Row(
+                children: [
+                  (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
+                  Text(
+                    rowTitle(item),
+                    style: tableTextStyleSecondary?.copyWith(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    maxLines: 1,
+                  ),
+                  const Spacer(),
+                  (rowSuffix != null) ? rowSuffix!(context, item, rowIdx) : const SizedBox.shrink(),
+                ],
               ),
-              maxLines: 1,
             ),
-          ],
-        ),
+          ]
       ),
     ];
   }

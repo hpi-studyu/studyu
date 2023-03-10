@@ -33,6 +33,7 @@ enum ModelActionType {
   remove, // same semantics as delete
   duplicate,
   clipboard,
+  primary, // ReportSection
 }
 
 /// Provides a human-readable translation of the model action type
@@ -49,6 +50,8 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.action_duplicate;
       case ModelActionType.clipboard:
         return tr.action_clipboard;
+      case ModelActionType.primary:
+        return tr.action_reportPrimary;
       default:
         return "[Invalid ModelActionType]";
     }
@@ -61,6 +64,7 @@ Map<ModelActionType, IconData> modelActionIcons = {
   ModelActionType.remove: Icons.close_rounded,
   ModelActionType.duplicate: Icons.file_copy_rounded,
   ModelActionType.clipboard: Icons.copy_rounded,
+  ModelActionType.primary: Icons.arrow_circle_up_rounded,
 };
 
 /// Decorates a list of [actions] with their corresponding icon

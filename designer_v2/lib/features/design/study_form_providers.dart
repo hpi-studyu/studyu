@@ -88,10 +88,10 @@ final reportsFormViewModelProvider = Provider.autoDispose.family<ReportsFormView
   return ref.watch(studyFormViewModelProvider(studyId)).reportsFormViewModel;
 });
 
-final reportSectionFormViewModelProvider =
-    Provider.autoDispose.family<ReportSectionFormViewModel, ReportSectionFormRouteArgs>((ref, args) {
+final reportItemFormViewModelProvider =
+Provider.autoDispose.family<ReportItemFormViewModel, ReportItemFormRouteArgs>((ref, args) {
   final owner = ref.watch(reportsFormViewModelProvider(args.studyId));
-  return owner.provide(args);
+  return owner.reportItemDelegate.provide(args);
 });
 
 // - Validators

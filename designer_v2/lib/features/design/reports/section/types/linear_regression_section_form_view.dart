@@ -7,12 +7,13 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/data_reference_editor.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class AverageSectionFormView extends ConsumerWidget {
-  const AverageSectionFormView({required this.formViewModel, required this.studyId, required this.reportSectionColumnWidth, super.key,});
+class LinearRegressionSectionFormView extends ConsumerWidget {
+  const LinearRegressionSectionFormView({required this.formViewModel, required this.studyId, required this.reportSectionColumnWidth, super.key});
 
   final ReportItemFormViewModel formViewModel;
   final StudyID studyId;
@@ -32,14 +33,14 @@ class AverageSectionFormView extends ConsumerWidget {
           columnWidths: reportSectionColumnWidth,
           rows: [
             FormTableRow(
-              label: tr.form_field_report_average_temporalAggregation_title,
-              labelHelpText: tr.form_field_report_average_temporalAggregation_tooltip,
+              label: tr.form_field_report_improvementDirection_title,
+              labelHelpText: tr.form_field_report_improvementDirection_tooltip,
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
-                child: ReactiveDropdownField<TemporalAggregation>(
-                  formControl: formViewModel.temporalAggregationControl,
-                  items: ReportItemFormViewModel.temporalAggregationControlOptions.map((option) {
+                child: ReactiveDropdownField<ImprovementDirection>(
+                  formControl: formViewModel.improvementDirectionControl,
+                  items: ReportItemFormViewModel.improvementDirectionControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
@@ -56,6 +57,18 @@ class AverageSectionFormView extends ConsumerWidget {
                       ),
                     );
                   }).toList(),
+                ),
+              ),
+            ),
+            FormTableRow(
+              control: formViewModel.alphaControl,
+              label: tr.form_field_report_linearRegression_alpha_title,
+              labelHelpText: tr.form_field_report_linearRegression_alpha_tooltip,
+              input: ReactiveTextField(
+                formControl: formViewModel.alphaControl,
+                validationMessages: formViewModel.alphaControl.validationMessages,
+                decoration: InputDecoration(
+                  hintText: tr.form_field_report_linearRegression_alpha_hint,
                 ),
               ),
             ),

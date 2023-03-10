@@ -1,39 +1,76 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
-import 'package:studyu_designer_v2/features/forms/form_data.dart';
-
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ReportsFormData implements IStudyFormData {
   ReportsFormData({
-    required this.reportsFormData,
+    required this.reportItems,
   });
 
-  final List<ReportSectionFormData> reportsFormData;
+  final List<ReportItemFormData> reportItems;
 
   factory ReportsFormData.fromStudy(Study study) {
     return ReportsFormData(
-      reportsFormData: ReportSectionFormData.fromDomainModel(study.reportSpecification),
+      reportItems: ReportItemFormData.fromDomainModel(study.reportSpecification),
     );
   }
 
   @override
   Study apply(Study study) {
-    for (ReportSectionFormData sectionFormData in reportsFormData) {
-      if (sectionFormData.isPrimary) {
-        study.reportSpecification.primary = sectionFormData.section;
+    study.reportSpecification.secondary = [];
+    for (ReportItemFormData itemFormData in reportItems) {
+      if (itemFormData.isPrimary) {
+        study.reportSpecification.primary = itemFormData.section;
       } else {
-        study.reportSpecification.secondary.add(sectionFormData.section);
+        study.reportSpecification.secondary.add(itemFormData.section);
       }
     }
+
+    if (!reportItems.any((element) => element.isPrimary)) {
+      study.reportSpecification.primary = null;
+    }
+
     return study;
   }
 
   @override
-  IFormData copy() {
-    throw UnimplementedError();
-  }
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   @override
-  FormDataID get id => "123"; // todo
+  ReportsFormData copy() {
+    throw UnimplementedError(); // not needed for top-level form data
+  }
+}
+
+enum ReportStatus {
+  primary,
+  secondary;
+
+  String toJson() => name;
+  static ReportStatus fromJson(String json) => values.byName(json);
+}
+
+extension ReportStatusFormatted on ReportStatus {
+  String get string {
+    switch (this) {
+      case ReportStatus.primary:
+        return tr.report_status_primary;
+      case ReportStatus.secondary:
+        return tr.report_status_secondary;
+      default:
+        return "[Invalid ReportStatus]";
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case ReportStatus.primary:
+        return tr.report_status_primary_description;
+      case ReportStatus.secondary:
+        return tr.report_status_secondary_description;
+      default:
+        return "[Invalid ReportStatus]";
+    }
+  }
 }
