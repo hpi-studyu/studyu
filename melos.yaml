@@ -4,10 +4,10 @@ repository: https://github.com/hpi-studyu/studyu
 
 packages:
   - .
-  - app/*
-  - designer_v2/*
-  - core/*
-  - flutter_common/*
+  - app
+  - designer_v2
+  - core
+  - flutter_common
 
 command:
   clean:
