@@ -1,3 +1,7 @@
+## 4.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 4.0.0-dev.5
 
  - **FIX**: do not schedule notifications for not started studies. ([b57f57c3](https://github.com/hpi-studyu/studyu/commit/b57f57c30a798030171a9bbcd32a5fb109bb20c0))

@@ -1,3 +1,7 @@
+## 2.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 2.0.0-dev.7
 
  - **FIX**: reload dashboard if subject is null. ([42ccfc42](https://github.com/hpi-studyu/studyu/commit/42ccfc42ac437fb54d670f5c5cbbf557e6ef34f4))
