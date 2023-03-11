@@ -11,6 +11,32 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.0.2`](#studyu_app---v202)
+ - [`studyu_designer_v2` - `v1.1.1`](#studyu_designer_v2---v111)
+
+---
+
+#### `studyu_app` - `v2.0.2`
+
+ - **FIX**: preview mode working again. ([75bec484](https://github.com/hpi-studyu/studyu/commit/75bec484a065cea9a4842afde26205876718d7d0))
+
+#### `studyu_designer_v2` - `v1.1.1`
+
+ - **FIX**: preview mode working again. ([75bec484](https://github.com/hpi-studyu/studyu/commit/75bec484a065cea9a4842afde26205876718d7d0))
+
+
+## 2023-03-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`studyu_app` - `v2.0.0`](#studyu_app---v200)
  - [`studyu_core` - `v4.0.0`](#studyu_core---v400)
 

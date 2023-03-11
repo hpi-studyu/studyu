@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - **FIX**: preview mode working again. ([75bec484](https://github.com/hpi-studyu/studyu/commit/75bec484a065cea9a4842afde26205876718d7d0))
+
 ## 1.1.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
