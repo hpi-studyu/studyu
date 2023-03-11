@@ -3,17 +3,21 @@ name: studyu-packages
 repository: https://github.com/hpi-studyu/studyu
 
 packages:
-  - 'app/*'
-#  - 'designer/*'
-  - 'designer_v2/*'
-  - 'core/*'
-  - 'flutter_common/*'
-#  - 'repo_generator/*'
-#  - 'notebook_uploader/*'
+  - .
+  - app
+  - designer_v2
+  - core
+  - flutter_common
 
 command:
-  version:
-    linkToCommits: true
+  clean:
+    hooks:
+      # Clean things very deeply, can be used to establish "pristine checkout" status
+      pre: >
+        git clean -x -d -f -q
+      # Additional cleanup lifecycle script, executed when `melos clean` is ran.
+      post: >
+        melos exec --flutter --concurrency=3 -- "flutter clean"
 
 scripts:
   analyze:
@@ -59,7 +63,7 @@ scripts:
       melos exec -c 6 --fail-fast -- \
         "flutter test"
     description: Run `flutter test` for a specific package.
-    select-package:
+    packageFilters:
       dir-exists: test
 
   generate:
@@ -67,7 +71,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter pub run build_runner build --delete-conflicting-outputs"
     description: Generate files with build_runner
-    select-package:
+    packageFilters:
       scope: studyu_core
 
   build:android:
@@ -75,7 +79,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build apk --no-tree-shake-icons --multidex"
     description: Build app for Android.
-    select-package:
+    packageFilters:
       dir-exists: android
 
   build:ios:
@@ -83,7 +87,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build ipa --no-codesign --no-tree-shake-icons"
     description: Build app for iOS.
-    select-package:
+    packageFilters:
       dir-exists: ios
 
   build:web:
@@ -91,7 +95,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
-    select-package:
+    packageFilters:
       dir-exists: web
 
   build:web:app:
@@ -99,7 +103,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build app for Web.
-    select-package:
+    packageFilters:
       scope: studyu_app
 
   build:web:designer:
@@ -107,7 +111,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build designer for Web.
-    select-package:
+    packageFilters:
       scope: studyu_designer
 
   build:web:designer_v2:
@@ -115,7 +119,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons"
     description: Build designer_v2 for Web.
-    select-package:
+    packageFilters:
       scope: studyu_designer_v2
 
   # Staging Env
@@ -125,7 +129,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
     description: Build web staging.
-    select-package:
+    packageFilters:
       scope: [studyu_app, studyu_designer_v2]
       dir-exists: web
 
@@ -134,7 +138,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
     description: Build web app staging.
-    select-package:
+    packageFilters:
       scope: studyu_app
       dir-exists: web
 
@@ -143,7 +147,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
     description: Build designer app staging.
-    select-package:
+    packageFilters:
       scope: studyu_designer
       dir-exists: web
 
@@ -152,7 +156,7 @@ scripts:
       melos exec -c 2 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.staging"
     description: Build designer_v2 staging.
-    select-package:
+    packageFilters:
       scope: studyu_designer_v2
       dir-exists: web
 
@@ -163,7 +167,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.selfhost"
     description: Build app for Docker and self-hosted Supabase instance.
-    select-package:
+    packageFilters:
       scope: studyu_app
 
   build:web:designer:selfhost:
@@ -171,7 +175,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.selfhost"
     description: Build designer for Docker and self-hosted Supabase instance.
-    select-package:
+    packageFilters:
       scope: studyu_designer
 
   build:web:designer_v2:selfhost:
@@ -179,7 +183,7 @@ scripts:
       melos exec -c 1 --fail-fast -- \
         "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=ENV=.env.selfhost"
     description: Build designer_v2 for Docker and self-hosted Supabase instance.
-    select-package:
+    packageFilters:
       scope: studyu_designer_v2
 
   # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
@@ -187,7 +191,7 @@ scripts:
     run: |
       melos exec -c 1 -- \
         "flutter run lib/main.dart -d chrome --web-port 3001 --dart-define=ENV=.env.local"
-    select-package:
+    packageFilters:
       scope: studyu_app
     description: Runs app in chrome on port 3001 with local env
 
@@ -195,14 +199,6 @@ scripts:
     run: |
       melos exec -c 1 -- \
         "flutter run lib/main.dart -d chrome --web-port 3000 --dart-define=ENV=.env.local"
-    select-package:
+    packageFilters:
       scope: studyu_designer
     description: Runs designer in chrome on port 3000 with local env
-
-# Clean things very deeply, can be used to establish "pristine checkout" status
-clean:deep: >
-  git clean -x -d -f -q
-
-# Additional cleanup lifecycle script, executed when `melos clean` is ran.
-postclean: >
-  melos exec --flutter --concurrency=3 -- "flutter clean"
