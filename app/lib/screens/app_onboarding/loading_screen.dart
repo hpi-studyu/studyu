@@ -34,7 +34,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> initStudy() async {
     final state = context.read<AppState>();
 
-    if (widget.queryParameters.containsKey('mode') && widget.queryParameters['mode'] == 'preview') {
+    if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,

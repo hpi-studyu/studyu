@@ -21,7 +21,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
       return '';
     }
     String appUrl = env.appUrl ?? '';
-    appUrl += "?mode=preview&session=${Uri.encodeComponent(serializedSession)}";
+    appUrl += "/preview?session=${Uri.encodeComponent(serializedSession)}";
     appUrl += "&studyid=$studyId";
     appUrl += "&languageCode=$languageCode";
     return appUrl;

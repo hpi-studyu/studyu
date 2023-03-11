@@ -19,6 +19,7 @@ import 'screens/study/report/report_history.dart';
 
 class Routes {
   static const String loading = '/loading';
+  static const String preview = '/preview';
   static const String dashboard = '/dashboard';
   static const String welcome = '/welcome';
   static const String about = '/about';
@@ -53,9 +54,11 @@ class Routes {
   }
 
   static Route<dynamic> generateRoute(RouteSettings settings, Map<String, String> queryParameters) {
-    switch (settings.name) {
-      // init Parse on our initial route
+    final uri = Uri.parse(settings.name);
+    switch (uri.path) {
       case loading:
+        return MaterialPageRoute(builder: (_) => const LoadingScreen(), settings: settings);
+      case preview:
         return MaterialPageRoute(builder: (_) => LoadingScreen(queryParameters: queryParameters), settings: settings);
       case dashboard:
         return MaterialPageRoute(builder: (_) => const DashboardScreen(), settings: settings);
