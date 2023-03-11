@@ -29,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: async
-      sha256: bfe67ef28df125b7dddcea62755991f807aa39a2492a23e1550161692950bbe0
+      sha256: "947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.10.0"
+    version: "2.11.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -237,10 +237,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: b266845913346d6c1bd3424f3c3913ab18a03d17ffb01dfa84c5547caa15ccf2
+      sha256: fb4e0095c623aadec304af39a929aabb4f47729ae7f9286f38e90df2e521104b
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.1"
+    version: "1.5.2"
   graphs:
     dependency: transitive
     description:
@@ -421,10 +421,10 @@ packages:
     dependency: transitive
     description:
       name: realtime_client
-      sha256: f50f3dce6ac48de7a6d29f6b9b0b8864c1ecdebf322a1724b0aa70e95babd109
+      sha256: "467ef702a35858004a1b9c475dc0ebc0b858ade758e99295beda7f101d523198"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   retry:
     dependency: transitive
     description:
