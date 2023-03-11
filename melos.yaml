@@ -3,7 +3,7 @@ name: studyu-packages
 repository: https://github.com/hpi-studyu/studyu
 
 packages:
-  - .
+  # - .
   - app
   - designer_v2
   - core
