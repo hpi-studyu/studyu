@@ -42,5 +42,7 @@ linter:
     # Apparently package imports are preferred because they allow for easy find and replace
     # always_use_package_imports: false
 
+    sort_pub_dependencies: true
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
