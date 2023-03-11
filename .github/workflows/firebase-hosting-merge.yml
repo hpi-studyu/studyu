@@ -20,7 +20,7 @@ jobs:
       - name: Enable web support
         run: flutter config --enable-web
       - name: Install melos
-        run: dart pub global activate melos 2.9.0
+        run: dart pub global activate melos
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Web"
