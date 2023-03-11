@@ -410,7 +410,7 @@
   "dialog_study_test_help_title": "Test your study!",
   "dialog_study_test_help_description": "This page allows you to experience your study like one of your study's participants, so that you can tailor the design to your needs and verify everything works correctly.",
   "dialog_study_test_section_tips": "⭐ Pro tips",
-  "dialog_study_test_section_tips_text": "• Use the menu in the top-left to quickly preview and jump to different parts of your study\n• Fast-forward through the participant's schedule by clicking 'next day' on the app's dashboard page\n• Preview what your results will look like by exporting & analyzing the data from your latest test session (via the Analyze tab)\n• To get a fresh experience, you can reset all data and enroll as a new test user",
+  "dialog_study_test_section_tips_text": "• Use the menu in the top-left to quickly preview and jump to different parts of your study\n• Fast-forward through the participant's schedule by clicking 'next day' on the app's dashboard page\n• Preview what your results will look like by exporting and analyzing the data from your latest test session (via the Analyze tab)\n• To get a fresh experience, you can reset all data and enroll as a new test user",
   "dialog_study_test_download_url_intro": "• You can also",
   "dialog_study_test_download_url": "https://github.com/hpi-studyu/studyu#app-stores",
   "dialog_study_test_download_url_text": "download the StudyU app",

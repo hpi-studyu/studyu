@@ -369,7 +369,7 @@
   "dialog_study_test_help_title": "Teste deine Studie!",
   "dialog_study_test_help_description": "Im Testmodus siehst du deine Studie aus Teilnehmersicht in der StudyU App, sodass du sie für deine Zwecke anpassen & sicherstellen kannst, dass alles wie vorgesehen funktioniert.",
   "dialog_study_test_section_tips": "⭐ Profi-Tipps",
-  "dialog_study_test_section_tips_text": "• Über das Menü auf der linken Seite kannst du schnell zu verschiedenen Teilen deiner Studie gelangen\n• Du kannst die Studie im Schnelldurchlauf testen, indem du auf der Tagesübersicht via 'next day' zum nächsten Tag gehst\n• Sieh dir eine Vorschau der möglichen Ergebnisse an, indem du die Daten aus dem aktuellen Testlauf exportierst (über die Analysieren-Unterseite)\n• Um als neuer Teilnehmer nochmal von vorne anzufangen, kannst du den Testdurchlauf jederzeit zurücksetzen",
+  "dialog_study_test_section_tips_text": "• Über das Menü auf der linken Seite kannst du schnell zu verschiedenen Teilen deiner Studie gelangen\n• Du kannst die Studie im Schnelldurchlauf testen, in dem du auf der Tagesübersicht via 'next day' zum nächsten Tag gehst\n• Sieh dir eine Vorschau der möglichen Ergebnisse an, in dem du die Daten aus dem aktuellen Testlauf exportierst (über die Analysieren-Unterseite)\n• Um als neuer Teilnehmer nochmal von vorne anzufangen, kannst du den Testdurchlauf jederzeit zurücksetzen",
   "dialog_study_test_download_url_intro": "• Du kannst",
   "dialog_study_test_download_url": "https://github.com/hpi-studyu/studyu#app-stores",
   "dialog_study_test_download_url_text": "die StudyU App runterladen",

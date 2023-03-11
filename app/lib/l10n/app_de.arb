@@ -91,9 +91,10 @@
   "no": "Nein",
   "confirm": "Auswahl bestätigen",
   "faq": "FAQ",
-  "faq_full": "Häufig Gestellte Fragen",
+  "faq_full": "Häufig gestellte Fragen",
 
   "start_study": "Starte Studie",
+  "next_day": "Nächster Tag",
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 

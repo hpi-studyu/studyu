@@ -212,16 +212,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: _buildBody(),
-      bottomSheet: (kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy
-          ? TextButton(
+      bottomSheet: true ||((kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy)
+          ? Container(
+            margin: const EdgeInsets.only(left: 16, bottom: 8),
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.fast_forward_rounded),
               onPressed: () async {
                 await subject.setStartDateBackBy(days: 1);
                 setState(() {
                   scheduleToday = subject.scheduleFor(DateTime.now());
                 });
               },
-              child: const Text('next day'),
+              label: Text(AppLocalizations.of(context).next_day),
             )
+          )
           : null,
     );
   }
