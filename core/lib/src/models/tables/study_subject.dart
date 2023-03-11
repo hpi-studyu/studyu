@@ -24,7 +24,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @JsonKey(name: 'user_id')
   String userId;
   @JsonKey(name: 'started_at')
-  // stored in UTC format, be careful when comparing dates
+  // Should be converted to UTC before saving
   DateTime? startedAt;
   @JsonKey(name: 'selected_intervention_ids')
   List<String> selectedInterventionIds;

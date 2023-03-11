@@ -192,7 +192,7 @@ class Preview {
       getInterventionIds(),
       null, // no invite code
     );
-    subject.startedAt = DateTime.now();
+    subject.startedAt = DateTime.now().toUtc();
 
     if (state.trackParticipantProgress) {
       // print("[PreviewApp]: Tracking Participant progress");
