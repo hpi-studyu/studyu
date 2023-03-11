@@ -58,7 +58,7 @@ jobs:
         with:
           channel: stable
       - name: Build StudyU ios without codesign
-        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }} --build-name '2.0.1'
+        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
         working-directory: ./app
       - uses: maierj/fastlane-action@v3.0.0
         with:
