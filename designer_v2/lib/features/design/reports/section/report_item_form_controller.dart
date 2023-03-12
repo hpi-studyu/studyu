@@ -36,7 +36,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   ReportSectionType get sectionType => sectionTypeControl.value ?? defaultSectionType;
 
   static List<FormControlOption<ReportSectionType>> get sectionTypeControlOptions =>
-      ReportSectionType.values.map((e) => FormControlOption(e, e.toJson())).toList();
+      ReportSectionType.values.map((e) => FormControlOption(e, e.string)).toList();
 
   // DataReference might need to be section specific in the future
   final FormControl<DataReferenceIdentifier<num>> dataReferenceControl = FormControl();
