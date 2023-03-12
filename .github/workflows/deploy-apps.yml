@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - designer_v2
+    paths:
+      - 'app/**'
+      - 'core/**'
+      - 'flutter_common/**'
   workflow_dispatch:
 
 jobs:
