@@ -70,7 +70,7 @@ extension StudyExportX on Study {
       final Map<String, dynamic> rowShared = {
         'participant_id': record.subjectId,
         'participant_started_at': record.startedAt!.toString(),
-        'invite_code': participants!.where((element) => element.id == record.subjectId).first.inviteCode ?? '',
+        'invite_code': participants!.where((element) => element.id == record.subjectId).firstWhereOrNull((_) => true)?.inviteCode ?? '',
         'current_day_of_study': record.completedAt!.difference(record.startedAt!).inDays.toString(),
         'current_intervention_id': record.interventionId,
         'current_intervention_name': intervention?.name ?? invalidKey,
