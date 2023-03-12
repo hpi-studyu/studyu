@@ -83,7 +83,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   bool get isReadonly => formMode == FormMode.readonly;
 
   /// Enum that determines which [FormValidationConfig] should be selected
-  /// from the [validationConfig] and applied to the [form].
+  /// from the [sharedValidationConfig] and applied to the [form].
   ///
   /// If null, the [AbstractControl]s contained in the [form] will be validated
   /// using their default configuration. Otherwise, the default configuration
@@ -237,7 +237,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// [AbstractControl.asyncValidators] for all [FormControl]'s in the
   /// current [form] (or the [FormGroup] itself) with the validators of
   /// the [FormValidationConfig]corresponding to the given [validationSet]
-  /// (as defined in [validationConfig])
+  /// (as defined in [sharedValidationConfig])
   ///
   /// Note: this will only look at immediate child controls of the [form]
   /// and not walk the whole tree
@@ -245,7 +245,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
     if (validationSet == null) {
       return; // retain default form validators
     }
-    final formValidationConfig = validationConfig[validationSet];
+    final formValidationConfig = sharedValidationConfig[validationSet];
     if (formValidationConfig == null) {
       throw FormConfigException("Failed to lookup FormValidationConfig for key: $validationSet");
     }
@@ -421,7 +421,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   ///
   /// One of the [FormValidationConfig]s is chosen at runtime based on the
   /// current [validationSet] and applied to the [form].
-  FormValidationConfigSet get validationConfig => {};
+  FormValidationConfigSet get sharedValidationConfig => {};
 
   /// Initialize the values of all [FormControl]s in the [form]
   void setControlsFrom(T data);

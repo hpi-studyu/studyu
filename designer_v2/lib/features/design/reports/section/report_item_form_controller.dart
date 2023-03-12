@@ -26,7 +26,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   final FormControl<SectionID> sectionIdControl = FormControl(value: const Uuid().v4()); // hidden
   late final FormControl<ReportSectionType> sectionTypeControl = CustomFormControl(
     value: defaultSectionType,
-    onValueChanged: onQuestionTypeChanged,
+    onValueChanged: onSectionTypeChanged,
   );
   final FormControl<String> titleControl = FormControl();
   final FormControl<String> descriptionControl = FormControl();
@@ -36,7 +36,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   ReportSectionType get sectionType => sectionTypeControl.value ?? defaultSectionType;
 
   static List<FormControlOption<ReportSectionType>> get sectionTypeControlOptions =>
-      ReportSectionType.values.map((e) => FormControlOption(e, e.string)).toList();
+      ReportSectionType.values.map((e) => FormControlOption(e, e.toJson())).toList();
 
   // DataReference might need to be section specific in the future
   final FormControl<DataReferenceIdentifier<num>> dataReferenceControl = FormControl();
@@ -44,16 +44,15 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   // - Form fields (section type-specific)
 
   // -- Average
-  static List<FormControlOption<TemporalAggregation>> get temporalAggregationControlOptions =>
-      TemporalAggregation.values.map((e) => FormControlOption(e, e.string)).toList();
-  final FormControl<TemporalAggregation> temporalAggregationControl = FormControl();
+  static List<FormControlOption<TemporalAggregationFormatted>> get temporalAggregationControlOptions =>
+      TemporalAggregationFormatted.values.map((e) => FormControlOption(e, e.string)).toList();
+  final FormControl<TemporalAggregationFormatted> temporalAggregationControl = FormControl();
 
   // -- LinearRegression
-  static List<FormControlOption<ImprovementDirection>> get improvementDirectionControlOptions =>
-      ImprovementDirection.values.map((e) => FormControlOption(e, e.string)).toList();
-  final FormControl<ImprovementDirection> improvementDirectionControl = FormControl();
-  final FormControl<double> alphaControl = FormControl(); // todo must be numeric (double)
-
+  static List<FormControlOption<ImprovementDirectionFormatted>> get improvementDirectionControlOptions =>
+      ImprovementDirectionFormatted.values.map((e) => FormControlOption(e, e.string)).toList();
+  final FormControl<ImprovementDirectionFormatted> improvementDirectionControl = FormControl();
+  final FormControl<double> alphaControl = FormControl();
 
   @override
   Map<FormMode, String> get titles => {
@@ -62,30 +61,93 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
     FormMode.readonly: tr.form_report_readonly,
   };
 
-  @override
-  FormValidationConfigSet get validationConfig => {
-    StudyFormValidationSet.draft: [titleRequired, descriptionRequired],
-    StudyFormValidationSet.publish: [titleRequired, descriptionRequired],
-    StudyFormValidationSet.test: [titleRequired, descriptionRequired],
+  late final Map<ReportSectionType, FormGroup> _controlsBySectionType = {
+    ReportSectionType.average: FormGroup({
+      'temporalAggregation': temporalAggregationControl,
+    }),
+    ReportSectionType.linearRegression: FormGroup({
+      'improvementDirection': improvementDirectionControl,
+      'alphaControl': alphaControl,
+    }),
   };
+
+  late final FormValidationConfigSet _sharedValidationConfig = {
+    StudyFormValidationSet.draft: [titleRequired, descriptionRequired, dataReferenceRequired],
+    StudyFormValidationSet.publish: [titleRequired, descriptionRequired, dataReferenceRequired],
+    StudyFormValidationSet.test: [titleRequired, descriptionRequired, dataReferenceRequired],
+  };
+
+  late final Map<ReportSectionType, FormValidationConfigSet> _validationConfigsBySectionType = {
+    ReportSectionType.average: {
+      StudyFormValidationSet.draft: [aggregationRequired],
+      StudyFormValidationSet.publish: [aggregationRequired],
+      StudyFormValidationSet.test: [aggregationRequired],
+    },
+    ReportSectionType.linearRegression: {
+      StudyFormValidationSet.draft: [improvementDirectionRequired, alphaConfidenceRequired],
+      StudyFormValidationSet.publish: [improvementDirectionRequired, alphaConfidenceRequired],
+      StudyFormValidationSet.test: [improvementDirectionRequired, alphaConfidenceRequired],
+    },
+  };
+
+  @override
+  FormValidationConfigSet get sharedValidationConfig => {
+    StudyFormValidationSet.draft: _getValidationConfig(StudyFormValidationSet.draft),
+    StudyFormValidationSet.publish: _getValidationConfig(StudyFormValidationSet.publish),
+    StudyFormValidationSet.test: _getValidationConfig(StudyFormValidationSet.test),
+  };
+
+  List<FormControlValidation> _getValidationConfig(StudyFormValidationSet validationSet) {
+    return [
+      ...(_sharedValidationConfig[validationSet] ?? []),
+      ...(_validationConfigsBySectionType[sectionType]?[validationSet] ?? [])
+    ];
+  }
 
   get titleRequired => FormControlValidation(control: titleControl, validators: [
     Validators.required
   ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_consent_title_required,
+    ValidationMessage.required: (error) => tr.form_field_report_title_required,
   });
   get descriptionRequired => FormControlValidation(control: descriptionControl, validators: [
     Validators.required
   ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_consent_text_required,
+    ValidationMessage.required: (error) => tr.form_field_report_text_required,
   });
+
+  get dataReferenceRequired => FormControlValidation(control: dataReferenceControl, validators: [
+    Validators.required
+  ], validationMessages: {
+    ValidationMessage.required: (error) => tr.form_field_report_data_source_required,
+  });
+
+  // -- Average
+  get aggregationRequired => FormControlValidation(control: temporalAggregationControl, validators: [
+    Validators.required
+  ], validationMessages: {
+    ValidationMessage.required: (error) => tr.form_field_report_temporalAggregation_required,
+  });
+
+  // -- LinearRegression
+  get improvementDirectionRequired => FormControlValidation(control: improvementDirectionControl, validators: [
+    Validators.required
+  ], validationMessages: {
+    ValidationMessage.required: (error) => tr.form_field_report_improvementDirection_required,
+  });
+  get alphaConfidenceRequired => FormControlValidation(control: alphaControl, validators: [
+    Validators.number
+  ], validationMessages: {
+    ValidationMessage.number: (error) => tr.form_field_report_alphaConfidence_number,
+  });
+
 
   late final Map<String, AbstractControl> sectionBaseControls = {
     'sectionId': sectionIdControl, // hidden
     'section': sectionControl,
     'sectionType': sectionTypeControl,
-    'descriptionControl': descriptionControl,
-    'titleControl': titleControl,
+    'description': descriptionControl,
+    'title': titleControl,
+    'dataReference': dataReferenceControl,
   };
 
   @override
@@ -94,12 +156,12 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
       switch(sectionType) {
         case ReportSectionType.average:
           AverageSection averageSection = AverageSection();
-          averageSection.aggregate = temporalAggregationControl.value!;
+          averageSection.aggregate = temporalAggregationControl.value!.value;
           averageSection.resultProperty = dataReferenceControl.value!;
           return averageSection;
         case ReportSectionType.linearRegression:
           LinearRegressionSection linearSection = LinearRegressionSection();
-          linearSection.improvement = improvementDirectionControl.value;
+          linearSection.improvement = improvementDirectionControl.value!.value;
           linearSection.alpha = alphaControl.value!;
           linearSection.resultProperty = dataReferenceControl.value!;
           return linearSection;
@@ -135,18 +197,22 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   @override
   late final FormGroup form = FormGroup({
     ...sectionBaseControls,
+    ..._controlsBySectionType[sectionType]!.controls,
   });
 
-  onQuestionTypeChanged(ReportSectionType? sectionType) {
+  onSectionTypeChanged(ReportSectionType? sectionType) {
     _updateFormControls(sectionType);
-  }
-
-  onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
-    return; // subclass responsibility
   }
 
   /// Dynamically updates the [form] based on the given [sectionType]
   void _updateFormControls(ReportSectionType? sectionType) {
+    final subtypeFormControls = _controlsBySectionType[sectionType]!.controls;
+    for (final controlName in form.controls.keys) {
+      if (!sectionBaseControls.containsKey(controlName)) {
+        form.removeControl(controlName, emitEvent: false);
+      }
+    }
+    form.addAll(subtypeFormControls);
     markFormGroupChanged();
   }
 
@@ -165,7 +231,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
     switch(sectionType) {
       case ReportSectionType.average:
         AverageSection averageSection = data.section as AverageSection;
-        temporalAggregationControl.value = averageSection.aggregate;
+        temporalAggregationControl.value = TemporalAggregationFormatted(averageSection.aggregate!);
         dataReferenceControl.value = DataReferenceIdentifier(
             averageSection.resultProperty!.task,
             averageSection.resultProperty!.property
@@ -173,7 +239,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         break;
       case ReportSectionType.linearRegression:
         LinearRegressionSection linearRegressionSection = data.section as LinearRegressionSection;
-        improvementDirectionControl.value = linearRegressionSection.improvement;
+        improvementDirectionControl.value = ImprovementDirectionFormatted(linearRegressionSection.improvement!);
         alphaControl.value = linearRegressionSection.alpha;
         dataReferenceControl.value = DataReferenceIdentifier(
             linearRegressionSection.resultProperty!.task,

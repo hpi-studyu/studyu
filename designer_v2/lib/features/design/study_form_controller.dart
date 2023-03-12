@@ -86,7 +86,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   );
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [], // defined in subforms
         StudyFormValidationSet.publish: [], // defined in subforms
         StudyFormValidationSet.test: [], // defined in subforms

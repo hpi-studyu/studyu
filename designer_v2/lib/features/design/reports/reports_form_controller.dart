@@ -50,7 +50,7 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
   List<ReportItemFormViewModel> get reportItemModels => reportItemFormViewModels.formViewModels;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [], // TODO
     StudyFormValidationSet.publish: [], // TODO
     StudyFormValidationSet.test: [], // TODO

@@ -43,9 +43,19 @@ enum ReportSectionType {
   static ReportSectionType fromJson(String json) => values.byName(json);
 }
 
-extension TemporalAggregationFormatted on TemporalAggregation {
+// toJson and fromJson do not work on extensions to be used with jsonEncode.
+// This is the reason for why the enums are encapsulated.
+// todo make generic
+class TemporalAggregationFormatted {
+  final TemporalAggregation _value;
+  const TemporalAggregationFormatted(this._value);
+
+  static List<TemporalAggregationFormatted> get values =>
+      TemporalAggregation.values.map((e) => TemporalAggregationFormatted(e)).toList();
+  TemporalAggregation get value => TemporalAggregation.values.byName(toJson());
+
   String get string {
-    switch (this) {
+    switch (value) {
       case TemporalAggregation.day:
         return tr.reportSection_type_temporalAggregation_day;
       case TemporalAggregation.phase:
@@ -58,7 +68,7 @@ extension TemporalAggregationFormatted on TemporalAggregation {
   }
 
   IconData? get icon {
-    switch (this) {
+    switch (value) {
       case TemporalAggregation.day:
         return Icons.calendar_month_rounded;
       case TemporalAggregation.phase:
@@ -69,11 +79,34 @@ extension TemporalAggregationFormatted on TemporalAggregation {
         return null;
     }
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is TemporalAggregationFormatted &&
+              _value == other._value;
+
+  @override
+  int get hashCode => _value.hashCode;
+
+  @override
+  toString() => toJson();
+
+  String toJson() => _value.name;
+  static TemporalAggregationFormatted fromJson(String json) =>
+      TemporalAggregationFormatted(TemporalAggregation.values.byName(json));
 }
 
-extension ImprovementDirectionFormatted on ImprovementDirection {
+class ImprovementDirectionFormatted {
+  final ImprovementDirection _value;
+  const ImprovementDirectionFormatted(this._value);
+
+  static List<ImprovementDirectionFormatted> get values =>
+      ImprovementDirection.values.map((e) => ImprovementDirectionFormatted(e)).toList();
+  ImprovementDirection get value => ImprovementDirection.values.byName(toJson());
+
   String get string {
-    switch (this) {
+    switch (value) {
       case ImprovementDirection.positive:
         return tr.reportSection_type_improvementDirection_positive;
       case ImprovementDirection.negative:
@@ -84,7 +117,7 @@ extension ImprovementDirectionFormatted on ImprovementDirection {
   }
 
   IconData? get icon {
-    switch (this) {
+    switch (value) {
       case ImprovementDirection.positive:
         return Icons.arrow_upward_rounded;
       case ImprovementDirection.negative:
@@ -93,4 +126,20 @@ extension ImprovementDirectionFormatted on ImprovementDirection {
         return null;
     }
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is ImprovementDirectionFormatted &&
+              _value == other._value;
+
+  @override
+  int get hashCode => _value.hashCode;
+
+  @override
+  toString() => toJson();
+
+  String toJson() => _value.name;
+  static ImprovementDirectionFormatted fromJson(String json) =>
+      ImprovementDirectionFormatted(ImprovementDirection.values.byName(json));
 }

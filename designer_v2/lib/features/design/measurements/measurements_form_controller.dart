@@ -44,7 +44,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   List<MeasurementSurveyFormViewModel> get measurementViewModels => surveyMeasurementFormViewModels.formViewModels;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [],
         StudyFormValidationSet.publish: [measurementRequired],
         StudyFormValidationSet.test: [],

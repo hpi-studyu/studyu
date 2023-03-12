@@ -65,7 +65,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   List<ConsentItemFormViewModel> get consentItemModels => consentItemFormViewModels.formViewModels;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [], // TODO
         StudyFormValidationSet.publish: [], // TODO
         StudyFormValidationSet.test: [], // TODO

@@ -26,6 +26,9 @@ class AverageSectionFormView extends ConsumerWidget {
       ...study.interventions.expand((intervention) => intervention.tasks),
       ...study.observations,
     ];
+
+    //print("ENCODE:${jsonEncode(TemporalAggregationFormatted.values.day)}");
+
     return Column(
       children: [
         FormTableLayout(
@@ -37,8 +40,9 @@ class AverageSectionFormView extends ConsumerWidget {
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
-                child: ReactiveDropdownField<TemporalAggregation>(
+                child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
+                  hint: const Text("Select an aggregation value"),
                   items: ReportItemFormViewModel.temporalAggregationControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;

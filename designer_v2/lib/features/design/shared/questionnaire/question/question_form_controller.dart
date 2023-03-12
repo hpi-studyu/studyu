@@ -223,7 +223,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   };
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: _getValidationConfig(StudyFormValidationSet.draft),
         StudyFormValidationSet.publish: _getValidationConfig(StudyFormValidationSet.publish),
         StudyFormValidationSet.test: _getValidationConfig(StudyFormValidationSet.test),

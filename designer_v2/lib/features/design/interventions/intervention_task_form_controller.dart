@@ -33,7 +33,7 @@ class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTas
   TaskID get instanceId => instanceIdControl.value!;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [titleRequired],
         StudyFormValidationSet.publish: [titleRequired],
         StudyFormValidationSet.test: [titleRequired],

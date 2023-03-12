@@ -16,12 +16,15 @@ class DataReferenceEditor<T> {
   final FormControl<DataReferenceIdentifier<T>> formControl;
   final List<Task> availableTasks;
 
-  ReactiveDropdownField get buildReactiveDropdownField =>
-      ReactiveDropdownField<DataReferenceIdentifier>(
+  ReactiveDropdownField get buildReactiveDropdownField {
+    final items = _dataReferenceItems();
+    return ReactiveDropdownField<DataReferenceIdentifier>(
         formControl: formControl,
-        items: _dataReferenceItems(),
+        items: items,
         isExpanded: true,
+        hint: items.isNotEmpty ? const Text("Select a data source") : const Text("No scale survey question defined"),
       );
+  }
 
   FormTableRow buildFormTableRow(ThemeData theme) =>
       FormTableRow(

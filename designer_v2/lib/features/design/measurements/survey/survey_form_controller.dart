@@ -45,7 +45,7 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
   MeasurementID get instanceId => instanceIdControl.value!;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [titleRequired, atLeastOneQuestion],
         StudyFormValidationSet.publish: [titleRequired, atLeastOneQuestion],
         StudyFormValidationSet.test: [titleRequired, atLeastOneQuestion],

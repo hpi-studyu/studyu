@@ -212,7 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       body: _buildBody(),
-      bottomSheet: true ||((kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy)
+      bottomSheet: (kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy
           ? Container(
             margin: const EdgeInsets.only(left: 16, bottom: 8),
             child: ElevatedButton.icon(

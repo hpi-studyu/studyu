@@ -53,7 +53,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   // - Validation
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [
           ...studyScheduleValidationConfig[StudyFormValidationSet.draft]!,
         ],

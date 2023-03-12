@@ -25,7 +25,7 @@ class ConsentItemFormViewModel extends ManagedFormViewModel<ConsentItemFormData>
   String get consentId => consentIdControl.value!;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [titleRequired, descriptionRequired],
         StudyFormValidationSet.publish: [titleRequired, descriptionRequired],
         StudyFormValidationSet.test: [titleRequired, descriptionRequired],

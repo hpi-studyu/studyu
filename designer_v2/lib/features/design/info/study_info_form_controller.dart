@@ -83,7 +83,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   // - Validation
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         // TODO phoneFormat
         StudyFormValidationSet.draft: [titleRequired, emailFormat, websiteFormat],
         StudyFormValidationSet.publish: [

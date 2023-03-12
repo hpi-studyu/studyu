@@ -48,7 +48,7 @@ class InterventionFormViewModel extends ManagedFormViewModel<InterventionFormDat
   InterventionID get interventionId => interventionIdControl.value!;
 
   @override
-  FormValidationConfigSet get validationConfig => {
+  FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [
           titleRequired, /*atLeastOneTask*/
         ],

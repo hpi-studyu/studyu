@@ -32,14 +32,19 @@
     "reportSection_type_temporalAggregation_day",
     "reportSection_type_temporalAggregation_phase",
     "reportSection_type_temporalAggregation_intervention",
+    "form_field_report_temporalAggregation_required",
     "reportSection_type_linearRegression",
     "reportSection_type_improvementDirection_positive",
     "reportSection_type_improvementDirection_negative",
+    "form_field_report_improvementDirection_required",
     "form_field_report_linearRegression_alpha_title",
     "form_field_report_linearRegression_alpha_tooltip",
     "form_field_report_linearRegression_alpha_hint",
+    "form_field_report_alphaConfidence_required",
+    "form_field_report_alphaConfidence_number",
     "form_field_report_data_source_title",
     "form_field_report_data_source_tooltip",
+    "form_field_report_data_source_required",
     "action_reportPrimary"
   ]
 }
