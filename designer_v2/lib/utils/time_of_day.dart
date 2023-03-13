@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/utils/typings.dart';
 class Time extends TimeOfDay {
   const Time({required super.hour, required super.minute});
 
+  static fromTimeOfDay(TimeOfDay timeOfDay) => Time(hour: timeOfDay.hour, minute: timeOfDay.minute);
+
   JsonMap toJson() => {
         "hour": super.hour,
         "minute": super.minute,
@@ -33,11 +35,14 @@ class TimeValueAccessor extends ControlValueAccessor<Time, String> {
     if (parts.length != 2) {
       return null;
     }
-
-    return Time(
-      hour: int.parse(parts[0].trim()),
-      minute: int.parse(parts[1].trim()),
-    );
+    try {
+      return Time(
+        hour: int.parse(parts[0].trim()),
+        minute: int.parse(parts[1].trim()),
+      );
+    } catch(e) {
+      return null;
+    }
   }
 
   String _addLeadingZeroIfNeeded(int value) => (value < 10) ? '0$value' : value.toString();

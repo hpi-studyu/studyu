@@ -15,6 +15,18 @@ class ScheduleControls extends FormConsumerWidget {
 
   @override
   Widget build(BuildContext context, FormGroup form) {
+    formViewModel.reminderTimePickerControl.valueChanges.listen((event) {
+      formViewModel.reminderTimeControl.value = Time.fromTimeOfDay(formViewModel.reminderTimePickerControl.value!);
+    });
+
+    formViewModel.restrictedTimeStartPickerControl.valueChanges.listen((event) {
+      formViewModel.restrictedTimeStartControl.value = Time.fromTimeOfDay(formViewModel.restrictedTimeStartPickerControl.value!);
+    });
+
+    formViewModel.restrictedTimeEndPickerControl.valueChanges.listen((event) {
+      formViewModel.restrictedTimeEndControl.value = Time.fromTimeOfDay(formViewModel.restrictedTimeEndPickerControl.value!);
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -48,7 +60,7 @@ class ScheduleControls extends FormConsumerWidget {
                     children: [
                       IntrinsicWidth(
                           child: ReactiveTimePicker(
-                        formControl: formViewModel.reminderTimeControl,
+                        formControl: formViewModel.reminderTimePickerControl,
                         initialEntryMode: TimePickerEntryMode.input,
                         builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
                           return ReactiveTextField<Time>(
@@ -98,7 +110,7 @@ class ScheduleControls extends FormConsumerWidget {
             children: [
               Flexible(
                   child: ReactiveTimePicker(
-                formControl: formViewModel.restrictedTimeStartControl,
+                formControl: formViewModel.restrictedTimeStartPickerControl,
                 initialEntryMode: TimePickerEntryMode.input,
                 builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
                   return ReactiveTextField<Time>(
@@ -123,7 +135,7 @@ class ScheduleControls extends FormConsumerWidget {
               const SizedBox(width: 10.0),
               Flexible(
                   child: ReactiveTimePicker(
-                formControl: formViewModel.restrictedTimeEndControl,
+                formControl: formViewModel.restrictedTimeEndPickerControl,
                 initialEntryMode: TimePickerEntryMode.input,
                 builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
                   return ReactiveTextField<Time>(
