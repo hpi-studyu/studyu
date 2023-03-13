@@ -100,7 +100,8 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                                   ? Opacity(
                                 opacity: ThemeConfig.kMuteFadeFactor,
                                 child: TextButton.icon(
-                                  onPressed: formViewModel.testReport,
+                                  //onPressed: formViewModel.testReport,
+                                  onPressed: null,
                                   icon: const Icon(Icons.play_circle_outline_rounded),
                                   label: Text(tr.form_array_report_items_test),
                                 ),
