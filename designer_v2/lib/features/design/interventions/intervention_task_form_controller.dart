@@ -66,6 +66,7 @@ class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTas
   InterventionTaskFormData buildFormData() {
     return InterventionTaskFormData(
       taskId: taskId,
+      instanceId: instanceId,
       taskTitle: taskTitleControl.value!, // required
       taskDescription: taskDescriptionControl.value,
       isTimeLocked: isTimeRestrictedControl.value!, // required
@@ -73,7 +74,6 @@ class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTas
       timeLockEnd: restrictedTimeEndControl.value?.toStudyUTimeOfDay(),
       hasReminder: hasReminderControl.value!, // required
       reminderTime: reminderTimeControl.value?.toStudyUTimeOfDay(),
-      instanceId: instanceId,
     );
   }
 

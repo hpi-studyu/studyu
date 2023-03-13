@@ -65,6 +65,7 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
   MeasurementSurveyFormData copy() {
     return MeasurementSurveyFormData(
       measurementId: const Uuid().v4(), // always regenerate id
+      instanceId: const Uuid().v4(), // always regenerate id
       title: title.withDuplicateLabel(),
       introText: introText,
       outroText: outroText,
@@ -74,7 +75,6 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
       timeLockEnd: timeLockEnd,
       hasReminder: hasReminder,
       reminderTime: reminderTime,
-      instanceId: instanceId,
     );
   }
 }
