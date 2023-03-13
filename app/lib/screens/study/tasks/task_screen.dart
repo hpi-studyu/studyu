@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
 import 'intervention/checkmark_task_widget.dart';
@@ -21,11 +22,12 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   TaskInstance taskInstance;
+  StudySubject subject;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final subject = context.watch<AppState>().activeSubject;
+    subject = context.watch<AppState>().activeSubject;
     taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id, study: subject.study);
   }
 
@@ -52,6 +54,8 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final interventionCard = InterventionCardTitle(
+        intervention: subject.getInterventionForDate(DateTime.now()));
     return Scaffold(
       appBar: AppBar(
         title: Text(taskInstance.task.title ?? ''),
@@ -61,8 +65,15 @@ class _TaskScreenState extends State<TaskScreen> {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(taskInstance.task.title ?? '', style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
+            children: [Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(taskInstance.task.title ?? '',
+                      style: theme.textTheme.headlineMedium.copyWith(fontSize: 24)),
+                  if (taskInstance.task is CheckmarkTask)
+                    interventionCard.descriptionButton(context, iconColor: Colors.grey),
+                ]
+            ),
               const SizedBox(height: 20),
               _buildTask(),
             ],

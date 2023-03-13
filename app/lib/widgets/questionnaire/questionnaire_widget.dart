@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 
 import 'question_container.dart';
@@ -117,19 +118,16 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     return AnimatedList(
       key: _listKey,
       controller: _scrollController,
-      initialItemCount: shownQuestions.length + 1,
+      initialItemCount: shownQuestions.length + 2,
       itemBuilder: (context, index, animation) {
         if (index == 0) {
-          return widget.header != null && widget.header.isNotEmpty ? TextBox(widget.header) : Container();
+          return widget.header != null && widget.header.isNotEmpty ? HtmlTextBox(widget.header) : Container();
         }
         index -= 1;
-        if (index == shownQuestions.length) {
-          return widget.footer != null && widget.footer.isNotEmpty ? TextBox(widget.footer) : Container();
+        if (index == widget.questions.length && qs.answers.length == widget.questions.length) {
+          return widget.footer != null && widget.footer.isNotEmpty ? HtmlTextBox(widget.footer) : Container();
         }
-        if (index > shownQuestions.length - 1) {
-          index -= 1;
-        }
-        if (index > shownQuestions.length) {
+        if (index > shownQuestions.length-1) {
           return Container();
         }
         return shownQuestions[index];
@@ -138,10 +136,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 }
 
-class TextBox extends StatelessWidget {
+class HtmlTextBox extends StatelessWidget {
   final String text;
 
-  const TextBox(this.text, {Key key}) : super(key: key);
+  const HtmlTextBox(this.text, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +150,7 @@ class TextBox extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(text),
+            HtmlText(text),
           ],
         ),
       ),

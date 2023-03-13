@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../models/app_state.dart';
@@ -202,7 +203,7 @@ class ConsentCard extends StatelessWidget {
                   )
                 ],
               ),
-              content: Text(consent.description),
+              content: HtmlText(consent.description),
             ),
           );
           onTapped(index);

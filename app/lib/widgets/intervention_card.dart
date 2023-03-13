@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 
 class InterventionCard extends StatelessWidget {
@@ -57,6 +58,28 @@ class InterventionCardTitle extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+  IconButton descriptionButton(BuildContext context, {Color iconColor}) {
+    final theme = Theme.of(context);
+    return IconButton(
+      icon: Icon(Icons.info_outline, color: iconColor),
+      onPressed: () => showDialog(
+        context: context,
+        builder: (context) {
+          final description =
+          intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
+          return AlertDialog(
+            title: ListTile(
+              leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
+              dense: true,
+              title: Text(intervention.name, style: theme.textTheme.titleLarge),
+            ),
+            content: HtmlText(description),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -74,24 +97,7 @@ class InterventionCardTitle extends StatelessWidget {
         children: [
           Expanded(child: Text(intervention.name, style: theme.textTheme.titleLarge)),
           if (showDescriptionButton)
-            IconButton(
-              icon: const Icon(Icons.info_outline),
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) {
-                  final description =
-                      intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
-                  return AlertDialog(
-                    title: ListTile(
-                      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
-                      dense: true,
-                      title: Text(intervention.name, style: theme.textTheme.titleLarge),
-                    ),
-                    content: Text(description ?? ''),
-                  );
-                },
-              ),
-            )
+            descriptionButton(context),
         ],
       ),
     );

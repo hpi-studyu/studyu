@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/widgets/html_text.dart';
 
 class QuestionHeader extends StatelessWidget {
   final String prompt;
@@ -26,7 +27,7 @@ class QuestionHeader extends StatelessWidget {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Information'),
-            content: Text(rationale),
+            content: HtmlText(rationale),
           ),
         ),
       )
@@ -44,7 +45,7 @@ class QuestionHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(prompt, style: Theme.of(context).textTheme.titleMedium),
+              HtmlText(prompt, style: Theme.of(context).textTheme.titleMedium),
               ..._buildSubtitle(context),
             ],
           ),
