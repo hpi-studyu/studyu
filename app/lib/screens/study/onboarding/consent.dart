@@ -35,7 +35,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
   @override
   void initState() {
     super.initState();
-    // todo fix subject is null if page gets reloaded (same as dashboard)
+    // todo fix subject is null if page gets reloaded in all files (same solution as in dashboard)
     subject = context.read<AppState>().activeSubject;
     consentList = subject.study.consent;
     boxLogic = List.filled(consentList.length, false);
@@ -215,11 +215,10 @@ class ConsentCard extends StatelessWidget {
             children: [
               consent.iconName.isNotEmpty ? Icon(MdiIcons.fromString(consent.iconName), size: 60, color: Colors.blue) : const SizedBox.shrink(),
               consent.iconName.isNotEmpty != null ? const SizedBox(height: 10) : const SizedBox.shrink(),
-              Text(consent.title, style: Theme.of(context).textTheme.titleSmall),
+              Flexible(child: Text(consent.title, style: Theme.of(context).textTheme.titleSmall),),
             ],
-          ),
+          ),),
         ),
-      ),
     );
   }
 }
