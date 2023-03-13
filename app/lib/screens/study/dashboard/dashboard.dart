@@ -38,6 +38,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   StudySubject subject;
   List<TaskInstance> scheduleToday;
 
+  get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -66,6 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
       return const SizedBox.shrink();
     }
+
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
@@ -80,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
           IconButton(
-            tooltip: 'Current report',
+            tooltip: 'Current report', // todo tr
             icon: const Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject)),
           ),
@@ -211,8 +214,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: _buildBody(),
-      bottomSheet: (kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy
+      body: Padding(
+        padding: showNextDay ? EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 10) : EdgeInsets.zero,
+        child: _buildBody(),
+      ),
+      bottomSheet: showNextDay
           ? Container(
             margin: const EdgeInsets.only(left: 16, bottom: 8),
             child: ElevatedButton.icon(
@@ -224,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 });
               },
               label: Text(AppLocalizations.of(context).next_day),
-            )
+            ),
           )
           : null,
     );
