@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
@@ -17,9 +18,10 @@ import 'package:studyu_designer_v2/theme.dart';
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]
 class SurveyQuestionFormView extends ConsumerStatefulWidget {
-  const SurveyQuestionFormView({required this.formViewModel, super.key});
+  const SurveyQuestionFormView({required this.formViewModel, this.isHtmlStyleable = true, super.key});
 
   final QuestionFormViewModel formViewModel;
+  final bool isHtmlStyleable;
 
   @override
   ConsumerState<SurveyQuestionFormView> createState() => _SurveyQuestionFormViewState();
@@ -29,6 +31,11 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
   QuestionFormViewModel get formViewModel => widget.formViewModel;
 
   late bool isQuestionHelpTextFieldVisible = formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
+  bool isStylingInformationDismissed = true;
+
+  onDismissedCallback() => setState(() {
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
@@ -67,6 +74,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                   ],
                 )
               : const SizedBox.shrink(),
+          if(widget.isHtmlStyleable)
+            HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
           const SizedBox(height: 24.0),
           _buildResponseTypeHeader(context),
           const SizedBox(height: 16.0),
@@ -95,7 +104,6 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                   items: formViewModel.questionTypeControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
-
                     return DropdownMenuItem(
                       value: option.value,
                       child: Row(
@@ -133,10 +141,28 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           labelBuilder: (context) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+            Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
               FormLabel(
                 labelText: tr.form_field_question,
                 helpText: tr.form_field_question_tooltip,
               ),
+              if (widget.isHtmlStyleable) const SizedBox(width: 8),
+              if (widget.isHtmlStyleable) Opacity(
+                opacity: ThemeConfig.kMuteFadeFactor,
+                child: Tooltip(
+                  message: "Use html to style your content",
+                  child: Hyperlink(
+                    text: "styleable",
+                    onClick: () => setState(() {
+                      isStylingInformationDismissed = !isStylingInformationDismissed;
+                    }),
+                    visitedColor: null,
+                  ),
+                ),
+              ),
+            ]),
               (!isQuestionHelpTextFieldVisible && !formViewModel.isReadonly)
                   ? Opacity(
                       opacity: ThemeConfig.kMuteFadeFactor,
@@ -162,6 +188,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           ),
         ),
       ],
+
     );
   }
 
@@ -173,6 +200,32 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           control: formViewModel.questionInfoTextControl,
           label: tr.form_field_question_help_text,
           labelHelpText: tr.form_field_question_help_text_tooltip,
+          labelBuilder: (context) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FormLabel(
+                      labelText: tr.form_field_question_help_text,
+                      helpText: tr.form_field_question_help_text_tooltip,
+                    ),
+                    if (widget.isHtmlStyleable) const SizedBox(width: 8),
+                    if (widget.isHtmlStyleable) Opacity(
+                      opacity: ThemeConfig.kMuteFadeFactor,
+                      child: Tooltip(
+                        message: "Use html to style your content",
+                        child: Hyperlink(
+                          text: "styleable",
+                          onClick: () => setState(() {
+                            isStylingInformationDismissed = !isStylingInformationDismissed;
+                          }),
+                          visitedColor: null,
+                        ),
+                      ),
+                    ),
+                  ]
+              )]
+          ),
           input: ReactiveTextField(
             formControl: formViewModel.questionInfoTextControl,
             validationMessages: formViewModel.questionInfoTextControl.validationMessages,

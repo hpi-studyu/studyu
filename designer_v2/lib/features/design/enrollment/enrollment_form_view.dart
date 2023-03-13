@@ -197,7 +197,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
         FormSideSheetTab(
           title: tr.navlink_screener_question_content,
           index: 0,
-          formViewBuilder: (formViewModel) => SurveyQuestionFormView(formViewModel: formViewModel),
+          formViewBuilder: (formViewModel) => SurveyQuestionFormView(formViewModel: formViewModel, isHtmlStyleable: false),
         ),
         FormSideSheetTab(
           title: tr.navlink_screener_question_logic,

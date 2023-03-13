@@ -18,6 +18,7 @@ class BannerBox extends StatefulWidget {
       this.noPrefix = false,
       this.isDismissed,
       this.dismissable = true,
+      this.onDismissed,
       this.dismissIconSize = 24.0,
       Key? key})
       : super(key: key);
@@ -29,6 +30,7 @@ class BannerBox extends StatefulWidget {
   final bool noPrefix;
   final bool dismissable;
   final bool? isDismissed;
+  final Function()? onDismissed;
   final double dismissIconSize;
 
   @override
@@ -91,6 +93,7 @@ class _BannerBoxState extends State<BannerBox> {
                     icon: Icon(Icons.close_rounded, size: widget.dismissIconSize),
                     splashRadius: widget.dismissIconSize,
                     onPressed: () => setState(() {
+                      if (widget.onDismissed != null) widget.onDismissed!();
                       isDismissed = true;
                     }),
                   ),

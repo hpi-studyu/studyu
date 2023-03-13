@@ -4,15 +4,27 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
-class InterventionTaskFormView extends StatelessWidget {
+class InterventionTaskFormView extends StatefulWidget {
   const InterventionTaskFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final InterventionTaskFormViewModel formViewModel;
+  @override
+  State<InterventionTaskFormView> createState() => _InterventionTaskFormViewState();
+}
+
+class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
+  bool isStylingInformationDismissed = true;
+
+  onDismissedCallback() => setState(() {
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,27 +34,51 @@ class InterventionTaskFormView extends StatelessWidget {
         children: [
           FormTableLayout(rowLayout: FormTableRowLayout.vertical, rows: [
             FormTableRow(
-              control: formViewModel.taskTitleControl,
+              control: widget.formViewModel.taskTitleControl,
               label: tr.form_field_intervention_task_title,
               labelHelpText: tr.form_field_intervention_task_title_tooltip,
               input: ReactiveTextField(
-                formControl: formViewModel.taskTitleControl,
+                formControl: widget.formViewModel.taskTitleControl,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(200),
                 ],
-                validationMessages: formViewModel.taskTitleControl.validationMessages,
+                validationMessages: widget.formViewModel.taskTitleControl.validationMessages,
               ),
             ),
             FormTableRow(
-              control: formViewModel.taskDescriptionControl,
-              label: tr.form_field_intervention_task_description,
-              labelHelpText: tr.form_field_intervention_task_description_tooltip,
+              control: widget.formViewModel.taskDescriptionControl,
+              labelBuilder: (context) => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  FormLabel(
+                    labelText: tr.form_field_intervention_task_description,
+                    helpText: tr.form_field_intervention_task_description_tooltip,
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    margin: const EdgeInsets.only(left: 3.0),
+                    child: Opacity(
+                      opacity: ThemeConfig.kMuteFadeFactor,
+                      child: Tooltip(
+                        message: "Use html to style your content",
+                        child: Hyperlink(
+                          text: "styleable",
+                          onClick: () => setState(() {
+                            isStylingInformationDismissed = !isStylingInformationDismissed;
+                          }),
+                          visitedColor: null,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               input: ReactiveTextField(
-                formControl: formViewModel.taskDescriptionControl,
+                formControl: widget.formViewModel.taskDescriptionControl,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
-                validationMessages: formViewModel.taskDescriptionControl.validationMessages,
+                validationMessages: widget.formViewModel.taskDescriptionControl.validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -56,17 +92,17 @@ class InterventionTaskFormView extends StatelessWidget {
           ReactiveFormConsumer(builder: (context, form, child) {
             return Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
               ReactiveCheckbox(
-                formControl: formViewModel.markAsCompletedControl,
+                formControl: widget.formViewModel.markAsCompletedControl,
               ),
               const SizedBox(width: 3.0),
               FormControlLabel(
-                formControl: formViewModel.markAsCompletedControl,
+                formControl: widget.formViewModel.markAsCompletedControl,
                 text: tr.form_field_intervention_task_mark_as_completed_label,
               ),
             ]);
           }),
           const SizedBox(height: 24.0),
-          ScheduleControls(formViewModel: formViewModel),
+          ScheduleControls(formViewModel: widget.formViewModel),
         ],
       ),
     );

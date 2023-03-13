@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
+import 'package:studyu_designer_v2/common_views/styling_information.dart';
+import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
@@ -15,40 +17,74 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-class MeasurementSurveyFormView extends ConsumerWidget {
+class MeasurementSurveyFormView extends ConsumerStatefulWidget {
   const MeasurementSurveyFormView({required this.formViewModel, Key? key}) : super(key: key);
 
   final MeasurementSurveyFormViewModel formViewModel;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MeasurementSurveyFormView> createState() => _MeasurementSurveyFormViewState();
+}
+
+class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFormView> {
+  bool isStylingInformationDismissed = true;
+
+  onDismissedCallback() => setState(() {
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
         FormTableLayout(rows: [
           FormTableRow(
-            control: formViewModel.surveyTitleControl,
+            control: widget.formViewModel.surveyTitleControl,
             label: tr.form_field_measurement_survey_title,
-            //labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             labelHelpText: tr.form_field_measurement_survey_title_tooltip,
             input: ReactiveTextField(
-              formControl: formViewModel.surveyTitleControl,
+              formControl: widget.formViewModel.surveyTitleControl,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(200),
               ],
-              validationMessages: formViewModel.surveyTitleControl.validationMessages,
+              validationMessages: widget.formViewModel.surveyTitleControl.validationMessages,
             ),
           ),
           FormTableRow(
-            control: formViewModel.surveyIntroTextControl,
-            label: tr.form_field_measurement_survey_intro_text,
-            labelHelpText: tr.form_field_measurement_survey_intro_text_tooltip,
+            control: widget.formViewModel.surveyIntroTextControl,
+            labelBuilder: (context) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FormLabel(
+                  labelText: tr.form_field_measurement_survey_intro_text,
+                  helpText: tr.form_field_measurement_survey_intro_text_tooltip,
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  margin: const EdgeInsets.only(left: 3.0),
+                  child: Opacity(
+                    opacity: ThemeConfig.kMuteFadeFactor,
+                    child: Tooltip(
+                      message: "Use html to style your content",
+                      child: Hyperlink(
+                        text: "styleable",
+                        onClick: () => setState(() {
+                          isStylingInformationDismissed = !isStylingInformationDismissed;
+                        }),
+                        visitedColor: null,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             input: ReactiveTextField(
-              formControl: formViewModel.surveyIntroTextControl,
+              formControl: widget.formViewModel.surveyIntroTextControl,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(2000),
               ],
-              validationMessages: formViewModel.surveyIntroTextControl.validationMessages,
+              validationMessages: widget.formViewModel.surveyIntroTextControl.validationMessages,
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 5,
@@ -56,15 +92,39 @@ class MeasurementSurveyFormView extends ConsumerWidget {
             ),
           ),
           FormTableRow(
-            control: formViewModel.surveyOutroTextControl,
-            label: tr.form_field_measurement_survey_outro_text,
-            labelHelpText: tr.form_field_measurement_survey_outro_text_tooltip,
+            control: widget.formViewModel.surveyOutroTextControl,
+            labelBuilder: (context) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FormLabel(
+                  labelText: tr.form_field_measurement_survey_outro_text,
+                  helpText: tr.form_field_measurement_survey_outro_text_tooltip,
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  margin: const EdgeInsets.only(left: 3.0),
+                  child: Opacity(
+                    opacity: ThemeConfig.kMuteFadeFactor,
+                    child: Tooltip(
+                      message: "Use html to style your content",
+                      child: Hyperlink(
+                        text: "styleable",
+                        onClick: () => setState(() {
+                          isStylingInformationDismissed = !isStylingInformationDismissed;
+                        }),
+                        visitedColor: null,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             input: ReactiveTextField(
-              formControl: formViewModel.surveyOutroTextControl,
+              formControl: widget.formViewModel.surveyOutroTextControl,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(2000),
               ],
-              validationMessages: formViewModel.surveyOutroTextControl.validationMessages,
+              validationMessages: widget.formViewModel.surveyOutroTextControl.validationMessages,
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 5,
@@ -72,19 +132,20 @@ class MeasurementSurveyFormView extends ConsumerWidget {
             ),
           ),
         ]),
+        HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
         const SizedBox(height: 28.0),
         ReactiveFormConsumer(
             // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
             // By default, ReactiveFormArray only updates when adding/removing controls
             builder: (context, form, child) {
           return ReactiveFormArray(
-            formArray: formViewModel.questionsArray,
+            formArray: widget.formViewModel.questionsArray,
             builder: (context, formArray, child) {
               return FormArrayTable<QuestionFormViewModel>(
-                control: formViewModel.questionsArray,
-                items: formViewModel.questionModels,
+                control: widget.formViewModel.questionsArray,
+                items: widget.formViewModel.questionModels,
                 onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
-                getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
+                getActionsAt: (viewModel, _) => widget.formViewModel.availablePopupActions(viewModel),
                 onNewItem: () => _onNewItem(context, ref),
                 onNewItemLabel: tr.form_array_measurement_survey_questions_new,
                 rowTitle: (viewModel) => viewModel.formData?.questionText ?? '',
@@ -113,18 +174,18 @@ class MeasurementSurveyFormView extends ConsumerWidget {
           );
         }),
         const SizedBox(height: 28.0),
-        ScheduleControls(formViewModel: formViewModel),
+        ScheduleControls(formViewModel: widget.formViewModel),
       ],
     );
   }
 
   _onNewItem(BuildContext context, WidgetRef ref) {
-    final routeArgs = formViewModel.buildNewFormRouteArgs();
+    final routeArgs = widget.formViewModel.buildNewFormRouteArgs();
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
   _onSelectItem(QuestionFormViewModel item, BuildContext context, WidgetRef ref) {
-    final routeArgs = formViewModel.buildFormRouteArgs(item);
+    final routeArgs = widget.formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 

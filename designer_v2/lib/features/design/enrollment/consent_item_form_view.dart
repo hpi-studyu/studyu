@@ -3,17 +3,31 @@ import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
+import 'package:studyu_designer_v2/common_views/styling_information.dart';
+import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
-class ConsentItemFormView extends StatelessWidget {
+class ConsentItemFormView extends StatefulWidget {
   const ConsentItemFormView({required this.formViewModel, super.key});
 
   final ConsentItemFormViewModel formViewModel;
 
   @override
-  Widget build(BuildContext context) {
+  State<ConsentItemFormView> createState() => _ConsentItemFormViewState();
+}
+
+class _ConsentItemFormViewState extends State<ConsentItemFormView> {
+    bool isStylingInformationDismissed = true;
+
+    onDismissedCallback() => setState(() {
+      isStylingInformationDismissed = !isStylingInformationDismissed;
+    });
+
+    @override
+    Widget build(BuildContext context) {
     return ReactiveFormConsumer(builder: (context, formGroup, child)
     {
       return Column(
@@ -23,18 +37,18 @@ class ConsentItemFormView extends StatelessWidget {
             rowLayout: FormTableRowLayout.vertical,
             rows: [
               FormTableRow(
-                control: formViewModel.titleControl,
+                control: widget.formViewModel.titleControl,
                 label: tr.form_field_consent_title,
                 labelHelpText: tr.form_field_consent_title_tooltip,
                 input: Row(
                   children: [
                     Expanded(
                       child: ReactiveTextField(
-                        formControl: formViewModel.titleControl,
+                        formControl: widget.formViewModel.titleControl,
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(100),
                         ],
-                        validationMessages: formViewModel.titleControl
+                        validationMessages: widget.formViewModel.titleControl
                             .validationMessages,
                         decoration: InputDecoration(
                           hintText: tr.form_field_consent_title_hint,
@@ -43,14 +57,14 @@ class ConsentItemFormView extends StatelessWidget {
                     ),
                     ReactiveFormConsumer(
                       builder: (context, form, child) {
-                        return (formViewModel.iconControl.value != null)
+                        return (widget.formViewModel.iconControl.value != null)
                             ? const SizedBox(width: 4.0)
                             : const SizedBox(width: 8.0);
                       },
                     ),
                     IntrinsicWidth(
                       child: ReactiveIconPicker(
-                        formControl: formViewModel.iconControl,
+                        formControl: widget.formViewModel.iconControl,
                         iconOptions: IconPack.material,
                       ),
                     )
@@ -58,15 +72,36 @@ class ConsentItemFormView extends StatelessWidget {
                 ),
               ),
               FormTableRow(
-                control: formViewModel.descriptionControl,
-                label: tr.form_field_consent_text,
-                labelHelpText: tr.form_field_consent_text_tooltip,
+                control: widget.formViewModel.descriptionControl,
+                labelBuilder: (context) => Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FormLabel(
+                      labelText: tr.form_field_consent_text,
+                      helpText: tr.form_field_consent_text_tooltip,
+                    ),
+                    const SizedBox(width: 8),
+                    Opacity(
+                      opacity: ThemeConfig.kMuteFadeFactor,
+                      child: Tooltip(
+                        message: "Use html to style your content",
+                        child: Hyperlink(
+                          text: "styleable",
+                          onClick: () => setState(() {
+                            isStylingInformationDismissed = !isStylingInformationDismissed;
+                          }),
+                          visitedColor: null,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 input: ReactiveTextField(
-                  formControl: formViewModel.descriptionControl,
+                  formControl: widget.formViewModel.descriptionControl,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(10000),
                   ],
-                  validationMessages: formViewModel.descriptionControl
+                  validationMessages: widget.formViewModel.descriptionControl
                       .validationMessages,
                   keyboardType: TextInputType.multiline,
                   minLines: 10,
@@ -78,6 +113,7 @@ class ConsentItemFormView extends StatelessWidget {
               ),
             ],
           ),
+          HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
         ],
       );
     });
