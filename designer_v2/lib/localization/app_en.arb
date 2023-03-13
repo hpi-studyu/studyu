@@ -322,7 +322,7 @@
   "form_field_crossover_schedule_include_baseline_tooltip": "Add an intervention-free baseline phase at the beginning of your study",
   "form_field_crossover_schedule_include_baseline_label": "Include in schedule",
   "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
-  "form_study_design_measurements_description": "Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU app on a daily basis. The collected data & results will be available on the Analyze page when the study is launched.",
+  "form_study_design_measurements_description": "Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU app on a daily basis. The collected data and results will be available on the Analyze page when the study is launched.",
   "form_array_measurements_minlength": "{count,plural, =1{You need to define at least one survey to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
