@@ -16,7 +16,7 @@ class SidesheetTab extends NavbarTab {
 }
 
 class Sidesheet extends StatefulWidget {
-  static double kDefaultWidth = 640;
+  static double kDefaultWidth = 740;
 
   const Sidesheet({
     required this.titleText,
@@ -82,7 +82,7 @@ class _SidesheetState extends State<Sidesheet> {
     final backgroundColor = ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
 
     return Align(
-      alignment: Alignment.bottomRight,
+      alignment: Alignment.bottomLeft,
       child: Material(
         elevation: 0,
         color: Colors.white,
@@ -221,7 +221,7 @@ Future<T?> showModalSideSheet<T extends Object?>({
   bool ignoreAppBar = true,
   bool barrierDismissible = true,
   Color? barrierColor,
-  Duration transitionDuration = const Duration(milliseconds: 300),
+  Duration transitionDuration = const Duration(milliseconds: 500),
   String? barrierLabel = "Sidesheet",
   bool useRootNavigator = true,
   RouteSettings? routeSettings,
@@ -247,7 +247,7 @@ Future<T?> showModalSideSheet<T extends Object?>({
     ),
     transitionBuilder: (_, animation, __, child) {
       return SlideTransition(
-        position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).animate(animation),
+        position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
         child: child,
       );
     },
