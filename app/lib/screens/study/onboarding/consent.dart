@@ -215,7 +215,13 @@ class ConsentCard extends StatelessWidget {
             children: [
               consent.iconName.isNotEmpty ? Icon(MdiIcons.fromString(consent.iconName), size: 60, color: Colors.blue) : const SizedBox.shrink(),
               consent.iconName.isNotEmpty != null ? const SizedBox(height: 10) : const SizedBox.shrink(),
-              Flexible(child: Text(consent.title, style: Theme.of(context).textTheme.titleSmall),),
+              Flexible(
+                child: Text(consent.title,
+                  style: Theme.of(context).textTheme.titleSmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
+              ),
             ],
           ),),
         ),
