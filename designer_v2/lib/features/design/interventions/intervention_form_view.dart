@@ -113,6 +113,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
             ),
           ],
         ),
+        HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
         const SizedBox(height: 28.0),
         ReactiveFormConsumer(
             // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
@@ -138,7 +139,6 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
             },
           );
         }),
-        HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
       ],
     );
   }

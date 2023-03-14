@@ -4,6 +4,7 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
@@ -88,6 +89,7 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
               ),
             ),
           ]),
+          HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
           const SizedBox(height: 12.0),
           ReactiveFormConsumer(builder: (context, form, child) {
             return Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [

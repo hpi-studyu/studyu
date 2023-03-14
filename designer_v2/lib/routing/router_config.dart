@@ -446,15 +446,6 @@ class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
   final TaskID taskId;
 }
 
-/*class ReportFormRouteArgs extends StudyFormRouteArgs {
-  ReportFormRouteArgs({
-    required super.studyId,
-    required this.reportId,
-  });
-
-  final ReportID reportId;
-}*/
-
 class ReportItemFormRouteArgs extends StudyFormRouteArgs {
   ReportItemFormRouteArgs({
     required super.studyId,
