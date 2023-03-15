@@ -135,7 +135,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
     ValidationMessage.required: (error) => tr.form_field_report_improvementDirection_required,
   });
   get alphaConfidenceRequired => FormControlValidation(control: alphaControl, validators: [
-    Validators.number
+    Validators.required // todo numeric but also support decimal numbers e.g. 0.2 or 0,2
   ], validationMessages: {
     ValidationMessage.number: (error) => tr.form_field_report_alphaConfidence_number,
   });
