@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-04-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.1.0`](#studyu_app---v210)
+ - [`studyu_designer_v2` - `v1.2.0`](#studyu_designer_v2---v120)
+
+---
+
+#### `studyu_app` - `v2.1.0`
+
+ - **FIX**: Missing Push Notification Entitlement for iOS. ([28ffd2c2](https://github.com/hpi-studyu/studyu/commit/28ffd2c2f2e06822d95c5a3e77e23fdfcb11b823))
+ - **FIX**: make intervention task title wrappable. ([ea73a74e](https://github.com/hpi-studyu/studyu/commit/ea73a74e20833001a494bfc35d2d84d04e786f95))
+ - **FIX**(app): question footer not being shown. ([e2553c34](https://github.com/hpi-studyu/studyu/commit/e2553c34689a26d2b404e69292ad07914f1ae0b9))
+ - **FIX**(app): Next Day button overflow. ([0c78e221](https://github.com/hpi-studyu/studyu/commit/0c78e22115a89bb5c04c628191370829658562b6))
+ - **FIX**: consent items not centered if no icon. ([827d68b0](https://github.com/hpi-studyu/studyu/commit/827d68b0371c999e502a941a2e49c592b7ef0993))
+ - **FEAT**: add report section validation sets. ([5c063148](https://github.com/hpi-studyu/studyu/commit/5c0631480aa0efa886104640380908da6dc78f39))
+ - **FEAT**: translation and styling. ([4f62ba65](https://github.com/hpi-studyu/studyu/commit/4f62ba65c6f5736465f40654c352902289f8db37))
+
+#### `studyu_designer_v2` - `v1.2.0`
+
+ - **FIX**: number validator not working properly. ([5b60c1da](https://github.com/hpi-studyu/studyu/commit/5b60c1da8d40b5728fbf4a902dad21f3b3009865))
+ - **FIX**: intervention task html styling info missing. ([c2ca55f8](https://github.com/hpi-studyu/studyu/commit/c2ca55f83109f14aaafc9dbeb068a1ae32b18632))
+ - **FIX**: regenerate instanceId's for duplicates. ([a539ec53](https://github.com/hpi-studyu/studyu/commit/a539ec533fea07cf948dceeeed43c903bde2f630))
+ - **FIX**: add pointerinerceptor to timepickers. ([c3491ed2](https://github.com/hpi-studyu/studyu/commit/c3491ed27603071e449c580978e0aae0724fe309))
+ - **FIX**(designer2): workaround for schedule timepicker type error. ([93012567](https://github.com/hpi-studyu/studyu/commit/93012567aab06bad584eb06ff9313cbd4dad8969))
+ - **FIX**: translation. ([75bc38ca](https://github.com/hpi-studyu/studyu/commit/75bc38ca1ba46ba343c2179ea66d98b78cbf9483))
+ - **FIX**: export no element bug. ([588d255e](https://github.com/hpi-studyu/studyu/commit/588d255e920aec5685f69c9983218470c7a0cefb))
+ - **FEAT**: try left sidesheet. ([7d8dba3b](https://github.com/hpi-studyu/studyu/commit/7d8dba3b03e92008a4dcbf4acfe6a24333f37d13))
+ - **FEAT**(designer2): introduce basic html styleable concept. ([02da7901](https://github.com/hpi-studyu/studyu/commit/02da79014a5ef37f05aa4ef1899d6d94ba7b92a2))
+ - **FEAT**: add report section validation sets. ([5c063148](https://github.com/hpi-studyu/studyu/commit/5c0631480aa0efa886104640380908da6dc78f39))
+ - **FEAT**: translation and styling. ([4f62ba65](https://github.com/hpi-studyu/studyu/commit/4f62ba65c6f5736465f40654c352902289f8db37))
+
+
 ## 2023-03-11
 
 ### Changes

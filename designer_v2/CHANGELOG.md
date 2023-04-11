@@ -1,3 +1,17 @@
+## 1.2.0
+
+ - **FIX**: number validator not working properly. ([5b60c1da](https://github.com/hpi-studyu/studyu/commit/5b60c1da8d40b5728fbf4a902dad21f3b3009865))
+ - **FIX**: intervention task html styling info missing. ([c2ca55f8](https://github.com/hpi-studyu/studyu/commit/c2ca55f83109f14aaafc9dbeb068a1ae32b18632))
+ - **FIX**: regenerate instanceId's for duplicates. ([a539ec53](https://github.com/hpi-studyu/studyu/commit/a539ec533fea07cf948dceeeed43c903bde2f630))
+ - **FIX**: add pointerinerceptor to timepickers. ([c3491ed2](https://github.com/hpi-studyu/studyu/commit/c3491ed27603071e449c580978e0aae0724fe309))
+ - **FIX**(designer2): workaround for schedule timepicker type error. ([93012567](https://github.com/hpi-studyu/studyu/commit/93012567aab06bad584eb06ff9313cbd4dad8969))
+ - **FIX**: translation. ([75bc38ca](https://github.com/hpi-studyu/studyu/commit/75bc38ca1ba46ba343c2179ea66d98b78cbf9483))
+ - **FIX**: export no element bug. ([588d255e](https://github.com/hpi-studyu/studyu/commit/588d255e920aec5685f69c9983218470c7a0cefb))
+ - **FEAT**: try left sidesheet. ([7d8dba3b](https://github.com/hpi-studyu/studyu/commit/7d8dba3b03e92008a4dcbf4acfe6a24333f37d13))
+ - **FEAT**(designer2): introduce basic html styleable concept. ([02da7901](https://github.com/hpi-studyu/studyu/commit/02da79014a5ef37f05aa4ef1899d6d94ba7b92a2))
+ - **FEAT**: add report section validation sets. ([5c063148](https://github.com/hpi-studyu/studyu/commit/5c0631480aa0efa886104640380908da6dc78f39))
+ - **FEAT**: translation and styling. ([4f62ba65](https://github.com/hpi-studyu/studyu/commit/4f62ba65c6f5736465f40654c352902289f8db37))
+
 ## 1.1.1
 
  - **FIX**: preview mode working again. ([75bec484](https://github.com/hpi-studyu/studyu/commit/75bec484a065cea9a4842afde26205876718d7d0))

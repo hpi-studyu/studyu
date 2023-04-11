@@ -1,3 +1,13 @@
+## 2.1.0
+
+ - **FIX**: Missing Push Notification Entitlement for iOS. ([28ffd2c2](https://github.com/hpi-studyu/studyu/commit/28ffd2c2f2e06822d95c5a3e77e23fdfcb11b823))
+ - **FIX**: make intervention task title wrappable. ([ea73a74e](https://github.com/hpi-studyu/studyu/commit/ea73a74e20833001a494bfc35d2d84d04e786f95))
+ - **FIX**(app): question footer not being shown. ([e2553c34](https://github.com/hpi-studyu/studyu/commit/e2553c34689a26d2b404e69292ad07914f1ae0b9))
+ - **FIX**(app): Next Day button overflow. ([0c78e221](https://github.com/hpi-studyu/studyu/commit/0c78e22115a89bb5c04c628191370829658562b6))
+ - **FIX**: consent items not centered if no icon. ([827d68b0](https://github.com/hpi-studyu/studyu/commit/827d68b0371c999e502a941a2e49c592b7ef0993))
+ - **FEAT**: add report section validation sets. ([5c063148](https://github.com/hpi-studyu/studyu/commit/5c0631480aa0efa886104640380908da6dc78f39))
+ - **FEAT**: translation and styling. ([4f62ba65](https://github.com/hpi-studyu/studyu/commit/4f62ba65c6f5736465f40654c352902289f8db37))
+
 ## 2.0.2
 
  - **FIX**: preview mode working again. ([75bec484](https://github.com/hpi-studyu/studyu/commit/75bec484a065cea9a4842afde26205876718d7d0))
