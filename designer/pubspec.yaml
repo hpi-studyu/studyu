@@ -43,7 +43,7 @@ dependencies:
   webview_flutter_web: ^0.1.0+4 # breaking
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.13.0
   flutter_test:
     sdk: flutter
   lint: ^2.0.1
