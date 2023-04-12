@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/widgets/html_text.dart';
-import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 
 import 'intervention/checkmark_task_widget.dart';
@@ -55,8 +54,6 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final interventionCard = InterventionCardTitle(
-        intervention: subject.getInterventionForDate(DateTime.now()));
     return Scaffold(
       appBar: AppBar(
         title: Text(taskInstance.task.title ?? ''),

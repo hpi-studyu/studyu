@@ -1,0 +1,21 @@
+include: package:lint/strict.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+
+# You can customize the lint rules set to your own liking. A list of all rules
+# can be found at https://dart-lang.github.io/linter/lints/options/options.html
+linter:
+  rules:
+    # Util classes are awesome!
+    # avoid_classes_with_only_static_members: false
+
+    # Make constructors the first thing in every class
+    # sort_constructors_first: true
+
+    # prefer_single_quotes: true
+
+    # DISABLE
+    # We have prints for better debugging. Maybe not the best option.
+    avoid_print: false

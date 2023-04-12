@@ -33,6 +33,8 @@ linter:
     # prefer_single_quotes: true
     # use_raw_strings: true
 
+    # prefer_single_quotes: true
+
     # DISABLE
     # We have prints for better debugging. Maybe not the best option.
     avoid_print: false
