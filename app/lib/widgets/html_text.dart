@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class HtmlText extends StatelessWidget{
   const HtmlText(this.text, {this.style, Key key,}) : super(key: key);
@@ -11,8 +12,7 @@ class HtmlText extends StatelessWidget{
     return SingleChildScrollView(
       child: SizedBox(
         width: double.maxFinite,
-        child: Text(text),
-        /*child: HtmlWidget(
+        child: HtmlWidget(
           text ?? '',
           textStyle: style,
 
@@ -21,7 +21,7 @@ class HtmlText extends StatelessWidget{
           // and fallback widget
           onErrorBuilder: (context, element, error) => Text('$element Error: $error'),
           onLoadingBuilder: (context, element, loadingProgress) => const CircularProgressIndicator(),
-        ),*/
+        ),
       ),
     );
   }

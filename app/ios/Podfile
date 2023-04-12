@@ -40,11 +40,11 @@ post_install do |installer|
 
     # for flutter package 'just_audio'
     # We do not use the microphone, so we compile out any microphone code
-    # target.build_configurations.each do |config|
-    #     config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
-    #         '$(inherited)',
-    #         'AUDIO_SESSION_MICROPHONE=0'
-    #     ]
-    # end
+    target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+            '$(inherited)',
+            'AUDIO_SESSION_MICROPHONE=0'
+        ]
+    end
   end
 end
