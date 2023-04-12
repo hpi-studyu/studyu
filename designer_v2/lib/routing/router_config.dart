@@ -360,7 +360,7 @@ class RouterConf {
         }),
   ];
 
-  static route(String name) {
+  static GoRoute route(String name) {
     searchRouteNames(List<GoRoute> subRoutes) {
       if (subRoutes.isEmpty) return null;
       for (GoRoute route in subRoutes) {
@@ -370,7 +370,7 @@ class RouterConf {
       }
     }
 
-    return searchRouteNames(routes);
+    return searchRouteNames(routes)!;
   }
 }
 

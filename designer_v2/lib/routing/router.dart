@@ -20,7 +20,6 @@ import 'router_config.dart';
 /// route changes in the app. See router_intent.dart for more details.
 
 final routerProvider = Provider<GoRouter>((ref) {
-  print("routerProvider");
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
   const defaultLocation = studiesRouteName;
@@ -31,7 +30,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       appController.stream, // initialization events
       authRepository.watchAuthStateChanges() // authentication events
     ]),
-    initialLocation: defaultLocation,
     routes: RouterConf.routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
     redirect: (context, state) {
