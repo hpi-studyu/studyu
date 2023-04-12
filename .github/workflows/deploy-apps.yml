@@ -44,36 +44,3 @@ jobs:
           subdirectory: './app/android'
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
-
-  app-store-release:
-    name: Create App Store Release
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up ruby env
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.2.1
-          bundler-cache: true
-          working-directory: './app/ios'
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: Build StudyU ios without codesign
-        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
-        working-directory: ./app
-      - uses: maierj/fastlane-action@v3.0.0
-        with:
-          lane: 'upload_testflight'
-          subdirectory: './app/ios'
-        env:
-          FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
-          FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}
-          FASTLANE_APP_IOS_KEY_CONTENT: ${{ secrets.FASTLANE_APP_IOS_KEY_CONTENT }}
-          FASTLANE_APP_IOS_MATCH_GIT_URL: ${{ secrets.FASTLANE_APP_IOS_MATCH_GIT_URL }}
-          FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY: ${{ secrets.FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
-          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
