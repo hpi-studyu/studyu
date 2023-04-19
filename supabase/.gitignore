@@ -4,3 +4,4 @@ volumes/db/init/studyu-schema.sql
 volumes/storage
 .env
 test.http
+docker-compose.override.yml
