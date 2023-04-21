@@ -1,7 +1,7 @@
-FROM cirrusci/flutter:latest as builder
+FROM ghcr.io/cirruslabs/flutter:stable as builder
 
 # todo is this line already part of cirrusci/flutter ?
-RUN flutter config --enable-web
+#RUN flutter config --enable-web
 
 ENV PATH ${PATH}:/root/.pub-cache/bin/
 
@@ -12,6 +12,8 @@ RUN dart pub global activate melos
 WORKDIR /src/
 
 COPY melos.yaml melos.yaml
+COPY pubspec.yaml pubspec.yaml
+COPY pubspec.lock pubspec.lock
 
 COPY core/pubspec.yaml core/pubspec.yaml
 COPY core/pubspec.lock core/pubspec.lock
@@ -24,7 +26,9 @@ COPY app/pubspec.lock app/pubspec.lock
 COPY designer_v2/pubspec.yaml designer_v2/pubspec.yaml
 COPY designer_v2/pubspec.lock designer_v2/pubspec.lock
 
-RUN melos clean
+RUN flutter pub get
+#RUN melos clean
+RUN flutter clean
 RUN melos bootstrap
 
 COPY ./ ./
@@ -46,7 +50,7 @@ ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 COPY ./docker/hpi/nginx/ /etc/nginx/conf.d/
 
 # todo get ssl certs from elsewhere
-COPY ./docker/hpi/hpi.studyu.health /etc/nginx/certs
+#COPY ./docker/hpi/hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
 COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
@@ -57,4 +61,5 @@ RUN mkdir /usr/share/nginx/html/designer_v2/assets/envs
 CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/envs/.env && nginx -g 'daemon off;'"]
 CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/envs/.env && nginx -g 'daemon off;'"]
 
-EXPOSE 80 443
+EXPOSE 80
+# EXPOSE 80 443
