@@ -1,6 +1,6 @@
 version: '3'
 services:
-  studyu-apps:
+  apps:
     build:
       context: ../../
       dockerfile: ./docker/hpi/Dockerfile
