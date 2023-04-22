@@ -42,8 +42,8 @@ RUN if [ -n "$ENV" ] ; then melos run build:web:designer_v2:$ENV ; else melos ru
 
 # todo move nginx to different docker (compose?) file to run it independently when running multiple flutter apps together
 FROM nginx:stable-alpine
-ARG FLUTTER_APP_FOLDER
-ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
+# ARG FLUTTER_APP_FOLDER
+# ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 
 # We need to modify the nginx conf to redirect all links to index.html
 # COPY ./docker/hpi/nginx/default.conf /etc/nginx/conf.d/default.conf
