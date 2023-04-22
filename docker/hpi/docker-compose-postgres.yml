@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  postgresql:
+    image: supabase/postgres:15.1.0.72
+    restart: always
+    ports:
+      - "5432:5432"
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf 
+    environment:
+      POSTGRES_PASSWORD: your-super-secret-and-long-postgres-password
+    volumes:
+      # - ./data:/var/lib/postgresql/data
+      - ./volumes/db/data:/var/lib/postgresql/data:Z 
