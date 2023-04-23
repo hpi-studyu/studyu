@@ -8,7 +8,7 @@ LICENSE
 *.md
 *.iml
 .supabase
-supabase/
+docker/hpi/volumes
 
 # Flutter specific
 **/.dart_tool

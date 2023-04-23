@@ -1,20 +1,22 @@
 version: '3'
+name: 'studyu'
 
 services:
-  postgresql:
+  db:
     image: supabase/postgres:15.1.0.72
-    restart: always
+    restart: unless-stopped
     ports:
       - "5432:5432"
     command: postgres -c config_file=/etc/postgresql/postgresql.conf 
     environment:
-      POSTGRES_PASSWORD: postgres
       POSTGRES_HOST: /var/run/postgresql
       PGPORT: ${POSTGRES_PORT}
       POSTGRES_PORT: ${POSTGRES_PORT}
-      PGPASSWORD: postgres
       PGDATABASE: ${POSTGRES_DB}
       POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#    networks:
+#      - studyu-net
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
@@ -23,3 +25,8 @@ services:
       - ./volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       # PGDATA directory is persisted between restarts
       - ./volumes/db/data:/var/lib/postgresql/data:Z
+      # Init sql data
+      - ../../database/studyu-schema.sql:/docker-entrypoint-initdb.d/init-scripts/99-data.sql:Z
+#networks:
+#  studyu-net:
+#      name: studyu_network
