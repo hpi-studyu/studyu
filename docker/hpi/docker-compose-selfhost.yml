@@ -11,6 +11,10 @@ services:
       - 443:443
     env_file:
       - ../../flutter_common/lib/envs/.env.selfhost
+    extra_hosts:
+      # - "app.hpi.studyu.health:127.0.0.1"
+      # - "designer.hpi.studyu.health:127.0.0.1"
+      # - "db.hpi.studyu.health:127.0.0.1"
 #    volumes:
 #      - ./etc/letsencrypt:/etc/letsencrypt
 #      - ./certbot/data:/var/www/certbot
