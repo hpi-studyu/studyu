@@ -59,10 +59,6 @@ services:
   auth:
     container_name: supabase-auth
     image: supabase/gotrue:v2.47.0
-#    depends_on:
-#      db:
-#        # Disable this if you are using an external Postgres database
-#        condition: service_healthy
     healthcheck:
       test:
         [
@@ -117,10 +113,6 @@ services:
   rest:
     container_name: supabase-rest
     image: postgrest/postgrest:v10.1.2
-#    depends_on:
-#      db:
-#        # Disable this if you are using an external Postgres database
-#        condition: service_healthy
     restart: unless-stopped
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
@@ -132,10 +124,6 @@ services:
   realtime:
     container_name: realtime-dev.supabase-realtime
     image: supabase/realtime:v2.5.1
-#    depends_on:
-#      db:
-#        # Disable this if you are using an external Postgres database
-#        condition: service_healthy
     healthcheck:
       test:
         [
@@ -171,9 +159,6 @@ services:
     container_name: supabase-storage
     image: supabase/storage-api:v0.28.2
     depends_on:
-#      db:
-        # Disable this if you are using an external Postgres database
-#        condition: service_healthy
       rest:
         condition: service_started
       imgproxy:
@@ -229,10 +214,6 @@ services:
   meta:
     container_name: supabase-meta
     image: supabase/postgres-meta:v0.60.7
-#    depends_on:
-#      db:
-        # Disable this if you are using an external Postgres database
-#        condition: service_healthy
     restart: unless-stopped
     environment:
       PG_META_PORT: 8080
@@ -261,41 +242,3 @@ services:
       - start
       - --main-service
       - /home/deno/functions/main
-
-  # Comment out everything below this point if you are using an external Postgres database
-#  db:
-#    container_name: supabase-db
-#    image: supabase/postgres:15.1.0.54-rc0
-#    healthcheck:
-#      test: pg_isready -U postgres -h localhost
-#      interval: 5s
-#      timeout: 5s
-#      retries: 10
-#    command:
-#      - postgres
-#      - -c
-#      - config_file=/etc/postgresql/postgresql.conf
-#      - -c
-#      - log_min_messages=fatal # prevents Realtime polling queries from appearing in logs
-#    restart: unless-stopped
-#    ports:
-#      # Pass down internal port because it's set dynamically by other services
-#      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-#    environment:
-#      POSTGRES_HOST: /var/run/postgresql
-#      PGPORT: ${POSTGRES_PORT}
-#      POSTGRES_PORT: ${POSTGRES_PORT}
-#      PGPASSWORD: ${POSTGRES_PASSWORD}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      PGDATABASE: ${POSTGRES_DB}
-#      POSTGRES_DB: ${POSTGRES_DB}
-#    volumes:
-#      - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
-#      # Must be superuser to create event trigger
-#      - ./volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
-#      # Must be superuser to alter reserved role
-#      - ./volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
-#      # PGDATA directory is persisted between restarts
-#      - ./volumes/db/data:/var/lib/postgresql/data:Z
-
-# If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
