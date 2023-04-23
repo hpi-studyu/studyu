@@ -20,8 +20,6 @@ services:
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
       LOGFLARE_URL: http://analytics:4000
       NEXT_PUBLIC_ENABLE_LOGS: true
-    networks:
-      - supabase-net
 
   kong:
     logging:
@@ -32,8 +30,6 @@ services:
     depends_on:
       analytics:
         condition: service_healthy
-    networks:
-      - supabase-net
 
   auth:
     depends_on:
@@ -44,8 +40,6 @@ services:
       options:
         syslog-address: "tcp://localhost:${VECTOR_PORT}"
         tag: auth
-    networks:
-      - supabase-net
 
   rest:
     depends_on:
@@ -56,8 +50,6 @@ services:
       options:
         syslog-address: "tcp://localhost:${VECTOR_PORT}"
         tag: rest
-    networks:
-      - supabase-net
 
   realtime:
     depends_on:
@@ -68,8 +60,6 @@ services:
       options:
         syslog-address: "tcp://localhost:${VECTOR_PORT}"
         tag: realtime
-    networks:
-      - supabase-net
 
   storage:
     depends_on:
@@ -80,8 +70,6 @@ services:
       options:
         syslog-address: "tcp://localhost:${VECTOR_PORT}"
         tag: storage
-    networks:
-      - supabase-net
 
   meta:
     depends_on:
@@ -92,8 +80,16 @@ services:
       options:
         syslog-address: "tcp://localhost:${VECTOR_PORT}"
         tag: meta
-    networks:
-      - supabase-net
+
+  functions:
+    depends_on:
+      analytics:
+        condition: service_healthy
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:${VECTOR_PORT}"
+        tag: functions
 
   analytics:
     container_name: supabase-analytics
@@ -129,8 +125,6 @@ services:
       LOGFLARE_SINGLE_TENANT: true
       LOGFLARE_SUPABASE_MODE: true
       LOGFLARE_MIN_CLUSTER_SIZE: 1
-    networks:
-      - supabase-net
   vector:
     container_name: supabase-vector
     image: timberio/vector:0.28.1-alpine
@@ -154,8 +148,6 @@ services:
     volumes:
       - ./volumes/logs/vector.yml:/etc/vector/vector.yml:ro
     command: [ "--config", "etc/vector/vector.yml" ]
-    networks:
-      - supabase-net
   # Comment out everything below this point if you are using an external Postgres database
   db:
     logging:
@@ -169,8 +161,3 @@ services:
         condition: service_healthy
     volumes:
       - ./volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
-    networks:
-      - supabase-net
-networks:
-  supabase-net:
-    name: studyu_network
