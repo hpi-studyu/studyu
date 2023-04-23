@@ -1,0 +1,16 @@
+version: '3'
+name: 'studyu'
+
+services:
+  studyu-apps:
+    container_name: studyu-apps
+    build:
+      context: ../../
+      dockerfile: ./docker/hpi/Dockerfile
+      args:
+        ENV: staging
+    ports:
+      - 80:80
+      - 443:443
+    env_file:
+      - ../../flutter_common/lib/envs/.env.staging
