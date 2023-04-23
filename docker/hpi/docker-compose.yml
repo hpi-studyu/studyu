@@ -1,4 +1,6 @@
 version: '3'
+name: 'studyu'
+
 services:
   studyu-apps:
     build:
