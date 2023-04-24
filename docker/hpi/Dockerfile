@@ -43,11 +43,11 @@ RUN if [ -n "$ENV" ] ; then melos run build:web:designer_v2:$ENV ; else melos ru
 # todo move nginx to different docker (compose?) file to run it independently when running multiple flutter apps together
 FROM nginx:stable-alpine
 
-# todo comment out?
 ARG FLUTTER_APP_FOLDER
 ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 
-COPY ./docker/hpi/nginx/ /etc/nginx/conf.d/
+COPY ./docker/hpi/nginx/.htpasswd /etc/nginx/.htpasswd
+COPY ./docker/hpi/nginx/conf.d/ /etc/nginx/conf.d/
 
 # todo get ssl certs from elsewhere
 #COPY ./docker/hpi/hpi.studyu.health /etc/nginx/certs
