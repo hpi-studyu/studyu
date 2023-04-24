@@ -16,7 +16,7 @@ services:
     env_file:
       - ../../flutter_common/lib/envs/.env.selfhost
     volumes:
-      - ./etc/letsencrypt:/etc/letsencrypt
+      - /etc/letsencrypt:/etc/letsencrypt
 #      - ./certbot/data:/var/www/certbot
 
 #  certbot:
