@@ -2,8 +2,8 @@ version: '3'
 name: 'studyu'
 
 services:
-  studyu-apps:
-    container_name: studyu-apps
+  apps:
+    container_name: apps
     build:
       context: ../../
       dockerfile: ./docker/hpi/Dockerfile
