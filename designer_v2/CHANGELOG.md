@@ -1,3 +1,8 @@
+## 1.2.1
+
+ - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
+ - **FIX**: initial router location. ([6cae20f1](https://github.com/hpi-studyu/studyu/commit/6cae20f1a9b5d1161aae6b08c262e50824b18971))
+
 ## 1.2.0
 
  - **FIX**: number validator not working properly. ([5b60c1da](https://github.com/hpi-studyu/studyu/commit/5b60c1da8d40b5728fbf4a902dad21f3b3009865))

@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-04-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.1.1`](#studyu_app---v211)
+ - [`studyu_core` - `v4.0.1`](#studyu_core---v401)
+ - [`studyu_designer_v2` - `v1.2.1`](#studyu_designer_v2---v121)
+ - [`studyu_flutter_common` - `v1.4.1`](#studyu_flutter_common---v141)
+
+---
+
+#### `studyu_app` - `v2.1.1`
+
+ - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
+
+#### `studyu_core` - `v4.0.1`
+
+ - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
+
+#### `studyu_designer_v2` - `v1.2.1`
+
+ - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
+ - **FIX**: initial router location. ([6cae20f1](https://github.com/hpi-studyu/studyu/commit/6cae20f1a9b5d1161aae6b08c262e50824b18971))
+
+#### `studyu_flutter_common` - `v1.4.1`
+
+ - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 2023-04-11
 
 ### Changes

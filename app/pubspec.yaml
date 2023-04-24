@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.1.0
+version: 2.1.1
 description: An app to facilitate N-of-1 trials
 publish_to: none
 homepage: https://hpi.de/lippert/projects/studyu.html
@@ -37,8 +37,8 @@ dependencies:
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   shared_preferences: ^2.1.0
-  studyu_core: ^4.0.0
-  studyu_flutter_common: ^1.4.0
+  studyu_core: ^4.0.1
+  studyu_flutter_common: ^1.4.1
   supabase: ^1.6.3
   supabase_flutter: ^1.7.0
   timeline_tile: ^2.0.0
