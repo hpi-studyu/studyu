@@ -47,10 +47,10 @@ ARG FLUTTER_APP_FOLDER
 ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 
 COPY ./docker/hpi/nginx/.htpasswd /etc/nginx/.htpasswd
-COPY ./docker/hpi/nginx/conf.d/ /etc/nginx/conf.d/
+COPY ./docker/hpi/nginx/conf.d /etc/nginx/conf.d
 
 # todo get ssl certs from elsewhere
-#COPY ./docker/hpi/hpi.studyu.health /etc/nginx/certs
+COPY /etc/letsencrypt/live/hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
 COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
@@ -61,5 +61,6 @@ RUN mkdir /usr/share/nginx/html/designer_v2/assets/envs
 CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/envs/.env && nginx -g 'daemon off;'"]
 CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/envs/.env && nginx -g 'daemon off;'"]
 
-EXPOSE 80
+# EXPOSE 80
 # EXPOSE 80 443
+EXPOSE 443
