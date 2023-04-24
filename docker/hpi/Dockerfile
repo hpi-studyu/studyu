@@ -49,8 +49,7 @@ ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
 COPY ./docker/hpi/nginx/.htpasswd /etc/nginx/.htpasswd
 COPY ./docker/hpi/nginx/conf.d /etc/nginx/conf.d
 
-# todo get ssl certs from elsewhere
-COPY /etc/letsencrypt/live/hpi.studyu.health /etc/nginx/certs
+# COPY /etc/letsencrypt/live/hpi.studyu.health /etc/nginx/certs
 
 COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
 COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
