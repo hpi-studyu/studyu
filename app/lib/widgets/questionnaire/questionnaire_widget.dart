@@ -127,7 +127,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         if (index == widget.questions.length && qs.answers.length == widget.questions.length) {
           return widget.footer != null && widget.footer.isNotEmpty ? HtmlTextBox(widget.footer) : Container();
         }
-        if (index > shownQuestions.length-1) {
+        if (index > shownQuestions.length - 1) {
           return Container();
         }
         return shownQuestions[index];

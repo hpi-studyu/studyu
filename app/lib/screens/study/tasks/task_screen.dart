@@ -63,34 +63,32 @@ class _TaskScreenState extends State<TaskScreen> {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                      child: Text(
-                        taskInstance.task.title ?? '',
-                        style: theme.textTheme.headlineMedium.copyWith(fontSize: 24),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                      ),
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Flexible(
+                  child: Text(
+                    taskInstance.task.title ?? '',
+                    style: theme.textTheme.headlineMedium.copyWith(fontSize: 24),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.info_outline, color: Colors.grey),
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: ListTile(
-                            dense: true,
-                            title: Text(taskInstance.task.title, style: theme.textTheme.titleLarge),
-                          ),
-                          content: HtmlText(taskInstance.task.header),
-                        );
-                      },
-                    ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.info_outline, color: Colors.grey),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: ListTile(
+                          dense: true,
+                          title: Text(taskInstance.task.title, style: theme.textTheme.titleLarge),
+                        ),
+                        content: HtmlText(taskInstance.task.header),
+                      );
+                    },
                   ),
-                ]
-            ),
+                ),
+              ]),
               const SizedBox(height: 20),
               _buildTask(),
             ],

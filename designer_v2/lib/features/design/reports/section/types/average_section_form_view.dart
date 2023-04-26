@@ -12,7 +12,12 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class AverageSectionFormView extends ConsumerWidget {
-  const AverageSectionFormView({required this.formViewModel, required this.studyId, required this.reportSectionColumnWidth, super.key,});
+  const AverageSectionFormView({
+    required this.formViewModel,
+    required this.studyId,
+    required this.reportSectionColumnWidth,
+    super.key,
+  });
 
   final ReportItemFormViewModel formViewModel;
   final StudyID studyId;
@@ -52,7 +57,7 @@ class AverageSectionFormView extends ConsumerWidget {
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                              size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
+                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)

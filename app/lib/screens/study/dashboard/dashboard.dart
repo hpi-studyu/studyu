@@ -48,8 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       scheduleToday = subject.scheduleFor(DateTime.now());
       if (widget.error != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(widget.error)));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error)));
         });
       }
     }
@@ -63,8 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     if (subject == null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.loading, (_) => false);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
       });
       return const SizedBox.shrink();
     }
@@ -119,43 +117,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    final Uri emailLaunchUri = Uri(
-                        scheme: 'mailto',
-                        path: subject.study.contact.email,
-                        queryParameters: {
-                          'subject': '[StudyU] Debug Information',
-                          'body': StudyNotifications.scheduledNotificationsDebug,
-                        }
-                    );
+                    final Uri emailLaunchUri =
+                        Uri(scheme: 'mailto', path: subject.study.contact.email, queryParameters: {
+                      'subject': '[StudyU] Debug Information',
+                      'body': StudyNotifications.scheduledNotificationsDebug,
+                    });
                     if (!mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: GestureDetector(
                         onDoubleTap: () {
-                          showDialog(context: context, builder: (_) =>
-                              AlertDialog(
-                                title: const SelectableText('Notification Log'),
-                                content: Column(children: [
-                                  ElevatedButton(
-                                    onPressed: () => launchUrl(emailLaunchUri),
-                                    child: const Text('Send via email'),
-                                  ),
-                                  FutureBuilder<bool>(
-                                      future: receivePermission(),
-                                      builder: (context, AsyncSnapshot<bool> snapshot) {
-                                        if (snapshot.hasData) {
-                                          return Text('ignoreBatteryOptimizations: ${snapshot.data.toString()}');
-                                        } else {
-                                          return const CircularProgressIndicator();
-                                        }
-                                      }
-                                  ),
-                                  Text('SubjectID: ${subject.id}'),
-                                  SelectableText(StudyNotifications.scheduledNotificationsDebug),
-                                ],),
-                                scrollable: true,
-                              )
-                          );
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                    title: const SelectableText('Notification Log'),
+                                    content: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () => launchUrl(emailLaunchUri),
+                                          child: const Text('Send via email'),
+                                        ),
+                                        FutureBuilder<bool>(
+                                            future: receivePermission(),
+                                            builder: (context, AsyncSnapshot<bool> snapshot) {
+                                              if (snapshot.hasData) {
+                                                return Text('ignoreBatteryOptimizations: ${snapshot.data.toString()}');
+                                              } else {
+                                                return const CircularProgressIndicator();
+                                              }
+                                            }),
+                                        Text('SubjectID: ${subject.id}'),
+                                        SelectableText(StudyNotifications.scheduledNotificationsDebug),
+                                      ],
+                                    ),
+                                    scrollable: true,
+                                  ));
                         },
                         child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
                       ),
@@ -220,18 +216,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       bottomSheet: showNextDay
           ? Container(
-            margin: const EdgeInsets.only(left: 16, bottom: 8),
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.fast_forward_rounded),
-              onPressed: () async {
-                await subject.setStartDateBackBy(days: 1);
-                setState(() {
-                  scheduleToday = subject.scheduleFor(DateTime.now());
-                });
-              },
-              label: Text(AppLocalizations.of(context).next_day),
-            ),
-          )
+              margin: const EdgeInsets.only(left: 16, bottom: 8),
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.fast_forward_rounded),
+                onPressed: () async {
+                  await subject.setStartDateBackBy(days: 1);
+                  setState(() {
+                    scheduleToday = subject.scheduleFor(DateTime.now());
+                  });
+                },
+                label: Text(AppLocalizations.of(context).next_day),
+              ),
+            )
           : null,
     );
   }
@@ -244,17 +240,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return Center(
           child: Padding(
               padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).study_not_started,
-                      style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
-                    )
-                  ]
-              )
-          )
-      );
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(
+                  AppLocalizations.of(context).study_not_started,
+                  style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
+                )
+              ])));
     } else {
       return TaskOverview(
         subject: subject,

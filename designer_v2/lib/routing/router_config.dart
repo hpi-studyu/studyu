@@ -43,7 +43,6 @@ import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
 
-
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
   static const authKey = ValueKey("auth"); // shared key for auth pages
@@ -371,6 +370,7 @@ class RouterConf {
         if (newRoute != null) return newRoute;
       }
     }
+
     return searchRouteNames(routes)!;
   }
 }

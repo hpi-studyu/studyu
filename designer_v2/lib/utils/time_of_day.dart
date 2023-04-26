@@ -40,7 +40,7 @@ class TimeValueAccessor extends ControlValueAccessor<Time, String> {
         hour: int.parse(parts[0].trim()),
         minute: int.parse(parts[1].trim()),
       );
-    } catch(e) {
+    } catch (e) {
       return null;
     }
   }

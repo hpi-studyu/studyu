@@ -55,7 +55,7 @@ class InterventionTaskFormData extends IFormDataWithSchedule {
   InterventionTaskFormData copy() {
     return InterventionTaskFormData(
       taskId: const Uuid().v4(), // always regenerate id
-      instanceId:  const Uuid().v4(), // always regenerate id
+      instanceId: const Uuid().v4(), // always regenerate id
       taskTitle: taskTitle.withDuplicateLabel(),
       taskDescription: taskDescription,
       isTimeLocked: isTimeLocked,

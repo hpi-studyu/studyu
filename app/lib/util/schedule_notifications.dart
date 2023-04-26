@@ -9,8 +9,8 @@ import 'package:timezone/timezone.dart' as tz;
 import '../models/app_state.dart';
 import 'notifications.dart';
 
-Future<int> scheduleReminderForDate(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, int id, String body, StudyNotification studyNotification, NotificationDetails notificationDetails) async {
+Future<int> scheduleReminderForDate(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, int id,
+    String body, StudyNotification studyNotification, NotificationDetails notificationDetails) async {
   var currentId = id;
   final task = studyNotification.taskInstance.task;
   final date = studyNotification.date;
@@ -29,8 +29,10 @@ Future<int> scheduleReminderForDate(
 
     // todo we do not support overlapping completion periods, since otherwise we cannot identify the origin of the reminder exactly
     // for now we just filter out all task instances where the reminder is outside of the completionPeriod
-    if (!task.schedule.completionPeriods.where((element) => element.id == studyNotification.taskInstance.id)
-        .single.contains(reminder)) {
+    if (!task.schedule.completionPeriods
+        .where((element) => element.id == studyNotification.taskInstance.id)
+        .single
+        .contains(reminder)) {
       continue;
     }
 
@@ -119,9 +121,9 @@ List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime da
 
 class StudyNotification {
   StudyNotification(
-      this.taskInstance,
-      this.date,
-      );
+    this.taskInstance,
+    this.date,
+  );
 
   final TaskInstance taskInstance;
   final DateTime date;

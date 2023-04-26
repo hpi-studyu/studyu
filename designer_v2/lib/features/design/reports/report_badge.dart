@@ -5,10 +5,10 @@ import 'package:studyu_designer_v2/features/design/reports/reports_form_data.dar
 class ReportBadge extends StatelessWidget {
   const ReportBadge(
       {required this.status,
-        this.type = study_badge.BadgeType.outlineFill,
-        this.showPrefixIcon = true,
-        this.showTooltip = true,
-        Key? key})
+      this.type = study_badge.BadgeType.outlineFill,
+      this.showPrefixIcon = true,
+      this.showTooltip = true,
+      Key? key})
       : super(key: key);
 
   final ReportStatus? status;

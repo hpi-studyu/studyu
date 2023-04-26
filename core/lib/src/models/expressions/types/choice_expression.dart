@@ -21,7 +21,8 @@ class ChoiceExpression extends ValueExpression<dynamic> {
   @override
   bool checkValue(dynamic value) {
     if (value is List) {
-      if (value.isEmpty) { // workaround until not expression is implemented for V2
+      if (value.isEmpty) {
+        // workaround until not expression is implemented for V2
         return true;
       } else {
         return value.any((element) => choices.contains(element));

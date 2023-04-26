@@ -49,7 +49,7 @@ extension StudyExportX on Study {
     final surveyAnsweredColumnById = {};
 
     for (var i = 1; i < observations.length + 1; i++) {
-      final surveyMeasurement = observations[i-1] as QuestionnaireTask;
+      final surveyMeasurement = observations[i - 1] as QuestionnaireTask;
       final surveyQuestions = surveyMeasurement.questions.questions;
       surveyColumns['survey${i}_id'] = surveyMeasurement.id;
       surveyColumns['survey${i}_name'] = surveyMeasurement.title;
@@ -57,7 +57,7 @@ extension StudyExportX on Study {
       surveyAnsweredColumnById[surveyMeasurement.id] = 'is_survey$i';
 
       for (var j = 1; j < surveyQuestions.length + 1; j++) {
-        final question = surveyQuestions[j-1];
+        final question = surveyQuestions[j - 1];
         surveyColumns['survey${i}_question${j}_id'] = question.id;
         surveyColumns['survey${i}_question${j}_text'] = question.prompt;
         surveyColumns['survey${i}_question${j}_response'] = '';
@@ -70,7 +70,11 @@ extension StudyExportX on Study {
       final Map<String, dynamic> rowShared = {
         'participant_id': record.subjectId,
         'participant_started_at': record.startedAt!.toString(),
-        'invite_code': participants!.where((element) => element.id == record.subjectId).firstWhereOrNull((_) => true)?.inviteCode ?? '',
+        'invite_code': participants!
+                .where((element) => element.id == record.subjectId)
+                .firstWhereOrNull((_) => true)
+                ?.inviteCode ??
+            '',
         'current_day_of_study': record.completedAt!.difference(record.startedAt!).inDays.toString(),
         'current_intervention_id': record.interventionId,
         'current_intervention_name': intervention?.name ?? invalidKey,

@@ -81,7 +81,7 @@ class InterventionCardTitle extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   final description =
-                  intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
+                      intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
                   return AlertDialog(
                     title: ListTile(
                       leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),

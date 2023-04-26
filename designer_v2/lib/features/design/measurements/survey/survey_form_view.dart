@@ -30,8 +30,8 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
   bool isStylingInformationDismissed = true;
 
   onDismissedCallback() => setState(() {
-    isStylingInformationDismissed = !isStylingInformationDismissed;
-  });
+        isStylingInformationDismissed = !isStylingInformationDismissed;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +132,10 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
             ),
           ),
         ]),
-        HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
+        HtmlStylingBanner(
+          isDismissed: isStylingInformationDismissed,
+          onDismissed: onDismissedCallback,
+        ),
         const SizedBox(height: 28.0),
         ReactiveFormConsumer(
             // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
