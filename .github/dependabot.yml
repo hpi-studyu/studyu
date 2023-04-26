@@ -27,25 +27,9 @@ updates:
       - "dependencies"
   - package-ecosystem: "pub"
     open-pull-requests-limit: 20
-    directory: "designer/"
+    directory: "designer_v2/"
     schedule:
       interval: "daily"
     labels:
-      - "designer"
-      - "dependencies"
-  - package-ecosystem: "pub"
-    open-pull-requests-limit: 20
-    directory: "notebook_uploader/"
-    schedule:
-      interval: "daily"
-    labels:
-      - "notebook_uploader"
-      - "dependencies"
-  - package-ecosystem: "pub"
-    open-pull-requests-limit: 20
-    directory: "repo_generator/"
-    schedule:
-      interval: "daily"
-    labels:
-      - "repo_generator"
+      - "designer_v2"
       - "dependencies"
