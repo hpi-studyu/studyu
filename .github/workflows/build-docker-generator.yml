@@ -8,7 +8,7 @@ on:
       - '.github/workflows/build-docker-generator.yml'
     branches:
       - master
-      - dev
+      # - dev
   release:
     types: [published]
 
