@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../models/app_state.dart';
 import '../../routes.dart';
@@ -200,7 +198,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       } catch (e) {
         print('Error when trying to login and retrieve the study subject');
       }
-      if (!signInRes) {
+      /*if (!signInRes) {
         final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
         if (migrateRes) {
           print("Successfully migrated to V2");
@@ -211,7 +209,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
         initStudy();
         return;
-      }
+      }*/
     }
     if (!mounted) return;
 
@@ -244,7 +242,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+  /*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {
@@ -272,5 +270,5 @@ class _LoadingScreenState extends State<LoadingScreen> {
       }
     }
     return false;
-  }
+  }*/
 }
