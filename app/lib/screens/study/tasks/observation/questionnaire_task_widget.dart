@@ -22,6 +22,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
   bool responseValidator;
+  DateTime loginClickTime;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     final state = context.read<AppState>();
@@ -72,6 +73,9 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
             ElevatedButton.icon(
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
               onPressed: () {
+                if (isRedundantClick(DateTime.now())) {
+                  return;
+                }
                 switch (response.runtimeType) {
                   case QuestionnaireState:
                     _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
@@ -102,5 +106,21 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         responseValidator = false;
       });
     }
+  }
+
+  bool isRedundantClick(DateTime currentTime) {
+    if (loginClickTime == null) {
+      loginClickTime = currentTime;
+      return false;
+    }
+    int secondsUntilClicked = currentTime.difference(loginClickTime).inSeconds;
+    // timeout submit button to disable multiple clicks
+    if (secondsUntilClicked < 3) {
+      print('complete button is still freezed');
+      return true;
+    }
+
+    loginClickTime = currentTime;
+    return false;
   }
 }
