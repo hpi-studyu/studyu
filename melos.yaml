@@ -34,12 +34,6 @@ scripts:
         "dart format -l 120 ."
     description: Format all code
 
-  format:check:
-    description: Check formatting of Dart code.
-    run: |
-      melos exec -c 6 -- \
-        "dart format -l 120 --output none --set-exit-if-changed ."
-
   fix:
     run: |
       melos exec -c 6 -- \
@@ -49,7 +43,7 @@ scripts:
   format:ci:
     run: |
       melos exec -c 6 -- \
-        "find . -name "*.dart" ! -name "*.g.dart" | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
+        "find . -name "*.dart" ! -name "*.g.dart" ! -path "./.dart_tool/**" | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
     description: Format all code without generated files
 
   outdated:
