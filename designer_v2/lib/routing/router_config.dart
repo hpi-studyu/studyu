@@ -61,6 +61,8 @@ class RouteParams {
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConf {
+  static late final GoRouter router;
+
   static final List<GoRoute> routes = publicRoutes + privateRoutes;
 
   static final List<GoRoute> publicRoutes = [
@@ -141,13 +143,13 @@ class RouterConf {
       path: "/studies/:${RouteParams.studyId}",
       name: studyRouteName,
       redirect: (BuildContext context, GoRouterState state) =>
-          state.namedLocation('studyEdit', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+          router.namedLocation('studyEdit', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: studyEditRouteName,
       redirect: (BuildContext context, GoRouterState state) =>
-          state.namedLocation('studyEditInfo', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+          router.namedLocation('studyEditInfo', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit/info",
@@ -369,7 +371,6 @@ class RouterConf {
         if (newRoute != null) return newRoute;
       }
     }
-
     return searchRouteNames(routes)!;
   }
 }

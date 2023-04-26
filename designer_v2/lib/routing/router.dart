@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
@@ -23,8 +24,90 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
   const defaultLocation = studiesRouteName;
+  late final GoRouter router;
 
-  return GoRouter(
+  String? authGuard(BuildContext context, GoRouterState state) {
+    final loginLocation = router.namedLocation(loginRouteName);
+    final signupLocation = router.namedLocation(signupRouteName);
+    final splashLocation = router.namedLocation(splashRouteName);
+    final passwordRecoveryLocation = router.namedLocation(recoverPasswordRouteName);
+    final isOnDefaultPage = state.subloc == router.namedLocation(defaultLocation);
+    final isOnLoginPage = state.subloc == loginLocation;
+    final isOnSignupPage = state.subloc == signupLocation;
+    final isOnSplashPage = state.subloc == splashLocation;
+    final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
+    final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.subloc);
+
+    // Read most recent app state on re-evaluation (see refreshListenable)
+    final isLoggedIn = authRepository.isLoggedIn;
+    var allowPasswordReset = authRepository.allowPasswordReset;
+    final isInitialized = appController.isInitialized;
+
+    // Carry original location through the redirect flow so that we can
+    // redirect the user to where they came from after initialization
+    final String? from;
+    if (state.queryParams.containsKey('from')) {
+      from = state.queryParams['from'];
+    } else {
+      if (state.subloc.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
+        from = state.subloc;
+      } else {
+        from = null;
+      }
+    }
+    // Helper to generate routes carrying the 'from' param (if any)
+    namedLocForwarded(String name) {
+      final Map<String, String> qParams = {};
+      if (from != null && from != '/') {
+        // if (from != null && from != '/' && from != defaultLocation) {
+        qParams["from"] = from;
+      }
+      return router.namedLocation(name, queryParams: qParams);
+    }
+
+    if (!isInitialized) {
+      // Redirect to splash screen while app is pending initialization
+      return (isOnSplashPage) ? null : namedLocForwarded(splashRouteName);
+    }
+
+    // Handle password recovery
+    if (allowPasswordReset) {
+      if (isOnPasswordRecoveryPage) {
+        authRepository.allowPasswordReset = false;
+        return null;
+      } else {
+        return namedLocForwarded(recoverPasswordRouteName);
+      }
+    }
+
+    if (!isLoggedIn) {
+      if (from != null) {
+        /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
+        // Only allow access to public pages...
+        if (!isOnSplashPage && isOnPublicPage) {
+          return null;
+          // ... else send user to their origin location
+        } else if (from != state.subloc) {
+          return from;
+        }
+      }
+      // Redirect to login page as default
+      return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
+    } else {
+      // If the user is authenticated, forward to where they were going initially...
+      if (from != null && from != state.subloc) {
+        return from;
+      }
+      // ...or send them to the default location if they just authenticated and weren't going anywhere
+      if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
+        return '/$defaultLocation';
+      }
+    }
+    // don't redirect in all other cases
+    return null;
+  }
+
+  router = GoRouter(
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
       appController.stream, // initialization events
@@ -32,95 +115,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     ]),
     routes: RouterConf.routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
-    redirect: (context, state) {
-      final loginLocation = state.namedLocation(loginRouteName);
-      final signupLocation = state.namedLocation(signupRouteName);
-      final splashLocation = state.namedLocation(splashRouteName);
-      final passwordRecoveryLocation = state.namedLocation(recoverPasswordRouteName);
-      final isOnDefaultPage = state.subloc == state.namedLocation(defaultLocation);
-      final isOnLoginPage = state.subloc == loginLocation;
-      final isOnSignupPage = state.subloc == signupLocation;
-      final isOnSplashPage = state.subloc == splashLocation;
-      final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
-      final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.subloc);
-
-      // Read most recent app state on re-evaluation (see refreshListenable)
-      final isLoggedIn = authRepository.isLoggedIn;
-      var allowPasswordReset = authRepository.allowPasswordReset;
-      final isInitialized = appController.isInitialized;
-
-      // Carry original location through the redirect flow so that we can
-      // redirect the user to where they came from after initialization
-      final String? from;
-      if (state.queryParams.containsKey('from')) {
-        from = state.queryParams['from'];
-      } else {
-        if (state.subloc.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
-          from = state.subloc;
-        } else {
-          from = null;
-        }
-      }
-      // Helper to generate routes carrying the 'from' param (if any)
-      namedLocForwarded(String name) {
-        final Map<String, String> qParams = {};
-        if (from != null && from != '/') {
-          // if (from != null && from != '/' && from != defaultLocation) {
-          qParams["from"] = from;
-        }
-        return state.namedLocation(name, queryParams: qParams);
-      }
-
-      if (!isInitialized) {
-        // Redirect to splash screen while app is pending initialization
-        return (isOnSplashPage) ? null : namedLocForwarded(splashRouteName);
-      }
-
-      /*print("***NEW ROUTER***");
-      print("subloc: " + state.subloc);
-      print("isOnPublicPage: " + isOnPublicPage.toString());
-      if (from != null) {
-        print("from: $from");
-      } else {
-        print("from: null");
-      }*/
-
-      // Handle password recovery
-      if (allowPasswordReset) {
-        if (isOnPasswordRecoveryPage) {
-          authRepository.allowPasswordReset = false;
-          return null;
-        } else {
-          return namedLocForwarded(recoverPasswordRouteName);
-        }
-      }
-
-      if (!isLoggedIn) {
-        if (from != null) {
-          /*&& !isOnSplashPage*/ /*&& state.subloc != '/'*/
-          // Only allow access to public pages...
-          if (!isOnSplashPage && isOnPublicPage) {
-            return null;
-            // ... else send user to their origin location
-          } else if (from != state.subloc) {
-            return from;
-          }
-        }
-        // Redirect to login page as default
-        return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
-      } else {
-        // If the user is authenticated, forward to where they were going initially...
-        if (from != null && from != state.subloc) {
-          return from;
-        }
-        // ...or send them to the default location if they just authenticated and weren't going anywhere
-        if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
-          return '/$defaultLocation';
-        }
-      }
-      // don't redirect in all other cases
-      return null;
-    },
+    redirect: authGuard,
     debugLogDiagnostics: kDebugMode,
   );
+  RouterConf.router = router;
+  return router;
 });
