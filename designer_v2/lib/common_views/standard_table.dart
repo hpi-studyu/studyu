@@ -29,6 +29,7 @@ class StandardTableColumn {
   final TableColumnWidth columnWidth;
 }
 
+// ignore: must_be_immutable
 class StandardTable<T> extends StatefulWidget {
   StandardTable(
       {required this.items,
