@@ -1,3 +1,7 @@
+## 1.2.2
+
+ - **FIX**: more slider usability fixes. ([6e151bc6](https://github.com/hpi-studyu/studyu/commit/6e151bc6281c3740ccb8d23154994c2066fc65ae))
+
 ## 1.2.1
 
  - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))

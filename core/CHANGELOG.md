@@ -1,3 +1,7 @@
+## 4.0.2
+
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+
 ## 4.0.1
 
  - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))

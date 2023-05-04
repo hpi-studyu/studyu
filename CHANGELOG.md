@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-05-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.1.2`](#studyu_app---v212)
+ - [`studyu_core` - `v4.0.2`](#studyu_core---v402)
+ - [`studyu_designer_v2` - `v1.2.2`](#studyu_designer_v2---v122)
+ - [`studyu_flutter_common` - `v1.4.2`](#studyu_flutter_common---v142)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_flutter_common` - `v1.4.2`
+
+---
+
+#### `studyu_app` - `v2.1.2`
+
+ - **FIX**: improve debug mode and send test notification. ([8c6afd6f](https://github.com/hpi-studyu/studyu/commit/8c6afd6fd36904592a5aa0c118c5cf88afc8bfc1))
+ - **FIX**: more slider usability fixes. ([6e151bc6](https://github.com/hpi-studyu/studyu/commit/6e151bc6281c3740ccb8d23154994c2066fc65ae))
+ - **FIX**: improve questionnaire slider usability. ([187fda96](https://github.com/hpi-studyu/studyu/commit/187fda96dfb6faa44d6521859cf0219c726cab17))
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+ - **FIX**: disable multiple submit button clicks for task widget. ([5297f590](https://github.com/hpi-studyu/studyu/commit/5297f59074f3e2771cdb9431fc563a236894fd08))
+
+#### `studyu_core` - `v4.0.2`
+
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+
+#### `studyu_designer_v2` - `v1.2.2`
+
+ - **FIX**: more slider usability fixes. ([6e151bc6](https://github.com/hpi-studyu/studyu/commit/6e151bc6281c3740ccb8d23154994c2066fc65ae))
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 2023-04-24
 
 ### Changes
