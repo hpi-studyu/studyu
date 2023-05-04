@@ -13,10 +13,13 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({@required this.task, @required this.completionPeriod, Key key}) : super(key: key);
+  const QuestionnaireTaskWidget(
+      {@required this.task, @required this.completionPeriod, Key key})
+      : super(key: key);
 
   @override
-  State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
+  State<QuestionnaireTaskWidget> createState() =>
+      _QuestionnaireTaskWidgetState();
 }
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
@@ -24,12 +27,16 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   bool responseValidator;
   DateTime loginClickTime;
 
-  Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
+  Future<void> _addQuestionnaireResult<T>(
+      T response, BuildContext context) async {
     final state = context.read<AppState>();
     final activeStudy = state.activeSubject;
     try {
       if (state.trackParticipantProgress) {
-        await activeStudy.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
+        await activeStudy.addResult<T>(
+            taskId: widget.task.id,
+            periodId: widget.completionPeriod.id,
+            result: response);
       }
       if (!mounted) return;
       Navigator.pop(context, true);
@@ -38,7 +45,9 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         SnackBar(
           content: Text(AppLocalizations.of(context).could_not_save_results),
           duration: const Duration(seconds: 10),
-          action: SnackBarAction(label: 'Retry', onPressed: () => _addQuestionnaireResult(response, context)),
+          action: SnackBarAction(
+              label: 'Retry',
+              onPressed: () => _addQuestionnaireResult(response, context)),
         ),
       );
     }
@@ -46,7 +55,8 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.watch<AppState>().activeSubject.study.fhirQuestionnaire;
+    final fhirQuestionnaire =
+        context.watch<AppState>().activeSubject.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
             fhirQuestionnaire,
@@ -71,14 +81,17 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           ),
           if (response != null && responseValidator)
             ElevatedButton.icon(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green)),
               onPressed: () {
                 if (isRedundantClick(DateTime.now())) {
                   return;
                 }
                 switch (response.runtimeType) {
                   case QuestionnaireState:
-                    _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
+                    _addQuestionnaireResult<QuestionnaireState>(
+                        response as QuestionnaireState, context);
                     break;
                   case fhir.QuestionnaireResponse:
                     _addQuestionnaireResult<fhir.QuestionnaireResponse>(

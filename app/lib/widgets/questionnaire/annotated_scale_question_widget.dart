@@ -8,14 +8,19 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
   final Function(Answer) onDone;
 
-  const AnnotatedScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const AnnotatedScaleQuestionWidget(
+      {Key key, @required this.question, this.onDone})
+      : super(key: key);
 
   @override
-  State<AnnotatedScaleQuestionWidget> createState() => _AnnotatedScaleQuestionWidgetState();
+  State<AnnotatedScaleQuestionWidget> createState() =>
+      _AnnotatedScaleQuestionWidgetState();
 }
 
-class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWidget> {
+class _AnnotatedScaleQuestionWidgetState
+    extends State<AnnotatedScaleQuestionWidget> {
   double value;
+
   // double actualValue;
   bool sliderTouched;
 

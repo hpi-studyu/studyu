@@ -9,7 +9,8 @@ class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
   final Function(Answer) onDone;
 
-  const ScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const ScaleQuestionWidget({Key key, @required this.question, this.onDone})
+      : super(key: key);
 
   @override
   State<ScaleQuestionWidget> createState() => _ScaleQuestionWidgetState();
@@ -27,10 +28,15 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final sliderRange = (widget.question.maximum - widget.question.minimum).abs();
+    final sliderRange =
+        (widget.question.maximum - widget.question.minimum).abs();
 
-    Color minColor = widget.question.minColor != null ? Color(widget.question.minColor) : null;
-    Color maxColor = widget.question.maxColor != null ? Color(widget.question.maxColor) : null;
+    Color minColor = widget.question.minColor != null
+        ? Color(widget.question.minColor)
+        : null;
+    Color maxColor = widget.question.maxColor != null
+        ? Color(widget.question.maxColor)
+        : null;
 
     final isColored = minColor != null || maxColor != null;
     if (isColored) {
@@ -41,15 +47,21 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
 
     final theme = Theme.of(context);
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
-    final thumbColor = isColored ? Color.lerp(minColor, maxColor, (value - widget.question.minimum) / sliderRange).withOpacity(1) : null;
-    final activeTrackColor = isColored ? coloredSliderTheme.activeTrackColor : null;
-    final inactiveTrackColor = isColored ? coloredSliderTheme.inactiveTrackColor : null;
+    final thumbColor = isColored
+        ? Color.lerp(minColor, maxColor,
+                (value - widget.question.minimum) / sliderRange)
+            .withOpacity(1)
+        : null;
+    final activeTrackColor =
+        isColored ? coloredSliderTheme.activeTrackColor : null;
+    final inactiveTrackColor =
+        isColored ? coloredSliderTheme.inactiveTrackColor : null;
 
     return Column(
       children: [
         Stack(
-            children: [
-              Theme(
+          children: [
+            Theme(
                 data: isColored
                     ? theme.copyWith(
                         sliderTheme: SliderThemeData(
@@ -80,9 +92,8 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   isColored: isColored,
                   linearStep: false,
                   steps: widget.question,
-                )
-              ),
-            ],
+                )),
+          ],
         ),
       ],
     );
