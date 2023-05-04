@@ -48,7 +48,7 @@ Future<int> scheduleReminderForDate(FlutterLocalNotificationsPlugin flutterLocal
     );
     // DEBUG: Show test notifications
     /*if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {
-        await show(
+        await flutterLocalNotificationsPlugin.show(
           /*******************/
           currentId,
           task.title,
@@ -69,9 +69,9 @@ Future<int> scheduleReminderForDate(FlutterLocalNotificationsPlugin flutterLocal
   return currentId;
 }
 
-Future<void> scheduleNotifications(BuildContext context) async {
-  StudyNotifications.scheduledNotificationsDebug = DateTime.now().toString();
+const notificationDetails = NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
 
+Future<void> scheduleNotifications(BuildContext context) async {
   if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -90,7 +90,7 @@ Future<void> scheduleNotifications(BuildContext context) async {
   final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
 
-  const notificationDetails = NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
+  StudyNotifications.scheduledNotificationsDebug = "Timestamp: ${DateTime.now().toString()}\nSubject ID: ${subject.id}\n";
   final List<StudyNotification> studyNotificationList = [];
 
   for (int index = 0; index <= 3; index++) {
@@ -117,6 +117,23 @@ List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime da
     }
   }
   return taskNotifications;
+}
+
+void testNotifications(BuildContext context) async {
+  // Notifications not supported on web
+  if (kIsWeb) return;
+  final appState = context.read<AppState>();
+  final subject = appState.activeSubject;
+  final studyNotifications =
+      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
+  await studyNotifications.flutterLocalNotificationsPlugin.show(
+    /*******************/
+    99,
+    'StudyU Test Notification',
+    'This notification confirms that you receive StudyU notifications',
+    /*******************/
+    notificationDetails,
+  );
 }
 
 class StudyNotification {

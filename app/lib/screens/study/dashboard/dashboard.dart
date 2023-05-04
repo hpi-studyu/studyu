@@ -8,6 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/util/notifications.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -117,11 +118,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    final Uri emailLaunchUri =
-                        Uri(scheme: 'mailto', path: subject.study.contact.email, queryParameters: {
-                      'subject': '[StudyU] Debug Information',
-                      'body': StudyNotifications.scheduledNotificationsDebug,
-                    });
                     if (!mounted) return;
                     showAboutDialog(
                       context: context,
@@ -134,24 +130,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     content: Column(
                                       children: [
                                         ElevatedButton(
-                                          onPressed: () => launchUrl(emailLaunchUri),
+                                          onPressed: () {
+                                            final Uri emailLaunchUri =
+                                            Uri(scheme: 'mailto', path: subject.study.contact.email, queryParameters: {
+                                              'subject': '[StudyU] Debug Information',
+                                              'body': StudyNotifications.scheduledNotificationsDebug,
+                                            });
+                                            launchUrl(emailLaunchUri);
+                                          },
                                           child: const Text('Send via email'),
                                         ),
                                         FutureBuilder<bool>(
                                             future: receivePermission(),
                                             builder: (context, AsyncSnapshot<bool> snapshot) {
                                               if (snapshot.hasData) {
-                                                return Text('ignoreBatteryOptimizations: ${snapshot.data.toString()}');
+                                                String data = "ignoreBatteryOptimizations: ${snapshot.data.toString()}";
+                                                StudyNotifications.scheduledNotificationsDebug += "\n\n$data\n";
+                                                return Text(data);
                                               } else {
                                                 return const CircularProgressIndicator();
                                               }
                                             }),
-                                        Text('SubjectID: ${subject.id}'),
                                         SelectableText(StudyNotifications.scheduledNotificationsDebug),
                                       ],
                                     ),
                                     scrollable: true,
                                   ));
+                                  testNotifications(context);
                         },
                         child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
                       ),
