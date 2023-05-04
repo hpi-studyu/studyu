@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 
 import 'question_widget.dart';
 
+@Deprecated('Use [AnnotatedScaleQuestionWidget]')
 class VisualAnalogueQuestionWidget extends QuestionWidget {
   final VisualAnalogueQuestion question;
   final Function(Answer) onDone;
@@ -13,7 +14,7 @@ class VisualAnalogueQuestionWidget extends QuestionWidget {
   @override
   State<VisualAnalogueQuestionWidget> createState() => _VisualAnalogueQuestionWidgetState();
 }
-
+@Deprecated('Use [_AnnotatedScaleQuestionWidgetState]')
 class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWidget> {
   double value;
 
