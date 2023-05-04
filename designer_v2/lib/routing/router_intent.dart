@@ -222,9 +222,11 @@ extension GoRouterX on GoRouter {
         : ((intent.dispatch != null) ? intent.dispatch! : defaultDispatchMethod);
 
     if (dispatchMethod == RoutingIntentDispatch.push) {
-      pushNamed(intent.route.name!, pathParameters: intent.params, queryParameters: intent.queryParams, extra: intent.extra);
+      pushNamed(intent.route.name!,
+          pathParameters: intent.params, queryParameters: intent.queryParams, extra: intent.extra);
     } else if (dispatchMethod == RoutingIntentDispatch.go) {
-      goNamed(intent.route.name!, pathParameters: intent.params, queryParameters: intent.queryParams, extra: intent.extra);
+      goNamed(intent.route.name!,
+          pathParameters: intent.params, queryParameters: intent.queryParams, extra: intent.extra);
     }
   }
 }

@@ -9,24 +9,17 @@ import 'package:timezone/timezone.dart' as tz;
 import '../models/app_state.dart';
 import 'notifications.dart';
 
-Future<int> scheduleReminderForDate(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    int id,
-    String body,
-    StudyNotification studyNotification,
-    NotificationDetails notificationDetails) async {
+Future<int> scheduleReminderForDate(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin, int id,
+    String body, StudyNotification studyNotification, NotificationDetails notificationDetails) async {
   var currentId = id;
   final task = studyNotification.taskInstance.task;
   final date = studyNotification.date;
   for (final reminder in task.schedule.reminders) {
     // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
-    final reminderTime = tz.TZDateTime(tz.local, date.year, date.month,
-        date.day, reminder.hour, reminder.minute);
+    final reminderTime = tz.TZDateTime(tz.local, date.year, date.month, date.day, reminder.hour, reminder.minute);
     if (date.isSameDate(DateTime.now()) &&
-        !StudyUTimeOfDay(hour: date.hour, minute: date.minute)
-            .earlierThan(reminder, exact: true)) {
-      String debugStr =
-          'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
+        !StudyUTimeOfDay(hour: date.hour, minute: date.minute).earlierThan(reminder, exact: true)) {
+      String debugStr = 'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
       //StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       if (StudyNotifications.debug) {
         print(debugStr);
@@ -50,8 +43,7 @@ Future<int> scheduleReminderForDate(
       reminderTime,
       notificationDetails,
       payload: studyNotification.taskInstance.id,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.wallClockTime,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
       // exactAllowWhileIdle only works if the exact alarm permission has been granted
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
@@ -68,8 +60,7 @@ Future<int> scheduleReminderForDate(
         );
       }*/
     // DEBUG: List scheduled notifications
-    String debugStr =
-        'Scheduled #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
+    String debugStr = 'Scheduled #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
     StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
     if (StudyNotifications.debug) {
       print(debugStr);
@@ -79,8 +70,7 @@ Future<int> scheduleReminderForDate(
   return currentId;
 }
 
-const notificationDetails =
-    NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
+const notificationDetails = NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
 
 Future<void> scheduleNotifications(BuildContext context) async {
   if (StudyNotifications.debug) {
@@ -95,11 +85,10 @@ Future<void> scheduleNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
   final body = AppLocalizations.of(context).study_notification_body;
-  final studyNotifications = context.read<AppState>().studyNotifications ??
-      await StudyNotifications.create(subject, context);
+  final studyNotifications =
+      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
 
-  final notificationsPlugin =
-      studyNotifications.flutterLocalNotificationsPlugin;
+  final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
 
   StudyNotifications.scheduledNotificationsDebug =
@@ -113,25 +102,21 @@ Future<void> scheduleNotifications(BuildContext context) async {
   }
   var id = 0;
   for (final StudyNotification notification in studyNotificationList) {
-    final currentId = await scheduleReminderForDate(
-        notificationsPlugin, id, body, notification, notificationDetails);
+    final currentId = await scheduleReminderForDate(notificationsPlugin, id, body, notification, notificationDetails);
     id = currentId;
   }
 }
 
-List<StudyNotification> _buildNotificationList(
-    StudySubject subject, DateTime date, List<TaskInstance> tasks) {
+List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime date, List<TaskInstance> tasks) {
   List<StudyNotification> taskNotifications = [];
   for (TaskInstance taskInstance in tasks) {
     if (taskInstance.task.title == null || taskInstance.task.title.isEmpty) {
       return [];
     }
-    if (!subject.completedTaskInstanceForDay(
-        taskInstance.task.id, taskInstance.completionPeriod, date)) {
+    if (!subject.completedTaskInstanceForDay(taskInstance.task.id, taskInstance.completionPeriod, date)) {
       taskNotifications.add(StudyNotification(taskInstance, date));
     } else {
-      String debugStr =
-          'TaskInstance already completed: ${taskInstance.completionPeriod}, ${taskInstance.task.title}';
+      String debugStr = 'TaskInstance already completed: ${taskInstance.completionPeriod}, ${taskInstance.task.title}';
       StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
     }
   }
@@ -143,8 +128,8 @@ void testNotifications(BuildContext context) async {
   if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
-  final studyNotifications = context.read<AppState>().studyNotifications ??
-      await StudyNotifications.create(subject, context);
+  final studyNotifications =
+      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
   await studyNotifications.flutterLocalNotificationsPlugin.show(
     /*******************/
     99,

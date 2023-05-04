@@ -131,11 +131,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            final Uri emailLaunchUri =
-                                            Uri(scheme: 'mailto', path: subject.study.contact.email, queryParameters: {
-                                              'subject': '[StudyU] Debug Information',
-                                              'body': StudyNotifications.scheduledNotificationsDebug,
-                                            });
+                                            final Uri emailLaunchUri = Uri(
+                                                scheme: 'mailto',
+                                                path: subject.study.contact.email,
+                                                queryParameters: {
+                                                  'subject': '[StudyU] Debug Information',
+                                                  'body': StudyNotifications.scheduledNotificationsDebug,
+                                                });
                                             launchUrl(emailLaunchUri);
                                           },
                                           child: const Text('Send via email'),
@@ -156,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ),
                                     scrollable: true,
                                   ));
-                                  testNotifications(context);
+                          testNotifications(context);
                         },
                         child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
                       ),

@@ -11,10 +11,8 @@ abstract class Question<V> {
     BooleanQuestion.questionType: (json) => BooleanQuestion.fromJson(json),
     ChoiceQuestion.questionType: (json) => ChoiceQuestion.fromJson(json),
     ScaleQuestion.questionType: (json) => ScaleQuestion.fromJson(json),
-    AnnotatedScaleQuestion.questionType: (json) =>
-        AnnotatedScaleQuestion.fromJson(json),
-    VisualAnalogueQuestion.questionType: (json) =>
-        VisualAnalogueQuestion.fromJson(json),
+    AnnotatedScaleQuestion.questionType: (json) => AnnotatedScaleQuestion.fromJson(json),
+    VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
   };
   static const String keyType = 'type';
   String type;
