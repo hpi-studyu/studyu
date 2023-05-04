@@ -13,6 +13,7 @@ on:
       - 'studyu_flutter_common-v*'
       - 'studyu_repo_generator-v*'
       - 'studyu_notebook_uploader-v*'
+  workflow_dispatch:
 
 jobs:
   publishing:
