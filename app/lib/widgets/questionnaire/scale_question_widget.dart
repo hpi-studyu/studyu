@@ -69,6 +69,8 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   onChanged: (val) => setState(() {
                     value = val;
                     //print('Slider value (linear): $value');
+                  }),
+                  onChangeEnd: (val) => setState(() {
                     sliderTouched = true;
                     widget.onDone(widget.question.constructAnswer(value));
                   }),

@@ -80,7 +80,6 @@ List<Widget> buildChoiceOptionRow(
   AbstractControl formControl,
 ) {
   final theme = Theme.of(context);
-  print(formControl.disabled);
 
   return [
     Center(
