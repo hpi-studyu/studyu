@@ -12,8 +12,8 @@ abstract class SliderQuestion extends Question<num> {
 
   double get initial => max(_initial, minimum);
 
-  set initial(double value) {
-    _initial = value;
+  set initial(double? value) {
+    _initial = value ?? _initial;
   }
 
   SliderQuestion(super.type);
