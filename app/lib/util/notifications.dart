@@ -94,18 +94,18 @@ class StudyNotifications {
             sound: true,
           );
     } else if (Platform.isAndroid) {
+      // todo look into this further if notifications are not received on Android
       final AndroidFlutterLocalNotificationsPlugin androidImplementation = flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
-      //final bool granted =
-      await androidImplementation?.requestPermission();
+      final bool granted = await androidImplementation?.requestPermission();
 
       var status = await Permission.ignoreBatteryOptimizations.status;
       if (status.isDenied) {
         if (await Permission.ignoreBatteryOptimizations.request().isGranted) {
-          print("Ignore battery optimization Permission is granted");
+          // print("Ignore battery optimization Permission is granted");
         } else {
-          print("Ignore battery optimization Permission is denied.");
+          // print("Ignore battery optimization Permission is denied.");
         }
       }
     }
