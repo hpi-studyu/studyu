@@ -43,7 +43,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
 
     final theme = Theme.of(context);
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
-    final thumbColor = isColored ? Color.lerp(minColor, maxColor, value / sliderRange).withOpacity(1) : null;
+    final thumbColor = isColored ? Color.lerp(minColor, maxColor, (value - widget.question.minimum) / sliderRange).withOpacity(1) : null;
     final activeTrackColor = isColored ? coloredSliderTheme.activeTrackColor : null;
     final inactiveTrackColor = isColored ? coloredSliderTheme.inactiveTrackColor : null;
 
