@@ -1057,14 +1057,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.0.1"
+    version: "4.0.2"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.4.1"
+    version: "1.4.2"
   supabase:
     dependency: "direct main"
     description:
