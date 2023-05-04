@@ -9,7 +9,6 @@ abstract class SliderQuestion extends Question<num> {
   double _initial = 0;
   double step = 1;
 
-
   double get initial => max(_initial, minimum);
 
   set initial(double? value) {
@@ -20,5 +19,6 @@ abstract class SliderQuestion extends Question<num> {
 
   SliderQuestion.withId(super.type) : super.withId();
 
-  Answer<num> constructAnswer(double response) => Answer.forQuestion(this, response);
+  Answer<num> constructAnswer(double response) =>
+      Answer.forQuestion(this, response);
 }
