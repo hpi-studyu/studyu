@@ -73,10 +73,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
-    _invalidateDownstreamAnswers(index);
+    // todo enable this after we implemented conditional questions again
+    // _invalidateDownstreamAnswers(index);
+
     _nextQuestionIndex = widget.questions.indexWhere((question) => question.id == answer.question) + 1;
     qs.answers[answer.question] = answer;
     widget.onChange?.call(qs);
+
+    // do not show later questions if earlier question is edited
+    if (index + 1 != shownQuestions.length) return;
 
     // check if index of the next question is in range
     if (widget.questions.length > _nextQuestionIndex) {
