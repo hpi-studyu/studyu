@@ -1,3 +1,7 @@
+## 1.4.2
+
+ - Update a dependency to the latest release.
+
 ## 1.4.1
 
  - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))

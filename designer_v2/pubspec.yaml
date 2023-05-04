@@ -1,5 +1,5 @@
 name: studyu_designer_v2
-version: 1.2.1
+version: 1.2.2
 publish_to: none
 description: Create digital N-of-1 studies with StudyU
 
@@ -28,8 +28,8 @@ dependencies:
   reactive_forms: ^14.1.0 # form_builder_validators <=8.5.0
   rxdart: ^0.27.7
   shared_preferences: ^2.1.0
-  studyu_core: ^4.0.1
-  studyu_flutter_common: ^1.4.1
+  studyu_core: ^4.0.2
+  studyu_flutter_common: ^1.4.2
   supabase: ^1.7.0
   supabase_flutter: ^1.8.1
   url_launcher: ^6.1.10

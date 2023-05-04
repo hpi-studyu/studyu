@@ -1,3 +1,11 @@
+## 2.1.2
+
+ - **FIX**: improve debug mode and send test notification. ([8c6afd6f](https://github.com/hpi-studyu/studyu/commit/8c6afd6fd36904592a5aa0c118c5cf88afc8bfc1))
+ - **FIX**: more slider usability fixes. ([6e151bc6](https://github.com/hpi-studyu/studyu/commit/6e151bc6281c3740ccb8d23154994c2066fc65ae))
+ - **FIX**: improve questionnaire slider usability. ([187fda96](https://github.com/hpi-studyu/studyu/commit/187fda96dfb6faa44d6521859cf0219c726cab17))
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+ - **FIX**: disable multiple submit button clicks for task widget. ([5297f590](https://github.com/hpi-studyu/studyu/commit/5297f59074f3e2771cdb9431fc563a236894fd08))
+
 ## 2.1.1
 
  - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
