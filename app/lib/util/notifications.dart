@@ -98,7 +98,7 @@ class StudyNotifications {
       final AndroidFlutterLocalNotificationsPlugin androidImplementation = flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
-      final bool granted = await androidImplementation?.requestPermission();
+      /*final bool granted =*/ await androidImplementation?.requestPermission();
 
       var status = await Permission.ignoreBatteryOptimizations.status;
       if (status.isDenied) {

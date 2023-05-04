@@ -42,7 +42,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _finishQuestionnaire(QuestionnaireState result) => widget.onComplete?.call(result);
 
+  // we might need this later
   // if question with lower index than current question is answered, remove all downstream answers
+  // ignore: unused_element
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
       final startIndex = widget.questions.indexWhere((question) => question.id == shownQuestions[index].question.id);

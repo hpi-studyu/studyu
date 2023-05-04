@@ -31,12 +31,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     final signupLocation = router.namedLocation(signupRouteName);
     final splashLocation = router.namedLocation(splashRouteName);
     final passwordRecoveryLocation = router.namedLocation(recoverPasswordRouteName);
-    final isOnDefaultPage = state.subloc == router.namedLocation(defaultLocation);
-    final isOnLoginPage = state.subloc == loginLocation;
-    final isOnSignupPage = state.subloc == signupLocation;
-    final isOnSplashPage = state.subloc == splashLocation;
-    final isOnPasswordRecoveryPage = state.subloc == passwordRecoveryLocation;
-    final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.subloc);
+    final isOnDefaultPage = state.matchedLocation == router.namedLocation(defaultLocation);
+    final isOnLoginPage = state.matchedLocation == loginLocation;
+    final isOnSignupPage = state.matchedLocation == signupLocation;
+    final isOnSplashPage = state.matchedLocation == splashLocation;
+    final isOnPasswordRecoveryPage = state.matchedLocation == passwordRecoveryLocation;
+    final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.matchedLocation);
 
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;
@@ -46,11 +46,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     // Carry original location through the redirect flow so that we can
     // redirect the user to where they came from after initialization
     final String? from;
-    if (state.queryParams.containsKey('from')) {
-      from = state.queryParams['from'];
+    if (state.queryParameters.containsKey('from')) {
+      from = state.queryParameters['from'];
     } else {
-      if (state.subloc.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
-        from = state.subloc;
+      if (state.matchedLocation.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
+        from = state.matchedLocation;
       } else {
         from = null;
       }
@@ -62,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         // if (from != null && from != '/' && from != defaultLocation) {
         qParams["from"] = from;
       }
-      return router.namedLocation(name, queryParams: qParams);
+      return router.namedLocation(name, queryParameters: qParams);
     }
 
     if (!isInitialized) {
@@ -87,7 +87,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         if (!isOnSplashPage && isOnPublicPage) {
           return null;
           // ... else send user to their origin location
-        } else if (from != state.subloc) {
+        } else if (from != state.matchedLocation) {
           return from;
         }
       }
@@ -95,7 +95,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
     } else {
       // If the user is authenticated, forward to where they were going initially...
-      if (from != null && from != state.subloc) {
+      if (from != null && from != state.matchedLocation) {
         return from;
       }
       // ...or send them to the default location if they just authenticated and weren't going anywhere

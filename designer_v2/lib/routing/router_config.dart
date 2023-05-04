@@ -127,13 +127,13 @@ class RouterConf {
       path: "/studies",
       name: studiesRouteName,
       builder: (context, state) => DashboardScreen(filter: () {
-        if (state.queryParams[RouteParams.studiesFilter] == null) {
+        if (state.queryParameters[RouteParams.studiesFilter] == null) {
           return null;
         }
         final idx = StudiesFilter.values
             .map((v) => v.toShortString())
             .toList()
-            .indexOf(state.queryParams[RouteParams.studiesFilter]!);
+            .indexOf(state.queryParameters[RouteParams.studiesFilter]!);
         return (idx != -1) ? StudiesFilter.values[idx] : null;
       }() // call anonymous closure to resolve param to enum
           ),
@@ -142,19 +142,19 @@ class RouterConf {
       path: "/studies/:${RouteParams.studyId}",
       name: studyRouteName,
       redirect: (BuildContext context, GoRouterState state) =>
-          router.namedLocation('studyEdit', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+          router.namedLocation('studyEdit', pathParameters: {RouteParams.studyId: state.pathParameters[RouteParams.studyId]!}),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: studyEditRouteName,
       redirect: (BuildContext context, GoRouterState state) =>
-          router.namedLocation('studyEditInfo', params: {RouteParams.studyId: state.params[RouteParams.studyId]!}),
+          router.namedLocation('studyEditInfo', pathParameters: {RouteParams.studyId: state.pathParameters[RouteParams.studyId]!}),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit/info",
       name: studyEditInfoRouteName,
       pageBuilder: (context, state) {
-        final studyId = state.params[RouteParams.studyId]!;
+        final studyId = state.pathParameters[RouteParams.studyId]!;
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
@@ -171,7 +171,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/enrollment",
         name: studyEditEnrollmentRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -187,7 +187,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/interventions",
         name: studyEditInterventionsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -205,8 +205,8 @@ class RouterConf {
               name: studyEditInterventionRouteName,
               pageBuilder: (context, state) {
                 final routeArgs = InterventionFormRouteArgs(
-                    studyId: state.params[RouteParams.studyId]!,
-                    interventionId: state.params[RouteParams.interventionId]!);
+                    studyId: state.pathParameters[RouteParams.studyId]!,
+                    interventionId: state.pathParameters[RouteParams.interventionId]!);
                 return MaterialPage(
                     child: StudyFormScaffold<InterventionFormViewModel>(
                   studyId: routeArgs.studyId,
@@ -228,7 +228,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/measurements",
         name: studyEditMeasurementsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -246,8 +246,8 @@ class RouterConf {
               name: studyEditMeasurementRouteName,
               pageBuilder: (context, state) {
                 final routeArgs = MeasurementFormRouteArgs(
-                    studyId: state.params[RouteParams.studyId]!,
-                    measurementId: state.params[RouteParams.measurementId]!);
+                    studyId: state.pathParameters[RouteParams.studyId]!,
+                    measurementId: state.pathParameters[RouteParams.measurementId]!);
                 return MaterialPage(
                     child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
                   studyId: routeArgs.studyId,
@@ -269,7 +269,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/reports",
         name: studyEditReportsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -285,8 +285,8 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/test",
         name: studyTestRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
-          final appRoute = state.queryParams[RouteParams.testAppRoute];
+          final studyId = state.pathParameters[RouteParams.studyId]!;
+          final appRoute = state.queryParameters[RouteParams.testAppRoute];
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -300,7 +300,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/recruit",
         name: studyRecruitRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -314,7 +314,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/monitor",
         name: studyMonitorRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -328,7 +328,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/analyze",
         name: studyAnalyzeRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
@@ -342,7 +342,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/settings",
         name: studySettingsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.params[RouteParams.studyId]!;
+          final studyId = state.pathParameters[RouteParams.studyId]!;
           return buildModalTransitionPage(
             context,
             state,

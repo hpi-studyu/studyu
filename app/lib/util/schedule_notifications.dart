@@ -44,7 +44,8 @@ Future<int> scheduleReminderForDate(FlutterLocalNotificationsPlugin flutterLocal
       notificationDetails,
       payload: studyNotification.taskInstance.id,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.wallClockTime,
-      androidAllowWhileIdle: true,
+      // exactAllowWhileIdle only works if the exact alarm permission has been granted
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
     // DEBUG: Show test notifications
     /*if (StudyNotifications.debug && (currentId == 0 || currentId == 1 || currentId == 2)) {

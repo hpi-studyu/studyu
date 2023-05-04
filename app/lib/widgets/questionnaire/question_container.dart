@@ -45,6 +45,8 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
           onDone: _onDone,
         );
       case VisualAnalogueQuestion:
+        // todo remove this when older studies are finished
+        // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
           question: widget.question as VisualAnalogueQuestion,
           onDone: _onDone,
