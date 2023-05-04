@@ -172,7 +172,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
                   child: Icon(notification.icon,
                       size: 2 / 3 * widget.snackbarInnerPadding, color: theme.snackBarTheme.actionTextColor),
                 )
-              : const SizedBox(),
+              : const SizedBox.shrink(),
           Text(notification.message!, style: theme.textTheme.titleMedium!.copyWith(color: theme.colorScheme.onPrimary))
         ],
       ),

@@ -61,7 +61,7 @@ class CustomSlider extends StatelessWidget {
     final labelTextStyle = textTheme.bodyLarge;
 
     List<Annotation> annotations = [...steps.annotations];
-    if (annotations.isEmpty) return const SizedBox();
+    if (annotations.isEmpty) return const SizedBox.shrink();
 
     // Ensure annotation order is correct for widget generation
     double startPosValue = steps.minimum;
@@ -90,21 +90,27 @@ class CustomSlider extends StatelessWidget {
           children: List.generate(
             divisions + 1,
                 (index) => Expanded(
-              child: Column(
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  onChanged(index + minValue);
+                  onChangeEnd(index + minValue);
+                },
+                child: Column(
                 children: [
                   Container(
                     alignment: Alignment.bottomCenter,
                     height: valueHeight,
                     child: index % (minorTick + 1) == 0
                         ? Text(
-                      //linearStep
+                        //linearStep
                         //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
-                          /*:*/ annotations.firstWhere((annotation) => annotation.value == index + minValue, orElse: () => Annotation()).annotation,
-                      style: labelTextStyle.copyWith(fontWeight: isValueSelected(index)
-                          ? FontWeight.bold
-                          : FontWeight.normal),
-                      textAlign: TextAlign.center,
-                    )
+                        /*:*/ annotations.firstWhere((annotation) => annotation.value == index + minValue, orElse: () => Annotation()).annotation,
+                        style: labelTextStyle.copyWith(fontWeight: isValueSelected(index)
+                            ? FontWeight.bold
+                            : FontWeight.normal),
+                        textAlign: TextAlign.center,
+                      )
                         : null,
                   ),
                   Container(
@@ -120,6 +126,7 @@ class CustomSlider extends StatelessWidget {
                   ),
                 ],
               ),
+              ),
             ),
           ),
         ),
@@ -134,7 +141,7 @@ class CustomSlider extends StatelessWidget {
               inactiveTrackColor: inactiveColor,
               overlayColor: activeColor?.withOpacity(0.1),
               thumbColor: thumbColor,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15.0),
               trackShape: CustomTrackShape(),
               showValueIndicator: ShowValueIndicator.never,
               valueIndicatorTextStyle: const TextStyle(
