@@ -43,11 +43,13 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
             // actualValue = annotations[(val / widget.question.maximum+1 * (annotations.length)).ceil().toInt()];
             // print('Slider value (linear): $value');
             // print('Actual value (non-linear): $actualValue');
+            //widget.onDone(widget.question.constructAnswer(value));
+          }),
+          onChangeEnd: (val) => setState(() {
             sliderTouched = true;
             widget.onDone(widget.question.constructAnswer(value));
           }),
           activeColor: Theme.of(context).primaryColor,
-          inactiveColor: Colors.orange.shade50,
           linearStep: false,
           steps: widget.question,
         ),

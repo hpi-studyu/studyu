@@ -9,6 +9,7 @@ class CustomSlider extends StatelessWidget {
   //final int majorTick;
   final int minorTick;
   final Function(double) onChanged; // nullable
+  final Function(double) onChangeEnd; // nullable
   final Color activeColor; // nullable
   final Color inactiveColor; // nullable
   final Color minColor;
@@ -18,7 +19,7 @@ class CustomSlider extends StatelessWidget {
   final int labelValuePrecision;
   final int tickValuePrecision;
   final bool linearStep;
-  final ScaleQuestion steps; // nullable
+  final AnnotatedScaleQuestion steps; // nullable
 
   const CustomSlider({
     Key key,
@@ -29,13 +30,14 @@ class CustomSlider extends StatelessWidget {
     //this.majorTick,
     this.minorTick,
     this.onChanged,
+    this.onChangeEnd,
     // not required
     this.activeColor,
     this.inactiveColor,
     this.minColor,
     this.maxColor,
     this.thumbColor,
-    this.isColored,
+    this.isColored = false,
     this.labelValuePrecision = 2,
     this.tickValuePrecision = 1,
     this.linearStep = true,
@@ -45,7 +47,7 @@ class CustomSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final allocatedHeight = MediaQuery.of(context).size.height;
-    final allocatedWidth = MediaQuery.of(context).size.width - 32;
+    final allocatedWidth = MediaQuery.of(context).size.width - 32; // -32 horizontal padding
     final divisions = (steps.maximum - steps.minimum) ~/ steps.step;
     //final divisions = steps.annotations.length; // (majorTick - 1) * minorTick + majorTick;
     final double valueHeight =
@@ -78,6 +80,10 @@ class CustomSlider extends StatelessWidget {
       annotations = [startPosAnnotation, ...annotations];
     }
 
+    bool isValueSelected(int index) {
+      return index + minValue == value;
+    }
+
     return Column(
       children: [
         Row(
@@ -93,8 +99,8 @@ class CustomSlider extends StatelessWidget {
                         ? Text(
                       //linearStep
                         //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
-                          /*:*/ annotations.firstWhere((annotation) => annotation.value == index, orElse: () => Annotation()).annotation,
-                      style: labelTextStyle.copyWith(fontWeight: (index / (divisions )) * maxValue == value
+                          /*:*/ annotations.firstWhere((annotation) => annotation.value == index + minValue, orElse: () => Annotation()).annotation,
+                      style: labelTextStyle.copyWith(fontWeight: isValueSelected(index)
                           ? FontWeight.bold
                           : FontWeight.normal),
                       textAlign: TextAlign.center,
@@ -107,7 +113,7 @@ class CustomSlider extends StatelessWidget {
                     child: VerticalDivider(
                       indent: index % (minorTick + 1) == 0 ? 2 : 6,
                       thickness: 1.8,
-                      color: (index / (divisions )) * maxValue == value
+                      color: isValueSelected(index)
                           ? thumbColor ?? primaryColor
                           : Colors.grey.shade300,
                     ),
@@ -156,6 +162,7 @@ class CustomSlider extends StatelessWidget {
                   max: maxValue,
                   divisions: divisions,
                   onChanged: onChanged,
+                  onChangeEnd: onChangeEnd,
                   label: value.toStringAsFixed(labelValuePrecision),
                 ),
               ],
