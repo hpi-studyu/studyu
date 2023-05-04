@@ -17,12 +17,14 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
 
 class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWidget> {
   double value;
-  double actualValue;
+  // double actualValue;
+  bool sliderTouched;
 
   @override
   void initState() {
     super.initState();
     value = widget.question.initial;
+    sliderTouched = false;
   }
 
   @override
@@ -39,14 +41,17 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           onChanged: (val) => setState(() {
             value = val;
             // actualValue = annotations[(val / widget.question.maximum+1 * (annotations.length)).ceil().toInt()];
-            print('Slider value (linear): $value');
+            // print('Slider value (linear): $value');
             // print('Actual value (non-linear): $actualValue');
+            sliderTouched = true;
+            widget.onDone(widget.question.constructAnswer(value));
           }),
           activeColor: Theme.of(context).primaryColor,
           inactiveColor: Colors.orange.shade50,
           linearStep: false,
           steps: widget.question,
         ),
+        if (!sliderTouched)
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(

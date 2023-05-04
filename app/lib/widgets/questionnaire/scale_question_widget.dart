@@ -18,11 +18,13 @@ class ScaleQuestionWidget extends QuestionWidget {
 
 class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
   double value;
+  bool sliderTouched;
 
   @override
   void initState() {
     super.initState();
     value = widget.question.initial;
+    sliderTouched = false;
   }
 
   @override
@@ -66,7 +68,9 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   tickValuePrecision: 0,
                   onChanged: (val) => setState(() {
                     value = val;
-                    print('Slider value (linear): $value');
+                    //print('Slider value (linear): $value');
+                    sliderTouched = true;
+                    widget.onDone(widget.question.constructAnswer(value));
                   }),
                   activeColor: activeTrackColor,
                   inactiveColor: inactiveTrackColor,
@@ -80,6 +84,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
               ),
             ],
         ),
+        if (!sliderTouched)
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(

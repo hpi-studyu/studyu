@@ -116,7 +116,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     int secondsUntilClicked = currentTime.difference(loginClickTime).inSeconds;
     // timeout submit button to disable multiple clicks
     if (secondsUntilClicked < 3) {
-      print('complete button is still freezed');
+      print('complete button is still frozen');
       return true;
     }
 
