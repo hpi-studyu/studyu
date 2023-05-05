@@ -7,7 +7,7 @@ on:
       - 'repo_generator/**'
       - '.github/workflows/build-docker-generator.yml'
     branches:
-      - master
+      # - master
       # - dev
   release:
     types: [published]

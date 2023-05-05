@@ -8,7 +8,7 @@ on:
       - '.github/workflows/build-docker-notebook-uploader.yml'
     branches:
       - master
-      - dev
+      # - dev
   release:
     types: [published]
 jobs:

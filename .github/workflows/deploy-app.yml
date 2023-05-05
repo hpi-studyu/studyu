@@ -3,7 +3,7 @@ name: App Deploy
 on:
   push:
     branches:
-    - master
+    # - master
   workflow_dispatch:
 
 env:
