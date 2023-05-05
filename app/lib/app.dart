@@ -39,6 +39,19 @@ class _MyAppState extends State<MyApp> {
               return Routes.generateRoute(settings, widget.queryParameters);
             },
             onUnknownRoute: Routes.unknownRoute,
+            localeListResolutionCallback: (locales, supportedLocales) {
+              // print('device locales=$locales supported locales=$supportedLocales');
+              final supportedLanguageCodes =
+              supportedLocales.map((e) => e.languageCode);
+              if (locales != null) {
+                for (final locale in locales) {
+                  if (supportedLanguageCodes.contains(locale.languageCode)) {
+                    return locale;
+                  }
+                }
+              }
+              return const Locale('en');
+            },
             locale: model.appLocal,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
