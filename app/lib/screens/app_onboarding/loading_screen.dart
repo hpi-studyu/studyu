@@ -16,7 +16,8 @@ class LoadingScreen extends StatefulWidget {
   final String sessionString;
   final Map<String, String> queryParameters;
 
-  const LoadingScreen({Key key, this.sessionString, this.queryParameters}) : super(key: key);
+  const LoadingScreen({Key key, this.sessionString, this.queryParameters})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
@@ -33,6 +34,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final state = context.read<AppState>();
 
     if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
+      state.logger
+          .info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,
@@ -60,7 +63,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
           // if we remove the await, we can push multiple times. warning: do not run in while(true)
-          await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
+          await Navigator.push<EligibilityResult>(
+              context, EligibilityScreen.routeFor(study: preview.study));
           // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
           iFrameHelper.postRouteFinished();
           return;
@@ -74,7 +78,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
           return;
         }
 
-        state.activeSubject = await preview.getStudySubject(state, createSubject: true);
+        state.activeSubject =
+            await preview.getStudySubject(state, createSubject: true);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
@@ -119,13 +124,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (preview.selectedRoute == '/observation') {
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy.observations
+                .where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
           await Navigator.push<bool>(
               context,
               TaskScreen.routeFor(
-                  taskInstance: TaskInstance(tasks.first, tasks.first.schedule.completionPeriods.first.id)));
+                  taskInstance: TaskInstance(tasks.first,
+                      tasks.first.schedule.completionPeriods.first.id)));
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -159,7 +166,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('Subject ID: $selectedStudyObjectId');
+    state.logger.info('Subject ID: $selectedStudyObjectId');
+    state.analytics.initBasic(selectedStudyObjectId);
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
       if (isUserLoggedIn()) {
@@ -179,8 +187,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
           'subject_progress(*)',
         ],
       );
-    } catch (e) {
-      print("Try signing in again\n$e");
+    } catch (exception, stackTrace) {
+      state.logger.warning("Try signing in again");
+      await state.analytics.captureEvent(
+        exception,
+        stackTrace: stackTrace,
+      );
       bool signInRes = false;
       try {
         // Try signing in again. Needed if JWT is expired
@@ -195,8 +207,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ],
           );
         }
-      } catch (e) {
-        print('Error when trying to login and retrieve the study subject');
+      } catch (exception, stackTrace) {
+        state.logger.severe(
+            'Error when trying to login and retrieve the study subject');
+        await state.analytics.captureException(
+          exception,
+          stackTrace: stackTrace,
+        );
       }
       /*if (!signInRes) {
         final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
@@ -216,8 +233,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (subject != null) {
       state.activeSubject = subject;
       scheduleNotifications(context);
+      state.analytics.addBreadcrumb(
+          category: 'waypoint', message: 'Authenticated and subject retrieved');
+      state.analytics.initAdvanced();
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      state.logger
+          .severe('Subject is null at loading screen. Going back to welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
@@ -242,7 +264,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  /*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {

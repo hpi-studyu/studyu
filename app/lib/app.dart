@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:studyu_app/util/app_analysis.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'main.dart';
@@ -31,6 +33,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: Consumer<AppLanguage>(
         builder: (context, model, child) {
+          context.read<AppState>().analytics = Analytics(context);
           return MaterialApp(
             title: 'StudyU',
             theme: theme,
@@ -39,6 +42,9 @@ class _MyAppState extends State<MyApp> {
               return Routes.generateRoute(settings, widget.queryParameters);
             },
             onUnknownRoute: Routes.unknownRoute,
+            navigatorObservers: [
+              SentryNavigatorObserver(),
+            ],
             localeListResolutionCallback: (locales, supportedLocales) {
               // print('device locales=$locales supported locales=$supportedLocales');
               final supportedLanguageCodes =
