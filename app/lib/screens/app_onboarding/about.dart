@@ -337,10 +337,10 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: 40),
                 if (context.read<AppState>().activeSubject == null)
                   OutlinedButton.icon(
-                  icon: const Icon(MdiIcons.rocket),
-                  onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                  label: Text(AppLocalizations.of(context).get_started, style: const TextStyle(fontSize: 20)),
-                ),
+                    icon: const Icon(MdiIcons.rocket),
+                    onPressed: () => Navigator.pushNamed(context, Routes.terms),
+                    label: Text(AppLocalizations.of(context).get_started, style: const TextStyle(fontSize: 20)),
+                  ),
               ],
             ),
           ),

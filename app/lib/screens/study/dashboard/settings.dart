@@ -74,9 +74,9 @@ class _SettingsState extends State<Settings> {
           const Tooltip(
             triggerMode: TooltipTriggerMode.tap,
             showDuration: Duration(milliseconds: 10000),
-            margin: EdgeInsets.fromLTRB(30,0,30,0),
+            margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
             message:
-            'All collected data is used only to improve app performance and never for tracking purposes. You can read more about this in our data privacy.',
+                'All collected data is used only to improve app performance and never for tracking purposes. You can read more about this in our data privacy.',
             child: Icon(
               Icons.info,
             ),
