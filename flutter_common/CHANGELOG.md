@@ -1,3 +1,7 @@
+## 1.5.0
+
+ - **FEAT**: sentry integration in core. ([0fae767f](https://github.com/hpi-studyu/studyu/commit/0fae767f0a7dc3c3409dd5179eeb870429b580cd))
+
 ## 1.4.2
 
  - Update a dependency to the latest release.
