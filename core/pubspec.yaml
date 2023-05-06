@@ -12,7 +12,9 @@ dependencies:
   csv: ^5.0.2
   fhir: ^0.4.7
   json_annotation: ^4.8.1
+  logging: ^1.1.1
   quiver: ^3.2.1
+  sentry: ^7.5.1
   supabase: ^1.7.0
   uuid: ^3.0.7
 

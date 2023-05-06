@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -16,8 +18,7 @@ class LoadingScreen extends StatefulWidget {
   final String sessionString;
   final Map<String, String> queryParameters;
 
-  const LoadingScreen({Key key, this.sessionString, this.queryParameters})
-      : super(key: key);
+  const LoadingScreen({Key key, this.sessionString, this.queryParameters}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
@@ -34,8 +35,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final state = context.read<AppState>();
 
     if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
-      state.logger
-          .info("Preview: Found query parameters ${widget.queryParameters}");
+      Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,
@@ -63,8 +63,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (preview.selectedRoute == '/eligibilityCheck') {
           if (!mounted) return;
           // if we remove the await, we can push multiple times. warning: do not run in while(true)
-          await Navigator.push<EligibilityResult>(
-              context, EligibilityScreen.routeFor(study: preview.study));
+          await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
           // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
           iFrameHelper.postRouteFinished();
           return;
@@ -78,8 +77,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           return;
         }
 
-        state.activeSubject =
-            await preview.getStudySubject(state, createSubject: true);
+        state.activeSubject = await preview.getStudySubject(state, createSubject: true);
 
         // CONSENT
         if (preview.selectedRoute == Routes.consent) {
@@ -124,15 +122,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (preview.selectedRoute == '/observation') {
           print(state.selectedStudy.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations
-                .where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
           await Navigator.push<bool>(
               context,
               TaskScreen.routeFor(
-                  taskInstance: TaskInstance(tasks.first,
-                      tasks.first.schedule.completionPeriods.first.id)));
+                  taskInstance: TaskInstance(tasks.first, tasks.first.schedule.completionPeriods.first.id)));
           iFrameHelper.postRouteFinished();
           return;
         }
@@ -166,14 +162,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    state.logger.info('Subject ID: $selectedStudyObjectId');
-    state.analytics.initBasic(selectedStudyObjectId);
+    Analytics.logger.info('Subject ID: $selectedStudyObjectId');
+    state.analytics.initBasic();
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
-      if (isUserLoggedIn()) {
+      /*if (isUserLoggedIn()) {
+        Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found but logged in -> studySelection');
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
-      }
+      }*/
+      Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -188,9 +186,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ],
       );
     } catch (exception, stackTrace) {
-      state.logger.warning("Try signing in again");
-      await state.analytics.captureEvent(
-        exception,
+      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in");
+      await Analytics.captureEvent(
+        SentryEvent(throwable: exception),
         stackTrace: stackTrace,
       );
       bool signInRes = false;
@@ -208,9 +206,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
           );
         }
       } catch (exception, stackTrace) {
-        state.logger.severe(
-            'Error when trying to login and retrieve the study subject');
-        await state.analytics.captureException(
+        Analytics.logger.severe('Error when trying to login and retrieve the study subject');
+        await Analytics.captureException(
           exception,
           stackTrace: stackTrace,
         );
@@ -233,13 +230,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (subject != null) {
       state.activeSubject = subject;
       scheduleNotifications(context);
-      state.analytics.addBreadcrumb(
-          category: 'waypoint', message: 'Authenticated and subject retrieved');
+      Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
       state.analytics.initAdvanced();
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      state.logger
-          .severe('Subject is null at loading screen. Going back to welcome');
+      Analytics.logger.severe('Subject is null -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }

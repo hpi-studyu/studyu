@@ -1,25 +1,29 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class Analytics {
+class AppAnalytics {
   final BuildContext context;
   AppState state;
   StudySubject subject;
 
-  Analytics(this.context) {
+  AppAnalytics(this.context) {
     state = context.read<AppState>();
     subject = state.activeSubject;
   }
 
-  void initBasic(String selectedStudyObjectId) {
+  Future<void> initBasic() async {
     Sentry.configureScope(
-      (scope) {
+      (scope) async {
         final basicContext = {
-          'selectedStudyObjectId': selectedStudyObjectId,
+          'selectedStudyObjectId': getActiveSubjectId(),
           'isPreview': state.isPreview,
+          'sharedPrefsEmail': await getFakeUserEmail(),
         };
         scope.setContexts('basicState', basicContext);
       },
@@ -39,23 +43,5 @@ class Analytics {
       };
       scope.setContexts('advancedState', advancedContext);
     });
-  }
-
-  captureEvent(SentryEvent event, {StackTrace stackTrace}) async {
-    await Sentry.captureEvent(
-      event,
-      stackTrace: stackTrace,
-    );
-  }
-
-  captureException(exception, {StackTrace stackTrace}) async {
-    await Sentry.captureException(
-      exception,
-      stackTrace: stackTrace,
-    );
-  }
-
-  void addBreadcrumb({String message, String category}) {
-    Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
   }
 }

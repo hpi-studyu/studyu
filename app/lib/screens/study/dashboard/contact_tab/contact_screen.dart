@@ -153,24 +153,31 @@ class ContactItem extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  void launchContact() {
+  Future<void> launchContact() async {
     {
+      Uri uri;
       switch (type) {
         case ContactItemType.website:
           if (!itemValue.startsWith('http://') && !itemValue.startsWith('https://')) {
-            launchUrl(Uri.parse('http://$itemValue'));
+            uri = Uri.parse('http://$itemValue');
           } else {
-            launchUrl(Uri.parse(itemValue));
+            uri = Uri.parse(itemValue);
           }
           break;
         case ContactItemType.email:
-          launchUrl(Uri.parse('mailto:$itemValue'));
+          uri = Uri.parse('mailto:$itemValue');
           break;
         case ContactItemType.phone:
-          launchUrl(Uri.parse('tel:$itemValue'));
+          uri = Uri.parse('tel:$itemValue');
           break;
+        default:
+          uri = Uri.parse(itemValue);
       }
-      launchUrl(Uri.parse(itemValue));
+      if (await canLaunchUrl(uri)) {
+        launchUrl(uri);
+      } else {
+        Analytics.logger.warning("Cannot launch Url: $uri");
+      }
     }
   }
 

@@ -37,7 +37,7 @@ Future<void> main() async {
   usePathUrlStrategy();
 
   await SentryFlutter.init(
-        (options) {
+    (options) {
       options.dsn = 'https://afe6ec116e4b4096956eb109e1135f36@o4504554311188480.ingest.sentry.io/4504554316169216';
       // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
       // We recommend adjusting this value in production.

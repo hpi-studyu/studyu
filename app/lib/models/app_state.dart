@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:logging/logging.dart';
-import 'package:studyu_app/util/app_analysis.dart';
+import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
 
@@ -12,8 +11,7 @@ class AppState with ChangeNotifier {
   List<String> preselectedInterventionIds;
   StudyNotifications studyNotifications;
   bool isPreview = false;
-  Logger logger = Logger('main');
-  Analytics analytics;
+  AppAnalytics analytics;
 
   /// Flag indicating whether the participant's progress should be tracked
   ///

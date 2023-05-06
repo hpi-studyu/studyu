@@ -5,6 +5,7 @@ import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/models/tables/study_invite.dart';
 import 'package:studyu_core/src/models/tables/study_subject.dart';
 import 'package:studyu_core/src/models/tables/subject_progress.dart';
+import 'package:studyu_core/src/util/analytics.dart';
 import 'package:supabase/supabase.dart';
 
 abstract class SupabaseObject {
@@ -101,6 +102,7 @@ class SupabaseQuery {
   }
 
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
+    Analytics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
       print('Message: ${error.message}');
       print('Hint: ${error.hint}');
