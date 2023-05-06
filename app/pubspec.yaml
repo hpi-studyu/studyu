@@ -39,10 +39,8 @@ dependencies:
   sentry_flutter: ^7.5.1
   sentry_logging: ^7.5.1
   shared_preferences: ^2.1.0
-  studyu_core: # ^4.0.2
-    path: ../core
-  studyu_flutter_common: # ^1.4.2
-    path: ../flutter_common
+  studyu_core: ^4.0.2
+  studyu_flutter_common: ^1.4.2
   supabase: ^1.7.0
   supabase_flutter: ^1.8.1
   timeline_tile: ^2.0.0
