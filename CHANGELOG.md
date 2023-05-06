@@ -15,6 +15,28 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.2.1`](#studyu_app---v221)
+
+---
+
+#### `studyu_app` - `v2.2.1`
+
+ - **FIX**: study cannot be left inadvertently anymore via about. ([b8237b5b](https://github.com/hpi-studyu/studyu/commit/b8237b5b4e0b4c1e35d3b22efe22fd89d2990ba5))
+ - **FIX**: provide option to disable analytics in settings. ([1f2dc252](https://github.com/hpi-studyu/studyu/commit/1f2dc252aee41896d12951a2e13bd37b24d47df9))
+
+
+## 2023-05-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.2.0`](#studyu_app---v220)
  - [`studyu_core` - `v4.1.0`](#studyu_core---v410)
  - [`studyu_designer_v2` - `v1.3.0`](#studyu_designer_v2---v130)

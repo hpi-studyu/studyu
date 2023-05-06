@@ -1,3 +1,8 @@
+## 2.2.1
+
+ - **FIX**: study cannot be left inadvertently anymore via about. ([b8237b5b](https://github.com/hpi-studyu/studyu/commit/b8237b5b4e0b4c1e35d3b22efe22fd89d2990ba5))
+ - **FIX**: provide option to disable analytics in settings. ([1f2dc252](https://github.com/hpi-studyu/studyu/commit/1f2dc252aee41896d12951a2e13bd37b24d47df9))
+
 ## 2.2.0
 
  - **FIX**: could not find libflutter.so. ([95aa1828](https://github.com/hpi-studyu/studyu/commit/95aa1828cc8b9c280218ae91da4127f75cc6b96d))
