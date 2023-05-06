@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';

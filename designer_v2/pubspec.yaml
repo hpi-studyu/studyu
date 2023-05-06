@@ -11,7 +11,7 @@ dependencies:
   async: ^2.10.0 # flutter_test
   csv: ^5.0.2
   cupertino_icons: ^1.0.5
-  dynamic_color: ^1.6.3
+  dynamic_color: ^1.6.3 # material_color_utilities <=0.5.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter

@@ -5,7 +5,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
-import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
