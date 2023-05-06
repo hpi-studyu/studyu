@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -18,11 +20,13 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   Locale _selectedValue;
+  bool _analyticsValue;
   StudySubject subject;
 
   @override
   void initState() {
     super.initState();
+    _analyticsValue = AppAnalytics.isEnabled;
     _selectedValue = context.read<AppLanguage>().appLocal;
     subject = context.read<AppState>().activeSubject;
   }
@@ -44,24 +48,43 @@ class _SettingsState extends State<Settings> {
         child: Text('System'),
       ),
     );
+    print("Sentry.isEnabled ${Sentry.isEnabled}");
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Text('${AppLocalizations.of(context).language}:'),
-        const SizedBox(
-          width: 5,
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('${AppLocalizations.of(context).language}:'),
+            const SizedBox(
+              width: 5,
+            ),
+            DropdownButton<Locale>(
+              value: _selectedValue,
+              items: dropDownItems,
+              onChanged: (value) {
+                setState(() {
+                  _selectedValue = value;
+                });
+                context.read<AppLanguage>().changeLanguage(value);
+              },
+            ),
+          ],
         ),
-        DropdownButton<Locale>(
-          value: _selectedValue,
-          items: dropDownItems,
-          onChanged: (value) {
-            setState(() {
-              _selectedValue = value;
-            });
-            context.read<AppLanguage>().changeLanguage(value);
-          },
-        ),
+        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          const Text('Disable app analytics:'),
+          const SizedBox(
+            width: 5,
+          ),
+          Switch(
+              value: _analyticsValue,
+              onChanged: (value) {
+                setState(() {
+                  _analyticsValue = value;
+                });
+                AppAnalytics.setEnabled(value);
+              }),
+        ])
       ],
     );
   }
@@ -145,7 +168,9 @@ class OptOutAlertDialog extends StatelessWidget {
           onPressed: () async {
             await subject.softDelete();
             await deleteActiveStudyReference();
-            if (context.mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
+            }
           },
         )
       ],
@@ -175,7 +200,9 @@ class DeleteAlertDialog extends StatelessWidget {
             onPressed: () async {
               await subject.delete(); // hard-delete
               await deleteLocalData();
-              if (context.mounted) Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+              }
             },
           )
         ],
