@@ -5,10 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
-import '../../../util/localization.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/localization.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key key}) : super(key: key);
@@ -70,14 +69,13 @@ class _SettingsState extends State<Settings> {
           ],
         ),
         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          const Text('Disable app analytics: '),
-          const Tooltip(
+          Text('${AppLocalizations.of(context).allow_analytics}: '),
+          Tooltip(
             triggerMode: TooltipTriggerMode.tap,
-            showDuration: Duration(milliseconds: 10000),
-            margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
-            message:
-                'All collected data is used only to improve app performance and never for tracking purposes. You can read more about this in our data privacy.',
-            child: Icon(
+            showDuration: const Duration(milliseconds: 10000),
+            margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+            message: AppLocalizations.of(context).allow_analytics_desc,
+            child: const Icon(
               Icons.info,
             ),
           ),
