@@ -19,7 +19,7 @@ class AppAnalytics {
     Sentry.configureScope(
       (scope) async {
         final basicContext = {
-          'selectedStudyObjectId': getActiveSubjectId(),
+          'selectedStudyObjectId': await getActiveSubjectId(),
           'isPreview': state.isPreview,
           'sharedPrefsEmail': await getFakeUserEmail(),
         };
