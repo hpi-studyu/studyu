@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -48,7 +47,6 @@ class _SettingsState extends State<Settings> {
         child: Text('System'),
       ),
     );
-    print("Sentry.isEnabled ${Sentry.isEnabled}");
 
     return Column(
       children: [
@@ -72,7 +70,17 @@ class _SettingsState extends State<Settings> {
           ],
         ),
         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          const Text('Disable app analytics:'),
+          const Text('Disable app analytics: '),
+          const Tooltip(
+            triggerMode: TooltipTriggerMode.tap,
+            showDuration: Duration(milliseconds: 10000),
+            margin: EdgeInsets.fromLTRB(30,0,30,0),
+            message:
+            'All collected data is used only to improve app performance and never for tracking purposes. You can read more about this in our data privacy.',
+            child: Icon(
+              Icons.info,
+            ),
+          ),
           const SizedBox(
             width: 5,
           ),
