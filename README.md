@@ -11,12 +11,12 @@ We have 6 different Flutter/Dart packages all contained in this monorepo.
 
 ## Try it yourself
 
-- [StudyU App](https://app2.studyu.health)
-- [StudyU Designer v2](https://designer2.studyu.health)
+- [StudyU App](https://app.studyu.health)
+- [StudyU Designer v2](https://designer.studyu.health)
 
 ### Deprecated Packages
-- [StudyU App v1](https://app.studyu.health)
-- [StudyU legacy Designer v1 (deprecated)](https://designer.studyu.health)
+- [StudyU App v1](https://app-v1.studyu.health)
+- [StudyU legacy Designer v1 (deprecated)](https://designer-v1.studyu.health)
 
 ## App Stores
 
