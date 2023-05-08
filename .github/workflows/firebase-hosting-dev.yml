@@ -27,6 +27,6 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_E37AF }}'
-          # channelId: live # do not deploy to production
+          channelId: # empty for preview deployment
           expires: 30d
           projectId: studyu-e37af
