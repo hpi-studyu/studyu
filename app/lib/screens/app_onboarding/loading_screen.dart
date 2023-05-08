@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
@@ -33,6 +34,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final state = context.read<AppState>();
 
     if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
+      Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,
@@ -159,13 +161,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('Subject ID: $selectedStudyObjectId');
+    Analytics.logger.info('Subject ID: $selectedStudyObjectId');
+    state.analytics.initBasic();
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
-      if (isUserLoggedIn()) {
+      /*if (isUserLoggedIn()) {
+        Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found but logged in -> studySelection');
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
-      }
+      }*/
+      Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -179,8 +184,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
           'subject_progress(*)',
         ],
       );
-    } catch (e) {
-      print("Try signing in again\n$e");
+    } catch (exception, stackTrace) {
+      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in");
+      await Analytics.captureEvent(
+        SentryEvent(throwable: exception),
+        stackTrace: stackTrace,
+      );
       bool signInRes = false;
       try {
         // Try signing in again. Needed if JWT is expired
@@ -195,8 +204,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ],
           );
         }
-      } catch (e) {
-        print('Error when trying to login and retrieve the study subject');
+      } catch (exception, stackTrace) {
+        Analytics.logger.severe('Error when trying to login and retrieve the study subject');
+        await Analytics.captureException(
+          exception,
+          stackTrace: stackTrace,
+        );
       }
       /*if (!signInRes) {
         final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
@@ -216,8 +229,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (subject != null) {
       state.activeSubject = subject;
       scheduleNotifications(context);
+      Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
+      state.analytics.initAdvanced();
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      Analytics.logger.severe('Subject is null -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
@@ -242,7 +258,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  /*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {

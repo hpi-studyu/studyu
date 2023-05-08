@@ -46,7 +46,7 @@ class _TermsScreenState extends State<TermsScreen> {
                       onChange: (val) => setState(() => _acceptedTerms = val),
                       isChecked: _acceptedTerms,
                       icon: const Icon(MdiIcons.fileDocumentEdit),
-                      pdfUrl: appConfig.appTerms[appLocale.toString()],
+                      pdfUrl: appConfig.appTerms[appLocale.languageCode.toString()],
                       pdfUrlLabel: AppLocalizations.of(context).terms_read,
                     ),
                     const SizedBox(height: 20),
@@ -57,16 +57,18 @@ class _TermsScreenState extends State<TermsScreen> {
                       onChange: (val) => setState(() => _acceptedPrivacy = val),
                       isChecked: _acceptedPrivacy,
                       icon: const Icon(MdiIcons.shieldLock),
-                      pdfUrl: appConfig.appPrivacy[appLocale.toString()],
+                      pdfUrl: appConfig.appPrivacy[appLocale.languageCode.toString()],
                       pdfUrlLabel: AppLocalizations.of(context).privacy_read,
                     ),
                     const SizedBox(height: 30),
                     OutlinedButton.icon(
                       icon: const Icon(MdiIcons.scaleBalance),
-                      onPressed: () => launchUrl(
-                        Uri.parse(appConfig.imprint[appLocale.toString()]),
-                        mode: LaunchMode.externalApplication,
-                      ),
+                      onPressed: () async {
+                        final uri = Uri.parse(appConfig.imprint[appLocale.languageCode.toString()]);
+                        if (await canLaunchUrl(uri)) {
+                          launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      },
                       label: Text(AppLocalizations.of(context).imprint_read),
                     ),
                   ],
@@ -124,7 +126,12 @@ class LegalSection extends StatelessWidget {
         const SizedBox(height: 20),
         OutlinedButton.icon(
           icon: icon,
-          onPressed: () => launchUrl(Uri.parse(pdfUrl), mode: LaunchMode.externalApplication),
+          onPressed: () async {
+            final uri = Uri.parse(pdfUrl);
+            if (await canLaunchUrl(uri)) {
+              launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
           label: Text(pdfUrlLabel),
         ),
         CheckboxListTile(title: Text(acknowledgment), value: isChecked, onChanged: onChange),

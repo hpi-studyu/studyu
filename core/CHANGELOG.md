@@ -1,3 +1,9 @@
+## 4.1.0
+
+ - **FIX**: slider design overhaul. ([75589ca1](https://github.com/hpi-studyu/studyu/commit/75589ca1f443f4ef779a8766cc9150cda74fb3bb))
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+ - **FEAT**: sentry integration in core. ([0fae767f](https://github.com/hpi-studyu/studyu/commit/0fae767f0a7dc3c3409dd5179eeb870429b580cd))
+
 ## 4.0.2
 
  - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))

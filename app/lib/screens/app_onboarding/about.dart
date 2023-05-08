@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-import '../../routes.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({Key key}) : super(key: key);
@@ -334,11 +335,12 @@ class AboutScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 40),
-                OutlinedButton.icon(
-                  icon: const Icon(MdiIcons.rocket),
-                  onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                  label: Text(AppLocalizations.of(context).get_started, style: const TextStyle(fontSize: 20)),
-                ),
+                if (context.read<AppState>().activeSubject == null)
+                  OutlinedButton.icon(
+                    icon: const Icon(MdiIcons.rocket),
+                    onPressed: () => Navigator.pushNamed(context, Routes.terms),
+                    label: Text(AppLocalizations.of(context).get_started, style: const TextStyle(fontSize: 20)),
+                  ),
               ],
             ),
           ),
