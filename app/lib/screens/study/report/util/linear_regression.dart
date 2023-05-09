@@ -16,6 +16,12 @@ class LinearRegressionResult<T> {
   const LinearRegressionResult(this.intercept, this.variables);
 }
 
+/*
+* TODO Refactor this and drop the following packages to support null safety:
+*  - extended_math
+*  - grizzly_distuv
+ */
+
 class LinearRegression {
   Matrix designMatrix;
   Vector dependentValues;
