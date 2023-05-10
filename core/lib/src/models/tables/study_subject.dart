@@ -90,7 +90,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
   Future<void> addResult<T>(
-      {required String taskId, required String periodId, required T result, bool? offline}) async {
+      {required String taskId,
+        required String periodId,
+        required T result, bool? offline,
+      }) async {
     late final Result<T> resultObject;
     switch (T) {
       case QuestionnaireState:
