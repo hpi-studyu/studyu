@@ -1,4 +1,4 @@
-import 'package:chewie/chewie.dart';
+/*import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:video_player/video_player.dart';
@@ -52,4 +52,4 @@ class _VideoTaskState extends State<VideoTask> {
       ),
     );
   }
-}
+}*/

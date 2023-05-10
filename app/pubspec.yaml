@@ -10,7 +10,7 @@ environment:
 dependencies: 
   charts_common: ^0.12.0
   charts_flutter: ^0.12.0
-  chewie: ^1.4.0
+  # chewie: ^1.4.0
   cupertino_icons: ^1.0.5
   extended_math: # todo remove for null safety support
    git: https://github.com/nstrelow/extended_math.git
@@ -48,7 +48,7 @@ dependencies:
   universal_html: ^2.2.1
   url_launcher: ^6.1.10
   uuid: ^3.0.7
-  video_player: ^2.6.1
+  # video_player: ^2.6.1
 
 dev_dependencies: 
   flutter_launcher_icons: ^0.13.1

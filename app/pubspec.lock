@@ -130,7 +130,7 @@ packages:
     source: hosted
     version: "2.0.3"
   chewie:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: chewie
       sha256: e9da4898ee4859825404f507969f57113c04ca0060e152b95c9afd73934126ad
@@ -798,14 +798,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  pimp_my_button:
-    dependency: "direct main"
-    description:
-      name: pimp_my_button
-      sha256: f36d974abd6ac0ea75d5bd674df0607b52843815c0a673c39db1bfeadfb63a99
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   platform:
     dependency: transitive
     description:
@@ -1274,7 +1266,7 @@ packages:
     source: hosted
     version: "2.1.4"
   video_player:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: video_player
       sha256: de95f0e9405f29b5582573d4166132e71f83b3158aac14e8ee5767a54f4f1fbd
