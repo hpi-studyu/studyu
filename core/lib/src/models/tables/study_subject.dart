@@ -89,7 +89,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
-  Future<void> addResult<T>({required String taskId, required String periodId, required T result, bool? offline}) async {
+  Future<void> addResult<T>(
+      {required String taskId, required String periodId, required T result, bool? offline}) async {
     late final Result<T> resultObject;
     switch (T) {
       case QuestionnaireState:
@@ -346,9 +347,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is StudySubject &&
-              runtimeType == other.runtimeType &&
-              jsonEncode(toFullJson()) == jsonEncode(other.toFullJson());
+      other is StudySubject &&
+          runtimeType == other.runtimeType &&
+          jsonEncode(toFullJson()) == jsonEncode(other.toFullJson());
 
   @override
   int get hashCode => toFullJson().hashCode;

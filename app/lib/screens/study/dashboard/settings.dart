@@ -212,7 +212,7 @@ class DeleteAlertDialog extends StatelessWidget {
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
                 }
-              } on SocketException catch(_) {}
+              } on SocketException catch (_) {}
             },
           )
         ],

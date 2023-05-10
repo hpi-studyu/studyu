@@ -60,9 +60,9 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is SubjectProgress &&
-              runtimeType == other.runtimeType &&
-              jsonEncode(toJson()) == jsonEncode(other.toJson());
+      other is SubjectProgress &&
+          runtimeType == other.runtimeType &&
+          jsonEncode(toJson()) == jsonEncode(other.toJson());
 
   @override
   int get hashCode => toJson().hashCode;

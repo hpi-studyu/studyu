@@ -62,7 +62,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
       );
 
   Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select()).single;
+    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
+        .single;
   }
 }
 

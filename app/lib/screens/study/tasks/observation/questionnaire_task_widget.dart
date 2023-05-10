@@ -30,14 +30,10 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     await handleTaskCompletion(context, (StudySubject subject) async {
       try {
-        await subject.addResult<T>(taskId: widget.task.id,
-            periodId: widget.completionPeriod.id,
-            result: response);
+        await subject.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
       } on SocketException catch (_) {
-        await subject.addResult<T>(taskId: widget.task.id,
-            periodId: widget.completionPeriod.id,
-            result: response,
-            offline: true);
+        await subject.addResult<T>(
+            taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response, offline: true);
         rethrow;
       }
     });

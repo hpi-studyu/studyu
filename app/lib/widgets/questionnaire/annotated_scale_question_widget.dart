@@ -54,18 +54,18 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           steps: widget.question,
         ),
         if (!sliderTouched)
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () {
-              setState(() {
-                sliderTouched = true;
-              });
-              widget.onDone(widget.question.constructAnswer(value));
-            },
-            child: Text(AppLocalizations.of(context).done),
-          ),
-        )
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  sliderTouched = true;
+                });
+                widget.onDone(widget.question.constructAnswer(value));
+              },
+              child: Text(AppLocalizations.of(context).done),
+            ),
+          )
       ],
     );
   }

@@ -16,14 +16,13 @@ class Cache {
     newSubject = await synchronize(subject);
     Analytics.logger.info("Save to local cache");
     (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
-    assert (newSubject == (await loadSubject()));
+    assert(newSubject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject() async {
     Analytics.logger.info("Load subject from cache");
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
-      return StudySubject.fromJson(
-          jsonDecode((await sharedPrefs).getString(cacheSubjectKey)));
+      return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)));
     } else {
       throw Exception("No cached subject found");
     }
@@ -64,23 +63,17 @@ class Cache {
         newProgress = localSubject.progress;
       }*/
         // save new progress
-        final List<SubjectProgress> newProgress = [
-          ...localSubject.progress,
-          ...remoteSubject.progress
-        ];
-        newProgress.removeWhere((element) => localSubject.progress.contains(element) && remoteSubject.progress.contains(element));
+        final List<SubjectProgress> newProgress = [...localSubject.progress, ...remoteSubject.progress];
+        newProgress.removeWhere(
+            (element) => localSubject.progress.contains(element) && remoteSubject.progress.contains(element));
         for (var p in newProgress) {
           await p.save();
         }
 
         // merge local and remote progress and remove duplicates
-        final List<SubjectProgress> finalProgress = [
-          ...localSubject.progress,
-          ...remoteSubject.progress
-        ];
+        final List<SubjectProgress> finalProgress = [...localSubject.progress, ...remoteSubject.progress];
         final duplicates = <DateTime>{};
-        finalProgress.retainWhere((element) =>
-            duplicates.add(element.completedAt));
+        finalProgress.retainWhere((element) => duplicates.add(element.completedAt));
         // replace remote progress with our merge
         remoteSubject.progress = finalProgress;
         await remoteSubject.save();
@@ -89,17 +82,15 @@ class Cache {
         // We can either drop local or overwrite remote
         // ... for now do nothing
         if (!kDebugMode || localSubject.startedAt == remoteSubject.startedAt) {
-          Analytics.logger.severe(
-              "Cache synchronization found local changes that cannot be merged");
-          Analytics.captureException(
-              Exception("CacheSynchronizationException"));
-          Analytics.captureMessage("localSubject: ${localSubject
-              .toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
+          Analytics.logger.severe("Cache synchronization found local changes that cannot be merged");
+          Analytics.captureException(Exception("CacheSynchronizationException"));
+          Analytics.captureMessage(
+              "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
         }
       }
-    } on SocketException catch(_) {
+    } on SocketException catch (_) {
       print("error");
-    } catch(exception) {
+    } catch (exception) {
       Analytics.logger.warning(exception);
     }
     isSynchronizing = false;

@@ -29,19 +29,20 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
         setState(() {
           _isLoading = true;
         });
-          await handleTaskCompletion(context, (StudySubject subject) async {
-            try {
-              await subject.addResult<bool>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true);
+        await handleTaskCompletion(context, (StudySubject subject) async {
+          try {
+            await subject.addResult<bool>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true);
           } on SocketException catch (_) {
-              await subject.addResult<bool>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true, offline: true);
-              rethrow;
-            }
-          });
+            await subject.addResult<bool>(
+                taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true, offline: true);
+            rethrow;
+          }
+        });
         setState(() {
           _isLoading = false;
         });
-          if (!mounted) return;
-          Navigator.pop(context, true);
+        if (!mounted) return;
+        Navigator.pop(context, true);
       },
       icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
       label: Text(AppLocalizations.of(context).complete),

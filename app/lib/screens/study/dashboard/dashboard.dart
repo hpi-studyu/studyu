@@ -234,7 +234,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     setState(() {
                       scheduleToday = subject.scheduleFor(DateTime.now());
                     });
-                  } on SocketException catch (_) { }
+                  } on SocketException catch (_) {}
                 },
                 label: Text(AppLocalizations.of(context).next_day),
               ),
