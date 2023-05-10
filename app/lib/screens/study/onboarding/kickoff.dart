@@ -7,7 +7,6 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
-import '../../../util/schedule_notifications.dart';
 
 class KickoffScreen extends StatefulWidget {
   const KickoffScreen({Key key}) : super(key: key);
@@ -28,9 +27,9 @@ class _KickoffScreen extends State<KickoffScreen> {
       subject = await subject.save();
       if (!mounted) return;
       context.read<AppState>().activeSubject = subject;
+      context.read<AppState>().init(context);
       await storeActiveSubjectId(subject.id);
       if (!mounted) return;
-      scheduleNotifications(context);
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {

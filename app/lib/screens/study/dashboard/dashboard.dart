@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -227,10 +229,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.fast_forward_rounded),
                 onPressed: () async {
-                  await subject.setStartDateBackBy(days: 1);
-                  setState(() {
-                    scheduleToday = subject.scheduleFor(DateTime.now());
-                  });
+                  try {
+                    await subject.setStartDateBackBy(days: 1);
+                    setState(() {
+                      scheduleToday = subject.scheduleFor(DateTime.now());
+                    });
+                  } on SocketException catch (_) { }
                 },
                 label: Text(AppLocalizations.of(context).next_day),
               ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/models/results/result.dart';
 import 'package:studyu_core/src/util/supabase_object.dart';
@@ -54,4 +56,14 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
     startedAt = startedAt?.subtract(Duration(days: days));
     return this;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is SubjectProgress &&
+              runtimeType == other.runtimeType &&
+              jsonEncode(toJson()) == jsonEncode(other.toJson());
+
+  @override
+  int get hashCode => toJson().hashCode;
 }

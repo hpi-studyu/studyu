@@ -5,12 +5,11 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import '../../models/app_state.dart';
-import '../../routes.dart';
-import '../../util/schedule_notifications.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
 import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -32,6 +31,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
+    Analytics.init();
 
     if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
       Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
@@ -205,11 +205,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
           );
         }
       } catch (exception, stackTrace) {
-        Analytics.logger.severe('Error when trying to login and retrieve the study subject');
-        await Analytics.captureException(
-          exception,
-          stackTrace: stackTrace,
-        );
+        try {
+          Analytics.logger.warning('Could not login and retrieve the study subject. Fallback to offline mode');
+          await Analytics.captureEvent(
+            SentryEvent(throwable: exception),
+            stackTrace: stackTrace,
+          );
+          subject = await Cache.loadSubject();
+        } catch (exception, stackTrace) {
+          Analytics.logger.severe('Error when initializing offline mode');
+          await Analytics.captureException(
+            exception,
+            stackTrace: stackTrace,
+          );
+        }
       }
       /*if (!signInRes) {
         final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
@@ -227,10 +236,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
+      // storeCache(subject);
+      subject = await Cache.synchronize(subject);
+      if (!mounted) return;
       state.activeSubject = subject;
-      scheduleNotifications(context);
-      Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
-      state.analytics.initAdvanced();
+      state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Analytics.logger.severe('Subject is null -> welcome');

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -204,11 +206,13 @@ class DeleteAlertDialog extends StatelessWidget {
             label: Text(AppLocalizations.of(context).delete_data),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
             onPressed: () async {
-              await subject.delete(); // hard-delete
-              await deleteLocalData();
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
-              }
+              try {
+                await subject.delete(); // hard-delete
+                await deleteLocalData();
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+                }
+              } on SocketException catch(_) {}
             },
           )
         ],

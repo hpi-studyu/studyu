@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/tables/app_config.dart';
 import 'package:studyu_core/src/models/tables/repo.dart';
@@ -60,8 +62,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
       );
 
   Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
-        .single;
+    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select()).single;
   }
 }
 
@@ -88,8 +89,14 @@ class SupabaseQuery {
     }
   }
 
-  static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
-      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
+  static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async {
+    try {
+      return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
+    } catch (error, stacktrace) {
+      catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(List<Map<String, dynamic>> response) {
     return List<T>.from(
@@ -104,15 +111,18 @@ class SupabaseQuery {
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
     Analytics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
-      print('Message: ${error.message}');
-      print('Hint: ${error.hint}');
-      print('Details: ${error.details}');
-      print('Code: ${error.code}');
-      print('Stacktrace: $stacktrace');
+      Analytics.logger.severe('Message: ${error.message}');
+      Analytics.logger.severe('Hint: ${error.hint}');
+      Analytics.logger.severe('Details: ${error.details}');
+      Analytics.logger.severe('Code: ${error.code}');
+      Analytics.logger.severe('Stacktrace: $stacktrace');
+      throw error;
+    } else if (error is SocketException) {
+      Analytics.logger.info("App is suspected to be offline");
       throw error;
     } else {
-      print('Caught Supabase Error: $error');
-      print('Stacktrace: $stacktrace');
+      Analytics.logger.severe('Caught Supabase Error: $error');
+      Analytics.logger.severe('Stacktrace: $stacktrace');
       throw error;
     }
   }

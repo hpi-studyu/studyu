@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'intervention/checkmark_task_widget.dart';
 import 'observation/questionnaire_task_widget.dart';
 
@@ -96,5 +99,31 @@ class _TaskScreenState extends State<TaskScreen> {
         ),
       ),
     );
+  }
+}
+
+handleTaskCompletion(BuildContext context, Function(StudySubject) completionCallback) async {
+  final state = context.read<AppState>();
+  final activeSubject = state.activeSubject;
+  try {
+    if (state.trackParticipantProgress) {
+      await completionCallback(activeSubject);
+      Analytics.logger.info("Saved results in online mode");
+    }
+  } on SocketException catch (exception, stackTrace) {
+    Analytics.logger.info("Saving results in offline mode");
+    Analytics.captureEvent(exception, stackTrace: stackTrace);
+    await Cache.store(activeSubject);
+  } catch (exception, stackTrace) {
+    Analytics.logger.severe("Could not save results");
+    Analytics.captureException(exception, stackTrace: stackTrace);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context).could_not_save_results),
+        duration: const Duration(seconds: 10),
+        action: SnackBarAction(label: 'Retry', onPressed: () => handleTaskCompletion(context, completionCallback)),
+      ),
+    );
+    rethrow;
   }
 }

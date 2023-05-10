@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 
 typedef CustomErrorWidgetBuilder = Widget Function(BuildContext context, dynamic error, void Function() reload);
@@ -93,8 +92,6 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
           case ConnectionState.done:
             if (snapshot.hasError) {
               // ignore: only_throw_errors
-              if (kDebugMode) throw snapshot.error!;
-
               if (widget.errorWidgetBuilder != null) {
                 return widget.errorWidgetBuilder!(context, snapshot.error, reload);
               }
@@ -117,13 +114,15 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
       child: Center(
         child: Column(
           children: [
-            const Text('Something went wrong:'),
-            const SizedBox(height: 16),
-            Text(error.toString()),
+            // todo translate
+            const Text('Could not load information. Device might be offline.'),
+            //const SizedBox(height: 16),
+            //Text(error.toString()),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: reload,
               icon: const Icon(Icons.sync),
+              // todo translate
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.secondary),
             ),

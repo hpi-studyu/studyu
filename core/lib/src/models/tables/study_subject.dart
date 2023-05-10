@@ -1,12 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
-import 'package:studyu_core/src/models/models.dart';
-import 'package:studyu_core/src/util/extensions.dart';
-import 'package:studyu_core/src/util/supabase_object.dart';
 import 'package:uuid/uuid.dart';
 
 part 'study_subject.g.dart';
@@ -14,6 +14,7 @@ part 'study_subject.g.dart';
 @JsonSerializable()
 class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   static const String tableName = 'study_subject';
+  final _controller = StreamController<StudySubject>();
 
   @override
   Map<String, dynamic> get primaryKeys => {'id': id};
@@ -88,7 +89,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
-  Future<void> addResult<T>({required String taskId, required String periodId, required T result}) async {
+  Future<void> addResult<T>({required String taskId, required String periodId, required T result, bool? offline}) async {
     late final Result<T> resultObject;
     switch (T) {
       case QuestionnaireState:
@@ -104,16 +105,21 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         print('Unsupported question type: $T');
         resultObject = Result<T>.app(type: 'unknown', periodId: periodId, result: result);
     }
-
-    final p = await SubjectProgress(
+    SubjectProgress p = SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,
       taskId: taskId,
       result: resultObject,
       resultType: resultObject.type,
-    ).save();
-    progress.add(p);
-    await save();
+    );
+    if (offline ?? false) {
+      p.completedAt = DateTime.now().toUtc();
+      progress.add(p);
+    } else {
+      p = await p.save();
+      progress.add(p);
+      await save();
+    }
   }
 
   Map<DateTime, List<SubjectProgress>> getResultsByDate({required String interventionId}) {
@@ -284,15 +290,25 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Future<StudySubject> save() async {
     try {
       final response = await env.client.from(tableName).upsert(toJson()).select<List>();
-      final json = List<Map<String, dynamic>>.from(response).single;
-      json['study'] = study.toJson();
-      json['subject_progress'] = progress.map((p) => p.toJson()).toList();
-      return StudySubject.fromJson(json);
+      final json = toFullJson(partialJson: List<Map<String, dynamic>>.from(response).single);
+      final newSubject = StudySubject.fromJson(json);
+      _controller.add(newSubject);
+      Analytics.logger.info("Saving study subject");
+      return newSubject;
     } catch (e, stack) {
       SupabaseQuery.catchSupabaseException(e, stack);
       rethrow;
     }
   }
+
+  Map<String, dynamic> toFullJson({Map<String, dynamic>? partialJson}) {
+    final json = partialJson ?? toJson();
+    json['study'] = study.toJson();
+    json['subject_progress'] = progress.map((p) => p.toJson()).toList();
+    return json;
+  }
+
+  Stream<StudySubject> get onSave => _controller.stream;
 
   Future<void> deleteProgress() async {
     try {
@@ -326,6 +342,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       await env.client.from(tableName).select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is StudySubject &&
+              runtimeType == other.runtimeType &&
+              jsonEncode(toFullJson()) == jsonEncode(other.toFullJson());
+
+  @override
+  int get hashCode => toFullJson().hashCode;
 
   @override
   String toString() {

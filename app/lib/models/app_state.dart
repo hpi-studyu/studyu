@@ -1,6 +1,8 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/notifications.dart';
+import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 class AppState with ChangeNotifier {
@@ -21,6 +23,15 @@ class AppState with ChangeNotifier {
   bool get trackParticipantProgress => !(isPreview && selectedStudy.isRunning);
 
   AppState();
+
+  void init(BuildContext context) {
+    scheduleNotifications(context);
+    Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
+    analytics.initAdvanced();
+    activeSubject.onSave.listen((StudySubject subject) async {
+      await Cache.store(subject);
+    });
+  }
 
   void updateStudy(Study study) {
     // todo baseline
