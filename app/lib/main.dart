@@ -38,7 +38,7 @@ Future<void> main() async {
   usePathUrlStrategy();
   await AppAnalytics.init();
 
-  if (AppAnalytics.isEnabled) {
+  if (!kDebugMode && AppAnalytics.isEnabled) {
     await SentryFlutter.init(
       (options) {
         options.dsn = 'https://afe6ec116e4b4096956eb109e1135f36@o4504554311188480.ingest.sentry.io/4504554316169216';
