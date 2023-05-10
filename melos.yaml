@@ -49,13 +49,13 @@ scripts:
   outdated:
     run: |
       melos exec -c 6 --fail-fast -- \
-        "flutter pub outdated"
+        "dart pub outdated"
     description: Check all outdated dependencies
 
   upgrade:
     run: |
       melos exec -c 6 --fail-fast -- \
-        "flutter pub upgrade" && melos bootstrap
+        "dart pub upgrade" && melos bootstrap
     description: Check all outdated dependencies
 
   test:
