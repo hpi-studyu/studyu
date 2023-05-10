@@ -8,15 +8,16 @@ repository: https://github.com/hpi-studyu/studyu
 environment: 
   sdk: '>=2.7.0 <3.0.0'
 dependencies: 
-  charts_common: ^0.12.0
-  charts_flutter: ^0.12.0
+  # charts_common: ^0.12.0
+  # charts_flutter: ^0.12.0
   # chewie: ^1.4.0
   cupertino_icons: ^1.0.5
-  extended_math: # todo remove for null safety support
-   git: https://github.com/nstrelow/extended_math.git
+  # extended_math: # todo remove for null safety support
+  # git: https://github.com/nstrelow/extended_math.git
   fhir: ^0.4.7
   flutter:
     sdk: flutter
+  flutter_charts: ^0.5.1
   flutter_file_dialog: ^3.0.0
   flutter_local_notifications: ^14.0.0+1
   flutter_localizations:
@@ -25,9 +26,9 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.10.0
-  grizzly_distuv: ^1.0.0 # todo remove for null safety support
+  # grizzly_distuv: ^1.0.0 # todo remove for null safety support
   intersperse: ^2.0.0
-  intl: ^0.17.0 # flutter_localizations from sdk
+  intl: ^0.18.0
   material_design_icons_flutter: ^6.0.7096
   package_info_plus: ^3.1.2
   pdf: ^3.10.1
