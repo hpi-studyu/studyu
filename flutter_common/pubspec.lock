@@ -523,7 +523,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.1.0"
+    version: "4.2.0"
   supabase:
     dependency: transitive
     description:
