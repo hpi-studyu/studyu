@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-05-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.3.0`](#studyu_app---v230)
+ - [`studyu_core` - `v4.2.0`](#studyu_core---v420)
+ - [`studyu_flutter_common` - `v1.6.0`](#studyu_flutter_common---v160)
+ - [`studyu_designer_v2` - `v1.3.1`](#studyu_designer_v2---v131)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_designer_v2` - `v1.3.1`
+
+---
+
+#### `studyu_app` - `v2.3.0`
+
+ - **REFACTOR**: button for null safety. ([9c2796e3](https://github.com/hpi-studyu/studyu/commit/9c2796e311c5729759c7bbe6c9ad054423a2b3fe))
+ - **FIX**: add untouched slider buttons again. ([9775f7ef](https://github.com/hpi-studyu/studyu/commit/9775f7eff28001b0fdff7e45fe1c266085dec878))
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
+#### `studyu_core` - `v4.2.0`
+
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
+#### `studyu_flutter_common` - `v1.6.0`
+
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 2023-05-06
 
 ### Changes

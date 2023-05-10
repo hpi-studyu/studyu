@@ -1,3 +1,7 @@
+## 4.2.0
+
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
 ## 4.1.0
 
  - **FIX**: slider design overhaul. ([75589ca1](https://github.com/hpi-studyu/studyu/commit/75589ca1f443f4ef779a8766cc9150cda74fb3bb))

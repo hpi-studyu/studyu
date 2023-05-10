@@ -1,3 +1,9 @@
+## 2.3.0
+
+ - **REFACTOR**: button for null safety. ([9c2796e3](https://github.com/hpi-studyu/studyu/commit/9c2796e311c5729759c7bbe6c9ad054423a2b3fe))
+ - **FIX**: add untouched slider buttons again. ([9775f7ef](https://github.com/hpi-studyu/studyu/commit/9775f7eff28001b0fdff7e45fe1c266085dec878))
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
 ## 2.2.1
 
  - **FIX**: study cannot be left inadvertently anymore via about. ([b8237b5b](https://github.com/hpi-studyu/studyu/commit/b8237b5b4e0b4c1e35d3b22efe22fd89d2990ba5))

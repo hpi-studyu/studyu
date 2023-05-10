@@ -1,3 +1,7 @@
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
 ## 1.3.0
 
  - **FIX**: more slider usability fixes. ([d8309803](https://github.com/hpi-studyu/studyu/commit/d83098037f6f1cf9bdc0f150df6d94156c81f19d))
