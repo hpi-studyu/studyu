@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
@@ -23,6 +24,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
   void initState() {
     super.initState();
     value = widget.question.initial;
+    sliderTouched = false;
   }
 
   @override
@@ -72,6 +74,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   }),
                   onChangeEnd: (val) => setState(() {
                     value = val;
+                    sliderTouched = true;
                     widget.onDone(widget.question.constructAnswer(value));
                   }),
                   activeColor: activeTrackColor,
@@ -82,9 +85,23 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   isColored: isColored,
                   linearStep: false,
                   steps: widget.question,
-                )),
+                )
+            ),
           ],
         ),
+        if (!sliderTouched)
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () {
+              setState(() {
+                sliderTouched = true;
+              });
+              widget.onDone(widget.question.constructAnswer(value));
+            },
+            child: Text(AppLocalizations.of(context).done),
+          ),
+        )
       ],
     );
   }

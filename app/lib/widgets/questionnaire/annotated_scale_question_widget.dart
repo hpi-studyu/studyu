@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
 import 'custom_slider.dart';
@@ -16,14 +17,13 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
 
 class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWidget> {
   double value;
-
-  // double actualValue;
   bool sliderTouched;
 
   @override
   void initState() {
     super.initState();
     value = widget.question.initial;
+    sliderTouched = false;
   }
 
   @override
@@ -45,6 +45,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
             //widget.onDone(widget.question.constructAnswer(value));
           }),
           onChangeEnd: (val) => setState(() {
+            sliderTouched = true;
             value = val;
             widget.onDone(widget.question.constructAnswer(value));
           }),
@@ -52,6 +53,19 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           linearStep: false,
           steps: widget.question,
         ),
+        if (!sliderTouched)
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () {
+              setState(() {
+                sliderTouched = true;
+              });
+              widget.onDone(widget.question.constructAnswer(value));
+            },
+            child: Text(AppLocalizations.of(context).done),
+          ),
+        )
       ],
     );
   }
