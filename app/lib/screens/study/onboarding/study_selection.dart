@@ -177,7 +177,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   studyResult = await (Supabase.instance.client.rpc(
                     'get_study_record_from_invite',
                     params: {'invite_code': _controller.text},
-                  ).single() as FutureOr<Map<String, dynamic>?>);
+                  ).single());
                 } on PostgrestException catch (error) {
                   print(error.message);
                   setState(() {
@@ -185,15 +185,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                   });
                 }
 
-                if (studyResult == null) {
-                  setState(() {
-                    _errorMessage = AppLocalizations.of(context)!.error;
-                  });
-                } else {
-                  setState(() {
-                    _errorMessage = null;
-                  });
-
+                if (studyResult != null) {
                   final study = Study.fromJson(studyResult);
 
                   if (!mounted) return;
@@ -222,5 +214,5 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             },
           )
         ],
-      );
+  );
 }
