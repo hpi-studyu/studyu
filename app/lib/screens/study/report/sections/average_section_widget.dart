@@ -36,8 +36,8 @@ class AverageSectionWidget extends ReportSectionWidget {
     return Iterable<int>.generate(numberOfPhases).map((i) => (i+1) * phaseDuration).toList();
   }
 
-  bool get needsSeparators => section.aggregate == TemporalAggregation.day;
-  bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
+  //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
+  //bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
 
   Widget getDiagram(BuildContext context) {
     return BarChart(
@@ -193,8 +193,10 @@ class AverageSectionWidget extends ReportSectionWidget {
         getDrawingVerticalLine: (val) => FlLine(color: Colors.black),
         verticalInterval: subject.study.schedule.phaseDuration.toDouble(),*/
       ),
-
       barGroups: getBarGroups(),
+      barTouchData: BarTouchData(
+        enabled: false, // todo enable with x and y value
+      )
     );
   }
 
@@ -219,36 +221,34 @@ class AverageSectionWidget extends ReportSectionWidget {
   List<BarChartGroupData> getBarGroups() {
     // groupBy((datum) => datum.intervention)
     final data = getAggregatedData().toList();
-    data.add(DiagramDatum(1, 5, DateTime.now(), subject.selectedInterventions.first.id));
+    //data.add(DiagramDatum(1, 10, DateTime.now(), subject.selectedInterventions.first.id));
     //data.add(DiagramDatum(100, 3, DateTime.now(), subject.selectedInterventions.first.id));
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
     //data.sort((a, b) => a.timestamp!.compareTo(b.timestamp!));
-    return Iterable<int>.generate(subject.study.schedule.length).toList().asMap().entries.map((entry) {
-      final idx = entry.key;
+
+    //return Iterable<int>.generate(subject.study.schedule.length).toList().asMap().entries.map((entry) {
+    return data.mapIndexed((idx, entry) {
       //print(idx);
-      if (idx < data.length) {
-        final val = data[idx];
-        if (idx+1 == val.x) {
+      //if (idx < data.length) {
           return BarChartGroupData(
-              x: val.x.round(),
+              x: entry.x.round(),
               barRods: [
                 charts.BarChartRodData(
-                  toY: val.value.toDouble(),
-                  color: getColor(val.x.round(), subject.study.schedule.includeBaseline),
+                  toY: entry.value.toDouble(),
+                  color: getColor(entry, subject),
                 )
               ]
           );
-        }
-      }
-      return BarChartGroupData(
+      //}
+      /*return BarChartGroupData(
         x: idx+1,
         barRods: [
           charts.BarChartRodData(
-            toY: 1,
-            color: getColor(idx+1, subject.study.schedule.includeBaseline),
+            toY: 5,
+            /*color: getColor(DiagramDatum(idx+1, 5, null, subject.selectedInterventions[0].id), subject),*/
           )
         ]
-      );
+      );*/
     }
     ).toList();
     /*return List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
@@ -262,20 +262,26 @@ class AverageSectionWidget extends ReportSectionWidget {
       ));*/
   }
 
-
-  // todo does not work for ABBA
-  MaterialColor getColor(int pos, bool includeBaseline) {
+  MaterialColor getColor(DiagramDatum diagram, StudySubject subject) {
+    const baselineColor = Colors.grey;
     final colors = [Colors.blue, Colors.orange];
     MaterialColor? c;
-    phasePos.forEachIndexed((index, phaseBreak) {
+    //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
+    if (subject.study.schedule.includeBaseline && diagram.x < subject.study.schedule.phaseDuration) {
+      // if id == "_baseline"
+      c = baselineColor;
+    } else {
+      c = colors[subject.selectedInterventions.map((e) => e.id).toList().indexOf(diagram.intervention)];
+    }
+    /*phasePos.forEachIndexed((index, phaseBreak) {
       if (includeBaseline && pos <= phasePos[0]) {
         c = Colors.grey;
       }
       if (pos <= phaseBreak && c == null) {
         c = colors[(index % colors.length)];
       }
-    });
-    return c ?? Colors.green;
+    });*/
+    return c; //?? Colors.green;
   }
 
   Iterable<DiagramDatum> getAggregatedData() {
