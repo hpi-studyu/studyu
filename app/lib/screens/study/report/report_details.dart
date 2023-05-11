@@ -51,8 +51,7 @@ class ReportDetailsScreen extends StatelessWidget {
                 subject: subject,
                 primary: true,
               ),
-            if (subject!.study.reportSpecification.secondary.isNotEmpty &&
-                (subject!.completedStudy || kDebugMode))
+            if (subject!.study.reportSpecification.secondary.isNotEmpty && (subject!.completedStudy || kDebugMode))
               ...subject!.study.reportSpecification.secondary
                   .map((section) => ReportSectionContainer(section, subject: subject))
           ],

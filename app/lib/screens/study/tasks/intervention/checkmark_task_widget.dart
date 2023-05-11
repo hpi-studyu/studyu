@@ -31,7 +31,8 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
         });
         await handleTaskCompletion(context, (StudySubject? subject) async {
           try {
-            await subject!.addResult<bool>(taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true);
+            await subject!
+                .addResult<bool>(taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true);
           } on SocketException catch (_) {
             await subject!.addResult<bool>(
                 taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true, offline: true);

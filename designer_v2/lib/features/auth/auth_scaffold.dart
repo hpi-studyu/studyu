@@ -138,10 +138,10 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
             ),
           ),
         ),
-        rightWidget: Column(
+        rightWidget: const Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Expanded(
               child: Center(
                 child: StudyUJobsToBeDone(),

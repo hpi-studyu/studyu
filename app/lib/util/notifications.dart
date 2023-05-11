@@ -201,15 +201,15 @@ class StudyNotifications {
     );
 
     //if (taskToRun != null) {
-      final isInsidePeriod = taskToRun.completionPeriod.contains(StudyUTimeOfDay.now());
-      if (!completed && isInsidePeriod) {
-        await navigatorKey.currentState!.push(
-          MaterialPageRoute(
-            builder: (_) => TaskScreen(taskInstance: taskToRun),
-          ),
-        );
-        navigatorKey.currentState!.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
-        // todo error management after null safety
+    final isInsidePeriod = taskToRun.completionPeriod.contains(StudyUTimeOfDay.now());
+    if (!completed && isInsidePeriod) {
+      await navigatorKey.currentState!.push(
+        MaterialPageRoute(
+          builder: (_) => TaskScreen(taskInstance: taskToRun),
+        ),
+      );
+      navigatorKey.currentState!.pushNamedAndRemoveUntil(Routes.loading, (_) => false);
+      // todo error management after null safety
       /*} else {
         navigatorKey.currentState!.push(
           MaterialPageRoute(

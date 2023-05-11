@@ -137,8 +137,7 @@ class PerformanceBar extends StatelessWidget {
   final int completed;
   final int total;
 
-  const PerformanceBar({required this.task, required this.completed, required this.total, Key? key})
-      : super(key: key);
+  const PerformanceBar({required this.task, required this.completed, required this.total, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -109,8 +109,8 @@ class CustomSlider extends StatelessWidget {
                                   .firstWhere((annotation) => annotation.value == index + minValue!,
                                       orElse: () => Annotation())
                                   .annotation,
-                              style: labelTextStyle!.copyWith(
-                                  fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
+                              style: labelTextStyle!
+                                  .copyWith(fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
                               textAlign: TextAlign.center,
                             )
                           : null,

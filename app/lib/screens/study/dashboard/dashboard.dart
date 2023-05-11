@@ -149,7 +149,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             builder: (context, AsyncSnapshot<bool> snapshot) {
                                               if (snapshot.hasData) {
                                                 String data = "ignoreBatteryOptimizations: ${snapshot.data.toString()}";
-                                                StudyNotifications.scheduledNotificationsDebug = "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
+                                                StudyNotifications.scheduledNotificationsDebug =
+                                                    "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
                                                 return Text(data);
                                               } else {
                                                 return const CircularProgressIndicator();

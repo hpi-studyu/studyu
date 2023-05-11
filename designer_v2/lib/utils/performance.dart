@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 /// Prevents jank from lazy-loading system-specific emoji fonts
 /// See https://github.com/flutter/flutter/issues/42586
 prefetchEmojiFont() {
-  ParagraphBuilder pb = ParagraphBuilder(ParagraphStyle(locale: window.locale));
+  ParagraphBuilder pb = ParagraphBuilder(ParagraphStyle(locale: WidgetsBinding.instance.platformDispatcher.locale));
   pb.addText('\ud83d\ude01'); // smiley face emoji
   pb.build().layout(const ParagraphConstraints(width: 100));
 }

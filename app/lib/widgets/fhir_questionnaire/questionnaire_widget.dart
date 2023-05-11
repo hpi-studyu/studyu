@@ -129,8 +129,7 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
   }
 
   bool _satisfies(fhir.QuestionnaireEnableWhen condition) {
-    final conditionalItem =
-        questionnaireResponse!.item?.firstWhereOrNull((item) => item.linkId == condition.question);
+    final conditionalItem = questionnaireResponse!.item?.firstWhereOrNull((item) => item.linkId == condition.question);
     switch (condition.operator_) {
       case fhir.QuestionnaireEnableWhenOperator.exists:
         if (conditionalItem == null) {

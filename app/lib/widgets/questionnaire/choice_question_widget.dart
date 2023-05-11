@@ -10,8 +10,7 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final Function(Answer) onDone;
   final String multiSelectionText;
 
-  const ChoiceQuestionWidget(
-      {Key? key, required this.question, required this.onDone, required this.multiSelectionText})
+  const ChoiceQuestionWidget({Key? key, required this.question, required this.onDone, required this.multiSelectionText})
       : super(key: key);
 
   @override
