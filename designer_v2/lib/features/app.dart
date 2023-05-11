@@ -107,6 +107,7 @@ class _AppContentState extends ConsumerState<AppContent> {
               localizationsDelegates: const [
                 ...AppLocalizations.localizationsDelegates,
                 // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
+                // FormBuilderLocalizations.delegate,
               ],
             );
           },
