@@ -86,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             tooltip: 'Current report', // todo tr
             icon: const Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject)),
+            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject!)),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {

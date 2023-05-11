@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
 import 'package:studyu_core/core.dart';
 
 import 'report_section_widget.dart';
 
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection? section, StudySubject? subject);
+typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject subject);
 
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
-    /*AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
-    LinearRegressionSection: (section, instance) =>
+    AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
+    /*LinearRegressionSection: (section, instance) =>
         LinearRegressionSectionWidget(instance, section as LinearRegressionSection),*/
   };
 
-  final ReportSection? section;
-  final StudySubject? subject;
+  final ReportSection section;
+  final StudySubject subject;
   final bool primary;
   final GestureTapCallback? onTap;
 
@@ -44,12 +45,12 @@ class ReportSectionContainer extends StatelessWidget {
             children: [
               if (primary) ...buildPrimaryHeader(context, theme),
               Text(
-                section!.title ?? '',
+                section.title ?? '',
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 4),
               Text(
-                section!.description ?? '',
+                section.description ?? '',
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),
