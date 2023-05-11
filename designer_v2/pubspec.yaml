@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   archive: ^3.3.7
-  async: ^2.10.0 # flutter_test
+  async: ^2.11.0
   csv: ^5.0.2
   cupertino_icons: ^1.0.5
   dynamic_color: ^1.6.3 # material_color_utilities <=0.2.0
@@ -23,8 +23,8 @@ dependencies:
   material_color_utilities: ^0.2.0 # flutter_test
   material_design_icons_flutter: ^6.0.7096
   pointer_interceptor: ^0.9.3+4
-  reactive_color_picker: ^0.4.0 # form_builder_validators <= 8.6.1
-  reactive_forms: ^14.1.0 # form_builder_validators <=8.6.1
+  reactive_color_picker: ^0.5.0
+  reactive_forms: ^14.3.0
   rxdart: ^0.27.7
   shared_preferences: ^2.1.1
   studyu_core: ^4.2.0
