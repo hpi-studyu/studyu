@@ -58,7 +58,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (result == null) return;
 
     if (!mounted) return;
-    if (result.eligible != null && result.eligible!) {
+    if (result.eligible) {
       navigateToJourney(context);
     } else {
       Navigator.pop(context);

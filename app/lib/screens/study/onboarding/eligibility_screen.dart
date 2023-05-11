@@ -9,11 +9,11 @@ import '../../../widgets/questionnaire/questionnaire_widget.dart';
 import 'onboarding_progress.dart';
 
 class EligibilityResult {
-  final bool? eligible;
+  final bool eligible;
   final QuestionnaireState answers;
   final EligibilityCriterion? firstFailed;
 
-  EligibilityResult(this.answers, {this.eligible, this.firstFailed});
+  EligibilityResult(this.answers, {required this.eligible, this.firstFailed});
 }
 
 class EligibilityScreen extends StatefulWidget {
@@ -113,7 +113,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         backgroundColor: Colors.red[50],
       );
 
-  Widget _constructResultBanner() => activeResult!.eligible! ? _constructPassBanner() : _constructFailBanner();
+  Widget _constructResultBanner() => activeResult!.eligible ? _constructPassBanner() : _constructFailBanner();
 
   @override
   Widget build(BuildContext context) {

@@ -75,8 +75,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
-    // todo enable this after we implemented conditional questions again
-    // _invalidateDownstreamAnswers(index);
+    _invalidateDownstreamAnswers(index);
 
     _nextQuestionIndex = widget.questions.indexWhere((question) => question.id == answer.question) + 1;
     qs.answers[answer.question] = answer;
