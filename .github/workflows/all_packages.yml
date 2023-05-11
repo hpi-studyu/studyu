@@ -29,9 +29,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - if: ${{ github.ref == 'refs/heads/master' }}
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
+      - if: ${{ github.ref == 'refs/heads/dev' }}
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
       - name: Install melos
         run: dart pub global activate melos
       - name: "Bootstrap Workspace"
@@ -44,9 +49,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - if: ${{ github.ref == 'refs/heads/master' }}
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
+      - if: ${{ github.ref == 'refs/heads/dev' }}
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
       - name: Install melos
         run: dart pub global activate melos
       - name: "Bootstrap Workspace"
@@ -59,9 +69,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - if: ${{ github.ref == 'refs/heads/master' }}
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
+      - if: ${{ github.ref == 'refs/heads/dev' }}
+        uses: subosito/flutter-action@v2
+        with:
+          channel: master
       - name: Install melos
         run: dart pub global activate melos
       - name: "Bootstrap Workspace"
