@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class SelectableButton extends StatelessWidget {
   final Widget child;
   final bool selected;
-  final Function() onTap;
+  final Function()? onTap;
 
-  const SelectableButton({Key key, @required this.child, this.selected = false, this.onTap}) : super(key: key);
+  const SelectableButton({Key? key, required this.child, this.selected = false, this.onTap}) : super(key: key);
 
   Color _getFillColor(ThemeData theme) => selected ? theme.primaryColor : theme.cardColor;
 

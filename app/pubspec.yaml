@@ -6,11 +6,12 @@ homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
 
 environment: 
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 dependencies: 
   # charts_common: ^0.12.0
   # charts_flutter: ^0.12.0
   # chewie: ^1.4.0
+  collection: ^1.15.0-nullsafety.4
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
@@ -28,7 +29,7 @@ dependencies:
   flutter_widget_from_html: ^0.10.0
   # grizzly_distuv: ^1.0.0 # todo remove for null safety support
   intersperse: ^2.0.0
-  intl: ^0.18.0
+  intl: ^0.17.0
   material_design_icons_flutter: ^6.0.7096
   package_info_plus: ^3.1.2
   pdf: ^3.10.1

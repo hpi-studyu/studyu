@@ -9,13 +9,13 @@ typedef StateHandler = void Function(QuestionnaireState);
 typedef ContinuationPredicate = bool Function(QuestionnaireState);
 
 class QuestionnaireWidget extends StatefulWidget {
-  final String title;
-  final String header;
-  final String footer;
+  final String? title;
+  final String? header;
+  final String? footer;
   final List<Question> questions;
-  final StateHandler onChange;
-  final StateHandler onComplete;
-  final ContinuationPredicate shouldContinue;
+  final StateHandler? onChange;
+  final StateHandler? onComplete;
+  final ContinuationPredicate? shouldContinue;
 
   const QuestionnaireWidget(
     this.questions, {
@@ -25,7 +25,7 @@ class QuestionnaireWidget extends StatefulWidget {
     this.onComplete,
     this.onChange,
     this.shouldContinue,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       while (index + 1 < shownQuestions.length) {
         final end = shownQuestions.length;
         final lastQuestion = shownQuestions.removeLast();
-        _listKey.currentState.removeItem(
+        _listKey.currentState!.removeItem(
           end,
           (context, animation) => SizeTransition(
             sizeFactor: animation,
@@ -93,11 +93,11 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
       // check for conditional questions
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
-        _onQuestionDone(widget.questions[_nextQuestionIndex].getDefaultAnswer(), shownQuestions.length);
+        _onQuestionDone(widget.questions[_nextQuestionIndex].getDefaultAnswer()!, shownQuestions.length);
         return;
       }
       _insertQuestion(widget.questions[_nextQuestionIndex]);
-      _listKey.currentState.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
+      _listKey.currentState!.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
       _nextQuestionIndex++;
     } else {
       // we ran out of questions
@@ -128,11 +128,11 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       initialItemCount: shownQuestions.length + 2,
       itemBuilder: (context, index, animation) {
         if (index == 0) {
-          return widget.header != null && widget.header.isNotEmpty ? HtmlTextBox(widget.header) : Container();
+          return widget.header != null && widget.header!.isNotEmpty ? HtmlTextBox(widget.header) : Container();
         }
         index -= 1;
         if (index == widget.questions.length && qs.answers.length == widget.questions.length) {
-          return widget.footer != null && widget.footer.isNotEmpty ? HtmlTextBox(widget.footer) : Container();
+          return widget.footer != null && widget.footer!.isNotEmpty ? HtmlTextBox(widget.footer) : Container();
         }
         if (index > shownQuestions.length - 1) {
           return Container();
@@ -144,9 +144,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 }
 
 class HtmlTextBox extends StatelessWidget {
-  final String text;
+  final String? text;
 
-  const HtmlTextBox(this.text, {Key key}) : super(key: key);
+  const HtmlTextBox(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -10,21 +10,21 @@ import '../../../models/app_state.dart';
 import 'report_details.dart';
 
 class ReportHistoryScreen extends StatelessWidget {
-  const ReportHistoryScreen({Key key}) : super(key: key);
+  const ReportHistoryScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).report_history,
+          AppLocalizations.of(context)!.report_history,
         ),
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
-        tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.currentUser.id),
-        successBuilder: (BuildContext context, List<StudySubject> pastStudies) {
+        tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.currentUser!.id),
+        successBuilder: (BuildContext context, List<StudySubject>? pastStudies) {
           return ListView.builder(
-            itemCount: pastStudies.length,
+            itemCount: pastStudies!.length,
             itemBuilder: (context, index) {
               return ReportHistoryItem(pastStudies[index]);
             },
@@ -38,13 +38,13 @@ class ReportHistoryScreen extends StatelessWidget {
 class ReportHistoryItem extends StatelessWidget {
   final StudySubject subject;
 
-  const ReportHistoryItem(this.subject, {Key key}) : super(key: key);
+  const ReportHistoryItem(this.subject, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.watch<AppState>();
-    final isActiveStudy = model.activeSubject.studyId == subject.studyId;
+    final isActiveStudy = model.activeSubject!.studyId == subject.studyId;
     return Card(
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
@@ -62,8 +62,8 @@ class ReportHistoryItem extends StatelessWidget {
                   color: isActiveStudy ? Colors.white : Colors.black,
                 ),
                 Text(
-                  subject.study.title,
-                  style: theme.textTheme.headlineSmall.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                  subject.study.title!,
+                  style: theme.textTheme.headlineSmall!.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
                 ),
               ],
             ),

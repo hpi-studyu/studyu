@@ -12,7 +12,7 @@ import '../../../widgets/intervention_card.dart';
 import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
-  const InterventionSelectionScreen({Key key}) : super(key: key);
+  const InterventionSelectionScreen({Key? key}) : super(key: key);
 
   @override
   State<InterventionSelectionScreen> createState() => _InterventionSelectionScreenState();
@@ -20,7 +20,7 @@ class InterventionSelectionScreen extends StatefulWidget {
 
 class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
   final List<String> selectedInterventionIds = [];
-  Study selectedStudy;
+  Study? selectedStudy;
 
   @override
   void initState() {
@@ -34,13 +34,13 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       child: Column(
         children: [
           Text(
-            AppLocalizations.of(context).please_select_interventions,
+            AppLocalizations.of(context)!.please_select_interventions,
             style: theme.textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context).please_select_interventions_description,
-            style: theme.textTheme.bodyMedium.copyWith(color: theme.textTheme.bodySmall.color),
+            AppLocalizations.of(context)!.please_select_interventions_description,
+            style: theme.textTheme.bodyMedium!.copyWith(color: theme.textTheme.bodySmall!.color),
           ),
         ],
       ),
@@ -50,7 +50,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Widget _buildInterventionSelectionList() {
     final interventions = selectedStudy?.interventions;
     if (interventions == null || interventions.isEmpty) {
-      return Text(AppLocalizations.of(context).no_interventions_available);
+      return Text(AppLocalizations.of(context)!.no_interventions_available);
     }
 
     return ListView.builder(
@@ -83,8 +83,8 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
   Future<void> onFinished() async {
     final appState = context.read<AppState>();
     appState.activeSubject = StudySubject.fromStudy(
-      appState.selectedStudy,
-      Supabase.instance.client.auth.currentUser.id,
+      appState.selectedStudy!,
+      Supabase.instance.client.auth.currentUser!.id,
       selectedInterventionIds,
       appState.inviteCode,
     );
@@ -96,7 +96,7 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).intervention_selection_title),
+        title: Text(AppLocalizations.of(context)!.intervention_selection_title),
         leading: const Icon(MdiIcons.formatListChecks),
       ),
       body: SingleChildScrollView(

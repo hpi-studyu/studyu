@@ -7,11 +7,11 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class AppAnalytics {
-  static bool _enabled;
+  static bool? _enabled;
   static const String keyAnalytics = 'analytics';
   final BuildContext context;
-  AppState state;
-  StudySubject subject;
+  late AppState state;
+  StudySubject? subject;
 
   AppAnalytics(this.context) {
     state = context.read<AppState>();
@@ -21,7 +21,7 @@ class AppAnalytics {
   static Future<void> init() async {
     if (_enabled == null) {
       final prefs = await SharedPreferences.getInstance();
-      _enabled = prefs.get(keyAnalytics);
+      _enabled = prefs.get(keyAnalytics) as bool?;
       // analysis is enabled by default
       _enabled ??= true;
     }
@@ -57,11 +57,11 @@ class AppAnalytics {
   void initAdvanced() {
     Sentry.configureScope((scope) {
       scope.setUser(SentryUser(
-        id: subject.userId,
+        id: subject!.userId,
       ));
       final advancedContext = {
-        'subjectId': subject.id,
-        'studyId': state.selectedStudy.id,
+        'subjectId': subject!.id,
+        'studyId': state.selectedStudy!.id,
         'subject': subject.toString(),
         'selectedStudy': state.selectedStudy.toString(),
       };

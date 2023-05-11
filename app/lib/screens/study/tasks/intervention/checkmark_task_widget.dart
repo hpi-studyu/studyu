@@ -7,17 +7,17 @@ import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_core/core.dart';
 
 class CheckmarkTaskWidget extends StatefulWidget {
-  final CheckmarkTask task;
-  final CompletionPeriod completionPeriod;
+  final CheckmarkTask? task;
+  final CompletionPeriod? completionPeriod;
 
-  const CheckmarkTaskWidget({this.task, this.completionPeriod, Key key}) : super(key: key);
+  const CheckmarkTaskWidget({this.task, this.completionPeriod, Key? key}) : super(key: key);
 
   @override
   State<CheckmarkTaskWidget> createState() => _CheckmarkTaskWidgetState();
 }
 
 class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
-  DateTime loginClickTime;
+  DateTime? loginClickTime;
   bool _isLoading = false;
 
   @override
@@ -29,12 +29,12 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
         setState(() {
           _isLoading = true;
         });
-        await handleTaskCompletion(context, (StudySubject subject) async {
+        await handleTaskCompletion(context, (StudySubject? subject) async {
           try {
-            await subject.addResult<bool>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true);
+            await subject!.addResult<bool>(taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true);
           } on SocketException catch (_) {
-            await subject.addResult<bool>(
-                taskId: widget.task.id, periodId: widget.completionPeriod.id, result: true, offline: true);
+            await subject!.addResult<bool>(
+                taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true, offline: true);
             rethrow;
           }
         });
@@ -45,7 +45,7 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
         Navigator.pop(context, true);
       },
       icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
-      label: Text(AppLocalizations.of(context).complete),
+      label: Text(AppLocalizations.of(context)!.complete),
     );
   }
 }

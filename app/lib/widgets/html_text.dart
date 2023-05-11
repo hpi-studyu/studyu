@@ -5,11 +5,11 @@ class HtmlText extends StatelessWidget {
   const HtmlText(
     this.text, {
     this.style,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final String text;
-  final TextStyle style;
+  final String? text;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,7 @@ import 'package:studyu_core/core.dart';
 import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {
-  const PerformanceSection(StudySubject subject, {Key key, GestureTapCallback onTap})
+  const PerformanceSection(StudySubject? subject, {Key? key, GestureTapCallback? onTap})
       : super(subject, key: key, onTap: onTap);
 
   // TODO move to model
@@ -19,21 +19,21 @@ class PerformanceSection extends GenericSection {
   @override
   Widget buildContent(BuildContext context) {
     final interventions =
-        subject.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
+        subject!.selectedInterventions.where((intervention) => intervention.id != '__baseline').toList();
     final interventionProgress = interventions.map((intervention) {
       final countableInterventions = getCountableObservationAmount(intervention);
       return min<double>(countableInterventions == 0 ? 0 : countableInterventions / maximum, 1);
     }).toList();
-    return interventions.length != 2 || subject.study.reportSpecification?.primary == null
+    return interventions.length != 2 || subject!.study.reportSpecification.primary == null
         ? Center(
-            child: Text(AppLocalizations.of(context).performance),
+            child: Text(AppLocalizations.of(context)!.performance),
           )
         : Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Text(
-                  '${AppLocalizations.of(context).current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
+                  '${AppLocalizations.of(context)!.current_power_level}: ${getPowerLevelDescription(context, interventionProgress)}',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -47,7 +47,7 @@ class PerformanceSection extends GenericSection {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(
-                        interventions[i].name,
+                        interventions[i].name!,
                       ),
                     );
                   } else {
@@ -67,11 +67,11 @@ class PerformanceSection extends GenericSection {
 
   String getPowerLevelDescription(BuildContext context, List<num> interventionProgress) {
     if (interventionProgress.any((progress) => progress < minimumRatio)) {
-      return AppLocalizations.of(context).not_enough_data;
+      return AppLocalizations.of(context)!.not_enough_data;
     } else if (interventionProgress.any((progress) => progress < 1)) {
-      return AppLocalizations.of(context).barely_enough_data;
+      return AppLocalizations.of(context)!.barely_enough_data;
     } else {
-      return AppLocalizations.of(context).enough_data;
+      return AppLocalizations.of(context)!.enough_data;
     }
   }
 
@@ -82,13 +82,13 @@ class PerformanceSection extends GenericSection {
     }
 
     var countable = 0;
-    subject.getResultsByDate(interventionId: intervention.id).values.forEach((progress) {
+    subject!.getResultsByDate(interventionId: intervention.id).values.forEach((progress) {
       if (progress
               .where((result) => intervention.tasks.any((interventionTask) => interventionTask.id == result.taskId))
               .length ==
           interventionsPerDay) {
         countable += progress
-            .where((result) => subject.study.observations.any((observation) => observation.id == result.taskId))
+            .where((result) => subject!.study.observations.any((observation) => observation.id == result.taskId))
             .length;
       }
     });
@@ -121,9 +121,9 @@ class PerformanceSection extends GenericSection {
 
 class PerformanceBar extends StatelessWidget {
   final double progress;
-  final double minimum;
+  final double? minimum;
 
-  const PerformanceBar({@required this.progress, this.minimum, Key key}) : super(key: key);
+  const PerformanceBar({required this.progress, this.minimum, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +134,7 @@ class PerformanceBar extends StatelessWidget {
     final colorSamples =
         List<double>.generate(11, (index) => index * 0.1 * progress).map<Color>((index) => rainbow[index]).toList();
 
-    final spacing = (minimum * 1000).floor();
+    final spacing = (minimum! * 1000).floor();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +180,7 @@ class PerformanceBar extends StatelessWidget {
             ),
           ),
         ),
-        if (minimum != null && minimum >= 0 && minimum <= 1)
+        if (minimum != null && minimum! >= 0 && minimum! <= 1)
           Column(
             children: [
               Row(

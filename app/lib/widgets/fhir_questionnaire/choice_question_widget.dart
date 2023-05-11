@@ -11,18 +11,18 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final String multiSelectionText;
 
   const ChoiceQuestionWidget(
-      {Key key, @required this.question, @required this.onDone, @required this.multiSelectionText})
+      {Key? key, required this.question, required this.onDone, required this.multiSelectionText})
       : super(key: key);
 
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
 
   @override
-  String get subtitle => question.repeats?.value ?? false ? multiSelectionText : null;
+  String? get subtitle => question.repeats?.value ?? false ? multiSelectionText : null;
 }
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
-  List<fhir.Coding> selected;
+  late List<fhir.Coding?> selected;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
     selected = [];
   }
 
-  void tapped(fhir.Coding choice) {
+  void tapped(fhir.Coding? choice) {
     final isMultiple = widget.question.repeats?.value ?? false;
     setState(() {
       if (!isMultiple) selected.clear();
@@ -54,12 +54,12 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final choiceWidgets = widget.question.answerOption
+    final choiceWidgets = widget.question.answerOption!
         .map<Widget>(
           (choice) => SelectableButton(
             selected: selected.contains(choice.valueCoding),
             onTap: () => tapped(choice.valueCoding),
-            child: Text(choice.valueCoding.display),
+            child: Text(choice.valueCoding!.display!),
           ),
         )
         .toList();
@@ -69,7 +69,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         ElevatedButton(
           onPressed: confirm,
           style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
-          child: Text(AppLocalizations.of(context).confirm),
+          child: Text(AppLocalizations.of(context)!.confirm),
         ),
       );
     }

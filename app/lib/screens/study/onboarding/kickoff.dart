@@ -9,26 +9,26 @@ import '../../../models/app_state.dart';
 import '../../../routes.dart';
 
 class KickoffScreen extends StatefulWidget {
-  const KickoffScreen({Key key}) : super(key: key);
+  const KickoffScreen({Key? key}) : super(key: key);
 
   @override
   State<KickoffScreen> createState() => _KickoffScreen();
 }
 
 class _KickoffScreen extends State<KickoffScreen> {
-  StudySubject subject;
+  StudySubject? subject;
   bool ready = false;
 
   Future<void> _storeUserStudy(BuildContext context) async {
     try {
       // Start study at the next day
       final now = DateTime.now();
-      subject.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
-      subject = await subject.save();
+      subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
+      subject = await subject!.save();
       if (!mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
-      await storeActiveSubjectId(subject.id);
+      await storeActiveSubjectId(subject!.id);
       if (!mounted) return;
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
@@ -57,14 +57,14 @@ class _KickoffScreen extends State<KickoffScreen> {
         );
 
   String _getStatusText(BuildContext context) =>
-      !ready ? AppLocalizations.of(context).setting_up_study : AppLocalizations.of(context).good_to_go;
+      !ready ? AppLocalizations.of(context)!.setting_up_study : AppLocalizations.of(context)!.good_to_go;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(subject.study.title),
-        leading: Icon(MdiIcons.fromString(subject.study.iconName)),
+        title: Text(subject!.study.title!),
+        leading: Icon(MdiIcons.fromString(subject!.study.iconName)),
       ),
       body: Builder(
         builder: (buildContext) {
@@ -83,7 +83,7 @@ class _KickoffScreen extends State<KickoffScreen> {
                     const SizedBox(height: 16),
                     OutlinedButton(
                       onPressed: () => _storeUserStudy(context),
-                      child: Text(AppLocalizations.of(context).start_study),
+                      child: Text(AppLocalizations.of(context)!.start_study),
                     ),
                   ],
                 ),

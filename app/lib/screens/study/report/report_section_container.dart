@@ -3,31 +3,30 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
 import 'report_section_widget.dart';
-import 'sections/report_section_widgets.dart';
 
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject subject);
+typedef SectionBuilder = ReportSectionWidget Function(ReportSection? section, StudySubject? subject);
 
 class ReportSectionContainer extends StatelessWidget {
   static Map<Type, SectionBuilder> sectionTypes = {
-    AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
+    /*AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
     LinearRegressionSection: (section, instance) =>
-        LinearRegressionSectionWidget(instance, section as LinearRegressionSection),
+        LinearRegressionSectionWidget(instance, section as LinearRegressionSection),*/
   };
 
-  final ReportSection section;
-  final StudySubject subject;
+  final ReportSection? section;
+  final StudySubject? subject;
   final bool primary;
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
-  const ReportSectionContainer(this.section, {Key key, @required this.subject, this.onTap, this.primary = false})
+  const ReportSectionContainer(this.section, {Key? key, required this.subject, this.onTap, this.primary = false})
       : super(key: key);
 
-  ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType](section, subject);
+  ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType]!(section, subject);
 
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
-          AppLocalizations.of(context).report_primary_result.toUpperCase(),
-          style: theme.textTheme.labelSmall.copyWith(color: theme.colorScheme.secondary),
+          AppLocalizations.of(context)!.report_primary_result.toUpperCase(),
+          style: theme.textTheme.labelSmall!.copyWith(color: theme.colorScheme.secondary),
         ),
         const SizedBox(height: 4),
       ];
@@ -45,12 +44,12 @@ class ReportSectionContainer extends StatelessWidget {
             children: [
               if (primary) ...buildPrimaryHeader(context, theme),
               Text(
-                section.title ?? '',
+                section!.title ?? '',
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 4),
               Text(
-                section.description ?? '',
+                section!.description ?? '',
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),

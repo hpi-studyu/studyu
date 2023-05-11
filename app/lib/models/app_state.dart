@@ -6,21 +6,21 @@ import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 class AppState with ChangeNotifier {
-  Study selectedStudy;
-  List<Intervention> selectedInterventions;
-  StudySubject activeSubject;
-  String inviteCode;
-  List<String> preselectedInterventionIds;
-  StudyNotifications studyNotifications;
+  Study? selectedStudy;
+  List<Intervention>? selectedInterventions;
+  StudySubject? activeSubject;
+  String? inviteCode;
+  List<String>? preselectedInterventionIds;
+  StudyNotifications? studyNotifications;
   bool isPreview = false;
-  AppAnalytics analytics;
+  late AppAnalytics analytics;
 
   /// Flag indicating whether the participant's progress should be tracked
   ///
   /// We always track the participant's progress except when the study is
   /// being viewed in test/preview mode while already launched (to avoid
   /// mixing results from test users with actual participants)
-  bool get trackParticipantProgress => !(isPreview && selectedStudy.isRunning);
+  bool get trackParticipantProgress => !(isPreview && selectedStudy!.isRunning);
 
   AppState();
 
@@ -28,7 +28,7 @@ class AppState with ChangeNotifier {
     scheduleNotifications(context);
     Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
     analytics.initAdvanced();
-    activeSubject.onSave.listen((StudySubject subject) async {
+    activeSubject!.onSave.listen((StudySubject subject) async {
       await Cache.store(subject);
     });
   }
@@ -37,8 +37,8 @@ class AppState with ChangeNotifier {
     // todo baseline
     study.schedule.includeBaseline = false;
     selectedStudy = study;
-    if (activeSubject.study.id == study.id) {
-      activeSubject.study = study;
+    if (activeSubject!.study.id == study.id) {
+      activeSubject!.study = study;
     }
     notifyListeners();
   }

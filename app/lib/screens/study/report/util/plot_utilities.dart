@@ -1,5 +1,4 @@
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 
 Map<String, charts.Color> getInterventionPalette(List<Intervention> interventions) {
@@ -59,3 +58,4 @@ charts.TextStyleSpec convertTextTheme(TextStyle style) => charts.TextStyleSpec(
       lineHeight: style.height,
       color: charts.Color(r: style.color.red, g: style.color.green, b: style.color.blue, a: style.color.alpha),
     );
+*/

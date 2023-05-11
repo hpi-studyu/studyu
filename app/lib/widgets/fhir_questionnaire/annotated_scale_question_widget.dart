@@ -6,16 +6,16 @@ import 'question_widget.dart';
 
 class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
-  final Function(Answer) onDone;
+  final Function(Answer)? onDone;
 
-  const AnnotatedScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const AnnotatedScaleQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
 
   @override
   State<AnnotatedScaleQuestionWidget> createState() => _AnnotatedScaleQuestionWidgetState();
 }
 
 class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWidget> {
-  double value;
+  late double value;
 
   @override
   void initState() {
@@ -72,8 +72,8 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           divisions: (widget.question.maximum - widget.question.minimum) ~/ widget.question.step,
         ),
         ElevatedButton(
-          onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
-          child: Text(AppLocalizations.of(context).done),
+          onPressed: () => widget.onDone!(widget.question.constructAnswer(value)),
+          child: Text(AppLocalizations.of(context)!.done),
         )
       ],
     );

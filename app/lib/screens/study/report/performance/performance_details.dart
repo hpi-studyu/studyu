@@ -6,24 +6,24 @@ import '../../../../routes.dart';
 import '../../../../widgets/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
-  final StudySubject reportSubject;
+  final StudySubject? reportSubject;
 
-  static MaterialPageRoute routeFor({@required StudySubject subject}) => MaterialPageRoute(
+  static MaterialPageRoute routeFor({required StudySubject? subject}) => MaterialPageRoute(
         builder: (_) => PerformanceDetailsScreen(subject),
         settings: const RouteSettings(name: Routes.performanceDetails),
       );
 
-  const PerformanceDetailsScreen(this.reportSubject, {Key key}) : super(key: key);
+  const PerformanceDetailsScreen(this.reportSubject, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final interventions =
-        reportSubject.selectedInterventions.where((intervention) => !intervention.isBaseline()).toList();
+        reportSubject!.selectedInterventions.where((intervention) => !intervention.isBaseline()).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).performance),
+        title: Text(AppLocalizations.of(context)!.performance),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -35,15 +35,15 @@ class PerformanceDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text(AppLocalizations.of(context).performance_overview, style: theme.textTheme.titleMedium),
+                  child: Text(AppLocalizations.of(context)!.performance_overview, style: theme.textTheme.titleMedium),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context).performance_overview_interventions,
-                      style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor),
+                      AppLocalizations.of(context)!.performance_overview_interventions,
+                      style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ),
@@ -59,18 +59,18 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context).performance_overview_observations,
-                      style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor),
+                      AppLocalizations.of(context)!.performance_overview_observations,
+                      style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: reportSubject.study.observations.length,
+                  itemCount: reportSubject!.study.observations.length,
                   itemBuilder: (context, index) => ObservationPerformanceBar(
                     subject: reportSubject,
-                    observation: reportSubject.study.observations[index],
+                    observation: reportSubject!.study.observations[index],
                   ),
                 ),
               ],
@@ -84,9 +84,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
 
 class InterventionPerformanceBar extends StatelessWidget {
   final Intervention intervention;
-  final StudySubject subject;
+  final StudySubject? subject;
 
-  const InterventionPerformanceBar({@required this.intervention, @required this.subject, Key key}) : super(key: key);
+  const InterventionPerformanceBar({required this.intervention, required this.subject, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +100,8 @@ class InterventionPerformanceBar extends StatelessWidget {
             ...intervention.tasks.map(
               (task) => PerformanceBar(
                 task: task,
-                completed: subject.completedTasksFor(task),
-                total: subject.totalTaskCountFor(task),
+                completed: subject!.completedTasksFor(task),
+                total: subject!.totalTaskCountFor(task),
               ),
             )
           ],
@@ -113,9 +113,9 @@ class InterventionPerformanceBar extends StatelessWidget {
 
 class ObservationPerformanceBar extends StatelessWidget {
   final Observation observation;
-  final StudySubject subject;
+  final StudySubject? subject;
 
-  const ObservationPerformanceBar({@required this.observation, @required this.subject, Key key}) : super(key: key);
+  const ObservationPerformanceBar({required this.observation, required this.subject, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +124,8 @@ class ObservationPerformanceBar extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: PerformanceBar(
           task: observation,
-          completed: subject.completedTasksFor(observation),
-          total: subject.totalTaskCountFor(observation),
+          completed: subject!.completedTasksFor(observation),
+          total: subject!.totalTaskCountFor(observation),
         ),
       ),
     );
@@ -137,7 +137,7 @@ class PerformanceBar extends StatelessWidget {
   final int completed;
   final int total;
 
-  const PerformanceBar({@required this.task, @required this.completed, @required this.total, Key key})
+  const PerformanceBar({required this.task, required this.completed, required this.total, Key? key})
       : super(key: key);
 
   @override
@@ -147,7 +147,7 @@ class PerformanceBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Text(task.title)),
+            Expanded(child: Text(task.title!)),
             Text('$completed/$total'),
           ],
         ),

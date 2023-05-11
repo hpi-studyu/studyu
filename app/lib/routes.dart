@@ -53,8 +53,8 @@ class Routes {
     );
   }
 
-  static Route<dynamic> generateRoute(RouteSettings settings, Map<String, String> queryParameters) {
-    final uri = Uri.parse(settings.name);
+  static Route<dynamic>? generateRoute(RouteSettings settings, Map<String, String> queryParameters) {
+    final uri = Uri.parse(settings.name!);
     switch (uri.path) {
       case loading:
         return MaterialPageRoute(builder: (_) => const LoadingScreen(), settings: settings);

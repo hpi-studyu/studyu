@@ -15,7 +15,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({@required this.task, @required this.completionPeriod, Key key}) : super(key: key);
+  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, Key? key}) : super(key: key);
 
   @override
   State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
@@ -23,16 +23,16 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
-  bool responseValidator;
-  DateTime loginClickTime;
+  late bool responseValidator;
+  DateTime? loginClickTime;
   bool _isLoading = false;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
-    await handleTaskCompletion(context, (StudySubject subject) async {
+    await handleTaskCompletion(context, (StudySubject? subject) async {
       try {
-        await subject.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
+        await subject!.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
       } on SocketException catch (_) {
-        await subject.addResult<T>(
+        await subject!.addResult<T>(
             taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response, offline: true);
         rethrow;
       }
@@ -43,7 +43,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.watch<AppState>().activeSubject.study.fhirQuestionnaire;
+    final fhirQuestionnaire = context.watch<AppState>().activeSubject!.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
             fhirQuestionnaire,
@@ -81,8 +81,8 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                     await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
                     break;
                   case fhir.QuestionnaireResponse:
-                    await _addQuestionnaireResult<fhir.QuestionnaireResponse>(
-                      response as fhir.QuestionnaireResponse,
+                    await _addQuestionnaireResult<fhir.QuestionnaireResponse?>(
+                      response as fhir.QuestionnaireResponse?,
                       context,
                     );
                     break;
@@ -92,7 +92,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                 });
               },
               icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
-              label: Text(AppLocalizations.of(context).complete),
+              label: Text(AppLocalizations.of(context)!.complete),
             ),
         ],
       ),

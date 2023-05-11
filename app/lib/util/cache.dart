@@ -10,7 +10,7 @@ class Cache {
   static Future<SharedPreferences> get sharedPrefs => SharedPreferences.getInstance();
   static bool isSynchronizing = false;
 
-  static Future<void> store(StudySubject subject) async {
+  static Future<void> store(StudySubject? subject) async {
     if (subject == null) return;
     StudySubject newSubject;
     newSubject = await synchronize(subject);
@@ -22,7 +22,7 @@ class Cache {
   static Future<StudySubject> loadSubject() async {
     Analytics.logger.info("Load subject from cache");
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
-      return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)));
+      return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
     } else {
       throw Exception("No cached subject found");
     }
@@ -41,7 +41,7 @@ class Cache {
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
     // remote subject has newer study
-    if (!kDebugMode && remoteSubject.startedAt.isAfter(localSubject.startedAt)) return remoteSubject;
+    if (!kDebugMode && remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) return remoteSubject;
 
     Analytics.logger.info("Synchronize with cache");
     isSynchronizing = true;
@@ -72,7 +72,7 @@ class Cache {
 
         // merge local and remote progress and remove duplicates
         final List<SubjectProgress> finalProgress = [...localSubject.progress, ...remoteSubject.progress];
-        final duplicates = <DateTime>{};
+        final duplicates = <DateTime?>{};
         finalProgress.retainWhere((element) => duplicates.add(element.completedAt));
         // replace remote progress with our merge
         remoteSubject.progress = finalProgress;

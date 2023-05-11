@@ -61,7 +61,7 @@ Future<int> scheduleReminderForDate(FlutterLocalNotificationsPlugin flutterLocal
       }*/
     // DEBUG: List scheduled notifications
     String debugStr = 'Scheduled #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
-    StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
+    StudyNotifications.scheduledNotificationsDebug = '${StudyNotifications.scheduledNotificationsDebug}\n\n$debugStr';
     if (StudyNotifications.debug) {
       print(debugStr);
     }
@@ -83,8 +83,8 @@ Future<void> scheduleNotifications(BuildContext context) async {
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
-  final subject = appState.activeSubject;
-  final body = AppLocalizations.of(context).study_notification_body;
+  final subject = appState.activeSubject!;
+  final body = AppLocalizations.of(context)!.study_notification_body;
   final studyNotifications =
       context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
 
@@ -110,14 +110,14 @@ Future<void> scheduleNotifications(BuildContext context) async {
 List<StudyNotification> _buildNotificationList(StudySubject subject, DateTime date, List<TaskInstance> tasks) {
   List<StudyNotification> taskNotifications = [];
   for (TaskInstance taskInstance in tasks) {
-    if (taskInstance.task.title == null || taskInstance.task.title.isEmpty) {
+    if (taskInstance.task.title == null || taskInstance.task.title!.isEmpty) {
       return [];
     }
     if (!subject.completedTaskInstanceForDay(taskInstance.task.id, taskInstance.completionPeriod, date)) {
       taskNotifications.add(StudyNotification(taskInstance, date));
     } else {
       String debugStr = 'TaskInstance already completed: ${taskInstance.completionPeriod}, ${taskInstance.task.title}';
-      StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
+      StudyNotifications.scheduledNotificationsDebug = '${StudyNotifications.scheduledNotificationsDebug}\n\n$debugStr';
     }
   }
   return taskNotifications;

@@ -8,16 +8,16 @@ import 'question_widget.dart';
 
 class BooleanQuestionWidget extends QuestionWidget {
   final fhir.QuestionnaireItem question;
-  final Function(fhir.QuestionnaireResponseItem) onDone;
+  final Function(fhir.QuestionnaireResponseItem)? onDone;
 
-  const BooleanQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const BooleanQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
 
   @override
   State<BooleanQuestionWidget> createState() => _BooleanQuestionWidgetState();
 }
 
 class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
-  bool selected;
+  bool? selected;
 
   @override
   void initState() {
@@ -25,10 +25,10 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
     selected = null;
   }
 
-  void tapped({bool choice}) {
+  void tapped({bool? choice}) {
     setState(() {
       selected = choice;
-      widget.onDone(
+      widget.onDone!(
         fhir.QuestionnaireResponseItem(
           linkId: widget.question.linkId,
           answer: [fhir.QuestionnaireResponseAnswer(valueBoolean: fhir.Boolean(choice))],
@@ -45,13 +45,13 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
         SelectableButton(
           selected: selected == true,
           onTap: () => tapped(choice: true),
-          child: Text(AppLocalizations.of(context).yes),
+          child: Text(AppLocalizations.of(context)!.yes),
         ),
         const SizedBox(height: 8),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),
-          child: Text(AppLocalizations.of(context).no),
+          child: Text(AppLocalizations.of(context)!.no),
         ),
       ],
     );

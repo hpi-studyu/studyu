@@ -1,4 +1,4 @@
-import 'package:charts_common/common.dart';
+/*import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -168,4 +168,4 @@ class _ResultDatum {
   final Range<num> confidenceInterval;
 
   _ResultDatum(this.pos, this.value, this.confidenceInterval);
-}
+}*/

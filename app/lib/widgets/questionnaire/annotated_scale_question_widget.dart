@@ -7,17 +7,17 @@ import 'question_widget.dart';
 
 class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
-  final Function(Answer) onDone;
+  final Function(Answer)? onDone;
 
-  const AnnotatedScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const AnnotatedScaleQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
 
   @override
   State<AnnotatedScaleQuestionWidget> createState() => _AnnotatedScaleQuestionWidgetState();
 }
 
 class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWidget> {
-  double value;
-  bool sliderTouched;
+  double? value;
+  late bool sliderTouched;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
           onChangeEnd: (val) => setState(() {
             sliderTouched = true;
             value = val;
-            widget.onDone(widget.question.constructAnswer(value));
+            widget.onDone!(widget.question.constructAnswer(value!));
           }),
           activeColor: Theme.of(context).primaryColor,
           linearStep: false,
@@ -61,9 +61,9 @@ class _AnnotatedScaleQuestionWidgetState extends State<AnnotatedScaleQuestionWid
                 setState(() {
                   sliderTouched = true;
                 });
-                widget.onDone(widget.question.constructAnswer(value));
+                widget.onDone!(widget.question.constructAnswer(value!));
               },
-              child: Text(AppLocalizations.of(context).done),
+              child: Text(AppLocalizations.of(context)!.done),
             ),
           )
       ],

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,8 +17,8 @@ import '../../../widgets/study_tile.dart';
 Future<void> navigateToStudyOverview(
   BuildContext context,
   Study study, {
-  String inviteCode,
-  List<String> preselectedIds,
+  String? inviteCode,
+  List<String>? preselectedIds,
 }) async {
   context.read<AppState>().preselectedInterventionIds = preselectedIds;
   context.read<AppState>().inviteCode = inviteCode;
@@ -25,7 +27,7 @@ Future<void> navigateToStudyOverview(
 }
 
 class StudySelectionScreen extends StatelessWidget {
-  const StudySelectionScreen({Key key}) : super(key: key);
+  const StudySelectionScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class StudySelectionScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      AppLocalizations.of(context).study_selection_description,
+                      AppLocalizations.of(context)!.study_selection_description,
                       style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
@@ -48,7 +50,7 @@ class StudySelectionScreen extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context).study_selection_single,
+                            text: AppLocalizations.of(context)!.study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -56,13 +58,13 @@ class StudySelectionScreen extends StatelessWidget {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context).study_selection_single_why,
-                            style: theme.textTheme.titleSmall.copyWith(color: theme.primaryColor),
+                            text: AppLocalizations.of(context)!.study_selection_single_why,
+                            style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      content: Text(AppLocalizations.of(context).study_selection_single_reason),
+                                      content: Text(AppLocalizations.of(context)!.study_selection_single_reason),
                                     ),
                                   ),
                           )
@@ -75,9 +77,9 @@ class StudySelectionScreen extends StatelessWidget {
               Expanded(
                 child: RetryFutureBuilder<List<Study>>(
                   tryFunction: () async => Study.publishedPublicStudies(),
-                  successBuilder: (BuildContext context, List<Study> studies) {
+                  successBuilder: (BuildContext context, List<Study>? studies) {
                     return ListView.builder(
-                      itemCount: studies.length,
+                      itemCount: studies!.length,
                       itemBuilder: (context, index) {
                         return Hero(
                           tag: 'study_tile_${studies[index].id}',
@@ -100,7 +102,7 @@ class StudySelectionScreen extends StatelessWidget {
                   onPressed: () async {
                     await showDialog(context: context, builder: (_) => const InviteCodeDialog());
                   },
-                  label: Text(AppLocalizations.of(context).invite_code_button),
+                  label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
               ),
             ],
@@ -113,7 +115,7 @@ class StudySelectionScreen extends StatelessWidget {
 }
 
 class InviteCodeDialog extends StatefulWidget {
-  const InviteCodeDialog({Key key}) : super(key: key);
+  const InviteCodeDialog({Key? key}) : super(key: key);
 
   @override
   State<InviteCodeDialog> createState() => _InviteCodeDialogState();
@@ -121,7 +123,7 @@ class InviteCodeDialog extends StatefulWidget {
 
 class _InviteCodeDialogState extends State<InviteCodeDialog> {
   final _controller = TextEditingController();
-  String _errorMessage;
+  String? _errorMessage;
 
   _InviteCodeDialogState();
 
@@ -133,19 +135,19 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).private_study_invite_code),
+        title: Text(AppLocalizations.of(context)!.private_study_invite_code),
         content: TextFormField(
           controller: _controller,
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context).invite_code),
+          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.invite_code),
         ),
         actions: [
           OutlinedButton.icon(
             icon: const Icon(Icons.arrow_forward),
-            label: Text(AppLocalizations.of(context).next),
+            label: Text(AppLocalizations.of(context)!.next),
             onPressed: () async {
-              Map<String, dynamic> result;
+              Map<String, dynamic>? result;
               try {
                 result = await Supabase.instance.client
                     .rpc(
@@ -163,19 +165,19 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
               if (result == null) {
                 setState(() {
-                  _errorMessage = AppLocalizations.of(context).invalid_invite_code;
+                  _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
                 });
               } else {
                 setState(() {
                   _errorMessage = null;
                 });
 
-                Map<String, dynamic> studyResult;
+                Map<String, dynamic>? studyResult;
                 try {
-                  studyResult = await Supabase.instance.client.rpc(
+                  studyResult = await (Supabase.instance.client.rpc(
                     'get_study_record_from_invite',
                     params: {'invite_code': _controller.text},
-                  ).single();
+                  ).single() as FutureOr<Map<String, dynamic>?>);
                 } on PostgrestException catch (error) {
                   print(error.message);
                   setState(() {
@@ -185,7 +187,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
                 if (studyResult == null) {
                   setState(() {
-                    _errorMessage = AppLocalizations.of(context).error;
+                    _errorMessage = AppLocalizations.of(context)!.error;
                   });
                 } else {
                   setState(() {

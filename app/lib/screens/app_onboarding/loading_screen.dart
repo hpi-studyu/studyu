@@ -13,10 +13,10 @@ import 'package:studyu_app/routes.dart';
 import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
-  final String sessionString;
-  final Map<String, String> queryParameters;
+  final String? sessionString;
+  final Map<String, String>? queryParameters;
 
-  const LoadingScreen({Key key, this.sessionString, this.queryParameters}) : super(key: key);
+  const LoadingScreen({Key? key, this.sessionString, this.queryParameters}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
@@ -33,7 +33,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final state = context.read<AppState>();
     Analytics.init();
 
-    if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
+    if (widget.queryParameters != null && widget.queryParameters!.isNotEmpty) {
       Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
@@ -107,8 +107,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // todo not sure which includeBaseline statement is needed.
           // Either one of here or in preview.createFakeSubject
           // maybe remove
-          state.selectedStudy.schedule.includeBaseline = false;
-          state.activeSubject.study.schedule.includeBaseline = false;
+          state.selectedStudy!.schedule.includeBaseline = false;
+          state.activeSubject!.study.schedule.includeBaseline = false;
           // print("[PreviewApp]: Route preview");
           if (!mounted) return;
           // print("[PreviewApp]: Go to dashboard");
@@ -119,9 +119,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
-          print(state.selectedStudy.observations.first.id);
+          print(state.selectedStudy!.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy!.observations.where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
           await Navigator.push<bool>(
@@ -174,7 +174,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
-    StudySubject subject;
+    StudySubject? subject;
     try {
       subject = await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
@@ -257,7 +257,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${AppLocalizations.of(context).loading}...',
+                '${AppLocalizations.of(context)!.loading}...',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const CircularProgressIndicator(),

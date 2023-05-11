@@ -16,16 +16,16 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class ConsentScreen extends StatefulWidget {
-  const ConsentScreen({Key key}) : super(key: key);
+  const ConsentScreen({Key? key}) : super(key: key);
 
   @override
   State<ConsentScreen> createState() => _ConsentScreenState();
 }
 
 class _ConsentScreenState extends State<ConsentScreen> {
-  StudySubject subject;
-  List<bool> boxLogic;
-  List<ConsentItem> consentList;
+  StudySubject? subject;
+  late List<bool> boxLogic;
+  late List<ConsentItem> consentList;
 
   void onBoxTapped(int index) {
     setState(() {
@@ -38,7 +38,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
     super.initState();
     // todo fix subject is null if page gets reloaded in all files (same solution as in dashboard)
     subject = context.read<AppState>().activeSubject;
-    consentList = subject.study.consent;
+    consentList = subject!.study.consent;
     boxLogic = List.filled(consentList.length, false);
   }
 
@@ -64,7 +64,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).consent),
+        title: Text(AppLocalizations.of(context)!.consent),
         leading: const Icon(MdiIcons.textBoxCheck),
         actions: [
           IconButton(
@@ -75,19 +75,18 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   context: context,
                   builder: (context) => AlertDialog(
                     elevation: 24,
-                    title: Text(AppLocalizations.of(context).save_not_supported),
-                    content: Text(AppLocalizations.of(context).save_not_supported_description),
+                    title: Text(AppLocalizations.of(context)!.save_not_supported),
+                    content: Text(AppLocalizations.of(context)!.save_not_supported_description),
                   ),
                 );
-                return null;
               }
               final savedFilePath =
-                  await savePDF(context, '${subject.study.title}_consent', await generatePdfContent());
+                  await savePDF(context, '${subject!.study.title}_consent', await generatePdfContent());
               if (!mounted) return;
               if (savedFilePath != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${AppLocalizations.of(context).was_saved_to}$savedFilePath.'),
+                    content: Text('${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.'),
                   ),
                 );
               }
@@ -106,7 +105,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: AppLocalizations.of(context).please_give_consent,
+                        text: AppLocalizations.of(context)!.please_give_consent,
                         style: theme.textTheme.titleMedium,
                       ),
                       TextSpan(
@@ -114,13 +113,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
                         style: theme.textTheme.titleMedium,
                       ),
                       TextSpan(
-                        text: AppLocalizations.of(context).please_give_consent_why,
-                        style: theme.textTheme.titleSmall.copyWith(color: theme.primaryColor),
+                        text: AppLocalizations.of(context)!.please_give_consent_why,
+                        style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  content: Text(AppLocalizations.of(context).please_give_consent_reason),
+                                  content: Text(AppLocalizations.of(context)!.please_give_consent_reason),
                                 ),
                               ),
                       )
@@ -154,10 +153,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        backLabel: AppLocalizations.of(context).decline,
+        backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
         onBack: () => Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection)),
-        nextLabel: AppLocalizations.of(context).accept,
+        nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode ? () => Navigator.pop(context, true) : null,
         progress: const OnboardingProgress(stage: 2, progress: 2.5),
@@ -167,19 +166,19 @@ class _ConsentScreenState extends State<ConsentScreen> {
 }
 
 class ConsentCard extends StatelessWidget {
-  final ConsentItem consent;
-  final int index;
+  final ConsentItem? consent;
+  final int? index;
   final Function(int) onTapped;
-  final bool isChecked;
+  final bool? isChecked;
 
-  const ConsentCard({Key key, this.consent, this.index, this.onTapped, this.isChecked}) : super(key: key);
+  const ConsentCard({Key? key, this.consent, this.index, required this.onTapped, this.isChecked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
       elevation: 0,
-      color: isChecked ? Colors.blue[100] : Colors.grey[50],
+      color: isChecked! ? Colors.blue[100] : Colors.grey[50],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(
@@ -194,21 +193,21 @@ class ConsentCard extends StatelessWidget {
             builder: (context) => AlertDialog(
               title: Row(
                 children: [
-                  consent.iconName.isNotEmpty != null
-                      ? Icon(MdiIcons.fromString(consent.iconName), color: theme.primaryColor)
+                  consent!.iconName.isNotEmpty
+                      ? Icon(MdiIcons.fromString(consent!.iconName), color: theme.primaryColor)
                       : const SizedBox.shrink(),
-                  consent.iconName.isNotEmpty != null ? const SizedBox(width: 8) : const SizedBox.shrink(),
-                  Expanded(child: Text(consent.title)),
+                  consent!.iconName.isNotEmpty ? const SizedBox(width: 8) : const SizedBox.shrink(),
+                  Expanded(child: Text(consent!.title!)),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.pop(context),
                   )
                 ],
               ),
-              content: HtmlText(consent.description),
+              content: HtmlText(consent!.description),
             ),
           );
-          onTapped(index);
+          onTapped(index!);
         },
         child: Padding(
           padding: const EdgeInsets.all(8),
@@ -216,13 +215,13 @@ class ConsentCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              consent.iconName.isNotEmpty
-                  ? Icon(MdiIcons.fromString(consent.iconName), size: 60, color: Colors.blue)
+              consent!.iconName.isNotEmpty
+                  ? Icon(MdiIcons.fromString(consent!.iconName), size: 60, color: Colors.blue)
                   : const SizedBox.shrink(),
-              consent.iconName.isNotEmpty != null ? const SizedBox(height: 10) : const SizedBox.shrink(),
+              consent!.iconName.isNotEmpty ? const SizedBox(height: 10) : const SizedBox.shrink(),
               Flexible(
                 child: Text(
-                  consent.title,
+                  consent!.title!,
                   style: Theme.of(context).textTheme.titleSmall,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,

@@ -15,10 +15,10 @@ class TaskBox extends StatefulWidget {
   final Function() onCompleted;
 
   const TaskBox({
-    Key key,
-    @required this.taskInstance,
-    @required this.icon,
-    @required this.onCompleted,
+    Key? key,
+    required this.taskInstance,
+    required this.icon,
+    required this.onCompleted,
   }) : super(key: key);
 
   @override
@@ -41,7 +41,7 @@ class _TaskBoxState extends State<TaskBox> {
   Widget build(BuildContext context) {
     final completed = context
         .watch<AppState>()
-        .activeSubject
+        .activeSubject!
         .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod = widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());

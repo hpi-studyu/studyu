@@ -1,4 +1,4 @@
-bool isRedundantClick(DateTime loginClickTime) {
+bool isRedundantClick(DateTime? loginClickTime) {
   final currentTime = DateTime.now();
   if (loginClickTime == null) {
     loginClickTime = currentTime;
