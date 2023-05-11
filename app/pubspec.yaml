@@ -6,35 +6,31 @@ homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
 
 environment: 
-  sdk: '>=2.12.0 <3.0.0'
-dependencies: 
-  # charts_common: ^0.12.0
-  # charts_flutter: ^0.12.0
-  # chewie: ^1.4.0
-  collection: ^1.15.0-nullsafety.4
+  sdk: '>=2.12.0 <4.0.0'
+dependencies:
+  collection: ^1.17.1
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
   fhir: ^0.4.7
+  fl_chart: ^0.62.0
   flutter:
     sdk: flutter
-  flutter_charts: ^0.5.1
   flutter_file_dialog: ^3.0.0
   flutter_local_notifications: ^14.0.0+1
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^1.0.4
+  flutter_timezone: ^1.0.6
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.10.0
   # grizzly_distuv: ^1.0.0 # todo remove for null safety support
   intersperse: ^2.0.0
-  intl: ^0.18.0
+  intl: ^0.18.1
   material_design_icons_flutter: ^6.0.7096
   package_info_plus: ^3.1.2
   pdf: ^3.10.2
   permission_handler: ^10.2.0
-  # pimp_my_button: ^1.0.0
   provider: ^6.0.5
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
@@ -50,7 +46,6 @@ dependencies:
   universal_html: ^2.2.1
   url_launcher: ^6.1.11
   uuid: ^3.0.7
-  # video_player: ^2.6.1
 
 dev_dependencies: 
   flutter_launcher_icons: ^0.13.1
