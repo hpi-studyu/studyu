@@ -17,7 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   email_validator: ^2.1.17
   fl_chart: ^0.46.0 # breaking
-  flex_color_picker: ^3.0.2
+  flex_color_picker: ^3.2.2
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.0
