@@ -39,8 +39,8 @@ dependencies:
   universal_html: ^2.0.8
   url_launcher: ^6.1.8
   uuid: ^3.0.7
-  webview_flutter: ^3.0.4 # breaking
-  webview_flutter_web: ^0.1.0+4 # breaking
+  webview_flutter: ^4.2.0 # breaking
+  webview_flutter_web: ^0.2.2+1 # breaking
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0
