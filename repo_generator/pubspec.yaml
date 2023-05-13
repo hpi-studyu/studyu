@@ -14,8 +14,8 @@ dependencies:
   path: ^1.8.3
   pretty_json: ^2.0.0
   shelf: ^1.4.0
-  studyu_core: ^3.8.2
-  supabase: ^0.3.6 # breaking
+  studyu_core: ">=3.8.2 <5.0.0"
+  supabase: ">=0.3.6 <2.0.0" # breaking
 
 dev_dependencies:
   lint: ^2.0.1
