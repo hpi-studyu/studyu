@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -28,6 +29,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       if (!mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
+      await Cache.store(context.read<AppState>().activeSubject);
       await storeActiveSubjectId(subject!.id);
       if (!mounted) return;
       setState(() => ready = true);

@@ -90,7 +90,7 @@ class Cache {
         }
       }
     } on SocketException catch (_) {
-      print("error");
+      Analytics.logger.info("SocketException on synchronizing (normal if offline)");
     } catch (exception) {
       Analytics.logger.warning(exception);
     }

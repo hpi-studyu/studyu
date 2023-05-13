@@ -26,8 +26,12 @@ class AppState with ChangeNotifier {
 
   void init(BuildContext context) {
     scheduleNotifications(context);
-    Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
+    // Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
     analytics.initAdvanced();
+    initCache();
+  }
+
+  void initCache() {
     activeSubject!.onSave.listen((StudySubject subject) async {
       await Cache.store(subject);
     });
