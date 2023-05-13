@@ -18,9 +18,9 @@ Future<void> loadEnv() async {
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
-    // todo adapt for v2
     authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
-    debug: true, // optional
+    debug: true,
+    // optional
   );
   env.setEnv(
     dotenv.env['STUDYU_SUPABASE_URL']!,
