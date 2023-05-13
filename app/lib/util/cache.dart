@@ -24,6 +24,7 @@ class Cache {
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
     } else {
+      Analytics.logger.warning("No cached subject found");
       throw Exception("No cached subject found");
     }
   }

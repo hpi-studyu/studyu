@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +7,6 @@ import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
@@ -178,10 +176,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     StudySubject? subject;
     try {
-      try {
+      /*
+        try {
          InternetAddress.lookup(Uri.parse(supabaseUrl).host);
       } on SocketException catch (_) {
         Analytics.logger.warning('Could not connect to supabase url. Fallback to offline mode');
+        subject = await Cache.loadSubject();
+      }
+       */
+      final connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        Analytics.logger.warning("Could not find any connection. Going to offline mode");
         subject = await Cache.loadSubject();
       }
       subject ??= await SupabaseQuery.getById<StudySubject>(
@@ -192,8 +197,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
             'subject_progress(*)',
           ],
         );
-    } catch (exception, stackTrace) {
-      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in");
+    } catch (exception) {
+      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
       /*await Analytics.captureEvent(
         SentryEvent(throwable: exception),
         stackTrace: stackTrace,
@@ -212,16 +217,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ],
           );
         }
-      } catch (exception, stackTrace) {
+      } catch (exception) {
         try {
-          Analytics.logger.warning('Could not login and retrieve the study subject. Fallback to offline mode');
+          Analytics.logger.warning('Could not login and retrieve the study subject. Fallback to offline mode: ${exception.toString()}');
           /*await Analytics.captureEvent(
             SentryEvent(throwable: exception),
             stackTrace: stackTrace,
           );*/
           subject = await Cache.loadSubject();
         } catch (exception, stackTrace) {
-          Analytics.logger.severe('Error when initializing offline mode');
+          Analytics.logger.severe('Error when initializing offline mode: ${exception.toString()}');
           await Analytics.captureException(
             exception,
             stackTrace: stackTrace,
