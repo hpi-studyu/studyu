@@ -198,8 +198,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ],
       );
     } catch (exception) {
-      Analytics.logger
-          .warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
       /*await Analytics.captureEvent(
         SentryEvent(throwable: exception),
         stackTrace: stackTrace,
@@ -220,13 +219,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       } catch (exception) {
         try {
-          Analytics.logger.warning(
-              'Could not login and retrieve the study subject. Fallback to offline mode: ${exception.toString()}');
+          Analytics.logger.warning('Could not login and retrieve the study subject. This might be because the study subject is no longer available and only resides in app backup');
           /*await Analytics.captureEvent(
             SentryEvent(throwable: exception),
             stackTrace: stackTrace,
           );*/
-          subject = await Cache.loadSubject();
+          // subject = await Cache.loadSubject();
         } catch (exception, stackTrace) {
           Analytics.logger.severe('Error when initializing offline mode: ${exception.toString()}');
           await Analytics.captureException(
