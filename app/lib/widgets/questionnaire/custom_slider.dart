@@ -51,7 +51,7 @@ class CustomSlider extends StatelessWidget {
     final allocatedWidth = MediaQuery.of(context).size.width - 32; // -32 horizontal padding
     final divisions = (steps!.maximum - steps!.minimum) ~/ steps!.step;
     //final divisions = steps.annotations.length; // (majorTick - 1) * minorTick + majorTick;
-    final double valueHeight = allocatedHeight * 0.05 < 41 ? 41 : allocatedHeight * 0.05;
+    // final double valueHeight = allocatedHeight * 0.05 < 41 ? 41 : allocatedHeight * 0.05;
     final double tickHeight = allocatedHeight * 0.0125 < 20 ? 20 : allocatedHeight * 0.0125;
     // todo finetune label positions
     final labelOffset = (allocatedWidth / (divisions + 2)) * 0.5;
@@ -83,9 +83,14 @@ class CustomSlider extends StatelessWidget {
       return index + minValue! == value;
     }
 
+    String annotation(index) => annotations
+        .firstWhere((annotation) => annotation.value == index + minValue!, orElse: () => Annotation())
+        .annotation;
+
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: List.generate(
             divisions + 1,
             (index) => Expanded(
@@ -97,24 +102,20 @@ class CustomSlider extends StatelessWidget {
                 },
                 child: Column(
                   children: [
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      height: valueHeight,
-                      child: index % (minorTick! + 1) == 0
-                          ? Text(
+                    index % (minorTick! + 1) == 0 && annotation(index).isNotEmpty
+                        ? Container(
+                            alignment: Alignment.bottomCenter,
+                            //height: valueHeight,
+                            child: Text(
                               //linearStep
                               //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
                               /*:*/
-                              annotations
-                                  .firstWhere((annotation) => annotation.value == index + minValue!,
-                                      orElse: () => Annotation())
-                                  .annotation,
+                              annotation(index),
                               style: labelTextStyle!
                                   .copyWith(fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
                               textAlign: TextAlign.center,
-                            )
-                          : null,
-                    ),
+                            ))
+                        : const SizedBox.shrink(),
                     Container(
                       alignment: Alignment.bottomCenter,
                       height: tickHeight,
