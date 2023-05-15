@@ -226,21 +226,25 @@ class AverageSectionWidget extends ReportSectionWidget {
     //final phaseDuration = subject.study.schedule.phaseDuration;
 
     final starter = List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
-      x: index + 1,
-      /*barRods: [
+      x: index,
+      barRods: [
         BarChartRodData(
-          toY: 0,
+          toY: 1,
         )
-      ],*/
+      ],
     ));
 
     for (var entry in data) {
-      starter[entry.x.round()-1] = BarChartGroupData(x: entry.x.round(), barRods: [
-        charts.BarChartRodData(
-          toY: entry.value.toDouble(),
-          color: getColor(entry, subject),
-        )
-      ]);
+        starter[entry.x.round()] = BarChartGroupData(
+            x: entry.x.round(),
+            barRods: [
+              charts.BarChartRodData(
+                toY: entry.value.toDouble(),
+                color: getColor(entry, subject),
+              )
+            ]
+        );
+
     }
     return starter;
 
