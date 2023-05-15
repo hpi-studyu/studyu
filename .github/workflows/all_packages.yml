@@ -34,7 +34,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - if: ${{ github.ref == 'refs/heads/dev' }}
+      - if: ${{ github.ref != 'refs/heads/master' }}
         uses: subosito/flutter-action@v2
         with:
           channel: master
