@@ -10,7 +10,8 @@ import '../util/plot_utilities.dart';
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
 
-  const AverageSectionWidget(StudySubject subject, this.section, {Key? key}) : super(subject, key: key);
+  const AverageSectionWidget(StudySubject subject, this.section, {Key? key})
+      : super(subject, key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +27,17 @@ class AverageSectionWidget extends ReportSectionWidget {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfPhases)
-        .map((i) => (i + 1) * phaseDuration - ((phaseDuration / 2) - 1).ceil())
+        .map((i) =>
+            (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1).floor())
         .toList();
   }
 
   List<int> get phasePos {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfPhases).map((i) => (i + 1) * phaseDuration).toList();
+    return Iterable<int>.generate(numberOfPhases)
+        .map((i) => (i + 1) * phaseDuration)
+        .toList();
   }
 
   //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
@@ -169,12 +173,18 @@ class AverageSectionWidget extends ReportSectionWidget {
   charts.BarChartData getChartData() {
     //final colorPalette = getInterventionPalette(subject.selectedInterventions);
     //final interventionNames = getInterventionNames(subject.selectedInterventions);
+/*
+    final task = subject.study.observations.firstWhere((element) =>
+    element.id == section.resultProperty!.task).
+        .firstWhere((element) => element.id == section.resultProperty!.property);
+    print(task.toString());
+*/
     return charts.BarChartData(
         //minX: 1,
         //maxX: subject.study.schedule.length.toDouble(),
         titlesData: FlTitlesData(
             bottomTitles: AxisTitles(
-                axisNameWidget: const Text("Phase"),
+                axisNameWidget: (section.aggregate != TemporalAggregation.intervention) ? const Text("Phase") : const Text(""),
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: getTitles,
@@ -193,7 +203,11 @@ class AverageSectionWidget extends ReportSectionWidget {
         barGroups: getBarGroups(),
         barTouchData: BarTouchData(
           enabled: false, // todo enable with x and y value
-        ));
+        ),
+      //maxY: ; // todo get min and max values of question
+      // todo add question title to top of diagram (e.g. "pain rating")
+      // todo add legend
+    );
   }
 
   Widget getTitles(double value, TitleMeta meta) {
@@ -205,13 +219,20 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Widget getValues(double value) {
-    //print(titlePos);
-    final index = titlePos.indexOf(value.round());
-    //return Text(value.toString());
-    if (index != -1) {
-      return Text("${index + 1}");
-    } else {
-      return const SizedBox.shrink();
+    switch (section.aggregate) {
+      case TemporalAggregation.day:
+        final index = titlePos.indexOf(value.round());
+        if (index != -1) {
+          return Text("${index + 1}");
+        } else {
+          return const SizedBox.shrink();
+        }
+      case TemporalAggregation.phase:
+        return Text("${value + 1}");
+      case TemporalAggregation.intervention:
+        return const SizedBox.shrink();
+      default:
+        return const SizedBox.shrink();
     }
   }
 
@@ -224,27 +245,53 @@ class AverageSectionWidget extends ReportSectionWidget {
     //data.sort((a, b) => a.timestamp!.compareTo(b.timestamp!));
     //final numberOfPhases = subject.interventionOrder.length;
     //final phaseDuration = subject.study.schedule.phaseDuration;
-
-    final starter = List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
-      x: index,
-      barRods: [
-        BarChartRodData(
-          toY: 1,
-        )
-      ],
-    ));
-
+    List<BarChartGroupData> starter = List.empty();
+    switch(section.aggregate) {
+      case TemporalAggregation.day:
+      starter = List<BarChartGroupData>.generate(
+          subject.study.schedule.length,
+          (index) => BarChartGroupData(
+                x: index,
+                barRods: [
+                  BarChartRodData(
+                    toY: 0,
+                  )
+                ],
+              ));
+      case TemporalAggregation.phase:
+      starter = List<BarChartGroupData>.generate(
+          subject.interventionOrder.length,
+          (index) => BarChartGroupData(
+                x: index,
+                barRods: [
+                  BarChartRodData(
+                    toY: 0,
+                  )
+                ],
+              ));
+      case TemporalAggregation.intervention:
+      int interventionCount = subject.selectedInterventionIds.length +
+          (subject.study.schedule.includeBaseline ? 1 : 0);
+      starter = List<BarChartGroupData>.generate(
+          interventionCount,
+          (index) => BarChartGroupData(
+                x: index,
+                barRods: [
+                  BarChartRodData(
+                    toY: 0,
+                  )
+                ],
+              ));
+      default:
+    }
     for (var entry in data) {
-        starter[entry.x.round()] = BarChartGroupData(
-            x: entry.x.round(),
-            barRods: [
-              charts.BarChartRodData(
-                toY: entry.value.toDouble(),
-                color: getColor(entry, subject),
-              )
-            ]
-        );
-
+      starter[entry.x.round()] =
+          BarChartGroupData(x: entry.x.round(), barRods: [
+        charts.BarChartRodData(
+          toY: entry.value.toDouble(),
+          color: getColor(entry, subject),
+        )
+      ]);
     }
     return starter;
 
@@ -282,13 +329,37 @@ class AverageSectionWidget extends ReportSectionWidget {
   MaterialColor getColor(DiagramDatum diagram, StudySubject subject) {
     const baselineColor = Colors.grey;
     final colors = [Colors.blue, Colors.orange];
-    MaterialColor? c;
-    //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
-    if (subject.study.schedule.includeBaseline && diagram.x < subject.study.schedule.phaseDuration) {
-      // if id == "_baseline"
-      c = baselineColor;
-    } else {
-      c = colors[subject.selectedInterventions.map((e) => e.id).toList().indexOf(diagram.intervention)];
+    MaterialColor? c = Colors.teal;
+
+    switch (section.aggregate) {
+      case TemporalAggregation.day:
+        //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
+        if (subject.study.schedule.includeBaseline &&
+            diagram.x < subject.study.schedule.phaseDuration) {
+          // if id == "_baseline"
+          c = baselineColor;
+        } else {
+          c = colors[subject.selectedInterventions
+              .map((e) => e.id)
+              .toList()
+              .indexOf(diagram.intervention)];
+        }
+      case TemporalAggregation.phase:
+        if (subject.study.schedule.includeBaseline && diagram.x == 0) {
+          c = baselineColor;
+        } else {
+          c = colors[subject.selectedInterventions
+              .map((e) => e.id)
+              .toList()
+              .indexOf(diagram.intervention)];
+        }
+      case TemporalAggregation.intervention:
+        if (subject.study.schedule.includeBaseline && diagram.x == 0) {
+          c = baselineColor;
+        } else {
+          c = colors[diagram.x.round() - 1];
+        }
+      default:
     }
     /*phasePos.forEachIndexed((index, phaseBreak) {
       if (includeBaseline && pos <= phasePos[0]) {
@@ -308,7 +379,6 @@ class AverageSectionWidget extends ReportSectionWidget {
         subject.getDayOfStudyFor(e.key),
         e.value,
         e.key,
-        // todo this will probably fail when viewing results after study end
         subject.getInterventionForDate(e.key)!.id,
       ),
     );
