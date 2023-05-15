@@ -82,11 +82,11 @@ class Cache {
         // Unable to determine what has changed
         // We can either drop local or overwrite remote
         // ... for now do nothing
-        if (!kDebugMode || localSubject.startedAt == remoteSubject.startedAt) {
+        if (!kDebugMode && localSubject.startedAt == remoteSubject.startedAt) {
           Analytics.logger.severe("Cache synchronization found local changes that cannot be merged");
-          Analytics.captureException(Exception("CacheSynchronizationException"));
           Analytics.captureMessage(
               "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
+          Analytics.captureException(Exception("CacheSynchronizationException"));
         }
       }
     } on SocketException catch (_) {
