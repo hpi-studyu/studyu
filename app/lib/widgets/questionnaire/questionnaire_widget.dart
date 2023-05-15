@@ -42,9 +42,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _finishQuestionnaire(QuestionnaireState result) => widget.onComplete?.call(result);
 
-  // we might need this later
   // if question with lower index than current question is answered, remove all downstream answers
-  // ignore: unused_element
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
       final startIndex = widget.questions.indexWhere((question) => question.id == shownQuestions[index].question.id);
@@ -75,11 +73,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
-    _invalidateDownstreamAnswers(index);
-
     _nextQuestionIndex = widget.questions.indexWhere((question) => question.id == answer.question) + 1;
     qs.answers[answer.question] = answer;
     widget.onChange?.call(qs);
+
+    final shouldContinue = widget.shouldContinue?.call(qs);
+    // only invalidate if there is a conditional question or if answers do not allow to continue
+    if (shownQuestions.any((element) => element.question.conditional != null) || shouldContinue == false) {
+      _invalidateDownstreamAnswers(index);
+    }
 
     // do not show later questions if earlier question is edited
     if (index + 1 != shownQuestions.length) return;
@@ -88,7 +90,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     if (widget.questions.length > _nextQuestionIndex) {
       // we still have questions left
 
-      if (!(widget.shouldContinue?.call(qs) ?? true)) return;
+      if (!(shouldContinue ?? true)) return;
 
       // check for conditional questions
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
