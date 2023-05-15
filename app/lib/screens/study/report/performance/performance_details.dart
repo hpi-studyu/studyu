@@ -146,7 +146,7 @@ class PerformanceBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: Text(task.title!)),
+            Expanded(child: Text(task.title ?? '')),
             Text('$completed/$total'),
           ],
         ),
