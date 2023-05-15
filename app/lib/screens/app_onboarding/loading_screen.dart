@@ -190,15 +190,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         subject = await Cache.loadSubject();
       }
       subject ??= await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
+        selectedStudyObjectId,
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+      );
     } catch (exception) {
-      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+      Analytics.logger
+          .warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
       /*await Analytics.captureEvent(
         SentryEvent(throwable: exception),
         stackTrace: stackTrace,
@@ -219,7 +220,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       } catch (exception) {
         try {
-          Analytics.logger.warning('Could not login and retrieve the study subject. Fallback to offline mode: ${exception.toString()}');
+          Analytics.logger.warning(
+              'Could not login and retrieve the study subject. Fallback to offline mode: ${exception.toString()}');
           /*await Analytics.captureEvent(
             SentryEvent(throwable: exception),
             stackTrace: stackTrace,

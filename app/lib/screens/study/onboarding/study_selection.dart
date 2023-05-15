@@ -214,5 +214,5 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             },
           )
         ],
-  );
+      );
 }

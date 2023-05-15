@@ -11,7 +11,7 @@ import '../util/plot_utilities.dart';
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
 
-  const AverageSectionWidget(StudySubject subject, this.section , {Key? key}) : super(subject, key: key);
+  const AverageSectionWidget(StudySubject subject, this.section, {Key? key}) : super(subject, key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,15 @@ class AverageSectionWidget extends ReportSectionWidget {
   List<int> get titlePos {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfPhases).map((i) => (i+1) * phaseDuration - ((phaseDuration / 2)-1).ceil()).toList();
+    return Iterable<int>.generate(numberOfPhases)
+        .map((i) => (i + 1) * phaseDuration - ((phaseDuration / 2) - 1).ceil())
+        .toList();
   }
 
   List<int> get phasePos {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfPhases).map((i) => (i+1) * phaseDuration).toList();
+    return Iterable<int>.generate(numberOfPhases).map((i) => (i + 1) * phaseDuration).toList();
   }
 
   //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
@@ -45,7 +47,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       swapAnimationDuration: const Duration(milliseconds: 150), // Optional
       swapAnimationCurve: Curves.linear, // Optional
     );
-    
+
     /*return charts.NumericComboChart(
       getBarData(),
       animate: true,
@@ -170,34 +172,30 @@ class AverageSectionWidget extends ReportSectionWidget {
     //final colorPalette = getInterventionPalette(subject.selectedInterventions);
     //final interventionNames = getInterventionNames(subject.selectedInterventions);
     return charts.BarChartData(
-      //minX: 1,
-      //maxX: subject.study.schedule.length.toDouble(),
-      titlesData: FlTitlesData(
-        bottomTitles: AxisTitles(
-          axisNameWidget: const Text("Phase"),
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: getTitles,
-          )
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          )
-        )
-      ),
-      gridData: charts.FlGridData(
-        drawHorizontalLine: false,
-        drawVerticalLine: false,
-        /*checkToShowVerticalLine: (val) => true,
+        //minX: 1,
+        //maxX: subject.study.schedule.length.toDouble(),
+        titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+                axisNameWidget: const Text("Phase"),
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: getTitles,
+                )),
+            topTitles: AxisTitles(
+                sideTitles: SideTitles(
+              showTitles: false,
+            ))),
+        gridData: charts.FlGridData(
+          drawHorizontalLine: false,
+          drawVerticalLine: false,
+          /*checkToShowVerticalLine: (val) => true,
         getDrawingVerticalLine: (val) => FlLine(color: Colors.black),
         verticalInterval: subject.study.schedule.phaseDuration.toDouble(),*/
-      ),
-      barGroups: getBarGroups(),
-      barTouchData: BarTouchData(
-        enabled: false, // todo enable with x and y value
-      )
-    );
+        ),
+        barGroups: getBarGroups(),
+        barTouchData: BarTouchData(
+          enabled: false, // todo enable with x and y value
+        ));
   }
 
   Widget getTitles(double value, TitleMeta meta) {
@@ -212,7 +210,7 @@ class AverageSectionWidget extends ReportSectionWidget {
     //print(titlePos);
     final index = titlePos.indexOf(value.round());
     if (index != -1) {
-      return Text("${index+1}");
+      return Text("${index + 1}");
     } else {
       return const SizedBox.shrink();
     }
@@ -230,15 +228,12 @@ class AverageSectionWidget extends ReportSectionWidget {
     return data.mapIndexed((idx, entry) {
       //print(idx);
       //if (idx < data.length) {
-          return BarChartGroupData(
-              x: entry.x.round(),
-              barRods: [
-                charts.BarChartRodData(
-                  toY: entry.value.toDouble(),
-                  color: getColor(entry, subject),
-                )
-              ]
-          );
+      return BarChartGroupData(x: entry.x.round(), barRods: [
+        charts.BarChartRodData(
+          toY: entry.value.toDouble(),
+          color: getColor(entry, subject),
+        )
+      ]);
       //}
       /*return BarChartGroupData(
         x: idx+1,
@@ -249,8 +244,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           )
         ]
       );*/
-    }
-    ).toList();
+    }).toList();
     /*return List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
         x: index + 1,
         barRods: [
@@ -287,7 +281,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   Iterable<DiagramDatum> getAggregatedData() {
     final values = section.resultProperty!.retrieveFromResults(subject);
     final data = values.entries.map(
-          (e) => DiagramDatum(
+      (e) => DiagramDatum(
         subject.getDayOfStudyFor(e.key),
         e.value,
         e.key,
@@ -301,38 +295,40 @@ class AverageSectionWidget extends ReportSectionWidget {
           .groupBy((e) => e.x)
           .aggregateWithKey(
             (data, day) => DiagramDatum(
-          day,
-          foldAggregateMean()(data.map((e) => e.value)),
-          null,
-          data.first.intervention,
-        ),
-      ).map((e) => e.value);
+              day,
+              foldAggregateMean()(data.map((e) => e.value)),
+              null,
+              data.first.intervention,
+            ),
+          )
+          .map((e) => e.value);
     } else if (section.aggregate == TemporalAggregation.phase) {
       return data
           .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp!))
           .aggregateWithKey(
             (data, phase) => DiagramDatum(
-          phase,
-          foldAggregateMean()(data.map((e) => e.value)),
-          null,
-          data.first.intervention,
-        ),
-      ).map((e) => e.value);
+              phase,
+              foldAggregateMean()(data.map((e) => e.value)),
+              null,
+              data.first.intervention,
+            ),
+          )
+          .map((e) => e.value);
     } else {
       final order = getInterventionPositions(subject.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey(
             (data, intervention) => DiagramDatum(
-          order[intervention] as num,
-          foldAggregateMean()(data.map((e) => e.value)),
-          null,
-          intervention,
-        ),
-      ).map((e) => e.value);
+              order[intervention] as num,
+              foldAggregateMean()(data.map((e) => e.value)),
+              null,
+              intervention,
+            ),
+          )
+          .map((e) => e.value);
     }
   }
-
 }
 
 class DiagramDatum {
