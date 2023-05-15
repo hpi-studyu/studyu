@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart' as charts;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,6 @@ class AverageSectionWidget extends ReportSectionWidget {
     );
   }
 
-  // todo only run once
   List<int> get titlePos {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
@@ -209,6 +207,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   Widget getValues(double value) {
     //print(titlePos);
     final index = titlePos.indexOf(value.round());
+    //return Text(value.toString());
     if (index != -1) {
       return Text("${index + 1}");
     } else {
@@ -223,9 +222,29 @@ class AverageSectionWidget extends ReportSectionWidget {
     //data.add(DiagramDatum(100, 3, DateTime.now(), subject.selectedInterventions.first.id));
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
     //data.sort((a, b) => a.timestamp!.compareTo(b.timestamp!));
+    //final numberOfPhases = subject.interventionOrder.length;
+    //final phaseDuration = subject.study.schedule.phaseDuration;
 
-    //return Iterable<int>.generate(subject.study.schedule.length).toList().asMap().entries.map((entry) {
-    return data.mapIndexed((idx, entry) {
+    final starter = List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
+      x: index + 1,
+      /*barRods: [
+        BarChartRodData(
+          toY: 0,
+        )
+      ],*/
+    ));
+
+    for (var entry in data) {
+      starter[entry.x.round()-1] = BarChartGroupData(x: entry.x.round(), barRods: [
+        charts.BarChartRodData(
+          toY: entry.value.toDouble(),
+          color: getColor(entry, subject),
+        )
+      ]);
+    }
+    return starter;
+
+    /*return data.mapIndexed((idx, entry) {
       //print(idx);
       //if (idx < data.length) {
       return BarChartGroupData(x: entry.x.round(), barRods: [
@@ -244,7 +263,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           )
         ]
       );*/
-    }).toList();
+    }).toList();*/
     /*return List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
         x: index + 1,
         barRods: [
