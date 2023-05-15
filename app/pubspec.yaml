@@ -44,7 +44,7 @@ dependencies:
   supabase_flutter: ^1.9.1
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
-  universal_html: ^2.2.1
+  universal_html: ^2.2.2
   url_launcher: ^6.1.11
   uuid: ^3.0.7
 

@@ -1087,7 +1087,7 @@ packages:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.6.0"
+    version: "1.6.1"
   supabase:
     dependency: "direct main"
     description:
@@ -1156,10 +1156,10 @@ packages:
     dependency: "direct main"
     description:
       name: universal_html
-      sha256: ed4f24120c9b1b4721d44e439f7a47d09d9f1b7b868bc84c9d6d373a4a8732af
+      sha256: f2e0ff0c4af8e4bbda4d273ca4a11be4055414f478fad5c161609b74790ff696
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   universal_io:
     dependency: transitive
     description:
