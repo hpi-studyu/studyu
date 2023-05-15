@@ -1,3 +1,7 @@
+## 1.6.1
+
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
 ## 1.6.0
 
  - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))

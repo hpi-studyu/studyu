@@ -1,3 +1,9 @@
+## 2.3.1
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+ - **FIX**: only invalidate questions if necessary. ([c33d5162](https://github.com/hpi-studyu/studyu/commit/c33d5162b18965787a0a80d2cc98c3194281c693))
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
 ## 2.3.0
 
  - **REFACTOR**: button for null safety. ([9c2796e3](https://github.com/hpi-studyu/studyu/commit/9c2796e311c5729759c7bbe6c9ad054423a2b3fe))

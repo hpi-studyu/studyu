@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-05-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.3.1`](#studyu_app---v231)
+ - [`studyu_designer_v2` - `v1.3.2`](#studyu_designer_v2---v132)
+ - [`studyu_flutter_common` - `v1.6.1`](#studyu_flutter_common---v161)
+
+---
+
+#### `studyu_app` - `v2.3.1`
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+ - **FIX**: only invalidate questions if necessary. ([c33d5162](https://github.com/hpi-studyu/studyu/commit/c33d5162b18965787a0a80d2cc98c3194281c693))
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
+#### `studyu_designer_v2` - `v1.3.2`
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+
+#### `studyu_flutter_common` - `v1.6.1`
+
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 2023-05-11
 
 ### Changes

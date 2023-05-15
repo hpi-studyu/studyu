@@ -1,3 +1,7 @@
+## 1.3.2
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+
 ## 1.3.1
 
  - Update a dependency to the latest release.
