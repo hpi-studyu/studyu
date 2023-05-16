@@ -177,6 +177,11 @@ class OptOutAlertDialog extends StatelessWidget {
             await subject!.softDelete();
             await deleteActiveStudyReference();
             if (context.mounted) {
+              final studyNotifications = context.read<AppState>()
+                  .studyNotifications?.flutterLocalNotificationsPlugin;
+              await studyNotifications?.cancelAll();
+            }
+            if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
             }
           },
@@ -209,6 +214,11 @@ class DeleteAlertDialog extends StatelessWidget {
               try {
                 await subject!.delete(); // hard-delete
                 await deleteLocalData();
+                if (context.mounted) {
+                  final studyNotifications = context.read<AppState>()
+                      .studyNotifications?.flutterLocalNotificationsPlugin;
+                  await studyNotifications?.cancelAll();
+                }
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
                 }
