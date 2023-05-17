@@ -913,26 +913,26 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "1c5498c8d1754dbf4fa51ca14d31c8c34ea0a0f897ff666ecd516dbd588dad6a"
+      sha256: "01f8fc950b6a5f3daf8c2d2b0ae5c38812e63d703c19c56cb68524c0597660bc"
       url: "https://pub.dev"
     source: hosted
-    version: "7.5.2"
+    version: "7.6.1"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "67a3c20cc72681ab5c3ece993290a5780e10816ff1da1ddb59ac33136fc58a3d"
+      sha256: "9583ebcdbbba6907e555a8eeaf42380021baff57db1e399a3a31e80ce1f1cbe5"
       url: "https://pub.dev"
     source: hosted
-    version: "7.5.2"
+    version: "7.6.1"
   sentry_logging:
     dependency: "direct main"
     description:
       name: sentry_logging
-      sha256: "1e726df8ec85e0dd549529119e2ab92dee0aa5c2cf54eb007c1dc05a4389fb26"
+      sha256: f8d44330dc1494acd20fd03473c89eaa61d9c49fb11133a4ed78baa4bd16bdae
       url: "https://pub.dev"
     source: hosted
-    version: "7.5.2"
+    version: "7.6.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1077,16 +1077,18 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      path: "../core"
-      relative: true
-    source: path
+      name: studyu_core
+      sha256: a1eb87dfcc7e08f2689f39426104f97b7e8a0fc7498167810f26adfeab11fd5d
+      url: "https://pub.dev"
+    source: hosted
     version: "4.2.0"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      path: "../flutter_common"
-      relative: true
-    source: path
+      name: studyu_flutter_common
+      sha256: "74a7fbe9648f947653f51a22b5efc4820b09631cf08fa24dd31b208b80b69e50"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.6.1"
   supabase:
     dependency: "direct main"
