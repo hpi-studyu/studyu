@@ -6,7 +6,7 @@ FROM ghcr.io/cirruslabs/flutter:stable as builder
 ENV PATH ${PATH}:/root/.pub-cache/bin/
 
 # Install melos
-RUN dart pub global activate melos
+#RUN dart pub global activate melos
 
 # SETUP STUDYU
 WORKDIR /src/
@@ -26,10 +26,9 @@ COPY app/pubspec.lock app/pubspec.lock
 COPY designer_v2/pubspec.yaml designer_v2/pubspec.yaml
 COPY designer_v2/pubspec.lock designer_v2/pubspec.lock
 
-RUN flutter pub get
-#RUN melos clean
-RUN flutter clean
-RUN melos bootstrap
+#RUN flutter pub get
+#RUN flutter clean
+#RUN melos bootstrap
 
 COPY ./ ./
 
@@ -37,8 +36,8 @@ COPY ./ ./
 ARG ENV
 
 # Env variable from docker-compose-*.yaml is used here if set
-RUN if [ -n "$ENV" ] ; then melos run build:web:app:$ENV ; else melos run build:web:app ; fi
-RUN if [ -n "$ENV" ] ; then melos run build:web:designer_v2:$ENV ; else melos run build:web:designer_v2 ; fi
+#RUN if [ -n "$ENV" ] ; then melos run build:web:app:$ENV ; else melos run build:web:app ; fi
+#RUN if [ -n "$ENV" ] ; then melos run build:web:designer_v2:$ENV ; else melos run build:web:designer_v2 ; fi
 
 # todo move nginx to different docker (compose?) file to run it independently when running multiple flutter apps together
 FROM nginx:stable-alpine
@@ -51,15 +50,15 @@ COPY ./docker/hpi/nginx/conf.d /etc/nginx/conf.d
 
 # COPY /etc/letsencrypt/live/hpi.studyu.health /etc/nginx/certs
 
-COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
-COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
+#COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
+#COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
 
 # Loads all env vars starting with "STUDYU" into the .env file used by both Flutter apps
-RUN mkdir /usr/share/nginx/html/app/assets/envs
-RUN mkdir /usr/share/nginx/html/designer_v2/assets/envs
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/envs/.env && nginx -g 'daemon off;'"]
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/envs/.env && nginx -g 'daemon off;'"]
+#RUN mkdir /usr/share/nginx/html/app/assets/envs
+#RUN mkdir /usr/share/nginx/html/designer_v2/assets/envs
+#CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/envs/.env && nginx -g 'daemon off;'"]
+#CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/envs/.env && nginx -g 'daemon off;'"]
 
-# EXPOSE 80
+EXPOSE 80
 # EXPOSE 80 443
-EXPOSE 443
+#EXPOSE 443
