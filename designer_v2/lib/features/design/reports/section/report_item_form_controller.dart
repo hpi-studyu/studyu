@@ -56,10 +56,10 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: tr.form_report_create,
-    FormMode.edit: tr.form_report_edit,
-    FormMode.readonly: tr.form_report_readonly,
-  };
+        FormMode.create: tr.form_report_create,
+        FormMode.edit: tr.form_report_edit,
+        FormMode.readonly: tr.form_report_readonly,
+      };
 
   late final Map<ReportSectionType, FormGroup> _controlsBySectionType = {
     ReportSectionType.average: FormGroup({
@@ -92,10 +92,10 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-    StudyFormValidationSet.draft: _getValidationConfig(StudyFormValidationSet.draft),
-    StudyFormValidationSet.publish: _getValidationConfig(StudyFormValidationSet.publish),
-    StudyFormValidationSet.test: _getValidationConfig(StudyFormValidationSet.test),
-  };
+        StudyFormValidationSet.draft: _getValidationConfig(StudyFormValidationSet.draft),
+        StudyFormValidationSet.publish: _getValidationConfig(StudyFormValidationSet.publish),
+        StudyFormValidationSet.test: _getValidationConfig(StudyFormValidationSet.test),
+      };
 
   List<FormControlValidation> _getValidationConfig(StudyFormValidationSet validationSet) {
     return [
@@ -105,41 +105,40 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   }
 
   get titleRequired => FormControlValidation(control: titleControl, validators: [
-    Validators.required
-  ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_report_title_required,
-  });
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) => tr.form_field_report_title_required,
+      });
   get descriptionRequired => FormControlValidation(control: descriptionControl, validators: [
-    Validators.required
-  ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_report_text_required,
-  });
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) => tr.form_field_report_text_required,
+      });
 
   get dataReferenceRequired => FormControlValidation(control: dataReferenceControl, validators: [
-    Validators.required
-  ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_report_data_source_required,
-  });
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) => tr.form_field_report_data_source_required,
+      });
 
   // -- Average
   get aggregationRequired => FormControlValidation(control: temporalAggregationControl, validators: [
-    Validators.required
-  ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_report_temporalAggregation_required,
-  });
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) => tr.form_field_report_temporalAggregation_required,
+      });
 
   // -- LinearRegression
   get improvementDirectionRequired => FormControlValidation(control: improvementDirectionControl, validators: [
-    Validators.required
-  ], validationMessages: {
-    ValidationMessage.required: (error) => tr.form_field_report_improvementDirection_required,
-  });
+        Validators.required
+      ], validationMessages: {
+        ValidationMessage.required: (error) => tr.form_field_report_improvementDirection_required,
+      });
   get alphaConfidenceRequired => FormControlValidation(control: alphaControl, validators: [
-    Validators.required // todo numeric but also support decimal numbers e.g. 0.2 or 0,2
-  ], validationMessages: {
-    ValidationMessage.number: (error) => tr.form_field_report_alphaConfidence_number,
-  });
-
+        Validators.required // todo numeric but also support decimal numbers e.g. 0.2 or 0,2
+      ], validationMessages: {
+        ValidationMessage.number: (error) => tr.form_field_report_alphaConfidence_number,
+      });
 
   late final Map<String, AbstractControl> sectionBaseControls = {
     'sectionId': sectionIdControl, // hidden
@@ -153,7 +152,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
   @override
   ReportItemFormData buildFormData() {
     buildSectionSpecific(ReportSectionType sectionType) {
-      switch(sectionType) {
+      switch (sectionType) {
         case ReportSectionType.average:
           AverageSection averageSection = AverageSection();
           averageSection.aggregate = temporalAggregationControl.value!.value;
@@ -167,6 +166,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
           return linearSection;
       }
     }
+
     final sectionType = sectionTypeControl.value!;
     ReportSection section = buildSectionSpecific(sectionType);
 
@@ -228,23 +228,19 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
     descriptionControl.value = data.section.description;
 
     // Type-specific controls
-    switch(sectionType) {
+    switch (sectionType) {
       case ReportSectionType.average:
         AverageSection averageSection = data.section as AverageSection;
         temporalAggregationControl.value = TemporalAggregationFormatted(averageSection.aggregate!);
-        dataReferenceControl.value = DataReferenceIdentifier(
-            averageSection.resultProperty!.task,
-            averageSection.resultProperty!.property
-        );
+        dataReferenceControl.value =
+            DataReferenceIdentifier(averageSection.resultProperty!.task, averageSection.resultProperty!.property);
         break;
       case ReportSectionType.linearRegression:
         LinearRegressionSection linearRegressionSection = data.section as LinearRegressionSection;
         improvementDirectionControl.value = ImprovementDirectionFormatted(linearRegressionSection.improvement!);
         alphaControl.value = linearRegressionSection.alpha;
         dataReferenceControl.value = DataReferenceIdentifier(
-            linearRegressionSection.resultProperty!.task,
-            linearRegressionSection.resultProperty!.property
-        );
+            linearRegressionSection.resultProperty!.task, linearRegressionSection.resultProperty!.property);
         break;
     }
   }

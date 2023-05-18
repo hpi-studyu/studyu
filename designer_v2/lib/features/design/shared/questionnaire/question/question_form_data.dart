@@ -1,8 +1,8 @@
 import 'package:flutter/rendering.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
+import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
@@ -168,7 +168,8 @@ class ChoiceQuestionFormData extends QuestionFormData {
   @override
   QuestionFormData copy() {
     final data = ChoiceQuestionFormData(
-      questionId: const Uuid().v4(), // always regenerate id
+      questionId: const Uuid().v4(),
+      // always regenerate id
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
@@ -265,7 +266,7 @@ class ScaleQuestionFormData extends QuestionFormData {
     this.maxLabel,
     required this.midValues,
     required this.midLabels,
-    this.initialValue = 1,
+    this.initialValue,
     this.stepSize = 0,
     this.minColor,
     this.maxColor,
@@ -278,7 +279,7 @@ class ScaleQuestionFormData extends QuestionFormData {
   final List<double?> midValues;
   final List<String?> midLabels;
   final double stepSize;
-  final double initialValue;
+  final double? initialValue;
   final Color? minColor;
   final Color? maxColor;
 
@@ -350,7 +351,8 @@ class ScaleQuestionFormData extends QuestionFormData {
   @override
   QuestionFormData copy() {
     final data = ScaleQuestionFormData(
-      questionId: const Uuid().v4(), // always regenerate id
+      questionId: const Uuid().v4(),
+      // always regenerate id
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,

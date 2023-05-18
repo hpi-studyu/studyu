@@ -1,19 +1,21 @@
+import 'dart:io';
+
 import 'package:fhir/r4.dart' as fhir;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_core/core.dart';
-import 'package:supabase/supabase.dart';
-
-import '../../../../models/app_state.dart';
-import '../../../../widgets/fhir_questionnaire/questionnaire_widget.dart';
-import '../../../../widgets/questionnaire/questionnaire_widget.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/widgets/fhir_questionnaire/questionnaire_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({@required this.task, @required this.completionPeriod, Key key}) : super(key: key);
+  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, Key? key}) : super(key: key);
 
   @override
   State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
@@ -21,32 +23,27 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
-  bool responseValidator;
-  DateTime loginClickTime;
+  late bool responseValidator;
+  DateTime? loginClickTime;
+  bool _isLoading = false;
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
-    final state = context.read<AppState>();
-    final activeStudy = state.activeSubject;
-    try {
-      if (state.trackParticipantProgress) {
-        await activeStudy.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
+    await handleTaskCompletion(context, (StudySubject? subject) async {
+      try {
+        await subject!.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
+      } on SocketException catch (_) {
+        await subject!.addResult<T>(
+            taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response, offline: true);
+        rethrow;
       }
-      if (!mounted) return;
-      Navigator.pop(context, true);
-    } on PostgrestException {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).could_not_save_results),
-          duration: const Duration(seconds: 10),
-          action: SnackBarAction(label: 'Retry', onPressed: () => _addQuestionnaireResult(response, context)),
-        ),
-      );
-    }
+    });
+    if (!mounted) return;
+    Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.watch<AppState>().activeSubject.study.fhirQuestionnaire;
+    final fhirQuestionnaire = context.watch<AppState>().activeSubject!.study.fhirQuestionnaire;
     final questionnaireWidget = fhirQuestionnaire != null
         ? FhirQuestionnaireWidget(
             fhirQuestionnaire,
@@ -72,25 +69,31 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           if (response != null && responseValidator)
             ElevatedButton.icon(
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-              onPressed: () {
-                if (isRedundantClick(DateTime.now())) {
+              onPressed: () async {
+                if (isRedundantClick(loginClickTime)) {
                   return;
                 }
+                setState(() {
+                  _isLoading = true;
+                });
                 switch (response.runtimeType) {
                   case QuestionnaireState:
-                    _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
+                    await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
                     break;
                   case fhir.QuestionnaireResponse:
-                    _addQuestionnaireResult<fhir.QuestionnaireResponse>(
-                      response as fhir.QuestionnaireResponse,
+                    await _addQuestionnaireResult<fhir.QuestionnaireResponse?>(
+                      response as fhir.QuestionnaireResponse?,
                       context,
                     );
                     break;
                 }
+                setState(() {
+                  _isLoading = false;
+                });
               },
-              icon: const Icon(Icons.check),
-              label: Text(AppLocalizations.of(context).complete),
-            )
+              icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
+              label: Text(AppLocalizations.of(context)!.complete),
+            ),
         ],
       ),
     );
@@ -106,21 +109,5 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         responseValidator = false;
       });
     }
-  }
-
-  bool isRedundantClick(DateTime currentTime) {
-    if (loginClickTime == null) {
-      loginClickTime = currentTime;
-      return false;
-    }
-    int secondsUntilClicked = currentTime.difference(loginClickTime).inSeconds;
-    // timeout submit button to disable multiple clicks
-    if (secondsUntilClicked < 3) {
-      print('complete button is still freezed');
-      return true;
-    }
-
-    loginClickTime = currentTime;
-    return false;
   }
 }

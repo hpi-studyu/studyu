@@ -3,16 +3,20 @@
 We have 6 different Flutter/Dart packages all contained in this monorepo.
 
 - StudyU App (flutter)
-- StudyU Study Designer (flutter)
+- StudyU Designer v2 (flutter)
 - Repository Generator (dart web server)
 - Analysis Generator (dart CLI script)
 - Core: shared code for all 4 applications
-- Flutter Common: shared code for all Flutter apps (App, Designer)
+- Flutter Common: shared code for all Flutter apps (App, Designer v2)
 
 ## Try it yourself
 
 - [StudyU App](https://app.studyu.health)
-- [StudyU Designer](https://designer.studyu.health)
+- [StudyU Designer v2](https://designer.studyu.health)
+
+### Deprecated Packages
+- [StudyU App v1](https://app-v1.studyu.health)
+- [StudyU legacy Designer v1 (deprecated)](https://designer-v1.studyu.health)
 
 ## App Stores
 

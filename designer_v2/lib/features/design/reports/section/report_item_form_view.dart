@@ -19,14 +19,16 @@ class ReportItemFormView extends StatelessWidget {
   final StudyID studyId;
 
   get reportSectionColumnWidth => const {
-    0: FixedColumnWidth(180.0),
-    1: FlexColumnWidth(),
-  };
+        0: FixedColumnWidth(180.0),
+        1: FlexColumnWidth(),
+      };
 
   WidgetBuilder get sectionTypeBodyBuilder {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
-      ReportSectionType.average: (_) => AverageSectionFormView(formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
-      ReportSectionType.linearRegression: (_) => LinearRegressionSectionFormView(formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+      ReportSectionType.average: (_) => AverageSectionFormView(
+          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+      ReportSectionType.linearRegression: (_) => LinearRegressionSectionFormView(
+          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
     };
     final sectionType = formViewModel.sectionType;
 
@@ -39,16 +41,15 @@ class ReportItemFormView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      ReactiveFormConsumer(builder: (context, formGroup, child) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSectionText(context),
-          _buildSectionTypeHeader(context),
-          sectionTypeBodyBuilder(context),
-        ],
-      ));
-
+  Widget build(BuildContext context) => ReactiveFormConsumer(
+      builder: (context, formGroup, child) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionText(context),
+              _buildSectionTypeHeader(context),
+              sectionTypeBodyBuilder(context),
+            ],
+          ));
 
   _buildSectionText(BuildContext context) {
     return FormTableLayout(
@@ -117,7 +118,7 @@ class ReportItemFormView extends StatelessWidget {
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                              size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
+                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)
@@ -139,5 +140,4 @@ class ReportItemFormView extends StatelessWidget {
       ],
     );
   }
-
 }

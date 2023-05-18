@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class QuestionHeader extends StatelessWidget {
-  final String prompt;
-  final String subtitle;
-  final String rationale;
+  final String? prompt;
+  final String? subtitle;
+  final String? rationale;
 
-  const QuestionHeader({Key key, this.prompt, this.subtitle, this.rationale}) : super(key: key);
+  const QuestionHeader({Key? key, this.prompt, this.subtitle, this.rationale}) : super(key: key);
 
   List<Widget> _buildSubtitle(BuildContext context) {
     if (subtitle == null) return [];
     return [
       const SizedBox(height: 8),
-      Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+      Text(subtitle!, style: Theme.of(context).textTheme.bodySmall),
     ];
   }
 
@@ -26,7 +26,7 @@ class QuestionHeader extends StatelessWidget {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Information'),
-            content: Text(rationale),
+            content: Text(rationale!),
           ),
         ),
       )
@@ -44,7 +44,7 @@ class QuestionHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(prompt, style: Theme.of(context).textTheme.titleMedium),
+              Text(prompt!, style: Theme.of(context).textTheme.titleMedium),
               ..._buildSubtitle(context),
             ],
           ),

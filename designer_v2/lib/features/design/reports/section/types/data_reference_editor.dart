@@ -19,21 +19,20 @@ class DataReferenceEditor<T> {
   ReactiveDropdownField get buildReactiveDropdownField {
     final items = _dataReferenceItems();
     return ReactiveDropdownField<DataReferenceIdentifier>(
-        formControl: formControl,
-        items: items,
-        isExpanded: true,
-        hint: items.isNotEmpty ? const Text("Select a data source") : const Text("No scale survey question defined"),
-      );
+      formControl: formControl,
+      items: items,
+      isExpanded: true,
+      hint: items.isNotEmpty ? const Text("Select a data source") : const Text("No scale survey question defined"),
+    );
   }
 
-  FormTableRow buildFormTableRow(ThemeData theme) =>
-      FormTableRow(
+  FormTableRow buildFormTableRow(ThemeData theme) => FormTableRow(
         label: tr.form_field_report_data_source_title,
         labelHelpText: tr.form_field_report_data_source_tooltip,
         // TODO: extract custom dropdown component with theme + focus fix
         input: Theme(
-            data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
-            child: buildReactiveDropdownField,
+          data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+          child: buildReactiveDropdownField,
         ),
       );
 
@@ -45,7 +44,10 @@ class DataReferenceEditor<T> {
           items.add(
             DropdownMenuItem<DataReferenceIdentifier<T>>(
               value: DataReferenceIdentifier(task.id, entry.key),
-              child: Text('${task.title} > ${task.getHumanReadablePropertyName(entry.key)}', overflow: TextOverflow.ellipsis,),
+              child: Text(
+                '${task.title} > ${task.getHumanReadablePropertyName(entry.key)}',
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           );
         }

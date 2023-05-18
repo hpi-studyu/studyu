@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomOnboardingNavigation extends StatelessWidget {
-  final VoidCallback onBack;
-  final VoidCallback onNext;
-  final String backLabel;
-  final String nextLabel;
+  final VoidCallback? onBack;
+  final VoidCallback? onNext;
+  final String? backLabel;
+  final String? nextLabel;
   final bool hideNext;
-  final Icon nextIcon;
-  final Icon backIcon;
-  final Widget progress;
+  final Icon? nextIcon;
+  final Icon? backIcon;
+  final Widget? progress;
 
   const BottomOnboardingNavigation({
-    Key key,
+    Key? key,
     this.onNext,
     this.onBack,
     this.backLabel,
@@ -35,13 +35,13 @@ class BottomOnboardingNavigation extends StatelessWidget {
               child: Row(
                 children: [
                   backIcon ?? const Icon(Icons.navigate_before),
-                  Text(backLabel ?? AppLocalizations.of(context).back),
+                  Text(backLabel ?? AppLocalizations.of(context)!.back),
                 ],
               ),
             ),
             if (progress != null) ...[
               const SizedBox(width: 8),
-              Expanded(child: progress),
+              Expanded(child: progress!),
               const SizedBox(width: 8)
             ] else
               const Spacer(),
@@ -54,7 +54,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
                 onPressed: onNext,
                 child: Row(
                   children: [
-                    Text(nextLabel ?? AppLocalizations.of(context).next),
+                    Text(nextLabel ?? AppLocalizations.of(context)!.next),
                     nextIcon ?? const Icon(Icons.navigate_next),
                   ],
                 ),

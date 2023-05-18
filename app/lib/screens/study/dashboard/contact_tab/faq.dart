@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FAQ extends StatelessWidget {
-  const FAQ({Key key}) : super(key: key);
+  const FAQ({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO(Manisha): Transfer strings to translation files
-    if (AppLocalizations.of(context).faq_full == 'Frequently Asked Questions') {
+    if (AppLocalizations.of(context)!.faq_full == 'Frequently Asked Questions') {
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).faq_full),
+          title: Text(AppLocalizations.of(context)!.faq_full),
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(20),
@@ -21,7 +21,7 @@ class FAQ extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).faq_full),
+          title: Text(AppLocalizations.of(context)!.faq_full),
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(20),
@@ -250,7 +250,7 @@ final data_de = <Entry>[
 ];
 
 class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry, {Key key}) : super(key: key);
+  const EntryItem(this.entry, {Key? key}) : super(key: key);
 
   final Entry entry;
 

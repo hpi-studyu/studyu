@@ -10,21 +10,21 @@ import 'question_widget.dart';
 class QuestionContainer extends StatelessWidget {
   final Function(fhir.QuestionnaireResponseItem, int) onDone;
   final fhir.QuestionnaireItem question;
-  final int index;
+  final int? index;
 
-  const QuestionContainer({@required this.onDone, @required this.question, this.index, Key key}) : super(key: key);
+  const QuestionContainer({required this.onDone, required this.question, this.index, Key? key}) : super(key: key);
 
   void _onDone(fhir.QuestionnaireResponseItem response) {
-    onDone(response, index);
+    onDone(response, index!);
   }
 
-  QuestionWidget getQuestionBody(BuildContext context) {
+  QuestionWidget? getQuestionBody(BuildContext context) {
     switch (question.type) {
       case fhir.QuestionnaireItemType.choice:
         return ChoiceQuestionWidget(
           question: question,
           onDone: _onDone,
-          multiSelectionText: AppLocalizations.of(context).eligible_choice_multi_selection,
+          multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
       case fhir.QuestionnaireItemType.boolean:
         return BooleanQuestionWidget(
@@ -49,7 +49,7 @@ class QuestionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final questionBody = getQuestionBody(context);
+    final questionBody = getQuestionBody(context)!;
 
     return Card(
       child: Padding(

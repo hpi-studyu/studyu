@@ -8,9 +8,9 @@ import '../../../../util/intervention.dart';
 import '../../../../widgets/intervention_card.dart';
 
 class ProgressRow extends StatefulWidget {
-  final StudySubject subject;
+  final StudySubject? subject;
 
-  const ProgressRow({Key key, this.subject}) : super(key: key);
+  const ProgressRow({Key? key, this.subject}) : super(key: key);
 
   @override
   State<ProgressRow> createState() => _ProgressRowState();
@@ -21,7 +21,7 @@ class _ProgressRowState extends State<ProgressRow> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final currentPhase = widget.subject.getInterventionIndexForDate(DateTime.now());
+    final currentPhase = widget.subject!.getInterventionIndexForDate(DateTime.now());
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -42,14 +42,14 @@ class _ProgressRowState extends State<ProgressRow> {
                     color: currentPhase > index ? theme.primaryColor : theme.disabledColor,
                   ),
                 ),
-                widget.subject.getInterventionsInOrder().asMap().entries.map((entry) {
+                widget.subject!.getInterventionsInOrder().asMap().entries.map((entry) {
                   return InterventionSegment(
                     intervention: entry.value,
                     isCurrent: currentPhase == entry.key,
                     isFuture: currentPhase < entry.key,
-                    phaseDuration: widget.subject.study.schedule.phaseDuration,
-                    percentCompleted: widget.subject.percentCompletedForPhase(entry.key),
-                    percentMissed: widget.subject.percentMissedForPhase(entry.key, DateTime.now()),
+                    phaseDuration: widget.subject!.study.schedule.phaseDuration,
+                    percentCompleted: widget.subject!.percentCompletedForPhase(entry.key),
+                    percentMissed: widget.subject!.percentMissedForPhase(entry.key, DateTime.now()),
                   );
                 }),
               ),
@@ -72,13 +72,13 @@ class InterventionSegment extends StatelessWidget {
   final int phaseDuration;
 
   const InterventionSegment({
-    @required this.intervention,
-    @required this.percentCompleted,
-    @required this.percentMissed,
-    @required this.isCurrent,
-    @required this.isFuture,
-    @required this.phaseDuration,
-    Key key,
+    required this.intervention,
+    required this.percentCompleted,
+    required this.percentMissed,
+    required this.isCurrent,
+    required this.isFuture,
+    required this.phaseDuration,
+    Key? key,
   }) : super(key: key);
 
   List<Widget> buildSeparators(int nbSeparators) {

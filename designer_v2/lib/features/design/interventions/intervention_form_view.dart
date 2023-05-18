@@ -7,11 +7,11 @@ import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -30,8 +30,8 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
   bool isStylingInformationDismissed = true;
 
   onDismissedCallback() => setState(() {
-    isStylingInformationDismissed = !isStylingInformationDismissed;
-  });
+        isStylingInformationDismissed = !isStylingInformationDismissed;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,10 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
             ),
           ],
         ),
-        HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
+        HtmlStylingBanner(
+          isDismissed: isStylingInformationDismissed,
+          onDismissed: onDismissedCallback,
+        ),
         const SizedBox(height: 28.0),
         ReactiveFormConsumer(
             // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated

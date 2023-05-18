@@ -42,7 +42,8 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                     label: '', // don't care (showTableHeader=false)
                     columnWidth: FlexColumnWidth()),
               ],
-              onSelectItem: (_) => {}, // no-op
+              onSelectItem: (_) => {},
+              // no-op
               buildCellsAt: (context, control, _, __) => buildChoiceOptionRow(context, control),
               trailingActionsAt: (control, _) => formViewModel.availableActions(control),
               cellSpacing: 0.0,
@@ -80,7 +81,6 @@ List<Widget> buildChoiceOptionRow(
   AbstractControl formControl,
 ) {
   final theme = Theme.of(context);
-  print(formControl.disabled);
 
   return [
     Center(

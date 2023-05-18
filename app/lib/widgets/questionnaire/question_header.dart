@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 
 class QuestionHeader extends StatelessWidget {
-  final String prompt;
-  final String subtitle;
-  final String rationale;
+  final String? prompt;
+  final String? subtitle;
+  final String? rationale;
 
-  const QuestionHeader({Key key, this.prompt, this.subtitle, this.rationale}) : super(key: key);
+  const QuestionHeader({Key? key, this.prompt, this.subtitle, this.rationale}) : super(key: key);
 
   List<Widget> _buildSubtitle(BuildContext context) {
-    if (subtitle == null || subtitle.isEmpty) return [];
+    if (subtitle == null || subtitle!.isEmpty) return [];
     return [
       const SizedBox(height: 8),
-      Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+      Text(subtitle!, style: Theme.of(context).textTheme.bodySmall),
     ];
   }
 
   List<Widget> _buildRationaleButton(BuildContext context) {
-    if (rationale == null || rationale.isEmpty) return [];
+    if (rationale == null || rationale!.isEmpty) return [];
     return [
       const SizedBox(width: 8),
       IconButton(

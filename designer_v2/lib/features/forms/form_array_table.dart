@@ -133,29 +133,25 @@ class FormArrayTable<T> extends StatelessWidget {
   List<Widget> _buildRow(BuildContext context, T item, int rowIdx, Set<MaterialState> states) {
     final tableTextStyleSecondary = Theme.of(context).textTheme.bodyMedium;
     return [
-      CustomScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Row(
-                children: [
-                  (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
-                  Text(
-                    rowTitle(item),
-                    style: tableTextStyleSecondary?.copyWith(
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    maxLines: 1,
-                  ),
-                  const Spacer(),
-                  (rowSuffix != null) ? rowSuffix!(context, item, rowIdx) : const SizedBox.shrink(),
-                ],
+      CustomScrollView(physics: const NeverScrollableScrollPhysics(), scrollDirection: Axis.horizontal, slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Row(
+            children: [
+              (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
+              Text(
+                rowTitle(item),
+                style: tableTextStyleSecondary?.copyWith(
+                  overflow: TextOverflow.ellipsis,
+                ),
+                maxLines: 1,
               ),
-            ),
-          ]
-      ),
+              const Spacer(),
+              (rowSuffix != null) ? rowSuffix!(context, item, rowIdx) : const SizedBox.shrink(),
+            ],
+          ),
+        ),
+      ]),
     ];
   }
 

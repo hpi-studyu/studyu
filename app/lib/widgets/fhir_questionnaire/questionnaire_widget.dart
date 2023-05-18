@@ -1,19 +1,20 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:fhir/r4.dart' as fhir;
 import 'package:flutter/material.dart';
 
 import 'question_container.dart';
 
-typedef StateHandler = void Function(fhir.QuestionnaireResponse);
-typedef ContinuationPredicate = bool Function(fhir.QuestionnaireResponse);
+typedef StateHandler = void Function(fhir.QuestionnaireResponse?);
+typedef ContinuationPredicate = bool Function(fhir.QuestionnaireResponse?);
 
 class FhirQuestionnaireWidget extends StatefulWidget {
-  final String title;
+  final String? title;
   final fhir.Questionnaire questionnaire;
-  final StateHandler onChange;
-  final StateHandler onComplete;
-  final ContinuationPredicate shouldContinue;
+  final StateHandler? onChange;
+  final StateHandler? onComplete;
+  final ContinuationPredicate? shouldContinue;
 
   const FhirQuestionnaireWidget(
     this.questionnaire, {
@@ -21,7 +22,7 @@ class FhirQuestionnaireWidget extends StatefulWidget {
     this.onComplete,
     this.onChange,
     this.shouldContinue,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -36,18 +37,18 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
   // Map of question -> Answer
   // Answer can have type bool, num(int,double), String, List<String>
   // Only bool and num are currently used and List<String> (choice, only used for eligibility)
-  fhir.QuestionnaireResponse questionnaireResponse;
+  fhir.QuestionnaireResponse? questionnaireResponse;
 
   void _finishQuestionnaire() => widget.onComplete?.call(questionnaireResponse);
 
   /// Removes responses of clicked question and all following questions
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
-      questionnaireResponse.item.removeRange(index, questionnaireResponse.item.length);
+      questionnaireResponse!.item!.removeRange(index, questionnaireResponse!.item!.length);
       while (index + 1 < shownQuestions.length) {
         final end = shownQuestions.length - 1;
         final lastQuestion = shownQuestions.removeLast();
-        _listKey.currentState.removeItem(
+        _listKey.currentState!.removeItem(
           end,
           (context, animation) => SizeTransition(
             sizeFactor: animation,
@@ -72,11 +73,11 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
     _invalidateDownstreamAnswers(index);
 
     final oldResponseIndex =
-        questionnaireResponse.item?.indexWhere((item) => item.linkId == newResponseItem.linkId) ?? -1;
+        questionnaireResponse!.item?.indexWhere((item) => item.linkId == newResponseItem.linkId) ?? -1;
     if (oldResponseIndex > -1) {
-      questionnaireResponse.item[oldResponseIndex] = newResponseItem;
+      questionnaireResponse!.item![oldResponseIndex] = newResponseItem;
     } else {
-      questionnaireResponse.item.add(newResponseItem);
+      questionnaireResponse!.item!.add(newResponseItem);
     }
 
     widget.onChange?.call(questionnaireResponse);
@@ -86,7 +87,7 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
         return; // Checks if answer is wrong => not eligible ==> VALIDATION OF ANSWERS GIVEN!
       }
       _insertQuestion(nextQuestion);
-      _listKey.currentState.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
+      _listKey.currentState!.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
 
       // Scroll to bottom
       Timer(
@@ -104,10 +105,10 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
     }
   }
 
-  fhir.QuestionnaireItem _nextQuestion() {
+  fhir.QuestionnaireItem? _nextQuestion() {
     // TODO: Use Map<linkId, QuestionnaireItem> to not iterate over all questions
-    return widget.questionnaire.item
-        .firstWhere((item) => isQuestionNotDisplayedYet(item) && isQuestionEnabled(item), orElse: () => null);
+    return widget.questionnaire.item!
+        .firstWhereOrNull((item) => isQuestionNotDisplayedYet(item) && isQuestionEnabled(item));
   }
 
   bool isQuestionNotDisplayedYet(fhir.QuestionnaireItem item) {
@@ -115,21 +116,20 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
   }
 
   bool isQuestionEnabled(fhir.QuestionnaireItem item) {
-    if (item.enableWhen == null || item.enableWhen.isEmpty) return true;
+    if (item.enableWhen == null || item.enableWhen!.isEmpty) return true;
 
     switch (item.enableBehavior) {
       case fhir.QuestionnaireItemEnableBehavior.all:
-        return item.enableWhen.every(_satisfies);
+        return item.enableWhen!.every(_satisfies);
       case fhir.QuestionnaireItemEnableBehavior.any:
-        return item.enableWhen.any(_satisfies);
+        return item.enableWhen!.any(_satisfies);
       default:
         return true;
     }
   }
 
   bool _satisfies(fhir.QuestionnaireEnableWhen condition) {
-    final conditionalItem =
-        questionnaireResponse.item?.firstWhere((item) => item.linkId == condition.question, orElse: () => null);
+    final conditionalItem = questionnaireResponse!.item?.firstWhereOrNull((item) => item.linkId == condition.question);
     switch (condition.operator_) {
       case fhir.QuestionnaireEnableWhenOperator.exists:
         if (conditionalItem == null) {
@@ -137,7 +137,7 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
         }
         break;
       case fhir.QuestionnaireEnableWhenOperator.eq:
-        final responseCoding = conditionalItem?.answer?.first?.valueCoding;
+        final responseCoding = conditionalItem?.answer?.first.valueCoding;
         if (responseCoding?.code != condition.answerCoding?.code) {
           return false;
         }
@@ -156,7 +156,7 @@ class _FhirQuestionnaireWidgetState extends State<FhirQuestionnaireWidget> {
       status: fhir.QuestionnaireResponseStatus.in_progress,
       item: [],
     );
-    _insertQuestion(widget.questionnaire.item.first);
+    _insertQuestion(widget.questionnaire.item!.first);
   }
 
   @override

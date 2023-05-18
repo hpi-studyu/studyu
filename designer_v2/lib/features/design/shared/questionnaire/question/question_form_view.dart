@@ -34,8 +34,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
   bool isStylingInformationDismissed = true;
 
   onDismissedCallback() => setState(() {
-    isStylingInformationDismissed = !isStylingInformationDismissed;
-  });
+        isStylingInformationDismissed = !isStylingInformationDismissed;
+      });
 
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
@@ -74,8 +74,11 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                   ],
                 )
               : const SizedBox.shrink(),
-          if(widget.isHtmlStyleable)
-            HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
+          if (widget.isHtmlStyleable)
+            HtmlStylingBanner(
+              isDismissed: isStylingInformationDismissed,
+              onDismissed: onDismissedCallback,
+            ),
           const SizedBox(height: 24.0),
           _buildResponseTypeHeader(context),
           const SizedBox(height: 16.0),
@@ -141,28 +144,27 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           labelBuilder: (context) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              FormLabel(
-                labelText: tr.form_field_question,
-                helpText: tr.form_field_question_tooltip,
-              ),
-              if (widget.isHtmlStyleable) const SizedBox(width: 8),
-              if (widget.isHtmlStyleable) Opacity(
-                opacity: ThemeConfig.kMuteFadeFactor,
-                child: Tooltip(
-                  message: "Use html to style your content",
-                  child: Hyperlink(
-                    text: "styleable",
-                    onClick: () => setState(() {
-                      isStylingInformationDismissed = !isStylingInformationDismissed;
-                    }),
-                    visitedColor: null,
-                  ),
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                FormLabel(
+                  labelText: tr.form_field_question,
+                  helpText: tr.form_field_question_tooltip,
                 ),
-              ),
-            ]),
+                if (widget.isHtmlStyleable) const SizedBox(width: 8),
+                if (widget.isHtmlStyleable)
+                  Opacity(
+                    opacity: ThemeConfig.kMuteFadeFactor,
+                    child: Tooltip(
+                      message: "Use html to style your content",
+                      child: Hyperlink(
+                        text: "styleable",
+                        onClick: () => setState(() {
+                          isStylingInformationDismissed = !isStylingInformationDismissed;
+                        }),
+                        visitedColor: null,
+                      ),
+                    ),
+                  ),
+              ]),
               (!isQuestionHelpTextFieldVisible && !formViewModel.isReadonly)
                   ? Opacity(
                       opacity: ThemeConfig.kMuteFadeFactor,
@@ -188,7 +190,6 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           ),
         ),
       ],
-
     );
   }
 
@@ -200,32 +201,29 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           control: formViewModel.questionInfoTextControl,
           label: tr.form_field_question_help_text,
           labelHelpText: tr.form_field_question_help_text_tooltip,
-          labelBuilder: (context) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FormLabel(
-                      labelText: tr.form_field_question_help_text,
-                      helpText: tr.form_field_question_help_text_tooltip,
+          labelBuilder: (context) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              FormLabel(
+                labelText: tr.form_field_question_help_text,
+                helpText: tr.form_field_question_help_text_tooltip,
+              ),
+              if (widget.isHtmlStyleable) const SizedBox(width: 8),
+              if (widget.isHtmlStyleable)
+                Opacity(
+                  opacity: ThemeConfig.kMuteFadeFactor,
+                  child: Tooltip(
+                    message: "Use html to style your content",
+                    child: Hyperlink(
+                      text: "styleable",
+                      onClick: () => setState(() {
+                        isStylingInformationDismissed = !isStylingInformationDismissed;
+                      }),
+                      visitedColor: null,
                     ),
-                    if (widget.isHtmlStyleable) const SizedBox(width: 8),
-                    if (widget.isHtmlStyleable) Opacity(
-                      opacity: ThemeConfig.kMuteFadeFactor,
-                      child: Tooltip(
-                        message: "Use html to style your content",
-                        child: Hyperlink(
-                          text: "styleable",
-                          onClick: () => setState(() {
-                            isStylingInformationDismissed = !isStylingInformationDismissed;
-                          }),
-                          visitedColor: null,
-                        ),
-                      ),
-                    ),
-                  ]
-              )]
-          ),
+                  ),
+                ),
+            ])
+          ]),
           input: ReactiveTextField(
             formControl: formViewModel.questionInfoTextControl,
             validationMessages: formViewModel.questionInfoTextControl.validationMessages,

@@ -45,16 +45,16 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
 
   late final FormArray reportItemArray = FormArray([]);
   late final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData> reportItemFormViewModels =
-  FormViewModelCollection([], reportItemArray);
+      FormViewModelCollection([], reportItemArray);
 
   List<ReportItemFormViewModel> get reportItemModels => reportItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-    StudyFormValidationSet.draft: [], // TODO
-    StudyFormValidationSet.publish: [], // TODO
-    StudyFormValidationSet.test: [], // TODO
-  };
+        StudyFormValidationSet.draft: [], // TODO
+        StudyFormValidationSet.publish: [], // TODO
+        StudyFormValidationSet.test: [], // TODO
+      };
 
   @override
   late final FormGroup form = FormGroup({
@@ -63,19 +63,18 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
 
   @override
   void setControlsFrom(ReportsFormData data) {
-    final viewModels = data.reportItems.map((data) =>
-        ReportItemFormViewModel(
-          formData: data,
-          delegate: reportItemDelegate,
-        )).toList();
+    final viewModels = data.reportItems
+        .map((data) => ReportItemFormViewModel(
+              formData: data,
+              delegate: reportItemDelegate,
+            ))
+        .toList();
     reportItemFormViewModels.reset(viewModels);
   }
 
   @override
   ReportsFormData buildFormData() {
-    return ReportsFormData(
-        reportItems: reportItemFormViewModels.formData
-    );
+    return ReportsFormData(reportItems: reportItemFormViewModels.formData);
   }
 
   @override

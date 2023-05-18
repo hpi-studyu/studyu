@@ -13,13 +13,14 @@ on:
       - 'studyu_flutter_common-v*'
       - 'studyu_repo_generator-v*'
       - 'studyu_notebook_uploader-v*'
+  workflow_dispatch:
 
 jobs:
   publishing:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v2 # required!
+        uses: actions/checkout@main
 
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -10,27 +11,27 @@ import 'onboarding_progress.dart';
 class EligibilityResult {
   final bool eligible;
   final QuestionnaireState answers;
-  final EligibilityCriterion firstFailed;
+  final EligibilityCriterion? firstFailed;
 
-  EligibilityResult(this.answers, {this.eligible, this.firstFailed});
+  EligibilityResult(this.answers, {required this.eligible, this.firstFailed});
 }
 
 class EligibilityScreen extends StatefulWidget {
-  final Study study;
+  final Study? study;
 
-  static MaterialPageRoute<EligibilityResult> routeFor({@required Study study}) => MaterialPageRoute(
+  static MaterialPageRoute<EligibilityResult> routeFor({required Study? study}) => MaterialPageRoute(
         builder: (_) => EligibilityScreen(study: study),
         settings: const RouteSettings(name: '/eligibilityCheck'),
       );
 
-  const EligibilityScreen({@required this.study, Key key}) : super(key: key);
+  const EligibilityScreen({required this.study, Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();
 }
 
 class _EligibilityScreenState extends State<EligibilityScreen> {
-  EligibilityResult activeResult;
+  EligibilityResult? activeResult;
 
   @override
   void initState() {
@@ -45,8 +46,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   bool _checkContinuation(QuestionnaireState qs) {
-    final criteria = widget.study.eligibilityCriteria;
-    final failingResult = criteria?.firstWhere((element) => element.isViolated(qs), orElse: () => null);
+    final criteria = widget.study!.eligibilityCriteria;
+    final failingResult = criteria.firstWhereOrNull((element) => element.isViolated(qs));
     if (failingResult == null) return true;
     setState(() {
       activeResult = EligibilityResult(qs, eligible: false, firstFailed: failingResult);
@@ -55,9 +56,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   void _evaluateResponse(QuestionnaireState qs) {
-    final criteria = widget.study.eligibilityCriteria;
+    final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final conditionResult = criteria?.every((criterion) => criterion.isSatisfied(qs)) ?? true;
+      final conditionResult = criteria.every((criterion) => criterion.isSatisfied(qs));
       if (conditionResult) {
         activeResult = EligibilityResult(qs, eligible: conditionResult);
       } else {
@@ -77,7 +78,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           color: Colors.green,
           size: 32,
         ),
-        content: Text(AppLocalizations.of(context).eligible_yes, style: Theme.of(context).textTheme.titleMedium),
+        content: Text(AppLocalizations.of(context)!.eligible_yes, style: Theme.of(context).textTheme.titleMedium),
         actions: [Container()],
         forceActionsBelow: true,
         backgroundColor: Colors.green[50],
@@ -92,34 +93,34 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context).eligible_no, style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context)!.eligible_no, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             if (activeResult?.firstFailed?.reason != null)
-              Text(activeResult.firstFailed.reason)
+              Text(activeResult!.firstFailed!.reason!)
             else
               const SizedBox.shrink(),
             if (activeResult?.firstFailed?.reason != null) const SizedBox(height: 4) else const SizedBox.shrink(),
-            Text(AppLocalizations.of(context).eligible_mistake),
+            Text(AppLocalizations.of(context)!.eligible_mistake),
           ],
         ),
         actions: [
           TextButton(
             onPressed: _finish,
-            child: Text(AppLocalizations.of(context).eligible_back),
+            child: Text(AppLocalizations.of(context)!.eligible_back),
           )
         ],
         forceActionsBelow: true,
         backgroundColor: Colors.red[50],
       );
 
-  Widget _constructResultBanner() => activeResult.eligible ? _constructPassBanner() : _constructFailBanner();
+  Widget _constructResultBanner() => activeResult!.eligible ? _constructPassBanner() : _constructFailBanner();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).eligibility_questionnaire_title),
+        title: Text(AppLocalizations.of(context)!.eligibility_questionnaire_title),
         leading: const Icon(MdiIcons.clipboardList),
       ),
       body: Column(
@@ -127,14 +128,14 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Text(
-              AppLocalizations.of(context).please_answer_eligibility,
+              AppLocalizations.of(context)!.please_answer_eligibility,
               style: theme.textTheme.titleMedium,
             ),
           ),
           Expanded(
             child: QuestionnaireWidget(
-              widget.study.questionnaire.questions,
-              title: widget.study.title,
+              widget.study!.questionnaire.questions,
+              title: widget.study!.title,
               onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,

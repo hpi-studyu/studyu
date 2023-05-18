@@ -10,7 +10,7 @@ class InterventionCard extends StatelessWidget {
   final bool showCheckbox;
   final bool showTasks;
   final bool showDescription;
-  final Function() onTap;
+  final Function()? onTap;
 
   const InterventionCard(
     this.intervention, {
@@ -19,7 +19,7 @@ class InterventionCard extends StatelessWidget {
     this.showCheckbox = false,
     this.showTasks = true,
     this.showDescription = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -43,19 +43,19 @@ class InterventionCard extends StatelessWidget {
 }
 
 class InterventionCardTitle extends StatelessWidget {
-  final Intervention intervention;
+  final Intervention? intervention;
   final bool selected;
   final bool showCheckbox;
   final bool showDescriptionButton;
-  final Function() onTap;
+  final Function()? onTap;
 
   const InterventionCardTitle({
-    @required this.intervention,
+    required this.intervention,
     this.selected = false,
     this.showCheckbox = false,
     this.showDescriptionButton = true,
     this.onTap,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -63,17 +63,17 @@ class InterventionCardTitle extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       onTap: onTap,
-      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
+      leading: Icon(MdiIcons.fromString(intervention!.icon), color: theme.colorScheme.secondary),
       trailing: showCheckbox
           ? Checkbox(
               value: selected,
-              onChanged: (_) => onTap(), // Needed so Checkbox can be clicked and has color
+              onChanged: (_) => onTap!(), // Needed so Checkbox can be clicked and has color
             )
           : null,
       dense: true,
       title: Row(
         children: [
-          Expanded(child: Text(intervention.name, style: theme.textTheme.titleLarge)),
+          Expanded(child: Text(intervention!.name!, style: theme.textTheme.titleLarge)),
           if (showDescriptionButton)
             IconButton(
               icon: const Icon(Icons.info_outline),
@@ -81,12 +81,12 @@ class InterventionCardTitle extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   final description =
-                  intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
+                      intervention!.isBaseline() ? AppLocalizations.of(context)!.baseline : intervention!.description;
                   return AlertDialog(
                     title: ListTile(
-                      leading: Icon(MdiIcons.fromString(intervention.icon), color: theme.colorScheme.secondary),
+                      leading: Icon(MdiIcons.fromString(intervention!.icon), color: theme.colorScheme.secondary),
                       dense: true,
-                      title: Text(intervention.name, style: theme.textTheme.titleLarge),
+                      title: Text(intervention!.name!, style: theme.textTheme.titleLarge),
                     ),
                     content: HtmlText(description),
                   );
@@ -102,20 +102,20 @@ class InterventionCardTitle extends StatelessWidget {
 class InterventionCardDescription extends StatelessWidget {
   final Intervention intervention;
 
-  const InterventionCardDescription({@required this.intervention, Key key}) : super(key: key);
+  const InterventionCardDescription({required this.intervention, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final description = intervention.isBaseline() ? AppLocalizations.of(context).baseline : intervention.description;
+    final description = intervention.isBaseline() ? AppLocalizations.of(context)!.baseline : intervention.description;
     if (description == null) return Container();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         description,
-        style: theme.textTheme.bodyMedium.copyWith(color: theme.textTheme.bodySmall.color),
+        style: theme.textTheme.bodyMedium!.copyWith(color: theme.textTheme.bodySmall!.color),
       ),
     );
   }
@@ -124,7 +124,7 @@ class InterventionCardDescription extends StatelessWidget {
 class _TaskList extends StatelessWidget {
   final List<InterventionTask> tasks;
 
-  const _TaskList({@required this.tasks, Key key}) : super(key: key);
+  const _TaskList({required this.tasks, Key? key}) : super(key: key);
 
   String scheduleString(List<CompletionPeriod> schedules) {
     return schedules
@@ -142,7 +142,7 @@ class _TaskList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context).tasks_daily, style: theme.textTheme.bodyMedium),
+              Text(AppLocalizations.of(context)!.tasks_daily, style: theme.textTheme.bodyMedium),
             ],
           ),
         ),
@@ -157,15 +157,15 @@ class _TaskList extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     children: [
-                      Expanded(child: Text(task.title, style: theme.textTheme.bodyMedium)),
+                      Expanded(child: Text(task.title!, style: theme.textTheme.bodyMedium)),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 16, color: theme.textTheme.bodySmall.color),
+                          Icon(Icons.access_time, size: 16, color: theme.textTheme.bodySmall!.color),
                           const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
-                            style: theme.textTheme.bodyMedium
-                                .copyWith(fontSize: 12, color: theme.textTheme.bodySmall.color),
+                            style: theme.textTheme.bodyMedium!
+                                .copyWith(fontSize: 12, color: theme.textTheme.bodySmall!.color),
                           ),
                         ],
                       ),

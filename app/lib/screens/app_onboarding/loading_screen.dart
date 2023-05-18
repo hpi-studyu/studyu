@@ -1,22 +1,22 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import '../../models/app_state.dart';
-import '../../routes.dart';
-import '../../util/schedule_notifications.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
 import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
-  final String sessionString;
-  final Map<String, String> queryParameters;
+  final String? sessionString;
+  final Map<String, String>? queryParameters;
 
-  const LoadingScreen({Key key, this.sessionString, this.queryParameters}) : super(key: key);
+  const LoadingScreen({Key? key, this.sessionString, this.queryParameters}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
@@ -31,8 +31,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
+    Analytics.init();
 
-    if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
+    if (widget.queryParameters != null && widget.queryParameters!.isNotEmpty) {
+      Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,
@@ -105,8 +107,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // todo not sure which includeBaseline statement is needed.
           // Either one of here or in preview.createFakeSubject
           // maybe remove
-          state.selectedStudy.schedule.includeBaseline = false;
-          state.activeSubject.study.schedule.includeBaseline = false;
+          state.selectedStudy!.schedule.includeBaseline = false;
+          state.activeSubject!.study.schedule.includeBaseline = false;
           // print("[PreviewApp]: Route preview");
           if (!mounted) return;
           // print("[PreviewApp]: Go to dashboard");
@@ -117,9 +119,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
-          print(state.selectedStudy.observations.first.id);
+          print(state.selectedStudy!.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy!.observations.where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
           await Navigator.push<bool>(
@@ -159,19 +161,35 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    print('Subject ID: $selectedStudyObjectId');
+    Analytics.logger.info('Subject ID: $selectedStudyObjectId');
+    state.analytics.initBasic();
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
-      if (isUserLoggedIn()) {
+      /*if (isUserLoggedIn()) {
+        Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found but logged in -> studySelection');
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
-      }
+      }*/
+      Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
-    StudySubject subject;
+    StudySubject? subject;
     try {
-      subject = await SupabaseQuery.getById<StudySubject>(
+      /*
+        try {
+         InternetAddress.lookup(Uri.parse(supabaseUrl).host);
+      } on SocketException catch (_) {
+        Analytics.logger.warning('Could not connect to supabase url. Fallback to offline mode');
+        subject = await Cache.loadSubject();
+      }
+       */
+      final connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        Analytics.logger.warning("Could not find any connection. Going to offline mode");
+        subject = await Cache.loadSubject();
+      }
+      subject ??= await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
         selectedColumns: [
           '*',
@@ -179,8 +197,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
           'subject_progress(*)',
         ],
       );
-    } catch (e) {
-      print("Try signing in again\n$e");
+    } catch (exception) {
+      Analytics.logger
+          .warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+      /*await Analytics.captureEvent(
+        SentryEvent(throwable: exception),
+        stackTrace: stackTrace,
+      );*/
       bool signInRes = false;
       try {
         // Try signing in again. Needed if JWT is expired
@@ -195,8 +218,22 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ],
           );
         }
-      } catch (e) {
-        print('Error when trying to login and retrieve the study subject');
+      } catch (exception) {
+        try {
+          Analytics.logger.warning(
+              'Could not login and retrieve the study subject. This might be because the study subject is no longer available and only resides in app backup');
+          /*await Analytics.captureEvent(
+            SentryEvent(throwable: exception),
+            stackTrace: stackTrace,
+          );*/
+          // subject = await Cache.loadSubject();
+        } catch (exception, stackTrace) {
+          Analytics.logger.severe('Error when initializing offline mode: ${exception.toString()}');
+          await Analytics.captureException(
+            exception,
+            stackTrace: stackTrace,
+          );
+        }
       }
       /*if (!signInRes) {
         final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
@@ -214,10 +251,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
+      // storeCache(subject);
+      subject = await Cache.synchronize(subject);
+      if (!mounted) return;
       state.activeSubject = subject;
-      scheduleNotifications(context);
+      state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      Analytics.logger.severe('Subject is null -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
@@ -231,7 +272,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${AppLocalizations.of(context).loading}...',
+                '${AppLocalizations.of(context)!.loading}...',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const CircularProgressIndicator(),
@@ -242,7 +283,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-  /*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/util/notifications.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,9 +20,9 @@ import '../report/report_details.dart';
 import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
-  final String error;
+  final String? error;
 
-  const DashboardScreen({Key key, this.error}) : super(key: key);
+  const DashboardScreen({Key? key, this.error}) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -28,28 +31,27 @@ class DashboardScreen extends StatefulWidget {
 class OverflowMenuItem {
   final String name;
   final IconData icon;
-  final String routeName;
-  final Function() onTap;
+  final String? routeName;
+  final Function()? onTap;
 
   OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  StudySubject subject;
-  List<TaskInstance> scheduleToday;
+  StudySubject? subject;
+  List<TaskInstance>? scheduleToday;
 
-  get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject.completedStudy;
+  get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject!.completedStudy;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     subject = context.watch<AppState>().activeSubject;
     if (subject != null) {
-      scheduleToday = subject.scheduleFor(DateTime.now());
+      scheduleToday = subject!.scheduleFor(DateTime.now());
       if (widget.error != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(widget.error)));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
     }
@@ -63,8 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     if (subject == null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.loading, (_) => false);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
       });
       return const SizedBox.shrink();
     }
@@ -73,10 +74,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
         automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context).dashboard),
+        title: Text(AppLocalizations.of(context)!.dashboard),
         actions: [
           IconButton(
-            tooltip: AppLocalizations.of(context).contact,
+            tooltip: AppLocalizations.of(context)!.contact,
             icon: const Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
@@ -85,77 +86,82 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             tooltip: 'Current report', // todo tr
             icon: const Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject)),
+            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject!)),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {
               if (value.routeName != null) {
-                Navigator.pushNamed(context, value.routeName);
+                Navigator.pushNamed(context, value.routeName!);
               } else if (value.onTap != null) {
-                value.onTap();
+                value.onTap!();
               }
             },
             itemBuilder: (context) {
               return [
                 OverflowMenuItem(
-                  AppLocalizations.of(context).report_history,
+                  AppLocalizations.of(context)!.report_history,
                   MdiIcons.history,
                   routeName: Routes.reportHistory,
                 ),
                 OverflowMenuItem(
-                  AppLocalizations.of(context).faq,
+                  AppLocalizations.of(context)!.faq,
                   MdiIcons.frequentlyAskedQuestions,
                   routeName: Routes.faq,
                 ),
-                OverflowMenuItem(AppLocalizations.of(context).settings, Icons.settings, routeName: Routes.appSettings),
+                OverflowMenuItem(AppLocalizations.of(context)!.settings, Icons.settings, routeName: Routes.appSettings),
                 OverflowMenuItem(
-                  AppLocalizations.of(context).what_is_studyu,
+                  AppLocalizations.of(context)!.what_is_studyu,
                   MdiIcons.helpCircleOutline,
                   routeName: Routes.about,
                 ),
                 OverflowMenuItem(
-                  AppLocalizations.of(context).about,
+                  AppLocalizations.of(context)!.about,
                   MdiIcons.informationOutline,
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    final Uri emailLaunchUri = Uri(
-                        scheme: 'mailto',
-                        path: subject.study.contact.email,
-                        queryParameters: {
-                          'subject': '[StudyU] Debug Information',
-                          'body': StudyNotifications.scheduledNotificationsDebug,
-                        }
-                    );
                     if (!mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: GestureDetector(
                         onDoubleTap: () {
-                          showDialog(context: context, builder: (_) =>
-                              AlertDialog(
-                                title: const SelectableText('Notification Log'),
-                                content: Column(children: [
-                                  ElevatedButton(
-                                    onPressed: () => launchUrl(emailLaunchUri),
-                                    child: const Text('Send via email'),
-                                  ),
-                                  FutureBuilder<bool>(
-                                      future: receivePermission(),
-                                      builder: (context, AsyncSnapshot<bool> snapshot) {
-                                        if (snapshot.hasData) {
-                                          return Text('ignoreBatteryOptimizations: ${snapshot.data.toString()}');
-                                        } else {
-                                          return const CircularProgressIndicator();
-                                        }
-                                      }
-                                  ),
-                                  Text('SubjectID: ${subject.id}'),
-                                  SelectableText(StudyNotifications.scheduledNotificationsDebug),
-                                ],),
-                                scrollable: true,
-                              )
-                          );
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                    title: const SelectableText('Notification Log'),
+                                    content: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            final Uri emailLaunchUri = Uri(
+                                                scheme: 'mailto',
+                                                path: subject!.study.contact.email,
+                                                queryParameters: {
+                                                  'subject': '[StudyU] Debug Information',
+                                                  'body': StudyNotifications.scheduledNotificationsDebug,
+                                                });
+                                            launchUrl(emailLaunchUri);
+                                          },
+                                          child: const Text('Send via email'),
+                                        ),
+                                        FutureBuilder<bool>(
+                                            future: receivePermission(),
+                                            builder: (context, AsyncSnapshot<bool> snapshot) {
+                                              if (snapshot.hasData) {
+                                                String data = "ignoreBatteryOptimizations: ${snapshot.data.toString()}";
+                                                StudyNotifications.scheduledNotificationsDebug =
+                                                    "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
+                                                return Text(data);
+                                              } else {
+                                                return const CircularProgressIndicator();
+                                              }
+                                            }),
+                                        SelectableText(StudyNotifications.scheduledNotificationsDebug!),
+                                      ],
+                                    ),
+                                    scrollable: true,
+                                  ));
+                          testNotifications(context);
                         },
                         child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
                       ),
@@ -220,46 +226,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       bottomSheet: showNextDay
           ? Container(
-            margin: const EdgeInsets.only(left: 16, bottom: 8),
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.fast_forward_rounded),
-              onPressed: () async {
-                await subject.setStartDateBackBy(days: 1);
-                setState(() {
-                  scheduleToday = subject.scheduleFor(DateTime.now());
-                });
-              },
-              label: Text(AppLocalizations.of(context).next_day),
-            ),
-          )
+              margin: const EdgeInsets.only(left: 16, bottom: 8),
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.fast_forward_rounded),
+                onPressed: () async {
+                  try {
+                    await subject!.setStartDateBackBy(days: 1);
+                    setState(() {
+                      scheduleToday = subject!.scheduleFor(DateTime.now());
+                    });
+                  } on SocketException catch (_) {}
+                },
+                label: Text(AppLocalizations.of(context)!.next_day),
+              ),
+            )
           : null,
     );
   }
 
   Widget _buildBody() {
-    if (subject.completedStudy) {
+    if (subject!.completedStudy) {
       return const StudyFinishedPlaceholder();
-    } else if (subject.startedAt.isAfter(DateTime.now())) {
+    } else if (subject!.startedAt!.isAfter(DateTime.now())) {
       final theme = Theme.of(context);
       return Center(
           child: Padding(
               padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).study_not_started,
-                      style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
-                    )
-                  ]
-              )
-          )
-      );
+              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(
+                  AppLocalizations.of(context)!.study_not_started,
+                  style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
+                )
+              ])));
     } else {
       return TaskOverview(
         subject: subject,
         scheduleToday: scheduleToday,
-        interventionIcon: subject.getInterventionForDate(DateTime.now())?.icon,
+        interventionIcon: subject!.getInterventionForDate(DateTime.now())?.icon,
       );
     }
   }
@@ -268,7 +271,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 class StudyFinishedPlaceholder extends StatelessWidget {
   static const space = SizedBox(height: 80);
 
-  const StudyFinishedPlaceholder({Key key}) : super(key: key);
+  const StudyFinishedPlaceholder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -282,20 +285,20 @@ class StudyFinishedPlaceholder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              AppLocalizations.of(context).completed_study,
+              AppLocalizations.of(context)!.completed_study,
               style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
             ),
             space,
             OutlinedButton.icon(
               onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
               icon: const Icon(MdiIcons.history, size: fontSize),
-              label: Text(AppLocalizations.of(context).report_history, style: textStyle),
+              label: Text(AppLocalizations.of(context)!.report_history, style: textStyle),
             ),
             space,
             OutlinedButton.icon(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
               icon: const Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
-              label: Text(AppLocalizations.of(context).study_selection, style: textStyle),
+              label: Text(AppLocalizations.of(context)!.study_selection, style: textStyle),
             ),
           ],
         ),

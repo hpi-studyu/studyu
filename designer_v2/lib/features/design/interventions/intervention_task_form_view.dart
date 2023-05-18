@@ -24,8 +24,8 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
   bool isStylingInformationDismissed = true;
 
   onDismissedCallback() => setState(() {
-    isStylingInformationDismissed = !isStylingInformationDismissed;
-  });
+        isStylingInformationDismissed = !isStylingInformationDismissed;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,10 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
               ),
             ),
           ]),
-          HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
+          HtmlStylingBanner(
+            isDismissed: isStylingInformationDismissed,
+            onDismissed: onDismissedCallback,
+          ),
           const SizedBox(height: 12.0),
           ReactiveFormConsumer(builder: (context, form, child) {
             return Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [

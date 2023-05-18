@@ -3,7 +3,8 @@ name: Designer Deploy
 on:
   push:
     branches:
-    - master
+      - main #noop
+    # - master
   workflow_dispatch:
 
 env:

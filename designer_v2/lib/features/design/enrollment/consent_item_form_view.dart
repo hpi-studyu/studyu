@@ -20,16 +20,15 @@ class ConsentItemFormView extends StatefulWidget {
 }
 
 class _ConsentItemFormViewState extends State<ConsentItemFormView> {
-    bool isStylingInformationDismissed = true;
+  bool isStylingInformationDismissed = true;
 
-    onDismissedCallback() => setState(() {
-      isStylingInformationDismissed = !isStylingInformationDismissed;
-    });
+  onDismissedCallback() => setState(() {
+        isStylingInformationDismissed = !isStylingInformationDismissed;
+      });
 
-    @override
-    Widget build(BuildContext context) {
-    return ReactiveFormConsumer(builder: (context, formGroup, child)
-    {
+  @override
+  Widget build(BuildContext context) {
+    return ReactiveFormConsumer(builder: (context, formGroup, child) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -48,8 +47,7 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(100),
                         ],
-                        validationMessages: widget.formViewModel.titleControl
-                            .validationMessages,
+                        validationMessages: widget.formViewModel.titleControl.validationMessages,
                         decoration: InputDecoration(
                           hintText: tr.form_field_consent_title_hint,
                         ),
@@ -101,8 +99,7 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(10000),
                   ],
-                  validationMessages: widget.formViewModel.descriptionControl
-                      .validationMessages,
+                  validationMessages: widget.formViewModel.descriptionControl.validationMessages,
                   keyboardType: TextInputType.multiline,
                   minLines: 10,
                   maxLines: 30,
@@ -113,7 +110,10 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
               ),
             ],
           ),
-          HtmlStylingBanner(isDismissed: isStylingInformationDismissed, onDismissed: onDismissedCallback,),
+          HtmlStylingBanner(
+            isDismissed: isStylingInformationDismissed,
+            onDismissed: onDismissedCallback,
+          ),
         ],
       );
     });

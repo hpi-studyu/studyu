@@ -1,17 +1,4 @@
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
-
-Map<String, charts.Color> getInterventionPalette(List<Intervention> interventions) {
-  final colors = <String, charts.Color>{};
-  if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
-    colors[Study.baselineID] = charts.MaterialPalette.gray.shadeDefault;
-    interventions.removeWhere((intervention) => intervention.id == Study.baselineID);
-  }
-  colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
-  colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
-  return colors;
-}
 
 Map<String, int> getInterventionPositions(List<Intervention> interventions) {
   final order = <String, int>{};
@@ -22,6 +9,18 @@ Map<String, int> getInterventionPositions(List<Intervention> interventions) {
   order[interventions.first.id] = 1;
   order[interventions.last.id] = 2;
   return order;
+}
+
+/*
+Map<String, charts.Color> getInterventionPalette(List<Intervention> interventions) {
+  final colors = <String, charts.Color>{};
+  if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
+    colors[Study.baselineID] = charts.MaterialPalette.gray.shadeDefault;
+    interventions.removeWhere((intervention) => intervention.id == Study.baselineID);
+  }
+  colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
+  colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
+  return colors;
 }
 
 List<Intervention> getInterventionsWithoutBaseline(List<Intervention> interventions) =>
@@ -59,3 +58,4 @@ charts.TextStyleSpec convertTextTheme(TextStyle style) => charts.TextStyleSpec(
       lineHeight: style.height,
       color: charts.Color(r: style.color.red, g: style.color.green, b: style.color.blue, a: style.color.alpha),
     );
+*/

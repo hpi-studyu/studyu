@@ -13,14 +13,14 @@ import '../dashboard/contact_tab/contact_screen.dart';
 import 'eligibility_screen.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
-  const StudyOverviewScreen({Key key}) : super(key: key);
+  const StudyOverviewScreen({Key? key}) : super(key: key);
 
   @override
   State<StudyOverviewScreen> createState() => _StudyOverviewScreen();
 }
 
 class _StudyOverviewScreen extends State<StudyOverviewScreen> {
-  Study study;
+  Study? study;
 
   @override
   void initState() {
@@ -32,18 +32,18 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     final appState = context.read<AppState>();
     if (appState.preselectedInterventionIds != null) {
       appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy,
-        Supabase.instance.client.auth.currentUser.id,
-        appState.preselectedInterventionIds,
+        appState.selectedStudy!,
+        Supabase.instance.client.auth.currentUser!.id,
+        appState.preselectedInterventionIds!,
         appState.inviteCode,
       );
       Navigator.pushNamed(context, Routes.journey);
-    } else if (study.interventions.length <= 2) {
+    } else if (study!.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
       appState.activeSubject = StudySubject.fromStudy(
-        appState.selectedStudy,
-        Supabase.instance.client.auth.currentUser.id,
-        study.interventions.map((i) => i.id).toList(),
+        appState.selectedStudy!,
+        Supabase.instance.client.auth.currentUser!.id,
+        study!.interventions.map((i) => i.id).toList(),
         appState.inviteCode,
       );
       Navigator.pushNamed(context, Routes.journey);
@@ -58,9 +58,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (result == null) return;
 
     if (!mounted) return;
-    if (result.eligible != null && result.eligible) {
+    if (result.eligible) {
       navigateToJourney(context);
-    } else if (result.answers != null) {
+    } else {
       Navigator.pop(context);
     }
   }
@@ -70,14 +70,14 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(MdiIcons.textLong),
-        title: Text(AppLocalizations.of(context).study_overview_title),
+        title: Text(AppLocalizations.of(context)!.study_overview_title),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Hero(
-              tag: 'study_tile_${study.id}',
-              child: Material(child: StudyTile.fromStudy(study: study)),
+              tag: 'study_tile_${study!.id}',
+              child: Material(child: StudyTile.fromStudy(study: study!)),
             ),
             const SizedBox(height: 16),
             StudyDetailsView(study: study),
@@ -85,7 +85,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
-        onNext: context.watch<AppState>().selectedStudy.hasEligibilityCheck
+        onNext: context.watch<AppState>().selectedStudy!.hasEligibilityCheck
             ? () => navigateToEligibilityCheck(context)
             : () => navigateToJourney(context),
       ),
@@ -94,34 +94,34 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 }
 
 class StudyDetailsView extends StatelessWidget {
-  final Study study;
+  final Study? study;
 
-  const StudyDetailsView({@required this.study, Key key}) : super(key: key);
+  const StudyDetailsView({required this.study, Key? key}) : super(key: key);
 
   double get iconSize => 40;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baselineLength = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
+    final baselineLength = study!.schedule.includeBaseline ? study!.schedule.phaseDuration : 0;
     final studyLength = baselineLength +
-        study.schedule.phaseDuration * study.schedule.numberOfCycles * StudySchedule.numberOfInterventions;
+        study!.schedule.phaseDuration * study!.schedule.numberOfCycles * StudySchedule.numberOfInterventions;
     return Column(
       children: [
         ListTile(
-          title: Text(AppLocalizations.of(context).intervention_phase_duration),
-          subtitle: Text('${study.schedule.phaseDuration} ${AppLocalizations.of(context).days}'),
+          title: Text(AppLocalizations.of(context)!.intervention_phase_duration),
+          subtitle: Text('${study!.schedule.phaseDuration} ${AppLocalizations.of(context)!.days}'),
           leading: Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
         ),
         ListTile(
-          title: Text(AppLocalizations.of(context).study_length),
-          subtitle: Text('$studyLength ${AppLocalizations.of(context).days}'),
+          title: Text(AppLocalizations.of(context)!.study_length),
+          subtitle: Text('$studyLength ${AppLocalizations.of(context)!.days}'),
           leading: Icon(MdiIcons.calendar, color: theme.primaryColor, size: iconSize),
         ),
         const SizedBox(height: 16),
         ContactWidget(
-          contact: study.contact,
-          title: AppLocalizations.of(context).study_publisher,
+          contact: study!.contact,
+          title: AppLocalizations.of(context)!.study_publisher,
           color: theme.colorScheme.secondary,
         ),
       ],

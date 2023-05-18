@@ -21,11 +21,13 @@ class ScheduleControls extends FormConsumerWidget {
     });
 
     formViewModel.restrictedTimeStartPickerControl.valueChanges.listen((event) {
-      formViewModel.restrictedTimeStartControl.value = Time.fromTimeOfDay(formViewModel.restrictedTimeStartPickerControl.value!);
+      formViewModel.restrictedTimeStartControl.value =
+          Time.fromTimeOfDay(formViewModel.restrictedTimeStartPickerControl.value!);
     });
 
     formViewModel.restrictedTimeEndPickerControl.valueChanges.listen((event) {
-      formViewModel.restrictedTimeEndControl.value = Time.fromTimeOfDay(formViewModel.restrictedTimeEndPickerControl.value!);
+      formViewModel.restrictedTimeEndControl.value =
+          Time.fromTimeOfDay(formViewModel.restrictedTimeEndPickerControl.value!);
     });
 
     return Column(
@@ -59,27 +61,27 @@ class ScheduleControls extends FormConsumerWidget {
                   child: Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      IntrinsicWidth(child: PointerInterceptor(
-                          child: ReactiveTimePicker(
-                            formControl: formViewModel.reminderTimePickerControl,
-                            initialEntryMode: TimePickerEntryMode.input,
-                            builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                              return ReactiveTextField<Time>(
-                                formControl: formViewModel.reminderTimeControl,
-                                valueAccessor: TimeValueAccessor(),
-                                decoration: InputDecoration(
-                                    hintText: tr.form_field_time_of_day_hint,
-                                    suffixIcon: Material(
-                                        color: Colors.transparent,
-                                        child: IconButton(
-                                          splashRadius: 18.0,
-                                          onPressed: picker.showPicker,
-                                          icon: const Icon(Icons.access_time),
-                                        ))),
-                              );
-                            },
-                          )
-                      )),
+                      IntrinsicWidth(
+                          child: PointerInterceptor(
+                              child: ReactiveTimePicker(
+                        formControl: formViewModel.reminderTimePickerControl,
+                        initialEntryMode: TimePickerEntryMode.input,
+                        builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
+                          return ReactiveTextField<Time>(
+                            formControl: formViewModel.reminderTimeControl,
+                            valueAccessor: TimeValueAccessor(),
+                            decoration: InputDecoration(
+                                hintText: tr.form_field_time_of_day_hint,
+                                suffixIcon: Material(
+                                    color: Colors.transparent,
+                                    child: IconButton(
+                                      splashRadius: 18.0,
+                                      onPressed: picker.showPicker,
+                                      icon: const Icon(Icons.access_time),
+                                    ))),
+                          );
+                        },
+                      ))),
                     ],
                   ),
                 )
@@ -110,60 +112,61 @@ class ScheduleControls extends FormConsumerWidget {
           label: " ",
           input: Row(
             children: [
-              Flexible(child: PointerInterceptor(
-                  child: ReactiveTimePicker(
-                    formControl: formViewModel.restrictedTimeStartPickerControl,
-                    initialEntryMode: TimePickerEntryMode.input,
-                    builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                      return ReactiveTextField<Time>(
-                        formControl: formViewModel.restrictedTimeStartControl,
-                        valueAccessor: TimeValueAccessor(),
-                        decoration: (formViewModel.restrictedTimeStartControl.enabled)
-                            ? InputDecoration(
-                            labelText: tr.form_field_time_restriction_start_hint,
-                            helperText: "",
-                            hintText: tr.form_field_time_of_day_hint,
-                            suffixIcon: Material(
-                                color: Colors.transparent,
-                                child: IconButton(
-                                  splashRadius: 18.0,
-                                  onPressed: picker.showPicker,
-                                  icon: const Icon(Icons.access_time),
-                                )))
-                            : const InputDecoration(),
-                      );
-                    },
-                  )),
+              Flexible(
+                child: PointerInterceptor(
+                    child: ReactiveTimePicker(
+                  formControl: formViewModel.restrictedTimeStartPickerControl,
+                  initialEntryMode: TimePickerEntryMode.input,
+                  builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
+                    return ReactiveTextField<Time>(
+                      formControl: formViewModel.restrictedTimeStartControl,
+                      valueAccessor: TimeValueAccessor(),
+                      decoration: (formViewModel.restrictedTimeStartControl.enabled)
+                          ? InputDecoration(
+                              labelText: tr.form_field_time_restriction_start_hint,
+                              helperText: "",
+                              hintText: tr.form_field_time_of_day_hint,
+                              suffixIcon: Material(
+                                  color: Colors.transparent,
+                                  child: IconButton(
+                                    splashRadius: 18.0,
+                                    onPressed: picker.showPicker,
+                                    icon: const Icon(Icons.access_time),
+                                  )))
+                          : const InputDecoration(),
+                    );
+                  },
+                )),
               ),
               const SizedBox(width: 10.0),
-              Flexible(child: PointerInterceptor(
-                  child: ReactiveTimePicker(
-                    formControl: formViewModel.restrictedTimeEndPickerControl,
-                    initialEntryMode: TimePickerEntryMode.input,
-                    builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
-                      return ReactiveTextField<Time>(
-                        formControl: formViewModel.restrictedTimeEndControl,
-                        valueAccessor: TimeValueAccessor(),
-                        decoration: (formViewModel.restrictedTimeEndControl.enabled)
-                            ? InputDecoration(
-                            labelText: tr.form_field_time_restriction_end_hint,
-                            helperText: "",
-                            hintText: tr.form_field_time_of_day_hint,
-                            suffixIcon: Material(
-                                color: Colors.transparent,
-                                child: IconButton(
-                                  splashRadius: 18.0,
-                                  onPressed: picker.showPicker,
-                                  icon: const Icon(Icons.access_time),
-                                )))
-                            : const InputDecoration(),
-                      );
-                    },
-                  )),
+              Flexible(
+                child: PointerInterceptor(
+                    child: ReactiveTimePicker(
+                  formControl: formViewModel.restrictedTimeEndPickerControl,
+                  initialEntryMode: TimePickerEntryMode.input,
+                  builder: (BuildContext context, ReactiveTimePickerDelegate picker, Widget? child) {
+                    return ReactiveTextField<Time>(
+                      formControl: formViewModel.restrictedTimeEndControl,
+                      valueAccessor: TimeValueAccessor(),
+                      decoration: (formViewModel.restrictedTimeEndControl.enabled)
+                          ? InputDecoration(
+                              labelText: tr.form_field_time_restriction_end_hint,
+                              helperText: "",
+                              hintText: tr.form_field_time_of_day_hint,
+                              suffixIcon: Material(
+                                  color: Colors.transparent,
+                                  child: IconButton(
+                                    splashRadius: 18.0,
+                                    onPressed: picker.showPicker,
+                                    icon: const Icon(Icons.access_time),
+                                  )))
+                          : const InputDecoration(),
+                    );
+                  },
+                )),
               )
             ],
-          )
-      ),
+          )),
     ];
   }
 }

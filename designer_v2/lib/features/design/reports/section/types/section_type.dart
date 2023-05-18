@@ -82,9 +82,7 @@ class TemporalAggregationFormatted {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is TemporalAggregationFormatted &&
-              _value == other._value;
+      identical(this, other) || other is TemporalAggregationFormatted && _value == other._value;
 
   @override
   int get hashCode => _value.hashCode;
@@ -129,9 +127,7 @@ class ImprovementDirectionFormatted {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is ImprovementDirectionFormatted &&
-              _value == other._value;
+      identical(this, other) || other is ImprovementDirectionFormatted && _value == other._value;
 
   @override
   int get hashCode => _value.hashCode;

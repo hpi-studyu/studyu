@@ -36,8 +36,8 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>, D ex
         onExecute: (onDelete != null)
             ? () => onDelete(formViewModel)
             : () => removeWhere((e) {
-              return formViewModel.formData!.id == e.formData?.id;
-            }),
+                  return formViewModel.formData!.id == e.formData?.id;
+                }),
         isAvailable: !isReadOnly,
       ),
     ].where((action) => action.isAvailable).toList();

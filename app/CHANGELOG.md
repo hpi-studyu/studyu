@@ -1,3 +1,43 @@
+## 2.3.1
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+ - **FIX**: only invalidate questions if necessary. ([c33d5162](https://github.com/hpi-studyu/studyu/commit/c33d5162b18965787a0a80d2cc98c3194281c693))
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
+## 2.3.0
+
+ - **REFACTOR**: button for null safety. ([9c2796e3](https://github.com/hpi-studyu/studyu/commit/9c2796e311c5729759c7bbe6c9ad054423a2b3fe))
+ - **FIX**: add untouched slider buttons again. ([9775f7ef](https://github.com/hpi-studyu/studyu/commit/9775f7eff28001b0fdff7e45fe1c266085dec878))
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
+## 2.2.1
+
+ - **FIX**: study cannot be left inadvertently anymore via about. ([b8237b5b](https://github.com/hpi-studyu/studyu/commit/b8237b5b4e0b4c1e35d3b22efe22fd89d2990ba5))
+ - **FIX**: provide option to disable analytics in settings. ([1f2dc252](https://github.com/hpi-studyu/studyu/commit/1f2dc252aee41896d12951a2e13bd37b24d47df9))
+
+## 2.2.0
+
+ - **FIX**: could not find libflutter.so. ([95aa1828](https://github.com/hpi-studyu/studyu/commit/95aa1828cc8b9c280218ae91da4127f75cc6b96d))
+ - **FIX**: device language is now used as default app language. ([ee78de35](https://github.com/hpi-studyu/studyu/commit/ee78de35c5ebed91fca297f9c1a7e78aac4d67f3))
+ - **FIX**: improve debug mode and send test notification. ([84937a2b](https://github.com/hpi-studyu/studyu/commit/84937a2bd50dfe18cd26cb1e112347f0a2cabd73))
+ - **FIX**: more slider usability fixes. ([d8309803](https://github.com/hpi-studyu/studyu/commit/d83098037f6f1cf9bdc0f150df6d94156c81f19d))
+ - **FIX**: improve questionnaire slider usability. ([9068c195](https://github.com/hpi-studyu/studyu/commit/9068c1954ccc1e3265e72e16304528b7f2e81dbc))
+ - **FIX**: slider design overhaul. ([75589ca1](https://github.com/hpi-studyu/studyu/commit/75589ca1f443f4ef779a8766cc9150cda74fb3bb))
+ - **FIX**: improve debug mode and send test notification. ([8c6afd6f](https://github.com/hpi-studyu/studyu/commit/8c6afd6fd36904592a5aa0c118c5cf88afc8bfc1))
+ - **FIX**: more slider usability fixes. ([6e151bc6](https://github.com/hpi-studyu/studyu/commit/6e151bc6281c3740ccb8d23154994c2066fc65ae))
+ - **FIX**: improve questionnaire slider usability. ([187fda96](https://github.com/hpi-studyu/studyu/commit/187fda96dfb6faa44d6521859cf0219c726cab17))
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+ - **FEAT**: sentry integration in core. ([0fae767f](https://github.com/hpi-studyu/studyu/commit/0fae767f0a7dc3c3409dd5179eeb870429b580cd))
+ - **FEAT**: Add sentry.io for crash reports. ([d19e0e9b](https://github.com/hpi-studyu/studyu/commit/d19e0e9b2d1db453f9e1e09cd0b37269c22278cb))
+
+## 2.1.2
+
+ - **FIX**: improve debug mode and send test notification. ([8c6afd6f](https://github.com/hpi-studyu/studyu/commit/8c6afd6fd36904592a5aa0c118c5cf88afc8bfc1))
+ - **FIX**: more slider usability fixes. ([6e151bc6](https://github.com/hpi-studyu/studyu/commit/6e151bc6281c3740ccb8d23154994c2066fc65ae))
+ - **FIX**: improve questionnaire slider usability. ([187fda96](https://github.com/hpi-studyu/studyu/commit/187fda96dfb6faa44d6521859cf0219c726cab17))
+ - **FIX**: slider design overhaul. ([b5a6b8ad](https://github.com/hpi-studyu/studyu/commit/b5a6b8ad18c67d2ab5b21313ff5740f175d9b7eb))
+ - **FIX**: disable multiple submit button clicks for task widget. ([5297f590](https://github.com/hpi-studyu/studyu/commit/5297f59074f3e2771cdb9431fc563a236894fd08))
+
 ## 2.1.1
 
  - **FIX**: upgrade deps to fix invalid refresh token bug. ([6a4da159](https://github.com/hpi-studyu/studyu/commit/6a4da1594d7baed5d76f74464670ec411abc961c))
