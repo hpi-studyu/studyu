@@ -9,7 +9,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 dependencies:
   collection: ^1.17.1
-  connectivity_plus: ^4.0.0
+  connectivity_plus: ^4.0.1
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
