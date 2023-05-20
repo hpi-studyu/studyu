@@ -2,12 +2,12 @@ version: '3'
 services:
   designer:
     build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+      context: ../..
+      dockerfile: ../Dockerfile
       args:
         FLUTTER_APP_FOLDER: designer
         ENV: staging
     ports:
       - 8081:80
     env_file:
-      - ../flutter_common/lib/envs/.env.staging
+      - ../../flutter_common/lib/envs/.env.staging

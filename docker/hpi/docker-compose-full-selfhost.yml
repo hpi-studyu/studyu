@@ -2,8 +2,8 @@ version: '3'
 services:
   app-selfhost:
     build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+      context: ../..
+      dockerfile: ../Dockerfile
       args:
         FLUTTER_APP_FOLDER: app
         ENV: selfhost
@@ -12,11 +12,11 @@ services:
     networks:
       - studyu-net
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
+      - ../../flutter_common/lib/envs/.env.selfhost
   designer-selfhost:
     build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+      context: ../..
+      dockerfile: ../Dockerfile
       args:
         FLUTTER_APP_FOLDER: designer
         ENV: selfhost
@@ -25,11 +25,11 @@ services:
     networks:
       - studyu-net
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
+      - ../../flutter_common/lib/envs/.env.selfhost
   designer2-selfhost:
     build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+      context: ../..
+      dockerfile: ../Dockerfile
       args:
         FLUTTER_APP_FOLDER: designer_v2
         ENV: selfhost
@@ -38,7 +38,7 @@ services:
     networks:
       - studyu-net
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
+      - ../../flutter_common/lib/envs/.env.selfhost
 networks:
   studyu-net:
       name: studyu_network

@@ -1,7 +1,9 @@
-FROM cirrusci/flutter:latest as builder
+FROM ghcr.io/cirruslabs/flutter:stable as builder
 
 # E.g. app or designer
 ARG FLUTTER_APP_FOLDER
+
+#RUN flutter config --enable-web
 
 ENV PATH ${PATH}:/root/.pub-cache/bin/
 
@@ -13,6 +15,9 @@ WORKDIR /src/
 
 COPY melos.yaml melos.yaml
 
+COPY pubspec.yaml pubspec.yaml
+COPY pubspec.lock pubspec.lock
+
 COPY core/pubspec.yaml core/pubspec.yaml
 COPY core/pubspec.lock core/pubspec.lock
 
@@ -22,33 +27,13 @@ COPY flutter_common/pubspec.lock flutter_common/pubspec.lock
 COPY $FLUTTER_APP_FOLDER/pubspec.yaml $FLUTTER_APP_FOLDER/pubspec.yaml
 COPY $FLUTTER_APP_FOLDER/pubspec.lock $FLUTTER_APP_FOLDER/pubspec.lock
 
-RUN melos clean
+RUN flutter pub get
+RUN melos cleandocker
 RUN melos bootstrap
 
 COPY ./ ./
 
-# Can be 'selfhost'
-ARG ENV
-
 # Env variable from docker-compose-*.yaml is used here if set
-RUN if [ -n "$ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$ENV ; else melos run build:web:$FLUTTER_APP_FOLDER ; fi
-
-FROM nginx:stable-alpine
-ARG FLUTTER_APP_FOLDER
-ENV FLUTTER_APP_FOLDER ${FLUTTER_APP_FOLDER}
-
-# We need to modify the nginx conf to redirect all links to index.html for designer_v2
-COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
-
-COPY ./docker/nginx/designer2-stage.hpi.studyu.health.conf /etc/nginx/conf.d/designer2-stage.hpi.studyu.health.conf
-
-# todo get ssl certs from elsewhere
-COPY ./hpi.studyu.health /etc/nginx/certs
-
-COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
-
-# Loads all env vars starting with "STUDYU" into the .env file used by both Flutter apps
-RUN mkdir /usr/share/nginx/html/$FLUTTER_APP_FOLDER/assets/envs
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/$FLUTTER_APP_FOLDER/assets/envs/.env && nginx -g 'daemon off;'"]
-
-EXPOSE 80 443
+ARG STUDYU_ENV
+RUN if [ -n "$STUDYU_ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$STUDYU_ENV ; else melos run build:web:app ; fi
+RUN if [ -n "$STUDYU_ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$STUDYU_ENV ; else melos run build:web:$FLUTTER_APP_FOLDER ; fi
