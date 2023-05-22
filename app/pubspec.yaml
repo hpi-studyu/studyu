@@ -8,8 +8,8 @@ repository: https://github.com/hpi-studyu/studyu
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies:
-  collection: ^1.17.1
-  connectivity_plus: ^4.0.0
+  collection: ^1.17.1 # flutter_test sdk
+  connectivity_plus: ^4.0.1
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
@@ -18,30 +18,30 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.0
-  flutter_local_notifications: ^14.0.0+2
+  flutter_local_notifications: ^14.1.0
   flutter_localizations:
     sdk: flutter
   flutter_timezone: ^1.0.6
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.10.0
+  flutter_widget_from_html: ^0.10.1
   # grizzly_distuv: ^1.0.0 # todo remove for null safety support
   intersperse: ^2.0.0
   intl: ^0.18.0
   material_design_icons_flutter: ^6.0.7096
-  package_info_plus: ^3.1.2 # sentry_flutter <= 7.5.2
+  package_info_plus: ^4.0.1
   pdf: ^3.10.3
   permission_handler: ^10.2.0
   provider: ^6.0.5
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
-  sentry_flutter: ^7.5.2
-  sentry_logging: ^7.5.2
+  sentry_flutter: ^7.6.1
+  sentry_logging: ^7.6.1
   shared_preferences: ^2.1.1
   studyu_core: ^4.2.0
   studyu_flutter_common: ^1.6.1
   supabase: ^1.8.1
-  supabase_flutter: ^1.9.1
+  supabase_flutter: ^1.9.2
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
   universal_html: ^2.2.2
@@ -53,6 +53,14 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   flutter_test: 
     sdk: flutter
+
+dependency_overrides:
+  # need this to support chewie 1.5.0 https://github.com/creativecreatorormaybenot/wakelock/pull/203
+  wakelock_windows:
+    git:
+      url: https://github.com/timsneath/wakelock
+      ref: win32-v5
+      path: wakelock_windows
 
 flutter_icons:
   image_path: assets/images/icon.png
