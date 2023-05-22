@@ -1,0 +1,14 @@
+version: '3'
+name: 'studyu'
+
+services:
+  nginx-only:
+    container_name: nginx-only
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    ports:
+      - 80:80
+    # - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro

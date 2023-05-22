@@ -1,0 +1,15 @@
+version: '3'
+name: 'studyu'
+
+services:
+  designer_v2:
+    container_name: designer_v2
+    restart: unless-stopped
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.specifc
+      args:
+        FLUTTER_APP_FOLDER: designer_v2
+        # STUDYU_ENV: selfhost
+    ports:
+      - 8081:8081
