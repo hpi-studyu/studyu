@@ -18,9 +18,6 @@ command:
       # Additional cleanup lifecycle script, executed when `melos clean` is ran.
       post: >
         melos exec --flutter --concurrency=3 -- "flutter clean"
-  clean-docker:
-    hooks:
-        melos exec --flutter --concurrency=3 -- "flutter clean"
 
 scripts:
   analyze:

@@ -1,4 +1,4 @@
-version: '3',
+version: '3'
 name: 'studyu'
 
 services:
@@ -17,8 +17,8 @@ services:
       - -c
       - log_min_messages=fatal # prevents Realtime polling queries from appearing in logs
     restart: unless-stopped
-    ports:
-      - "5432:5432"
+    # ports:
+    #  - "5432:5432"
     environment:
       # Connection variables
       POSTGRES_HOST: /var/run/postgresql

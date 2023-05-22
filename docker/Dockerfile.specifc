@@ -1,0 +1,34 @@
+FROM ghcr.io/cirruslabs/flutter:stable as builder
+
+ARG STUDYU_ENV
+ARG FLUTTER_APP_FOLDER
+
+ENV PATH ${PATH}:/root/.pub-cache/bin/
+
+# Create workdir
+WORKDIR /src/
+
+# Install melos
+RUN dart pub global activate melos
+
+# Copy repository files
+COPY ./ ./
+
+# Clean repository without failing
+RUN melos clean || true
+
+# Setup workspace
+RUN flutter pub get
+RUN melos bootstrap
+
+# Build apps
+RUN if [ -n "$STUDYU_ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$STUDYU_ENV ; else melos run build:web:$FLUTTER_APP_FOLDER ; fi
+
+
+# Configure webserver
+FROM nginx:stable-alpine
+
+ARG FLUTTER_APP_FOLDER
+
+# Copy web builds from the builder image to the webserver
+COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
