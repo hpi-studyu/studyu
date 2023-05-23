@@ -4,7 +4,7 @@ name: 'studyu'
 services:
   db:
     container_name: supabase-db
-    image: supabase/postgres:15.1.0.72
+    image: supabase/postgres:15.1.0.84
     healthcheck:
       test: pg_isready -U postgres -h localhost
       interval: 5s
