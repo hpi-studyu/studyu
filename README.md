@@ -1,13 +1,19 @@
 # StudyU built at HPI with ❤
 
-We have 6 different Flutter/Dart packages all contained in this monorepo.
+We have different Flutter/Dart packages all contained in this monorepo.
+
+Active packages:
 
 - StudyU App (flutter)
 - StudyU Designer v2 (flutter)
+- Core: shared code for all applications
+- Flutter Common: shared code for all Flutter apps (App, Designer v2)
+
+Outdated packages:
+
+- StudyU Designer (flutter)
 - Repository Generator (dart web server)
 - Analysis Generator (dart CLI script)
-- Core: shared code for all 4 applications
-- Flutter Common: shared code for all Flutter apps (App, Designer v2)
 
 ## Try it yourself
 
@@ -43,15 +49,6 @@ Konigorski S, Wernicke S, Slosarek T, Zenner AM, Strelow N, Ruether FD, Henschel
 
 Select the run-configuration/task in your IDE to run the Flutter apps.
 
-#### A word about Flutter beta
-
-We used to keep the channel on beta to get the newest changes (web support) and react quickly to breaking changes.
-Beta was mostly stable, but sometimes packages were not being updated quickly to address beta changes.
-Sometimes we had to include packages from Github PRs, which required some effort to maintain.
-
-Flutter has come a long way since then and now with version 2.8, we switched our code to use stable.
-This will make it easier to maintain in the future and reduce the occurrence of breaking changes and workarounds.
-
 ### Environments
 
 We use .env (environment) files, to specify the enviroment variables such as Supabase instance and other servers.
@@ -70,7 +67,7 @@ flutter build/run android/web/... --dart-define=ENV=.env.dev/.env.prod/.env.loca
 STUDYU_SUPABASE_URL=https://efeapuvwaxtxnlkzlajv.supabase.co
 STUDYU_SUPABASE_PUBLIC_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyNTUwODMyOCwiZXhwIjoxOTQxMDg0MzI4fQ.PUirsx5Zzhj3akaStc5Djid0aAVza3ELoZ5XUTqM91A
 STUDYU_PROJECT_GENERATOR_URL=https://studyu-project-generator-2zro3rzera-ew.a.run.app
-STUDYU_APP_URL="https://studyu-app.web.app/#/"
+STUDYU_APP_URL="https://app.studyu.health/"
 ```
 
 The great advantage of this new approach
