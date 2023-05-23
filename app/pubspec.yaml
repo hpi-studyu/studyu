@@ -40,7 +40,7 @@ dependencies:
   shared_preferences: ^2.1.1
   studyu_core: ^4.2.0
   studyu_flutter_common: ^1.6.1
-  supabase: ^1.8.1
+  supabase: ^1.9.0
   supabase_flutter: ^1.9.2
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
