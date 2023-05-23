@@ -1,13 +1,13 @@
 # Run StudyU with Docker
 
-The StudyU modules can be run with Docker and `docker compose` which makes StudyU very easy to operate.
+The StudyU modules can be run with Docker and `docker compose` allowing StudyU to be very easy to operate.
 This makes it possible to quickly deploy code changes to your own instance or to store data in a
 self-hosted Supabase instance data, rather than relying on a public cloud service.
 
 You will need to install Docker to be able to run any of the following scripts. Make sure you have 
 [Docker](https://docker.com) installed and configured by running `docker -v`.
 
-For HPI VMs [this script](https://gist.github.com/johannesvedder/0fafcbeabe8e069f96085bfedaebd9d0) can 
+For HPI VMs, [this script](https://gist.github.com/johannesvedder/0fafcbeabe8e069f96085bfedaebd9d0) can 
 be used to install and setup docker.
 
 ## Overview
@@ -36,15 +36,15 @@ The default ports are 8080 for the [StudyU App](http://localhost:8080) and 8081 
 
 If you want to use a different database, several more steps are necessary. You can either use a managed 
 Supabase project at [supabase.com](https://supabase.com) and link it with your StudyU instance, or you can 
-self-host Supabase on your own as explained in [Use Case #2].
+self-host Supabase on your own as explained in [Use Case #2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu).
 
-In order to run your StudyU instance under a custom domain or a different port, refer to [nginx setup].
+In order to run your StudyU instance under a custom domain or a different port, refer to [Change hostname or ports](#change-hostname-or-ports).
 
 ## Use Case #2: Run a self-hosted Supabase instance together with StudyU
 
 Supabase can be [self-hosted](https://supabase.com/docs/guides/self-hosting/docker) by design, since 
 they are open source. We provide a modified version of their docker setup, specifically optimized 
-to work with StudyU. Everything for this is located in the [supabase](/supabase) directory.
+to work with StudyU. Everything for this is located in the [supabase directory](supabase).
 
 Supabase consists out of [several tools](https://supabase.com/docs/guides/getting-started/architecture) 
 with PostgreSQL database as the core. To make it easy to perform changes to the Supabase middleware independently 
@@ -68,19 +68,23 @@ assigned to Supabase and StudyU.
    - `flutter_common/lib/envs/.env.selfhost`
 4. Configure the other Supabase settings in `supabase/.env` and StudyU settings in 
 `flutter_common/lib/envs/.env.selfhost` according to your wishes. In order to run your instances under 
-a custom domain or a different port, refer to [Change hostname or ports].
-**Otherwise `STUDYU_SUPABASE_URL` must be set to `http://localhost:80`**.
+a custom domain or a different port, refer to [Change hostname or ports](#change-hostname-or-ports).
+Otherwise `STUDYU_SUPABASE_URL` must be set to `http://localhost:80`.
 
-**BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration]**
+**BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration](#advanced-configuration)**
 
 ### Run Supabase and StudyU
 
 Make sure that you thoughtfully completed all the previous steps and then start the following services:
-- In the directory `supabase/`:
-  a. `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
-  b. `docker compose up` (Start Supabase)
-- In the directory `docker/` 
-  a. `docker compose up` (Start StudyU App and StudyU Designer)
+
+In the directory `supabase/`:
+
+a. `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
+b. `docker compose up` (Start Supabase)
+
+In the directory `docker/`
+
+a. `docker compose up` (Start StudyU App and StudyU Designer)
 
 Open your local Supabase Studio instance on [http://localhost:80](http://localhost:80) 
 (default basic authentication with username: studyu, password: studyu). The StudyU database scheme is 
@@ -88,7 +92,7 @@ automatically applied. Navigate to the table editor. Add a row to the table `app
 `prod` and insert the links to the terms of services and privacy policies with respect to their language.
 
 The default ports are as follows:
-- 80 for [Supabase Studio](http://localhost:80) (**INSECURE** username: studyu, password: studyu)
+- 80 for [Supabase Studio](http://localhost:80) (**INSECURE** Username: studyu, Password: studyu)
 - 8080 for [StudyU App](http://localhost:8080)
 - 8081 for [StudyU Designer](http://localhost:8081).
 
@@ -100,18 +104,20 @@ the previous use cases will be applied for configuration purposes.
 ### Supabase Machine
 
 On the machine where Supabase and PostgreSQL should be run, perform all the Supabase related configuration 
-steps described in [Configure at Use Case #2]. However, this will not be sufficient to access Supabase. 
+steps described in [Configure](#configure) of Use Case #2. However, this will not be sufficient to access Supabase. 
 Additionally, to the Supabase backend, a nginx reverse proxy will need to be started. This is further 
-explained in [Some words about nginx]. 
+explained in [Some words about nginx](#some-words-about-nginx). 
 
-**BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration]**
+**BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration](#Advanced-Configuration)**
 
-Run the following services:
-- In the directory `supabase/`:
-  a. `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
-  b. `docker compose up` (Start Supabase)
-- In the directory `docker/`
-  a. `docker compose -f docker-compose-nginx_only.yml up` (Start the nginx reverse proxy)
+Run the following services. In the directory `supabase/`:
+
+a. `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
+b. `docker compose up` (Start Supabase)
+
+In the directory `docker/`:
+
+a. `docker compose -f docker-compose-nginx_only.yml up` (Start the nginx reverse proxy)
 
 The default ports are as follows:
 - 80 for [Supabase Studio](http://localhost:80) (**INSECURE** username: studyu, password: studyu)
@@ -157,7 +163,7 @@ When running a self-hosted supabase instance with our setup, all external ports 
 Thus, a separate nginx container needs to be started additionally, serving as a reverse proxy for 
 advanced configuration and security purposes. All external requests to supabase outside of docker are 
 tunneled through the proxy at `nginx/conf.d/03_supabase.conf`. This allows to restrict access as explained in 
-[Secure the Supabase backend]. Any changes to the hostname or ports in any Supabase configuration files must
+[Secure the Supabase backend](#secure-the-Supabase-backend). Any changes to the hostname or ports in any Supabase configuration files must
 therefore also be applied to the nginx configuration.
 
 ### Change hostname or ports
@@ -195,10 +201,11 @@ TODO
 
 ## Good to know
 
-Use `-d` to run containers in the background.
-In order to stop docker containers from running press CTRL+C or run `docker compose -p 'studyu' down --remove-orphans` and `docker compose -p 'supabase' down --remove-orphans`.
-When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
-Moreover, it often helps to clear the cache of your web browser when making changes to environment files.
+- Use `-d` to run containers in the background.
+- After making changes to nginx configuration scripts, it is necessary to reload nginx. For this, get the name of the docker container with `docker ps`, and then `sh` into the container with `docker exec -it <container name> sh` and run `/usr/sbin/nginx -s reload` inside the container.
+- In order to stop docker containers from running press CTRL+C or run `docker compose -p 'studyu' down --remove-orphans` and `docker compose -p 'supabase' down --remove-orphans`.
+- When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
+- Moreover, it often helps to clear the cache of your web browser when making changes to environment files.
 
 
 ## Automatic install and update script
