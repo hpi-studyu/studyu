@@ -21,8 +21,8 @@ RUN melos bootstrap
 ARG STUDYU_ENV
 
 # Build apps
-RUN if [ -n "$STUDYU_ENV" ] ; then melos run build:web:app:$STUDYU_ENV ; else melos run build:web:app ; fi
-RUN if [ -n "$STUDYU_ENV" ] ; then melos run build:web:designer_v2:$STUDYU_ENV ; else melos run build:web:designer_v2 ; fi
+RUN melos run build:web:app:$STUDYU_ENV
+RUN melos run build:web:designer_v2:$STUDYU_ENV
 
 # Configure webserver
 FROM nginx:stable-alpine

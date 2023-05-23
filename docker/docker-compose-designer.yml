@@ -10,6 +10,8 @@ services:
       dockerfile: ./docker/Dockerfile.specifc
       args:
         FLUTTER_APP_FOLDER: designer_v2
-        # STUDYU_ENV: selfhost
+        STUDYU_ENV: selfhost
     ports:
       - 8081:8081
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
