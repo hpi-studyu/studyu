@@ -36,7 +36,7 @@ dependencies:
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   sentry_flutter: ^7.6.1
-  sentry_logging: ^7.6.1
+  sentry_logging: ^7.6.2
   shared_preferences: ^2.1.1
   studyu_core: ^4.2.0
   studyu_flutter_common: ^1.6.1
