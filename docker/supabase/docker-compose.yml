@@ -58,7 +58,7 @@ services:
 
   auth:
     container_name: supabase-auth
-    image: supabase/gotrue:v2.47.0
+    image: supabase/gotrue:v2.60.7
     healthcheck:
       test:
         [
@@ -233,7 +233,7 @@ services:
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@{POSTGRES_DB}:${POSTGRES_PORT}/${POSTGRES_DB}"
-      VERIFY_JWT: false
+      VERIFY_JWT: "false"
     # ports:
     #  - ${FUNCTIONS_HTTP_PORT}:9000/tcp
     volumes:
@@ -242,3 +242,5 @@ services:
       - start
       - --main-service
       - /home/deno/functions/main
+
+# If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
