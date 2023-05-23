@@ -8,8 +8,8 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-      # args:
-      #  STUDYU_ENV: selfhost
+      args:
+        STUDYU_ENV: selfhost
     ports:
       - 8080:8080
       - 8081:8081

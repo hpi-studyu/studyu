@@ -21,9 +21,8 @@ RUN melos clean || true
 RUN flutter pub get
 RUN melos bootstrap
 
-# Build apps
-RUN if [ -n "$STUDYU_ENV" ] ; then melos run build:web:$FLUTTER_APP_FOLDER:$STUDYU_ENV ; else melos run build:web:$FLUTTER_APP_FOLDER ; fi
-
+# Build app
+RUN melos run build:web:$FLUTTER_APP_FOLDER:$STUDYU_ENV
 
 # Configure webserver
 FROM nginx:stable-alpine
