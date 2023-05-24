@@ -15,7 +15,6 @@ COPY ./ ./
 RUN melos clean
 
 # Setup workspace
-RUN flutter pub get
 RUN melos bootstrap
 
 ARG STUDYU_ENV
