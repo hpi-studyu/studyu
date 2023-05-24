@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:studyu_app/util/app_analytics.dart';
-import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/localization.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -177,8 +177,10 @@ class OptOutAlertDialog extends StatelessWidget {
             await subject!.softDelete();
             await deleteActiveStudyReference();
             if (context.mounted) {
-              final studyNotifications = context.read<AppState>()
-                  .studyNotifications?.flutterLocalNotificationsPlugin;
+              final studyNotifications = context
+                  .read<AppState>()
+                  .studyNotifications
+                  ?.flutterLocalNotificationsPlugin;
               await studyNotifications?.cancelAll();
             }
             if (context.mounted) {
@@ -215,8 +217,10 @@ class DeleteAlertDialog extends StatelessWidget {
                 await subject!.delete(); // hard-delete
                 await deleteLocalData();
                 if (context.mounted) {
-                  final studyNotifications = context.read<AppState>()
-                      .studyNotifications?.flutterLocalNotificationsPlugin;
+                  final studyNotifications = context
+                      .read<AppState>()
+                      .studyNotifications
+                      ?.flutterLocalNotificationsPlugin;
                   await studyNotifications?.cancelAll();
                 }
                 if (context.mounted) {

@@ -180,30 +180,33 @@ class AverageSectionWidget extends ReportSectionWidget {
     print(task.toString());
 */
     return charts.BarChartData(
-        //minX: 1,
-        //maxX: subject.study.schedule.length.toDouble(),
-        titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-                axisNameWidget: (section.aggregate != TemporalAggregation.intervention) ? const Text("Phase") : const Text(""),
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: getTitles,
-                )),
-            topTitles: AxisTitles(
-                sideTitles: SideTitles(
-              showTitles: false,
-            ))),
-        gridData: charts.FlGridData(
-          drawHorizontalLine: false,
-          drawVerticalLine: false,
-          /*checkToShowVerticalLine: (val) => true,
+      //minX: 1,
+      //maxX: subject.study.schedule.length.toDouble(),
+      titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(
+              axisNameWidget:
+                  (section.aggregate != TemporalAggregation.intervention)
+                      ? const Text("Phase")
+                      : const Text(""),
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: getTitles,
+              )),
+          topTitles: AxisTitles(
+              sideTitles: SideTitles(
+            showTitles: false,
+          ))),
+      gridData: charts.FlGridData(
+        drawHorizontalLine: false,
+        drawVerticalLine: false,
+        /*checkToShowVerticalLine: (val) => true,
         getDrawingVerticalLine: (val) => FlLine(color: Colors.black),
         verticalInterval: subject.study.schedule.phaseDuration.toDouble(),*/
-        ),
-        barGroups: getBarGroups(),
-        barTouchData: BarTouchData(
-          enabled: false, // todo enable with x and y value
-        ),
+      ),
+      barGroups: getBarGroups(),
+      barTouchData: BarTouchData(
+        enabled: false, // todo enable with x and y value
+      ),
       //maxY: ; // todo get min and max values of question
       // todo add question title to top of diagram (e.g. "pain rating")
       // todo add legend
@@ -246,42 +249,42 @@ class AverageSectionWidget extends ReportSectionWidget {
     //final numberOfPhases = subject.interventionOrder.length;
     //final phaseDuration = subject.study.schedule.phaseDuration;
     List<BarChartGroupData> starter = List.empty();
-    switch(section.aggregate) {
+    switch (section.aggregate) {
       case TemporalAggregation.day:
-      starter = List<BarChartGroupData>.generate(
-          subject.study.schedule.length,
-          (index) => BarChartGroupData(
-                x: index,
-                barRods: [
-                  BarChartRodData(
-                    toY: 0,
-                  )
-                ],
-              ));
+        starter = List<BarChartGroupData>.generate(
+            subject.study.schedule.length,
+            (index) => BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: 0,
+                    )
+                  ],
+                ));
       case TemporalAggregation.phase:
-      starter = List<BarChartGroupData>.generate(
-          subject.interventionOrder.length,
-          (index) => BarChartGroupData(
-                x: index,
-                barRods: [
-                  BarChartRodData(
-                    toY: 0,
-                  )
-                ],
-              ));
+        starter = List<BarChartGroupData>.generate(
+            subject.interventionOrder.length,
+            (index) => BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: 0,
+                    )
+                  ],
+                ));
       case TemporalAggregation.intervention:
-      int interventionCount = subject.selectedInterventionIds.length +
-          (subject.study.schedule.includeBaseline ? 1 : 0);
-      starter = List<BarChartGroupData>.generate(
-          interventionCount,
-          (index) => BarChartGroupData(
-                x: index,
-                barRods: [
-                  BarChartRodData(
-                    toY: 0,
-                  )
-                ],
-              ));
+        int interventionCount = subject.selectedInterventionIds.length +
+            (subject.study.schedule.includeBaseline ? 1 : 0);
+        starter = List<BarChartGroupData>.generate(
+            interventionCount,
+            (index) => BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: 0,
+                    )
+                  ],
+                ));
       default:
     }
     for (var entry in data) {

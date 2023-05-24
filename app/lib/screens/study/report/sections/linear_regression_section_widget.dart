@@ -11,7 +11,6 @@ class LinearRegressionSectionWidget extends ReportSectionWidget {
   Widget build(BuildContext context) {
     return const Text("LinearRegression is currently not supported");
   }
-
 }
 
 /*import 'package:charts_common/common.dart';
