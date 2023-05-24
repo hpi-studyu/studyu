@@ -77,14 +77,14 @@ Otherwise, if a custom domain or port should be used, refer to [Change hostname 
 
 Make sure that you thoughtfully completed all the previous steps and then start the following services:
 
-In the directory `supabase/`:
+In the directory `supabase`:
 
-a. `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
-b. `docker compose up` (Start Supabase)
+- `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
+- `docker compose up` (Start Supabase)
 
-In the directory `docker/`
+In the directory `docker`
 
-a. `docker compose up` (Start StudyU App and StudyU Designer)
+- `docker compose up` (Start StudyU App and StudyU Designer)
 
 Open your local Supabase Studio instance on [http://localhost:8082](http://localhost:8082) 
 (default basic authentication with username: studyu, password: studyu). The StudyU database scheme is 
@@ -110,14 +110,15 @@ explained in [Some words about nginx](#some-words-about-nginx).
 
 **BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration](#Advanced-Configuration)**
 
-Run the following services. In the directory `supabase/`:
+Run the following services.
+In the directory `supabase`:
 
-a. `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
-b. `docker compose up` (Start Supabase)
+- `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
+- `docker compose up` (Start Supabase)
 
-In the directory `docker/`:
+In the directory `docker`:
 
-a. `docker compose -f docker-compose-nginx_only.yml up` (Start the nginx reverse proxy)
+- `docker compose -f docker-compose-nginx_only.yml up` (Start the nginx reverse proxy)
 
 The default ports are as follows:
 - 8082 for [Supabase Studio](http://localhost:8082) (**INSECURE** username: studyu, password: studyu)
@@ -128,8 +129,8 @@ On the second machine where StudyU should be run, replace the default Supabase v
 ones in the file `flutter_common/lib/envs/.env.selfhost`. Make sure to set `STUDYU_SUPABASE_URL` to the 
 correct URL of the Supabase instace of your first machine.
 
-Then run in the directory `docker/`:
-  a. `docker compose up` (Start StudyU App and StudyU Designer)
+Then run in the directory `docker`:
+- `docker compose up` (Start StudyU App and StudyU Designer)
 
 The default ports are as follows:
 - 8080 for [StudyU App](http://localhost:8080)
