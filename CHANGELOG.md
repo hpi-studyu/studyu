@@ -11,6 +11,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.3.3`](#studyu_app---v233)
+
+---
+
+#### `studyu_app` - `v2.3.3`
+
+ - **FIX**: downgrade deps to stable release. ([773ec700](https://github.com/hpi-studyu/studyu/commit/773ec7003716877115632102eadcf704a5a270e3))
+
+
+## 2023-05-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`studyu_workspace` - `v0.1.0`](#studyu_workspace---v010)
 
 Packages with other changes:

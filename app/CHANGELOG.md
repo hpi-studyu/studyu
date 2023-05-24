@@ -1,3 +1,7 @@
+## 2.3.3
+
+ - **FIX**: downgrade deps to stable release. ([773ec700](https://github.com/hpi-studyu/studyu/commit/773ec7003716877115632102eadcf704a5a270e3))
+
 ## 2.3.2
 
  - **FIX**: do not show notifications after study was left. ([f478ab9d](https://github.com/hpi-studyu/studyu/commit/f478ab9de6463b666d7c3f55ad2afcdbc65cf72f))
