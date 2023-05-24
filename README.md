@@ -40,10 +40,18 @@ Konigorski S, Wernicke S, Slosarek T, Zenner AM, Strelow N, Ruether FD, Henschel
 ### Getting started
 
 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. Make sure both flutter and dart are in your PATH. Run `dart --version` and `flutter --version` to check.
-3. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global activate melos`. Melos is used to manage the Monorepo structure and links all packages.
-4. Run `melos bootstrap` to generate Android Studio/VS Code IDE files to make sure your IDE is setup properly. This also takes care of downloading all other dependencies (usually `flutter pub get` is used).
-5. Open the root folder of the studyu Git repository in Android Studio or VS Code. You should have new run-configurations/tasks added for running the Flutter apps or executing Melos scripts. More information at the [Melos Documentation](https://melos.invertase.dev/).
+2. Make sure both flutter and dart are in your PATH. Run `dart --version` and `flutter --version` to
+   check.
+3. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global activate melos`. Melos
+   is used to manage the Monorepo structure and links all packages.
+4. Run `melos bootstrap` to generate Android Studio/VS Code IDE files to make sure your IDE is setup
+   properly. This also takes care of downloading all other dependencies (usually `flutter pub get`
+   is used).
+5. Run `dart pub get` to initialize the StudyU root project. This will apply a consistent lint style
+   to all packages.
+6. Open the root folder of this repository in Android Studio or VS Code. You should have new
+   run-configurations/tasks added for running the Flutter apps or executing Melos scripts. More
+   information at the [Melos Documentation](https://melos.invertase.dev/).
 
 ### Running Flutter apps
 

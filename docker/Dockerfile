@@ -15,6 +15,7 @@ COPY ./ ./
 RUN melos clean
 
 # Setup workspace
+RUN dart pub get
 RUN melos bootstrap
 
 ARG STUDYU_ENV

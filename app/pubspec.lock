@@ -181,10 +181,10 @@ packages:
     dependency: transitive
     description:
       name: csslib
-      sha256: "831883fb353c8bdc1d71979e5b342c7d88acfbc643113c14ae51e2442ea0f20f"
+      sha256: f857285c8dc0b4f2f77b49a1c083ff8c75223a7549de20f3e607df58cf497a43
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.3"
+    version: "0.17.0"
   csv:
     dependency: transitive
     description:
@@ -1155,10 +1155,11 @@ packages:
   universal_html:
     dependency: "direct main"
     description:
-      name: universal_html
-      sha256: f2e0ff0c4af8e4bbda4d273ca4a11be4055414f478fad5c161609b74790ff696
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: patch-1
+      resolved-ref: f6f76050270c4c5ea6074d776a849e2a046f80ea
+      url: "https://github.com/UsamaSarwar/universal_html"
+    source: git
     version: "2.2.2"
   universal_io:
     dependency: transitive
