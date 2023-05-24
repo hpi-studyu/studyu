@@ -18,7 +18,6 @@ COPY ./ ./
 RUN melos clean
 
 # Setup workspace
-RUN flutter pub get
 RUN melos bootstrap
 
 # Build app
