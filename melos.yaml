@@ -14,7 +14,7 @@ command:
     hooks:
       # Clean things very deeply, can be used to establish "pristine checkout" status
       pre: >
-        git clean -x -d -f -q
+        git clean -x -d -f -q || true
       # Additional cleanup lifecycle script, executed when `melos clean` is ran.
       post: >
         melos exec --flutter --concurrency=3 -- "flutter clean"
