@@ -43,7 +43,7 @@ scripts:
   format:ci:
     run: |
       melos exec -c 6 -- \
-        "find . -type f -name "*.dart" ! -name "*.g.dart" ! -path "**/.dart_tool/**" | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
+        "find . -type f -name "*.dart" ! -name "*.g.dart" ! -path ".dart_tool/**" | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
     description: Format all code without generated files
 
   outdated:
