@@ -57,7 +57,7 @@ file.
 Before your own Supabase instance can be started, the default Supabase secrets need to be changed and 
 assigned to Supabase and StudyU.
 
-1. Copy the example Supabase configuration `cp supabase/.env.example supabase/.env`
+1. Create a copy of the example Supabase configuration `cp supabase/.env.example supabase/.env`
 2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a `JWT_SECRET` for 
 [Supabase Auth](https://supabase.com/docs/learn/auth-deep-dive/auth-deep-dive-jwts) with at least 
 32 characters. Then [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the corresponding 
@@ -67,9 +67,9 @@ assigned to Supabase and StudyU.
    - `supabase/volumes/api/kong.yml`
    - `flutter_common/lib/envs/.env.selfhost`
 4. Configure the other Supabase settings in `supabase/.env` and StudyU settings in 
-`flutter_common/lib/envs/.env.selfhost` according to your wishes. In order to run your instances under 
-a custom domain or a different port, refer to [Change hostname or ports](#change-hostname-or-ports).
-Otherwise `STUDYU_SUPABASE_URL` must be set to `http://localhost:80`.
+`flutter_common/lib/envs/.env.selfhost` according to your wishes.
+5. If Supabase runs on the same machine, `STUDYU_SUPABASE_URL` must be set to `http://localhost:80` in the file `flutter_common/lib/envs/.env.selfhost`. 
+Otherwise, if a custom domain or port should be used, refer to [Change hostname or ports](#change-hostname-or-ports).
 
 **BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration](#advanced-configuration)**
 
@@ -86,15 +86,15 @@ In the directory `docker/`
 
 a. `docker compose up` (Start StudyU App and StudyU Designer)
 
-Open your local Supabase Studio instance on [http://localhost:80](http://localhost:80) 
+Open your local Supabase Studio instance on [http://localhost:8082](http://localhost:8082) 
 (default basic authentication with username: studyu, password: studyu). The StudyU database scheme is 
 automatically applied. Navigate to the table editor. Add a row to the table `app_config` with the id 
 `prod` and insert the links to the terms of services and privacy policies with respect to their language.
 
 The default ports are as follows:
-- 80 for [Supabase Studio](http://localhost:80) (**INSECURE** Username: studyu, Password: studyu)
 - 8080 for [StudyU App](http://localhost:8080)
 - 8081 for [StudyU Designer](http://localhost:8081).
+- 8082 for [Supabase Studio](http://localhost:8082) (**INSECURE** Username: studyu, Password: studyu)
 
 ## Use Case #3: Run Supabase and StudyU on different machines
 
@@ -120,7 +120,7 @@ In the directory `docker/`:
 a. `docker compose -f docker-compose-nginx_only.yml up` (Start the nginx reverse proxy)
 
 The default ports are as follows:
-- 80 for [Supabase Studio](http://localhost:80) (**INSECURE** username: studyu, password: studyu)
+- 8082 for [Supabase Studio](http://localhost:8082) (**INSECURE** username: studyu, password: studyu)
 
 ### StudyU Machine
 
@@ -203,11 +203,11 @@ TODO
 
 - Use `-d` to run containers in the background.
 - After making changes to nginx configuration scripts, it is necessary to reload nginx. For this, get the name of the docker container with `docker ps`, and then `sh` into the container with `docker exec -it <container name> sh` and run `/usr/sbin/nginx -s reload` inside the container.
+- After making changes to `docker-compose*.yml` files in the `docker/` directory, a rebuild of studyu is necessary. Run `docker compose up --build`.
 - In order to stop docker containers from running press CTRL+C or run `docker compose -p 'studyu' down --remove-orphans` and `docker compose -p 'supabase' down --remove-orphans`.
 - When experimenting with Docker setups, it might be necessary to 
 [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) in order to make changes visible.
 - Moreover, it often helps to clear the cache of your web browser when making changes to environment files.
-
 
 ## Automatic install and update script
 
