@@ -204,7 +204,8 @@ TODO
 - Use `-d` to run containers in the background.
 - After making changes to nginx configuration scripts, it is necessary to reload nginx. For this, get the name of the docker container with `docker ps`, and then `sh` into the container with `docker exec -it <container name> sh` and run `/usr/sbin/nginx -s reload` inside the container.
 - In order to stop docker containers from running press CTRL+C or run `docker compose -p 'studyu' down --remove-orphans` and `docker compose -p 'supabase' down --remove-orphans`.
-- When experimenting with Docker setups, it might be necessary to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) before seeing changes.
+- When experimenting with Docker setups, it might be necessary to 
+[remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/) in order to make changes visible.
 - Moreover, it often helps to clear the cache of your web browser when making changes to environment files.
 
 
