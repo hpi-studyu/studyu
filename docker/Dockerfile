@@ -12,7 +12,7 @@ RUN dart pub global activate melos
 COPY ./ ./
 
 # Clean repository without failing
-RUN melos clean || true
+RUN melos clean
 
 # Setup workspace
 RUN flutter pub get
