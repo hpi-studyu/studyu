@@ -1,3 +1,8 @@
+## 2.3.4
+
+ - **FIX**: overwrite universal_html dep. ([19f30c86](https://github.com/hpi-studyu/studyu/commit/19f30c863dbb59c4f176694c177fc8c0f964dc24))
+ - **FIX**: deps quickfix. ([99cc4ea6](https://github.com/hpi-studyu/studyu/commit/99cc4ea642b4d97c3d59ffe1412eb1e2c231615b))
+
 ## 2.3.3
 
  - **FIX**: downgrade deps to stable release. ([773ec700](https://github.com/hpi-studyu/studyu/commit/773ec7003716877115632102eadcf704a5a270e3))
