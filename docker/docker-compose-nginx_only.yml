@@ -7,7 +7,7 @@ services:
     image: nginx:stable-alpine
     restart: unless-stopped
     ports:
-      - 80:80
+      - 8082:8082
     # - 443:443
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
