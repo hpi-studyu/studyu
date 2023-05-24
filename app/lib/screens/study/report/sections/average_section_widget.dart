@@ -10,8 +10,7 @@ import '../util/plot_utilities.dart';
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
 
-  const AverageSectionWidget(StudySubject subject, this.section, {Key? key})
-      : super(subject, key: key);
+  const AverageSectionWidget(StudySubject subject, this.section, {Key? key}) : super(subject, key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +26,14 @@ class AverageSectionWidget extends ReportSectionWidget {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfPhases)
-        .map((i) =>
-            (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1).floor())
+        .map((i) => (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1).floor())
         .toList();
   }
 
   List<int> get phasePos {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfPhases)
-        .map((i) => (i + 1) * phaseDuration)
-        .toList();
+    return Iterable<int>.generate(numberOfPhases).map((i) => (i + 1) * phaseDuration).toList();
   }
 
   //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
@@ -185,9 +181,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
               axisNameWidget:
-                  (section.aggregate != TemporalAggregation.intervention)
-                      ? const Text("Phase")
-                      : const Text(""),
+                  (section.aggregate != TemporalAggregation.intervention) ? const Text("Phase") : const Text(""),
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: getTitles,
@@ -273,8 +267,8 @@ class AverageSectionWidget extends ReportSectionWidget {
                   ],
                 ));
       case TemporalAggregation.intervention:
-        int interventionCount = subject.selectedInterventionIds.length +
-            (subject.study.schedule.includeBaseline ? 1 : 0);
+        int interventionCount =
+            subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
         starter = List<BarChartGroupData>.generate(
             interventionCount,
             (index) => BarChartGroupData(
@@ -288,8 +282,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       default:
     }
     for (var entry in data) {
-      starter[entry.x.round()] =
-          BarChartGroupData(x: entry.x.round(), barRods: [
+      starter[entry.x.round()] = BarChartGroupData(x: entry.x.round(), barRods: [
         charts.BarChartRodData(
           toY: entry.value.toDouble(),
           color: getColor(entry, subject),
@@ -337,24 +330,17 @@ class AverageSectionWidget extends ReportSectionWidget {
     switch (section.aggregate) {
       case TemporalAggregation.day:
         //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
-        if (subject.study.schedule.includeBaseline &&
-            diagram.x < subject.study.schedule.phaseDuration) {
+        if (subject.study.schedule.includeBaseline && diagram.x < subject.study.schedule.phaseDuration) {
           // if id == "_baseline"
           c = baselineColor;
         } else {
-          c = colors[subject.selectedInterventions
-              .map((e) => e.id)
-              .toList()
-              .indexOf(diagram.intervention)];
+          c = colors[subject.selectedInterventions.map((e) => e.id).toList().indexOf(diagram.intervention)];
         }
       case TemporalAggregation.phase:
         if (subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[subject.selectedInterventions
-              .map((e) => e.id)
-              .toList()
-              .indexOf(diagram.intervention)];
+          c = colors[subject.selectedInterventions.map((e) => e.id).toList().indexOf(diagram.intervention)];
         }
       case TemporalAggregation.intervention:
         if (subject.study.schedule.includeBaseline && diagram.x == 0) {
