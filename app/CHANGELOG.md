@@ -1,3 +1,7 @@
+## 2.3.2
+
+ - **FIX**: do not show notifications after study was left. ([f478ab9d](https://github.com/hpi-studyu/studyu/commit/f478ab9de6463b666d7c3f55ad2afcdbc65cf72f))
+
 ## 2.3.1
 
  - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))

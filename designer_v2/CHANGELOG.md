@@ -1,3 +1,7 @@
+## 1.3.3
+
+ - **FIX**: enable emojis again for designer_v2 web. ([d2ccd3f0](https://github.com/hpi-studyu/studyu/commit/d2ccd3f0f997f304871c223f913c3392b91304c3))
+
 ## 1.3.2
 
  - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
