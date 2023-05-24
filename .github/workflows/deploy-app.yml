@@ -3,7 +3,7 @@ name: App Deploy
 on:
   push:
     branches:
-      - main #noop
+      - disabled
     # - master
   workflow_dispatch:
 
