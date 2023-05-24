@@ -48,15 +48,18 @@ dependencies:
   url_launcher: ^6.1.11
   uuid: ^3.0.7
 
-dev_dependencies: 
+dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.1
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
 dependency_overrides:
   # quickfix for https://github.com/dint-dev/universal_html/issues/76
-  csslib: 0.17.0
+  universal_html:
+    git:
+      url: https://github.com/UsamaSarwar/universal_html
+      ref: patch-1
   # need this to support chewie 1.5.0 https://github.com/creativecreatorormaybenot/wakelock/pull/203
   wakelock_windows:
     git:
