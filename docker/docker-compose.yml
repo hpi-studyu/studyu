@@ -11,8 +11,9 @@ services:
       args:
         STUDYU_ENV: selfhost
     ports:
-      - 8080:8080
-      - 8081:8081
+      - 8080:8080 # StudyU App
+      - 8081:8081 # StudyU Designer
+      - 8082:8082 # Supabase Studio (disable if you do not want to self-host Supabase on this machine)
     # - 443:443
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
