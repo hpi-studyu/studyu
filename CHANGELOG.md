@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_flutter_common` - `v1.6.2-dev.1`](#studyu_flutter_common---v162-dev1)
+
+---
+
+#### `studyu_flutter_common` - `v1.6.2-dev.1`
+
+ - **FIX**: add dhc db to .env. ([f81a44c0](https://github.com/hpi-studyu/studyu/commit/f81a44c0350acadb0f00c42fa5ad4a37ee604fd5))
+
+
+## 2023-05-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.4.0`](#studyu_app---v240)
 
 ---

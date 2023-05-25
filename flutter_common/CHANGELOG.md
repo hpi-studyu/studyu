@@ -1,3 +1,7 @@
+## 1.6.2-dev.1
+
+ - **FIX**: add dhc db to .env. ([f81a44c0](https://github.com/hpi-studyu/studyu/commit/f81a44c0350acadb0f00c42fa5ad4a37ee604fd5))
+
 ## 1.6.2-dev.0
 
  - **FIX**: .env.selfhost use localhost as default. ([5dc73afb](https://github.com/hpi-studyu/studyu/commit/5dc73afb27806256a659243342fe2c16aad61cb7))
