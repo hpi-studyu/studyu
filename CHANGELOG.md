@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.4.0`](#studyu_app---v240)
+
+---
+
+#### `studyu_app` - `v2.4.0`
+
+ - **FEAT**: store analytics data in the backend and support caching. ([f3e70610](https://github.com/hpi-studyu/studyu/commit/f3e7061081f631d74c6df0ea78024ace6ea1f333))
+
+
+## 2023-05-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_core` - `v4.3.0-dev.0`](#studyu_core---v430-dev0)
  - [`studyu_flutter_common` - `v1.6.2-dev.0`](#studyu_flutter_common---v162-dev0)
 

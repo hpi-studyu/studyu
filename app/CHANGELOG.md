@@ -1,3 +1,7 @@
+## 2.4.0
+
+ - **FEAT**: store analytics data in the backend and support caching. ([f3e70610](https://github.com/hpi-studyu/studyu/commit/f3e7061081f631d74c6df0ea78024ace6ea1f333))
+
 ## 2.3.4
 
  - **FIX**: overwrite universal_html dep. ([19f30c86](https://github.com/hpi-studyu/studyu/commit/19f30c863dbb59c4f176694c177fc8c0f964dc24))
