@@ -19,9 +19,9 @@ easily adoptable for various purposes. Here we describe the most common use-case
 
 Choose this method if you do not want to setup your own Supabase instance, but only 
 launch StudyU applications with docker. This might be useful if you want to run StudyU after 
-you made changes to the codebase. The main StudyU database will be used by default, as specified in 
-the [.env.selfhost](https://github.com/hpi-studyu/studyu/blob/dev/flutter_common/lib/envs/.env.selfhost) 
-environment file.
+you made changes to the codebase. Switch to the `.env.local` [environment file](https://github.com/hpi-studyu/studyu/blob/dev/flutter_common/lib/envs/.env.local)
+to use the StudyU database with local StudyU applications. For this modify the `docker-compose-*.yml` files 
+you want to run (see below), and replace `../flutter_common/lib/envs/.env.selfhost` with `../flutter_common/lib/envs/.env.local` in the section `env_file`. 
 
 To start both the StudyU App and the StudyU Designer, simply run `docker compose up`. 
 
@@ -34,9 +34,10 @@ Make sure to replace `<module>` with one of the following:
 The default ports are 8080 for the [StudyU App](http://localhost:8080) and 8081 for the 
 [StudyU Designer](http://localhost:8081).
 
-If you want to use a different database, several more steps are necessary. You can either use a managed 
-Supabase project at [supabase.com](https://supabase.com) and link it with your StudyU instance, or you can 
-self-host Supabase on your own as explained in [Use Case #2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu).
+If you want to use a different database, more steps are necessary. You can start a managed 
+Supabase project at [supabase.com](https://supabase.com) and link it with your StudyU instance by 
+replacing the values for `STUDYU_SUPABASE_URL` and `STUDYU_SUPABASE_PUBLIC_ANON_KEY` in the file `.env.local`.
+Alternatively, you can self-host Supabase on your own as explained in [Use Case #2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu).
 
 In order to run your StudyU instance under a custom domain or a different port, refer to [Change hostname or ports](#change-hostname-or-ports).
 
@@ -68,7 +69,7 @@ assigned to Supabase and StudyU.
    - `flutter_common/lib/envs/.env.selfhost`
 4. Configure the other Supabase settings in `supabase/.env` and StudyU settings in 
 `flutter_common/lib/envs/.env.selfhost` according to your wishes.
-5. If Supabase runs on the same machine, `STUDYU_SUPABASE_URL` must be set to `http://localhost:80` in the file `flutter_common/lib/envs/.env.selfhost`. 
+
 Otherwise, if a custom domain or port should be used, refer to [Change hostname or ports](#change-hostname-or-ports).
 
 **BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced Configuration](#advanced-configuration)**
