@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/notifications.dart';
@@ -6,6 +7,7 @@ import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 class AppState with ChangeNotifier {
+  AppConfig? appConfig;
   Study? selectedStudy;
   List<Intervention>? selectedInterventions;
   StudySubject? activeSubject;
@@ -22,7 +24,11 @@ class AppState with ChangeNotifier {
   /// mixing results from test users with actual participants)
   bool get trackParticipantProgress => !(isPreview && selectedStudy!.isRunning);
 
-  AppState();
+  AppState(this.appConfig) {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
+      appConfig = await AppConfig.getAppConfig();
+    });
+  }
 
   void init(BuildContext context) {
     scheduleNotifications(context);
@@ -33,7 +39,7 @@ class AppState with ChangeNotifier {
 
   void initCache() {
     activeSubject!.onSave.listen((StudySubject subject) async {
-      await Cache.store(subject);
+      await Cache.storeSubject(subject);
     });
   }
 

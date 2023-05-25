@@ -15,6 +15,8 @@ AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => AppConfig(
           Map<String, String>.from(json['designer_privacy'] as Map),
       designerTerms: Map<String, String>.from(json['designer_terms'] as Map),
       imprint: Map<String, String>.from(json['imprint'] as Map),
+      analytics:
+          StudyUAnalytics.fromJson(json['analytics'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AppConfigToJson(AppConfig instance) => <String, dynamic>{
@@ -25,4 +27,5 @@ Map<String, dynamic> _$AppConfigToJson(AppConfig instance) => <String, dynamic>{
       'designer_privacy': instance.designerPrivacy,
       'designer_terms': instance.designerTerms,
       'imprint': instance.imprint,
+      'analytics': instance.analytics.toJson(),
     };

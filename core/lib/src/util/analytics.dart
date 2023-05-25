@@ -2,8 +2,11 @@
 
 import 'dart:async';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:sentry/sentry.dart';
+
+part 'analytics.g.dart';
 
 class Analytics {
   static Logger logger = Logger('');
@@ -55,4 +58,19 @@ class Analytics {
     print("[Breadcrumb] $category: $message");
     Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
   }
+}
+
+@JsonSerializable()
+class StudyUAnalytics {
+  bool enabled;
+  @JsonKey(name: 'dsn')
+  String dsn;
+  @JsonKey(name: 'samplingRate')
+  double? samplingRate;
+
+  StudyUAnalytics(this.enabled, this.dsn, this.samplingRate);
+
+  factory StudyUAnalytics.fromJson(Map<String, dynamic> json) => _$StudyUAnalyticsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StudyUAnalyticsToJson(this);
 }

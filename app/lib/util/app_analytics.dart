@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sentry_logging/sentry_logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studyu_app/app.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-class AppAnalytics {
-  static bool? _enabled;
+import 'cache.dart';
+
+class AppAnalytics /*extends Analytics*/ {
+  static bool? _userEnabled;
   static const String keyAnalytics = 'analytics';
   final BuildContext context;
   late AppState state;
@@ -19,16 +23,45 @@ class AppAnalytics {
   }
 
   static Future<void> init() async {
-    if (_enabled == null) {
+    if (_userEnabled == null) {
       final prefs = await SharedPreferences.getInstance();
-      _enabled = prefs.get(keyAnalytics) as bool?;
-      // analysis is enabled by default
-      _enabled ??= true;
+      _userEnabled = prefs.get(keyAnalytics) as bool?;
+      // analytics is enabled by default
+      _userEnabled ??= true;
     }
   }
 
-  static get isEnabled {
-    return _enabled;
+  static Future<void> start(AppConfig? appConfig, MyApp myApp) async {
+    StudyUAnalytics? studyUAnalytics;
+    if (appConfig == null || appConfig.analytics.dsn.isEmpty) {
+      final cachedAnalytics = (await Cache.loadAnalytics());
+      if (cachedAnalytics != null) {
+        studyUAnalytics = cachedAnalytics;
+      }
+    } else {
+      studyUAnalytics = appConfig.analytics;
+    }
+
+    if (studyUAnalytics == null || !studyUAnalytics.enabled) {
+      runApp(myApp);
+      return;
+    }
+    await SentryFlutter.init((options) {
+      options.dsn = studyUAnalytics!.dsn;
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = studyUAnalytics.samplingRate ?? 1.0;
+      options.addIntegration(LoggingIntegration());
+    }, appRunner: () => runApp(myApp));
+    Cache.storeAnalytics(StudyUAnalytics(
+      studyUAnalytics.enabled,
+      studyUAnalytics.dsn,
+      studyUAnalytics.samplingRate,
+    ));
+  }
+
+  static get isUserEnabled {
+    return _userEnabled;
   }
 
   static void setEnabled(bool newEnabled) async {
@@ -38,7 +71,7 @@ class AppAnalytics {
       // a restart of the app will be necessary to enable sentry again
       Sentry.close();
     }
-    _enabled = newEnabled;
+    _userEnabled = newEnabled;
   }
 
   Future<void> initBasic() async {

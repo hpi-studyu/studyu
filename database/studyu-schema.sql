@@ -137,7 +137,8 @@ CREATE TABLE public.app_config (
     designer_privacy jsonb NOT NULL,
     designer_terms jsonb NOT NULL,
     imprint jsonb NOT NULL,
-    contact jsonb DEFAULT '{"email": "hpi-info@hpi.de", "phone": "+49-(0)331 5509-0", "website": "https://hpi.de/", "organization": "Hasso Plattner Institute"}'::jsonb NOT NULL
+    contact jsonb DEFAULT '{"email": "hpi-info@hpi.de", "phone": "+49-(0)331 5509-0", "website": "https://hpi.de/", "organization": "Hasso Plattner Institute"}'::jsonb NOT NULL,
+    analytics jsonb
 );
 
 

@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,12 +29,12 @@ class _TermsScreenState extends State<TermsScreen> {
   @override
   Widget build(BuildContext context) {
     final appLocale = Localizations.localeOf(context);
-
+    final state = context.watch<AppState>();
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: RetryFutureBuilder<AppConfig>(
-            tryFunction: AppConfig.getAppConfig,
+            tryFunction: () => (state.appConfig != null) ? Future.value(state.appConfig) : AppConfig.getAppConfig(),
             successBuilder: (BuildContext context, AppConfig? appConfig) => SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),

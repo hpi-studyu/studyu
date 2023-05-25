@@ -26,7 +26,7 @@ class _SettingsState extends State<Settings> {
   @override
   void initState() {
     super.initState();
-    _analyticsValue = AppAnalytics.isEnabled;
+    _analyticsValue = AppAnalytics.isUserEnabled;
     _selectedValue = context.read<AppLanguage>().appLocal;
     subject = context.read<AppState>().activeSubject;
   }

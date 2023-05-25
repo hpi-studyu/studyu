@@ -29,7 +29,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       if (!mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
-      await Cache.store(context.read<AppState>().activeSubject);
+      await Cache.storeSubject(context.read<AppState>().activeSubject);
       await storeActiveSubjectId(subject!.id);
       if (!mounted) return;
       setState(() => ready = true);

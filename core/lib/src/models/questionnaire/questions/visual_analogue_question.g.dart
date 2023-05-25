@@ -19,8 +19,8 @@ VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
               json['conditional'] as Map<String, dynamic>)
       ..minimum = (json['minimum'] as num).toDouble()
       ..maximum = (json['maximum'] as num).toDouble()
-      ..initial = (json['initial'] as num).toDouble()
       ..step = (json['step'] as num).toDouble()
+      ..initial = (json['initial'] as num).toDouble()
       ..minimumColor = json['minimumColor'] as int
       ..maximumColor = json['maximumColor'] as int
       ..minimumAnnotation = json['minimumAnnotation'] as String
@@ -44,8 +44,8 @@ Map<String, dynamic> _$VisualAnalogueQuestionToJson(
   writeNotNull('conditional', instance.conditional?.toJson());
   val['minimum'] = instance.minimum;
   val['maximum'] = instance.maximum;
-  val['initial'] = instance.initial;
   val['step'] = instance.step;
+  val['initial'] = instance.initial;
   val['minimumColor'] = instance.minimumColor;
   val['maximumColor'] = instance.maximumColor;
   val['minimumAnnotation'] = instance.minimumAnnotation;

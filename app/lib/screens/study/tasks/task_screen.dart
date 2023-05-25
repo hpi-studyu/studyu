@@ -113,7 +113,7 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
   } on SocketException catch (exception, stackTrace) {
     Analytics.logger.info("Saving results in offline mode");
     Analytics.captureEvent(exception, stackTrace: stackTrace);
-    await Cache.store(activeSubject);
+    await Cache.storeSubject(activeSubject);
   } catch (exception, stackTrace) {
     Analytics.logger.severe("Could not save results");
     Analytics.captureException(exception, stackTrace: stackTrace);
