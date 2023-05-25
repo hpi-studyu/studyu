@@ -12,6 +12,8 @@ services:
         FLUTTER_APP_FOLDER: designer_v2
         STUDYU_ENV: selfhost
     ports:
-      - 8081:8081
+      - 8081:8081 # StudyU Designer
+      - 8082:8082 # Supabase Studio (disable if you do not want to self-host Supabase on this machine)
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
