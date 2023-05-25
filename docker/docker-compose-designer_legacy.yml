@@ -10,10 +10,11 @@ services:
       dockerfile: ./docker/Dockerfile.specifc
       args:
         FLUTTER_APP_FOLDER: designer
-        STUDYU_ENV: selfhost
     ports:
       - 8081:8081
     volumes:
       # To use the legacy designer instead of the new designer_v2
       # replace designer_v2 with designer in the file nginx/conf.d/designer.conf
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    env_file:
+      - ../flutter_common/lib/envs/.env.selfhost
