@@ -1087,7 +1087,7 @@ packages:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.6.2-dev.0"
+    version: "1.6.2-dev.1"
   supabase:
     dependency: "direct main"
     description:
