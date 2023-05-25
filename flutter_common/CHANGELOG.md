@@ -1,3 +1,8 @@
+## 1.6.2-dev.0
+
+ - **FIX**: .env.selfhost use localhost as default. ([5dc73afb](https://github.com/hpi-studyu/studyu/commit/5dc73afb27806256a659243342fe2c16aad61cb7))
+ - **DOCS**: modified docker setup. ([21897dd5](https://github.com/hpi-studyu/studyu/commit/21897dd507669d3208eb2ad0aecea3761caa3086))
+
 ## 1.6.1
 
  - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
