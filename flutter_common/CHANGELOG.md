@@ -1,3 +1,7 @@
+## 1.6.2-dev.2
+
+ - **REFACTOR**: rename ENV to STUDY_ENV. ([1ee25b50](https://github.com/hpi-studyu/studyu/commit/1ee25b50e2544f6a62e77ac4266b5fd4c8ba9bf2))
+
 ## 1.6.2-dev.1
 
  - **FIX**: add dhc db to .env. ([f81a44c0](https://github.com/hpi-studyu/studyu/commit/f81a44c0350acadb0f00c42fa5ad4a37ee604fd5))

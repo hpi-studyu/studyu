@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-05-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.3.0-dev.1`](#studyu_core---v430-dev1)
+ - [`studyu_flutter_common` - `v1.6.2-dev.2`](#studyu_flutter_common---v162-dev2)
+
+---
+
+#### `studyu_core` - `v4.3.0-dev.1`
+
+ - **FIX**: analytics same key. ([b2412c42](https://github.com/hpi-studyu/studyu/commit/b2412c422263c8f1e08f5fe6197ac412fe5941c6))
+
+#### `studyu_flutter_common` - `v1.6.2-dev.2`
+
+ - **REFACTOR**: rename ENV to STUDY_ENV. ([1ee25b50](https://github.com/hpi-studyu/studyu/commit/1ee25b50e2544f6a62e77ac4266b5fd4c8ba9bf2))
+
+
 ## 2023-05-25
 
 ### Changes
