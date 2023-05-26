@@ -101,14 +101,13 @@ for more convenience:
 
 - `.env`: Production database used by default
 - `.env.staging`: Staging database, currently not used
-- `.env.local`: Used when connecting to a locally running supabase instance.
-- `.env.selfhost`: Used when connecting to a self-hosted supabase instance.
+- `.env.local`: Used to run StudyU locally with Docker with the deployed
+  production instance of Supabase
+- `.env.selfhost`: Used for a selfhosted instance of Supabase, e.g. an instance
+  running locally with Docker
 
-Ideally we should only use staging for all our development work or run an
-instance locally. This needs to be setup using the new [supabase
-cli](https://github.com/supabase/cli).
-
-Also see melos commands `app:web:local` and `designer:web:local`.
+Ideally we should only use the staging database or a local one for all our
+development work.
 
 ### Coding on `core`
 
