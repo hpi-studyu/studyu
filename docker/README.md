@@ -131,6 +131,9 @@ Supabase and StudyU can be deployed on different machines, e.g. for
 load-balancing reasons. A mix of the previous use cases will be applied for
 configuration purposes.
 
+This set up can also be used for local development by following the instructions
+in *Supabase Machine* and running StudyU locally with Flutter.
+
 ### Supabase Machine
 
 On the machine where Supabase and PostgreSQL should be run, perform all the
