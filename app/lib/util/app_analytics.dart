@@ -12,8 +12,10 @@ import 'cache.dart';
 
 class AppAnalytics /*extends Analytics*/ {
   static bool? _userEnabled;
+
   /// Checks if the user has allowed us to use analytic features
   static const String keyAnalyticsUserEnable = 'analytics_user_enable';
+
   /// Stores the [StudyUAnalytics] settings in the cache;
   final BuildContext context;
   late AppState state;

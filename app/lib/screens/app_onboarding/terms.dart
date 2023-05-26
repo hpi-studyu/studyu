@@ -32,11 +32,11 @@ class _TermsScreenState extends State<TermsScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: (state.appConfig != null) ? legalSection(context, state.appConfig) :
-          RetryFutureBuilder<AppConfig>(
-            tryFunction: AppConfig.getAppConfig,
-            successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)
-          ),
+          child: (state.appConfig != null)
+              ? legalSection(context, state.appConfig)
+              : RetryFutureBuilder<AppConfig>(
+                  tryFunction: AppConfig.getAppConfig,
+                  successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -98,7 +98,6 @@ class _TermsScreenState extends State<TermsScreen> {
       ),
     );
   }
-
 }
 
 class LegalSection extends StatelessWidget {
