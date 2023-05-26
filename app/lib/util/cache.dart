@@ -9,7 +9,6 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 class Cache {
   static Future<SharedPreferences> get sharedPrefs => SharedPreferences.getInstance();
   static bool isSynchronizing = false;
-  static const String analyticsKey = 'analytics';
 
   static Future<void> storeSubject(StudySubject? subject) async {
     if (subject == null) return;
@@ -31,12 +30,12 @@ class Cache {
   }
 
   static Future<void> storeAnalytics(StudyUAnalytics analytics) async {
-    (await sharedPrefs).setString(analyticsKey, jsonEncode(analytics.toJson()));
+    (await sharedPrefs).setString(StudyUAnalytics.keyStudyUAnalytics, jsonEncode(analytics.toJson()));
   }
 
   static Future<StudyUAnalytics?> loadAnalytics() async {
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
-      return StudyUAnalytics.fromJson(jsonDecode((await sharedPrefs).getString(analyticsKey)!));
+      return StudyUAnalytics.fromJson(jsonDecode((await sharedPrefs).getString(StudyUAnalytics.keyStudyUAnalytics)!));
     }
     return null;
   }

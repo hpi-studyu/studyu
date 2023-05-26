@@ -63,10 +63,15 @@ class Analytics {
 @JsonSerializable()
 class StudyUAnalytics {
   bool enabled;
+
   @JsonKey(name: 'dsn')
   String dsn;
+
   @JsonKey(name: 'samplingRate')
   double? samplingRate;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  static const String keyStudyUAnalytics = 'analytics_settings';
 
   StudyUAnalytics(this.enabled, this.dsn, this.samplingRate);
 

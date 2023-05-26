@@ -12,7 +12,9 @@ import 'cache.dart';
 
 class AppAnalytics /*extends Analytics*/ {
   static bool? _userEnabled;
-  static const String keyAnalytics = 'analytics';
+  /// Checks if the user has allowed us to use analytic features
+  static const String keyAnalyticsUserEnable = 'analytics_user_enable';
+  /// Stores the [StudyUAnalytics] settings in the cache;
   final BuildContext context;
   late AppState state;
   StudySubject? subject;
@@ -25,7 +27,7 @@ class AppAnalytics /*extends Analytics*/ {
   static Future<void> init() async {
     if (_userEnabled == null) {
       final prefs = await SharedPreferences.getInstance();
-      _userEnabled = prefs.get(keyAnalytics) as bool?;
+      _userEnabled = prefs.get(keyAnalyticsUserEnable) as bool?;
       // analytics is enabled by default
       _userEnabled ??= true;
     }
@@ -66,7 +68,7 @@ class AppAnalytics /*extends Analytics*/ {
 
   static void setEnabled(bool newEnabled) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(keyAnalytics, newEnabled);
+    await prefs.setBool(keyAnalyticsUserEnable, newEnabled);
     if (!newEnabled) {
       // a restart of the app will be necessary to enable sentry again
       Sentry.close();
