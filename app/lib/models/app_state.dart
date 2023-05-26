@@ -26,7 +26,11 @@ class AppState with ChangeNotifier {
 
   AppState(this.appConfig) {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-      appConfig = await AppConfig.getAppConfig();
+      try {
+        appConfig = await AppConfig.getAppConfig();
+      } catch (error) {
+        // Still offline
+      }
     });
   }
 
