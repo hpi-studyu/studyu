@@ -28,55 +28,14 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = Localizations.localeOf(context);
     final state = context.watch<AppState>();
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: RetryFutureBuilder<AppConfig>(
-            tryFunction: () => (state.appConfig != null) ? Future.value(state.appConfig) : AppConfig.getAppConfig(),
-            successBuilder: (BuildContext context, AppConfig? appConfig) => SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    LegalSection(
-                      title: AppLocalizations.of(context)!.terms,
-                      description: AppLocalizations.of(context)!.terms_content,
-                      acknowledgment: AppLocalizations.of(context)!.terms_agree,
-                      onChange: (val) => setState(() => _acceptedTerms = val!),
-                      isChecked: _acceptedTerms,
-                      icon: const Icon(MdiIcons.fileDocumentEdit),
-                      pdfUrl: appConfig!.appTerms[appLocale.languageCode.toString()],
-                      pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
-                    ),
-                    const SizedBox(height: 20),
-                    LegalSection(
-                      title: AppLocalizations.of(context)!.privacy,
-                      description: AppLocalizations.of(context)!.privacy_content,
-                      acknowledgment: AppLocalizations.of(context)!.privacy_agree,
-                      onChange: (val) => setState(() => _acceptedPrivacy = val!),
-                      isChecked: _acceptedPrivacy,
-                      icon: const Icon(MdiIcons.shieldLock),
-                      pdfUrl: appConfig.appPrivacy[appLocale.languageCode.toString()],
-                      pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
-                    ),
-                    const SizedBox(height: 30),
-                    OutlinedButton.icon(
-                      icon: const Icon(MdiIcons.scaleBalance),
-                      onPressed: () async {
-                        final uri = Uri.parse(appConfig.imprint[appLocale.languageCode.toString()]!);
-                        if (await canLaunchUrl(uri)) {
-                          launchUrl(uri, mode: LaunchMode.externalApplication);
-                        }
-                      },
-                      label: Text(AppLocalizations.of(context)!.imprint_read),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          child: (state.appConfig != null) ? legalSection(context, state.appConfig) :
+          RetryFutureBuilder<AppConfig>(
+            tryFunction: AppConfig.getAppConfig,
+            successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)
           ),
         ),
       ),
@@ -93,6 +52,53 @@ class _TermsScreenState extends State<TermsScreen> {
       ),
     );
   }
+
+  Widget legalSection(BuildContext context, AppConfig? appConfig) {
+    final appLocale = Localizations.localeOf(context);
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LegalSection(
+              title: AppLocalizations.of(context)!.terms,
+              description: AppLocalizations.of(context)!.terms_content,
+              acknowledgment: AppLocalizations.of(context)!.terms_agree,
+              onChange: (val) => setState(() => _acceptedTerms = val!),
+              isChecked: _acceptedTerms,
+              icon: const Icon(MdiIcons.fileDocumentEdit),
+              pdfUrl: appConfig!.appTerms[appLocale.languageCode.toString()],
+              pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
+            ),
+            const SizedBox(height: 20),
+            LegalSection(
+              title: AppLocalizations.of(context)!.privacy,
+              description: AppLocalizations.of(context)!.privacy_content,
+              acknowledgment: AppLocalizations.of(context)!.privacy_agree,
+              onChange: (val) => setState(() => _acceptedPrivacy = val!),
+              isChecked: _acceptedPrivacy,
+              icon: const Icon(MdiIcons.shieldLock),
+              pdfUrl: appConfig.appPrivacy[appLocale.languageCode.toString()],
+              pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
+            ),
+            const SizedBox(height: 30),
+            OutlinedButton.icon(
+              icon: const Icon(MdiIcons.scaleBalance),
+              onPressed: () async {
+                final uri = Uri.parse(appConfig.imprint[appLocale.languageCode.toString()]!);
+                if (await canLaunchUrl(uri)) {
+                  launchUrl(uri, mode: LaunchMode.externalApplication);
+                }
+              },
+              label: Text(AppLocalizations.of(context)!.imprint_read),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }
 
 class LegalSection extends StatelessWidget {
