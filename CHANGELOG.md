@@ -15,6 +15,28 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.4.1`](#studyu_app---v241)
+
+---
+
+#### `studyu_app` - `v2.4.1`
+
+ - **FIX**: analytics same key. ([b2412c42](https://github.com/hpi-studyu/studyu/commit/b2412c422263c8f1e08f5fe6197ac412fe5941c6))
+ - **DOCS**: add todo, describe bug. ([4316341c](https://github.com/hpi-studyu/studyu/commit/4316341c601bd884daf271c6b6ef5805828bc32e))
+
+
+## 2023-05-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_core` - `v4.3.0-dev.1`](#studyu_core---v430-dev1)
  - [`studyu_flutter_common` - `v1.6.2-dev.2`](#studyu_flutter_common---v162-dev2)
 

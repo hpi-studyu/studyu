@@ -1,3 +1,8 @@
+## 2.4.1
+
+ - **FIX**: analytics same key. ([b2412c42](https://github.com/hpi-studyu/studyu/commit/b2412c422263c8f1e08f5fe6197ac412fe5941c6))
+ - **DOCS**: add todo, describe bug. ([4316341c](https://github.com/hpi-studyu/studyu/commit/4316341c601bd884daf271c6b6ef5805828bc32e))
+
 ## 2.4.0
 
  - **FEAT**: store analytics data in the backend and support caching. ([f3e70610](https://github.com/hpi-studyu/studyu/commit/f3e7061081f631d74c6df0ea78024ace6ea1f333))
