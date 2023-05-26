@@ -30,11 +30,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - if: ${{ github.ref != 'refs/heads/master' }}
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -50,11 +46,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - if: ${{ github.ref == 'refs/heads/dev' }}
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -70,11 +62,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - if: ${{ github.ref == 'refs/heads/dev' }}
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
