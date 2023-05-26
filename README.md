@@ -62,11 +62,11 @@ Select the run-configuration/task in your IDE to run the Flutter apps.
 We use .env (environment) files, to specify the enviroment variables such as Supabase instance and other servers.
 We have multiple configurations stored under `flutter_common/lib/envs/`.
 By default `.env` (see below) is used, which is our production environment.
-We can specify the other files by using e.g. `--dart-define=ENV=.env.local`.
+We can specify the other files by using e.g. `--dart-define=STUDYU_ENV=.env.local`.
 This can also be added to the run configuration in Android Studio or VS Code.
 
 ```shell
-flutter build/run android/web/... --dart-define=ENV=.env.dev/.env.prod/.env.local/...
+flutter build/run android/web/... --dart-define=STUDYU_ENV=.env.dev/.env.prod/.env.local/...
 ```
 
 #### flutter_common/lib/envs/.env file example
