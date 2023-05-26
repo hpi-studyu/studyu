@@ -220,8 +220,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       } catch (exception) {
         try {
+          // TODO further analyze this. How to recreate:
+          // 1. Participate in a study and wait some time until playstore uploads
+          // a backup of your current subject
+          // 2. Leave the study via the menu to delete all remote data
+          // 3. Uninstall the app and reinstall
+          // 4. Open the app but do not join a study
+          // 5. Restart the app. Either only this error shows up, worst case is
+          // app hangs and is unresponsive
+
           Analytics.logger.warning(
-              'Could not login and retrieve the study subject. This might be because the study subject is no longer available and only resides in app backup');
+              'Could not login and retrieve the study subject.'
+                  'One reason for this might be that the study subject is no '
+                  'longer available and only resides in app backup');
           /*await Analytics.captureEvent(
             SentryEvent(throwable: exception),
             stackTrace: stackTrace,
