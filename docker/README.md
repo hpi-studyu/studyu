@@ -1,7 +1,7 @@
 # Run StudyU with Docker
 
 The StudyU modules can be run with Docker and `docker compose` allowing StudyU
-to be very easy to operate.  This makes it possible to quickly deploy code
+to be very easy to operate. This makes it possible to quickly deploy code
 changes to your own instance or to store data in a self-hosted Supabase instance
 data, rather than relying on a public cloud service.
 
@@ -35,7 +35,7 @@ To start both the StudyU App and the StudyU Designer, simply run `docker compose
 up`.
 
 If you only want to start a single StudyU application run `docker compose -f
-docker-compose-{module} up`.  Make sure to replace `{module}` with one of the
+docker-compose-{module} up`. Make sure to replace `{module}` with one of the
 following:
 
 - `app`: Start the StudyU App
@@ -48,7 +48,7 @@ for the [StudyU Designer](http://localhost:8081).
 If you want to use a different database, more steps are necessary. You can start
 a managed Supabase project at [supabase.com](https://supabase.com) and link it
 with your StudyU instance by replacing the values for `STUDYU_SUPABASE_URL` and
-`STUDYU_SUPABASE_PUBLIC_ANON_KEY` in the file `.env.local`.  Alternatively, you
+`STUDYU_SUPABASE_PUBLIC_ANON_KEY` in the file `.env.local`. Alternatively, you
 can self-host Supabase on your own as explained in [Use Case # 2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu).
 
 In order to run your StudyU instance under a custom domain or a different port,
@@ -135,14 +135,14 @@ configuration purposes.
 
 On the machine where Supabase and PostgreSQL should be run, perform all the
 Supabase related configuration steps described in [Configure](#configure) of Use
-Case #2. However, this will not be sufficient to access Supabase.  Additionally,
+Case #2. However, this will not be sufficient to access Supabase. Additionally,
 to the Supabase backend, a nginx reverse proxy will need to be started. This is
 further explained in [Some words about nginx](#some-words-about-nginx).
 
 **BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced
 Configuration](#advanced-configuration)**
 
-Run the following services.  In the directory `supabase`:
+Run the following services. In the directory `supabase`:
 
 - `docker compose -f docker-compose-db.yml up` (Start PostgreSQL)
 - `docker compose up` (Start Supabase)
@@ -180,7 +180,7 @@ Some more modifications can be done to customize and secure the setup.
 ### Secure the Supabase backend
 
 By default, the Supabase backend is not secure if you deploy it, since it can be
-accessed by anyone.  Supabase itself does not offer any access control for
+accessed by anyone. Supabase itself does not offer any access control for
 Supabase Studio. We have added basic authentication as an easy way to remedy
 this potential vulnerability. However, the defaults credentials need to be
 changed in the `nginx/.htpasswd` file. Consult your favorite search engine on
@@ -194,7 +194,7 @@ access the nginx reverse proxy. Have a look at the
 
 To run flutter apps like StudyU in a web browser, a web server is necessary. We
 have chosen to use nginx alpine for this task, since it features a very small
-file size and can furthermore act as a reverse proxy.  The configuration files
+file size and can furthermore act as a reverse proxy. The configuration files
 in the `nginx/conf.d/` directory are shipped together with each docker compose
 file in the `/docker` directory. The nginx server serves various purposes.
 
@@ -203,10 +203,10 @@ For the StudyU App and Designer (`nginx/conf.d/01_app.conf` and
 flutter apps are forwarded to the index.html which is the entrypoint for flutter
 on the web.
 
-When running a self-hosted supabase instance with our setup, all external ports
-are closed by default.  Thus, a separate nginx container needs to be started
+When running a self-hosted Supabase instance with our setup, all external ports
+are closed by default. Thus, a separate nginx container needs to be started
 additionally, serving as a reverse proxy for advanced configuration and security
-purposes. All external requests to supabase outside of docker are tunneled
+purposes. All external requests to Supabase outside of docker are tunneled
 through the proxy at `nginx/conf.d/03_supabase.conf`. This allows to restrict
 access as explained in [Secure the Supabase
 backend](#secure-the-supabase-backend). Any changes to the hostname or ports in
@@ -223,7 +223,7 @@ respective `nginx/conf.d/` files (`01_app.conf`, `02_designer.conf`,
 `03_supabase.conf`) and replacing `localhost` with the designated hostname.
 
 The default ports can be changed by replacing the old port with the new one in
-the same files as above.  Additionally, the `docker-compose-*.yml` files have to
+the same files as above. Additionally, the `docker-compose-*.yml` files have to
 be modified.
 
 ### SSL
@@ -240,7 +240,7 @@ of methods on how to make certbot work with nginx available on the web.
 ## Backup the Database
 
 StudyU stores its data with Supabase as a backend that in turn stores its data
-in a PostgreSQL database.  The data for this database is mapped as a docker
+in a PostgreSQL database. The data for this database is mapped as a docker
 compose volume to `supabase/volumes/db/data` and is persisted between restarts.
 
 For backup purposes you should not create a backup of this directory, but rather

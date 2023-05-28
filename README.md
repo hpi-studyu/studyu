@@ -27,8 +27,7 @@ Outdated packages:
 
 ## App Stores
 
-- [Google Play
-  Store](https://play.google.com/store/apps/details?id=health.studyu.app)
+- [Google Play Store](https://play.google.com/store/apps/details?id=health.studyu.app)
 - [Apple App Store](https://apps.apple.com/us/app/studyu-health/id1571991198)
 
 ## Publications
@@ -68,11 +67,11 @@ Select the run-configuration/task in your IDE to run the Flutter apps.
 
 ### Environments
 
-We use .env (environment) files, to specify the enviroment variables such as
-Supabase instance and other servers.  We have multiple configurations stored
-under `flutter_common/lib/envs/`.  By default `.env` (see below) is used, which
-is our production environment.  We can specify the other files by using e.g.
-`--dart-define=STUDYU_ENV=.env.local`.  This can also be added to the run
+We use .env (environment) files, to specify the environment variables such as
+Supabase instance and other servers. We have multiple configurations stored
+under `flutter_common/lib/envs/`. By default `.env` (see below) is used, which
+is our production environment. We can specify the other files by using e.g.
+`--dart-define=STUDYU_ENV=.env.local`. This can also be added to the run
 configuration in Android Studio or VS Code.
 
 ```shell
@@ -92,13 +91,13 @@ The great advantage of this new approach (compared to the previous approach
 which different entrypoint `main.dart` files) is that we can set the
 configuration of already compiled web apps. Previously, once built, a Flutter
 web app and its container would be hardcoded to whatever variable was given at
-the build time.  In the docker-compose setup, we leverage this by copying the
+the build time. In the docker-compose setup, we leverage this by copying the
 config (`.env`) to the right place in the container, without needing to rebuild.
 Now we can publish a docker image and the same image can be used in multiple
 environments.
 
-Additionally we have 4 envs for convenience. Replace or create for more
-convenience:
+Additionally, we have 4 environment files for convenience. Replace or create
+for more convenience:
 
 - `.env`: Production database used by default
 - `.env.staging`: Staging database, currently not used
@@ -106,7 +105,7 @@ convenience:
 - `.env.selfhost`: Used when connecting to a self-hosted supabase instance.
 
 Ideally we should only use staging for all our development work or run an
-instance locally.  This needs to be setup using the new [supabase
+instance locally. This needs to be setup using the new [supabase
 cli](https://github.com/supabase/cli).
 
 Also see melos commands `app:web:local` and `designer:web:local`.
@@ -114,7 +113,7 @@ Also see melos commands `app:web:local` and `designer:web:local`.
 ### Coding on `core`
 
 When developing models in the `core` package you need to make sure the JSON IO
-code is generated correctly.  To do this we use `build_runner` together with
+code is generated correctly. To do this we use `build_runner` together with
 `json_serializable`.
 
 To generate the IO code once, run `melos run generate`.
@@ -126,7 +125,7 @@ need to have all files generated, when being imported.
 ### Supabase
 
 We are using [Supabase](https://supabase.com/) as a Backend-as-a-Service
-provider.  Supabase provides different backend services such as a database, API,
+provider. Supabase provides different backend services such as a database, API,
 authentication, storage service all based around PostgreSQL and other FOSS.
 
 ### Local setup
