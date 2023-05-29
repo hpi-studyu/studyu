@@ -17,7 +17,7 @@ dependencies:
   fl_chart: ^0.62.0
   flutter:
     sdk: flutter
-  flutter_file_dialog: ^3.0.0
+  flutter_file_dialog: ^3.0.1
   flutter_local_notifications: ^14.1.0
   flutter_localizations:
     sdk: flutter
