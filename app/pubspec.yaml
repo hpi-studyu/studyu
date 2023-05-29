@@ -30,7 +30,7 @@ dependencies:
   intl: ^0.18.0 # flutter_localizations
   material_design_icons_flutter: ^6.0.7096
   package_info_plus: ^4.0.1
-  pdf: ^3.10.3
+  pdf: ^3.10.4
   permission_handler: ^10.2.0
   provider: ^6.0.5
   quiver: ^3.2.1
