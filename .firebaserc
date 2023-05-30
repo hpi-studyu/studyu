@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "studyu-e37af"
+    "default": "studyu-e37af",
+    "dev": "studyu-dev"
   },
   "targets": {
     "studyu-e37af": {
@@ -12,6 +13,17 @@
           "studyu-designer-v2"
         ]
       }
+    },
+    "studyu-dev": {
+      "hosting": {
+        "app": [
+          "studyu-dev-app-2"
+        ],
+        "designer-v2": [
+          "studyu-dev-designer-2"
+        ]
+      }
     }
-  }
+  },
+  "etags": {}
 }

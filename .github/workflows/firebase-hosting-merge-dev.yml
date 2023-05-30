@@ -26,7 +26,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_E37AF }}'
-          channelId: dev # empty for preview deployment
-          expires: 30d
-          projectId: studyu-e37af
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_DEV }}'
+          channelId: live
+          projectId: studyu-dev

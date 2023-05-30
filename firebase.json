@@ -7,10 +7,12 @@
         "firebase.json",
         "**/node_modules/**"
       ],
-      "rewrites": [ {
-        "source": "**",
-        "destination": "/index.html"
-      } ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
       "headers": [
         {
           "source": "*.supabase.co/**",
@@ -39,10 +41,12 @@
         "firebase.json",
         "**/node_modules/**"
       ],
-      "rewrites": [ {
-        "source": "**",
-        "destination": "/index.html"
-      } ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
       "headers": [
         {
           "source": "*",
