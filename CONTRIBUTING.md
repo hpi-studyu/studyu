@@ -1,28 +1,8 @@
-# Development setup
+# Contributing
 
-## Getting started
+## Project setup
 
-1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. Make sure both flutter and dart are in your PATH. Run `dart --version` and
-`flutter --version` to check.
-3. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global
-activate melos`. Melos is used to manage the Monorepo structure and links all
-packages.
-4. Run `melos bootstrap` to generate Android Studio/VS Code IDE files to make
-sure your IDE is setup properly. This also takes care of downloading all other
-dependencies (usually `flutter pub get` is used).
-5. Run `dart pub get` to initialize the StudyU root project. This will apply a
-consistent lint style to all packages.
-6. Open the root folder of this repository in Android Studio or VS Code. You
-should have new run-configurations/tasks added for running the Flutter apps or
-executing Melos scripts. More information at the [Melos
-Documentation](https://melos.invertase.dev/).
-
-## Running Flutter apps
-
-Select the run-configuration/task in your IDE to run the Flutter apps.
-
-## Environments
+### Environments
 
 We use .env (environment) files, to specify the environment variables such as
 Supabase instance and other servers. We have multiple configurations stored
@@ -35,7 +15,8 @@ configuration in Android Studio or VS Code.
 flutter build/run android/web/... --dart-define=STUDYU_ENV=.env.dev/.env.prod/.env.local/...
 ```
 
-### flutter_common/lib/envs/.env file example
+Below is an example for an environment file such as
+`flutter_common/lib/envs/.env`.
 
 ```shell
 STUDYU_SUPABASE_URL=https://efeapuvwaxtxnlkzlajv.supabase.co
@@ -66,7 +47,7 @@ convenience:
 Ideally we should only use the staging database or a local one for all our
 development work.
 
-## Coding on `core`
+### Coding on `core`
 
 When developing models in the `core` package you need to make sure the JSON IO
 code is generated correctly. To do this we use `build_runner` together with
@@ -78,13 +59,85 @@ Contrary to most recommendations, we commit those generated files to Git. This
 is needed, because core is a dependency by app and designer and dependencies
 need to have all files generated, when being imported.
 
-## Supabase
+### Database & backend
 
 We are using [Supabase](https://supabase.com/) as a Backend-as-a-Service
 provider. Supabase provides different backend services such as a database, API,
 authentication, storage service all based around PostgreSQL and other FOSS.
 
-## Local setup
+## Local development
 
-StudyU and Supabase can also be hosted locally via Docker. More information on
-this [can be found here](docker).
+Follow these instructions to set up and use your local development environment.
+
+### Supabase
+
+The following are instructions for how to quickly set up and run a local
+Supabase instance for development. More detailed instructions and additional use
+cases can be found [here](docker).
+
+#### Containers
+
+1. Copy the [`docker/supabase/.env.example`](docker/supabase/.env.example) to
+   create `docker/supabase/.env`. You can leave all values as they are.
+2. In [`docker/supabase/`](docker/supabase), run `docker compose -f
+   docker-compose-db.yml up` to launch the Postgres database.
+3. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
+   Supabase.
+4. In [`docker/`](docker), run `docker compose -f docker-compose-nginx_only.yml
+   up` to the nginx reverse proxy.
+
+If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote
+control enabled and the splits layout, you can omit steps 2-4 and instead run
+`.kitty/dev` from the project's root to launch all containers in split windows.
+
+#### Seeding
+
+Both the app as well as the designer require some configuration data to be
+present. To add this data, make sure your containers are running (steps 2-4
+above), open your local Supabase instance on
+[http://localhost:8082](http://localhost:8082), and log in with `studyu` as both
+the username as well as the password. Go to *production*, then to the *Table
+Editor*, and insert a new row into the `app_config` table. Fill in the following
+data.
+
+```plain
+id                    prod
+app_privacy           { "de": "example.com", "en": "example.com" }
+app_terms             { "de": "example.com", "en": "example.com" }
+designer_privacy      { "de": "example.com", "en": "example.com" }
+designer_terms        { "de": "example.com", "en": "example.com" }
+imprint               { "de": "example.com", "en": "example.com" }
+contact               { "email": "email@example.com",
+                        "phone": "1235678",
+                        "website": "example.com",
+                        "organization": "example" }
+analytics             { "dsn": "example",
+                        "enabled": false,
+                        "samplingRate": 0 }
+```
+
+### Flutter
+
+1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
+2. Make sure both flutter and dart are in your PATH. Run `dart --version` and
+   `flutter --version` to check.
+3. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global
+   activate melos`. Melos is used to manage the Monorepo structure and links all
+   packages.
+4. Run `melos bootstrap` download all other dependencies (usually `flutter pub
+   get` is used). If you use Android Studio or VS Code, the files for your IDE
+   are also set up.
+5. Run `dart pub get` to initialize the StudyU root project. This will apply a
+   consistent lint style to all packages.
+
+If you use Android Studio or VS Code, open the root folder of the project. You
+should have new run-configurations/tasks added for running the Flutter apps or
+executing Melos scripts.
+
+If you prefer working with the CLI, use `melos <script>` to run scripts from the
+[`melos.yaml` file](melos.yaml).
+
+To start developing locally, make sure your Supabase containers are running,
+your database is seeded, and then execute the melos scripts `dev:designer` or
+`dev:app`. You can find more information about Melos in its
+[documentation](https://melos.invertase.dev/).
