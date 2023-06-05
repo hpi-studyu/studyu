@@ -83,6 +83,22 @@ scripts:
     packageFilters:
       scope: studyu_core
 
+  dev:designer:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.selfhost"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs designer in Chrome on port 3001 with selfhost env for local development
+
+  dev:app:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run --dart-define=STUDYU_ENV=.env.selfhost"
+    packageFilters:
+      scope: studyu_app
+    description: Runs app with selfhost env for local development
+
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \

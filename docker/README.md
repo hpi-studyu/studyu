@@ -131,13 +131,18 @@ Supabase and StudyU can be deployed on different machines, e.g. for
 load-balancing reasons. A mix of the previous use cases will be applied for
 configuration purposes.
 
+This set up can also be used for local development by following the instructions
+in *Supabase Machine* and running StudyU locally with Flutter.
+
 ### Supabase Machine
 
 On the machine where Supabase and PostgreSQL should be run, perform all the
 Supabase related configuration steps described in [Configure](#configure) of Use
-Case #2. However, this will not be sufficient to access Supabase. Additionally,
-to the Supabase backend, a nginx reverse proxy will need to be started. This is
-further explained in [Some words about nginx](#some-words-about-nginx).
+Case #2 (for local development, it is sufficient to copy the `.env.example` to
+`.env` and leave everything else as is). However, this will not be sufficient to
+access Supabase. Additionally, to the Supabase backend, a nginx reverse proxy,
+will need to be started. This is further explained in [Some words about
+nginx](#some-words-about-nginx).
 
 **BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced
 Configuration](#advanced-configuration)**
