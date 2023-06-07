@@ -31,7 +31,7 @@ dependencies:
   material_design_icons_flutter: ^6.0.7096
   package_info_plus: ^4.0.1
   pdf: ^3.10.3
-  permission_handler: ^10.2.0
+  permission_handler: ^10.3.0
   provider: ^6.0.5
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
