@@ -401,10 +401,10 @@ packages:
     dependency: transitive
     description:
       name: functions_client
-      sha256: "578537de508c62c2875a6fdaa5dc71033283551ac7a32b8b8ef405c6c5823273"
+      sha256: "5df22810b8a638e6eeac3ccc538f28e421d938af24acbfc9f6c2cf377e5d686d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   fwfh_cached_network_image:
     dependency: transitive
     description:
@@ -465,10 +465,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: "3306606658484a05fc885aea15f9fa65bcc28194f35ef294de3a34d01393b928"
+      sha256: "8e8d2942c806e1c7285a2f6fffd1871a1355a36ea036ebd44ba4aadc260e896f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.0"
+    version: "1.8.2"
   hive:
     dependency: transitive
     description:
@@ -833,10 +833,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: "42abd4bf3322af3eb0d286ca2fca7cc28baae52b805761dfa7ab0d206ee072a3"
+      sha256: "36b401983777468655bd56b2892171c582ae66207ecca39880bbd10b3a67e23c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.0"
+    version: "1.3.1"
   process:
     dependency: transitive
     description:
@@ -1054,10 +1054,10 @@ packages:
     dependency: transitive
     description:
       name: storage_client
-      sha256: e14434a4cc16b01f2e96f3c646e43fb0bb16624b279a65a34da889cffe4b083c
+      sha256: "6421557eb290e1a408861968e382203267fb5fac6a3de8e04e03ceceb6600887"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   stream_channel:
     dependency: transitive
     description:
@@ -1077,33 +1077,35 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      path: "../core"
-      relative: true
-    source: path
+      name: studyu_core
+      sha256: "10050c70a3447771e22d1b586ded2960e2a908986d4ad0d3bf083f3fa6fff582"
+      url: "https://pub.dev"
+    source: hosted
     version: "4.3.0-dev.1"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      path: "../flutter_common"
-      relative: true
-    source: path
+      name: studyu_flutter_common
+      sha256: c6e4d8312b1d9b02926b7155e9f26405238001b364215e9e4736949b229536cc
+      url: "https://pub.dev"
+    source: hosted
     version: "1.6.2-dev.2"
   supabase:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: "8f89e406d1c0101409a9c5d5560ed391d6d3636d2e077336905f3eee18622073"
+      sha256: "3136f3bd893f89c09fb16f2585969e2694f5f64a38647ff90bff003e226b49df"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.2"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "809c67c296d4a0690fdc8e5f952a5e18b3ebd145867f1cb3f8f80248b22a56ae"
+      sha256: b89bbadbbfaec586ed77226629264b0975c68e54c97e6257b5247ed85ffad53c
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.0"
+    version: "1.10.2"
   synchronized:
     dependency: transitive
     description:
