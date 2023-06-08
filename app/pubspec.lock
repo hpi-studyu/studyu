@@ -937,10 +937,10 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "16d3fb6b3692ad244a695c0183fca18cf81fd4b821664394a781de42386bf022"
+      sha256: "396f85b8afc6865182610c0a2fc470853d56499f75f7499e2a73a9f0539d23d0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -1077,16 +1077,18 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      path: "../core"
-      relative: true
-    source: path
+      name: studyu_core
+      sha256: "10050c70a3447771e22d1b586ded2960e2a908986d4ad0d3bf083f3fa6fff582"
+      url: "https://pub.dev"
+    source: hosted
     version: "4.3.0-dev.1"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      path: "../flutter_common"
-      relative: true
-    source: path
+      name: studyu_flutter_common
+      sha256: c6e4d8312b1d9b02926b7155e9f26405238001b364215e9e4736949b229536cc
+      url: "https://pub.dev"
+    source: hosted
     version: "1.6.2-dev.2"
   supabase:
     dependency: "direct main"
