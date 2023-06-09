@@ -17,6 +17,15 @@ fi
 
 board="Development"
 lists=("Core" "App" "Designer")
+list_in_progress="In Progress"
+
+if [[ "$1" == '--help' || "$1" == '-h' ]]; then
+    echo "Interactively pick a Trello card to work on! This will"
+    echo "- Move the card to '$list_in_progress'"
+    echo "- create a linked Github issue"
+    echo "- create & check out a branch linked to the issue"
+    exit 0
+fi
 
 cards=""
 for list in ${lists[@]}; do
@@ -28,5 +37,27 @@ for list in ${lists[@]}; do
             -e "s/^\* \([^[:space:]]*\) - /\1:\x1b[2;3m$list → \x1b[0m/")
 done
 
-card_id=$(fzf --ansi --delimiter ':' --with-nth '2..' <<<"$cards" \
-    | sed 's/:.*//')
+selection=$(fzf --ansi --no-multi --delimiter ':' --with-nth '2..' <<<"$cards")
+[[ -z "$selection" ]] && exit 0
+
+card_id=$(sed 's/:.*//' <<< $selection)
+progress_id=$(trello show-lists --board $board \
+    | grep "$list_in_progress" \
+    | sed 's/^.*ID: \([^)]*\).*$/\1/')
+trello move-card $card_id $progress_id 1>/dev/null
+
+title=$(sed 's/^[^→]*→ //' <<< $selection)
+issue=$(gh issue create --title "$title" --body "[Trello card](https://trello.com/c/$card_id)" \
+    | tail -1 \
+    | sed -r 's|^.*/([[:digit:]]+)$|\1|')
+if [[ -z "$issue" ]]; then
+    echo "Failed to create GH issue!"
+    exit 1
+fi
+
+branch="issue/$issue-$(tr ' ' '-' <<<"$title"\
+    | tr -cd '[:alnum:]-' \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -r 's/--+/-/g')"
+
+git checkout -b "$branch"
