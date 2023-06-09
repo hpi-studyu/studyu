@@ -15,41 +15,18 @@ if [ -z "$ZSH_VERSION" -a -z "$BASH_VERSION" ]; then
     exit 1
 fi
 
-function show_boards() {
-    trello show-boards \
-        | sed -e 's/ (ID: [^)]*)$//' -e '/^[[:space:]]*$/d'
-}
+board="Development"
+lists=("Core" "App" "Designer")
 
-function show_lists() {
-    trello show-lists --board $1 \
+cards=""
+for list in ${lists[@]}; do
+    [[ -n "$cards" ]] && cards+=$'\n'
+    cards+=$(trello show-cards --board "$board" --list "$list" \
         | tail -n +2 \
-        | sed -e 's/ (ID: [^)]*)$//' -e '/^[[:space:]]*$/d'
-}
+        | sed \
+            -e '/^[[:space:]]*$/d' \
+            -e "s/^\* \([^[:space:]]*\) - /\1:\x1b[2;3m$list → \x1b[0m/")
+done
 
-function show_cards() {
-    trello show-cards --board $1 --list $2 \
-        | tail -n +2 \
-        | sed -e 's/^\* [^[:space:]]* //' -e 's/ (ID: [^)]*)$//' -e '/^[[:space:]]*$/d'
-}
-
-if [[ -z "$SELFSOURCE" ]]; then
-    trello refresh 1>/dev/null || exit 1
-
-    this_file=$(realpath $0)
-    board=$(show_boards | fzf \
-        --prompt "Select a board: " \
-        --preview-window="nohidden" \
-        --preview "SELFSOURCE=1 source $this_file && show_lists {}")
-    [[ -z "$board" ]] && exit 0
-
-    list=$(show_lists $board | fzf \
-        --prompt "Select a list on $board: " \
-        --preview-window="nohidden" \
-        --preview "SELFSOURCE=1 source $this_file && show_cards $board {}")
-    [[ -z "$list" ]] && exit 0
-
-    card=$(show_cards $board $list | fzf \
-        --prompt "Select a card on $list: ")
-    [[ -z "$card" ]] && exit 0
-    echo $card
-fi
+card_id=$(fzf --ansi --delimiter ':' --with-nth '2..' <<<"$cards" \
+    | sed 's/:.*//')
