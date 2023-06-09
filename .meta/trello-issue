@@ -18,6 +18,7 @@ list_in_progress="In Progress"
 if [[ "$1" == '--help' || "$1" == '-h' ]]; then
     echo "Interactively pick a Trello card to work on! This will"
     echo "- Move the card to '$list_in_progress'"
+    echo "- Assign youself to the card"
     echo "- create a linked Github issue"
     echo "- create & check out a branch linked to the issue"
     exit 0
@@ -38,12 +39,13 @@ done
 selection=$(fzf --ansi --no-multi --delimiter ':' --with-nth '2..' <<<"$cards")
 [[ -z "$selection" ]] && exit 0
 
-# move card to in progress
+# move card to in progress & assign yourself
 card_id=$(sed 's/:.*//' <<< $selection)
 progress_id=$(trello show-lists --board $board \
     | grep "$list_in_progress" \
     | sed 's/^.*ID: \([^)]*\).*$/\1/')
 trello move-card $card_id $progress_id 1>/dev/null
+trello assign-card $card_id 1>/dev/null
 
 # create github issue
 title=$(sed 's/^[^→]*→ //' <<< $selection)
