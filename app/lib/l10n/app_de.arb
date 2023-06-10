@@ -166,5 +166,6 @@
   "researchers": "Forscher",
   "website": "Website",
   "email": "Email",
-  "phone": "Telefon"
+  "phone": "Telefon",
+  "additionalInfo": "Zusätzliche Informationen"
 }

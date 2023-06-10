@@ -165,5 +165,6 @@
   "researchers": "Researchers",
   "website": "Website",
   "email": "Email",
-  "phone": "Phone"
+  "phone": "Phone",
+  "additionalInfo": "Additional information"
 }
