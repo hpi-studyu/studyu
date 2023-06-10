@@ -11,10 +11,12 @@ class Contact {
   String email = '';
   String website = '';
   String phone = '';
+  String? additionalInfo;
 
   Contact();
 
-  factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
+  factory Contact.fromJson(Map<String, dynamic> json) =>
+      _$ContactFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 
