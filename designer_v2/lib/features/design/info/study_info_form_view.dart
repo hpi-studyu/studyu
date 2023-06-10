@@ -166,6 +166,13 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     validationMessages: formViewModel.phoneControl.validationMessages,
                   ),
                 ),
+                FormTableRow(
+                  control: formViewModel.additionalInfoControl,
+                  label: tr.form_field_contact_additional_info,
+                  input: ReactiveTextField(
+                    formControl: formViewModel.additionalInfoControl,
+                  ),
+                ),
               ], columnWidths: const {
                 0: FixedColumnWidth(180.0),
                 1: FlexColumnWidth(),

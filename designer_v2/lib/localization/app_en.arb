@@ -215,6 +215,7 @@
   "form_field_contact_email_email": "Please enter a valid contact email address",
   "form_field_contact_phone": "Phone",
   "form_field_contact_phone_required": "You must specify a phone number for participants to contact",
+  "form_field_contact_additional_info": "Additional information",
   "@__________________STUDYPAGE_DESIGN_ENROLLMENT__________________": {},
   "form_study_design_enrollment_description": "Define who will be able to participate in your study, the criteria they have to meet and the terms they have to consent to.",
   "form_field_enrollment_type": "Participant pool",

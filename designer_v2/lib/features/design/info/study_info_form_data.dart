@@ -42,14 +42,16 @@ class StudyInfoFormData implements IStudyFormData {
 }
 
 class StudyContactInfoFormData implements IStudyFormData {
-  StudyContactInfoFormData(
-      {this.organization,
-      this.institutionalReviewBoard,
-      this.institutionalReviewBoardNumber,
-      this.researchers,
-      this.email,
-      this.website,
-      this.phone});
+  StudyContactInfoFormData({
+    this.organization,
+    this.institutionalReviewBoard,
+    this.institutionalReviewBoardNumber,
+    this.researchers,
+    this.email,
+    this.website,
+    this.phone,
+    this.additionalInfo,
+  });
 
   final String? organization;
   final String? institutionalReviewBoard;
@@ -58,17 +60,21 @@ class StudyContactInfoFormData implements IStudyFormData {
   final String? email;
   final String? website;
   final String? phone;
+  final String? additionalInfo;
 
   factory StudyContactInfoFormData.fromStudy(Study study) {
     final contact = study.contact;
     return StudyContactInfoFormData(
-        organization: contact.organization,
-        institutionalReviewBoard: contact.institutionalReviewBoard ?? '',
-        institutionalReviewBoardNumber: contact.institutionalReviewBoardNumber ?? '',
-        researchers: contact.researchers ?? '',
-        email: contact.email,
-        website: contact.website,
-        phone: contact.phone);
+      organization: contact.organization,
+      institutionalReviewBoard: contact.institutionalReviewBoard ?? '',
+      institutionalReviewBoardNumber:
+          contact.institutionalReviewBoardNumber ?? '',
+      researchers: contact.researchers ?? '',
+      email: contact.email,
+      website: contact.website,
+      phone: contact.phone,
+      additionalInfo: contact.additionalInfo,
+    );
   }
 
   @override
@@ -81,6 +87,9 @@ class StudyContactInfoFormData implements IStudyFormData {
     contact.email = email ?? '';
     contact.website = website ?? '';
     contact.phone = phone ?? '';
+    contact.additionalInfo = (additionalInfo == null || additionalInfo!.isEmpty)
+        ? null
+        : additionalInfo;
     study.contact = contact;
     return study;
   }
