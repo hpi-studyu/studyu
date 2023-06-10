@@ -67,8 +67,7 @@ class StudyContactInfoFormData implements IStudyFormData {
     return StudyContactInfoFormData(
       organization: contact.organization,
       institutionalReviewBoard: contact.institutionalReviewBoard ?? '',
-      institutionalReviewBoardNumber:
-          contact.institutionalReviewBoardNumber ?? '',
+      institutionalReviewBoardNumber: contact.institutionalReviewBoardNumber ?? '',
       researchers: contact.researchers ?? '',
       email: contact.email,
       website: contact.website,
@@ -87,9 +86,7 @@ class StudyContactInfoFormData implements IStudyFormData {
     contact.email = email ?? '';
     contact.website = website ?? '';
     contact.phone = phone ?? '';
-    contact.additionalInfo = (additionalInfo == null || additionalInfo!.isEmpty)
-        ? null
-        : additionalInfo;
+    contact.additionalInfo = (additionalInfo == null || additionalInfo!.isEmpty) ? null : additionalInfo;
     study.contact = contact;
     return study;
   }

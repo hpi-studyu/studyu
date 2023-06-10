@@ -15,8 +15,7 @@ class Contact {
 
   Contact();
 
-  factory Contact.fromJson(Map<String, dynamic> json) =>
-      _$ContactFromJson(json);
+  factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 
