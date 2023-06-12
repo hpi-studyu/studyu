@@ -110,7 +110,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
 
   /// Map that stores the default [AbstractControl.validators] and
   /// [AbstractControl.asyncValidators] for each control in the [form]
-  final Map<String, Tuple<List<ValidatorFunction>, List<AsyncValidatorFunction>>> _defaultControlValidators = {};
+  final Map<String, Tuple<List<Validator>, List<AsyncValidator>>> _defaultControlValidators = {};
 
   /// Flag indicating whether the current [form] data is different from
   /// the most recently set [formData]
@@ -185,7 +185,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
     }
   }
 
-  Tuple<List<ValidatorFunction>, List<AsyncValidatorFunction>>? _getDefaultValidators(String controlName) {
+  Tuple<List<Validator>, List<AsyncValidator>>? _getDefaultValidators(String controlName) {
     return _defaultControlValidators[controlName];
   }
 

@@ -26,7 +26,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   late final codeControl = FormControl<String>(
     validators: [Validators.required, Validators.minLength(8), Validators.maxLength(24)],
-    asyncValidators: [_uniqueInviteCode],
+    asyncValidators: [Validators.delegateAsync((control) => _uniqueInviteCode(control))],
     asyncValidatorsDebounceTime: 200,
     touched: true,
   );

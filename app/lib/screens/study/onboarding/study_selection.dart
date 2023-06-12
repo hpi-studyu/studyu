@@ -98,7 +98,7 @@ class StudySelectionScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: OutlinedButton.icon(
-                  icon: const Icon(MdiIcons.key),
+                  icon: Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(context: context, builder: (_) => const InviteCodeDialog());
                   },

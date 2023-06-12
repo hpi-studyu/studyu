@@ -67,7 +67,7 @@ class _TermsScreenState extends State<TermsScreen> {
               acknowledgment: AppLocalizations.of(context)!.terms_agree,
               onChange: (val) => setState(() => _acceptedTerms = val!),
               isChecked: _acceptedTerms,
-              icon: const Icon(MdiIcons.fileDocumentEdit),
+              icon: Icon(MdiIcons.fileDocumentEdit),
               pdfUrl: appConfig!.appTerms[appLocale.languageCode.toString()],
               pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
             ),
@@ -78,13 +78,13 @@ class _TermsScreenState extends State<TermsScreen> {
               acknowledgment: AppLocalizations.of(context)!.privacy_agree,
               onChange: (val) => setState(() => _acceptedPrivacy = val!),
               isChecked: _acceptedPrivacy,
-              icon: const Icon(MdiIcons.shieldLock),
+              icon: Icon(MdiIcons.shieldLock),
               pdfUrl: appConfig.appPrivacy[appLocale.languageCode.toString()],
               pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
             ),
             const SizedBox(height: 30),
             OutlinedButton.icon(
-              icon: const Icon(MdiIcons.scaleBalance),
+              icon: Icon(MdiIcons.scaleBalance),
               onPressed: () async {
                 final uri = Uri.parse(appConfig.imprint[appLocale.languageCode.toString()]!);
                 if (await canLaunchUrl(uri)) {

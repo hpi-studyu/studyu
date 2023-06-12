@@ -73,7 +73,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-        leading: const Icon(
+        leading: Icon(
           MdiIcons.checkboxMarkedCircle,
           color: Colors.green,
           size: 32,
@@ -85,7 +85,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       );
 
   Widget _constructFailBanner() => MaterialBanner(
-        leading: const Icon(
+        leading: Icon(
           MdiIcons.closeCircle,
           color: Colors.red,
           size: 32,
@@ -121,7 +121,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.eligibility_questionnaire_title),
-        leading: const Icon(MdiIcons.clipboardList),
+        leading: Icon(MdiIcons.clipboardList),
       ),
       body: Column(
         children: [

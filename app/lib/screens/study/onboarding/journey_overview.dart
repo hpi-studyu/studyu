@@ -52,7 +52,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
-        leading: const Icon(MdiIcons.mapMarkerPath),
+        leading: Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(
