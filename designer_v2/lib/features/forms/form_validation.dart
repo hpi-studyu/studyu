@@ -15,8 +15,8 @@ class FormControlValidation {
   });
 
   final AbstractControl<dynamic> control;
-  final List<ValidatorFunction> validators;
-  final List<AsyncValidatorFunction>? asyncValidators;
+  final List<Validator> validators;
+  final List<AsyncValidator>? asyncValidators;
   final Map<String, ValidationMessageFunction> validationMessages;
 
   FormControlValidation merge(FormControlValidation? other) {

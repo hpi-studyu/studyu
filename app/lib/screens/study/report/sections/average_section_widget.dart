@@ -186,11 +186,11 @@ class AverageSectionWidget extends ReportSectionWidget {
                 showTitles: true,
                 getTitlesWidget: getTitles,
               )),
-          topTitles: AxisTitles(
+          topTitles: const AxisTitles(
               sideTitles: SideTitles(
             showTitles: false,
           ))),
-      gridData: charts.FlGridData(
+      gridData: const charts.FlGridData(
         drawHorizontalLine: false,
         drawVerticalLine: false,
         /*checkToShowVerticalLine: (val) => true,

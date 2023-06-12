@@ -52,33 +52,26 @@ class CountWhereValidator<T> extends Validator<T> {
   }
 }
 
-ValidatorFunction mustMatch({
-  AbstractControl? control,
-  String? controlName,
-  AbstractControl? matchingControl,
-  String? matchingControlName,
-}) {
-  if ((controlName == null && control == null) || (matchingControlName == null && matchingControl == null)) {
-    throw Exception("Must provide either the control's reference or name for each control");
-  }
+class MustMatchValidator extends Validator<dynamic> {
+  MustMatchValidator({this.control, this.matchingControl}) : super();
 
-  return (AbstractControl<dynamic> form) {
-    form = form as FormGroup;
+  final AbstractControl? control;
+  final AbstractControl? matchingControl;
 
-    final formControl = control ?? form.control(controlName!);
-    final matchingFormControl = matchingControl ?? form.control(matchingControlName!);
-
-    if (formControl.value != matchingFormControl.value) {
-      matchingFormControl.setErrors({'mustMatch': true});
-
-      // force messages to show up as soon as possible
-      matchingFormControl.markAsTouched();
-    } else {
-      matchingFormControl.removeError('mustMatch');
+  @override
+  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
+    if (this.control == null || matchingControl == null) {
+      return null;
     }
-
+    if (this.control!.value != matchingControl!.value) {
+      matchingControl!.setErrors({'mustMatch': true});
+      // force messages to show up as soon as possible
+      matchingControl!.markAsTouched();
+    } else {
+      matchingControl!.removeError('mustMatch');
+    }
     return null;
-  };
+  }
 }
 
 // todo replace this with reactive forms validator

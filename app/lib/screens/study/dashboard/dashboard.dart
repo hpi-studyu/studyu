@@ -78,14 +78,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context)!.contact,
-            icon: const Icon(MdiIcons.faceAgent),
+            icon: Icon(MdiIcons.faceAgent),
             onPressed: () {
               Navigator.pushNamed(context, Routes.contact);
             },
           ),
           IconButton(
             tooltip: 'Current report', // todo tr
-            icon: const Icon(MdiIcons.chartBar),
+            icon: Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject!)),
           ),
           PopupMenuButton<OverflowMenuItem>(
@@ -291,13 +291,13 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             space,
             OutlinedButton.icon(
               onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
-              icon: const Icon(MdiIcons.history, size: fontSize),
+              icon: Icon(MdiIcons.history, size: fontSize),
               label: Text(AppLocalizations.of(context)!.report_history, style: textStyle),
             ),
             space,
             OutlinedButton.icon(
               onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
-              icon: const Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
+              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
               label: Text(AppLocalizations.of(context)!.study_selection, style: textStyle),
             ),
           ],

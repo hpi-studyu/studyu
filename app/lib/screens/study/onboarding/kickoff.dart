@@ -52,7 +52,7 @@ class _KickoffScreen extends State<KickoffScreen> {
           width: 64,
           child: CircularProgressIndicator(),
         )
-      : const Icon(
+      : Icon(
           MdiIcons.checkboxMarkedCircle,
           color: Colors.green,
           size: 64,

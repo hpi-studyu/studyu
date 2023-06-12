@@ -10,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_dotenv: ^5.0.2
-  shared_preferences: ^2.1.1
+  flutter_dotenv: ^5.1.0
+  shared_preferences: ^2.1.2
   studyu_core: ^4.3.0-dev.1
-  supabase_flutter: ^1.10.0
+  supabase_flutter: ^1.10.2
   uuid: ^3.0.7
 
 dev_dependencies:
