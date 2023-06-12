@@ -14,7 +14,7 @@ dependencies:
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
   fhir: ^0.4.7
-  fl_chart: ^0.62.0
+  fl_chart: ^0.63.0
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.0

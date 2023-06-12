@@ -261,10 +261,10 @@ packages:
     dependency: "direct main"
     description:
       name: fl_chart
-      sha256: "48a1b69be9544e2b03d9a8e843affd89e43f3194c9248776222efcb4206bb1ec"
+      sha256: c1e26c7e48496be85104c16c040950b0436674cdf0737f3f6e95511b2529b592
       url: "https://pub.dev"
     source: hosted
-    version: "0.62.0"
+    version: "0.63.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1077,16 +1077,18 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      path: "../core"
-      relative: true
-    source: path
+      name: studyu_core
+      sha256: "10050c70a3447771e22d1b586ded2960e2a908986d4ad0d3bf083f3fa6fff582"
+      url: "https://pub.dev"
+    source: hosted
     version: "4.3.0-dev.1"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      path: "../flutter_common"
-      relative: true
-    source: path
+      name: studyu_flutter_common
+      sha256: c6e4d8312b1d9b02926b7155e9f26405238001b364215e9e4736949b229536cc
+      url: "https://pub.dev"
+    source: hosted
     version: "1.6.2-dev.2"
   supabase:
     dependency: "direct main"
