@@ -19,6 +19,7 @@ if [ -z "$ZSH_VERSION" -a -z "$BASH_VERSION" ]; then
     exit 1
 fi
 
+max_title_chars=60
 board="Development"
 lists=("Core" "App" "Designer")
 list_in_progress="In Progress"
@@ -53,8 +54,21 @@ progress_id=$(trello show-lists --board $board \
     | grep "$list_in_progress" \
     | sed 's/^.*ID: \([^)]*\).*$/\1/')
 
-# create github issue
+# retrieve title & ggf. shorten
 title=$(sed 's/^[^→]*→ //' <<< $selection)
+if [[ ${#title} -gt $max_title_chars ]]; then
+    title_ellipses="$(head -c $max_title_chars <<< $title)..."
+    echo   "The title\n"
+    printf "    \x1b[2;3m$title\x1b[0m\n"
+    echo   "\nis longer than the maximum $max_title_chars characters."
+    printf "Please provide an alternative title or leave blank to accept \"\x1b[2;3m$title_ellipses\x1b[0m\".\n"
+    printf "\n> \x1b[2;3m"
+    read title_alt
+    printf "\x1b[0m"
+    [[ -n "$title_alt" ]] && title="$title_alt" || title="$title_ellipses"
+fi
+
+# create github issue
 issue=$(gh issue create --title "$title" --body "See [Trello card](https://trello.com/c/$card_id)" \
     | tail -1 \
     | sed -r 's|^.*/([[:digit:]]+)$|\1|')
