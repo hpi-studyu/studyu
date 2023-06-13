@@ -2,7 +2,7 @@ version: 2
 enable-beta-ecosystems: true
 updates:
   - package-ecosystem: "pub"
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 0
     directory: "core/"
     schedule:
       interval: "daily"
@@ -10,7 +10,7 @@ updates:
       - "core"
       - "dependencies"
   - package-ecosystem: "pub"
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 0
     directory: "flutter_common/"
     schedule:
       interval: "daily"
@@ -18,7 +18,7 @@ updates:
       - "flutter_common"
       - "dependencies"
   - package-ecosystem: "pub"
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 0
     directory: "app/"
     schedule:
       interval: "daily"
@@ -26,7 +26,7 @@ updates:
       - "app"
       - "dependencies"
   - package-ecosystem: "pub"
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 0
     directory: "designer_v2/"
     schedule:
       interval: "daily"
