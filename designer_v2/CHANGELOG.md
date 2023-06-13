@@ -1,3 +1,7 @@
+## 1.3.4
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
 ## 1.3.3
 
  - **FIX**: enable emojis again for designer_v2 web. ([d2ccd3f0](https://github.com/hpi-studyu/studyu/commit/d2ccd3f0f997f304871c223f913c3392b91304c3))
