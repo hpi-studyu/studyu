@@ -81,7 +81,7 @@ fi
 trello move-card $card_id $progress_id \
     --comment "See [GitHub issue #$issue]($(git config --get remote.origin.url | sed 's/\.git$//')/issues/$issue)" \
     1>/dev/null
-trello assign-card $card_id 1>/dev/null
+trello card-assign $card_id 1>/dev/null
 
 # create & check out git branch
 branch="issue/$issue-$(tr ' ' '-' <<<"$title"\
