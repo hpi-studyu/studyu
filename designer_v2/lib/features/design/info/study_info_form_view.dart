@@ -171,6 +171,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_additional_info,
                   input: ReactiveTextField(
                     formControl: formViewModel.additionalInfoControl,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 5,
+                    maxLines: 5,
+                    inputFormatters: [LengthLimitingTextInputFormatter(500)],
                   ),
                 ),
               ], columnWidths: const {
