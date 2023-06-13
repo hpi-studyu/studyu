@@ -31,6 +31,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> emailControl = FormControl();
   final FormControl<String> websiteControl = FormControl();
   final FormControl<String> phoneControl = FormControl();
+  final FormControl<String> additionalInfoControl = FormControl();
 
   @override
   late final FormGroup form = FormGroup({
@@ -44,6 +45,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     'email': emailControl,
     'website': websiteControl,
     'phone': phoneControl,
+    'additionalInfo': additionalInfoControl
   });
 
   @override
@@ -58,6 +60,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     emailControl.value = data.contactInfoFormData.email;
     websiteControl.value = data.contactInfoFormData.website;
     phoneControl.value = data.contactInfoFormData.phone;
+    additionalInfoControl.value = data.contactInfoFormData.additionalInfo;
   }
 
   @override
@@ -74,6 +77,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           email: emailControl.value,
           website: websiteControl.value,
           phone: phoneControl.value,
+          additionalInfo: additionalInfoControl.value,
         ));
   }
 

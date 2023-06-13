@@ -214,6 +214,7 @@
   "form_field_contact_email_email": "Bitte gib eine korrekte Email zur Kontaktaufnahme ein",
   "form_field_contact_phone": "Telefon",
   "form_field_contact_phone_required": "Die Studie muss eine Telefonnummer zur Kontaktaufnahme haben",
+  "form_field_contact_additional_info": "Zusätzliche Informationen",
   "@__________________STUDYPAGE_DESIGN_ENROLLMENT__________________": {},
   "form_study_design_enrollment_description": "Auf dieser Seite gibst du an wer an deiner Studie unter welchen Bedingungen teilnehmen darf.",
   "form_field_enrollment_type": "Teilnehmer",

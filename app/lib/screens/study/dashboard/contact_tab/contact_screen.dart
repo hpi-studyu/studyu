@@ -130,6 +130,13 @@ class ContactWidget extends StatelessWidget {
           type: ContactItemType.phone,
           iconColor: color,
         ),
+        if (contact?.additionalInfo != null)
+          ContactItem(
+            itemName: AppLocalizations.of(context)!.additionalInfo,
+            itemValue: contact!.additionalInfo,
+            iconData: MdiIcons.information,
+            iconColor: color,
+          ),
       ],
     );
   }
