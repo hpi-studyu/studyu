@@ -5,7 +5,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 enum StudiesFilter with GoRouteParamEnum { all, owned, shared, public }
 
 extension StudiesFilterByUser on StudiesFilter {
-  Iterable<Study> apply({required Iterable<Study> studies, required User user}) {
+  Iterable<Study> apply({required Iterable<Study> unfilteredStudies, required User user, String? query}) {
+    Iterable<Study> studies = unfilteredStudies;
+    if (query != null && query.isNotEmpty) {
+      studies = unfilteredStudies.where((s) => s.title!.toLowerCase().contains(query));
+    }
     switch (this) {
       case StudiesFilter.all:
         return studies;

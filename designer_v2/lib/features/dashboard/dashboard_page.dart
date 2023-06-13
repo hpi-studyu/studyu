@@ -23,12 +23,15 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   late final DashboardController controller;
+  final searchController = TextEditingController();
+  String? searchQuery;
 
   @override
   void initState() {
     super.initState();
     controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
+    searchController.addListener(searchListener);
   }
 
   @override
@@ -37,6 +40,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (oldWidget.filter != widget.filter) {
       runAsync(() => controller.setStudiesFilter(widget.filter));
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.removeListener(searchListener);
+  }
+
+  void searchListener() {
+    setState(() {
+      searchQuery = controller.search(searchController.text);
+    });
   }
 
   @override
@@ -59,11 +74,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),
+              const Spacer(),
+              SizedBox(
+                width: 400.0,
+                child: SearchBar(
+                  hintText: "Search", // todo tr
+                  controller: searchController,
+                  leading: const Icon(Icons.search),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
           AsyncValueWidget<List<Study>>(
-            value: state.visibleStudies,
+            value: state.visibleStudies(query: searchQuery),
             data: (visibleStudies) => StudiesTable(
               studies: visibleStudies,
               onSelect: controller.onSelectStudy,

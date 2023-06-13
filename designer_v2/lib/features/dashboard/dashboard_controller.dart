@@ -22,7 +22,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   /// Reference to services injected via Riverpod
   final GoRouter router;
 
-  /// A subscription for synchronizing state between the repository & controller
+  /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
 
   DashboardController({
@@ -58,6 +58,14 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
 
   onClickNewStudy() {
     router.dispatch(RoutingIntents.studyNew);
+  }
+
+  String? search(String query) {
+    if (query.isEmpty) {
+      return null;
+    } else {
+      return query.toLowerCase();
+    }
   }
 
   @override
