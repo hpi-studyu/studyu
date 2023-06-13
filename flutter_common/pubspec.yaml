@@ -1,5 +1,5 @@
 name: studyu_flutter_common
-version: 1.6.2-dev.2
+version: 1.6.2-dev.3
 description: StudyU common flutter components and functions for app and designer
 homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.1.2
-  studyu_core: ^4.3.0-dev.1
+  studyu_core: ^4.3.0-dev.2
   supabase_flutter: ^1.10.3
   uuid: ^3.0.7
 
