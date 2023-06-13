@@ -24,40 +24,72 @@ class StudiesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> headers = [
+      tr.studies_list_header_participants_enrolled,
+      tr.studies_list_header_participants_active,
+      tr.studies_list_header_participants_completed,
+    ];
+    final int maxLength = headers.fold(0, (max, element) => max > element.length ? max : element.length);
+    final double statsCellWidth = maxLength * 11;
+
     return StandardTable<Study>(
       items: studies,
       columns: [
         StandardTableColumn(
-            label: tr.studies_list_header_title,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4))),
+          label: tr.studies_list_header_title,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4)),
+          sortable: true,
+        ),
         StandardTableColumn(
-            label: tr.studies_list_header_status,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth())),
+          label: tr.studies_list_header_status,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth()),
+          sortable: true,
+        ),
         StandardTableColumn(
-            label: tr.studies_list_header_participation,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth())),
+          label: tr.studies_list_header_participation,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth()),
+          sortable: true,
+        ),
         StandardTableColumn(
           label: tr.studies_list_header_created_at,
           columnWidth: const FlexColumnWidth(1),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
-          columnWidth: const FlexColumnWidth(0.5),
+          columnWidth: MaxColumnWidth(FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_active,
-          columnWidth: const FlexColumnWidth(0.5),
+          columnWidth: MaxColumnWidth(FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
+          sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_completed,
-          columnWidth: const FlexColumnWidth(0.5),
+          columnWidth: MaxColumnWidth(FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
+          sortable: true,
         ),
       ],
       onSelectItem: onSelect,
       trailingActionsAt: (item, _) => getActions(item),
       buildCellsAt: _buildRow,
+      sortColumnPredicates: _sortColumns,
       emptyWidget: emptyWidget,
     );
+  }
+
+  List<int Function(Study a, Study b)?> get _sortColumns {
+    final predicates = [
+      (Study a, Study b) => a.title!.compareTo(b.title!),
+      (Study a, Study b) => a.status.index.compareTo(b.status.index),
+      (Study a, Study b) => a.participation.index.compareTo(b.participation.index),
+      (Study a, Study b) => a.createdAt!.compareTo(b.createdAt!),
+      (Study a, Study b) => a.participantCount.compareTo(b.participantCount),
+      (Study a, Study b) => a.activeSubjectCount.compareTo(b.activeSubjectCount),
+      (Study a, Study b) => a.endedCount.compareTo(b.endedCount),
+    ];
+    return predicates;
   }
 
   List<Widget> _buildRow(BuildContext context, Study item, int rowIdx, Set<MaterialState> states) {

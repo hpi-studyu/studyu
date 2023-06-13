@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -23,12 +24,15 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   late final DashboardController controller;
+  final searchController = TextEditingController();
+  String? searchQuery;
 
   @override
   void initState() {
     super.initState();
     controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
+    searchController.addListener(searchListener);
   }
 
   @override
@@ -37,6 +41,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (oldWidget.filter != widget.filter) {
       runAsync(() => controller.setStudiesFilter(widget.filter));
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.removeListener(searchListener);
+  }
+
+  void searchListener() {
+    setState(() {
+      searchQuery = controller.search(searchController.text);
+    });
   }
 
   @override
@@ -59,31 +75,52 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),
+              const Spacer(),
+              SizedBox(
+                width: 400.0,
+                child: SearchBar(
+                  hintText: tr.search,
+                  controller: searchController,
+                  leading: const Icon(Icons.search),
+                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    return ThemeConfig.sidesheetBackgroundColor(theme).withOpacity(0.5);
+                  }),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
           AsyncValueWidget<List<Study>>(
-            value: state.visibleStudies,
+            value: state.visibleStudies(query: searchQuery),
             data: (visibleStudies) => StudiesTable(
               studies: visibleStudies,
               onSelect: controller.onSelectStudy,
               getActions: controller.availableActions,
               emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: EmptyBody(
-                        icon: Icons.content_paste_search_rounded,
-                        title: "You don't have any studies yet",
-                        description:
-                            "Build your own study from scratch, start from the default template or create a new draft copy from an already published study!",
-                        button: PrimaryButton(
-                          text: "From template",
-                          onPressed: () {
-                            print("TODO");
-                          },
-                        ),
-                      ),
-                    )
+                  ? (searchQuery != null && searchQuery!.isNotEmpty)
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 24.0),
+                          child: EmptyBody(
+                            icon: Icons.content_paste_search_rounded,
+                            title: "No Studies found",
+                            description: "Modify your query",
+                          ),
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.only(top: 24.0),
+                          child: EmptyBody(
+                            icon: Icons.content_paste_search_rounded,
+                            title: "You don't have any studies yet",
+                            description:
+                                //"Build your own study from scratch, start from the default template or create a new draft copy from an already published study!",
+                                "Build your own study from scratch or create a new draft copy from an already published study!",
+                            /*button: PrimaryButton(
+                    text: "From template",
+                    onPressed: () {
+                    },
+                  ),*/
+                          ),
+                        )
                   : const SizedBox.shrink(),
             ),
           )

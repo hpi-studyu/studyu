@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer_v2/common_views/action_inline_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
@@ -18,62 +20,73 @@ enum StandardTableStyle { plain, material }
 
 /// Default descriptor for a table column
 class StandardTableColumn {
-  const StandardTableColumn({
+  StandardTableColumn({
     required this.label,
     this.tooltip,
     this.columnWidth = const FlexColumnWidth(),
+    this.sortable = false,
   });
 
   final String label;
   final String? tooltip;
   final TableColumnWidth columnWidth;
+  final bool sortable;
+
+  bool? sortAscending;
+  Widget? sortableIcon;
 }
 
-// ignore: must_be_immutable
 class StandardTable<T> extends StatefulWidget {
-  StandardTable(
-      {required this.items,
-      required this.columns,
-      required this.onSelectItem,
-      required this.buildCellsAt,
-      this.trailingActionsAt,
-      this.trailingActionsColumn = const StandardTableColumn(
-          label: '', columnWidth: MaxColumnWidth(IntrinsicColumnWidth(), FixedColumnWidth(65))),
-      this.trailingActionsMenuType = ActionMenuType.popup,
-      this.headerRowBuilder,
-      this.dataRowBuilder,
-      this.cellSpacing = 10.0,
-      this.rowSpacing = 9.0,
-      this.minRowHeight = 50.0,
-      this.showTableHeader = true,
-      this.tableWrapper,
-      this.leadingWidget,
-      this.trailingWidget,
-      this.leadingWidgetSpacing = 12.0,
-      this.trailingWidgetSpacing = 8.0,
-      this.emptyWidget,
-      this.rowStyle = StandardTableStyle.material,
-      this.disableRowInteractions = false,
-      this.hideLeadingTrailingWhenEmpty = true,
-      Key? key})
-      : super(key: key) {
+  StandardTable({
+    required this.items,
+    required List<StandardTableColumn>? columns,
+    required this.onSelectItem,
+    required this.buildCellsAt,
+    this.sortColumnPredicates,
+    this.trailingActionsAt,
+    StandardTableColumn? trailingActionsColumn,
+    this.trailingActionsMenuType = ActionMenuType.popup,
+    this.headerRowBuilder,
+    this.dataRowBuilder,
+    this.cellSpacing = 10.0,
+    this.rowSpacing = 9.0,
+    this.minRowHeight = 50.0,
+    this.showTableHeader = true,
+    this.tableWrapper,
+    this.leadingWidget,
+    this.trailingWidget,
+    this.leadingWidgetSpacing = 12.0,
+    this.trailingWidgetSpacing = 8.0,
+    this.emptyWidget,
+    this.rowStyle = StandardTableStyle.material,
+    this.disableRowInteractions = false,
+    this.hideLeadingTrailingWhenEmpty = true,
+    Key? key,
+  }) : super(key: key) {
+    if (trailingActionsColumn == null) {
+      this.inputTrailingActionsColumn = StandardTableColumn(
+          label: '', columnWidth: const MaxColumnWidth(IntrinsicColumnWidth(), FixedColumnWidth(65)));
+    } else {
+      this.inputTrailingActionsColumn = trailingActionsColumn;
+    }
     // Insert trailing column for actions menu
     if (trailingActionsAt != null) {
-      columns = [...columns]; // don't modify original reference
-      columns.add(trailingActionsColumn);
+      this.inputColumns = [...?columns];
+      this.inputColumns.add(this.inputTrailingActionsColumn);
     }
   }
 
   final List<T> items;
-  late List<StandardTableColumn> columns;
+  late final List<StandardTableColumn> inputColumns;
   final OnSelectHandler<T> onSelectItem;
   final ActionsProviderAt<T>? trailingActionsAt;
   final ActionMenuType? trailingActionsMenuType;
 
   final StandardTableCellsBuilder<T> buildCellsAt;
+  final List<int Function(T a, T b)?>? sortColumnPredicates;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
-  final StandardTableColumn trailingActionsColumn;
+  late final StandardTableColumn inputTrailingActionsColumn;
 
   final WidgetDecorator? tableWrapper;
 
@@ -117,6 +130,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   /// Static helper row for padding
   late final TableRow paddingRow = _buildPaddingRow();
 
+  List<T>? sortDefaultOrder;
+
   @override
   void initState() {
     super.initState();
@@ -151,8 +166,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     final theme = Theme.of(context);
 
     final Map<int, TableColumnWidth> columnWidths = {};
-    for (var idx = 0; idx < widget.columns.length; idx++) {
-      columnWidths[idx] = widget.columns[idx].columnWidth;
+    for (var idx = 0; idx < widget.inputColumns.length; idx++) {
+      columnWidths[idx] = widget.inputColumns[idx].columnWidth;
     }
 
     final headerRow = _buildHeaderRow();
@@ -196,6 +211,36 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     return tableWidget;
   }
 
+  void _sortColumn(List<T> items, int columnIndex) {
+    final sortAscending = widget.inputColumns[columnIndex].sortAscending;
+
+    // Save default order to restore later
+    if (sortDefaultOrder == null || sortDefaultOrder!.length != widget.items.length) {
+      sortDefaultOrder = List.from(widget.items);
+    }
+
+    if (sortAscending != null) {
+      if (columnIndex >= 0 && columnIndex < widget.inputColumns.length) {
+        final sortPredicate = widget.sortColumnPredicates;
+        items.sort((a, b) {
+          if (sortPredicate != null && sortPredicate[columnIndex] != null) {
+            return sortAscending ? sortPredicate[columnIndex]!(a, b) : sortPredicate[columnIndex]!(b, a);
+          } else if (a is Comparable && b is Comparable) {
+            // If sortPredicate is not provided, use default comparison logic
+            return sortAscending ? Comparable.compare(a, b) : Comparable.compare(b, a);
+          } else {
+            return 0;
+          }
+        });
+        _cachedRows.clear();
+      }
+    } else {
+      widget.items.clear();
+      widget.items.addAll(sortDefaultOrder!);
+      _cachedRows.clear();
+    }
+  }
+
   List<TableRow> _tableRows(ThemeData theme) {
     final List<TableRow> rows = [];
 
@@ -226,13 +271,14 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   }
 
   TableRow _buildPaddingRow() {
-    TableRow rowSpacer = TableRow(children: widget.columns.map((_) => SizedBox(height: widget.rowSpacing)).toList());
+    TableRow rowSpacer =
+        TableRow(children: widget.inputColumns.map((_) => SizedBox(height: widget.rowSpacing)).toList());
     return rowSpacer;
   }
 
   TableRow _buildHeaderRow() {
     final headerRowBuilder = widget.headerRowBuilder ?? _defaultHeader;
-    return headerRowBuilder(context, widget.columns);
+    return headerRowBuilder(context, widget.inputColumns);
   }
 
   TableRow _defaultHeader(BuildContext context, List<StandardTableColumn> columns) {
@@ -241,24 +287,78 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     final List<Widget> headerCells = [];
     for (var i = 0; i < columns.length; i++) {
       final isLeadingTrailing = i == 0 || i == columns.length - 1;
-      headerCells.add(Padding(
-          padding: EdgeInsets.fromLTRB(
-              (isLeadingTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
-              widget.cellSpacing,
-              (isLeadingTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
-              widget.cellSpacing),
-          child: Text(
-            columns[i].label,
-            overflow: TextOverflow.visible,
-            maxLines: 1,
-            softWrap: false,
-            style: theme.textTheme.bodySmall!.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.8),
-            ),
-          )));
+      headerCells.add(MouseEventsRegion(
+        builder: (context, state) {
+          return Padding(
+              padding: EdgeInsets.fromLTRB(
+                  (isLeadingTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
+                  widget.cellSpacing,
+                  (isLeadingTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
+                  widget.cellSpacing),
+              child: Row(
+                children: [
+                  Text(
+                    columns[i].label,
+                    overflow: TextOverflow.visible,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: theme.textTheme.bodySmall!.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                  ),
+                  widget.inputColumns[i].sortable
+                      ? widget.inputColumns[i].sortableIcon ?? const SizedBox(width: 17)
+                      : const SizedBox.shrink(),
+                ],
+              ));
+        },
+        onEnter: (event) => setState(() => sortAction(i, hover: event)),
+        onExit: (event) => setState(() => sortAction(i, hover: event)),
+        onTap: () => setState(() => sortAction(i)),
+      ));
     }
-
     return TableRow(children: headerCells);
+  }
+
+  void sortAction(int i, {PointerEvent? hover}) {
+    if (!widget.inputColumns[i].sortable) return;
+
+    final ascendingIcon = Icon(MdiIcons.arrowUp);
+    final descendingIcon = Icon(MdiIcons.arrowDown);
+    final hoveredIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
+
+    setState(() {
+      // Clicked
+      if (hover == null) {
+        switch (widget.inputColumns[i].sortAscending) {
+          case null:
+            // Reset all column sorting
+            for (StandardTableColumn c in widget.inputColumns) {
+              c.sortAscending = null;
+              c.sortableIcon = null;
+            }
+            widget.inputColumns[i].sortAscending = true;
+            widget.inputColumns[i].sortableIcon = ascendingIcon;
+            break;
+          case true:
+            widget.inputColumns[i].sortAscending = false;
+            widget.inputColumns[i].sortableIcon = descendingIcon;
+            break;
+          case false:
+            widget.inputColumns[i].sortAscending = null;
+            widget.inputColumns[i].sortableIcon = null;
+            break;
+        }
+        _sortColumn(widget.items, i);
+        // No sorting is active and hovered
+      } else if (widget.inputColumns[i].sortAscending == null) {
+        if (hover is PointerEnterEvent) {
+          widget.inputColumns[i].sortableIcon = hoveredIcon;
+        } else if (hover is PointerExitEvent) {
+          widget.inputColumns[i].sortableIcon = null;
+        }
+      }
+    });
   }
 
   TableRow _buildDataRow(int rowIdx) {
@@ -346,7 +446,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       final isTrailing = i == rawCells.length - 1;
       //final disableOnTap = (widget.trailingActionsAt != null && isTrailing)
       //    ? true : false;
-      final cellColumnConfig = widget.columns[i];
+      final cellColumnConfig = widget.inputColumns[i];
 
       Widget cell = rawCells[i];
       cell = decorateCell(

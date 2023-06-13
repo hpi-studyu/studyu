@@ -29,16 +29,16 @@ class DashboardState extends Equatable {
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> get visibleStudies {
+  AsyncValue<List<Study>> visibleStudies({required String? query}) {
     return studies.when(
-      data: (studies) => AsyncValue.data(_filterAndSortStudies(studies)),
+      data: (studies) => AsyncValue.data(_filterAndSortStudies(studies, query)),
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
       loading: () => const AsyncValue.loading(),
     );
   }
 
-  List<Study> _filterAndSortStudies(List<Study> studies) {
-    final filteredStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
+  List<Study> _filterAndSortStudies(List<Study> studies, String? query) {
+    final filteredStudies = studiesFilter.apply(unfilteredStudies: studies, user: currentUser, query: query).toList();
     filteredStudies.sort((study, other) => study.title!.compareTo(other.title!));
     return filteredStudies;
   }
