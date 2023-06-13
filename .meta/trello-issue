@@ -39,23 +39,27 @@ done
 selection=$(fzf --ansi --no-multi --delimiter ':' --with-nth '2..' <<<"$cards")
 [[ -z "$selection" ]] && exit 0
 
-# move card to in progress & assign yourself
+# retrieve ids of trello card & "in progress"-list
 card_id=$(sed 's/:.*//' <<< $selection)
 progress_id=$(trello show-lists --board $board \
     | grep "$list_in_progress" \
     | sed 's/^.*ID: \([^)]*\).*$/\1/')
-trello move-card $card_id $progress_id 1>/dev/null
-trello assign-card $card_id 1>/dev/null
 
 # create github issue
 title=$(sed 's/^[^→]*→ //' <<< $selection)
-issue=$(gh issue create --title "$title" --body "[Trello card](https://trello.com/c/$card_id)" \
+issue=$(gh issue create --title "$title" --body "See [Trello card](https://trello.com/c/$card_id)" \
     | tail -1 \
     | sed -r 's|^.*/([[:digit:]]+)$|\1|')
 if [[ -z "$issue" ]]; then
     echo "Failed to create GH issue!"
     exit 1
 fi
+
+# move card to in progress, comment GH issue link & assign yourself
+trello move-card $card_id $progress_id \
+    --comment "See [GitHub issue #$issue]($(git config --get remote.origin.url | sed 's/\.git$//')/issues/$issue)" \
+    1>/dev/null
+trello assign-card $card_id 1>/dev/null
 
 # create & check out git branch
 branch="issue/$issue-$(tr ' ' '-' <<<"$title"\
