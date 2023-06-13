@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-06-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.3.0-dev.2`](#studyu_core---v430-dev2)
+ - [`studyu_flutter_common` - `v1.6.2-dev.3`](#studyu_flutter_common---v162-dev3)
+
+---
+
+#### `studyu_core` - `v4.3.0-dev.2`
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+#### `studyu_flutter_common` - `v1.6.2-dev.3`
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+
 ## 2023-05-26
 
 ### Changes

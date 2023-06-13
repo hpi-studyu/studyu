@@ -1,3 +1,7 @@
+## 1.6.2-dev.3
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
 ## 1.6.2-dev.2
 
  - **REFACTOR**: rename ENV to STUDY_ENV. ([1ee25b50](https://github.com/hpi-studyu/studyu/commit/1ee25b50e2544f6a62e77ac4266b5fd4c8ba9bf2))

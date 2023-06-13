@@ -29,8 +29,8 @@ dependencies:
   reactive_forms: ^15.0.0
   rxdart: ^0.27.7
   shared_preferences: ^2.1.2
-  studyu_core: ^4.3.0-dev.1
-  studyu_flutter_common: ^1.6.2-dev.2
+  studyu_core: ^4.3.0-dev.2
+  studyu_flutter_common: ^1.6.2-dev.3
   supabase: ^1.9.3
   supabase_flutter: ^1.10.3
   url_launcher: ^6.1.11
