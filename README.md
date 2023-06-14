@@ -1,18 +1,32 @@
 # StudyU: N-of-1 Trials Made Easy
 
-StudyU is the award-winning, ideal platform to discover the effects of individual health interventions in a safe and convenient way. StudyU accomplishes this by ushering N-of-1 trials into the digital age, effectively combining the fields of technology and personalized research methods.
+StudyU is the award-winning, ideal platform to discover the effects of
+individual health interventions in a safe and convenient way. StudyU
+accomplishes this by ushering N-of-1 trials into the digital age, effectively
+combining the fields of technology and personalized research methods.
 
 ## What are N-of-1 Trials?
 
-Many medical treatments only work in 50% of patients [1], and either have low or unknown effectiveness [2]. N-of-1 trials are the gold standard for finding out which treatments work at the individual level. Here's an example on how they work:
+Many medical treatments only work in 50% of patients [1], and either have low
+or unknown effectiveness [2]. N-of-1 trials are the gold standard for finding
+out which treatments work at the individual level. Here's an example on how
+they work:
 
-TODO: https://youtu.be/_KaGearXQkI?t=733
+TODO: <https://youtu.be/_KaGearXQkI?t=733>
 
 ## The StudyU Platform
 
-The StudyU platform incorporates the StudyU App and the StudyU Designer. As a clinician, researcher, or digital health enthusiast you can conduct your own studies with the StudyU Designer. By utilizing the StudyU App, individuals have the opportunity to actively engage in N-of-1 trials and obtain personalized treatment advice. The StudyU App leverages the capabilities of statistical computing and advanced machine learning models to identify the optimal intervention tailored specifically to your unique needs and circumstances.
+The StudyU platform incorporates the StudyU App and the StudyU
+Designer. As a clinician, researcher, or digital health enthusiast
+you can conduct your own studies with the StudyU Designer. By utilizing
+the StudyU App, individuals have the opportunity to actively engage
+in N-of-1 trials and obtain personalized treatment advice. The StudyU
+App leverages the capabilities of statistical computing and advanced
+machine learning models to identify the optimal intervention tailored
+specifically to your unique needs and circumstances.
 
-Find out more about StudyU and start your study now at [studyu.health](https://studyu.health)
+Find out more about StudyU and start your study now at
+[studyu.health](https://studyu.health)
 
 ### Try out StudyU for yourself
 
@@ -37,15 +51,23 @@ conducting innovative digital N-of-1 trials. arXiv:2012.1420.
 
 ## References
 
-[1] Spear BB, Heath-Chiozzi M, Huff J. Clinical application of pharmacogenetics. Trends Mol Med. 2001 May;7(5):201-4. doi: 10.1016/s1471-4914(01)01986-4. PMID: 11325631.
+[1] Spear BB, Heath-Chiozzi M, Huff J.
+Clinical application of pharmacogenetics.
+Trends Mol Med. 2001 May;7(5):201-4.
+doi:10.1016/s1471-4914(01)01986-4. PMID: 11325631.
 
-[2] Smith QW, Street RL, Volk RJ, Fordis M. Differing Levels of Clinical Evidence: Exploring Communication Challenges in Shared Decision Making. Medical Care Research and Review. 2013;70(1_suppl):3S-13S. doi:10.1177/1077558712468491.
+[2] Smith QW, Street RL, Volk RJ, Fordis M.
+Differing Levels of Clinical Evidence: Exploring Communication
+Challenges in Shared Decision Making.
+Medical Care Research and Review. 2013;70(1_suppl):3S-13S.
+doi:10.1177/1077558712468491.
 
 ---
 
 ## Repository Overview
 
-We have different Flutter/Dart packages all contained in this monorepo. The StudyU platform consists out of the following packages:
+We have different Flutter/Dart packages all contained in
+this monorepo. The StudyU platform consists out of the following packages:
 
 - StudyU App: Participate in N-of-1 trials
 - StudyU Designer: Design and conduct your own N-of-1 trial
