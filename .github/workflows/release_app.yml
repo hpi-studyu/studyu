@@ -6,6 +6,8 @@ on:
       - 'studyu_app-v*'
   workflow_dispatch:
 
+concurrency: ci-pubdev
+
 jobs:
   github-release:
     name: Create Github Release
