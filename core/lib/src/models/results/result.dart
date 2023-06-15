@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
@@ -31,9 +30,6 @@ class Result<T> {
       case QuestionnaireState:
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
         break;
-      case fhir.QuestionnaireResponse:
-        resultMap = {keyResult: (result as fhir.QuestionnaireResponse).toJson()};
-        break;
       case bool:
         resultMap = {keyResult: result};
         break;
@@ -46,9 +42,6 @@ class Result<T> {
 
   static Result _fromJson(Map<String, dynamic> data) {
     switch (data[keyType] as String) {
-      case 'fhir.QuestionnaireResponse':
-        return Result<fhir.QuestionnaireResponse>.parseJson(data)
-          ..result = fhir.QuestionnaireResponse.fromJson(data[keyResult] as Map<String, dynamic>);
       case 'QuestionnaireState':
         return Result<QuestionnaireState>.parseJson(data)
           ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult] as List));

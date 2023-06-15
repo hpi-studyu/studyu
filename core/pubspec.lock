@@ -177,22 +177,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  fhir:
-    dependency: "direct main"
-    description:
-      name: fhir
-      sha256: "03c1d5299b639d48bc64071f654e20a558ef94ee07f3d1d6478e9604c6301392"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.7"
-  fhir_yaml:
-    dependency: transitive
-    description:
-      name: fhir_yaml
-      sha256: f4f1f0854ff426c3ed48c4f7aef8290331ef1c9e963dbe6ddc710a39a3fb9f08
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.2"
   file:
     dependency: transitive
     description:
@@ -209,14 +193,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  freezed_annotation:
-    dependency: transitive
-    description:
-      name: freezed_annotation
-      sha256: "70776c4541e5cacfe45bcaf00fe79137b8c61aa34fb5765a05ce6c57fd72c6e9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.14.3"
   frontend_server_client:
     dependency: transitive
     description:
