@@ -10,7 +10,6 @@ environment:
 dependencies:
   collection: ^1.17.1 # flutter_test sdk
   csv: ^5.0.2
-  fhir: ^0.4.7
   json_annotation: ^4.8.1
   logging: ^1.2.0
   quiver: ^3.2.1
