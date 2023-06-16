@@ -78,7 +78,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               SizedBox(
                 width: 400.0,
                 child: SearchBar(
-                  hintText: "Search", // todo tr
+                  hintText: tr.search,
                   controller: searchController,
                   leading: const Icon(Icons.search),
                 ),
@@ -93,21 +93,30 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               onSelect: controller.onSelectStudy,
               getActions: controller.availableActions,
               emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: EmptyBody(
-                        icon: Icons.content_paste_search_rounded,
-                        title: "You don't have any studies yet",
-                        description:
-                            "Build your own study from scratch, start from the default template or create a new draft copy from an already published study!",
-                        button: PrimaryButton(
-                          text: "From template",
-                          onPressed: () {
-                            print("TODO");
-                          },
-                        ),
-                      ),
-                    )
+                  ? (searchQuery != null && searchQuery!.isNotEmpty)
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 24.0),
+                          child: EmptyBody(
+                            icon: Icons.content_paste_search_rounded,
+                            title: "No Studies found",
+                            description: "Modify your query",
+                          ),
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.only(top: 24.0),
+                          child: EmptyBody(
+                            icon: Icons.content_paste_search_rounded,
+                            title: "You don't have any studies yet",
+                            description:
+                                //"Build your own study from scratch, start from the default template or create a new draft copy from an already published study!",
+                                "Build your own study from scratch or create a new draft copy from an already published study!",
+                            /*button: PrimaryButton(
+                    text: "From template",
+                    onPressed: () {
+                    },
+                  ),*/
+                          ),
+                        )
                   : const SizedBox.shrink(),
             ),
           )
