@@ -1155,12 +1155,11 @@ packages:
   universal_html:
     dependency: "direct main"
     description:
-      path: "."
-      ref: patch-1
-      resolved-ref: f6f76050270c4c5ea6074d776a849e2a046f80ea
-      url: "https://github.com/UsamaSarwar/universal_html"
-    source: git
-    version: "2.2.2"
+      name: universal_html
+      sha256: a5cc5a84188e5d3e58f3ed77fe3dd4575dc1f68aa7c89e51b5b4105b9aab3b9d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   universal_io:
     dependency: transitive
     description:
@@ -1314,12 +1313,13 @@ packages:
     source: hosted
     version: "2.0.16"
   wakelock:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: wakelock
-      sha256: "769ecf42eb2d07128407b50cb93d7c10bd2ee48f0276ef0119db1d25cc2f87db"
-      url: "https://pub.dev"
-    source: hosted
+      path: wakelock
+      ref: main
+      resolved-ref: f3610d6c246098fee74463de09434ed81fc2a7c8
+      url: "https://github.com/chandrabezzo/wakelock.git"
+    source: git
     version: "0.6.2"
   wakelock_macos:
     dependency: transitive
@@ -1349,9 +1349,9 @@ packages:
     dependency: "direct overridden"
     description:
       path: wakelock_windows
-      ref: win32-v5
-      resolved-ref: "2a9bca63a540771f241d688562351482b2cf234c"
-      url: "https://github.com/timsneath/wakelock"
+      ref: main
+      resolved-ref: f3610d6c246098fee74463de09434ed81fc2a7c8
+      url: "https://github.com/chandrabezzo/wakelock.git"
     source: git
     version: "0.2.2"
   web_socket_channel:
