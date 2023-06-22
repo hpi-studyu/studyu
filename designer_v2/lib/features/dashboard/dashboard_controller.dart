@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
@@ -66,6 +65,13 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     } else {
       return query.toLowerCase();
     }
+  }
+
+  void sortAndUpdate(Set<String> pinnedStudies) {
+    final studies = state.sort(pinnedStudies: pinnedStudies);
+    state = state.copyWith(
+      studies: () => AsyncValue.data(studies),
+    );
   }
 
   @override

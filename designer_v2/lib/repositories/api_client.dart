@@ -22,6 +22,8 @@ abstract class StudyUApi {
       Study study, List<SubjectProgress> records);
    */
   Future<AppConfig> fetchAppConfig();
+  Future<StudyUUser> fetchUser(String userId);
+  Future<StudyUUser> saveUser(StudyUUser user);
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -46,6 +48,8 @@ class ReportNotFoundException extends APIException {}
 class ReportSectionNotFoundException extends APIException {}
 
 class StudyInviteNotFoundException extends APIException {}
+
+class UserNotFoundException extends APIException {}
 
 class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin implements StudyUApi {
   StudyUApiClient({
@@ -168,6 +172,23 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   Future<AppConfig> fetchAppConfig() async {
     final request = AppConfig.getAppConfig();
     return _awaitGuarded(request);
+  }
+
+  @override
+  Future<StudyUUser> fetchUser(String userId) async {
+    await _testDelay();
+    final request = getById<StudyUUser>(userId);
+    return _awaitGuarded(request, onError: {
+      HttpStatus.notAcceptable: (e) => throw UserNotFoundException(),
+      HttpStatus.notFound: (e) => throw UserNotFoundException(),
+    });
+  }
+
+  @override
+  Future<StudyUUser> saveUser(StudyUUser user) async {
+    await _testDelay();
+    final request = user.save();
+    return _awaitGuarded<StudyUUser>(request);
   }
 
   /// Helper that tries to complete the given Supabase query [future] while

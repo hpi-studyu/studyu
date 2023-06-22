@@ -14,10 +14,12 @@ class StudiesTable extends StatelessWidget {
     required this.onSelect,
     required this.getActions,
     required this.emptyWidget,
+    required this.pinnedStudies,
     Key? key,
   }) : super(key: key);
 
   final List<Study> studies;
+  final Iterable<String>? pinnedStudies;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<Study> getActions;
   final Widget emptyWidget;
@@ -75,8 +77,28 @@ class StudiesTable extends StatelessWidget {
       trailingActionsAt: (item, _) => getActions(item),
       buildCellsAt: _buildRow,
       sortColumnPredicates: _sortColumns,
+      pinnedPredicates: pinnedPredicates,
       emptyWidget: emptyWidget,
     );
+  }
+
+  int Function(Study a, Study b)? get pinnedPredicates {
+    if (pinnedStudies == null)
+      (
+        a,
+        b,
+      ) =>
+          0;
+    return (Study a, Study b) {
+      if (pinnedStudies!.contains(a.id) && pinnedStudies!.contains(b.id)) {
+        return 0;
+      } else if (pinnedStudies!.contains(a.id)) {
+        return -1;
+      } else if (pinnedStudies!.contains(b.id)) {
+        return 1;
+      }
+      return 0;
+    };
   }
 
   List<int Function(Study a, Study b)?> get _sortColumns {

@@ -42,6 +42,7 @@ class StandardTable<T> extends StatefulWidget {
     required List<StandardTableColumn>? columns,
     required this.onSelectItem,
     required this.buildCellsAt,
+    this.pinnedPredicates,
     this.sortColumnPredicates,
     this.trailingActionsAt,
     StandardTableColumn? trailingActionsColumn,
@@ -84,6 +85,7 @@ class StandardTable<T> extends StatefulWidget {
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final List<int Function(T a, T b)?>? sortColumnPredicates;
+  final int Function(T a, T b)? pinnedPredicates;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
   late final StandardTableColumn inputTrailingActionsColumn;
@@ -232,6 +234,12 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
             return 0;
           }
         });
+        // Extract and insert pinned items at the top
+        if (widget.pinnedPredicates != null) {
+          items.sort((a, b) {
+            return widget.pinnedPredicates!(a, b);
+          });
+        }
         _cachedRows.clear();
       }
     } else {

@@ -29,24 +29,44 @@ class DashboardState extends Equatable {
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> visibleStudies({required String? query}) {
+  AsyncValue<List<Study>> visibleStudies(String? query, Set<String> pinnedStudies) {
     return studies.when(
-      data: (studies) => AsyncValue.data(_filterAndSortStudies(studies, query)),
+      data: (studies) {
+        List<Study> updatedStudies =
+            studiesFilter.apply(unfilteredStudies: studies, user: currentUser, query: query).toList();
+        updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
+        return AsyncValue.data(updatedStudies);
+      },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
       loading: () => const AsyncValue.loading(),
     );
   }
 
-  List<Study> _filterAndSortStudies(List<Study> studies, String? query) {
-    final filteredStudies = studiesFilter.apply(unfilteredStudies: studies, user: currentUser, query: query).toList();
-    filteredStudies.sort((study, other) => study.title!.compareTo(other.title!));
-    return filteredStudies;
+  List<Study> sort({required Set<String> pinnedStudies, List<Study>? studiesToSort}) {
+    final sortedStudies = studiesToSort ?? studies.value!;
+    sortedStudies.sort((study, other) => study.title!.compareTo(other.title!));
+    if (pinnedStudies.isNotEmpty) {
+      // Extract pinned studies and remove them from filteredStudies
+      final List<Study> pinned = [];
+      sortedStudies.removeWhere((study) {
+        if (pinnedStudies.contains(study.id)) {
+          pinned.add(study);
+          return true;
+        }
+        return false;
+      });
+
+      // Insert pinned studies at the beginning of the filteredStudies list
+      sortedStudies.insertAll(0, pinned);
+    }
+    return sortedStudies;
   }
 
   DashboardState copyWith({
     AsyncValue<List<Study>> Function()? studies,
     StudiesFilter Function()? studiesFilter,
     User Function()? currentUser,
+    AsyncValue<Set<String>> Function()? pinnedStudies,
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,

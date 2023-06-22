@@ -7,6 +7,7 @@ import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/models/tables/study_invite.dart';
 import 'package:studyu_core/src/models/tables/study_subject.dart';
 import 'package:studyu_core/src/models/tables/subject_progress.dart';
+import 'package:studyu_core/src/models/tables/user.dart';
 import 'package:studyu_core/src/util/analytics.dart';
 import 'package:supabase/supabase.dart';
 
@@ -30,6 +31,8 @@ String tableName(Type cls) {
       return Repo.tableName;
     case StudyInvite:
       return StudyInvite.tableName;
+    case StudyUUser:
+      return StudyUUser.tableName;
     default:
       print('$cls is not a supported Supabase type');
       throw TypeError();
@@ -51,6 +54,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return Repo.fromJson(json) as T;
       case StudyInvite:
         return StudyInvite.fromJson(json) as T;
+      case StudyUUser:
+        return StudyUUser.fromJson(json) as T;
       default:
         print('$T is not a supported Supabase type');
         throw TypeError();

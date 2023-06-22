@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -16,15 +17,17 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
-//Future<void> deleteProgress(Study study);
+  // Future<void> deleteProgress(Study study);
 }
 
 class StudyRepository extends ModelRepository<Study> implements IStudyRepository {
   StudyRepository({
+    this.sortCallback,
     required this.apiClient,
     required this.authRepository,
     required this.ref,
@@ -38,6 +41,8 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
   final ProviderRef ref;
+
+  final VoidCallback? sortCallback;
 
   @override
   ModelID getKey(Study model) {
@@ -106,6 +111,31 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
 
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
+      ModelAction(
+        type: StudyActionType.pin,
+        label: StudyActionType.pin.string,
+        onExecute: () async {
+          final dashboardController = ref.read(dashboardControllerProvider.notifier);
+          final controller = ref.read(userProvider).value!;
+          controller.user.preferences.pinnedStudies = Set.of(controller.user.preferences.pinnedStudies);
+          controller.user.preferences.pinnedStudies.add(model.id);
+          await controller.savePreferences(controller.user.preferences);
+          dashboardController.sortAndUpdate(controller.user.preferences.pinnedStudies);
+        },
+        isAvailable: !ref.read(userProvider).value!.user.preferences.pinnedStudies.contains(model.id),
+      ),
+      ModelAction(
+        type: StudyActionType.unpin,
+        label: StudyActionType.unpin.string,
+        onExecute: () async {
+          final dashboardController = ref.read(dashboardControllerProvider.notifier);
+          final controller = ref.read(userProvider).value!;
+          controller.user.preferences.pinnedStudies.remove(model.id);
+          await controller.savePreferences(controller.user.preferences);
+          dashboardController.sortAndUpdate(controller.user.preferences.pinnedStudies);
+        },
+        isAvailable: ref.read(userProvider).value!.user.preferences.pinnedStudies.contains(model.id),
+      ),
       ModelAction(
         type: StudyActionType.edit,
         label: StudyActionType.edit.string,

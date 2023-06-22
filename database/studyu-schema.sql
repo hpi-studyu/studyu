@@ -243,7 +243,8 @@ ALTER TABLE public.study_progress_export OWNER TO supabase_admin;
 
 CREATE TABLE public."user" (
     id uuid NOT NULL,
-    email text
+    email text,
+    preferences jsonb,
 );
 
 
@@ -838,6 +839,12 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
 
 CREATE POLICY "Users can do everything with their subjects" ON public.study_subject USING ((auth.uid() = user_id));
 
+
+--
+-- Name: user Users can do everything with their user data; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY "Users can read and write their user data" ON public."user" USING ((auth.uid() = id));
 
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
