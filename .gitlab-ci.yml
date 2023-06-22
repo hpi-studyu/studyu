@@ -3,7 +3,7 @@ stages:
 deployOnDockerHost:
   stage: deploy
   only:
-    - deploy/dev-env
+    - deploy
   script:
     - cp /opt/studyu-backend_configuration docker/supabase/.env
     - |
