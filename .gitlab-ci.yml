@@ -33,4 +33,4 @@ deployOnDockerHost:
     - |
       docker-compose \
       -f docker/docker-compose-nginx_only.yml \
-      up
+      up -d
