@@ -55,17 +55,17 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
-  # quickfix for https://github.com/dint-dev/universal_html/issues/76
-  universal_html:
-    git:
-      url: https://github.com/UsamaSarwar/universal_html
-      ref: patch-1
   # need this to support chewie 1.5.0 https://github.com/creativecreatorormaybenot/wakelock/pull/203
+  wakelock:
+    git:
+      url: https://github.com/chandrabezzo/wakelock.git # repository
+      ref: main # branch
+      path: wakelock/ # folder
   wakelock_windows:
     git:
-      url: https://github.com/timsneath/wakelock
-      ref: win32-v5
-      path: wakelock_windows
+      url: https://github.com/chandrabezzo/wakelock.git # repository
+      ref: main # branch
+      path: wakelock_windows/ # folder
 
 flutter_icons:
   image_path: assets/images/icon.png
