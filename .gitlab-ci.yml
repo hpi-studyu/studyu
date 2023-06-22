@@ -5,7 +5,6 @@ deployOnDockerHost:
   only:
     - deploy
   script:
-    - cp /opt/studyu-backend_configuration docker/supabase/.env
     - |
       docker-compose \
       -f docker/supabase/docker-compose-db.yml \
@@ -20,6 +19,9 @@ deployOnDockerHost:
       -f docker/supabase/docker-compose.yml \
       --env-file docker/supabase/.env \
       down
+    - cp /opt/studyu-backend_configuration docker/supabase/.env
+    - rm docker/supabase/volumes/api/kong.yml
+    - cp /opt/kong.yml docker/supabase/volumes/api/kong.yml
     - |
       docker-compose \
       -f docker/supabase/docker-compose-db.yml \
