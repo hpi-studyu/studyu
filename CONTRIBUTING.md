@@ -63,10 +63,8 @@ convenience:
 
 - `.env`: Production database used by default
 - `.env.staging`: Staging database, currently not ready to be used
-- `.env.local`: Used to run StudyU locally with Docker with the deployed
-  production instance of Supabase
-- `.env.selfhost`: Used for a selfhosted instance of Supabase, e.g. an instance
-  running locally with Docker
+- `.env.local`: Used to run StudyU locally with Docker
+- `.env.hpi`: Used for a selfhost instance of Supabase at HPI
 
 Ideally we should only use the staging database or a local one for all our
 development work.

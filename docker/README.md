@@ -27,7 +27,7 @@ run StudyU after you made changes to the codebase. Switch to the `.env.local`
 [environment file](https://github.com/hpi-studyu/studyu/blob/dev/flutter_common/lib/envs/.env.local)
 to use the StudyU database with local StudyU applications. For this modify the
 `docker-compose-*.yml` files you want to run (see below), and replace
-`../flutter_common/lib/envs/.env.selfhost` with
+`../flutter_common/lib/envs/.env.hpi` with
 `../flutter_common/lib/envs/.env.local` in the section `env_file`.
 
 To start both the StudyU App and the StudyU Designer, simply run `docker compose

@@ -1,4 +1,4 @@
 !.env
 !.env.local
-!.env.selfhost
+!.env.hpi
 !.env.staging
