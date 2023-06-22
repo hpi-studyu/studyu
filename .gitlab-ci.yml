@@ -1,0 +1,28 @@
+stages:
+  - deploy
+deployOnDockerHost:
+  stage: deploy
+  only:
+    - deploy/dev-env
+  script:
+    - cp /opt/studyu-backend_configuration docker/supabase/.env
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose-db.yml \
+      --env-file docker/supabase/.env \
+      down
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose.yml \
+      --env-file docker/supabase/.env \
+      down
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose-db.yml \
+      --env-file docker/supabase/.env \
+      up -d
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose.yml \
+      --env-file docker/supabase/.env \
+      up -d
