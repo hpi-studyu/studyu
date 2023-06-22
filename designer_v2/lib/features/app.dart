@@ -78,6 +78,7 @@ class _AppContentState extends ConsumerState<AppContent> {
             final themeProvider = ThemeProvider.of(context);
             final theme = themeProvider.light(settings.value.sourceColor);
             return MaterialApp.router(
+              title: 'StudyU Designer'.hardcoded,
               scaffoldMessengerKey: scaffoldMessengerKey,
               builder: (context, widget) => NotificationDispatcher(
                 scaffoldMessengerKey: scaffoldMessengerKey,
@@ -85,7 +86,6 @@ class _AppContentState extends ConsumerState<AppContent> {
                 child: widget,
               ),
               debugShowCheckedModeBanner: Config.isDebugMode,
-              title: 'StudyU Designer V2'.hardcoded,
               color: theme.colorScheme.surface,
               theme: theme,
               routeInformationProvider: router.routeInformationProvider,
