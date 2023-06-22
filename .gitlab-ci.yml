@@ -13,6 +13,10 @@ deployOnDockerHost:
       down
     - |
       docker-compose \
+      -f docker/supabase/docker-compose-nginx_only.yml \
+      down
+    - |
+      docker-compose \
       -f docker/supabase/docker-compose.yml \
       --env-file docker/supabase/.env \
       down
@@ -26,3 +30,7 @@ deployOnDockerHost:
       -f docker/supabase/docker-compose.yml \
       --env-file docker/supabase/.env \
       up -d
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose-nginx_only.yml \
+      up
