@@ -1,0 +1,14 @@
+'core':
+  - 'core/**/*'
+'designer_v2':
+  - 'designer_v2/**/*'
+'app':
+  - 'app/**/*'
+'flutter_common':
+  - 'flutter_common/**/*'
+'dependencies':
+  - '**/pubspec.yaml'
+  - '**/pubspec.lock'
+'documentation':
+  - 'docs/**/*'
+  - '**/*.md'
