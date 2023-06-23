@@ -17,7 +17,7 @@ on:
 
 jobs:
   publishing:
-    name: 'Publish to Pubdev'
+    name: 'Publish to Pub.dev'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'

@@ -15,17 +15,11 @@ jobs:
   play-store-release:
     name: Create Play Store Release
     runs-on: ubuntu-latest
-
     steps:
-      - name: Wait on check
-        uses: lewagon/wait-on-check-action@v1.3.1
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          check-name: 'Publish to Pubdev'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 600
-          allowed-conclusions: success
-          verbose: true
+          workflowId: 'publish_pubdev.yml'
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Checkout code
@@ -41,7 +35,7 @@ jobs:
         run: |
           echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
           gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.propertieFs
+          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
@@ -60,15 +54,11 @@ jobs:
   app-store-release:
     name: Create App Store Release
     runs-on: macos-latest
-
     steps:
-      - name: Wait on check
-        uses: lewagon/wait-on-check-action@v1.3.1
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
         with:
-          ref: ${{ github.ref }}
-          running-workflow-name: 'Publish to Pub.dev'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 600
+          workflowId: 'publish_pubdev.yml'
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Set up ruby env

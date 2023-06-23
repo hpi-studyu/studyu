@@ -6,8 +6,6 @@ on:
       - 'studyu_repo_generator-v*'
   workflow_dispatch:
 
-concurrency: ci-pubdev
-
 jobs:
   github-release:
     name: Create Github Release
