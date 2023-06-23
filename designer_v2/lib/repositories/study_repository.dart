@@ -5,6 +5,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -17,7 +18,6 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
-import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
@@ -115,26 +115,17 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.pin,
         label: StudyActionType.pin.string,
         onExecute: () async {
-          final dashboardController = ref.read(dashboardControllerProvider.notifier);
-          final controller = ref.read(userProvider).value!;
-          controller.user.preferences.pinnedStudies = Set.of(controller.user.preferences.pinnedStudies);
-          controller.user.preferences.pinnedStudies.add(model.id);
-          await controller.savePreferences(controller.user.preferences);
-          dashboardController.sortAndUpdate(controller.user.preferences.pinnedStudies);
+          ref.read(dashboardControllerProvider.notifier).pinStudy(model.id);
         },
-        isAvailable: !ref.read(userProvider).value!.user.preferences.pinnedStudies.contains(model.id),
+        isAvailable: !ref.read(userRepositoryProvider).user.preferences.pinnedStudies.contains(model.id),
       ),
       ModelAction(
-        type: StudyActionType.unpin,
-        label: StudyActionType.unpin.string,
+        type: StudyActionType.pinoff,
+        label: StudyActionType.pinoff.string,
         onExecute: () async {
-          final dashboardController = ref.read(dashboardControllerProvider.notifier);
-          final controller = ref.read(userProvider).value!;
-          controller.user.preferences.pinnedStudies.remove(model.id);
-          await controller.savePreferences(controller.user.preferences);
-          dashboardController.sortAndUpdate(controller.user.preferences.pinnedStudies);
+          ref.read(dashboardControllerProvider.notifier).pinOffStudy(model.id);
         },
-        isAvailable: ref.read(userProvider).value!.user.preferences.pinnedStudies.contains(model.id),
+        isAvailable: ref.read(userRepositoryProvider).user.preferences.pinnedStudies.contains(model.id),
       ),
       ModelAction(
         type: StudyActionType.edit,

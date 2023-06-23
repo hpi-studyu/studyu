@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 
 Map<StudyActionType, IconData> studyActionIcons = {
   StudyActionType.pin: MdiIcons.pin,
-  StudyActionType.unpin: MdiIcons.pinOff,
+  StudyActionType.pinoff: MdiIcons.pinOff,
   StudyActionType.edit: Icons.edit_rounded,
   StudyActionType.duplicate: Icons.file_copy_rounded,
   StudyActionType.duplicateDraft: Icons.file_copy_rounded,

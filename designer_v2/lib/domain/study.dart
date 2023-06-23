@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 enum StudyActionType {
   pin,
-  unpin,
+  pinoff,
   edit,
   duplicate,
   duplicateDraft,
@@ -22,7 +22,7 @@ extension StudyActionTypeFormatted on StudyActionType {
     switch (this) {
       case StudyActionType.pin:
         return tr.action_pin;
-      case StudyActionType.unpin:
+      case StudyActionType.pinoff:
         return tr.action_unpin;
       case StudyActionType.edit:
         return tr.action_edit;

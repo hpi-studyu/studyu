@@ -64,7 +64,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final controller = ref.read(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
-    final userRepo = ref.watch(userProvider);
+    final userRepo = ref.watch(userRepositoryProvider);
 
     return DashboardScaffold(
       body: Column(
@@ -95,37 +95,43 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
-          AsyncValueWidget<UserRepository>(
-              value: userRepo,
-              data: (userRepository) => AsyncValueWidget<List<Study>>(
-                  value: state.visibleStudies(searchQuery, userRepository.user.preferences.pinnedStudies),
-                  data: (visibleStudies) => StudiesTable(
-                        studies: visibleStudies,
-                        pinnedStudies: userRepository.user.preferences.pinnedStudies,
-                        onSelect: controller.onSelectStudy,
-                        getActions: controller.availableActions,
-                        emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
-                            ? (searchQuery != null && searchQuery!.isNotEmpty)
-                                ? Padding(
-                                    padding: const EdgeInsets.only(top: 24.0),
-                                    child: EmptyBody(
-                                      icon: Icons.content_paste_search_rounded,
-                                      title: tr.studies_not_found,
-                                      description: tr.modify_query,
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: const EdgeInsets.only(top: 24.0),
-                                    child: EmptyBody(
-                                      icon: Icons.content_paste_search_rounded,
-                                      title: tr.studies_empty,
-                                      description: tr.studies_empty_description,
-                                      // "...or create a new draft copy from an already published study!",
-                                      /* button: PrimaryButton(text: "From template",); */
-                                    ),
-                                  )
-                            : const SizedBox.shrink(),
-                      ))),
+          FutureBuilder<StudyUUser>(
+              future: userRepo.fetchUser(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return AsyncValueWidget<List<Study>>(
+                      value: state.visibleStudies(searchQuery, snapshot.data!.preferences.pinnedStudies),
+                      data: (visibleStudies) => StudiesTable(
+                            studies: visibleStudies,
+                            pinnedStudies: snapshot.data!.preferences.pinnedStudies,
+                            dashboardProvider: ref.read(dashboardControllerProvider.notifier),
+                            onSelect: controller.onSelectStudy,
+                            getActions: controller.availableActions,
+                            emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
+                                ? (searchQuery != null && searchQuery!.isNotEmpty)
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(top: 24.0),
+                                        child: EmptyBody(
+                                          icon: Icons.content_paste_search_rounded,
+                                          title: tr.studies_not_found,
+                                          description: tr.modify_query,
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.only(top: 24.0),
+                                        child: EmptyBody(
+                                          icon: Icons.content_paste_search_rounded,
+                                          title: tr.studies_empty,
+                                          description: tr.studies_empty_description,
+                                          // "...or create a new draft copy from an already published study!",
+                                          /* button: PrimaryButton(text: "From template",); */
+                                        ),
+                                      )
+                                : const SizedBox.shrink(),
+                          ));
+                }
+                return const SizedBox.shrink();
+              }),
         ],
       ),
     );

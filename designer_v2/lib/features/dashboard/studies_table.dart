@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
+import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -15,14 +18,16 @@ class StudiesTable extends StatelessWidget {
     required this.getActions,
     required this.emptyWidget,
     required this.pinnedStudies,
+    required this.dashboardProvider,
     Key? key,
   }) : super(key: key);
 
   final List<Study> studies;
-  final Iterable<String>? pinnedStudies;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<Study> getActions;
   final Widget emptyWidget;
+  final Iterable<String> pinnedStudies;
+  final DashboardController dashboardProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,10 @@ class StudiesTable extends StatelessWidget {
     return StandardTable<Study>(
       items: studies,
       columns: [
+        StandardTableColumn(
+          label: '',
+          columnWidth: const FixedColumnWidth(60),
+        ),
         StandardTableColumn(
           label: tr.studies_list_header_title,
           columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4)),
@@ -82,19 +91,11 @@ class StudiesTable extends StatelessWidget {
     );
   }
 
-  int Function(Study a, Study b)? get pinnedPredicates {
-    if (pinnedStudies == null)
-      (
-        a,
-        b,
-      ) =>
-          0;
+  int Function(Study a, Study b) get pinnedPredicates {
     return (Study a, Study b) {
-      if (pinnedStudies!.contains(a.id) && pinnedStudies!.contains(b.id)) {
-        return 0;
-      } else if (pinnedStudies!.contains(a.id)) {
+      if (pinnedStudies.contains(a.id)) {
         return -1;
-      } else if (pinnedStudies!.contains(b.id)) {
+      } else if (pinnedStudies.contains(b.id)) {
         return 1;
       }
       return 0;
@@ -103,6 +104,7 @@ class StudiesTable extends StatelessWidget {
 
   List<int Function(Study a, Study b)?> get _sortColumns {
     final predicates = [
+      (Study a, Study b) => 0, // do not sort pin icon
       (Study a, Study b) => a.title!.compareTo(b.title!),
       (Study a, Study b) => a.status.index.compareTo(b.status.index),
       (Study a, Study b) => a.participation.index.compareTo(b.participation.index),
@@ -121,7 +123,22 @@ class StudiesTable extends StatelessWidget {
       return (value > 0) ? null : ThemeConfig.bodyTextBackground(theme);
     }
 
+    Icon pinIcon(IconData iconData) {
+      return Icon(
+        iconData,
+        color: Colors.grey,
+        size: 20,
+      );
+    }
+
     return [
+      pinnedStudies.contains(item.id)
+          ? MouseEventsRegion(
+              onTap: () => dashboardProvider.pinOffStudy(item.id),
+              builder: (context, mouseEventState) =>
+                  mouseEventState.contains(MaterialState.hovered) ? pinIcon(MdiIcons.pinOff) : pinIcon(MdiIcons.pin),
+            )
+          : const SizedBox.shrink(),
       Text(item.title ?? '[Missing study title]'),
       StudyStatusBadge(
         status: item.status,

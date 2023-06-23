@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -17,6 +18,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
+  final IUserRepository userRepository;
 
   /// Reference to services injected via Riverpod
   final GoRouter router;
@@ -27,6 +29,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   DashboardController({
     required this.studyRepository,
     required this.authRepository,
+    required this.userRepository,
     required this.router,
   }) : super(DashboardState(currentUser: authRepository.currentUser!)) {
     _subscribeStudies();
@@ -67,8 +70,20 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     }
   }
 
-  void sortAndUpdate(Set<String> pinnedStudies) {
-    final studies = state.sort(pinnedStudies: pinnedStudies);
+  Future<void> pinStudy(String modelId) async {
+    userRepository.user.preferences.pinnedStudies.add(modelId);
+    await userRepository.saveUser();
+    sortStudies();
+  }
+
+  Future<void> pinOffStudy(String modelId) async {
+    userRepository.user.preferences.pinnedStudies.remove(modelId);
+    await userRepository.saveUser();
+    sortStudies();
+  }
+
+  void sortStudies() async {
+    final studies = state.sort(pinnedStudies: userRepository.user.preferences.pinnedStudies);
     state = state.copyWith(
       studies: () => AsyncValue.data(studies),
     );
@@ -93,6 +108,7 @@ final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardC
   final dashboardController = DashboardController(
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
+    userRepository: ref.watch(userRepositoryProvider),
     router: ref.watch(routerProvider),
   );
   dashboardController.addListener((state) {

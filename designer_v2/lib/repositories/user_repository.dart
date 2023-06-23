@@ -4,10 +4,9 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
 abstract class IUserRepository {
+  StudyUUser get user;
   Future<StudyUUser> fetchUser();
-  Future<StudyUUser> saveUser(StudyUUser user);
-  Preferences fetchPreferences();
-  Future<StudyUUser> savePreferences(Preferences preferences);
+  Future<StudyUUser> saveUser();
   void dispose();
 }
 
@@ -16,6 +15,7 @@ class UserRepository implements IUserRepository {
 
   final StudyUApi apiClient;
   final Ref ref;
+  @override
   late StudyUUser user;
 
   @override
@@ -26,29 +26,17 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<StudyUUser> saveUser(StudyUUser saveUser) async {
-    user = await apiClient.saveUser(saveUser);
+  Future<StudyUUser> saveUser() async {
+    user = await apiClient.saveUser(user);
     return user;
-  }
-
-  @override
-  Preferences fetchPreferences() {
-    return user.preferences;
-  }
-
-  @override
-  Future<StudyUUser> savePreferences(Preferences preferences) async {
-    user.preferences = preferences;
-    return await saveUser(user);
   }
 
   @override
   void dispose() {}
 }
 
-final userProvider = FutureProvider.autoDispose<UserRepository>((ref) async {
+final userRepositoryProvider = Provider<UserRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   final userRepository = UserRepository(apiClient, ref);
-  await userRepository.fetchUser();
   return userRepository;
 });

@@ -209,11 +209,11 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
         ],
       );
     }
-
     return tableWidget;
   }
 
-  void _sortColumn(List<T> items, int columnIndex) {
+  void _sortColumn(int columnIndex) {
+    if (!(columnIndex >= 0 && columnIndex < widget.inputColumns.length)) return;
     final sortAscending = widget.inputColumns[columnIndex].sortAscending;
 
     // Save default order to restore later
@@ -222,30 +222,38 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     }
 
     if (sortAscending != null) {
-      if (columnIndex >= 0 && columnIndex < widget.inputColumns.length) {
-        final sortPredicate = widget.sortColumnPredicates;
-        items.sort((a, b) {
-          if (sortPredicate != null && sortPredicate[columnIndex] != null) {
-            return sortAscending ? sortPredicate[columnIndex]!(a, b) : sortPredicate[columnIndex]!(b, a);
-          } else if (a is Comparable && b is Comparable) {
-            // If sortPredicate is not provided, use default comparison logic
-            return sortAscending ? Comparable.compare(a, b) : Comparable.compare(b, a);
-          } else {
-            return 0;
-          }
-        });
-        // Extract and insert pinned items at the top
-        if (widget.pinnedPredicates != null) {
-          items.sort((a, b) {
-            return widget.pinnedPredicates!(a, b);
-          });
-        }
-        _cachedRows.clear();
-      }
+      widget.items.sort((a, b) {
+        return _sortLogic(a, b, columnIndex: columnIndex, sortAscending: sortAscending);
+      });
+      _sortPinnedStudies(widget.items, columnIndex: columnIndex, sortAscending: sortAscending);
     } else {
       widget.items.clear();
       widget.items.addAll(sortDefaultOrder!);
-      _cachedRows.clear();
+      _sortPinnedStudies(widget.items, columnIndex: columnIndex);
+    }
+    _cachedRows.clear();
+  }
+
+  void _sortPinnedStudies(List<T> items, {required int columnIndex, bool? sortAscending}) {
+    // Extract and insert pinned items at the top
+    if (widget.pinnedPredicates != null) {
+      items.sort((a, b) {
+        int ret = widget.pinnedPredicates!(a, b);
+        // Fallback to default sorting algorithm
+        return ret == 0 ? _sortLogic(a, b, columnIndex: columnIndex, sortAscending: sortAscending) : ret;
+      });
+    }
+  }
+
+  int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending}) {
+    final sortPredicate = widget.sortColumnPredicates;
+    if (sortPredicate != null && sortPredicate[columnIndex] != null) {
+      return sortAscending ?? true ? sortPredicate[columnIndex]!(a, b) : sortPredicate[columnIndex]!(b, a);
+    } else if (a is Comparable && b is Comparable) {
+      // If sortPredicate is not provided, use default comparison logic
+      return sortAscending ?? true ? Comparable.compare(a, b) : Comparable.compare(b, a);
+    } else {
+      return 0;
     }
   }
 
@@ -357,8 +365,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
             widget.inputColumns[i].sortableIcon = null;
             break;
         }
-        _sortColumn(widget.items, i);
-        // No sorting is active and hovered
+        _sortColumn(i);
+        // No sorting icon is active or hovered
       } else if (widget.inputColumns[i].sortAscending == null) {
         if (hover is PointerEnterEvent) {
           widget.inputColumns[i].sortableIcon = hoveredIcon;
