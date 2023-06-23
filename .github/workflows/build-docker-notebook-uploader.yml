@@ -16,6 +16,15 @@ jobs:
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
+      - name: Wait on check
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          check-name: 'Publish to Pubdev'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 600
+          allowed-conclusions: success
+          verbose: true
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to GHCR

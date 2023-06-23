@@ -6,14 +6,21 @@ on:
       - 'studyu_app-v*'
   workflow_dispatch:
 
-concurrency: ci-pubdev
-
 jobs:
   github-release:
     name: Create Github Release
     runs-on: ubuntu-latest
 
     steps:
+      - name: Wait on check
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          check-name: 'Publish to Pubdev'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 600
+          allowed-conclusions: success
+          verbose: true
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Checkout code
