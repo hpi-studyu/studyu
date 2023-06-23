@@ -15,6 +15,43 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.4.4`](#studyu_app---v244)
+ - [`studyu_core` - `v4.3.0-dev.4`](#studyu_core---v430-dev4)
+ - [`studyu_designer_v2` - `v1.3.6`](#studyu_designer_v2---v136)
+ - [`studyu_flutter_common` - `v1.6.2-dev.5`](#studyu_flutter_common---v162-dev5)
+
+---
+
+#### `studyu_app` - `v2.4.4`
+
+ - **FIX**(deps): new temporary wakelock fix repo. ([414364c5](https://github.com/hpi-studyu/studyu/commit/414364c5373092994b20765c986cba75e21b3dc4))
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+#### `studyu_core` - `v4.3.0-dev.4`
+
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+#### `studyu_designer_v2` - `v1.3.6`
+
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+#### `studyu_flutter_common` - `v1.6.2-dev.5`
+
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+
+## 2023-06-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.4.3`](#studyu_app---v243)
  - [`studyu_core` - `v4.3.0-dev.3`](#studyu_core---v430-dev3)
  - [`studyu_designer_v2` - `v1.3.5`](#studyu_designer_v2---v135)
