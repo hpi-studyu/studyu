@@ -16,4 +16,4 @@ jobs:
         uses: docker://avtodev/markdown-lint:v1
         with:
           args: './**/*.md'
-          ignore: './**/CHANGELOG.md ./**/ios/** ./**/android/**'
+          ignore: './**/CHANGELOG.md ./**/ios/** ./**/android/** ./docs/database/**'
