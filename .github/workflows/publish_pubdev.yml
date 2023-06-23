@@ -28,7 +28,7 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: core
-          # dryRunOnly: true
+          dryRunOnly: true
 
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
@@ -37,7 +37,7 @@ jobs:
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: flutter_common
           flutter: true
-          # dryRunOnly: true
+          dryRunOnly: true
 
       - name: '>> Dart package repo_generator <<'
         uses: k-paxian/dart-package-publisher@master
@@ -45,7 +45,7 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: repo_generator
-          # dryRunOnly: true
+          dryRunOnly: true
 
       - name: '>> Dart package notebook_uploader <<'
         uses: k-paxian/dart-package-publisher@master
@@ -53,4 +53,4 @@ jobs:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: notebook_uploader
-          # dryRunOnly: true
+          dryRunOnly: true
