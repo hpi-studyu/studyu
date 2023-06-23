@@ -6,6 +6,13 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - master
+    paths:
+      - '**.dart'
+      - '**/pubspec.yaml'
+      - '**/pubspec.lock'
+      - 'melos.yaml'
+      - 'firebase.json'
+      - '.firebaserc'
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest

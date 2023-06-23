@@ -8,6 +8,9 @@ on:
       - '**.dart'
       - '**/pubspec.yaml'
       - '**/pubspec.lock'
+      - 'melos.yaml'
+      - 'firebase.json'
+      - '.firebaserc'
 
 jobs:
   build_and_preview:
