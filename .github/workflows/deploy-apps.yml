@@ -17,6 +17,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Wait on check
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          check-name: 'Publish to Pubdev'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 600
+          allowed-conclusions: success
+          verbose: true
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Checkout code
@@ -32,21 +41,60 @@ jobs:
         run: |
           echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
           gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - if: ${{ github.ref == 'refs/heads/dev' }}
+          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.propertieFs
+      - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
       - name: Build StudyU app bundle
         run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
         working-directory: ./app
-      - uses: maierj/fastlane-action@v3.0.0
+      - name: Fastlane upload
+        uses: maierj/fastlane-action@v3.0.0
         with:
           lane: 'internal'
           subdirectory: './app/android'
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
+
+  app-store-release:
+    name: Create App Store Release
+    runs-on: macos-latest
+
+    steps:
+      - name: Wait on check
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          running-workflow-name: 'Publish to Pub.dev'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 600
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up ruby env
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.1
+          bundler-cache: true
+          working-directory: './app/ios'
+      - name: Set up flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Build StudyU ios without codesign
+        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
+        working-directory: ./app
+      - name: Fastlane upload
+        uses: maierj/fastlane-action@v3.0.0
+        with:
+          lane: 'upload_testflight'
+          subdirectory: './app/ios'
+        env:
+          FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
+          FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}
+          FASTLANE_APP_IOS_KEY_CONTENT: ${{ secrets.FASTLANE_APP_IOS_KEY_CONTENT }}
+          FASTLANE_APP_IOS_MATCH_GIT_URL: ${{ secrets.FASTLANE_APP_IOS_MATCH_GIT_URL }}
+          FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY: ${{ secrets.FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
+          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}

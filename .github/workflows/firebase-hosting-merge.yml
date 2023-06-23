@@ -10,6 +10,15 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Wait on check
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          check-name: 'Publish to Pubdev'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 600
+          allowed-conclusions: success
+          verbose: true
       - name: Checkout code
         uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
