@@ -10,8 +10,11 @@ jobs:
   github-release:
     name: Create Github Release
     runs-on: ubuntu-latest
-
     steps:
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
+        with:
+          workflowId: 'publish_pubdev.yml'
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: Checkout code

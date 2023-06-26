@@ -1,3 +1,12 @@
+## 1.6.2-dev.5
+
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+## 1.6.2-dev.4
+
+ - **FIX**: upgrade deps. ([b2926c39](https://github.com/hpi-studyu/studyu/commit/b2926c395988077d4aa172490dbd9c6fd75d52c6))
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
 ## 1.6.2-dev.3
 
  - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))

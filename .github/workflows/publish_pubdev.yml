@@ -17,11 +17,11 @@ on:
 
 jobs:
   publishing:
+    name: 'Publish to Pub.dev'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
-
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:

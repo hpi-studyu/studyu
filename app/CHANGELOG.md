@@ -1,3 +1,14 @@
+## 2.4.4
+
+ - **FIX**(deps): new temporary wakelock fix repo. ([414364c5](https://github.com/hpi-studyu/studyu/commit/414364c5373092994b20765c986cba75e21b3dc4))
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+## 2.4.3
+
+ - **FIX**(deps): new temporary wakelock fix repo. ([bc2d90b2](https://github.com/hpi-studyu/studyu/commit/bc2d90b2f2859a79481e0c7ae9840c0e30cb7503))
+ - **FIX**: upgrade deps. ([b2926c39](https://github.com/hpi-studyu/studyu/commit/b2926c395988077d4aa172490dbd9c6fd75d52c6))
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
 ## 2.4.2
 
  - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))

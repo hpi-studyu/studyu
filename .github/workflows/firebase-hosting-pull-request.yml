@@ -17,6 +17,10 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
+        with:
+          workflowId: 'publish_pubdev.yml'
       - name: Checkout code
         uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2

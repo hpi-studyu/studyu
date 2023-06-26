@@ -465,10 +465,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: "047c7caff7b6aba3014df1579eb75a57c041c1f1aa8069847056f38b6d45f1ec"
+      sha256: "214d5050a68ce68a55da1a6d9d7a2e07e039b359f99f1a17ec685320c9101aa6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.3"
+    version: "1.8.4"
   hive:
     dependency: transitive
     description:
@@ -913,26 +913,26 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "0316390446c6497664379b3d72d1bc1b6e4c5385cf6c1f6a02c5ab5a3ce179ce"
+      sha256: "8f4f1d3ef3ca1801aa3138392bbf0851b39eff703008111765b265f76c8f0190"
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.0"
+    version: "7.8.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: cca6f3bcfa00d327d85424a42e4cc3b3abe25e6a2d68c4ff64b0e2a606684666
+      sha256: bbc1048558cf8ae65c1e27b1249357298cfca50e5843ad0367387f5c873b8e42
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.0"
+    version: "7.8.0"
   sentry_logging:
     dependency: "direct main"
     description:
       name: sentry_logging
-      sha256: "50a62a3bac807be796f7485b2a8321e1f44d62ad76d04b48e26daf52082a267a"
+      sha256: "30554b65282aaca37977d8ad4d7af6eb7e31ac09e949e9acece4d8ffeaa2b3b3"
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.0"
+    version: "7.8.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1080,30 +1080,30 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.3.0-dev.2"
+    version: "4.3.0-dev.4"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.6.2-dev.3"
+    version: "1.6.2-dev.5"
   supabase:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: "2c07c551d4530738a47f2a827268112bb4740637ec307de95fb80e37983f06ea"
+      sha256: "5f5e47fcac99a496e15274d5f6944e1323519df9f8929b4ab9eef8711abeb5f3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.3"
+    version: "1.9.4"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "06a50f4f2af4169876baf12d2006dc0e351c8c044dc4b388edac533505fcf84a"
+      sha256: "1ebe89b83b992123d40dcf5aa88b87d6c2d0a3c62052380cfc94de2337aac469"
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.3"
+    version: "1.10.4"
   synchronized:
     dependency: transitive
     description:
@@ -1155,12 +1155,11 @@ packages:
   universal_html:
     dependency: "direct main"
     description:
-      path: "."
-      ref: patch-1
-      resolved-ref: f6f76050270c4c5ea6074d776a849e2a046f80ea
-      url: "https://github.com/UsamaSarwar/universal_html"
-    source: git
-    version: "2.2.2"
+      name: universal_html
+      sha256: a5cc5a84188e5d3e58f3ed77fe3dd4575dc1f68aa7c89e51b5b4105b9aab3b9d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   universal_io:
     dependency: transitive
     description:
@@ -1314,12 +1313,13 @@ packages:
     source: hosted
     version: "2.0.16"
   wakelock:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: wakelock
-      sha256: "769ecf42eb2d07128407b50cb93d7c10bd2ee48f0276ef0119db1d25cc2f87db"
-      url: "https://pub.dev"
-    source: hosted
+      path: wakelock
+      ref: main
+      resolved-ref: f3610d6c246098fee74463de09434ed81fc2a7c8
+      url: "https://github.com/chandrabezzo/wakelock.git"
+    source: git
     version: "0.6.2"
   wakelock_macos:
     dependency: transitive
@@ -1349,9 +1349,9 @@ packages:
     dependency: "direct overridden"
     description:
       path: wakelock_windows
-      ref: win32-v5
-      resolved-ref: "2a9bca63a540771f241d688562351482b2cf234c"
-      url: "https://github.com/timsneath/wakelock"
+      ref: main
+      resolved-ref: f3610d6c246098fee74463de09434ed81fc2a7c8
+      url: "https://github.com/chandrabezzo/wakelock.git"
     source: git
     version: "0.2.2"
   web_socket_channel:
