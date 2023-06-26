@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-06-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.4.5`](#studyu_app---v245)
+ - [`studyu_core` - `v4.3.0-dev.5`](#studyu_core---v430-dev5)
+ - [`studyu_designer_v2` - `v1.3.7`](#studyu_designer_v2---v137)
+ - [`studyu_flutter_common` - `v1.6.2-dev.6`](#studyu_flutter_common---v162-dev6)
+
+---
+
+#### `studyu_app` - `v2.4.5`
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+#### `studyu_core` - `v4.3.0-dev.5`
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+#### `studyu_designer_v2` - `v1.3.7`
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+#### `studyu_flutter_common` - `v1.6.2-dev.6`
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+
 ## 2023-06-23
 
 ### Changes

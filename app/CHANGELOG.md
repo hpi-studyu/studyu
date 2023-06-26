@@ -1,3 +1,7 @@
+## 2.4.5
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
 ## 2.4.4
 
  - **FIX**(deps): new temporary wakelock fix repo. ([414364c5](https://github.com/hpi-studyu/studyu/commit/414364c5373092994b20765c986cba75e21b3dc4))
