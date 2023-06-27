@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
+import 'package:studyu_designer_v2/common_views/multiselect.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -95,20 +95,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     future: tags.getStudyTags(),
                     builder: (BuildContext context, AsyncSnapshot<List<StudyTag>> snapshot) {
                       if (snapshot.hasData) {
-                        return MultiSelectDialogField(
-                          //textfieldTagsController: formViewModel.tagsControl.value!.textfieldTagsController,
-                          items: snapshot.data!.map((e) => MultiSelectItem(e, e.name)).toList(),
-                          listType: MultiSelectListType.LIST,
-                          onConfirm: (studyTags) => print(
-                              studyTags), /*(String tag) {
-                      if (tag == 'php') {
-                        return 'No, please just no';
-                      } else if (formViewModel.tagsControl.value!.tags!.contains(tag)) {
-                        return 'you already entered that';
-                      }
-                      return null;
-                    },*/
-                        );
+                        return MultiSelectWidget();
                       } else {
                         return const CircularProgressIndicator();
                       }
