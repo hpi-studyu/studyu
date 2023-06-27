@@ -5,11 +5,9 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
-import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
-import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
@@ -111,22 +109,6 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
 
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
-      ModelAction(
-        type: StudyActionType.pin,
-        label: StudyActionType.pin.string,
-        onExecute: () async {
-          ref.read(dashboardControllerProvider.notifier).pinStudy(model.id);
-        },
-        isAvailable: !ref.read(userRepositoryProvider).user.preferences.pinnedStudies.contains(model.id),
-      ),
-      ModelAction(
-        type: StudyActionType.pinoff,
-        label: StudyActionType.pinoff.string,
-        onExecute: () async {
-          ref.read(dashboardControllerProvider.notifier).pinOffStudy(model.id);
-        },
-        isAvailable: ref.read(userRepositoryProvider).user.preferences.pinnedStudies.contains(model.id),
-      ),
       ModelAction(
         type: StudyActionType.edit,
         label: StudyActionType.edit.string,
