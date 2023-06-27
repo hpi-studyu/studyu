@@ -46,7 +46,9 @@ class Study extends SupabaseObjectFunctions<Study> {
   String id;
   String? title;
   String? description;
-  List<StudyTag> tags = [];
+  @JsonKey(includeToJson: true, includeFromJson: false)
+  // todo can we have a Set containing StudyTag here?
+  late List<StudyTag> tags = [];
   @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;
@@ -104,6 +106,10 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
+    final List? tags = json['tags'] as List?;
+    if (tags != null && tags.isNotEmpty) {
+      study.tags = tags.map((json) => StudyTag.fromJson(json as Map<String, dynamic>)).toList();
+    }
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
       study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
@@ -240,6 +246,6 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   @override
   String toString() {
-    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, fhirQuestionnaire: $fhirQuestionnaire, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+    return 'Study{id: $id, title: $title, description: $description, tags: $tags, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, fhirQuestionnaire: $fhirQuestionnaire, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 }

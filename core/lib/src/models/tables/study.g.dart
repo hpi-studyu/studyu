@@ -12,9 +12,6 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
     )
       ..title = json['title'] as String?
       ..description = json['description'] as String?
-      ..tags = (json['tags'] as List<dynamic>)
-          .map((e) => StudyTag.fromJson(e as Map<String, dynamic>))
-          .toList()
       ..participation =
           $enumDecode(_$ParticipationEnumMap, json['participation'])
       ..resultSharing =

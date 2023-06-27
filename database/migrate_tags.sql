@@ -33,7 +33,7 @@ ALTER TABLE ONLY public.study_tag
 --
 
 ALTER TABLE public.study
-ADD COLUMN tags text[]
+ADD COLUMN tags jsonb;
 
 
 --
