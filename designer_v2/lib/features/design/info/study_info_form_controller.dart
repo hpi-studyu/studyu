@@ -55,7 +55,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     titleControl.value = data.title;
     iconControl.value = IconOption(data.iconName);
     descriptionControl.value = data.description;
-    tagsControl.value = data.tagsInfoFormData.tags;
+    tagsControl.value = data.tags;
     organizationControl.value = data.contactInfoFormData.organization;
     reviewBoardControl.value = data.contactInfoFormData.institutionalReviewBoard;
     reviewBoardNumberControl.value = data.contactInfoFormData.institutionalReviewBoardNumber;
@@ -72,9 +72,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         title: titleControl.value!, // required
         iconName: iconControl.value?.name ?? '',
         description: descriptionControl.value,
-        tagsInfoFormData: StudyTagsInfoFormData(
-          tags: tagsControl.value ?? [],
-        ),
+        tags: tagsControl.value?.toList() ?? [],
         contactInfoFormData: StudyContactInfoFormData(
           organization: organizationControl.value,
           institutionalReviewBoard: reviewBoardControl.value,
@@ -99,6 +97,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         StudyFormValidationSet.publish: [
           titleRequired,
           descriptionRequired,
+          // todo tagsRequired,
           iconRequired,
           organizationRequired,
           reviewBoardRequired,

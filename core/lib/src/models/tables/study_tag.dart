@@ -30,4 +30,13 @@ class StudyTag extends SupabaseObjectFunctions<StudyTag> {
 
   @override
   String toString() => toJson().toString();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StudyTag && id == other.id;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ name.hashCode ^ color.hashCode ^ parentId.hashCode;
 }

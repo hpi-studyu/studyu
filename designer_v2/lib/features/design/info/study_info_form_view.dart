@@ -95,7 +95,34 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     future: tags.getStudyTags(),
                     builder: (BuildContext context, AsyncSnapshot<List<StudyTag>> snapshot) {
                       if (snapshot.hasData) {
-                        return MultiSelectWidget();
+                        final allTags = snapshot.data!.map((e) =>
+                            MultiSelectItem<StudyTag>(value: e, name: e.name)).toList();
+                        final selectedTags = formViewModel.tagsControl.value!.map((e) =>
+                            MultiSelectItem<StudyTag>(value: e, name: e.name)).toList();
+                        return Row(children: [
+                          Wrap(
+                            spacing: 8.0,
+                            children: List<Widget>.generate(formViewModel.tagsControl.value!.length, (index) {
+                              return TagChip(
+                                tag: formViewModel.study.tags.elementAt(index),
+                                onRemove: () {
+                                  final newTags = List<StudyTag>.from(formViewModel.tagsControl.value!);
+                                  newTags.removeAt(index);
+                                  formViewModel.tagsControl.value = newTags;
+                                },
+                              );
+                            }),
+                          ),
+                          const Spacer(),
+                          MultiSelectWidget<StudyTag>(
+                              items: allTags.toList(),
+                              selectedOptions: selectedTags,
+                              onConfirm: (selectedItems) {
+                                formViewModel.tagsControl.value = selectedItems.map((e) => e.value).toList();
+                              },
+                          )
+                        ]
+                        );
                       } else {
                         return const CircularProgressIndicator();
                       }
@@ -208,6 +235,23 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class TagChip<T> extends StatelessWidget {
+  final StudyTag tag;
+  final VoidCallback onRemove;
+
+  const TagChip({required this.tag, required this.onRemove, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // todo Chip vs InputChip
+    return Chip(
+      label: Text(tag.name),
+      deleteIcon: const Icon(Icons.close),
+      onDeleted: onRemove,
     );
   }
 }

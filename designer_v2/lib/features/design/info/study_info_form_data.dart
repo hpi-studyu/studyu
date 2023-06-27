@@ -5,14 +5,14 @@ class StudyInfoFormData implements IStudyFormData {
   StudyInfoFormData({
     required this.title,
     this.description,
-    required this.tagsInfoFormData,
+    required this.tags,
     required this.contactInfoFormData,
     required this.iconName,
   });
 
   final String title;
   final String? description;
-  final StudyTagsInfoFormData tagsInfoFormData;
+  final List<StudyTag> tags;
   final String iconName;
   final StudyContactInfoFormData contactInfoFormData;
 
@@ -20,7 +20,7 @@ class StudyInfoFormData implements IStudyFormData {
     return StudyInfoFormData(
       title: study.title ?? '',
       description: study.description ?? '',
-      tagsInfoFormData: StudyTagsInfoFormData.fromStudy(study),
+      tags: study.tags,
       iconName: study.iconName,
       contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
     );
@@ -30,35 +30,9 @@ class StudyInfoFormData implements IStudyFormData {
   Study apply(Study study) {
     study.title = title;
     study.description = description;
-    tagsInfoFormData.apply(study);
+    study.tags = tags;
     study.iconName = iconName;
     contactInfoFormData.apply(study);
-    return study;
-  }
-
-  @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
-
-  @override
-  StudyInfoFormData copy() {
-    throw UnimplementedError(); // not needed for top-level form data
-  }
-}
-
-class StudyTagsInfoFormData implements IStudyFormData {
-  StudyTagsInfoFormData({required this.tags});
-
-  final List<StudyTag> tags;
-
-  factory StudyTagsInfoFormData.fromStudy(Study study) {
-    return StudyTagsInfoFormData(
-      tags: study.tags,
-    );
-  }
-
-  @override
-  Study apply(Study study) {
-    study.tags = tags;
     return study;
   }
 
