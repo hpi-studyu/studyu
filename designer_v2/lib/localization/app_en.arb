@@ -202,7 +202,7 @@
   "form_field_study_description_hint": "Give a short summary of your study to participants",
   "form_field_study_description_required": "The study description must not be empty",
   "form_field_study_icon_required": "You must select an icon for your study",
-  "form_section_publisher": "Publisher & Contact Information",
+  "form_section_publisher": "Publisher and Contact Information",
   "form_section_publisher_description": "Participants will be able to contact you via the StudyU app using this information. Other clinicians or researchers will only be able to contact you if you agree to publish your study to the study registry.",
   "form_field_organization": "Responsible organization",
   "form_field_organization_required": "The responsible organization must not be empty",
