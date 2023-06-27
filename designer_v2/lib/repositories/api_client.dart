@@ -16,6 +16,7 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
+  Future<List<StudyTag>> getStudyTags();
   Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants);
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
@@ -166,6 +167,13 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
     return _awaitGuarded<void>(request); // TODO: any errors here?
+  }
+
+  @override
+  Future<List<StudyTag>> getStudyTags() async {
+    await _testDelay();
+    final request = getAll<StudyTag>();
+    return _awaitGuarded(request);
   }
 
   @override

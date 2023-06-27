@@ -78,6 +78,7 @@ CREATE TABLE public.study (
     contact jsonb NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
+    tags text[],
     icon_name text NOT NULL,
     published boolean DEFAULT false NOT NULL,
     registry_published boolean DEFAULT false NOT NULL,
@@ -125,6 +126,19 @@ CREATE TABLE public.study_subject (
 
 ALTER TABLE public.study_subject OWNER TO supabase_admin;
 
+--
+-- Name: study_tags; Type: TABLE; Schema: public; Owner: supabase_admin
+--
+
+CREATE TABLE study_tag (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name text NOT NULL,
+    color text NOT NULL,
+    parent_id uuid,
+);
+
+
+ALTER TABLE public.study_tag OWNER TO supabase_admin;
 
 --
 -- Name: app_config; Type: TABLE; Schema: public; Owner: supabase_admin
@@ -313,6 +327,14 @@ ALTER TABLE ONLY public."user"
 ALTER TABLE ONLY public.study_subject
     ADD CONSTRAINT study_subject_pkey PRIMARY KEY (id);
 
+
+--
+-- Name: study_tag study_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT study_tag_pkey PRIMARY KEY (id);
+
 -- ======================== FOREIGN KEY CONTRAINTS ======================================================
 
 --
@@ -361,6 +383,14 @@ ALTER TABLE ONLY public.study_subject
 
 ALTER TABLE ONLY public.study_subject
     ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
+
+
+--
+-- Name: study_tag study_tag_parentId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT "study_tag_parentId_fkey" FOREIGN KEY (parent_id) REFERENCES public.study_tag(id) ON DELETE CASCADE;
 
 
 --
@@ -841,6 +871,14 @@ CREATE POLICY "Users can do everything with their subjects" ON public.study_subj
 
 
 --
+-- Name: study_tag Allow read access but deny write access for tags; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY allow_read_deny_write_tag ON study_tag FOR ALL
+USING (true) WITH CHECK (false);
+
+
+--
 -- Name: user Users can do everything with their user data; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
@@ -875,6 +913,13 @@ ALTER TABLE public.study_invite ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.study_subject ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: study_tag; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE public.study_tag ENABLE ROW LEVEL SECURITY;
+
 
 --
 -- Name: subject_progress; Type: ROW SECURITY; Schema: public; Owner: supabase_admin

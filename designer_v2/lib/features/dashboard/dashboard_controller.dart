@@ -108,7 +108,8 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
           await pinOffStudy(model.id);
         },
         isAvailable: userRepository.user.preferences.pinnedStudies.contains(model.id),
-      )];
+      )
+    ];
     return withIcons(
       [...pinActions, ...studyRepository.availableActions(model)],
       studyActionIcons,

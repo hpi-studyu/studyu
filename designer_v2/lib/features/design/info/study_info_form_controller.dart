@@ -24,6 +24,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> titleControl = FormControl();
   final FormControl<IconOption> iconControl = FormControl();
   final FormControl<String> descriptionControl = FormControl();
+  final FormControl<List<StudyTag>> tagsControl = FormControl();
   final FormControl<String> organizationControl = FormControl();
   final FormControl<String> reviewBoardControl = FormControl();
   final FormControl<String> reviewBoardNumberControl = FormControl();
@@ -38,6 +39,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     'title': titleControl,
     'icon': iconControl,
     'description': descriptionControl,
+    'tags': tagsControl,
     'organization': organizationControl,
     'institutionalReviewBoard': reviewBoardControl,
     'institutionalReviewBoardNumber': reviewBoardNumberControl,
@@ -53,6 +55,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     titleControl.value = data.title;
     iconControl.value = IconOption(data.iconName);
     descriptionControl.value = data.description;
+    tagsControl.value = data.tagsInfoFormData.tags;
     organizationControl.value = data.contactInfoFormData.organization;
     reviewBoardControl.value = data.contactInfoFormData.institutionalReviewBoard;
     reviewBoardNumberControl.value = data.contactInfoFormData.institutionalReviewBoardNumber;
@@ -69,6 +72,9 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         title: titleControl.value!, // required
         iconName: iconControl.value?.name ?? '',
         description: descriptionControl.value,
+        tagsInfoFormData: StudyTagsInfoFormData(
+          tags: tagsControl.value ?? [],
+        ),
         contactInfoFormData: StudyContactInfoFormData(
           organization: organizationControl.value,
           institutionalReviewBoard: reviewBoardControl.value,

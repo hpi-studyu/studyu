@@ -44,7 +44,8 @@ class Preferences {
     final Map<String, dynamic> json = _$PreferencesToJson(this);
     // Remove empty fields from the JSON map
     json.removeWhere(
-        (key, value) => value == null || value is String && value.isEmpty || value is Set && value.isEmpty);
+      (key, value) => value == null || value is String && value.isEmpty || value is Set && value.isEmpty,
+    );
     return json;
   }
 }

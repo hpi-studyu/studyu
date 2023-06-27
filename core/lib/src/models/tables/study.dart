@@ -46,6 +46,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   String id;
   String? title;
   String? description;
+  List<StudyTag> tags = [];
   @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;

@@ -6,6 +6,7 @@ import 'package:studyu_core/src/models/tables/repo.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/models/tables/study_invite.dart';
 import 'package:studyu_core/src/models/tables/study_subject.dart';
+import 'package:studyu_core/src/models/tables/study_tag.dart';
 import 'package:studyu_core/src/models/tables/subject_progress.dart';
 import 'package:studyu_core/src/models/tables/user.dart';
 import 'package:studyu_core/src/util/analytics.dart';
@@ -31,6 +32,8 @@ String tableName(Type cls) {
       return Repo.tableName;
     case StudyInvite:
       return StudyInvite.tableName;
+    case StudyTag:
+      return StudyTag.tableName;
     case StudyUUser:
       return StudyUUser.tableName;
     default:
@@ -54,6 +57,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return Repo.fromJson(json) as T;
       case StudyInvite:
         return StudyInvite.fromJson(json) as T;
+      case StudyTag:
+        return StudyTag.fromJson(json) as T;
       case StudyUUser:
         return StudyUUser.fromJson(json) as T;
       default:

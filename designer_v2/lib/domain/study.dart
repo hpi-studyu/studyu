@@ -33,7 +33,7 @@ extension StudyActionTypeFormatted on StudyActionType {
       case StudyActionType.duplicateDraft:
         return tr.action_study_duplicate_draft;
       case StudyActionType.addCollaborator:
-        return "[StudyActionType.addCollaborator]"; // not implemented yet
+        return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
       default:

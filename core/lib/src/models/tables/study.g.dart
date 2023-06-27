@@ -12,6 +12,9 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
     )
       ..title = json['title'] as String?
       ..description = json['description'] as String?
+      ..tags = (json['tags'] as List<dynamic>)
+          .map((e) => StudyTag.fromJson(e as Map<String, dynamic>))
+          .toList()
       ..participation =
           $enumDecode(_$ParticipationEnumMap, json['participation'])
       ..resultSharing =
@@ -62,6 +65,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
+  val['tags'] = instance.tags.map((e) => e.toJson()).toList();
   val['user_id'] = instance.userId;
   val['participation'] = instance.participation.toJson();
   val['result_sharing'] = instance.resultSharing.toJson();

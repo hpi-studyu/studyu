@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
@@ -12,12 +13,14 @@ import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
   const StudyDesignInfoFormView(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final tags = ref.watch(studyTagRepositoryProvider);
     final state = ref.watch(studyControllerProvider(studyId));
 
     return AsyncValueWidget<Study>(
@@ -77,6 +80,39 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       LengthLimitingTextInputFormatter(500),
                     ],
                     decoration: InputDecoration(hintText: tr.form_field_study_description_hint),
+                  ),
+                ),
+                /* return FormTableRow(
+        control: snapshot.data!,
+
+
+        )*/
+                FormTableRow(
+                  control: null,
+                  label: 'Tags',
+                  labelHelpText: 'tr.form_field_study_tags_tooltip',
+                  input: FutureBuilder<List<StudyTag>>(
+                    future: tags.getStudyTags(),
+                    builder: (BuildContext context, AsyncSnapshot<List<StudyTag>> snapshot) {
+                      if (snapshot.hasData) {
+                        return MultiSelectDialogField(
+                          //textfieldTagsController: formViewModel.tagsControl.value!.textfieldTagsController,
+                          items: snapshot.data!.map((e) => MultiSelectItem(e, e.name)).toList(),
+                          listType: MultiSelectListType.LIST,
+                          onConfirm: (studyTags) => print(
+                              studyTags), /*(String tag) {
+                      if (tag == 'php') {
+                        return 'No, please just no';
+                      } else if (formViewModel.tagsControl.value!.tags!.contains(tag)) {
+                        return 'you already entered that';
+                      }
+                      return null;
+                    },*/
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
                   ),
                 ),
               ], columnWidths: const {
