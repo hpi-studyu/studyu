@@ -156,10 +156,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: "047c7caff7b6aba3014df1579eb75a57c041c1f1aa8069847056f38b6d45f1ec"
+      sha256: "214d5050a68ce68a55da1a6d9d7a2e07e039b359f99f1a17ec685320c9101aa6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.3"
+    version: "1.8.4"
   hive:
     dependency: transitive
     description:
@@ -388,10 +388,10 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "0316390446c6497664379b3d72d1bc1b6e4c5385cf6c1f6a02c5ab5a3ce179ce"
+      sha256: "8f4f1d3ef3ca1801aa3138392bbf0851b39eff703008111765b265f76c8f0190"
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.0"
+    version: "7.8.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -523,23 +523,23 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.3.0-dev.2"
+    version: "4.3.0-dev.5"
   supabase:
     dependency: transitive
     description:
       name: supabase
-      sha256: "2c07c551d4530738a47f2a827268112bb4740637ec307de95fb80e37983f06ea"
+      sha256: "5f5e47fcac99a496e15274d5f6944e1323519df9f8929b4ab9eef8711abeb5f3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.3"
+    version: "1.9.4"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "06a50f4f2af4169876baf12d2006dc0e351c8c044dc4b388edac533505fcf84a"
+      sha256: "1ebe89b83b992123d40dcf5aa88b87d6c2d0a3c62052380cfc94de2337aac469"
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.3"
+    version: "1.10.4"
   term_glyph:
     dependency: transitive
     description:

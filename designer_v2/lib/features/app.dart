@@ -30,17 +30,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    /*
-    // is this handled by supabase internally?
-    // move this to appController.onAppStart()
-    final uriParameters = SupabaseAuth.instance.parseUriParameters(Uri.base);
-    if (uriParameters.containsKey('access_token') &&
-        uriParameters.containsKey('refresh_token') &&
-        uriParameters.containsKey('expires_in')) {
-      /// Uri.base is a auth redirect link
-      /// Call recoverSessionFromUrl to continue
-      recoverSessionFromUrl(Uri.base);
-    }*/
   }
 }
 

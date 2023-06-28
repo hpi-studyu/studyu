@@ -11,14 +11,14 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 Future<void> main() async {
-  await loadEnv();
-  final sharedPreferences = await SharedPreferences.getInstance();
-
-  runAsync(prefetchEmojiFont);
-
   /// See: https://stackoverflow.com/questions/57879455/flutter-catching-all-unhandled-exceptions
-  runZonedGuarded(() {
+  await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    await loadEnv();
+    final sharedPreferences = await SharedPreferences.getInstance();
+    runAsync(prefetchEmojiFont);
+
     FlutterError.onError = (FlutterErrorDetails errorDetails) {
       // TODO: top-level error handling
       print("Exception: ${errorDetails.exception.toString()}");
