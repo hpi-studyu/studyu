@@ -5,7 +5,7 @@
 CREATE TABLE study_tag (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     name text NOT NULL,
-    color text NOT NULL,
+    color integer,
     parent_id uuid
 );
 

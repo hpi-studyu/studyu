@@ -17,7 +17,7 @@ class StudyTag extends SupabaseObjectFunctions<StudyTag> {
   @JsonKey(name: 'name')
   String name;
   @JsonKey(name: 'color')
-  String color;
+  int? color;
   @JsonKey(name: 'parent_id')
   String? parentId;
 

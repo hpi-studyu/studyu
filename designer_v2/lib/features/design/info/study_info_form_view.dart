@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
 import 'package:studyu_designer_v2/common_views/multi_select.dart';
+import 'package:studyu_designer_v2/common_views/study_tag_badge.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -21,7 +22,6 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyControllerProvider(studyId));
-
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
@@ -98,13 +98,11 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         selectedTags.sort((a, b) => a.name.compareTo(b.name));
 
                         return Row(children: [
-                          // todo use animatedlist instead of wrap and start
-                          // animation when confirm button of MultiSelectWidget is pressed
                           Wrap(
                             spacing: 8.0,
                             children: List<Widget>.generate(
                                 formViewModel.tagsControl.value!.length, (index) {
-                              return TagChip(
+                              return StudyTagBadge(
                                 tag: formViewModel.tagsControl.value!.elementAt(index),
                                 onRemove: () async {
                                   final newTags = List<StudyTag>.from(
@@ -256,23 +254,6 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class TagChip<T> extends StatelessWidget {
-  final StudyTag tag;
-  final VoidCallback onRemove;
-
-  const TagChip({required this.tag, required this.onRemove, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // todo Chip vs InputChip
-    return Chip(
-      label: Text(tag.name),
-      deleteIcon: const Icon(Icons.close),
-      onDeleted: onRemove,
     );
   }
 }

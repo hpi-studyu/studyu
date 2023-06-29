@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/common_views/badge.dart' as studybadge;
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -139,7 +140,21 @@ class StudiesTable extends StatelessWidget {
                   mouseEventState.contains(MaterialState.hovered) ? pinIcon(MdiIcons.pinOff) : pinIcon(MdiIcons.pin),
             )
           : const SizedBox.shrink(),
-      Text(item.title ?? '[Missing study title]'),
+      Column(children: [
+        Text(item.title ?? '[Missing study title]'),
+        Wrap(
+          spacing: 8.0,
+          children: List<Widget>.generate(
+              item.tags.length, (index) {
+            return studybadge.Badge(
+              label: item.tags.elementAt(index).name,
+              type: studybadge.BadgeType.outlineFill,
+              icon: null,
+            );
+          }),
+        ),
+      ],
+      ),
       StudyStatusBadge(
         status: item.status,
         showPrefixIcon: false,
