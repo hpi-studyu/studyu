@@ -1,5 +1,5 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 
 class QuestionnaireFormData implements IFormData {
