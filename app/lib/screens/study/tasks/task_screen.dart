@@ -48,6 +48,17 @@ class _TaskScreenState extends State<TaskScreen> {
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
+      case AudioRecordingTask:
+        return AudioRecordingTaskWidget(
+          task: taskInstance.task as AudioRecordingTask,
+          key: UniqueKey(),
+          completionPeriod: taskInstance.completionPeriod,
+        );
+      case ImageCapturingTask:
+        return ImageCapturingTaskWidget(
+            task: taskInstance.task as ImageCapturingTask,
+            key: UniqueKey(),
+            completionPeriod: taskInstance.completionPeriod,
       default:
         print('${taskInstance.task.runtimeType} is not a supported Task!');
         return null;
