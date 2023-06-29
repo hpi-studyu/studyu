@@ -12,7 +12,7 @@ is our production environment. We can specify the other files by using e.g.
 configuration in Android Studio or VS Code.
 
 ```shell
-flutter build/run android/web/... --dart-define=STUDYU_ENV=.env.dev/.env.prod/.env.local/...
+flutter build/run android/web/... --dart-define=STUDYU_ENV=.env.productive.dev/.env.productive.prod/.env.productive.local/...
 ```
 
 Below is an example for an environment file such as

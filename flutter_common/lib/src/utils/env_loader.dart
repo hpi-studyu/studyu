@@ -5,10 +5,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 const envsAssetPath = 'packages/studyu_flutter_common/envs';
 
-// load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
+// load env from envs/.env.productive or from the filename specified in the STUDYU_ENV runtime-variable
 String envFilePath() {
   const env = String.fromEnvironment('STUDYU_ENV');
-  return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
+  return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env.productive';
 }
 
 Future<void> loadEnv() async {

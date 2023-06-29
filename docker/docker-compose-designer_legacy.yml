@@ -17,4 +17,4 @@ services:
       # replace designer_v2 with designer in the file nginx/conf.d/designer.conf
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
+      - ../flutter_common/lib/envs/.env.productive.selfhost
