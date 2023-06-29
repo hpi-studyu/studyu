@@ -1,6 +1,5 @@
 name: Publish Notebook Uploader Docker image
 on:
-  workflow_dispatch:
   push:
     paths:
       - 'core/**'
@@ -8,14 +7,19 @@ on:
       - '.github/workflows/build-docker-notebook-uploader.yml'
     branches:
       - master
-      # - dev
   release:
     types: [published]
+  workflow_dispatch:
+
 jobs:
   push_to_registry:
     name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
+        with:
+          workflowId: 'publish_pubdev.yml'
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to GHCR

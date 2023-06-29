@@ -2,12 +2,25 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on PR
-'on': pull_request
+on:
+  pull_request:
+    paths:
+      - '**.dart'
+      - '**/pubspec.yaml'
+      - '**/pubspec.lock'
+      - 'melos.yaml'
+      - 'firebase.json'
+      - '.firebaserc'
+
 jobs:
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
+        with:
+          workflowId: 'publish_pubdev.yml'
       - name: Checkout code
         uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
