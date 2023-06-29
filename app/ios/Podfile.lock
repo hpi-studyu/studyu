@@ -23,16 +23,16 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - permission_handler_apple (9.0.4):
+  - permission_handler_apple (9.1.0):
     - Flutter
   - ReachabilitySwift (5.0.0)
-  - Sentry/HybridSDK (8.7.2):
-    - SentryPrivate (= 8.7.2)
+  - Sentry/HybridSDK (8.8.0):
+    - SentryPrivate (= 8.8.0)
   - sentry_flutter (0.0.1):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.7.2)
-  - SentryPrivate (8.7.2)
+    - Sentry/HybridSDK (= 8.8.0)
+  - SentryPrivate (8.8.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -130,11 +130,11 @@ SPEC CHECKSUMS:
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  Sentry: c43b6d1d51bf96edbaeac7772c4178aa54f4f450
-  sentry_flutter: 354c51276054f9f8a9b276967172aeb2e91d8a69
-  SentryPrivate: 760a9fd5d134c4d926c4c0afe9c4deceadbf4557
+  Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2
+  sentry_flutter: cf7da03b65520b631330ecb498deb592aa7640be
+  SentryPrivate: 4350d865f898224ab9fa02b37d6ee7fbb623f47e
   shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
@@ -143,6 +143,6 @@ SPEC CHECKSUMS:
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 
-PODFILE CHECKSUM: cd033bf551b7a305f245a464a62656b1120844df
+PODFILE CHECKSUM: 4793585db804881ae0d013f52140ebf91a4b4426
 
 COCOAPODS: 1.12.1
