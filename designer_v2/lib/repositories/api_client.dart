@@ -16,7 +16,7 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
-  Future<List<StudyTag>> getStudyTags();
+  Future<List<StudyTag>> getAllAvailableStudyTags();
   Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants);
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
@@ -170,7 +170,7 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   }
 
   @override
-  Future<List<StudyTag>> getStudyTags() async {
+  Future<List<StudyTag>> getAllAvailableStudyTags() async {
     await _testDelay();
     final request = getAll<StudyTag>();
     return _awaitGuarded(request);

@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 
 // todo implements ModelRepository<StudyTag>?
 abstract class IStudyTagRepository {
-  Future<List<StudyTag>> getStudyTags();
+  Future<List<StudyTag>> getAllAvailableStudyTags();
   void dispose();
 }
 
@@ -14,8 +14,8 @@ class StudyTagRepository implements IStudyTagRepository {
   final StudyUApi apiClient;
 
   @override
-  Future<List<StudyTag>> getStudyTags() async {
-    return await apiClient.getStudyTags();
+  Future<List<StudyTag>> getAllAvailableStudyTags() async {
+    return await apiClient.getAllAvailableStudyTags();
   }
 
   @override
