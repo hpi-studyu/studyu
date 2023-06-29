@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
