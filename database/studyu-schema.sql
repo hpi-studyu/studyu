@@ -1,3 +1,5 @@
+-- TODO move stuff from migrate_tags to here
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -78,7 +80,6 @@ CREATE TABLE public.study (
     contact jsonb NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
-    tags jsonb,
     icon_name text NOT NULL,
     published boolean DEFAULT false NOT NULL,
     registry_published boolean DEFAULT false NOT NULL,

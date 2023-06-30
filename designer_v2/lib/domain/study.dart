@@ -130,7 +130,7 @@ extension StudyDuplicateX on Study {
     copy.published = true;
     return copy;
   }
-
+// todo tags
   Study copyJsonIgnoredAttributes({required Study from, createdAt = false}) {
     participantCount = from.participantCount;
     activeSubjectCount = from.activeSubjectCount;
@@ -145,7 +145,7 @@ extension StudyDuplicateX on Study {
     }
     return this;
   }
-
+// todo tags
   Study resetJsonIgnoredAttributes() {
     participantCount = 0;
     activeSubjectCount = 0;

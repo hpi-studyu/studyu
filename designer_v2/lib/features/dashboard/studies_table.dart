@@ -145,9 +145,9 @@ class StudiesTable extends StatelessWidget {
         Wrap(
           spacing: 8.0,
           children: List<Widget>.generate(
-              item.tags.length, (index) {
+              item.studyTags.length, (index) {
             return studybadge.Badge(
-              label: item.tags.elementAt(index).name,
+              label: item.studyTags.elementAt(index).name,
               type: studybadge.BadgeType.outlineFill,
               icon: null,
             );

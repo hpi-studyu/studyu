@@ -20,7 +20,7 @@ class StudyInfoFormData implements IStudyFormData {
     return StudyInfoFormData(
       title: study.title ?? '',
       description: study.description ?? '',
-      tags: study.tags,
+      tags: study.studyTags,
       iconName: study.iconName,
       contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
     );
@@ -30,7 +30,7 @@ class StudyInfoFormData implements IStudyFormData {
   Study apply(Study study) {
     study.title = title;
     study.description = description;
-    study.tags = tags;
+    study.studyTags = tags;
     study.iconName = iconName;
     contactInfoFormData.apply(study);
     return study;

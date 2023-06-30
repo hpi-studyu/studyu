@@ -32,7 +32,7 @@ class MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return StandardDialog(
+        return  StandardDialog(
           titleText: 'Selected Options',
           body: SizedBox(
             width: 300,

@@ -16,7 +16,9 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
-  Future<List<StudyTag>> getAllAvailableStudyTags();
+  Future<List<Tag>> fetchAllTags();
+  Future<StudyTag> saveStudyTag(StudyTag studyTag);
+  Future<void> deleteStudyTag(StudyTag studyTag);
   Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants);
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
@@ -64,12 +66,13 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
 
   static final studyColumns = [
     '*',
+    'study_tags:tag(*)',
     'repo(*)',
     'study_invite!study_invite_studyId_fkey(*)',
     'study_participant_count',
     'study_ended_count',
     'active_subject_count',
-    'study_missed_days'
+    'study_missed_days',
   ];
 
   static final studyWithParticipantActivityColumns = [
@@ -166,14 +169,29 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     await _testDelay();
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
-    return _awaitGuarded<void>(request); // TODO: any errors here?
+    return _awaitGuarded<void>(request);
   }
 
   @override
-  Future<List<StudyTag>> getAllAvailableStudyTags() async {
+  Future<List<Tag>> fetchAllTags() async {
     await _testDelay();
-    final request = getAll<StudyTag>();
+    final request = getAll<Tag>();
     return _awaitGuarded(request);
+  }
+
+  @override
+  Future<StudyTag> saveStudyTag(StudyTag studyTag) async {
+    await _testDelay();
+    final Future<StudyTag> request = studyTag.save();
+    return _awaitGuarded<StudyTag>(request);
+  }
+
+  @override
+  Future<void> deleteStudyTag(StudyTag studyTag) async {
+    await _testDelay();
+    // Delegate to [SupabaseObjectMethods]
+    final request = studyTag.delete();
+    return _awaitGuarded<void>(request);
   }
 
   @override
@@ -212,10 +230,10 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
       return result;
     } on SupabaseQueryError catch (e) {
       if (onError == null) {
-        throw _apiException();
+        throw _apiException(error: e);
       }
       if (e.statusCode == null || !onError.containsKey(e.statusCode)) {
-        throw _apiException();
+        throw _apiException(error: e);
       }
       final errorHandler = onError[e.statusCode]!;
       errorHandler(e);
@@ -223,8 +241,15 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     throw _apiException();
   }
 
-  _apiException() {
-    debugLog("Unknown exception encountered");
+  _apiException({SupabaseQueryError? error}) {
+    if (error != null) {
+      debugLog("Supabase Exception encountered");
+      debugLog(error.statusCode.toString());
+      debugLog(error.details);
+      debugLog(error.message);
+    } else {
+      debugLog("Unknown exception encountered");
+    }
     return APIException();
   }
 

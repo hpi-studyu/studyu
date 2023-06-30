@@ -15,6 +15,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
+import 'package:studyu_designer_v2/repositories/tag_repository.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
   const StudyDesignInfoFormView(super.studyId, {super.key});
@@ -91,9 +92,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   labelHelpText: 'tr.form_field_study_tags_tooltip',
                   input: ReactiveFormConsumer(
                       builder: (context, form, child) {
-                        final tags = ref.read(studyTagRepositoryProvider);
+                        final tags = ref.read(tagRepositoryProvider);
+                        final studyTags = ref.watch(studyTagRepositoryProvider(studyId));
                         final selectedTags = formViewModel.tagsControl.value!
-                            .map((e) => MultiSelectItem<StudyTag>(value: e, name: e.name))
+                            .map((e) => MultiSelectItem<Tag>(value: e.tag, name: e.name))
                             .toList();
                         selectedTags.sort((a, b) => a.name.compareTo(b.name));
 
@@ -105,33 +107,36 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                               return StudyTagBadge(
                                 tag: formViewModel.tagsControl.value!.elementAt(index),
                                 onRemove: () async {
-                                  final newTags = List<StudyTag>.from(
+                                  studyTags.delegate.delete(formViewModel.tagsControl.value![index]);
+                                  /*final newTags = List<StudyTag>.from(
                                       formViewModel.tagsControl.value!);
                                   newTags.removeAt(index);
-                                  formViewModel.tagsControl.value = newTags;
+                                  formViewModel.tagsControl.value = newTags;*/
                                 },
                               );
                             }),
                           ),
                           const Spacer(),
-                          FutureBuilder<List<StudyTag>>(
-                              future: tags.getAllAvailableStudyTags(),
+                          FutureBuilder<List<Tag>>(
+                              future: tags.getAllTags(),
                               builder: (BuildContext context,
-                                  AsyncSnapshot<List<StudyTag>> snapshot) {
+                                  AsyncSnapshot<List<Tag>> snapshot) {
                                 if (snapshot.hasData) {
+                                  // todo move to controller
                                   final allTags = snapshot.data!
-                                      .map((e) => MultiSelectItem<StudyTag>(
+                                      .map((e) => MultiSelectItem<Tag>(
                                       value: e, name: e.name))
                                       .toList();
                                   allTags.sort((a, b) => a.name.compareTo(b.name));
-                                  return MultiSelectWidget<StudyTag>(
+                                  return MultiSelectWidget<Tag>(
                                     items: allTags.toList(),
                                     selectedOptions: selectedTags,
                                     onConfirm: (selectedItems) async {
-                                      formViewModel.tagsControl.value =
-                                          selectedItems
-                                              .map((e) => e.value)
-                                              .toList();
+                                        studyTags.updateStudyTags(selectedItems.map((e) => e.value).toList());
+                                        /*formViewModel.tagsControl.value =
+                                            selectedItems
+                                                .map((e) => e.value)
+                                                .toList();*/
                                     },
                                   );
                                 } else {
