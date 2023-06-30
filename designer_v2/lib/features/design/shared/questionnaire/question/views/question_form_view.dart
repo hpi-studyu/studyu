@@ -6,12 +6,17 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/bool_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/choice_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/choice_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -28,6 +33,11 @@ class SurveyQuestionFormView extends ConsumerStatefulWidget {
 }
 
 class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView> {
+  static final List<FormControlOption<SurveyQuestionType>> _questionTypeControlOptions =
+    QuestionFormData.questionTypeFormDataFactories.keys
+      .map((questionType) => FormControlOption(questionType, questionType.string))
+      .toList();
+
   QuestionFormViewModel get formViewModel => widget.formViewModel;
 
   late bool isQuestionHelpTextFieldVisible = formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
@@ -39,9 +49,9 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
 
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
-      SurveyQuestionType.choice: (_) => ChoiceQuestionFormView(formViewModel: formViewModel),
-      SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel),
-      SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.choice: (_) => ChoiceQuestionFormView(formViewModel: formViewModel as ChoiceQuestionFormViewModel),
+      SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel as BoolQuestionFormViewModel),
+      SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel as ScaleQuestionFormViewModel),
     };
     final questionType = formViewModel.questionType;
 
@@ -104,7 +114,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
-                  items: formViewModel.questionTypeControlOptions.map((option) {
+                  items: _questionTypeControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(

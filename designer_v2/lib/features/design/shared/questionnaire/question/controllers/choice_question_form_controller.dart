@@ -1,6 +1,7 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/choice_question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -37,6 +38,9 @@ class ChoiceQuestionFormViewModel extends QuestionFormViewModel<ChoiceQuestionFo
 
   bool get isAddOptionButtonVisible =>
       _responseOptionsArray.value != null && _responseOptionsArray.value!.length < customOptionsMax;
+
+  @override
+  SurveyQuestionType get questionType => SurveyQuestionType.choice;
 
   @override
   Map<FormMode, LocalizedStringResolver>? get titleResources => _titleResources;

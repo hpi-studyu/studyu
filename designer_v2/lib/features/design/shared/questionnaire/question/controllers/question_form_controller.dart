@@ -28,6 +28,8 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
     titles,
   }) => ScaleQuestionFormViewModel(formData: formData, delegate: delegate, validationSet: validationSet, titles: titles);
 
+  SurveyQuestionType get questionType;
+
   /// Customized titles (if any) depending on the context of use
   @protected
   Map<FormMode, LocalizedStringResolver>? get titleResources;
