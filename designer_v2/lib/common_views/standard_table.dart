@@ -51,7 +51,7 @@ class StandardTable<T> extends StatefulWidget {
     this.dataRowBuilder,
     this.cellSpacing = 10.0,
     this.rowSpacing = 9.0,
-    this.minRowHeight = 50.0,
+    this.minRowHeight = 60.0,
     this.showTableHeader = true,
     this.tableWrapper,
     this.leadingWidget,
@@ -302,14 +302,15 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
 
     final List<Widget> headerCells = [];
     for (var i = 0; i < columns.length; i++) {
-      final isLeadingTrailing = i == 0 || i == columns.length - 1;
+      final isLeading = i == 0;
+      final isTrailing = i == columns.length - 1;
       headerCells.add(MouseEventsRegion(
         builder: (context, state) {
           return Padding(
               padding: EdgeInsets.fromLTRB(
-                  (isLeadingTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
+                  (isLeading || isTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
                   widget.cellSpacing,
-                  (isLeadingTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
+                  (isLeading || isTrailing) ? 2 * widget.cellSpacing : widget.cellSpacing,
                   widget.cellSpacing),
               child: Row(
                 children: [

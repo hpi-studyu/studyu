@@ -124,36 +124,56 @@ class StudiesTable extends StatelessWidget {
       return (value > 0) ? null : ThemeConfig.bodyTextBackground(theme);
     }
 
-    Icon pinIcon(IconData iconData) {
+    Icon icon(IconData iconData) {
       return Icon(
         iconData,
         color: Colors.grey,
-        size: 20,
+        size: 25,
       );
     }
 
+    Widget getRespectivePinIcon(Set<MaterialState> state) {
+      final bool contains = pinnedStudies.contains(item.id);
+      final bool hovers = state.contains(MaterialState.hovered);
+      switch (hovers) {
+        case true:
+          return contains ? icon(MdiIcons.pinOff) : icon(MdiIcons.pin);
+        case false:
+          return contains ? icon(MdiIcons.pin) : const SizedBox.shrink();
+        default:
+          return const SizedBox.shrink();
+      }
+    }
+
     return [
-      pinnedStudies.contains(item.id)
-          ? MouseEventsRegion(
-              onTap: () => dashboardProvider.pinOffStudy(item.id),
-              builder: (context, mouseEventState) =>
-                  mouseEventState.contains(MaterialState.hovered) ? pinIcon(MdiIcons.pinOff) : pinIcon(MdiIcons.pin),
-            )
-          : const SizedBox.shrink(),
-      Column(children: [
-        Text(item.title ?? '[Missing study title]'),
-        Wrap(
-          spacing: 8.0,
-          children: List<Widget>.generate(
-              item.studyTags.length, (index) {
-            return studybadge.Badge(
-              label: item.studyTags.elementAt(index).name,
-              type: studybadge.BadgeType.outlineFill,
-              icon: null,
+      MouseEventsRegion(
+          onTap: () => pinnedStudies.contains(item.id) ? dashboardProvider.pinOffStudy(item.id) : dashboardProvider.pinStudy(item.id),
+          builder: (context, mouseEventState) {
+            return SizedBox.expand(
+              child: Container(
+                child: getRespectivePinIcon(mouseEventState),
+              ),
             );
-          }),
+          },
         ),
-      ],
+      item.studyTags.isEmpty ? Text(item.title ?? '[Missing study title]') :
+      Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(item.title ?? '[Missing study title]'),
+            const SizedBox(height: 8.0),
+            Wrap(
+              spacing: 8.0,
+              children: List<Widget>.generate(
+                  item.studyTags.length, (index) {
+                return studybadge.Badge(
+                  label: item.studyTags.elementAt(index).name,
+                  type: studybadge.BadgeType.outlineFill,
+                  icon: null,
+                );
+              }),
+            ),
+          ]
       ),
       StudyStatusBadge(
         status: item.status,
