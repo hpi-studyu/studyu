@@ -40,8 +40,8 @@ scripts:
     run: |
       melos exec -c 6 -- \
         "dart format -l 120 ."
-      markdownlint './**/*.md' --ignore './**/CHANGELOG.md' --ignore './**/ios/**' --ignore './**/android/**' --fix
-    description: Format all code & Markdown files
+      markdownlint './**/*.md' --ignore './**/CHANGELOG.md' --ignore './**/ios/**' --ignore './**/android/**' --ignore './docs/database/**' --fix
+    description: Format all code and markdown files
 
   fix:
     run: |
