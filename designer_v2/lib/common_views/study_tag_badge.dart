@@ -12,7 +12,7 @@ class StudyTagBadge<T> extends StatelessWidget {
     return Chip(
       label: Text(tag.name),
       deleteButtonTooltipMessage: '',
-      backgroundColor: Color(tag.color ?? Colors.grey.value),
+      backgroundColor: tag.color != null ? Color(int.parse(tag.color!)) : Colors.grey,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
       deleteIcon: const Icon(Icons.close),
       onDeleted: onRemove,

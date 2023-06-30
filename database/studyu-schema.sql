@@ -132,7 +132,7 @@ ALTER TABLE public.study_subject OWNER TO supabase_admin;
 CREATE TABLE public.tag (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     name text NOT NULL,
-    color integer,
+    color text,
     parent_id uuid
 );
 

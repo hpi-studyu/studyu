@@ -100,13 +100,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         children: List<Widget>.generate(formViewModel.tagsControl.value!.length, (index) {
                           return StudyTagBadge(
                             tag: formViewModel.tagsControl.value!.elementAt(index),
-                            onRemove: () async {
-                              studyTags.delegate.delete(formViewModel.tagsControl.value![index]);
-                              /*final newTags = List<StudyTag>.from(
-                                      formViewModel.tagsControl.value!);
-                                  newTags.removeAt(index);
-                                  formViewModel.tagsControl.value = newTags;*/
-                            },
+                            onRemove: () async =>
+                                studyTags.delegate.delete(
+                                    formViewModel.tagsControl.value![index]
+                                ),
                           );
                         }),
                       ),
@@ -122,13 +119,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                               return MultiSelectWidget<Tag>(
                                 items: allTags.toList(),
                                 selectedOptions: selectedTags,
-                                onConfirm: (selectedItems) async {
-                                  studyTags.updateStudyTags(selectedItems.map((e) => e.value).toList());
-                                  /*formViewModel.tagsControl.value =
-                                            selectedItems
-                                                .map((e) => e.value)
-                                                .toList();*/
-                                },
+                                onConfirm: (selectedItems) async =>
+                                    studyTags.updateStudyTags(
+                                        selectedItems.map((e) => e.value).toList()
+                                    ),
                               );
                             } else {
                               return const SizedBox();

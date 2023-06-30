@@ -5,7 +5,7 @@
 CREATE TABLE public.tag (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     name text NOT NULL,
-    color integer,
+    color text,
     parent_id uuid
     -- rename result_sharing to visibility
     --visibility public.result_sharing NOT NULL DEFAULT 'private'::public.result_sharing,

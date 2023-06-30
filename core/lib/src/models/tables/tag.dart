@@ -17,7 +17,7 @@ class Tag extends SupabaseObjectFunctions<Tag> {
   @JsonKey(name: 'name')
   String name;
   @JsonKey(name: 'color')
-  int? color;
+  String? color;
   @JsonKey(name: 'parent_id')
   String? parentId;
 

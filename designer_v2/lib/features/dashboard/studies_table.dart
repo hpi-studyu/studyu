@@ -166,10 +166,16 @@ class StudiesTable extends StatelessWidget {
               Wrap(
                 spacing: 8.0,
                 children: List<Widget>.generate(item.studyTags.length, (index) {
+                  // todo either use [StudyTagBadge] here or use [studybadge.Badge] at [StudyDesignInfoFormView]
+                  // try to style [StudyTagBadge] the same as Badge here because of delete function.
+                  // then replace this badge here with [StudyTagBadge]
                   return studybadge.Badge(
                     label: item.studyTags.elementAt(index).name,
                     type: studybadge.BadgeType.outlineFill,
                     icon: null,
+                    color: item.studyTags.elementAt(index).color != null
+                        ? Color(int.parse(item.studyTags.elementAt(index).color!))
+                        : Colors.grey,
                   );
                 }),
               ),
