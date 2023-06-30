@@ -74,7 +74,7 @@ class Study extends SupabaseObjectFunctions<Study> {
   Questionnaire? fhirQuestionnaire;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
-  late List<StudyTag> studyTags;
+  late List<StudyTag> studyTags = [];
 
   @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
@@ -113,6 +113,8 @@ class Study extends SupabaseObjectFunctions<Study> {
           tag: Tag.fromJson(json as Map<String, dynamic>),
       ),
       ).toList();
+    } else {
+      study.studyTags = [];
     }
 
     final List? repo = json['repo'] as List?;
@@ -168,14 +170,6 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   @override
   Map<String, dynamic> toJson() => _$StudyToJson(this);
-
-  /*List<Tag> get selectedStudyTags {
-    final selectedStudyTags = selectedStudyTagIds.map(
-          (selectedStudyTagId) =>
-              studyTags.singleWhere((studyTag) => studyTag.id == selectedStudyTagId),
-    ).toList();
-    return selectedStudyTags;
-  }*/
 
   // TODO: Add null checks in fromJson to allow selecting columns
   static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
