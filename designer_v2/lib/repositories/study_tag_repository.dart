@@ -123,7 +123,6 @@ class StudyTagRepositoryDelegate extends IModelRepositoryDelegate<StudyTag> {
         studyRepository.upsertLocally(study);
       },
       apply: () async {
-        //await studyRepository.ensurePersisted(model.id);
         await apiClient.saveStudyTag(model);
       },
       rollback: () {

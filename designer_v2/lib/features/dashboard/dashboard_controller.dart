@@ -72,13 +72,19 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   }
 
   Future<void> pinStudy(String modelId) async {
-    userRepository.user.preferences.pinnedStudies.add(modelId);
+    // todo move to userRepository [updatePreferences]
+    final newPinnedStudies = Set<String>.from(userRepository.user.preferences.pinnedStudies);
+    newPinnedStudies.add(modelId);
+    userRepository.user.preferences.pinnedStudies = newPinnedStudies;
     await userRepository.saveUser();
     sortStudies();
   }
 
   Future<void> pinOffStudy(String modelId) async {
-    userRepository.user.preferences.pinnedStudies.remove(modelId);
+    // todo move to userRepository [updatePreferences]
+    final newPinnedStudies = Set<String>.from(userRepository.user.preferences.pinnedStudies);
+    newPinnedStudies.remove(modelId);
+    userRepository.user.preferences.pinnedStudies = newPinnedStudies;
     await userRepository.saveUser();
     sortStudies();
   }
@@ -90,6 +96,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     );
   }
 
+  bool isPinned(Study study) {
+    return userRepository.user.preferences.pinnedStudies.contains(study.id);
+  }
+
   @override
   List<ModelAction> availableActions(Study model) {
     final pinActions = [
@@ -99,7 +109,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
         onExecute: () async {
           await pinStudy(model.id);
         },
-        isAvailable: userRepository.user.preferences.pinnedStudies.contains(model.id),
+        isAvailable: !isPinned(model),
       ),
       ModelAction(
         type: StudyActionType.pinoff,
@@ -107,9 +117,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
         onExecute: () async {
           await pinOffStudy(model.id);
         },
-        isAvailable: userRepository.user.preferences.pinnedStudies.contains(model.id),
+        isAvailable: isPinned(model),
       )
-    ];
+    ].where((action) => action.isAvailable).toList();
+
     return withIcons(
       [...pinActions, ...studyRepository.availableActions(model)],
       studyActionIcons,
