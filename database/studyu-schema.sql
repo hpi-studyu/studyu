@@ -951,6 +951,17 @@ CREATE POLICY "Allow subscribed users to select study tags"
 
 
 --
+-- Name: Allow users to select their own user row; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY "Allow users to read their own user row"
+ON public."user"
+FOR SELECT USING (
+  auth.uid() = id
+);
+
+
+--
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
 --
 
