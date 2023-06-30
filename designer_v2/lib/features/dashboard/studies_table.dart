@@ -147,34 +147,33 @@ class StudiesTable extends StatelessWidget {
 
     return [
       MouseEventsRegion(
-          onTap: () => pinnedStudies.contains(item.id) ? dashboardProvider.pinOffStudy(item.id) : dashboardProvider.pinStudy(item.id),
-          builder: (context, mouseEventState) {
-            return SizedBox.expand(
-              child: Container(
-                child: getRespectivePinIcon(mouseEventState),
-              ),
-            );
-          },
-        ),
-      item.studyTags.isEmpty ? Text(item.title ?? '[Missing study title]') :
-      Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(item.title ?? '[Missing study title]'),
-            const SizedBox(height: 8.0),
-            Wrap(
-              spacing: 8.0,
-              children: List<Widget>.generate(
-                  item.studyTags.length, (index) {
-                return studybadge.Badge(
-                  label: item.studyTags.elementAt(index).name,
-                  type: studybadge.BadgeType.outlineFill,
-                  icon: null,
-                );
-              }),
+        onTap: () => pinnedStudies.contains(item.id)
+            ? dashboardProvider.pinOffStudy(item.id)
+            : dashboardProvider.pinStudy(item.id),
+        builder: (context, mouseEventState) {
+          return SizedBox.expand(
+            child: Container(
+              child: getRespectivePinIcon(mouseEventState),
             ),
-          ]
+          );
+        },
       ),
+      item.studyTags.isEmpty
+          ? Text(item.title ?? '[Missing study title]')
+          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(item.title ?? '[Missing study title]'),
+              const SizedBox(height: 8.0),
+              Wrap(
+                spacing: 8.0,
+                children: List<Widget>.generate(item.studyTags.length, (index) {
+                  return studybadge.Badge(
+                    label: item.studyTags.elementAt(index).name,
+                    type: studybadge.BadgeType.outlineFill,
+                    icon: null,
+                  );
+                }),
+              ),
+            ]),
       StudyStatusBadge(
         status: item.status,
         showPrefixIcon: false,

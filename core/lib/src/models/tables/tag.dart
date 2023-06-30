@@ -30,10 +30,8 @@ class Tag extends SupabaseObjectFunctions<Tag> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is Tag && id == other.id && name == other.name && color == other.color;
+      identical(this, other) || other is Tag && id == other.id && name == other.name && color == other.color;
 
   @override
-  int get hashCode =>
-      id.hashCode ^ name.hashCode ^ color.hashCode ^ parentId.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode ^ parentId.hashCode;
 }

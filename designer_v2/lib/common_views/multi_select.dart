@@ -32,12 +32,13 @@ class MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return  StandardDialog(
+        return StandardDialog(
           titleText: 'Selected Options',
           body: SizedBox(
             width: 300,
             height: 300,
-            child: MultiSelectDialogContent<T>(items: widget.items, selectedOptions: _selectedOptions, maxSelection: widget._maxSelection),
+            child: MultiSelectDialogContent<T>(
+                items: widget.items, selectedOptions: _selectedOptions, maxSelection: widget._maxSelection),
           ),
           actionButtons: [
             ElevatedButton(
@@ -129,9 +130,7 @@ class MultiSelectDialogContentState extends State<MultiSelectDialogContent> {
           return ListTile(
             onTap: () => _toggleOption(option),
             title: Text(option.name),
-            leading: isSelected
-                ? const Icon(Icons.check_box)
-                : const Icon(Icons.check_box_outline_blank),
+            leading: isSelected ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
           );
         },
       ),
@@ -140,10 +139,7 @@ class MultiSelectDialogContentState extends State<MultiSelectDialogContent> {
 }
 
 class MultiSelectItem<T> {
-  MultiSelectItem({
-    required this.name,
-    required this.value
-  });
+  MultiSelectItem({required this.name, required this.value});
 
   String name;
   T value;
@@ -151,10 +147,7 @@ class MultiSelectItem<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MultiSelectItem &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          value == other.value;
+      other is MultiSelectItem && runtimeType == other.runtimeType && name == other.name && value == other.value;
 
   @override
   int get hashCode => name.hashCode ^ value.hashCode;

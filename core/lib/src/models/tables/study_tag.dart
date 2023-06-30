@@ -61,12 +61,10 @@ class StudyTag extends SupabaseObjectFunctions<StudyTag> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is StudyTag && studyId == other.studyId && tag == other.tag;
+      identical(this, other) || other is StudyTag && studyId == other.studyId && tag == other.tag;
 
   @override
-  int get hashCode =>
-      id.hashCode ^ name.hashCode ^ studyId.hashCode ^ tag.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode ^ studyId.hashCode ^ tag.hashCode;
 }
 
 extension StudyTagListToTagList on List<StudyTag> {

@@ -108,11 +108,14 @@ class Study extends SupabaseObjectFunctions<Study> {
     final study = _$StudyFromJson(json);
     final List? studyTags = json['study_tags'] as List?;
     if (studyTags != null) {
-      study.studyTags = studyTags.map((json) => StudyTag.fromTag(
-          studyId: study.id,
-          tag: Tag.fromJson(json as Map<String, dynamic>),
-      ),
-      ).toList();
+      study.studyTags = studyTags
+          .map(
+            (json) => StudyTag.fromTag(
+              studyId: study.id,
+              tag: Tag.fromJson(json as Map<String, dynamic>),
+            ),
+          )
+          .toList();
     } else {
       study.studyTags = [];
     }

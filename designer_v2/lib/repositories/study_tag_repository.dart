@@ -19,9 +19,7 @@ class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagR
     required this.studyRepository,
     required this.ref,
   }) : super(StudyTagRepositoryDelegate(
-      study: studyRepository.get(studyId)!.model,
-      apiClient: apiClient,
-      studyRepository: studyRepository));
+            study: studyRepository.get(studyId)!.model, apiClient: apiClient, studyRepository: studyRepository));
 
   /// The [Study] this repository operates on
   final StudyID studyId;
@@ -44,12 +42,14 @@ class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagR
   List<Future> updateStudyTags(List<Tag> tagsToUpdate) {
     final currentTags = study.studyTags.toTagList().toSet();
     final futureTags = tagsToUpdate.toSet();
-    final addFutures = futureTags.difference(currentTags).map((e) =>
-        delegate.save(StudyTag.fromTag(tag: e, studyId: study.id))
-    ).toList();
-    final deleteFutures = currentTags.difference(futureTags).map((e) =>
-        delegate.delete(StudyTag.fromTag(tag: e, studyId: study.id))
-    ).toList();
+    final addFutures = futureTags
+        .difference(currentTags)
+        .map((e) => delegate.save(StudyTag.fromTag(tag: e, studyId: study.id)))
+        .toList();
+    final deleteFutures = currentTags
+        .difference(futureTags)
+        .map((e) => delegate.delete(StudyTag.fromTag(tag: e, studyId: study.id)))
+        .toList();
     return [...addFutures, ...deleteFutures];
   }
 

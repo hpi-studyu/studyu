@@ -49,8 +49,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(100),
                         ],
-                        validationMessages:
-                            formViewModel.titleControl.validationMessages,
+                        validationMessages: formViewModel.titleControl.validationMessages,
                       )),
                       ReactiveFormConsumer(builder: (context, form, child) {
                         return (formViewModel.iconControl.value != null)
@@ -61,8 +60,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         child: ReactiveIconPicker(
                           formControl: formViewModel.iconControl,
                           iconOptions: IconPack.material,
-                          validationMessages:
-                              formViewModel.iconControl.validationMessages,
+                          validationMessages: formViewModel.iconControl.validationMessages,
                         ),
                       )
                     ],
@@ -74,77 +72,70 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   labelHelpText: tr.form_field_study_description_tooltip,
                   input: ReactiveTextField(
                     formControl: formViewModel.descriptionControl,
-                    validationMessages:
-                        formViewModel.descriptionControl.validationMessages,
+                    validationMessages: formViewModel.descriptionControl.validationMessages,
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(500),
                     ],
-                    decoration: InputDecoration(
-                        hintText: tr.form_field_study_description_hint),
+                    decoration: InputDecoration(hintText: tr.form_field_study_description_hint),
                   ),
                 ),
                 FormTableRow(
                   control: formViewModel.tagsControl,
                   label: 'Tags',
                   labelHelpText: 'tr.form_field_study_tags_tooltip',
-                  input: ReactiveFormConsumer(
-                      builder: (context, form, child) {
-                        final tags = ref.read(tagRepositoryProvider);
-                        final studyTags = ref.watch(studyTagRepositoryProvider(studyId));
-                        final selectedTags = formViewModel.tagsControl.value!
-                            .map((e) => MultiSelectItem<Tag>(value: e.tag, name: e.name))
-                            .toList();
-                        selectedTags.sort((a, b) => a.name.compareTo(b.name));
+                  input: ReactiveFormConsumer(builder: (context, form, child) {
+                    final tags = ref.read(tagRepositoryProvider);
+                    final studyTags = ref.watch(studyTagRepositoryProvider(studyId));
+                    final selectedTags = formViewModel.tagsControl.value!
+                        .map((e) => MultiSelectItem<Tag>(value: e.tag, name: e.name))
+                        .toList();
+                    selectedTags.sort((a, b) => a.name.compareTo(b.name));
 
-                        return Row(children: [
-                          Wrap(
-                            spacing: 8.0,
-                            children: List<Widget>.generate(
-                                formViewModel.tagsControl.value!.length, (index) {
-                              return StudyTagBadge(
-                                tag: formViewModel.tagsControl.value!.elementAt(index),
-                                onRemove: () async {
-                                  studyTags.delegate.delete(formViewModel.tagsControl.value![index]);
-                                  /*final newTags = List<StudyTag>.from(
+                    return Row(children: [
+                      Wrap(
+                        spacing: 8.0,
+                        children: List<Widget>.generate(formViewModel.tagsControl.value!.length, (index) {
+                          return StudyTagBadge(
+                            tag: formViewModel.tagsControl.value!.elementAt(index),
+                            onRemove: () async {
+                              studyTags.delegate.delete(formViewModel.tagsControl.value![index]);
+                              /*final newTags = List<StudyTag>.from(
                                       formViewModel.tagsControl.value!);
                                   newTags.removeAt(index);
                                   formViewModel.tagsControl.value = newTags;*/
-                                },
-                              );
-                            }),
-                          ),
-                          const Spacer(),
-                          FutureBuilder<List<Tag>>(
-                              future: tags.getAllTags(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<Tag>> snapshot) {
-                                if (snapshot.hasData) {
-                                  // todo move to controller
-                                  final allTags = snapshot.data!
-                                      .map((e) => MultiSelectItem<Tag>(
-                                      value: e, name: e.name))
-                                      .toList();
-                                  allTags.sort((a, b) => a.name.compareTo(b.name));
-                                  return MultiSelectWidget<Tag>(
-                                    items: allTags.toList(),
-                                    selectedOptions: selectedTags,
-                                    onConfirm: (selectedItems) async {
-                                        studyTags.updateStudyTags(selectedItems.map((e) => e.value).toList());
-                                        /*formViewModel.tagsControl.value =
+                            },
+                          );
+                        }),
+                      ),
+                      const Spacer(),
+                      FutureBuilder<List<Tag>>(
+                          future: tags.getAllTags(),
+                          builder: (BuildContext context, AsyncSnapshot<List<Tag>> snapshot) {
+                            if (snapshot.hasData) {
+                              // todo move to controller
+                              final allTags =
+                                  snapshot.data!.map((e) => MultiSelectItem<Tag>(value: e, name: e.name)).toList();
+                              allTags.sort((a, b) => a.name.compareTo(b.name));
+                              return MultiSelectWidget<Tag>(
+                                items: allTags.toList(),
+                                selectedOptions: selectedTags,
+                                onConfirm: (selectedItems) async {
+                                  studyTags.updateStudyTags(selectedItems.map((e) => e.value).toList());
+                                  /*formViewModel.tagsControl.value =
                                             selectedItems
                                                 .map((e) => e.value)
                                                 .toList();*/
-                                    },
-                                  );
-                                } else {
-                                  return const SizedBox();
-                                }
-                              }),
-                        ]);
-                      }),
+                                },
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          }),
+                    ]);
+                  }),
                 ),
               ], columnWidths: const {
                 0: FixedColumnWidth(185.0),
@@ -164,8 +155,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                        formViewModel.organizationControl.validationMessages,
+                    validationMessages: formViewModel.organizationControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -176,8 +166,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                        formViewModel.reviewBoardControl.validationMessages,
+                    validationMessages: formViewModel.reviewBoardControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -188,8 +177,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages: formViewModel
-                        .reviewBoardNumberControl.validationMessages,
+                    validationMessages: formViewModel.reviewBoardNumberControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -200,8 +188,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                        formViewModel.researchersControl.validationMessages,
+                    validationMessages: formViewModel.researchersControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -212,8 +199,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(300),
                     ],
-                    validationMessages:
-                        formViewModel.websiteControl.validationMessages,
+                    validationMessages: formViewModel.websiteControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -224,8 +210,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
-                    validationMessages:
-                        formViewModel.emailControl.validationMessages,
+                    validationMessages: formViewModel.emailControl.validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -236,8 +221,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50),
                     ],
-                    validationMessages:
-                        formViewModel.phoneControl.validationMessages,
+                    validationMessages: formViewModel.phoneControl.validationMessages,
                   ),
                 ),
                 FormTableRow(

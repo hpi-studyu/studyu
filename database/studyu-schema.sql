@@ -1,5 +1,3 @@
--- TODO move stuff from migrate_tags to here
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -128,16 +126,28 @@ CREATE TABLE public.study_subject (
 ALTER TABLE public.study_subject OWNER TO supabase_admin;
 
 --
--- Name: study_tags; Type: TABLE; Schema: public; Owner: supabase_admin
+-- Name: tag; Type: TABLE; Schema: public; Owner: supabase_admin
 --
 
-CREATE TABLE study_tag (
+CREATE TABLE public.tag (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     name text NOT NULL,
     color integer,
-    parent_id uuid,
+    parent_id uuid
 );
 
+
+ALTER TABLE public.tag OWNER TO supabase_admin;
+
+
+--
+-- Name: study_tag; Type: TABLE; Schema: public; Owner: supabase_admin
+--
+
+CREATE TABLE public.study_tag (
+    study_id uuid NOT NULL,
+    tag_id uuid NOT NULL
+);
 
 ALTER TABLE public.study_tag OWNER TO supabase_admin;
 
@@ -259,7 +269,7 @@ ALTER TABLE public.study_progress_export OWNER TO supabase_admin;
 CREATE TABLE public."user" (
     id uuid NOT NULL,
     email text,
-    preferences jsonb,
+    preferences jsonb
 );
 
 
@@ -330,11 +340,20 @@ ALTER TABLE ONLY public.study_subject
 
 
 --
+-- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.tag
+    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: study_tag study_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
 --
 
 ALTER TABLE ONLY public.study_tag
-    ADD CONSTRAINT study_tag_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT "study_tag_pkey" PRIMARY KEY (study_id, tag_id);
+
 
 -- ======================== FOREIGN KEY CONTRAINTS ======================================================
 
@@ -387,14 +406,6 @@ ALTER TABLE ONLY public.study_subject
 
 
 --
--- Name: study_tag study_tag_parentId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_tag
-    ADD CONSTRAINT "study_tag_parentId_fkey" FOREIGN KEY (parent_id) REFERENCES public.study_tag(id) ON DELETE CASCADE;
-
-
---
 -- Name: study_subject study_subject_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
 --
 
@@ -408,6 +419,30 @@ ALTER TABLE ONLY public.study_subject
 
 ALTER TABLE ONLY public.study
     ADD CONSTRAINT "study_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: tag tag_parentId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.tag
+    ADD CONSTRAINT "tag_parentId_fkey" FOREIGN KEY (parent_id) REFERENCES public.tag(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tag study_tag_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT "study_tag_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tag study_tag_tagId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT "study_tag_tagId_fkey" FOREIGN KEY (tag_id) REFERENCES public.tag(id) ON DELETE CASCADE;
 
 
 -- ======================== STUDY FUNCTIONS =====================================
@@ -875,15 +910,45 @@ CREATE POLICY "Users can do everything with their subjects" ON public.study_subj
 -- Name: study_tag Allow read access but deny write access for tags; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
-CREATE POLICY allow_read_deny_write_tag ON study_tag FOR ALL
-USING (true) WITH CHECK (false);
+CREATE POLICY "Allow read access, deny write access"
+  ON public.tag
+  FOR SELECT
+  USING (true);
 
 
 --
--- Name: user Users can do everything with their user data; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: Allow study creators to manage tags; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
-CREATE POLICY "Users can read and write their user data" ON public."user" USING ((auth.uid() = id));
+CREATE POLICY "Allow study creators to manage tags"
+  ON public.study_tag
+  FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.study
+      WHERE study.id = study_tag.study_id
+        AND study.user_id = auth.uid()
+    )
+  );
+
+
+--
+-- Name: Allow subscribed users to select study tags; Type: POLICY; Schema: public; Owner: supabase_admin
+--
+
+CREATE POLICY "Allow subscribed users to select study tags"
+  ON public.study_tag
+  FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.study_subject
+      WHERE study_subject.study_id = study_tag.study_id
+        AND study_subject.user_id = auth.uid()
+    )
+  );
+
 
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
@@ -916,11 +981,16 @@ ALTER TABLE public.study_invite ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.study_subject ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: tag; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+--
+
+ALTER TABLE public.tag ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: study_tag; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
 --
 
 ALTER TABLE public.study_tag ENABLE ROW LEVEL SECURITY;
-
 
 --
 -- Name: subject_progress; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
