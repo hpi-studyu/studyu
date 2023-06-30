@@ -34,23 +34,26 @@
 <!-- public.user -->
 <g id="node2" class="node">
 <title>public.user</title>
-<polygon fill="#efefef" stroke="transparent" points="170,-402.5 170,-437.5 398,-437.5 398,-402.5 170,-402.5"/>
-<polygon fill="none" stroke="#000000" points="170,-402.5 170,-437.5 398,-437.5 398,-402.5 170,-402.5"/>
-<text text-anchor="start" x="176.7091" y="-415.3" font-family="Arial Bold" font-size="18.00" fill="#000000">public.user</text>
-<text text-anchor="start" x="263.7229" y="-415.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
-<text text-anchor="start" x="297.9277" y="-415.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
-<polygon fill="none" stroke="#000000" points="170,-372.5 170,-402.5 398,-402.5 398,-372.5 170,-372.5"/>
-<text text-anchor="start" x="177" y="-383.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
-<text text-anchor="start" x="222.094" y="-383.9" font-family="Arial" font-size="14.00" fill="#666666">[uuid]</text>
-<polygon fill="none" stroke="#000000" points="170,-342.5 170,-372.5 398,-372.5 398,-342.5 170,-342.5"/>
-<text text-anchor="start" x="177" y="-353.9" font-family="Arial" font-size="14.00" fill="#000000">email    </text>
-<text text-anchor="start" x="244.6438" y="-353.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="#efefef" stroke="transparent" points="170,-417.5 170,-452.5 398,-452.5 398,-417.5 170,-417.5"/>
+<polygon fill="none" stroke="#000000" points="170,-417.5 170,-452.5 398,-452.5 398,-417.5 170,-417.5"/>
+<text text-anchor="start" x="176.7091" y="-430.3" font-family="Arial Bold" font-size="18.00" fill="#000000">public.user</text>
+<text text-anchor="start" x="263.7229" y="-430.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
+<text text-anchor="start" x="297.9277" y="-430.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
+<polygon fill="none" stroke="#000000" points="170,-387.5 170,-417.5 398,-417.5 398,-387.5 170,-387.5"/>
+<text text-anchor="start" x="177" y="-398.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
+<text text-anchor="start" x="222.094" y="-398.9" font-family="Arial" font-size="14.00" fill="#666666">[uuid]</text>
+<polygon fill="none" stroke="#000000" points="170,-357.5 170,-387.5 398,-387.5 398,-357.5 170,-357.5"/>
+<text text-anchor="start" x="177" y="-368.9" font-family="Arial" font-size="14.00" fill="#000000">email    </text>
+<text text-anchor="start" x="244.6438" y="-368.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="170,-327.5 170,-357.5 398,-357.5 398,-327.5 170,-327.5"/>
+<text text-anchor="start" x="177" y="-338.9" font-family="Arial" font-size="14.00" fill="#000000">preferences    </text>
+<text text-anchor="start" x="285.1122" y="-338.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 </g>
 <!-- public.repo&#45;&gt;public.user -->
 <g id="edge1" class="edge">
 <title>public.repo:user_id&#45;&gt;public.user:id</title>
-<path fill="none" stroke="#000000" d="M338.9795,-936.0183C243.7372,-904.7033 516.9916,-387.5 398,-387.5"/>
-<polygon fill="#000000" stroke="#000000" points="339.1076,-936.0372 348.3417,-941.9516 344.0538,-936.7686 349,-937.5 349,-937.5 349,-937.5 344.0538,-936.7686 349.6583,-933.0484 339.1076,-936.0372 339.1076,-936.0372"/>
+<path fill="none" stroke="#000000" d="M338.9755,-935.9653C247.2017,-904.585 513.6557,-402.5 398,-402.5"/>
+<polygon fill="#000000" stroke="#000000" points="339.1152,-935.9866 348.319,-941.9482 344.0576,-936.7433 349,-937.5 349,-937.5 349,-937.5 344.0576,-936.7433 349.681,-933.0518 339.1152,-935.9866 339.1152,-935.9866"/>
 <text text-anchor="start" x="7.0045" y="-947.5" font-family="Arial" font-size="10.00" fill="#000000">FOREIGN KEY (user_id) REFERENCES &quot;user&quot;(id) ON DELETE CASCADE</text>
 </g>
 <!-- public.study -->
