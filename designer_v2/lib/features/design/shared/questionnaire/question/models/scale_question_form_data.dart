@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
@@ -9,7 +8,6 @@ class ScaleQuestionFormData extends QuestionFormData {
   ScaleQuestionFormData({
     required super.questionId,
     required super.questionText,
-    required super.questionType,
     super.questionInfoText,
     required this.minValue,
     this.minLabel,
@@ -58,7 +56,6 @@ class ScaleQuestionFormData extends QuestionFormData {
   ) {
     final data = ScaleQuestionFormData(
       questionId: question.id,
-      questionType: SurveyQuestionType.scale,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       maxValue: question.maximum,
@@ -102,9 +99,8 @@ class ScaleQuestionFormData extends QuestionFormData {
   @override
   QuestionFormData copy() {
     final data = ScaleQuestionFormData(
-      questionId: const Uuid().v4(),
       // always regenerate id
-      questionType: questionType,
+      questionId: const Uuid().v4(),
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
       minValue: minValue,

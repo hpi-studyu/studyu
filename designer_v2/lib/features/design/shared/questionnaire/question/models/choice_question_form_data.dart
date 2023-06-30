@@ -1,6 +1,5 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
@@ -8,7 +7,6 @@ class ChoiceQuestionFormData extends QuestionFormData {
   ChoiceQuestionFormData({
     required super.questionId,
     required super.questionText,
-    required super.questionType,
     super.questionInfoText,
     this.isMultipleChoice = false,
     required this.answerOptions,
@@ -26,7 +24,6 @@ class ChoiceQuestionFormData extends QuestionFormData {
   ) {
     final data = ChoiceQuestionFormData(
       questionId: question.id,
-      questionType: SurveyQuestionType.choice,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
@@ -50,9 +47,8 @@ class ChoiceQuestionFormData extends QuestionFormData {
   @override
   QuestionFormData copy() {
     final data = ChoiceQuestionFormData(
-      questionId: const Uuid().v4(),
       // always regenerate id
-      questionType: questionType,
+      questionId: const Uuid().v4(),
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
       isMultipleChoice: isMultipleChoice,

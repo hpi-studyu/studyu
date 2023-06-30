@@ -1,6 +1,5 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
@@ -9,7 +8,6 @@ class BoolQuestionFormData extends QuestionFormData {
   BoolQuestionFormData({
     required super.questionId,
     required super.questionText,
-    required super.questionType,
     super.questionInfoText,
   });
 
@@ -27,7 +25,6 @@ class BoolQuestionFormData extends QuestionFormData {
   ) {
     final data = BoolQuestionFormData(
       questionId: question.id,
-      questionType: SurveyQuestionType.bool,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
     );
@@ -48,7 +45,6 @@ class BoolQuestionFormData extends QuestionFormData {
   BoolQuestionFormData copy() {
     final data = BoolQuestionFormData(
       questionId: const Uuid().v4(), // always regenerate id
-      questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
     );

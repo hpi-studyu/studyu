@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/bool_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/choice_question_form_view.dart';
 
 class BoolQuestionFormView extends ConsumerWidget {
   const BoolQuestionFormView({required this.formViewModel, Key? key}) : super(key: key);
 
-  final QuestionFormViewModel formViewModel;
+  final BoolQuestionFormViewModel formViewModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +17,7 @@ class BoolQuestionFormView extends ConsumerWidget {
         Opacity(
           opacity: 0.5,
           child: StandardTable<AbstractControl>(
-            items: formViewModel.answerOptionsControls,
+            items: formViewModel.responseOptionsControls,
             columns: const [
               StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)

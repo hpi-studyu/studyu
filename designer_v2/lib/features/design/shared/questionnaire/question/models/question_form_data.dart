@@ -39,14 +39,12 @@ abstract class QuestionFormData implements IFormData {
   QuestionFormData({
     required this.questionId,
     required this.questionText,
-    required this.questionType,
     this.questionInfoText,
   });
 
   final QuestionID questionId;
   final String questionText;
   final String? questionInfoText;
-  final SurveyQuestionType questionType;
 
   /// Mapping from response option => qualifying/disqualifying
   late final Map<dynamic, bool> responseOptionsValidity;

@@ -5,14 +5,14 @@ import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/choice_question_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ChoiceQuestionFormView extends ConsumerWidget {
   const ChoiceQuestionFormView({required this.formViewModel, Key? key}) : super(key: key);
 
-  final QuestionFormViewModel formViewModel;
+  final ChoiceQuestionFormViewModel formViewModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,10 +29,10 @@ class ChoiceQuestionFormView extends ConsumerWidget {
         ]),
         const SizedBox(height: 12.0),
         ReactiveFormArray(
-          formArray: formViewModel.answerOptionsArray,
+          formArray: formViewModel.responseOptionsArray,
           builder: (context, formArray, child) {
             return StandardTable<AbstractControl>(
-              items: formViewModel.answerOptionsControls,
+              items: formViewModel.responseOptionsControls,
               columns: const [
                 StandardTableColumn(
                   label: '', // don't care (showTableHeader=false)

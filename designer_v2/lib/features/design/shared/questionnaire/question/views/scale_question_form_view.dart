@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/reactive_color_picker.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -25,14 +25,14 @@ class ScaleQuestionFormView extends ConsumerStatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  final QuestionFormViewModel formViewModel;
+  final ScaleQuestionFormViewModel formViewModel;
 
   @override
   ConsumerState<ScaleQuestionFormView> createState() => _ScaleQuestionFormViewState();
 }
 
 class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
-  QuestionFormViewModel get formViewModel => widget.formViewModel;
+  ScaleQuestionFormViewModel get formViewModel => widget.formViewModel;
 
   late bool isMinMaxColorsVisible =
       formViewModel.scaleMinColorControl.value != null || formViewModel.scaleMaxColorControl.value != null;
