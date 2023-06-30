@@ -11,11 +11,10 @@ abstract class IUserRepository {
 }
 
 class UserRepository implements IUserRepository {
-  UserRepository({
-    required this.authRepository,
-    required this.apiClient,
-    required this.ref
-  }); //: super(UserRepositoryDelegate(apiClient: apiClient));
+  UserRepository(
+      {required this.authRepository,
+      required this.apiClient,
+      required this.ref}); //: super(UserRepositoryDelegate(apiClient: apiClient));
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -61,10 +60,8 @@ class UserRepository implements IUserRepository {
     );
 
     return saveOperation.execute().then((_) => model);*/
-
   }
 }
-
 
 /*class UserRepositoryDelegate extends IModelRepositoryDelegate<StudyUUser> {
   UserRepositoryDelegate({ required this.apiClient }) {

@@ -100,10 +100,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         children: List<Widget>.generate(formViewModel.tagsControl.value!.length, (index) {
                           return StudyTagBadge(
                             tag: formViewModel.tagsControl.value!.elementAt(index),
-                            onRemove: () async =>
-                                studyTags.delegate.delete(
-                                    formViewModel.tagsControl.value![index]
-                                ),
+                            onRemove: () async => studyTags.delegate.delete(formViewModel.tagsControl.value![index]),
                           );
                         }),
                       ),
@@ -120,9 +117,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                                 items: allTags.toList(),
                                 selectedOptions: selectedTags,
                                 onConfirm: (selectedItems) async =>
-                                    studyTags.updateStudyTags(
-                                        selectedItems.map((e) => e.value).toList()
-                                    ),
+                                    studyTags.updateStudyTags(selectedItems.map((e) => e.value).toList()),
                               );
                             } else {
                               return const SizedBox();
