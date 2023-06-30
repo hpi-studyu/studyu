@@ -1,5 +1,5 @@
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
