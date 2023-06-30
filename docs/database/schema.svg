@@ -551,7 +551,7 @@
 <text text-anchor="start" x="5089.2132" y="-630.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="5013,-589.5 5013,-619.5 5231,-619.5 5231,-589.5 5013,-589.5"/>
 <text text-anchor="start" x="5020" y="-600.9" font-family="Arial" font-size="14.00" fill="#000000">color    </text>
-<text text-anchor="start" x="5084.5372" y="-600.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
+<text text-anchor="start" x="5084.5372" y="-600.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="5013,-559.5 5013,-589.5 5231,-589.5 5231,-559.5 5013,-559.5"/>
 <text text-anchor="start" x="5020" y="-570.9" font-family="Arial" font-size="14.00" fill="#000000">parent_id    </text>
 <text text-anchor="start" x="5112.5582" y="-570.9" font-family="Arial" font-size="14.00" fill="#666666">[uuid]</text>

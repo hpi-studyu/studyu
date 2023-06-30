@@ -123,7 +123,7 @@
 <text text-anchor="start" x="631.2132" y="-383.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="555,-342.5 555,-372.5 773,-372.5 773,-342.5 555,-342.5"/>
 <text text-anchor="start" x="562" y="-353.9" font-family="Arial" font-size="14.00" fill="#000000">color    </text>
-<text text-anchor="start" x="626.5372" y="-353.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
+<text text-anchor="start" x="626.5372" y="-353.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="555,-312.5 555,-342.5 773,-342.5 773,-312.5 555,-312.5"/>
 <text text-anchor="start" x="562" y="-323.9" font-family="Arial" font-size="14.00" fill="#000000">parent_id    </text>
 <text text-anchor="start" x="654.5582" y="-323.9" font-family="Arial" font-size="14.00" fill="#666666">[uuid]</text>

@@ -8,7 +8,7 @@
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
 | id | uuid | gen_random_uuid() | false | [public.tag](public.tag.md) [public.study_tag](public.study_tag.md) |  |  |
 | name | text |  | false |  |  |  |
-| color | integer |  | true |  |  |  |
+| color | text |  | true |  |  |  |
 | parent_id | uuid |  | true |  | [public.tag](public.tag.md) |  |
 
 ## Constraints

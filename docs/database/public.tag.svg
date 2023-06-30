@@ -25,7 +25,7 @@
 <text text-anchor="start" x="116.399" y="-116.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="70.5,-75.5 70.5,-105.5 288.5,-105.5 288.5,-75.5 70.5,-75.5"/>
 <text text-anchor="start" x="77.5" y="-86.9" font-family="Arial" font-size="14.00" fill="#000000">color </text>
-<text text-anchor="start" x="111.723" y="-86.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
+<text text-anchor="start" x="111.723" y="-86.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="70.5,-45.5 70.5,-75.5 288.5,-75.5 288.5,-45.5 70.5,-45.5"/>
 <text text-anchor="start" x="77.5" y="-56.9" font-family="Arial" font-size="14.00" fill="#000000">parent_id </text>
 <text text-anchor="start" x="139.744" y="-56.9" font-family="Arial" font-size="14.00" fill="#666666">[uuid]</text>
