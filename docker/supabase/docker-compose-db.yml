@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 name: 'studyu'
 
 services:
@@ -37,6 +37,8 @@ services:
       # Must be superuser to alter reserved role
       - ./volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       # PGDATA directory is persisted between restarts
-      - ./volumes/db/data:/var/lib/postgresql/data:Z
+      - studyu-dbdata:/var/lib/postgresql/data:Z
       # Init sql data
       - ../../database/studyu-schema.sql:/docker-entrypoint-initdb.d/init-scripts/99-data.sql:Z
+volumes:
+  studyu-dbdata:
