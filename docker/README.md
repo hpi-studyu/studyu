@@ -24,8 +24,7 @@ common use-cases to get you started quickly.
 Choose this method if you do not want to setup your own Supabase instance, but
 only launch StudyU applications with docker. This might be useful if you want to
 run StudyU after you made changes to the codebase. Switch to the `.env.local`
-[environment
-file](https://github.com/hpi-studyu/studyu/blob/dev/flutter_common/lib/envs/.env.local)
+[environment file](https://github.com/hpi-studyu/studyu/blob/dev/flutter_common/lib/envs/.env.local)
 to use the StudyU database with local StudyU applications. For this modify the
 `docker-compose-*.yml` files you want to run (see below), and replace
 `../flutter_common/lib/envs/.env.selfhost` with
@@ -49,7 +48,9 @@ If you want to use a different database, more steps are necessary. You can start
 a managed Supabase project at [supabase.com](https://supabase.com) and link it
 with your StudyU instance by replacing the values for `STUDYU_SUPABASE_URL` and
 `STUDYU_SUPABASE_PUBLIC_ANON_KEY` in the file `.env.local`. Alternatively, you
-can self-host Supabase on your own as explained in [Use Case # 2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu).
+can self-host Supabase on your own as explained
+in [Use Case # 2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu)
+.
 
 In order to run your StudyU instance under a custom domain or a different port,
 refer to [Change hostname or ports](#change-hostname-or-ports).
@@ -76,20 +77,21 @@ Before your own Supabase instance can be started, the default Supabase secrets
 need to be changed and assigned to Supabase and StudyU.
 
 1. Create a copy of the example Supabase configuration `cp supabase/.env.example
-supabase/.env`
+   supabase/.env`
 2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a
-`JWT_SECRET` for [Supabase
-Auth](https://supabase.com/docs/learn/auth-deep-dive/auth-deep-dive-jwts) with
-at least 32 characters. Then
-[generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the
-corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
+   `JWT_SECRET` for [Supabase
+   Auth](https://supabase.com/docs/learn/auth-deep-dive/auth-deep-dive-jwts)
+   with
+   at least 32 characters. Then
+   [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the
+   corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
 3. Replace the default secrets with your newly generated ones in the following
-files:
-   - `supabase/.env`
-   - `supabase/volumes/api/kong.yml`
-   - `flutter_common/lib/envs/.env.selfhost`
+   files:
+    - `supabase/.env`
+    - `supabase/volumes/api/kong.yml`
+    - `flutter_common/lib/envs/.env.selfhost`
 4. Configure the other Supabase settings in `supabase/.env` and StudyU settings
-in `flutter_common/lib/envs/.env.selfhost` according to your wishes.
+   in `flutter_common/lib/envs/.env.selfhost` according to your wishes.
 
 Otherwise, if a custom domain or port should be used, refer to [Change hostname
 or ports](#change-hostname-or-ports).
@@ -245,11 +247,13 @@ of methods on how to make certbot work with nginx available on the web.
 ## Backup the Database
 
 StudyU stores its data with Supabase as a backend that in turn stores its data
-in a PostgreSQL database. The data for this database is mapped as a docker
-compose volume to `supabase/volumes/db/data` and is persisted between restarts.
+in a PostgreSQL database. The data for this database is stored in the docker
+volume `studyu-dbdata` and is persisted between restarts.
 
-For backup purposes you should not create a backup of this directory, but rather
-use specific postgres backup tools such as `pg_dump`.
+For backup purposes you should not create a backup of the `studyu-dbdata`
+volume, but rather use specific postgres backup tools such as `pg_dump`.
+
+All Supabase Storage data is stored in the docker volume `studyu-blob`.
 
 ## Update
 
@@ -267,9 +271,8 @@ TODO
 - In order to stop docker containers from running press CTRL+C or run `docker
   compose -p 'studyu' down --remove-orphans` and `docker compose -p 'supabase'
   down --remove-orphans`.
-- When experimenting with Docker setups, it might be necessary to [remove
-  previous
-  resources](https://docs.docker.com/engine/reference/commandline/system_prune/)
+- When experimenting with Docker setups, it might be necessary
+  to [remove previous resources](https://docs.docker.com/engine/reference/commandline/system_prune/)
   in order to make changes visible.
 - Moreover, it often helps to clear the cache of your web browser when making
   changes to environment files.
