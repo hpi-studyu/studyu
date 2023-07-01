@@ -244,5 +244,6 @@ services:
       - /home/deno/functions/main
 
 # If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
+
 volumes:
   studyu-blob:
