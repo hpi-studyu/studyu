@@ -88,7 +88,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   labelHelpText: 'tr.form_field_study_tags_tooltip',
                   input: ReactiveFormConsumer(builder: (context, form, child) {
                     final tags = ref.read(tagRepositoryProvider);
-                    final studyTags = ref.watch(studyTagRepositoryProvider(studyId));
+                    final studyTags = ref.read(studyTagRepositoryProvider(studyId));
                     final selectedTags = formViewModel.tagsControl.value!
                         .map((e) => MultiSelectItem<Tag>(value: e.tag, name: e.name))
                         .toList();

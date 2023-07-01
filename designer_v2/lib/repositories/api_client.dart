@@ -142,8 +142,8 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   @override
   Future<Study> saveStudy(Study study) async {
     await _testDelay();
-    // Chain a fetch request to make sure we return a complete & updated study
-    final request = study.save(); //.then((study) => fetchStudy(study.id));
+    // Chain a fetch request to make sure we return a complete and updated study
+    final request = study.save().then((study) => fetchStudy(study.id));
     return _awaitGuarded<Study>(request);
   }
 
