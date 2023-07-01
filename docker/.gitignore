@@ -1,6 +1,3 @@
 **/.env
 **/test.http
 **/docker-compose.override.yml
-
-supabase/volumes/db/data
-supabase/volumes/storage
