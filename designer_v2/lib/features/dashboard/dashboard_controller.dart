@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
@@ -27,6 +28,8 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
 
+  final SearchController searchController = SearchController();
+
   DashboardController({
     required this.studyRepository,
     required this.authRepository,
@@ -51,6 +54,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     });
   }
 
+  setSearchText(String? text) {
+    searchController.setText(text ?? state.query);
+  }
+
   setStudiesFilter(StudiesFilter? filter) {
     state = state.copyWith(studiesFilter: () => filter ?? DashboardState.defaultFilter);
   }
@@ -61,14 +68,6 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
 
   onClickNewStudy() {
     router.dispatch(RoutingIntents.studyNew);
-  }
-
-  String? search(String query) {
-    if (query.isEmpty) {
-      return null;
-    } else {
-      return query.toLowerCase();
-    }
   }
 
   Future<void> pinStudy(String modelId) async {
@@ -87,6 +86,12 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     userRepository.user.preferences.pinnedStudies = newPinnedStudies;
     await userRepository.saveUser();
     sortStudies();
+  }
+
+  void filterStudies(String? query) async {
+    state = state.copyWith(
+      query: query,
+    );
   }
 
   void sortStudies() async {

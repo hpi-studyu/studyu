@@ -11,6 +11,7 @@ class DashboardState extends Equatable {
   const DashboardState({
     this.studies = const AsyncValue.loading(),
     this.studiesFilter = defaultFilter,
+    this.query = '',
     required this.currentUser,
   });
 
@@ -25,21 +26,32 @@ class DashboardState extends Equatable {
   /// Currently authenticated user (used for filtering studies)
   final User currentUser;
 
+  final String query;
+
   /// The currently visible list of studies as by the selected filter
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> visibleStudies(String? query, Set<String> pinnedStudies) {
+  AsyncValue<List<Study>> visibleStudies(Set<String> pinnedStudies, String query) {
     return studies.when(
       data: (studies) {
         List<Study> updatedStudies =
-            studiesFilter.apply(unfilteredStudies: studies, user: currentUser, query: query).toList();
+            studiesFilter.apply(studies: studies, user: currentUser).toList();
+        updatedStudies = filter(studiesToFilter: updatedStudies);
         updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(updatedStudies);
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
       loading: () => const AsyncValue.loading(),
     );
+  }
+
+  List<Study> filter({List<Study>? studiesToFilter}) {
+    final filteredStudies = studiesToFilter ?? studies.value!;
+    if (query.isNotEmpty) {
+      return filteredStudies.where((s) => s.title!.toLowerCase().contains(query)).toList();
+    }
+    return filteredStudies;
   }
 
   List<Study> sort({required Set<String> pinnedStudies, List<Study>? studiesToSort}) {
@@ -66,12 +78,13 @@ class DashboardState extends Equatable {
     AsyncValue<List<Study>> Function()? studies,
     StudiesFilter Function()? studiesFilter,
     User Function()? currentUser,
-    AsyncValue<Set<String>> Function()? pinnedStudies,
+    String? query,
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
       studiesFilter: studiesFilter != null ? studiesFilter() : this.studiesFilter,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
+      query: query ?? this.query,
     );
   }
 

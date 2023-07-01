@@ -3,7 +3,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
-// todo may or may not implements ModelRepository<StudyUUser>
+// todo implements ModelRepository<StudyUUser>
 abstract class IUserRepository {
   StudyUUser get user;
   Future<StudyUUser> fetchUser();
