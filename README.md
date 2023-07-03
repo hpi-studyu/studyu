@@ -77,27 +77,3 @@ Golden E, Zweig M, Nadkarni G, Böttinger E (2020).
 StudyU: a platform for designing and conducting innovative digital N-of-1
 trials. arXiv: 2012.1420.  
 [https://arxiv.org/abs/2012.14201](https://arxiv.org/abs/2012.14201).
-
-## Repository Overview
-
-We have different Flutter/Dart packages all contained in this monorepo. The
-StudyU platform consists out of the following packages:
-
-- StudyU App: Participate in N-of-1 trials
-- StudyU Designer: Design and conduct your own N-of-1 trial
-
-Dependency packages:
-
-- Core: shared code for all applications
-- Flutter Common: shared code for all Flutter apps (App, Designer)
-
-Outdated packages:
-
-- StudyU Designer (flutter)
-- Repository Generator (dart web server)
-- Analysis Generator (dart CLI script)
-
-## Deprecated Packages
-
-- [StudyU App v1](https://app-v1.studyu.health)
-- [StudyU Designer v1](https://designer-v1.studyu.health)
