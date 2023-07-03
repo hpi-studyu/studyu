@@ -118,7 +118,8 @@ Open your local Supabase Studio instance on
 with username: studyu, password: studyu). The StudyU database scheme is
 automatically applied. Navigate to the table editor. Add a row to the table
 `app_config` with the id `prod` and insert the links to the terms of services
-and privacy policies with respect to their language.
+and privacy policies with respect to their language 
+(see [CONTRIBUTING.md](/CONTRIBUTING.md#seeding)).
 
 The default ports are as follows:
 
