@@ -48,9 +48,8 @@ If you want to use a different database, more steps are necessary. You can start
 a managed Supabase project at [supabase.com](https://supabase.com) and link it
 with your StudyU instance by replacing the values for `STUDYU_SUPABASE_URL` and
 `STUDYU_SUPABASE_PUBLIC_ANON_KEY` in the file `.env.local`. Alternatively, you
-can self-host Supabase on your own as explained
-in [Use Case # 2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu)
-.
+can self-host Supabase on your own as explained in
+[Use Case #2](#use-case-2-run-a-self-hosted-supabase-instance-together-with-studyu).
 
 In order to run your StudyU instance under a custom domain or a different port,
 refer to [Change hostname or ports](#change-hostname-or-ports).
@@ -118,7 +117,7 @@ Open your local Supabase Studio instance on
 with username: studyu, password: studyu). The StudyU database scheme is
 automatically applied. Navigate to the table editor. Add a row to the table
 `app_config` with the id `prod` and insert the links to the terms of services
-and privacy policies with respect to their language 
+and privacy policies with respect to their language
 (see [CONTRIBUTING.md](/CONTRIBUTING.md#seeding)).
 
 The default ports are as follows:
