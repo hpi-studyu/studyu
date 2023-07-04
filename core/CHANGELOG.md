@@ -1,3 +1,7 @@
+## 4.3.0-dev.6
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
 ## 4.3.0-dev.5
 
  - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
