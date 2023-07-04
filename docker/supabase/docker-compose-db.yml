@@ -4,7 +4,7 @@ name: 'studyu_database'
 services:
   db:
     container_name: supabase-db
-    image: supabase/postgres:15.1.0.84
+    image: supabase/postgres:15.1.0.90
     healthcheck:
       test: pg_isready -U postgres -h localhost
       interval: 5s
@@ -17,10 +17,7 @@ services:
       - -c
       - log_min_messages=fatal # prevents Realtime polling queries from appearing in logs
     restart: unless-stopped
-    # ports:
-    #  - "5432:5432"
     environment:
-      # Connection variables
       POSTGRES_HOST: /var/run/postgresql
       PGPORT: ${POSTGRES_PORT}
       POSTGRES_PORT: ${POSTGRES_PORT}
@@ -28,8 +25,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATABASE: ${POSTGRES_DB}
       POSTGRES_DB: ${POSTGRES_DB}
-      # Enable postgres data checksums
-      POSTGRES_INITDB_ARGS: "--data-checksums"
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
