@@ -8,7 +8,10 @@ import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'intervention/checkmark_task_widget.dart';
+import 'intervention/image_capturing_task_widget.dart';
 import 'observation/questionnaire_task_widget.dart';
+
+
 
 class TaskScreen extends StatefulWidget {
   final TaskInstance taskInstance;
@@ -48,7 +51,12 @@ class _TaskScreenState extends State<TaskScreen> {
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
-      default:
+      case ImageCapturingTask:
+        return ImageCapturingTaskWidget(
+            task: taskInstance.task as ImageCapturingTask,
+            key: UniqueKey(),
+            completionPeriod: taskInstance.completionPeriod,
+            default:
         print('${taskInstance.task.runtimeType} is not a supported Task!');
         return null;
     }

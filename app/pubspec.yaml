@@ -13,6 +13,10 @@ dependencies:
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
+  encrypted_media_capturing:
+    git:
+      url: https://github.com/HIAlab/Multimodal-N-of-1-Trials.git
+      ref: prototype/encrypted-capturing # branch name
   fhir: ^0.4.7
   fl_chart: ^0.63.0
   flutter:
@@ -47,6 +51,7 @@ dependencies:
   universal_html: ^2.2.3
   url_launcher: ^6.1.11
   uuid: ^3.0.7
+
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
