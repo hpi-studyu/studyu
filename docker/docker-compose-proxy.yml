@@ -2,8 +2,8 @@ version: '3'
 name: 'studyu'
 
 services:
-  nginx-only:
-    container_name: nginx-only
+  proxy:
+    container_name: studyu-proxy
     image: nginx:stable-alpine
     restart: unless-stopped
     ports:
@@ -12,3 +12,8 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+
+networks:
+  default:
+    name: studyu_network
+    driver: bridge

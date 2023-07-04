@@ -3,11 +3,11 @@ name: 'studyu'
 
 services:
   app:
-    container_name: app
+    container_name: studyu-app
     restart: unless-stopped
     build:
       context: ..
-      dockerfile: ./docker/Dockerfile.specifc
+      dockerfile: ./docker/Dockerfile.single
       args:
         FLUTTER_APP_FOLDER: app
     ports:
@@ -20,3 +20,8 @@ services:
       STUDYU_SUPABASE_PUBLIC_ANON_KEY: ${ANON_KEY}
     env_file:
       - ../flutter_common/lib/envs/.env.selfhost
+
+networks:
+  default:
+    name: studyu_network
+    driver: bridge

@@ -2,12 +2,12 @@ version: '3'
 name: 'studyu'
 
 services:
-  designer_v2:
-    container_name: designer_v2
+  designer:
+    container_name: studyu-designer
     restart: unless-stopped
     build:
       context: ..
-      dockerfile: ./docker/Dockerfile.specifc
+      dockerfile: ./docker/Dockerfile.single
       args:
         FLUTTER_APP_FOLDER: designer_v2
     ports:
@@ -20,3 +20,8 @@ services:
       STUDYU_SUPABASE_PUBLIC_ANON_KEY: ${ANON_KEY}
     env_file:
       - ../flutter_common/lib/envs/.env.selfhost
+
+networks:
+  default:
+    name: studyu_network
+    driver: bridge

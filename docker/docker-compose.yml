@@ -3,7 +3,7 @@ name: 'studyu'
 
 services:
   platform-full:
-    container_name: platform
+    container_name: studyu-platform-full
     restart: unless-stopped
     build:
       context: ..
@@ -20,3 +20,8 @@ services:
       STUDYU_SUPABASE_PUBLIC_ANON_KEY: ${ANON_KEY}
     env_file:
       - ../flutter_common/lib/envs/.env.selfhost
+
+networks:
+  default:
+    name: studyu_network
+    driver: bridge
