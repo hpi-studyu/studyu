@@ -16,5 +16,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    environment:
+      STUDYU_SUPABASE_PUBLIC_ANON_KEY: ${ANON_KEY}
     env_file:
       - ../flutter_common/lib/envs/.env.selfhost
