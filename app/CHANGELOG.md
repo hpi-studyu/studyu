@@ -1,3 +1,10 @@
+## 2.4.6
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+ - **FIX**: modify xcode version and ios target platform. ([67ec1562](https://github.com/hpi-studyu/studyu/commit/67ec15621054606f2e1995caa9f2b778e1d6593e))
+ - **FIX**: change provisioning profile name. ([5d84a1fc](https://github.com/hpi-studyu/studyu/commit/5d84a1fc7939674e509aff7a72581b10df0d969a))
+ - **FIX**: const constructor. ([1629003a](https://github.com/hpi-studyu/studyu/commit/1629003ae93d6fd6a495b3cbe6c23dd84ae3bcd8))
+
 ## 2.4.5
 
  - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
