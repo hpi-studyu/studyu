@@ -3,11 +3,11 @@ name: 'studyu'
 
 services:
   designer_legacy:
-    container_name: designer_legacy
+    container_name: studyu-designer_legacy
     restart: unless-stopped
     build:
       context: ..
-      dockerfile: ./docker/Dockerfile.specifc
+      dockerfile: ./docker/Dockerfile.single
       args:
         FLUTTER_APP_FOLDER: designer
     ports:
@@ -18,3 +18,8 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     env_file:
       - ../flutter_common/lib/envs/.env.selfhost
+
+networks:
+  default:
+    name: studyu_network
+    driver: bridge

@@ -83,7 +83,7 @@ cases can be found [here](docker).
    docker-compose-db.yml up` to launch the Postgres database.
 3. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
    Supabase.
-4. In [`docker/`](docker), run `docker compose -f docker-compose-nginx_only.yml
+4. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
    up` to the nginx reverse proxy.
 
 If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote
