@@ -156,7 +156,7 @@ Run the following services. In the directory `supabase`:
 
 In the directory `docker`:
 
-- `docker compose -f docker-compose-nginx_only.yml up` (Start the nginx reverse
+- `docker compose -f docker-compose-proxy.yml up` (Start the nginx reverse
   proxy)
 
 The default ports are as follows:
