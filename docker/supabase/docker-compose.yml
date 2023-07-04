@@ -5,7 +5,7 @@
 #   Destroy:        docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
 
 version: "3.8"
-name: 'studyu'
+name: 'studyu_supabase'
 
 services:
   studio:
@@ -193,7 +193,7 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - studyu-blob:/var/lib/storage:z
+      - blob:/var/lib/storage
 
   imgproxy:
     container_name: supabase-imgproxy
@@ -209,7 +209,7 @@ services:
       IMGPROXY_USE_ETAG: "true"
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
-      - studyu-blob:/var/lib/storage:z
+      - blob:/var/lib/storage
 
   meta:
     container_name: supabase-meta
@@ -245,5 +245,10 @@ services:
 
 # If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
 
+networks:
+  default:
+    name: studyu_network
+    driver: bridge
+
 volumes:
-  studyu-blob:
+  blob:

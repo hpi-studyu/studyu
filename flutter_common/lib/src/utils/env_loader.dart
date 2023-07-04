@@ -13,8 +13,11 @@ String envFilePath() {
 
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
-  final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL']!;
-  final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!;
+  final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL'] ?? const String.fromEnvironment('STUDYU_SUPABASE_URL');
+  final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY'] ?? const String.fromEnvironment('STUDYU_SUPABASE_PUBLIC_ANON_KEY');
+  final envAppUrl = dotenv.env['STUDYU_APP_URL'] ?? const String.fromEnvironment('STUDYU_APP_URL');
+  final envDesignerUrl = dotenv.env['STUDYU_DESIGNER_URL'] ?? const String.fromEnvironment('STUDYU_DESIGNER_URL');
+  final envProjectGeneratorUrl = dotenv.env['STUDYU_PROJECT_GENERATOR_URL'] ?? const String.fromEnvironment('STUDYU_PROJECT_GENERATOR_URL');
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
@@ -23,11 +26,11 @@ Future<void> loadEnv() async {
     // optional
   );
   env.setEnv(
-    dotenv.env['STUDYU_SUPABASE_URL']!,
-    dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
-    envAppUrl: dotenv.env['STUDYU_APP_URL'],
-    envDesignerUrl: dotenv.env['STUDYU_DESIGNER_URL'],
-    envProjectGeneratorUrl: dotenv.env['STUDYU_PROJECT_GENERATOR_URL'],
+    supabaseUrl,
+    supabaseAnonKey,
+    envAppUrl: envAppUrl,
+    envDesignerUrl: envDesignerUrl,
+    envProjectGeneratorUrl: envProjectGeneratorUrl,
     supabaseClient: Supabase.instance.client,
   );
 }
