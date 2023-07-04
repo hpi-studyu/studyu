@@ -1,4 +1,5 @@
 import 'package:studyu_core/src/models/interventions/tasks/checkmark_task.dart';
+import 'package:studyu_core/src/models/interventions/tasks/image_capturing_task.dart';
 import 'package:studyu_core/src/models/tasks/task.dart';
 
 typedef InterventionTaskParser = InterventionTask Function(Map<String, dynamic> data);
@@ -6,6 +7,7 @@ typedef InterventionTaskParser = InterventionTask Function(Map<String, dynamic> 
 abstract class InterventionTask extends Task {
   static Map<String, InterventionTaskParser> taskTypes = {
     CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json),
+    ImageCapturingTask.taskType: (json) => ImageCapturingTask.fromJson(json),
   };
 
   InterventionTask(super.type);

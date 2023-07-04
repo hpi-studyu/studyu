@@ -7,7 +7,7 @@ part 'image_capturing_task.g.dart';
 
 @JsonSerializable()
 class ImageCapturingTask extends InterventionTask {
-  static const String taskType = 'checkmark';
+  static const String taskType = 'image_capturing';
 
   ImageCapturingTask() : super(taskType);
 
