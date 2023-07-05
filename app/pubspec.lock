@@ -276,9 +276,9 @@ packages:
   encrypted_media_capturing:
     dependency: "direct main"
     description:
-      path: "."
+      path: app-encrypted_media_capturing
       ref: "prototype/encrypted-capturing"
-      resolved-ref: "8219b3edc122bb8d52d32477ac1cd6c3a0ba905e"
+      resolved-ref: a2f4b582c60eb8da9e99f9e2c1c02a375374c4f3
       url: "https://github.com/HIAlab/Multimodal-N-of-1-Trials.git"
     source: git
     version: "1.0.0"

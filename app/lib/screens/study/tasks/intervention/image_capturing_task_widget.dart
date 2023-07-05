@@ -7,6 +7,8 @@ import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_core/core.dart';
 import 'package:encrypted_media_capturing/take_picture_screen.dart';
 
+import 'lib/src/models/interventions/tasks/image_capturing_task.dart/';
+
 class ImageCapturingTaskWidget extends StatefulWidget {
   final ImageCapturingTask? task;
   final CompletionPeriod? completionPeriod;

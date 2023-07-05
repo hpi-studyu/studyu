@@ -17,6 +17,7 @@ dependencies:
     git:
       url: https://github.com/HIAlab/Multimodal-N-of-1-Trials.git
       ref: prototype/encrypted-capturing # branch name
+      path: app-encrypted_media_capturing
   fhir: ^0.4.7
   fl_chart: ^0.63.0
   flutter:
