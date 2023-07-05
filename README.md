@@ -3,9 +3,9 @@
 <img src="https://www.studyu.health/img/icon_wide.png" height="130" align="right"
 alt="StudyU Icon">
 
-StudyU is an <a href="https://www.studyu.health/blog/best-idea-award">
-award-winning</a> platform to discover the effects of individual health
-interventions in a safe and convenient way. StudyU accomplishes this by bringing
+StudyU is an [award-winning](https://www.studyu.health/blog/best-idea-award)
+platform to discover the effects of individual health interventions in a safe
+and convenient way. StudyU accomplishes this by bringing
 [N-of-1 trials](https://www.studyu.health/docs/basics/n-of-1-trials) into the
 digital age, effectively combining the fields of digitization and personalized
 research methods.
@@ -24,13 +24,13 @@ and the [StudyU Designer](https://designer.studyu.health).
 
 The StudyU Designer is a web-based application supporting the design and
 implementation of digital N-of-1 trials for clinicians, researchers, or digital
-health enthusiasts. With its user-centric design framework, the Study Designer
+health enthusiasts. With its user-centric design framework, the StudyU Designer
 improves usability with many supportive features during the study creation
 process. Notably, it includes a preview function that provides a real-time
 visualization of the study design. Besides running private N-of-1 trials,
 seamless collaboration with other researchers is also supported by sharing
-studies with other clinicians and researchers, fostering collaboration and
-transparency in the spirit of public health and open science.
+studies, fostering collaboration and transparency in the spirit of public health
+and open science.
 
 ### StudyU App
 
@@ -44,7 +44,7 @@ alt="Get it on Google Play">](<https://play.google.com/store/apps/details?id=hea
 
 The StudyU App is a user-friendly application that
 enables individuals to actively participate in digital N-of-1 trials and obtain
-personalized treatment advice. It’s accessible design approach accommodates users
+personalized treatment advice. Its accessible design approach accommodates users
 with limited technical skills, allowing them to directly measure the impact of
 interventions on their health outcomes. By engaging patients in the trial process,
 the StudyU App promotes patient empowerment and facilitates shared
