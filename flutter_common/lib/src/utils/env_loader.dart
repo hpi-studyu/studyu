@@ -11,18 +11,20 @@ String envFilePath() {
   return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
 }
 
+String? getEnv(String name) {
+  return dotenv.env[name] ?? (bool.hasEnvironment(name) ? String.fromEnvironment(name) : null);
+}
+
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
-  final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL'] ?? const String.fromEnvironment('STUDYU_SUPABASE_URL');
-  final supabaseAnonKey =
-      dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY'] ?? const String.fromEnvironment('STUDYU_SUPABASE_PUBLIC_ANON_KEY');
-  final envAppUrl = dotenv.env['STUDYU_APP_URL'] ?? const String.fromEnvironment('STUDYU_APP_URL');
-  final envDesignerUrl = dotenv.env['STUDYU_DESIGNER_URL'] ?? const String.fromEnvironment('STUDYU_DESIGNER_URL');
-  final envProjectGeneratorUrl =
-      dotenv.env['STUDYU_PROJECT_GENERATOR_URL'] ?? const String.fromEnvironment('STUDYU_PROJECT_GENERATOR_URL');
+  final supabaseUrl = getEnv('STUDYU_SUPABASE_URL');
+  final supabaseAnonKey = getEnv('STUDYU_SUPABASE_PUBLIC_ANON_KEY');
+  final envAppUrl = getEnv('STUDYU_APP_URL');
+  final envDesignerUrl = getEnv('STUDYU_DESIGNER_URL');
+  final envProjectGeneratorUrl = getEnv('STUDYU_PROJECT_GENERATOR_URL');
   await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
+    url: supabaseUrl!,
+    anonKey: supabaseAnonKey!,
     authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
     debug: true,
     // optional
