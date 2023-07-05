@@ -11,6 +11,46 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.4.7`](#studyu_app---v247)
+ - [`studyu_core` - `v4.3.0-dev.7`](#studyu_core---v430-dev7)
+ - [`studyu_designer_v2` - `v1.3.9`](#studyu_designer_v2---v139)
+ - [`studyu_flutter_common` - `v1.6.2-dev.8`](#studyu_flutter_common---v162-dev8)
+
+---
+
+#### `studyu_app` - `v2.4.7`
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+#### `studyu_core` - `v4.3.0-dev.7`
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+#### `studyu_designer_v2` - `v1.3.9`
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+#### `studyu_flutter_common` - `v1.6.2-dev.8`
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+
+## 2023-07-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`studyu_workspace` - `v0.4.0`](#studyu_workspace---v040)
 
 Packages with other changes:
