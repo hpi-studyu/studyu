@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -20,13 +19,6 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
   });
-
-  static defaultType({
-    formData,
-    delegate,
-    validationSet = StudyFormValidationSet.draft,
-    titles,
-  }) => ScaleQuestionFormViewModel(formData: formData, delegate: delegate, validationSet: validationSet, titles: titles);
 
   SurveyQuestionType get questionType;
 

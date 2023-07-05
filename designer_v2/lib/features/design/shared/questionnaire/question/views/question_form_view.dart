@@ -9,12 +9,14 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/bool_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/choice_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_type_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/choice_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/scale_question_form_view.dart';
+import 'package:studyu_designer_v2/features/forms/form_control.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -23,9 +25,9 @@ import 'package:studyu_designer_v2/theme.dart';
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]
 class SurveyQuestionFormView extends ConsumerStatefulWidget {
-  const SurveyQuestionFormView({required this.formViewModel, this.isHtmlStyleable = true, super.key});
+  SurveyQuestionFormView({required QuestionFormViewModel formViewModel, this.isHtmlStyleable = true, super.key}): typeController = QuestionTypeController(formViewModel);
 
-  final QuestionFormViewModel formViewModel;
+  final QuestionTypeController typeController;
   final bool isHtmlStyleable;
 
   @override
@@ -38,7 +40,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       .map((questionType) => FormControlOption(questionType, questionType.string))
       .toList();
 
-  QuestionFormViewModel get formViewModel => widget.formViewModel;
+  QuestionTypeController get controller => widget.typeController;
+  QuestionFormViewModel get formViewModel => controller.formViewModel;
 
   late bool isQuestionHelpTextFieldVisible = formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
   bool isStylingInformationDismissed = true;
@@ -53,7 +56,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel as BoolQuestionFormViewModel),
       SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel as ScaleQuestionFormViewModel),
     };
-    final questionType = formViewModel.questionType;
+    final questionType = controller.type;
 
     if (!questionTypeWidgets.containsKey(questionType)) {
       throw Exception("Failed to build widget for SurveyQuestionType $questionType because"
@@ -98,6 +101,10 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
     });
   }
 
+  String? getEnv(String name) {
+    return null;
+  }
+
   _buildResponseTypeHeader(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -113,7 +120,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
               input: Theme(
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
-                  formControl: formViewModel.questionTypeControl,
+                  formControl: controller.questionTypeControl,
                   items: _questionTypeControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
