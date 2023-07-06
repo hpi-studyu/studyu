@@ -13,7 +13,6 @@ dependencies:
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
-  fhir: ^0.4.7
   fl_chart: ^0.63.0
   flutter:
     sdk: flutter

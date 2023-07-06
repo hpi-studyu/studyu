@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:fhir/r4.dart' as fhir;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/widgets/fhir_questionnaire/questionnaire_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 
 class QuestionnaireTaskWidget extends StatefulWidget {
@@ -43,23 +39,15 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fhirQuestionnaire = context.watch<AppState>().activeSubject!.study.fhirQuestionnaire;
-    final questionnaireWidget = fhirQuestionnaire != null
-        ? FhirQuestionnaireWidget(
-            fhirQuestionnaire,
-            onComplete: (responseLocal) => setState(() {
-              response = responseLocal;
-            }),
-          )
-        : QuestionnaireWidget(
-            widget.task.questions.questions,
-            header: widget.task.header,
-            footer: widget.task.footer,
-            onChange: _responseValidator,
-            onComplete: (qs) => setState(() {
-              response = qs;
-            }),
-          );
+    final questionnaireWidget = QuestionnaireWidget(
+      widget.task.questions.questions,
+      header: widget.task.header,
+      footer: widget.task.footer,
+      onChange: _responseValidator,
+      onComplete: (qs) => setState(() {
+        response = qs;
+      }),
+    );
     return Expanded(
       child: Column(
         children: [
@@ -79,12 +67,6 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                 switch (response.runtimeType) {
                   case QuestionnaireState:
                     await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
-                    break;
-                  case fhir.QuestionnaireResponse:
-                    await _addQuestionnaireResult<fhir.QuestionnaireResponse?>(
-                      response as fhir.QuestionnaireResponse?,
-                      context,
-                    );
                     break;
                 }
                 setState(() {

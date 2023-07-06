@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
@@ -99,9 +98,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     switch (T) {
       case QuestionnaireState:
         resultObject = Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result);
-        break;
-      case fhir.QuestionnaireResponse:
-        resultObject = Result<T>.app(type: 'fhir.QuestionnaireResponse', periodId: periodId, result: result);
         break;
       case bool:
         resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);

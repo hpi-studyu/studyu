@@ -89,7 +89,6 @@ CREATE TABLE public.study (
     schedule jsonb NOT NULL,
     report_specification jsonb NOT NULL,
     results jsonb NOT NULL,
-    fhir_questionnaire jsonb,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     user_id uuid NOT NULL,
