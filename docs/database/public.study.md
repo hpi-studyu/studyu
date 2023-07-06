@@ -21,7 +21,6 @@
 | schedule | jsonb |  | false |  |  |  |
 | report_specification | jsonb |  | false |  |  |  |
 | results | jsonb |  | false |  |  |  |
-| fhir_questionnaire | jsonb |  | true |  |  |  |
 | created_at | timestamp with time zone | now() | false |  |  |  |
 | updated_at | timestamp with time zone | now() | false |  |  |  |
 | user_id | uuid |  | false |  | [public.user](public.user.md) | UserId of study creator |
