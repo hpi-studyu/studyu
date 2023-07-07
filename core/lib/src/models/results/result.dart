@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/models/questionnaire/image_reponse.dart';
 
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
@@ -30,6 +31,9 @@ class Result<T> {
     switch (T) {
       case QuestionnaireState:
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
+        break;
+      case ImageResponse:
+        resultMap = {keyResult: (result as ImageResponse).toJson()};
         break;
       case fhir.QuestionnaireResponse:
         resultMap = {keyResult: (result as fhir.QuestionnaireResponse).toJson()};

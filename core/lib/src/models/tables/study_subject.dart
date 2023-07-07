@@ -7,6 +7,7 @@ import 'package:fhir/r4.dart' as fhir;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
+import 'package:studyu_core/src/models/questionnaire/image_reponse.dart';
 import 'package:uuid/uuid.dart';
 
 part 'study_subject.g.dart';
@@ -105,6 +106,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         break;
       case bool:
         resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);
+        break;
+      case ImageResponse:
+        resultObject = Result<T>.app(type: 'ImageResponse', periodId: periodId, result: result);
         break;
       default:
         print('Unsupported question type: $T');

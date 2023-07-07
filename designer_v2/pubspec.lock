@@ -653,18 +653,16 @@ packages:
   studyu_core:
     dependency: "direct main"
     description:
-      name: studyu_core
-      sha256: b8ff5ab86e87b471a3c0ee1edc12c52196da404e604b1a5cb8d27c1744fdd43d
-      url: "https://pub.dev"
-    source: hosted
+      path: "../core"
+      relative: true
+    source: path
     version: "4.3.0-dev.5"
   studyu_flutter_common:
     dependency: "direct main"
     description:
-      name: studyu_flutter_common
-      sha256: "38686bf43fef19573bcd425f4a79464c21b229d566e61e9a98135e5785fc2010"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../flutter_common"
+      relative: true
+    source: path
     version: "1.6.2-dev.6"
   supabase:
     dependency: "direct main"
