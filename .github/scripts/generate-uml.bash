@@ -40,7 +40,7 @@ for d in "${!dirty[@]}"; do
     rm -rf "$out"
     # skip to next if directory doesn't exist (i.e. git diff showed it because
     # it was deleted
-    test -d "$d" || continue
+    test -d "$root/$d" || continue
 
     echo "Generating diagram for $d"
 
@@ -48,7 +48,7 @@ for d in "${!dirty[@]}"; do
     mkdir -p $(dirname "$out")
 
     # go to package dir, i.e. first path component
-    cd $(cut -d/ -f1 <<< "$d")
+    cd "$root/$(cut -d/ -f1 <<< "$d")"
     # uml generator gets confused with generated files so we have to remove
     # them
     find . -type f -name '*.g.dart' -exec rm {} \;
