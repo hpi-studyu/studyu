@@ -4,6 +4,10 @@
 root=$(realpath $(dirname $(realpath $0))/../..)
 
 docs_dir="$root/docs/uml"
+
+# find directories whose umls need updates -------------------------------------
+# regenerating all umls every time is too slow
+
 # find latest commit that updated uml diagrams (or use initial commit)
 prev_update="$(git log -n 1 --pretty=format:%H -- $docs_dir)"
 [[ -z  "$prev_update" ]] && prev_update="$(git rev-list --max-parents=0 HEAD)"
@@ -26,44 +30,42 @@ for changed in $(git diff --name-only $prev_update \
     dirty[$changed]=1
 done
 
-for d in "${!dirty[@]}"; do
-    echo "dirty: $d"
-done
-
-# check if dir still exists before regenerating uml
-
-exit 0
-
-rm -rf "$docs_dir"
+# generate needed umls ---------------------------------------------------------
 
 # temporary file for uml data
 tmpf=$(mktemp)
 
-for pkg in flutter_common core designer_v2 app; do
-    cd "$root/$pkg"
+# iterate keys of dirty
+for d in "${!dirty[@]}"; do
+    out="$docs_dir/$d/uml.svg"
+    # remove old uml if it exists
+    rm -rf "$out"
+    # skip to next if directory doesn't exist (i.e. git diff showed it because
+    # it was deleted
+    test -d "$d" || continue
+
+    echo "Generating diagram for $d"
+
+    # ensure destination dir extists
+    mkdir -p $(dirname "$out")
+
+    # go to package dir, i.e. first path component
+    cd $(cut -d/ -f1 <<< "$d")
     # uml generator gets confused with generated files so we have to remove
     # them
     find . -type f -name '*.g.dart' -exec rm {} \;
 
-    for dir in $(find lib -type d); do
-        # skip if no dart files
-        [[ -z $(find "$dir" -type f -name '*.dart') ]] && continue
-        echo "Generating diagram for $pkg/$dir"
-
-        out="$docs_dir/$pkg/$dir/uml.svg"
-        mkdir -p $(dirname "$out")
-
-        dart pub global run dcdg \
-            --exclude=State --exclude=StatefulWidget --exclude=StatelessWidget \
-            -b nomnoml \
-            -s "$dir" \
-            > $tmpf
-        npx --yes nomnoml "$tmpf" "$out"
-    done
+    # generate uml & svg
+    dart pub global run dcdg \
+        --exclude=State --exclude=StatefulWidget --exclude=StatelessWidget \
+        -b nomnoml \
+        -s "$(cut -d/ -f2- <<< "$d")" \
+        > $tmpf
+    npx --yes nomnoml "$tmpf" "$out"
 
     # get deleted generated files back from git
     git checkout HEAD -- .
-    break
 done
 
+# remove temporary file
 rm "$tmpf"
