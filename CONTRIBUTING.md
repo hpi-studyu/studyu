@@ -1,6 +1,30 @@
 # Contributing
 
-## Project setup
+## Repository Overview
+
+We have different Flutter/Dart packages all contained in this monorepo. The
+StudyU platform consists out of the following packages:
+
+- [StudyU App](./app): Participate in N-of-1 trials
+- [StudyU Designer v2](./designer_v2): Design and conduct your own N-of-1 trial
+
+Dependency packages:
+
+- [Core](./core): shared code for all applications
+- [Flutter Common](./flutter_common): shared code for all Flutter apps (App, Designer)
+
+Outdated and deprecated packages:
+
+- [StudyU Designer v1](./designer): Legacy Designer
+- [Repository Generator](./repo_generator): Dart web server
+- [Analysis Generator](./notebook_uploader): Dart CLI script)
+
+### Test Instance of deprecated Packages
+
+- [StudyU App v1](https://app-v1.studyu.health)
+- [StudyU Designer v1](https://designer-v1.studyu.health)
+
+## Project Setup
 
 ### Environments
 
@@ -59,13 +83,13 @@ Contrary to most recommendations, we commit those generated files to Git. This
 is needed, because core is a dependency by app and designer and dependencies
 need to have all files generated, when being imported.
 
-### Database & backend
+### Database and Backend
 
 We are using [Supabase](https://supabase.com/) as a Backend-as-a-Service
 provider. Supabase provides different backend services such as a database, API,
 authentication, storage service all based around PostgreSQL and other FOSS.
 
-## Local development
+## Local Development
 
 Follow these instructions to set up and use your local development environment.
 
@@ -83,7 +107,7 @@ cases can be found [here](docker).
    docker-compose-db.yml up` to launch the Postgres database.
 3. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
    Supabase.
-4. In [`docker/`](docker), run `docker compose -f docker-compose-nginx_only.yml
+4. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
    up` to the nginx reverse proxy.
 
 If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote

@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.4.5
+version: 2.4.7
 description: An app to facilitate N-of-1 trials
 publish_to: none
 homepage: https://hpi.de/lippert/projects/studyu.html
@@ -13,59 +13,46 @@ dependencies:
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
-  fhir: ^0.4.7
   fl_chart: ^0.63.0
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.1
-  flutter_local_notifications: ^14.1.1
+  flutter_local_notifications: ^15.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^1.0.6
+  flutter_timezone: ^1.0.7
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.10.1
+  flutter_widget_from_html: ^0.10.2
   # grizzly_distuv: ^1.0.0 # todo remove for null safety support
   intersperse: ^2.0.0
   intl: ^0.18.0 # flutter_localizations
   material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^4.0.2
   pdf: ^3.10.4
-  permission_handler: ^10.3.0
+  permission_handler: ^10.4.1
   provider: ^6.0.5
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   sentry_flutter: ^7.8.0
   sentry_logging: ^7.8.0
-  shared_preferences: ^2.1.2
-  studyu_core: ^4.3.0-dev.5
-  studyu_flutter_common: ^1.6.2-dev.6
-  supabase: ^1.9.4
-  supabase_flutter: ^1.10.4
+  shared_preferences: ^2.2.0
+  studyu_core: ^4.3.0-dev.7
+  studyu_flutter_common: ^1.6.2-dev.8
+  supabase: ^1.9.5
+  supabase_flutter: ^1.10.6
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
   universal_html: ^2.2.3
   url_launcher: ^6.1.11
   uuid: ^3.0.7
+  wakelock_plus: ^1.0.0+3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.2
   flutter_test:
     sdk: flutter
-
-dependency_overrides:
-  # need this to support chewie 1.5.0 https://github.com/creativecreatorormaybenot/wakelock/pull/203
-  wakelock:
-    git:
-      url: https://github.com/chandrabezzo/wakelock.git # repository
-      ref: main # branch
-      path: wakelock/ # folder
-  wakelock_windows:
-    git:
-      url: https://github.com/chandrabezzo/wakelock.git # repository
-      ref: main # branch
-      path: wakelock_windows/ # folder
 
 flutter_icons:
   image_path: assets/images/icon.png

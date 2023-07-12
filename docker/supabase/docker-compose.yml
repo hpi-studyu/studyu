@@ -5,12 +5,12 @@
 #   Destroy:        docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
 
 version: "3.8"
-name: 'studyu'
+name: 'studyu_supabase'
 
 services:
   studio:
     container_name: supabase-studio
-    image: supabase/studio:20230330-99fed3d
+    image: supabase/studio:20230621-7a24ddd
     restart: unless-stopped
     healthcheck:
       test:
@@ -58,7 +58,7 @@ services:
 
   auth:
     container_name: supabase-auth
-    image: supabase/gotrue:v2.60.7
+    image: supabase/gotrue:v2.62.1
     healthcheck:
       test:
         [
@@ -123,7 +123,7 @@ services:
 
   realtime:
     container_name: realtime-dev.supabase-realtime
-    image: supabase/realtime:v2.5.1
+    image: supabase/realtime:v2.10.1
     healthcheck:
       test:
         [
@@ -157,7 +157,7 @@ services:
 
   storage:
     container_name: supabase-storage
-    image: supabase/storage-api:v0.28.2
+    image: supabase/storage-api:v0.40.4
     depends_on:
       rest:
         condition: service_started
@@ -193,11 +193,11 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - studyu-blob:/var/lib/storage:z
+      - blob:/var/lib/storage
 
   imgproxy:
     container_name: supabase-imgproxy
-    image: darthsim/imgproxy:v3.13
+    image: darthsim/imgproxy:v3.8.0
     healthcheck:
       test: [ "CMD", "imgproxy", "health" ]
       timeout: 5s
@@ -209,11 +209,11 @@ services:
       IMGPROXY_USE_ETAG: "true"
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
-      - studyu-blob:/var/lib/storage:z
+      - blob:/var/lib/storage
 
   meta:
     container_name: supabase-meta
-    image: supabase/postgres-meta:v0.60.7
+    image: supabase/postgres-meta:v0.66.3
     restart: unless-stopped
     environment:
       PG_META_PORT: 8080
@@ -225,17 +225,16 @@ services:
 
   functions:
     container_name: supabase-edge-functions
-    image: supabase/edge-runtime:v1.2.12
+    image: supabase/edge-runtime:v1.5.2
     restart: unless-stopped
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SUPABASE_URL: http://kong:8000
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
-      SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@{POSTGRES_DB}:${POSTGRES_PORT}/${POSTGRES_DB}"
-      VERIFY_JWT: "false"
-    # ports:
-    #  - ${FUNCTIONS_HTTP_PORT}:9000/tcp
+      SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@{POSTGRES_DB}:${POSTGRES_PORT}/${POSTGRES_DB}
+      # TODO: Allow configuring VERIFY_JWT per function. This PR might help: https://github.com/supabase/cli/pull/786
+      VERIFY_JWT: "${FUNCTIONS_VERIFY_JWT}"
     volumes:
       - ./volumes/functions:/home/deno/functions:Z
     command:
@@ -244,5 +243,11 @@ services:
       - /home/deno/functions/main
 
 # If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
+
+networks:
+  default:
+    name: studyu_network
+    driver: bridge
+
 volumes:
-  studyu-blob:
+  blob:

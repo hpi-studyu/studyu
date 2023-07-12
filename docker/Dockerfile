@@ -30,5 +30,4 @@ COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
 COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
 
 # Loads all env vars starting with "STUDYU" into the .env file
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/packages/studyu_flutter_common/envs/.env && nginx -g 'daemon off;'"]
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/packages/studyu_flutter_common/envs/.env && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/packages/studyu_flutter_common/envs/.env && printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/packages/studyu_flutter_common/envs/.env && nginx -g 'daemon off;'"]
