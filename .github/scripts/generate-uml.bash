@@ -21,13 +21,11 @@ for changed in $(git diff --name-only $prev_update \
     | xargs dirname \
     | sort --unique \
 ); do
-    # set parent as dirty list until we reach lib
-    while [[ -n $(grep --extended-regexp '[^/]*/lib/.+' <<< "$changed") ]]; do
+    # set changed dir as dirty for all parents until we reach lib
+    while [[ -n $(grep --extended-regexp '[^/]*/lib' <<< "$changed") ]]; do
         dirty[$changed]=1
         changed="$(dirname "$changed")"
     done
-    # set lib dirty
-    dirty[$changed]=1
 done
 
 # generate needed umls ---------------------------------------------------------
