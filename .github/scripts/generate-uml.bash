@@ -9,7 +9,7 @@ docs_dir="$root/docs/uml"
 # regenerating all umls every time is too slow
 
 # find latest commit that updated uml diagrams (or use initial commit)
-prev_update="$(git log -n 1 --pretty=format:%H -- $docs_dir)"
+prev_update="$(git log -n 1 --pretty=format:%H -- "$docs_dir")"
 [[ -z  "$prev_update" ]] && prev_update="$(git rev-list --max-parents=0 HEAD)"
 
 # associative array, keys will be all directories whose uml has to be
