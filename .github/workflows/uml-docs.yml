@@ -7,10 +7,10 @@ on:
       - '!dev'
       - '!master'
     paths:
-      - 'flutter_common/**'
-      - 'core/**'
-      - 'designer_v2/**'
-      - 'app/**'
+      - 'flutter_common/**/*.dart'
+      - 'core/**/*.dart'
+      - 'designer_v2/**/*.dart'
+      - 'app/**/*.dart'
 
 jobs:
   generate-docs:
