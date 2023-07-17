@@ -130,9 +130,7 @@ ALTER TABLE public.study_subject OWNER TO supabase_admin;
 
 CREATE TABLE public.tag (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    name text NOT NULL,
-    color text,
-    parent_id uuid
+    name text NOT NULL UNIQUE
 );
 
 
@@ -418,14 +416,6 @@ ALTER TABLE ONLY public.study_subject
 
 ALTER TABLE ONLY public.study
     ADD CONSTRAINT "study_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
-
-
---
--- Name: tag tag_parentId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.tag
-    ADD CONSTRAINT "tag_parentId_fkey" FOREIGN KEY (parent_id) REFERENCES public.tag(id) ON DELETE CASCADE;
 
 
 --
@@ -906,7 +896,7 @@ CREATE POLICY "Users can do everything with their subjects" ON public.study_subj
 
 
 --
--- Name: study_tag Allow read access but deny write access for tags; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: tag Allow read access but deny write access for tags; Type: POLICY; Schema: public; Owner: supabase_admin
 --
 
 CREATE POLICY "Allow read access, deny write access"
