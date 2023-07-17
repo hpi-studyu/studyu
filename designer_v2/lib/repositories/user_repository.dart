@@ -8,7 +8,11 @@ abstract class IUserRepository {
   StudyUUser get user;
   Future<StudyUUser> fetchUser();
   Future<StudyUUser> saveUser();
+  Future<StudyUUser> updatePreferences(PreferenceAction pinAction, String modelId);
 }
+
+enum PreferenceAction { pin, pinOff }
+
 
 class UserRepository implements IUserRepository {
   UserRepository(
@@ -33,7 +37,6 @@ class UserRepository implements IUserRepository {
   Future<StudyUUser> saveUser() async {
     user = await apiClient.saveUser(user);
     return user;
-
     /*final saveOperation = OptimisticUpdate(
       applyOptimistic: () {
         final idx = study.studyTags.indexWhere((i) => i.id == model.id);
@@ -60,6 +63,21 @@ class UserRepository implements IUserRepository {
     );
 
     return saveOperation.execute().then((_) => model);*/
+  }
+
+  @override
+  Future<StudyUUser> updatePreferences(PreferenceAction pinAction, String modelId) async {
+    final newPinnedStudies = Set<String>.from(user.preferences.pinnedStudies);
+    switch(pinAction) {
+      case PreferenceAction.pin:
+        newPinnedStudies.add(modelId);
+        break;
+      case PreferenceAction.pinOff:
+        newPinnedStudies.remove(modelId);
+        break;
+    }
+    user.preferences.pinnedStudies = newPinnedStudies;
+    return saveUser();
   }
 }
 

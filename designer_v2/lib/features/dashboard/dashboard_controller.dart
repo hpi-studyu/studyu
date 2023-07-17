@@ -71,20 +71,12 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   }
 
   Future<void> pinStudy(String modelId) async {
-    // todo move to userRepository [updatePreferences]
-    final newPinnedStudies = Set<String>.from(userRepository.user.preferences.pinnedStudies);
-    newPinnedStudies.add(modelId);
-    userRepository.user.preferences.pinnedStudies = newPinnedStudies;
-    await userRepository.saveUser();
+    await userRepository.updatePreferences(PreferenceAction.pin, modelId);
     sortStudies();
   }
 
   Future<void> pinOffStudy(String modelId) async {
-    // todo move to userRepository [updatePreferences]
-    final newPinnedStudies = Set<String>.from(userRepository.user.preferences.pinnedStudies);
-    newPinnedStudies.remove(modelId);
-    userRepository.user.preferences.pinnedStudies = newPinnedStudies;
-    await userRepository.saveUser();
+    await userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
     sortStudies();
   }
 
