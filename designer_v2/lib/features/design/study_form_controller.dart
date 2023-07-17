@@ -22,12 +22,14 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
 class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
+    required this.studyTagsRepository,
     required this.authRepository,
     required super.formData, // Study
     super.validationSet = StudyFormValidationSet.draft,
@@ -41,6 +43,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   Study? studyDirtyCopy;
 
   final IStudyRepository studyRepository;
+  final IStudyTagRepository studyTagsRepository;
   final IAuthRepository authRepository;
   final GoRouter router;
 
@@ -48,6 +51,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
 
   late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
     formData: StudyInfoFormData.fromStudy(formData!),
+    studyTagsRepository: studyTagsRepository,
     delegate: this,
     study: formData!,
     validationSet: validationSet,
@@ -151,7 +155,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   Future _applyAndSaveSubform(IStudyFormData subformData) {
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
-    // Flush the on-write study copy to the repository & clear it
+    // Flush the on-write study copy to the repository and clear it
     return studyRepository.save(studyDirtyCopy!).then((study) => studyDirtyCopy = null);
   }
 }
@@ -167,6 +171,7 @@ final studyFormViewModelProvider = Provider.autoDispose.family<StudyFormViewMode
   final formViewModel = StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
+    studyTagsRepository: ref.watch(studyTagRepositoryProvider(studyId)),
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
   );

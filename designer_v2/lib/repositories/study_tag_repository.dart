@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 abstract class IStudyTagRepository implements ModelRepository<StudyTag> {
-  List<Future> updateStudyTags(List<Tag> tagsToUpdate);
+  void updateStudyTags(List<StudyTag> tagsToUpdate);
 }
 
 class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagRepository {
@@ -39,48 +39,16 @@ class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagR
   }
 
   @override
-  List<Future> updateStudyTags(List<Tag> tagsToUpdate) {
-    final currentTags = study.studyTags.toTagList().toSet();
+  void updateStudyTags(List<StudyTag> tagsToUpdate) {
+    final currentTags = study.studyTags.toSet();
     final futureTags = tagsToUpdate.toSet();
-    final addFutures = futureTags
-        .difference(currentTags)
-        .map((e) => delegate.save(StudyTag.fromTag(tag: e, studyId: study.id)))
-        .toList();
-    final deleteFutures = currentTags
-        .difference(futureTags)
-        .map((e) => delegate.delete(StudyTag.fromTag(tag: e, studyId: study.id)))
-        .toList();
-    return [...addFutures, ...deleteFutures];
+    for (StudyTag toSave in futureTags.difference(currentTags)) {
+      delegate.save(toSave);
+    }
+    for (StudyTag toDelete in currentTags.difference(futureTags)) {
+      delegate.delete(toDelete);
+    }
   }
-
-  /*@override
-  List<ModelAction> availableActions(Tag model) {
-    final actions = [
-      ModelAction(
-        type: ModelActionType.clipboard,
-        label: ModelActionType.clipboard.string,
-        onExecute: () => {
-          ref
-              .read(clipboardServiceProvider)
-              .copy(model.id)
-              .then((value) => ref.read(notificationServiceProvider).show(Notifications.StudyTagClipped))
-        },
-      ),
-      ModelAction(
-          type: ModelActionType.delete,
-          label: ModelActionType.delete.string,
-          onExecute: () {
-            return delete(getKey(model))
-                .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studyRecruit(model.studyId)))
-                .then((value) => Future.delayed(const Duration(milliseconds: 200),
-                    () => ref.read(notificationServiceProvider).show(Notifications.StudyTagDeleted)));
-          },
-          isAvailable: study.isOwner(authRepository.currentUser!),
-          isDestructive: true),
-    ];
-
-    return actions.where((action) => action.isAvailable).toList();
-  }*/
 
   @override
   emitUpdate() {
@@ -112,6 +80,7 @@ class StudyTagRepositoryDelegate extends IModelRepositoryDelegate<StudyTag> {
 
   @override
   Future<StudyTag> save(StudyTag model) async {
+    print("save");
     final saveOperation = OptimisticUpdate(
       applyOptimistic: () {
         final idx = study.studyTags.indexWhere((i) => i.id == model.id);
@@ -176,7 +145,7 @@ class StudyTagRepositoryDelegate extends IModelRepositoryDelegate<StudyTag> {
 }
 
 final studyTagRepositoryProvider = Provider.autoDispose.family<IStudyTagRepository, StudyID>((ref, studyId) {
-  print("studyTagRepositoryProvider($studyId");
+  print("studyTagRepositoryProvider");
   // Initialize repository for a given study
   final repository = StudyTagRepository(
     studyId: studyId,
@@ -187,7 +156,7 @@ final studyTagRepositoryProvider = Provider.autoDispose.family<IStudyTagReposito
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
-    print("studyTagRepositoryProvider($studyId.DISPOSE");
+    print("studyTagRepositoryProvider.DISPOSE");
     repository.dispose();
   });
   return repository;

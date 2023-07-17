@@ -6,11 +6,13 @@ import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
 class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   StudyInfoFormViewModel({
     required this.study,
+    required this.studyTagsRepository,
     super.delegate,
     super.formData,
     super.autosave = true,
@@ -18,13 +20,14 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   });
 
   final Study study;
+  final IStudyTagRepository studyTagsRepository;
 
   // - Form fields
 
   final FormControl<String> titleControl = FormControl();
   final FormControl<IconOption> iconControl = FormControl();
   final FormControl<String> descriptionControl = FormControl();
-  final FormControl<List<StudyTag>> tagsControl = FormControl();
+  final FormControl<List<StudyTag>> studyTagsControl = FormControl();
   final FormControl<String> organizationControl = FormControl();
   final FormControl<String> reviewBoardControl = FormControl();
   final FormControl<String> reviewBoardNumberControl = FormControl();
@@ -39,7 +42,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     'title': titleControl,
     'icon': iconControl,
     'description': descriptionControl,
-    'tags': tagsControl,
+    'studyTags': studyTagsControl,
     'organization': organizationControl,
     'institutionalReviewBoard': reviewBoardControl,
     'institutionalReviewBoardNumber': reviewBoardNumberControl,
@@ -55,7 +58,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     titleControl.value = data.title;
     iconControl.value = IconOption(data.iconName);
     descriptionControl.value = data.description;
-    tagsControl.value = data.tags;
+    studyTagsControl.value = data.studyTags;
     organizationControl.value = data.contactInfoFormData.organization;
     reviewBoardControl.value = data.contactInfoFormData.institutionalReviewBoard;
     reviewBoardNumberControl.value = data.contactInfoFormData.institutionalReviewBoardNumber;
@@ -72,7 +75,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         title: titleControl.value!, // required
         iconName: iconControl.value?.name ?? '',
         description: descriptionControl.value,
-        tags: tagsControl.value?.toList() ?? [],
+        studyTags: studyTagsControl.value!,
         contactInfoFormData: StudyContactInfoFormData(
           organization: organizationControl.value,
           institutionalReviewBoard: reviewBoardControl.value,
@@ -83,6 +86,12 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           phone: phoneControl.value,
           additionalInfo: additionalInfoControl.value,
         ));
+  }
+
+  @override
+  Future save() {
+    studyTagsRepository.updateStudyTags(studyTagsControl.value!);
+    return super.save();
   }
 
   @override
@@ -97,7 +106,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         StudyFormValidationSet.publish: [
           titleRequired,
           descriptionRequired,
-          // todo tagsRequired,
           iconRequired,
           organizationRequired,
           reviewBoardRequired,

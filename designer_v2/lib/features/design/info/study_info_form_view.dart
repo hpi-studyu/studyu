@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:reactive_multi_select_flutter/reactive_multi_select_flutter.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
-import 'package:studyu_designer_v2/common_views/multi_select.dart';
-import 'package:studyu_designer_v2/common_views/study_tag_badge.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 import 'package:studyu_designer_v2/repositories/tag_repository.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
@@ -27,6 +25,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
       value: state.study,
       data: (study) {
         final formViewModel = ref.read(studyInfoFormViewModelProvider(studyId));
+        final tags = ref.watch(tagRepositoryProvider);
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -83,48 +82,36 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   ),
                 ),
                 FormTableRow(
-                  control: formViewModel.tagsControl,
+                  control: formViewModel.studyTagsControl,
                   label: 'Tags',
-                  labelHelpText: 'tr.form_field_study_tags_tooltip',
-                  input: ReactiveFormConsumer(builder: (context, form, child) {
-                    final tags = ref.read(tagRepositoryProvider);
-                    final studyTags = ref.read(studyTagRepositoryProvider(studyId));
-                    final selectedTags = formViewModel.tagsControl.value!
-                        .map((e) => MultiSelectItem<Tag>(value: e.tag, name: e.name))
-                        .toList();
-                    selectedTags.sort((a, b) => a.name.compareTo(b.name));
-
-                    return Row(children: [
-                      Wrap(
-                        spacing: 8.0,
-                        children: List<Widget>.generate(formViewModel.tagsControl.value!.length, (index) {
-                          return StudyTagBadge(
-                            tag: formViewModel.tagsControl.value!.elementAt(index),
-                            onRemove: () async => studyTags.delegate.delete(formViewModel.tagsControl.value![index]),
-                          );
-                        }),
-                      ),
-                      const Spacer(),
-                      FutureBuilder<List<Tag>>(
-                          future: tags.getAllTags(),
-                          builder: (BuildContext context, AsyncSnapshot<List<Tag>> snapshot) {
-                            if (snapshot.hasData) {
-                              // todo move to controller
-                              final allTags =
-                                  snapshot.data!.map((e) => MultiSelectItem<Tag>(value: e, name: e.name)).toList();
-                              allTags.sort((a, b) => a.name.compareTo(b.name));
-                              return MultiSelectWidget<Tag>(
-                                items: allTags.toList(),
-                                selectedOptions: selectedTags,
-                                onConfirm: (selectedItems) async =>
-                                    studyTags.updateStudyTags(selectedItems.map((e) => e.value).toList()),
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          }),
-                    ]);
-                  }),
+                  // todo tr
+                  //labelHelpText: 'tr.form_field_study_tags_tooltip',
+                  input: FutureBuilder<List<Tag>>(
+                      future: tags.getAllTags(),
+                      builder: (BuildContext context, AsyncSnapshot<List<Tag>> snapshot) {
+                        if (snapshot.hasData) {
+                          final display = MultiSelectChipDisplay<StudyTag>();
+                          //display.disabled = true;
+                          return Row(
+                              children: [
+                                Expanded(
+                                    child: ReactiveMultiSelectDialogField(
+                                      formControl: formViewModel.studyTagsControl,
+                                      items: snapshot.data!
+                                          .map((e) =>
+                                          MultiSelectItem<StudyTag>(StudyTag.fromTag(tag: e, studyId: studyId), e.name))
+                                          .toList(),
+                                      dialogHeight: 200,
+                                      dialogWidth: 300,
+                                      searchable: true,
+                                      chipDisplay: display,
+                                    )
+                                )
+                              ]);
+                        } else {
+                          return const SizedBox();
+                        }
+                      }),
                 ),
               ], columnWidths: const {
                 0: FixedColumnWidth(185.0),
