@@ -1,5 +1,4 @@
 import 'package:csv/csv.dart';
-import 'package:fhir/r4.dart' show Questionnaire;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/models.dart';
@@ -70,12 +69,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   @JsonKey(name: 'registry_published')
   late bool registryPublished = false;
 
-  @JsonKey(name: 'fhir_questionnaire')
-  Questionnaire? fhirQuestionnaire;
-
   @JsonKey(includeToJson: false, includeFromJson: false)
   List<StudyTag> studyTags = [];
-
   @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
   @JsonKey(includeToJson: false, includeFromJson: false)
@@ -261,6 +256,6 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   @override
   String toString() {
-    return 'Study{id: $id, title: $title, description: $description, studyTags: $studyTags, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, fhirQuestionnaire: $fhirQuestionnaire, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+    return 'Study{id: $id, title: $title, description: $description, studyTags: $studyTags, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 }

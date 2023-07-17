@@ -16,7 +16,7 @@
 | [net._http_response](net._http_response.md) | 8 |  | BASE TABLE |
 | [supabase_functions.migrations](supabase_functions.migrations.md) | 2 |  | BASE TABLE |
 | [supabase_functions.hooks](supabase_functions.hooks.md) | 5 | Supabase Functions Hooks: Audit trail for triggered hooks. | BASE TABLE |
-| [public.study](public.study.md) | 22 |  | BASE TABLE |
+| [public.study](public.study.md) | 21 |  | BASE TABLE |
 | [public.study_subject](public.study_subject.md) | 7 |  | BASE TABLE |
 | [public.tag](public.tag.md) | 4 |  | BASE TABLE |
 | [public.study_tag](public.study_tag.md) | 2 |  | BASE TABLE |
