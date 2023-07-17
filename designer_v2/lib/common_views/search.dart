@@ -58,8 +58,7 @@ class SearchState extends State<Search> {
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             return ThemeConfig.sidesheetBackgroundColor(theme).withOpacity(0.5);
           }),
-        )
-    );
+        ));
   }
 
   @override
@@ -72,5 +71,4 @@ class SearchState extends State<Search> {
 
 class SearchController {
   late void Function(String text) setText;
-
 }

@@ -13,7 +13,6 @@ abstract class IUserRepository {
 
 enum PreferenceAction { pin, pinOff }
 
-
 class UserRepository implements IUserRepository {
   UserRepository(
       {required this.authRepository,
@@ -68,7 +67,7 @@ class UserRepository implements IUserRepository {
   @override
   Future<StudyUUser> updatePreferences(PreferenceAction pinAction, String modelId) async {
     final newPinnedStudies = Set<String>.from(user.preferences.pinnedStudies);
-    switch(pinAction) {
+    switch (pinAction) {
       case PreferenceAction.pin:
         newPinnedStudies.add(modelId);
         break;

@@ -92,22 +92,20 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         if (snapshot.hasData) {
                           final display = MultiSelectChipDisplay<StudyTag>();
                           //display.disabled = true;
-                          return Row(
-                              children: [
-                                Expanded(
-                                    child: ReactiveMultiSelectDialogField(
-                                      formControl: formViewModel.studyTagsControl,
-                                      items: snapshot.data!
-                                          .map((e) =>
-                                          MultiSelectItem<StudyTag>(StudyTag.fromTag(tag: e, studyId: studyId), e.name))
-                                          .toList(),
-                                      dialogHeight: 200,
-                                      dialogWidth: 300,
-                                      searchable: true,
-                                      chipDisplay: display,
-                                    )
-                                )
-                              ]);
+                          return Row(children: [
+                            Expanded(
+                                child: ReactiveMultiSelectDialogField(
+                              formControl: formViewModel.studyTagsControl,
+                              items: snapshot.data!
+                                  .map((e) =>
+                                      MultiSelectItem<StudyTag>(StudyTag.fromTag(tag: e, studyId: studyId), e.name))
+                                  .toList(),
+                              dialogHeight: 200,
+                              dialogWidth: 300,
+                              searchable: true,
+                              chipDisplay: display,
+                            ))
+                          ]);
                         } else {
                           return const SizedBox();
                         }

@@ -68,8 +68,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Search(
                   searchController: controller.searchController,
                   hintText: tr.search,
-                  onQueryChanged: (query) => controller.filterStudies(query)
-              ),
+                  onQueryChanged: (query) => controller.filterStudies(query)),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
@@ -106,8 +105,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         ),
                                       )
                                 : const SizedBox.shrink(),
-                          )
-                  );
+                          ));
                 }
                 return const SizedBox.shrink();
               }),

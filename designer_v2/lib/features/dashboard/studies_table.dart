@@ -37,8 +37,7 @@ class StudiesTable extends StatelessWidget {
       tr.studies_list_header_participants_active,
       tr.studies_list_header_participants_completed,
     ];
-    final int maxLength = headers.fold(
-        0, (max, element) => max > element.length ? max : element.length);
+    final int maxLength = headers.fold(0, (max, element) => max > element.length ? max : element.length);
     final double statsCellWidth = maxLength * 11;
 
     return StandardTable<Study>(
@@ -50,20 +49,17 @@ class StudiesTable extends StatelessWidget {
         ),
         StandardTableColumn(
           label: tr.studies_list_header_title,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4)),
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(2.4)),
           sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_status,
-          columnWidth: const MaxColumnWidth(
-              FixedColumnWidth(90), IntrinsicColumnWidth()),
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(90), IntrinsicColumnWidth()),
           sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participation,
-          columnWidth: const MaxColumnWidth(
-              FixedColumnWidth(130), IntrinsicColumnWidth()),
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth()),
           sortable: true,
         ),
         StandardTableColumn(
@@ -73,20 +69,17 @@ class StudiesTable extends StatelessWidget {
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
-          columnWidth: MaxColumnWidth(
-              FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
+          columnWidth: MaxColumnWidth(FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
           sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_active,
-          columnWidth: MaxColumnWidth(
-              FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
+          columnWidth: MaxColumnWidth(FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
           sortable: true,
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_completed,
-          columnWidth: MaxColumnWidth(
-              FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
+          columnWidth: MaxColumnWidth(FixedColumnWidth(statsCellWidth), const IntrinsicColumnWidth()),
           sortable: true,
         ),
       ],
@@ -115,19 +108,16 @@ class StudiesTable extends StatelessWidget {
       (Study a, Study b) => 0, // do not sort pin icon
       (Study a, Study b) => a.title!.compareTo(b.title!),
       (Study a, Study b) => a.status.index.compareTo(b.status.index),
-      (Study a, Study b) =>
-          a.participation.index.compareTo(b.participation.index),
+      (Study a, Study b) => a.participation.index.compareTo(b.participation.index),
       (Study a, Study b) => a.createdAt!.compareTo(b.createdAt!),
       (Study a, Study b) => a.participantCount.compareTo(b.participantCount),
-      (Study a, Study b) =>
-          a.activeSubjectCount.compareTo(b.activeSubjectCount),
+      (Study a, Study b) => a.activeSubjectCount.compareTo(b.activeSubjectCount),
       (Study a, Study b) => a.endedCount.compareTo(b.endedCount),
     ];
     return predicates;
   }
 
-  List<Widget> _buildRow(
-      BuildContext context, Study item, int rowIdx, Set<MaterialState> states) {
+  List<Widget> _buildRow(BuildContext context, Study item, int rowIdx, Set<MaterialState> states) {
     final theme = Theme.of(context);
 
     TextStyle? mutedTextStyleIfZero(int value) {
@@ -191,8 +181,7 @@ class StudiesTable extends StatelessWidget {
                         type: studybadge.BadgeType.outlineFill,
                         icon: null,
                         color: item.studyTags.elementAt(index).color != null
-                            ? Color(int.parse(
-                                item.studyTags.elementAt(index).color!))
+                            ? Color(int.parse(item.studyTags.elementAt(index).color!))
                             : Colors.grey,
                       );
                     },
@@ -209,12 +198,9 @@ class StudiesTable extends StatelessWidget {
         participation: item.participation,
       ),
       Text(item.createdAt?.toTimeAgoString() ?? ''),
-      Text(item.participantCount.toString(),
-          style: mutedTextStyleIfZero(item.participantCount)),
-      Text(item.activeSubjectCount.toString(),
-          style: mutedTextStyleIfZero(item.activeSubjectCount)),
-      Text(item.endedCount.toString(),
-          style: mutedTextStyleIfZero(item.endedCount)),
+      Text(item.participantCount.toString(), style: mutedTextStyleIfZero(item.participantCount)),
+      Text(item.activeSubjectCount.toString(), style: mutedTextStyleIfZero(item.activeSubjectCount)),
+      Text(item.endedCount.toString(), style: mutedTextStyleIfZero(item.endedCount)),
     ];
   }
 }

@@ -35,8 +35,7 @@ class DashboardState extends Equatable {
   AsyncValue<List<Study>> visibleStudies(Set<String> pinnedStudies, String query) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies =
-            studiesFilter.apply(studies: studies, user: currentUser).toList();
+        List<Study> updatedStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
         updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(updatedStudies);
