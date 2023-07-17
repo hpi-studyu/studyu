@@ -7,6 +7,13 @@
 version: "3.8"
 name: 'studyu_supabase'
 
+volumes:
+  blob:
+
+networks:
+  default:
+    name: studyu_network
+
 services:
   studio:
     container_name: supabase-studio
@@ -243,11 +250,3 @@ services:
       - /home/deno/functions/main
 
 # If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge
-
-volumes:
-  blob:
