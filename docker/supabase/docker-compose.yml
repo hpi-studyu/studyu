@@ -7,6 +7,15 @@
 version: "3.8"
 name: 'studyu_supabase'
 
+volumes:
+  blob:
+
+networks:
+  studyu_network:
+    name: studyu_network
+    driver: bridge
+    external: true
+
 services:
   studio:
     container_name: supabase-studio
@@ -25,6 +34,8 @@ services:
       retries: 3
     # ports:
     #  - ${STUDIO_PORT}:3000/tcp
+    networks:
+      - studyu_network
     environment:
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -44,6 +55,8 @@ services:
     # ports:
     #  - ${KONG_HTTP_PORT}:8000/tcp
     #  - ${KONG_HTTPS_PORT}:8443/tcp
+    networks:
+      - studyu_network
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
@@ -73,6 +86,8 @@ services:
       interval: 5s
       retries: 3
     restart: unless-stopped
+    networks:
+      - studyu_network
     environment:
       GOTRUE_API_HOST: 0.0.0.0
       GOTRUE_API_PORT: 9999
@@ -114,6 +129,8 @@ services:
     container_name: supabase-rest
     image: postgrest/postgrest:v10.1.2
     restart: unless-stopped
+    networks:
+      - studyu_network
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       PGRST_DB_SCHEMAS: ${PGRST_DB_SCHEMAS}
@@ -136,6 +153,8 @@ services:
       interval: 5s
       retries: 3
     restart: unless-stopped
+    networks:
+      - studyu_network
     environment:
       PORT: 4000
       DB_HOST: ${POSTGRES_HOST}
@@ -177,6 +196,8 @@ services:
       interval: 5s
       retries: 3
     restart: unless-stopped
+    networks:
+      - studyu_network
     environment:
       ANON_KEY: ${ANON_KEY}
       SERVICE_KEY: ${SERVICE_ROLE_KEY}
@@ -203,6 +224,8 @@ services:
       timeout: 5s
       interval: 5s
       retries: 3
+    networks:
+      - studyu_network
     environment:
       IMGPROXY_BIND: ":5001"
       IMGPROXY_LOCAL_FILESYSTEM_ROOT: /
@@ -215,6 +238,8 @@ services:
     container_name: supabase-meta
     image: supabase/postgres-meta:v0.66.3
     restart: unless-stopped
+    networks:
+      - studyu_network
     environment:
       PG_META_PORT: 8080
       PG_META_DB_HOST: ${POSTGRES_HOST}
@@ -227,6 +252,8 @@ services:
     container_name: supabase-edge-functions
     image: supabase/edge-runtime:v1.5.2
     restart: unless-stopped
+    networks:
+      - studyu_network
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SUPABASE_URL: http://kong:8000
@@ -243,11 +270,3 @@ services:
       - /home/deno/functions/main
 
 # If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge
-
-volumes:
-  blob:

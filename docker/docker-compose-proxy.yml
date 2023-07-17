@@ -1,6 +1,12 @@
 version: '3'
 name: 'studyu'
 
+networks:
+  studyu_network:
+    name: studyu_network
+    driver: bridge
+    external: true
+
 services:
   proxy:
     container_name: studyu-proxy
@@ -9,11 +15,8 @@ services:
     ports:
       - 8082:8082
     # - 443:443
+    networks:
+      - studyu_network
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge
