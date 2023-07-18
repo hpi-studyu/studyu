@@ -106,9 +106,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       case bool:
         resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);
         break;
-      case ImageResponse:
-        resultObject = Result<T>.app(type: 'ImageResponse', periodId: periodId, result: result);
-        break;
       default:
         print('Unsupported question type: $T');
         resultObject = Result<T>.app(type: 'unknown', periodId: periodId, result: result);

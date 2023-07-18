@@ -18,6 +18,5 @@ class ImageCapturingQuestion extends Question<ImageCapturingQuestion> {
   @override
   Map<String, dynamic> toJson() => _$ImageCapturingQuestionToJson(this);
 
-  // ignore: avoid_positional_boolean_parameters
-  Answer<bool> constructAnswer(bool response) => Answer.forQuestion(this, response);
+  Answer<String> constructAnswer(String response) => Answer.forQuestion(this, response);
 }

@@ -45,6 +45,11 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
           question: widget.question as ScaleQuestion,
           onDone: _onDone,
         );
+      case ImageCapturingQuestion:
+        return ImageCapturingQuestionWidget(
+          question: widget.question as ImageCapturingQuestion,
+          onDone: _onDone,
+        );
       case VisualAnalogueQuestion:
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
