@@ -32,6 +32,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     _scaleResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
+    imageResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -82,6 +84,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         SurveyQuestionType.bool: boolResponseOptionsArray,
         SurveyQuestionType.choice: choiceResponseOptionsArray,
         SurveyQuestionType.scale: _scaleResponseOptionsArray,
+        SurveyQuestionType.image: imageResponseOptionsArray,
       }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -104,6 +107,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           .toList();
   late final FormArray<String> boolResponseOptionsArray =
       FormArray(boolOptions);
+
+  // Image
+  List<AbstractControl<String>> get imageOptions =>
+      ImageQuestionFormData.kResponseOptions.keys
+          .map((e) => FormControl(value: e, disabled: true))
+          .toList();
+  late final FormArray<String> imageResponseOptionsArray =
+      FormArray(imageOptions);
 
   // Scale
   static const int kDefaultScaleMinValue = 0;
@@ -219,6 +230,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'scaleMidLabels': scaleMidLabelControls,
       'scaleMinColor': scaleMinColorControl,
       'scaleMaxColor': scaleMaxColorControl,
+    }),
+    SurveyQuestionType.image: FormGroup({
+      'imageOptionsArray': imageResponseOptionsArray,
     }),
   };
 
@@ -341,6 +355,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     switch (data.questionType) {
       case SurveyQuestionType.bool:
         break;
+      case SurveyQuestionType.image:
+        break;
       case SurveyQuestionType.choice:
         data = data as ChoiceQuestionFormData;
         isMultipleChoiceControl.value = data.isMultipleChoice;
@@ -377,6 +393,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     switch (questionType) {
       case SurveyQuestionType.bool:
         return BoolQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+        );
+      case SurveyQuestionType.image:
+        return ImageQuestionFormData(
           questionId: questionId,
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
