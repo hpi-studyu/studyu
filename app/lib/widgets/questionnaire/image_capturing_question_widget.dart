@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:pdf/widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:encrypted_media_capturing/take_picture_screen.dart';
 import 'question_widget.dart';
 
-class ImageCapturingQuestionWidget extends QuestionWidget {
+class ImageCapturingWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
   final Function(Answer)? onDone;
 
-  const ImageCapturingQuestionWidget({Key? key, required this.question, this.onDone})
+  const ImageCapturingWidget({Key? key, required this.question, this.onDone})
       : super(key: key);
 
   @override
-  State<ImageCapturingQuestionWidget> createState() => _ImageCapturingQuestionWidgetState();
+  State<ImageCapturingWidget> createState() => _ImageCapturingWidgetState();
 }
 
-class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWidget> {
+class _ImageCapturingWidgetState extends State<ImageCapturingWidget> {
   String text = "empty";
-
 
   @override
   void initState() {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var txt = TextEditingController();
 
-    void setFilePath(){
+    void setFilePath() {
       print(text);
       print(text.runtimeType);
       txt.text = text;
@@ -52,7 +52,9 @@ class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWid
     return Column(
       children: [
         TextButton(onPressed: getFilePath, child: Text("Capture!")),
-        TextField(controller: txt,),
+        TextField(
+          controller: txt,
+        ),
       ],
     );
   }
