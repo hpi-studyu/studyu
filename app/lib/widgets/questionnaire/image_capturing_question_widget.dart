@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pdf/widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:encrypted_media_capturing/take_picture_screen.dart';
 import 'question_widget.dart';
 
-class ImageCapturingWidget extends QuestionWidget {
+class ImageCapturingQuestionWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
   final Function(Answer)? onDone;
 
-  const ImageCapturingWidget({Key? key, required this.question, this.onDone})
+  const ImageCapturingQuestionWidget({Key? key, required this.question, this.onDone})
       : super(key: key);
 
   @override
-  State<ImageCapturingWidget> createState() => _ImageCapturingWidgetState();
+  State<ImageCapturingQuestionWidget> createState() => _ImageCapturingQuestionWidgetState();
 }
 
-class _ImageCapturingWidgetState extends State<ImageCapturingWidget> {
+class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWidget> {
   String text = "empty";
 
 

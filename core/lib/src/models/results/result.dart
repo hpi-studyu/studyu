@@ -34,9 +34,6 @@ class Result<T> {
       case fhir.QuestionnaireResponse:
         resultMap = {keyResult: (result as fhir.QuestionnaireResponse).toJson()};
         break;
-      case ImageResponse:
-        resultMap = {keyResult: (result as ImageResponse).toJson()};
-        break;
       case bool:
         resultMap = {keyResult: result};
         break;
