@@ -95,7 +95,7 @@
 	]
 	
 	[ScreenerQuestionFormViewModel]o-[FormArray]
-	[QuestionFormViewModel]&lt;:-[ScreenerQuestionFormViewModel]
+	[&lt;abstract&gt;QuestionFormViewModel]&lt;:-[ScreenerQuestionFormViewModel]
 	[&lt;abstract&gt;IScreenerQuestionLogicFormViewModel]&lt;:--[ScreenerQuestionFormViewModel]
 	
 	[EnrollmentFormViewModel
@@ -592,7 +592,7 @@
 						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormViewModel">
 							<rect x="2227.0" y="139.5" height="31.0" width="212.0" data-name="QuestionFormViewModel"></rect>
 						</g>
-						<g transform="translate(2227, 139.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionFormViewModel">
+						<g transform="translate(2227, 139.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormViewModel">
 								<text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormViewModel">QuestionFormViewModel</text>
 								

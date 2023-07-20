@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="1054.0" height="1206.0" viewbox="0 0 1054 1206" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="1392.0" height="1206.0" viewbox="0 0 1392 1206" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[ChoiceQuestion
 	  |
 	  &lt;static&gt;+questionType: String;
@@ -87,6 +87,16 @@
 	[AnnotatedScaleQuestion]&lt;:--[ScaleQuestion]
 	[VisualAnalogueQuestion]&lt;:--[ScaleQuestion]
 	
+	[FreeTextQuestion
+	  |
+	  &lt;static&gt;+questionType: String
+	  |
+	  +Map&lt;String, dynamic&gt; toJson();
+	  +Answer&lt;String&gt; constructAnswer()
+	]
+	
+	[&lt;abstract&gt;Question]&lt;:-[FreeTextQuestion]
+	
 	[VisualAnalogueQuestion
 	  |
 	  &lt;static&gt;+questionType: String;
@@ -114,14 +124,14 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1206.0" width="1054.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="1206.0" width="1392.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M472.5 74.4 L173 143 L173 170.5 L173.0 170.5 " fill="none"></path>
-					<path d="M473.7 79.6 L472.5 74.4 L471.3 69.2 L485.5 71.5 Z"></path>
-					<path d="M529.0 90.3 L529 143 L529 163 L529.0 163.0 " fill="none"></path>
-					<path d="M534.3 90.3 L529.0 90.3 L523.7 90.3 L529.0 77.0 Z"></path>
+					<path d="M638.3 70.3 L173 143 L173 170.5 L173.0 170.5 " fill="none"></path>
+					<path d="M639.1 75.6 L638.3 70.3 L637.5 65.1 L651.5 68.3 Z"></path>
+					<path d="M651.5 82.9 L529 143 L529 163 L529.0 163.0 " fill="none"></path>
+					<path d="M653.8 87.7 L651.5 82.9 L649.1 78.1 L663.4 77.0 Z"></path>
 					<path d="M529.0 329.3 L529 336 L529 378.5 L529.0 378.5 " fill="none"></path>
 					<path d="M534.3 329.3 L529.0 329.3 L523.7 329.3 L529.0 316.0 Z"></path>
 					<path d="M529.0 1020.7 L529 1022 L529 1042 L529.0 1042.0 " fill="none"></path>
@@ -138,10 +148,12 @@
 						<path d="M841.0 522.3 L841 529 L691.5 647.1145833333334 L691.5 647.1 " fill="none"></path>
 					</g>
 					<path d="M846.3 522.3 L841.0 522.3 L835.7 522.3 L841.0 509.0 Z"></path>
+					<path d="M738.5 82.9 L861 143 L861 185.5 L861.0 185.5 " fill="none"></path>
+					<path d="M740.9 78.1 L738.5 82.9 L736.2 87.7 L726.6 77.0 Z"></path>
 					<path d="M684.7 287.7 L841 336 L841 356 L841.0 356.0 " fill="none"></path>
 					<path d="M686.3 282.6 L684.7 287.7 L683.2 292.8 L672.0 283.7 Z"></path>
-					<path d="M585.4 75.6 L855 143 L855 185.5 L855.0 185.5 " fill="none"></path>
-					<path d="M586.7 70.4 L585.4 75.6 L584.1 80.8 L572.5 72.4 Z"></path>
+					<path d="M751.7 70.8 L1193 143 L1193 185.5 L1193.0 185.5 " fill="none"></path>
+					<path d="M752.5 65.5 L751.7 70.8 L750.8 76.0 L738.5 68.6 Z"></path>
 					<g data-name="ChoiceQuestion">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestion">
 							<rect x="0.0" y="170.5" height="138.0" width="346.0" data-name="ChoiceQuestion"></rect>
@@ -172,9 +184,9 @@
 					</g>
 					<g data-name="Question">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Question">
-							<rect x="485.5" y="46.0" height="31.0" width="87.0" data-name="Question"></rect>
+							<rect x="651.5" y="46.0" height="31.0" width="87.0" data-name="Question"></rect>
 						</g>
-						<g transform="translate(485.5, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Question">
+						<g transform="translate(651.5, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Question">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Question">
 								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="Question">Question</text>
 								
@@ -183,24 +195,24 @@
 					</g>
 					<g data-name="Choice">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Choice">
-							<rect x="612.5" y="0.0" height="123.0" width="272.0" data-name="Choice"></rect>
-							<path d="M612.5 31.0 L884.5 31.0" fill="none" data-name="Choice"></path>
-							<path d="M612.5 77.0 L884.5 77.0" fill="none" data-name="Choice"></path>
+							<rect x="778.5" y="0.0" height="123.0" width="272.0" data-name="Choice"></rect>
+							<path d="M778.5 31.0 L1050.5 31.0" fill="none" data-name="Choice"></path>
+							<path d="M778.5 77.0 L1050.5 77.0" fill="none" data-name="Choice"></path>
 						</g>
-						<g transform="translate(612.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Choice">
+						<g transform="translate(778.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Choice">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Choice">
 								<text x="128.0" y="13.5" stroke="none" text-anchor="middle" data-name="Choice">Choice</text>
 								
 							</g>
 						</g>
-						<g transform="translate(612.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Choice">
+						<g transform="translate(778.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Choice">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Choice">
 								<text x="0.0" y="13.5" stroke="none" data-name="Choice">+id: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Choice">+text: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(612.5, 77)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Choice">
+						<g transform="translate(778.5, 77)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Choice">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Choice">
 								<text x="0.0" y="13.5" stroke="none" data-name="Choice">+Map&lt;String, dynamic&gt; toJson()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Choice">+String toString()</text>
@@ -367,25 +379,51 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="FreeTextQuestion">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FreeTextQuestion">
+							<rect x="712.0" y="185.5" height="108.0" width="298.0" data-name="FreeTextQuestion"></rect>
+							<path d="M712.0 216.5 L1010.0 216.5" fill="none" data-name="FreeTextQuestion"></path>
+							<path d="M712.0 247.5 L1010.0 247.5" fill="none" data-name="FreeTextQuestion"></path>
+						</g>
+						<g transform="translate(712, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FreeTextQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FreeTextQuestion">
+								<text x="141.0" y="13.5" stroke="none" text-anchor="middle" data-name="FreeTextQuestion">FreeTextQuestion</text>
+								
+							</g>
+						</g>
+						<g transform="translate(712, 216.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FreeTextQuestion">
+								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestion">&lt;static&gt;+questionType: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(712, 247.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FreeTextQuestion">
+								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestion">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestion">+Answer&lt;String&gt; constructAnswer()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="BooleanQuestion">
 						<g fill="#eee8d5" stroke="#33322E" data-name="BooleanQuestion">
-							<rect x="712.0" y="185.5" height="108.0" width="286.0" data-name="BooleanQuestion"></rect>
-							<path d="M712.0 216.5 L998.0 216.5" fill="none" data-name="BooleanQuestion"></path>
-							<path d="M712.0 247.5 L998.0 247.5" fill="none" data-name="BooleanQuestion"></path>
+							<rect x="1050.0" y="185.5" height="108.0" width="286.0" data-name="BooleanQuestion"></rect>
+							<path d="M1050.0 216.5 L1336.0 216.5" fill="none" data-name="BooleanQuestion"></path>
+							<path d="M1050.0 247.5 L1336.0 247.5" fill="none" data-name="BooleanQuestion"></path>
 						</g>
-						<g transform="translate(712, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanQuestion">
+						<g transform="translate(1050, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanQuestion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BooleanQuestion">
 								<text x="135.0" y="13.5" stroke="none" text-anchor="middle" data-name="BooleanQuestion">BooleanQuestion</text>
 								
 							</g>
 						</g>
-						<g transform="translate(712, 216.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanQuestion">
+						<g transform="translate(1050, 216.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanQuestion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BooleanQuestion">
 								<text x="0.0" y="13.5" stroke="none" data-name="BooleanQuestion">&lt;static&gt;+questionType: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(712, 247.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanQuestion">
+						<g transform="translate(1050, 247.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanQuestion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BooleanQuestion">
 								<text x="0.0" y="13.5" stroke="none" data-name="BooleanQuestion">+Map&lt;String, dynamic&gt; toJson()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="BooleanQuestion">+Answer&lt;bool&gt; constructAnswer()</text>
