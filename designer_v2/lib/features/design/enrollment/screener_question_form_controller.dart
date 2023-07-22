@@ -18,7 +18,7 @@ abstract class ScreenerQuestionFormViewModel<D extends QuestionFormData> extends
   }) {
     QuestionFormViewModel ret;
     if (formData == null) {
-      ret = ChoiceQuestionFormViewModel(delegate: delegate, validationSet: validationSet, titles: titles);
+      ret = ScreenerScaleQuestionFormViewModel(delegate: delegate, validationSet: validationSet, titles: titles);
     } else {
       switch (FD) {
         case BoolQuestionFormData:

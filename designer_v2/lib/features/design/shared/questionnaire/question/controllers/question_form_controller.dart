@@ -34,7 +34,7 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
   }) {
     QuestionFormViewModel ret;
     if (formData == null) {
-      ret = ChoiceQuestionFormViewModel(delegate: delegate, validationSet: validationSet, titles: titles);
+      ret = ScaleQuestionFormViewModel(delegate: delegate, validationSet: validationSet, titles: titles);
     } else {
       switch (FD) {
         case BoolQuestionFormData:
