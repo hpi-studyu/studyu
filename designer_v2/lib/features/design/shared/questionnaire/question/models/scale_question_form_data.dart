@@ -97,7 +97,7 @@ class ScaleQuestionFormData extends QuestionFormData {
   }
 
   @override
-  QuestionFormData copy() {
+  ScaleQuestionFormData copy() {
     final data = ScaleQuestionFormData(
       // always regenerate id
       questionId: const Uuid().v4(),

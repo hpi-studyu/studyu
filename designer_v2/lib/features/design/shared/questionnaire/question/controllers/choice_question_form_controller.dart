@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/utils/validation.dart';
 
 class ChoiceQuestionFormViewModel extends QuestionFormViewModel<ChoiceQuestionFormData> {
   ChoiceQuestionFormViewModel({
-    ChoiceQuestionFormData? super.formData,
+    super.formData,
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
     titles,

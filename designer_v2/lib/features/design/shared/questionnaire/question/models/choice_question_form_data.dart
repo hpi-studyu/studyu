@@ -45,7 +45,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
   }
 
   @override
-  QuestionFormData copy() {
+  ChoiceQuestionFormData copy() {
     final data = ChoiceQuestionFormData(
       // always regenerate id
       questionId: const Uuid().v4(),

@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class BoolQuestionFormViewModel extends QuestionFormViewModel<BoolQuestionFormData> {
   BoolQuestionFormViewModel({
-    BoolQuestionFormData? super.formData,
+    super.formData,
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
     titles,

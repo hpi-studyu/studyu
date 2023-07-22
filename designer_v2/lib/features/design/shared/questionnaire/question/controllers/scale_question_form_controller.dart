@@ -13,7 +13,7 @@ import 'package:studyu_designer_v2/utils/color.dart';
 
 class ScaleQuestionFormViewModel extends QuestionFormViewModel<ScaleQuestionFormData> {
   ScaleQuestionFormViewModel({
-    ScaleQuestionFormData? super.formData,
+    super.formData,
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
     titles,
