@@ -1,7 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/bool_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/choice_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/bool_question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/choice_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/scale_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -15,10 +21,49 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
     implements IListActionProvider<FormControl<dynamic>> {
 
   QuestionFormViewModel({
-    super.formData,
+    D? super.formData,
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
   });
+
+  static QuestionFormViewModel<FD> concrete<FD extends QuestionFormData>({
+    FD? formData,
+    delegate,
+    validationSet = StudyFormValidationSet.draft,
+    titles
+  }) {
+    QuestionFormViewModel ret;
+    if (formData == null) {
+      ret = ChoiceQuestionFormViewModel(delegate: delegate, validationSet: validationSet, titles: titles);
+    } else {
+      switch (FD) {
+        case BoolQuestionFormData:
+          ret = BoolQuestionFormViewModel(
+            formData: formData as BoolQuestionFormData,
+            delegate: delegate,
+            validationSet: validationSet,
+            titles: titles);
+          break;
+        case ScaleQuestionFormData:
+          ret = ScaleQuestionFormViewModel(
+            formData: formData as ScaleQuestionFormData,
+            delegate: delegate,
+            validationSet: validationSet,
+            titles: titles);
+          break;
+        case ChoiceQuestionFormData:
+          ret = ChoiceQuestionFormViewModel(
+            formData: formData as ChoiceQuestionFormData,
+            delegate: delegate,
+            validationSet: validationSet,
+            titles: titles);
+          break;
+        default:
+          throw UnimplementedError();
+      }
+    }
+    return ret as QuestionFormViewModel<FD>;
+  }
 
   SurveyQuestionType get questionType;
 
