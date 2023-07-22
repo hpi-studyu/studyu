@@ -46,7 +46,7 @@
 	  +midAnnotations: List&lt;Annotation&gt;
 	  |
 	  +ScaleQuestion toQuestion();
-	  +QuestionFormData copy();
+	  +ScaleQuestionFormData copy();
 	  +Answer&lt;dynamic&gt; constructAnswerFor()
 	]
 	
@@ -60,7 +60,7 @@
 	  +responseOptions: List&lt;String&gt;
 	  |
 	  +Question&lt;dynamic&gt; toQuestion();
-	  +QuestionFormData copy();
+	  +ChoiceQuestionFormData copy();
 	  -Choice _buildChoiceForValue();
 	  +Answer&lt;dynamic&gt; constructAnswerFor()
 	]
@@ -195,7 +195,7 @@
 						<g transform="translate(432, 581)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScaleQuestionFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="ScaleQuestionFormData">+ScaleQuestion toQuestion()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ScaleQuestionFormData">+QuestionFormData copy()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ScaleQuestionFormData">+ScaleQuestionFormData copy()</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="ScaleQuestionFormData">+Answer&lt;dynamic&gt; constructAnswerFor()</text>
 								
 							</g>
@@ -235,7 +235,7 @@
 						<g transform="translate(816, 506)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionFormData">+Question&lt;dynamic&gt; toQuestion()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceQuestionFormData">+QuestionFormData copy()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceQuestionFormData">+ChoiceQuestionFormData copy()</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="ChoiceQuestionFormData">-Choice _buildChoiceForValue()</text>
 								<text x="0.0" y="58.5" stroke="none" data-name="ChoiceQuestionFormData">+Answer&lt;dynamic&gt; constructAnswerFor()</text>
 								
