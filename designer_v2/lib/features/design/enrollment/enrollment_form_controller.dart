@@ -191,8 +191,8 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       };
 
   @override
-  ScreenerQuestionFormViewModel provideQuestionFormViewModel(QuestionFormData? formData) {
-    return ScreenerQuestionFormViewModel(
+  ScreenerQuestionFormViewModel provideQuestionFormViewModel<FD extends QuestionFormData>(FD? formData) {
+    return ScreenerQuestionFormViewModel.concrete(
       formData: formData,
       delegate: this,
       validationSet: validationSet,

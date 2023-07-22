@@ -52,7 +52,9 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
               body: TextParagraph(text: tr.form_array_screener_question_logic_dirty_banner),
               padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,
-              isDismissed: !formViewModel.isMidValuesClearedInfoVisible,
+              isDismissed: formViewModel is ScreenerScaleQuestionFormViewModel
+                ? !(formViewModel as ScreenerScaleQuestionFormViewModel).isMidValuesClearedInfoVisible
+                : true,
               dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
             ),
           )
