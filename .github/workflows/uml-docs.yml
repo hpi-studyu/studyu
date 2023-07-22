@@ -12,6 +12,10 @@ on:
       - 'designer_v2/**/*.dart'
       - 'app/**/*.dart'
 
+concurrency:
+  group: ${{ github.ref }}-uml-docs
+  cancel-in-progress: true
+
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
