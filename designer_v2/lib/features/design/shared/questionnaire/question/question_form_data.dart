@@ -43,7 +43,7 @@ abstract class QuestionFormData implements IFormData {
         ChoiceQuestionFormData.fromDomainModel(
             question as ChoiceQuestion, eligibilityCriteria),
     SurveyQuestionType.image: (question, eligibilityCriteria) =>
-        BoolQuestionFormData.fromDomainModel(
+        ImageQuestionFormData.fromDomainModel(
             question as ImageCapturingQuestion, eligibilityCriteria),
   };
 
