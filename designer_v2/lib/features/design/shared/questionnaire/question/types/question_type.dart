@@ -52,7 +52,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
       case SurveyQuestionType.image:
-        return Icons.camera_rounded;
+        return Icons.photo_camera_rounded;
       default:
         return null;
     }
