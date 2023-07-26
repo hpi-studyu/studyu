@@ -1,7 +1,7 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/choice_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/scale_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
@@ -75,7 +75,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
     if (args.questionId.isNewId) {
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
-      final viewModel = provideQuestionFormViewModel<ScaleQuestionFormData>(null);
+      final viewModel = provideQuestionFormViewModel<ChoiceQuestionFormData>(null);
       questionFormViewModels.stage(viewModel);
       return viewModel;
     }

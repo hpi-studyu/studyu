@@ -33,34 +33,29 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
     titles
   }) {
     QuestionFormViewModel ret;
-    if (formData == null) {
-      ret = ScaleQuestionFormViewModel(delegate: delegate, validationSet: validationSet, titles: titles);
-    } else {
-      switch (FD) {
-        case BoolQuestionFormData:
-          ret = BoolQuestionFormViewModel(
-            formData: formData as BoolQuestionFormData,
-            delegate: delegate,
-            validationSet: validationSet,
-            titles: titles);
-          break;
-        case ScaleQuestionFormData:
-          ret = ScaleQuestionFormViewModel(
-            formData: formData as ScaleQuestionFormData,
-            delegate: delegate,
-            validationSet: validationSet,
-            titles: titles);
-          break;
-        case ChoiceQuestionFormData:
-          ret = ChoiceQuestionFormViewModel(
-            formData: formData as ChoiceQuestionFormData,
-            delegate: delegate,
-            validationSet: validationSet,
-            titles: titles);
-          break;
-        default:
-          throw UnimplementedError();
-      }
+    switch (FD) {
+      case BoolQuestionFormData:
+        ret = BoolQuestionFormViewModel(
+          formData: formData as BoolQuestionFormData?,
+          delegate: delegate,
+          validationSet: validationSet,
+          titles: titles);
+        break;
+      case ScaleQuestionFormData:
+        ret = ScaleQuestionFormViewModel(
+          formData: formData as ScaleQuestionFormData?,
+          delegate: delegate,
+          validationSet: validationSet,
+          titles: titles);
+        break;
+      case ChoiceQuestionFormData:
+      default:
+        ret = ChoiceQuestionFormViewModel(
+          formData: formData as ChoiceQuestionFormData?,
+          delegate: delegate,
+          validationSet: validationSet,
+          titles: titles);
+        break;
     }
     return ret as QuestionFormViewModel<FD>;
   }
