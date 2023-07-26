@@ -1,0 +1,628 @@
+<svg version="1.1" baseProfile="full" width="3228.3" height="938.0" viewbox="0 0 3228.25 938" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[AuthScaffold
+	  |
+	  +body: Widget;
+	  +formKey: AuthFormKey;
+	  +leftContentMinWidth: double;
+	  +leftPanelMinWidth: double;
+	  +leftPanelPadding: EdgeInsets
+	]
+	
+	[AuthScaffold]o-[&lt;abstract&gt;Widget]
+	[AuthScaffold]o-[AuthFormKey]
+	[AuthScaffold]o-[EdgeInsets]
+	
+	[PasswordRecoveryForm
+	  |
+	  +formKey: AuthFormKey
+	  |
+	  +Widget build()
+	]
+	
+	[PasswordRecoveryForm]o-[AuthFormKey]
+	[&lt;abstract&gt;FormConsumerRefWidget]&lt;:-[PasswordRecoveryForm]
+	
+	[LoginForm
+	  |
+	  +formKey: AuthFormKey
+	  |
+	  +Widget build()
+	]
+	
+	[LoginForm]o-[AuthFormKey]
+	[&lt;abstract&gt;FormConsumerRefWidget]&lt;:-[LoginForm]
+	
+	[SignupForm
+	  |
+	  +formKey: AuthFormKey
+	  |
+	  +Widget build();
+	  -dynamic _onClickTermsOfUse();
+	  -dynamic _onClickPrivacyPolicy()
+	]
+	
+	[SignupForm]o-[AuthFormKey]
+	[&lt;abstract&gt;FormConsumerRefWidget]&lt;:-[SignupForm]
+	
+	[PasswordForgotForm
+	  |
+	  +formKey: AuthFormKey
+	  |
+	  +Widget build()
+	]
+	
+	[PasswordForgotForm]o-[AuthFormKey]
+	[&lt;abstract&gt;FormConsumerRefWidget]&lt;:-[PasswordForgotForm]
+	
+	[StudyUJobsToBeDone
+	  |
+	  +Widget build()
+	]
+	
+	[AuthFormController
+	  |
+	  +authRepository: IAuthRepository;
+	  +sharedPreferences: SharedPreferences;
+	  +notificationService: INotificationService;
+	  +router: GoRouter;
+	  +emailControl: FormControl&lt;String&gt;;
+	  +passwordControl: FormControl&lt;String&gt;;
+	  +passwordConfirmationControl: FormControl&lt;String&gt;;
+	  +rememberMeControl: FormControl&lt;bool&gt;;
+	  +termsOfServiceControl: FormControl&lt;bool&gt;;
+	  &lt;static&gt;+authValidationMessages: Map&lt;String, String Function(dynamic)&gt;;
+	  +loginForm: FormGroup;
+	  +signupForm: FormGroup;
+	  +passwordForgotForm: FormGroup;
+	  +passwordRecoveryForm: FormGroup;
+	  +controlValidatorsByForm: Map&lt;AuthFormKey, Map&lt;FormControl&lt;dynamic&gt;, List&lt;Validator&lt;dynamic&gt;&gt;&gt;&gt;;
+	  -_formKey: AuthFormKey;
+	  +shouldRemember: bool;
+	  +formKey: AuthFormKey;
+	  +form: FormGroup
+	  |
+	  -dynamic _onChangeFormKey();
+	  +dynamic resetControlsFor();
+	  -dynamic _forceValidationMessages();
+	  +dynamic signUp();
+	  -dynamic _signUp();
+	  +dynamic signIn();
+	  -dynamic _signInWith();
+	  +dynamic signOut();
+	  +dynamic resetPasswordForEmail();
+	  +dynamic sendPasswordResetLink();
+	  +dynamic recoverPassword();
+	  +dynamic updateUser();
+	  -void _setRememberMe();
+	  -void _delRememberMe();
+	  -void _initRememberMe()
+	]
+	
+	[AuthFormController]o-[&lt;abstract&gt;IAuthRepository]
+	[AuthFormController]o-[SharedPreferences]
+	[AuthFormController]o-[&lt;abstract&gt;INotificationService]
+	[AuthFormController]o-[GoRouter]
+	[AuthFormController]o-[FormControl]
+	[AuthFormController]o-[FormGroup]
+	[AuthFormController]o-[AuthFormKey]
+	[&lt;abstract&gt;IFormGroupController]&lt;:--[AuthFormController]
+	
+	[AuthFormKey
+	  |
+	  +index: int;
+	  &lt;static&gt;+values: List&lt;AuthFormKey&gt;;
+	  &lt;static&gt;+login: AuthFormKey;
+	  &lt;static&gt;+signup: AuthFormKey;
+	  &lt;static&gt;+passwordForgot: AuthFormKey;
+	  &lt;static&gt;+passwordRecovery: AuthFormKey;
+	  &lt;static&gt;-_loginSubmit: AuthFormKey;
+	  &lt;static&gt;-_signupSubmit: AuthFormKey
+	]
+	
+	[AuthFormKey]o-[AuthFormKey]
+	[Enum]&lt;:--[AuthFormKey]
+	
+	[EmailTextField
+	  |
+	  +labelText: String;
+	  +hintText: String?;
+	  +formControlName: String?;
+	  +formControl: FormControl&lt;dynamic&gt;?
+	]
+	
+	[EmailTextField]o-[FormControl]
+	
+	[PasswordTextField
+	  |
+	  +labelText: String;
+	  +hintText: String?;
+	  +formControlName: String?;
+	  +formControl: FormControl&lt;dynamic&gt;?
+	]
+	
+	[PasswordTextField]o-[FormControl]
+	
+	</desc>
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+			<g stroke="transparent" fill="transparent">
+				<rect x="0.0" y="0.0" height="938.0" width="3228.3" stroke="none"></rect>
+			</g>
+			<g transform="translate(8, 8)" fill="#33322E">
+				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M146.1 467.8 L193.5 695 L193.5 783 L193.5 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M149.4 457.5 L146.1 467.8 L138.9 459.7 L142.2 449.5 Z"></path>
+					</g>
+					<path d="M164.3 466.5 L266.25 695 L673.5 767.0827276613937 L673.5 767.1 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M165.4 455.9 L164.3 466.5 L155.6 460.2 L156.7 449.5 Z"></path>
+					</g>
+					<path d="M112.9 467.8 L65.5 695 L65.5 783 L65.5 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M120.1 459.7 L112.9 467.8 L109.6 457.5 L116.8 449.5 Z"></path>
+					</g>
+					<path d="M403.0 453.7 L403 695 L673.5 757.4927455357143 L673.5 757.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M408.3 444.3 L403.0 453.7 L397.7 444.3 L403.0 435.0 Z"></path>
+					</g>
+					<path d="M742.7 44.5 L403 82 L403 342 L403.0 342.0 " fill="none"></path>
+					<path d="M743.3 49.8 L742.7 44.5 L742.2 39.2 L756.0 43.1 Z"></path>
+					<path d="M650.5 453.7 L650.5 695 L689.243961352657 715 L689.2 715.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M655.8 444.3 L650.5 453.7 L645.2 444.3 L650.5 435.0 Z"></path>
+					</g>
+					<path d="M787.2 49.6 L650.5 82 L650.5 342 L650.5 342.0 " fill="none"></path>
+					<path d="M788.4 54.8 L787.2 49.6 L786.0 44.4 L800.2 46.5 Z"></path>
+					<path d="M933.0 468.7 L933 695 L917.1545893719807 715 L917.2 715.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M938.3 459.3 L933.0 468.7 L927.7 459.3 L933.0 450.0 Z"></path>
+					</g>
+					<path d="M896.7 54.5 L933 82 L933 327 L933.0 327.0 " fill="none"></path>
+					<path d="M899.9 50.3 L896.7 54.5 L893.4 58.8 L886.0 46.5 Z"></path>
+					<path d="M1215.5 453.7 L1215.5 695 L1028.5 748.0987654320987 L1028.5 748.1 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1220.8 444.3 L1215.5 453.7 L1210.2 444.3 L1215.5 435.0 Z"></path>
+					</g>
+					<path d="M985.1 48.4 L1215.5 82 L1215.5 342 L1215.5 342.0 " fill="none"></path>
+					<path d="M985.8 43.1 L985.1 48.4 L984.3 53.7 L971.9 46.5 Z"></path>
+					<path d="M2424.4 686.2 L2436.25 695 L2436.25 783 L2436.3 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2420.1 676.3 L2424.4 686.2 L2413.7 684.9 L2409.4 675.0 Z"></path>
+					</g>
+					<path d="M2237.4 690.3 L2240.75 695 L2240.75 783 L2240.8 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2236.4 679.6 L2237.4 690.3 L2227.7 685.7 L2226.7 675.0 Z"></path>
+					</g>
+					<path d="M2025.3 693.7 L2025.25 695 L2025.25 783 L2025.3 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2030.6 684.3 L2025.3 693.7 L2019.9 684.3 L2025.3 675.0 Z"></path>
+					</g>
+					<path d="M1857.3 691.3 L1855.25 695 L1855.25 783 L1855.3 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1866.5 685.7 L1857.3 691.3 L1857.2 680.6 L1866.3 675.0 Z"></path>
+					</g>
+					<path d="M2466.3 651.1 L2540 695 L2713.6618357487923 783 L2713.7 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2461.0 641.8 L2466.3 651.1 L2455.5 650.9 L2450.3 641.6 Z"></path>
+					</g>
+					<path d="M1723.6 688.2 L1716.75 695 L1716.75 783 L1716.8 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1734.0 685.4 L1723.6 688.2 L1726.5 677.8 L1736.9 675.0 Z"></path>
+					</g>
+					<path d="M1583.4 597.2 L1376.25 695 L1028.5 763.5237981913375 L1028.5 763.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1594.1 598.0 L1583.4 597.2 L1589.5 588.4 L1600.3 589.2 Z"></path>
+					</g>
+					<g stroke-dasharray="6 6">
+						<path d="M2025.3 59.8 L2025.25 82 L2025.25 102 L2025.3 102.0 " fill="none"></path>
+					</g>
+					<path d="M2030.6 59.8 L2025.3 59.8 L2019.9 59.8 L2025.3 46.5 Z"></path>
+					<path d="M1047.0 769.9 L1422.3333333333333 715 L1520.7916666666667 715 L1520.7916666666667 715 L1619.25 798.5 L1619.25 798.5 L1520.7916666666667 882 L1520.7916666666667 882 L1422.3333333333333 882 L1422.3333333333333 882 L1028.5 824.4415110851809 L1028.5 824.4 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1037.0 765.9 L1047.0 769.9 L1038.5 776.5 L1028.5 772.6 Z"></path>
+					</g>
+					<g stroke-dasharray="6 6">
+						<path d="M1396.3 417.0 L1463.25 695 L1028.5 768.4938750510412 L1028.5 768.5 " fill="none"></path>
+					</g>
+					<path d="M1401.5 415.7 L1396.3 417.0 L1391.2 418.2 L1393.2 404.0 Z"></path>
+					<path d="M2650.8 460.7 L2650.75 695 L2730.2475845410627 783 L2730.2 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2656.1 451.3 L2650.8 460.7 L2645.4 451.3 L2650.8 442.0 Z"></path>
+					</g>
+					<path d="M3011.8 460.7 L3011.75 695 L2784.31038647343 783 L2784.3 783.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3017.1 451.3 L3011.8 460.7 L3006.4 451.3 L3011.8 442.0 Z"></path>
+					</g>
+					<g data-name="AuthScaffold">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AuthScaffold">
+							<rect x="0.0" y="327.5" height="122.0" width="259.0" data-name="AuthScaffold"></rect>
+							<path d="M0.0 358.5 L259.0 358.5" fill="none" data-name="AuthScaffold"></path>
+						</g>
+						<g transform="translate(0, 327.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthScaffold">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AuthScaffold">
+								<text x="121.5" y="13.5" stroke="none" text-anchor="middle" data-name="AuthScaffold">AuthScaffold</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 358.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthScaffold">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthScaffold">
+								<text x="0.0" y="13.5" stroke="none" data-name="AuthScaffold">+body: Widget</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AuthScaffold">+formKey: AuthFormKey</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AuthScaffold">+leftContentMinWidth: double</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AuthScaffold">+leftPanelMinWidth: double</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AuthScaffold">+leftPanelPadding: EdgeInsets</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Widget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget">
+							<rect x="158.0" y="783.0" height="31.0" width="71.0" data-name="Widget"></rect>
+						</g>
+						<g transform="translate(158, 783)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget">
+								<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget">Widget</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AuthFormKey">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AuthFormKey">
+							<rect x="673.5" y="715.0" height="167.0" width="355.0" data-name="AuthFormKey"></rect>
+							<path d="M673.5 746.0 L1028.5 746.0" fill="none" data-name="AuthFormKey"></path>
+						</g>
+						<g transform="translate(673.5, 715)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthFormKey">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AuthFormKey">
+								<text x="169.5" y="13.5" stroke="none" text-anchor="middle" data-name="AuthFormKey">AuthFormKey</text>
+								
+							</g>
+						</g>
+						<g transform="translate(673.5, 746)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormKey">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthFormKey">
+								<text x="0.0" y="13.5" stroke="none" data-name="AuthFormKey">+index: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;+values: List&lt;AuthFormKey&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;+login: AuthFormKey</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;+signup: AuthFormKey</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;+passwordForgot: AuthFormKey</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;+passwordRecovery: AuthFormKey</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;-_loginSubmit: AuthFormKey</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="AuthFormKey">&lt;static&gt;-_signupSubmit: AuthFormKey</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="EdgeInsets">
+						<g fill="#eee8d5" stroke="#33322E" data-name="EdgeInsets">
+							<rect x="13.0" y="783.0" height="31.0" width="105.0" data-name="EdgeInsets"></rect>
+						</g>
+						<g transform="translate(13, 783)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EdgeInsets">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EdgeInsets">
+								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="EdgeInsets">EdgeInsets</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="PasswordRecoveryForm">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PasswordRecoveryForm">
+							<rect x="299.0" y="342.0" height="93.0" width="208.0" data-name="PasswordRecoveryForm"></rect>
+							<path d="M299.0 373.0 L507.0 373.0" fill="none" data-name="PasswordRecoveryForm"></path>
+							<path d="M299.0 404.0 L507.0 404.0" fill="none" data-name="PasswordRecoveryForm"></path>
+						</g>
+						<g transform="translate(299, 342)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PasswordRecoveryForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PasswordRecoveryForm">
+								<text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="PasswordRecoveryForm">PasswordRecoveryForm</text>
+								
+							</g>
+						</g>
+						<g transform="translate(299, 373)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PasswordRecoveryForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PasswordRecoveryForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="PasswordRecoveryForm">+formKey: AuthFormKey</text>
+								
+							</g>
+						</g>
+						<g transform="translate(299, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PasswordRecoveryForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PasswordRecoveryForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="PasswordRecoveryForm">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormConsumerRefWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormConsumerRefWidget">
+							<rect x="756.0" y="15.5" height="31.0" width="219.0" data-name="FormConsumerRefWidget"></rect>
+						</g>
+						<g transform="translate(756, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormConsumerRefWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormConsumerRefWidget">
+								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormConsumerRefWidget">FormConsumerRefWidget</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="LoginForm">
+						<g fill="#eee8d5" stroke="#33322E" data-name="LoginForm">
+							<rect x="547.0" y="342.0" height="93.0" width="207.0" data-name="LoginForm"></rect>
+							<path d="M547.0 373.0 L754.0 373.0" fill="none" data-name="LoginForm"></path>
+							<path d="M547.0 404.0 L754.0 404.0" fill="none" data-name="LoginForm"></path>
+						</g>
+						<g transform="translate(547, 342)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LoginForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LoginForm">
+								<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="LoginForm">LoginForm</text>
+								
+							</g>
+						</g>
+						<g transform="translate(547, 373)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LoginForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LoginForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="LoginForm">+formKey: AuthFormKey</text>
+								
+							</g>
+						</g>
+						<g transform="translate(547, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LoginForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LoginForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="LoginForm">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SignupForm">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SignupForm">
+							<rect x="794.0" y="327.0" height="123.0" width="278.0" data-name="SignupForm"></rect>
+							<path d="M794.0 358.0 L1072.0 358.0" fill="none" data-name="SignupForm"></path>
+							<path d="M794.0 389.0 L1072.0 389.0" fill="none" data-name="SignupForm"></path>
+						</g>
+						<g transform="translate(794, 327)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SignupForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SignupForm">
+								<text x="131.0" y="13.5" stroke="none" text-anchor="middle" data-name="SignupForm">SignupForm</text>
+								
+							</g>
+						</g>
+						<g transform="translate(794, 358)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SignupForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SignupForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="SignupForm">+formKey: AuthFormKey</text>
+								
+							</g>
+						</g>
+						<g transform="translate(794, 389)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SignupForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SignupForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="SignupForm">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SignupForm">-dynamic _onClickTermsOfUse()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SignupForm">-dynamic _onClickPrivacyPolicy()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="PasswordForgotForm">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PasswordForgotForm">
+							<rect x="1112.0" y="342.0" height="93.0" width="207.0" data-name="PasswordForgotForm"></rect>
+							<path d="M1112.0 373.0 L1319.0 373.0" fill="none" data-name="PasswordForgotForm"></path>
+							<path d="M1112.0 404.0 L1319.0 404.0" fill="none" data-name="PasswordForgotForm"></path>
+						</g>
+						<g transform="translate(1112, 342)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PasswordForgotForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PasswordForgotForm">
+								<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="PasswordForgotForm">PasswordForgotForm</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1112, 373)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PasswordForgotForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PasswordForgotForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="PasswordForgotForm">+formKey: AuthFormKey</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1112, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PasswordForgotForm">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PasswordForgotForm">
+								<text x="0.0" y="13.5" stroke="none" data-name="PasswordForgotForm">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyUJobsToBeDone">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUJobsToBeDone">
+							<rect x="1379.3" y="0.0" height="62.0" width="194.0" data-name="StudyUJobsToBeDone"></rect>
+							<path d="M1379.3 31.0 L1573.3 31.0" fill="none" data-name="StudyUJobsToBeDone"></path>
+						</g>
+						<g transform="translate(1379.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUJobsToBeDone">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUJobsToBeDone">
+								<text x="89.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUJobsToBeDone">StudyUJobsToBeDone</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1379.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUJobsToBeDone">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUJobsToBeDone">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyUJobsToBeDone">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AuthFormController">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AuthFormController">
+							<rect x="1600.3" y="102.0" height="573.0" width="850.0" data-name="AuthFormController"></rect>
+							<path d="M1600.3 133.0 L2450.3 133.0" fill="none" data-name="AuthFormController"></path>
+							<path d="M1600.3 434.0 L2450.3 434.0" fill="none" data-name="AuthFormController"></path>
+						</g>
+						<g transform="translate(1600.25, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthFormController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AuthFormController">
+								<text x="417.0" y="13.5" stroke="none" text-anchor="middle" data-name="AuthFormController">AuthFormController</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1600.25, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthFormController">
+								<text x="0.0" y="13.5" stroke="none" data-name="AuthFormController">+authRepository: IAuthRepository</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AuthFormController">+sharedPreferences: SharedPreferences</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AuthFormController">+notificationService: INotificationService</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AuthFormController">+router: GoRouter</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AuthFormController">+emailControl: FormControl&lt;String&gt;</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="AuthFormController">+passwordControl: FormControl&lt;String&gt;</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="AuthFormController">+passwordConfirmationControl: FormControl&lt;String&gt;</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="AuthFormController">+rememberMeControl: FormControl&lt;bool&gt;</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="AuthFormController">+termsOfServiceControl: FormControl&lt;bool&gt;</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="AuthFormController">&lt;static&gt;+authValidationMessages: Map&lt;String, String Function(dynamic)&gt;</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="AuthFormController">+loginForm: FormGroup</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="AuthFormController">+signupForm: FormGroup</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="AuthFormController">+passwordForgotForm: FormGroup</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="AuthFormController">+passwordRecoveryForm: FormGroup</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="AuthFormController">+controlValidatorsByForm: Map&lt;AuthFormKey, Map&lt;FormControl&lt;dynamic&gt;, List&lt;Validator&lt;dynamic&gt;&gt;&gt;&gt;</text>
+								<text x="0.0" y="238.5" stroke="none" data-name="AuthFormController">-_formKey: AuthFormKey</text>
+								<text x="0.0" y="253.5" stroke="none" data-name="AuthFormController">+shouldRemember: bool</text>
+								<text x="0.0" y="268.5" stroke="none" data-name="AuthFormController">+formKey: AuthFormKey</text>
+								<text x="0.0" y="283.5" stroke="none" data-name="AuthFormController">+form: FormGroup</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1600.25, 434)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthFormController">
+								<text x="0.0" y="13.5" stroke="none" data-name="AuthFormController">-dynamic _onChangeFormKey()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AuthFormController">+dynamic resetControlsFor()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AuthFormController">-dynamic _forceValidationMessages()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AuthFormController">+dynamic signUp()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AuthFormController">-dynamic _signUp()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="AuthFormController">+dynamic signIn()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="AuthFormController">-dynamic _signInWith()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="AuthFormController">+dynamic signOut()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="AuthFormController">+dynamic resetPasswordForEmail()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="AuthFormController">+dynamic sendPasswordResetLink()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="AuthFormController">+dynamic recoverPassword()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="AuthFormController">+dynamic updateUser()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="AuthFormController">-void _setRememberMe()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="AuthFormController">-void _delRememberMe()</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="AuthFormController">-void _initRememberMe()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IAuthRepository">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IAuthRepository">
+							<rect x="2365.3" y="783.0" height="31.0" width="142.0" data-name="IAuthRepository"></rect>
+						</g>
+						<g transform="translate(2365.25, 783)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAuthRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IAuthRepository">
+								<text x="63.0" y="13.5" stroke="none" text-anchor="middle" data-name="IAuthRepository">IAuthRepository</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SharedPreferences">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SharedPreferences">
+							<rect x="2156.3" y="783.0" height="31.0" width="169.0" data-name="SharedPreferences"></rect>
+						</g>
+						<g transform="translate(2156.25, 783)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SharedPreferences">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SharedPreferences">
+								<text x="76.5" y="13.5" stroke="none" text-anchor="middle" data-name="SharedPreferences">SharedPreferences</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="INotificationService">
+						<g fill="#eee8d5" stroke="#33322E" data-name="INotificationService">
+							<rect x="1941.3" y="783.0" height="31.0" width="168.0" data-name="INotificationService"></rect>
+						</g>
+						<g transform="translate(1941.25, 783)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="INotificationService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="INotificationService">
+								<text x="76.0" y="13.5" stroke="none" text-anchor="middle" data-name="INotificationService">INotificationService</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="GoRouter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
+							<rect x="1809.3" y="783.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
+						</g>
+						<g transform="translate(1809.25, 783)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
+								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
+							<rect x="2687.8" y="783.0" height="31.0" width="113.0" data-name="FormControl"></rect>
+						</g>
+						<g transform="translate(2687.75, 783)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
+								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormGroup">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
+							<rect x="1664.3" y="783.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
+						</g>
+						<g transform="translate(1664.25, 783)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
+								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IFormGroupController">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IFormGroupController">
+							<rect x="1931.8" y="15.5" height="31.0" width="187.0" data-name="IFormGroupController"></rect>
+						</g>
+						<g transform="translate(1931.75, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormGroupController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormGroupController">
+								<text x="85.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormGroupController">IFormGroupController</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Enum">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
+							<rect x="1359.0" y="373.0" height="31.0" width="61.0" data-name="Enum"></rect>
+						</g>
+						<g transform="translate(1359, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
+								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="EmailTextField">
+						<g fill="#eee8d5" stroke="#33322E" data-name="EmailTextField">
+							<rect x="2490.3" y="335.0" height="107.0" width="321.0" data-name="EmailTextField"></rect>
+							<path d="M2490.3 366.0 L2811.3 366.0" fill="none" data-name="EmailTextField"></path>
+						</g>
+						<g transform="translate(2490.25, 335)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EmailTextField">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EmailTextField">
+								<text x="152.5" y="13.5" stroke="none" text-anchor="middle" data-name="EmailTextField">EmailTextField</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2490.25, 366)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EmailTextField">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EmailTextField">
+								<text x="0.0" y="13.5" stroke="none" data-name="EmailTextField">+labelText: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="EmailTextField">+hintText: String?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="EmailTextField">+formControlName: String?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="EmailTextField">+formControl: FormControl&lt;dynamic&gt;?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="PasswordTextField">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PasswordTextField">
+							<rect x="2851.3" y="335.0" height="107.0" width="321.0" data-name="PasswordTextField"></rect>
+							<path d="M2851.3 366.0 L3172.3 366.0" fill="none" data-name="PasswordTextField"></path>
+						</g>
+						<g transform="translate(2851.25, 335)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PasswordTextField">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PasswordTextField">
+								<text x="152.5" y="13.5" stroke="none" text-anchor="middle" data-name="PasswordTextField">PasswordTextField</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2851.25, 366)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PasswordTextField">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PasswordTextField">
+								<text x="0.0" y="13.5" stroke="none" data-name="PasswordTextField">+labelText: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="PasswordTextField">+hintText: String?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="PasswordTextField">+formControlName: String?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="PasswordTextField">+formControl: FormControl&lt;dynamic&gt;?</text>
+								
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
