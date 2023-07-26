@@ -786,10 +786,10 @@ CREATE POLICY "Editors can see their study subjects progress" ON public.subject_
 
 
 --
--- Name: study Everybody can view (published and open) studies; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: study Everybody can view (published and registry_published) studies; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Everybody can view (published and open) studies" ON public.study FOR SELECT USING ((published = true) AND (participation = 'open'::public.participation));
+CREATE POLICY "Everybody can view designated published studies" ON public.study FOR SELECT USING (((published = true) AND (registry_published = true OR participation = 'open'::public.participation OR result_sharing = 'public'::public.result_sharing)));
 
 
 --
