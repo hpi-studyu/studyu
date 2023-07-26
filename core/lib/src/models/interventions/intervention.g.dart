@@ -12,9 +12,8 @@ Intervention _$InterventionFromJson(Map<String, dynamic> json) => Intervention(
     )
       ..description = json['description'] as String?
       ..icon = json['icon'] as String
-      ..tasks = (json['tasks'] as List<dynamic>)
-          .map((e) => InterventionTask.fromJson(e as Map<String, dynamic>))
-          .toList();
+      ..tasks =
+          (json['tasks'] as List<dynamic>).map((e) => InterventionTask.fromJson(e as Map<String, dynamic>)).toList();
 
 Map<String, dynamic> _$InterventionToJson(Intervention instance) {
   final val = <String, dynamic>{
