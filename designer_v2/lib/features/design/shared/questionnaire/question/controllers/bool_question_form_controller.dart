@@ -35,12 +35,7 @@ class BoolQuestionFormViewModel extends QuestionFormViewModel<BoolQuestionFormDa
       'boolOptionsArray': _responseOptionsArray,
   });
 
-  @override
-  BoolQuestionFormData buildFormData() => BoolQuestionFormData(
-    questionId: questionId,
-    questionText: questionTextControl.value!, // required
-    questionInfoText: questionInfoTextControl.value,
-  );
+  @override void setControlsFrom(BoolQuestionFormData data) {}
 
   @override
   BoolQuestionFormViewModel createDuplicate() {

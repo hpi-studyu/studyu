@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/bool_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/choice_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
@@ -15,7 +14,6 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
-import 'package:uuid/uuid.dart';
 
 abstract class QuestionFormViewModel<D extends QuestionFormData> extends ManagedFormViewModel<D>
     implements IListActionProvider<FormControl<dynamic>> {
@@ -68,22 +66,10 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
 
   // - Form fields
 
-  final FormControl<QuestionID> questionIdControl = FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<String> questionTextControl = FormControl();
-  final FormControl<String> questionInfoTextControl = FormControl();
-
-  QuestionID get questionId => questionIdControl.value!;
-
   List<FormControlOption<SurveyQuestionType>> get questionTypeControlOptions =>
       QuestionFormData.questionTypeFormDataFactories.keys
           .map((questionType) => FormControlOption(questionType, questionType.string))
           .toList();
-
-  late final Map<String, AbstractControl> questionBaseControls = {
-    'questionId': questionIdControl, // hidden
-    'questionText': questionTextControl,
-    'questionInfoText': questionInfoTextControl,
-  };
 
   FormArray get responseOptionsArray;
   List<AbstractControl> get responseOptionsControls => responseOptionsArray.controls;
@@ -101,12 +87,6 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
   @protected // can't be private because it's a sublass responsibility
   FormGroup get controls;
 
-  late final FormValidationConfigSet _sharedValidationConfig = {
-    StudyFormValidationSet.draft: [questionTextRequired],
-    StudyFormValidationSet.publish: [questionTextRequired],
-  };
-
-  @protected // can't be private because it's a sublass responsibility
   FormValidationConfigSet? get validationConfigs => null;
 
   @override
@@ -115,49 +95,27 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
         StudyFormValidationSet.publish: _getValidationConfig(StudyFormValidationSet.publish),
         StudyFormValidationSet.test: _getValidationConfig(StudyFormValidationSet.test),
       };
-
   List<FormControlValidation> _getValidationConfig(StudyFormValidationSet validationSet) {
-    return [
-      ...(_sharedValidationConfig[validationSet] ?? []),
-      ...(validationConfigs?[validationSet] ?? [])
-    ];
+    return validationConfigs?[validationSet] ?? [];
   }
-
-  get questionTextRequired => FormControlValidation(control: questionTextControl, validators: [
-        Validators.required,
-        Validators.minLength(1)
-      ], validationMessages: {
-        ValidationMessage.required: (error) => tr.form_field_question_required,
-        ValidationMessage.minLength: (error) => tr.form_field_question_required,
-      });
-
   /// The form containing the controls for the currently selected
   /// [SurveyQuestionType]
   ///
   /// By default, contains all the controls shared among question types.
   /// Controls specific to the currently selected [questionType] are added /
   /// removed dynamically via the [_questionTypeChanges] subscription.
-  @override
-  late final FormGroup form = FormGroup({
-    ...questionBaseControls,
-    ...controls.controls,
-  });
+  late final FormGroup _form = FormGroup({ ...controls.controls });
+  @override FormGroup get form => _form;
 
   @override
   void initControls() {}
 
   @override
-  void setControlsFrom(D data) {
-    // Shared controls
-    questionIdControl.value = data.questionId;
-    questionTextControl.value = data.questionText;
-    questionInfoTextControl.value = data.questionInfoText ?? '';
-  }
-
-  @override
   D buildFormData() {
     throw UnimplementedError();
   }
+
+  D supplementFormData(D data) => data;
 
   @override
   Map<FormMode, String> get titles => {

@@ -26,18 +26,17 @@ mixin ScreenerQuestionFormViewModelMixin<D extends QuestionFormData> on Question
       ];
 
   late final _questionBaseControls = {
-    ...super.questionBaseControls,
     'responseOptionLogic': responseOptionsLogicControls,
     'responseOptionLogicDescriptions': responseOptionsLogicDescriptionControls,
   };
 
+  late final FormGroup _form = FormGroup({ ..._questionBaseControls, ...controls.controls });
   @override
-  Map<String, AbstractControl> get questionBaseControls => _questionBaseControls;
+  FormGroup get form => _form;
 
   List<AbstractControl> prevResponseOptionControls = [];
   late List<dynamic> prevResponseOptionValues = [];
 
-  @override
   onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
     if (formMode == FormMode.readonly) {
       return;
@@ -75,7 +74,6 @@ mixin ScreenerQuestionFormViewModelMixin<D extends QuestionFormData> on Question
 
   @override
   void setControlsFrom(D data) {
-    super.setControlsFrom(data);
     //prevResponseOptionControls = answerOptionsControls;
     onResponseOptionsChanged(responseOptionsControls);
 

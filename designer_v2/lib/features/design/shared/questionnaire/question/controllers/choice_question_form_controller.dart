@@ -61,11 +61,11 @@ class ChoiceQuestionFormViewModel extends QuestionFormViewModel<ChoiceQuestionFo
   };
 
   @override
-  ChoiceQuestionFormData buildFormData() => ChoiceQuestionFormData(
-    questionId: questionId,
-    questionText: questionTextControl.value!,
+  ChoiceQuestionFormData supplementFormData(data) => ChoiceQuestionFormData(
+    questionId: data.questionId,
+    questionText: data.questionText,
     // required
-    questionInfoText: questionInfoTextControl.value,
+    questionInfoText: data.questionInfoText,
     isMultipleChoice: isMultipleChoiceControl.value!,
     // required
     answerOptions: validAnswerOptions,
@@ -74,7 +74,6 @@ class ChoiceQuestionFormViewModel extends QuestionFormViewModel<ChoiceQuestionFo
 
   @override
   void setControlsFrom(ChoiceQuestionFormData data) {
-      super.setControlsFrom(data);
       // Unfortunately needed because of how [FormArray.updateValue] is implemented
       // Note: `formArray.value = []` does not remove any controls!
       _responseOptionsArray.clear();

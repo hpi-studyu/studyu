@@ -154,11 +154,11 @@ class ScaleQuestionFormViewModel extends QuestionFormViewModel<ScaleQuestionForm
   };
 
   @override
-  ScaleQuestionFormData buildFormData() => ScaleQuestionFormData(
-    questionId: questionId,
-    questionText: questionTextControl.value!,
+  ScaleQuestionFormData supplementFormData(data) => ScaleQuestionFormData(
+    questionId: data.questionId,
+    questionText: data.questionText,
     // required
-    questionInfoText: questionInfoTextControl.value,
+    questionInfoText: data.questionInfoText,
     minValue: scaleMinValueControl.value!.toDouble(),
     // non-empty formatter
     maxValue: scaleMaxValueControl.value!.toDouble(),
@@ -181,7 +181,6 @@ class ScaleQuestionFormViewModel extends QuestionFormViewModel<ScaleQuestionForm
 
   @override
   void setControlsFrom(ScaleQuestionFormData data) {
-    super.setControlsFrom(data);
     scaleMinValueControl.value = data.minValue.toInt();
     scaleMaxValueControl.value = data.maxValue.toInt();
     scaleMinLabelControl.value = data.minLabel;

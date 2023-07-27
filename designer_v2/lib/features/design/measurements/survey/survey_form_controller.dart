@@ -160,7 +160,7 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
     final args = SurveyQuestionFormRouteArgs(
       studyId: study.id,
       measurementId: measurementId,
-      questionId: modelWrapper.model.questionId,
+      questionId: modelWrapper.questionId,
     );
     return args;
   }

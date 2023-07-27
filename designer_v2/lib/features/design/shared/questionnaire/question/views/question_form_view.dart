@@ -39,9 +39,10 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       .map((questionType) => FormControlOption(questionType, questionType.string))
       .toList();
 
-  QuestionFormViewModel get formViewModel => widget.modelWrapper.model;
+  QuestionFormViewModelWrapper get modelWrapper => widget.modelWrapper;
+  QuestionFormViewModel get formViewModel => modelWrapper.model;
 
-  late bool isQuestionHelpTextFieldVisible = formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
+  late bool isQuestionHelpTextFieldVisible = modelWrapper.questionInfoTextControl.value?.isNotEmpty ?? false;
   bool isStylingInformationDismissed = true;
 
   onDismissedCallback() => setState(() {
@@ -155,7 +156,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       rowLayout: FormTableRowLayout.vertical,
       rows: [
         FormTableRow(
-          control: formViewModel.questionTextControl,
+          control: modelWrapper.questionTextControl,
           labelBuilder: (context) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -198,8 +199,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
             ],
           ),
           input: ReactiveTextField(
-            formControl: formViewModel.questionTextControl,
-            validationMessages: formViewModel.questionTextControl.validationMessages,
+            formControl: modelWrapper.questionTextControl,
+            validationMessages: modelWrapper.questionTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,
           ),
@@ -213,7 +214,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       rowLayout: FormTableRowLayout.vertical,
       rows: [
         FormTableRow(
-          control: formViewModel.questionInfoTextControl,
+          control: modelWrapper.questionInfoTextControl,
           label: tr.form_field_question_help_text,
           labelHelpText: tr.form_field_question_help_text_tooltip,
           labelBuilder: (context) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -240,8 +241,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
             ])
           ]),
           input: ReactiveTextField(
-            formControl: formViewModel.questionInfoTextControl,
-            validationMessages: formViewModel.questionInfoTextControl.validationMessages,
+            formControl: modelWrapper.questionInfoTextControl,
+            validationMessages: modelWrapper.questionInfoTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,
             decoration: InputDecoration(

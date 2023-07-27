@@ -81,7 +81,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModelWrapper> on Fo
       return modelWrapper;
     }
 
-    final viewModel = modelCollection.findWhere((vm) => vm.model.questionId == args.questionId);
+    final viewModel = modelCollection.findWhere((vm) => vm.questionId == args.questionId);
     if (viewModel == null) {
       throw QuestionNotFoundException(); // TODO handle 404 not found
     }

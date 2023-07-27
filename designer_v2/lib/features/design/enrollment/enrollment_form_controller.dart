@@ -154,7 +154,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModelWrapper modelWrapper) {
     return ScreenerQuestionFormRouteArgs(
       studyId: study.id,
-      questionId: modelWrapper.model.questionId,
+      questionId: modelWrapper.questionId,
     );
   }
 
