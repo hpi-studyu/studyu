@@ -1,4 +1,4 @@
 !.env
+!.env.dev
 !.env.local
 !.env.hpi
-!.env.staging
