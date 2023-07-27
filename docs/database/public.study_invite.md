@@ -16,8 +16,8 @@ Study invite codes
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| study_invite_pkey | PRIMARY KEY | PRIMARY KEY (code) |
 | study_invite_studyId_fkey | FOREIGN KEY | FOREIGN KEY (study_id) REFERENCES study(id) ON DELETE CASCADE |
+| study_invite_pkey | PRIMARY KEY | PRIMARY KEY (code) |
 
 ## Indexes
 

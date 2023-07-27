@@ -17,8 +17,8 @@ Git repo where the generated project is stored
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| repo_pkey | PRIMARY KEY | PRIMARY KEY (project_id) |
 | repo_studyId_fkey | FOREIGN KEY | FOREIGN KEY (study_id) REFERENCES study(id) |
+| repo_pkey | PRIMARY KEY | PRIMARY KEY (project_id) |
 | repo_userId_fkey | FOREIGN KEY | FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE |
 
 ## Indexes

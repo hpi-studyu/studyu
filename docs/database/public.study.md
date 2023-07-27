@@ -32,6 +32,7 @@
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
+| study_id_key | UNIQUE | UNIQUE (id) |
 | study_pkey | PRIMARY KEY | PRIMARY KEY (id) |
 | study_userId_fkey | FOREIGN KEY | FOREIGN KEY (user_id) REFERENCES "user"(id) |
 
@@ -39,6 +40,7 @@
 
 | Name | Definition |
 | ---- | ---------- |
+| study_id_key | CREATE UNIQUE INDEX study_id_key ON public.study USING btree (id) |
 | study_pkey | CREATE UNIQUE INDEX study_pkey ON public.study USING btree (id) |
 
 ## Triggers

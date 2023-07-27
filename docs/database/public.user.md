@@ -10,7 +10,6 @@ Users get automatically added, when a new user is created in auth.users
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
 | id | uuid |  | false | [public.study](public.study.md) [public.study_subject](public.study_subject.md) [public.repo](public.repo.md) |  |  |
 | email | text |  | true |  |  |  |
-| preferences | jsonb |  | true |  |  |  |
 
 ## Constraints
 

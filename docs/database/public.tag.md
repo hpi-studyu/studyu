@@ -6,22 +6,21 @@
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | uuid | gen_random_uuid() | false | [public.tag](public.tag.md) [public.study_tag](public.study_tag.md) |  |  |
+| id | uuid | gen_random_uuid() | false | [public.study_tag](public.study_tag.md) |  |  |
 | name | text |  | false |  |  |  |
-| color | text |  | true |  |  |  |
-| parent_id | uuid |  | true |  | [public.tag](public.tag.md) |  |
 
 ## Constraints
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| tag_parentId_fkey | FOREIGN KEY | FOREIGN KEY (parent_id) REFERENCES tag(id) ON DELETE CASCADE |
+| tag_name_key | UNIQUE | UNIQUE (name) |
 | tag_pkey | PRIMARY KEY | PRIMARY KEY (id) |
 
 ## Indexes
 
 | Name | Definition |
 | ---- | ---------- |
+| tag_name_key | CREATE UNIQUE INDEX tag_name_key ON public.tag USING btree (name) |
 | tag_pkey | CREATE UNIQUE INDEX tag_pkey ON public.tag USING btree (id) |
 
 ## Relations
