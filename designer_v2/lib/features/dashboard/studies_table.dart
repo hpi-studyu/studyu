@@ -180,9 +180,6 @@ class StudiesTable extends StatelessWidget {
                         label: item.studyTags.elementAt(index).name,
                         type: studybadge.BadgeType.outlineFill,
                         icon: null,
-                        color: item.studyTags.elementAt(index).color != null
-                            ? Color(int.parse(item.studyTags.elementAt(index).color!))
-                            : Colors.grey,
                       );
                     },
                   );

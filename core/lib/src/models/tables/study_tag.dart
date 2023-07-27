@@ -49,8 +49,6 @@ class StudyTag extends SupabaseObjectFunctions<StudyTag> {
 
   String get name => tag.name;
 
-  String? get color => tag.color;
-
   String get id => tag.id;
 
   @override

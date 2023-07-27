@@ -5,10 +5,12 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/tag_repository.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 abstract class IStudyTagRepository implements ModelRepository<StudyTag> {
-  void updateStudyTags(List<StudyTag> tagsToUpdate);
+  void updateStudyTags(List<String> tagsToUpdate);
 }
 
 class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagRepository {
@@ -18,6 +20,7 @@ class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagR
     required this.authRepository,
     required this.studyRepository,
     required this.ref,
+    required this.tagRepository,
   }) : super(StudyTagRepositoryDelegate(
             study: studyRepository.get(studyId)!.model, apiClient: apiClient, studyRepository: studyRepository));
 
@@ -32,6 +35,7 @@ class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagR
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
   final IStudyRepository studyRepository;
+  final ITagRepository tagRepository;
 
   @override
   ModelID getKey(StudyTag model) {
@@ -39,14 +43,27 @@ class StudyTagRepository extends ModelRepository<StudyTag> implements IStudyTagR
   }
 
   @override
-  void updateStudyTags(List<StudyTag> tagsToUpdate) {
-    final currentTags = study.studyTags.toSet();
-    final futureTags = tagsToUpdate.toSet();
-    for (StudyTag toSave in futureTags.difference(currentTags)) {
-      delegate.save(toSave);
+  void updateStudyTags(List<String> studyTagStringsToUpdate) async {
+    final currentStudyTags = study.studyTags.toSet();
+    final allTags = (await tagRepository.fetchAll());
+    final futureTags = [];
+    print("updateStudyTags $studyTagStringsToUpdate");
+    for (String tagNameToUpdate in studyTagStringsToUpdate) {
+      final maybeTag = allTags.firstWhereOrNull((element) =>
+      element.name == tagNameToUpdate);
+      if (maybeTag == null) {
+        print("create new tag $tagNameToUpdate");
+        final newTag = await tagRepository.createTagIfNotExists(tagNameToUpdate);
+        futureTags.add(StudyTag.fromTag(tag: newTag, studyId: studyId));
+      } else {
+        futureTags.add(StudyTag.fromTag(tag: maybeTag, studyId: studyId));
+      }
     }
-    for (StudyTag toDelete in currentTags.difference(futureTags)) {
-      delegate.delete(toDelete);
+    for (StudyTag toSave in futureTags.toSet().difference(currentStudyTags)) {
+      await delegate.save(toSave);
+    }
+    for (StudyTag toDelete in currentStudyTags.difference(futureTags.toSet())) {
+      await delegate.delete(toDelete);
     }
   }
 
@@ -152,6 +169,7 @@ final studyTagRepositoryProvider = Provider.autoDispose.family<IStudyTagReposito
     apiClient: ref.watch(apiClientProvider),
     authRepository: ref.watch(authRepositoryProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
+    tagRepository: ref.watch(tagRepositoryProvider),
     ref: ref,
   );
   // Bind lifecycle to Riverpod

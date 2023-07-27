@@ -9,23 +9,9 @@ part of 'tag.dart';
 Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
       id: json['id'] as String,
       name: json['name'] as String,
-      color: json['color'] as String?,
-      parentId: json['parent_id'] as String?,
     );
 
-Map<String, dynamic> _$TagToJson(Tag instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'name': instance.name,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('color', instance.color);
-  writeNotNull('parent_id', instance.parentId);
-  return val;
-}
+Map<String, dynamic> _$TagToJson(Tag instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };

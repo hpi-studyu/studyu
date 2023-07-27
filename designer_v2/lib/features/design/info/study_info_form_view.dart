@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:reactive_multi_select_flutter/reactive_multi_select_flutter.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
+import 'package:studyu_designer_v2/common_views/reactive_textfield_tags.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 import 'package:studyu_designer_v2/repositories/tag_repository.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
@@ -26,6 +27,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
       data: (study) {
         final formViewModel = ref.read(studyInfoFormViewModelProvider(studyId));
         final tags = ref.watch(tagRepositoryProvider);
+        final studyTags = ref.watch(studyTagRepositoryProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -83,18 +85,35 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 ),
                 FormTableRow(
                   control: formViewModel.studyTagsControl,
-                  label: 'Tags',
-                  // todo tr
-                  //labelHelpText: 'tr.form_field_study_tags_tooltip',
+                  label: tr.form_field_study_tags,
+                  labelHelpText: tr.form_field_study_tags_tooltip,
                   input: FutureBuilder<List<Tag>>(
-                      future: tags.getAllTags(),
+                      future: tags.fetchAll(),
                       builder: (BuildContext context, AsyncSnapshot<List<Tag>> snapshot) {
                         if (snapshot.hasData) {
-                          final display = MultiSelectChipDisplay<StudyTag>();
-                          //display.disabled = true;
                           return Row(children: [
                             Expanded(
-                                child: ReactiveMultiSelectDialogField(
+                                child: ReactiveTextfieldTags(
+                                  formControl: formViewModel.studyTagsControl,
+                                  availableTags: snapshot.data!.map((e) => e.name).toList(),
+                                  validationMessages: formViewModel.studyTagsControl.validationMessages,
+                                  onSubmittedCb: (tags) {
+                                    studyTags.updateStudyTags(tags);
+                                  },
+                                  validator: (tag) {
+
+                                  },
+                                  helperText: tr.form_field_study_tags_helper(3),
+                                  hintText: tr.form_field_study_tags_hint,
+                                )
+                            )
+                          ]);
+                          /*ReactiveTextfieldTags(
+                              formControl: formViewModel.studyTagsControl,
+                              availableTags: snapshot.data!.map((e) => e.name).toList(),
+                            ),*/
+                          /*Expanded(
+                                child: ReactiveMul#tiSelectDialogField(
                               formControl: formViewModel.studyTagsControl,
                               items: snapshot.data!
                                   .map((e) =>
@@ -104,8 +123,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                               dialogWidth: 300,
                               searchable: true,
                               chipDisplay: display,
-                            ))
-                          ]);
+                            ))*/
                         } else {
                           return const SizedBox();
                         }

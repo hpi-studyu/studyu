@@ -16,12 +16,8 @@ class Tag extends SupabaseObjectFunctions<Tag> {
   String id;
   @JsonKey(name: 'name')
   String name;
-  @JsonKey(name: 'color')
-  String? color;
-  @JsonKey(name: 'parent_id')
-  String? parentId;
 
-  Tag({required this.id, required this.name, this.color, this.parentId});
+  Tag({required this.id, required this.name});
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
@@ -30,8 +26,8 @@ class Tag extends SupabaseObjectFunctions<Tag> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Tag && id == other.id && name == other.name && color == other.color;
+      identical(this, other) || other is Tag && id == other.id && name == other.name;
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ color.hashCode ^ parentId.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode;
 }

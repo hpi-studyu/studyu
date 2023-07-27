@@ -17,6 +17,9 @@ abstract class StudyUApi {
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
   Future<List<Tag>> fetchAllTags();
+  Future<List<Tag>> fetchTag();
+  Future<Tag> saveTag(Tag tag);
+  Future<void> deleteTag(Tag tag);
   Future<StudyTag> saveStudyTag(StudyTag studyTag);
   Future<void> deleteStudyTag(StudyTag studyTag);
   Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants);
@@ -177,6 +180,28 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     await _testDelay();
     final request = getAll<Tag>();
     return _awaitGuarded(request);
+  }
+
+  @override
+  Future<List<Tag>> fetchTag() async {
+    await _testDelay();
+    final request = getAll<Tag>();
+    return _awaitGuarded(request);
+  }
+
+  @override
+  Future<Tag> saveTag(Tag tag) async {
+    await _testDelay();
+    final Future<Tag> request = tag.save();
+    return _awaitGuarded<Tag>(request);
+  }
+
+  @override
+  Future<void> deleteTag(Tag tag) async {
+    await _testDelay();
+    // todo do not delete if tag is part of another study
+    final request = tag.delete();
+    return _awaitGuarded<void>(request);
   }
 
   @override
