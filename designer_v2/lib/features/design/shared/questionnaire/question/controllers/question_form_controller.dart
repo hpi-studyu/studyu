@@ -31,7 +31,7 @@ abstract class QuestionFormViewModel<D extends QuestionFormData> extends Managed
     titles
   }) {
     QuestionFormViewModel ret;
-    switch (FD) {
+    switch (formData == null ? FD : formData.runtimeType) {
       case BoolQuestionFormData:
         ret = BoolQuestionFormViewModel(
           formData: formData as BoolQuestionFormData?,
