@@ -87,7 +87,6 @@ need to be changed and assigned to Supabase and StudyU.
 3. Replace the default secrets with your newly generated ones in the following
    files:
     - `supabase/.env`
-    - `supabase/volumes/api/kong.yml`
     - `flutter_common/lib/envs/.env.selfhost`
 4. Configure the other Supabase settings in `supabase/.env` and StudyU settings
    in `flutter_common/lib/envs/.env.selfhost` according to your wishes.

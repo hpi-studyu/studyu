@@ -182,9 +182,8 @@ class Study extends SupabaseObjectFunctions<Study> {
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async {
     try {
-      return SupabaseQuery.extractSupabaseList<Study>(
-        await env.client.from(tableName).select(),
-      );
+      final response = await env.client.from(tableName).select().eq('participation', 'open') as List;
+      return SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;

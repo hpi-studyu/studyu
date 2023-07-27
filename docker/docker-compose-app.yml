@@ -2,10 +2,8 @@ version: '3'
 name: 'studyu'
 
 networks:
-  studyu_network:
+  default:
     name: studyu_network
-    driver: bridge
-    external: true
 
 services:
   app:
@@ -19,8 +17,6 @@ services:
     ports:
       - 8080:8080 # StudyU App
       - 8082:8082 # Supabase Studio (disable if you do not want to self-host Supabase on this machine)
-    networks:
-      - studyu_network
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro

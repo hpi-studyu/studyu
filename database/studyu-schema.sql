@@ -1,3 +1,10 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.1 (Ubuntu 15.1-1.pgdg20.04+1)
+-- Dumped by pg_dump version 15.3 (Ubuntu 15.3-1.pgdg22.04+1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -9,26 +16,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-
--- ================== EXTENSIONS ===============================
-
 --
 -- Name: moddatetime; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS moddatetime WITH SCHEMA extensions;
 
-
 --
--- Name: EXTENSION moddatetime; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION moddatetime; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION moddatetime IS 'functions for tracking last modification time';
 
--- =================== ENUMS ====================================
-
 --
--- Name: git_provider; Type: TYPE; Schema: public; Owner: supabase_admin
+-- Name: git_provider; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE public.git_provider AS ENUM (
@@ -36,10 +37,10 @@ CREATE TYPE public.git_provider AS ENUM (
 );
 
 
-ALTER TYPE public.git_provider OWNER TO supabase_admin;
+ALTER TYPE public.git_provider OWNER TO postgres;
 
 --
--- Name: participation; Type: TYPE; Schema: public; Owner: supabase_admin
+-- Name: participation; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE public.participation AS ENUM (
@@ -48,10 +49,10 @@ CREATE TYPE public.participation AS ENUM (
 );
 
 
-ALTER TYPE public.participation OWNER TO supabase_admin;
+ALTER TYPE public.participation OWNER TO postgres;
 
 --
--- Name: result_sharing; Type: TYPE; Schema: public; Owner: supabase_admin
+-- Name: result_sharing; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE public.result_sharing AS ENUM (
@@ -61,16 +62,14 @@ CREATE TYPE public.result_sharing AS ENUM (
 );
 
 
-ALTER TYPE public.result_sharing OWNER TO supabase_admin;
-
+ALTER TYPE public.result_sharing OWNER TO postgres;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
--- ==================== TABLES ========================
 --
--- Name: study; Type: TABLE; Schema: public; Owner: supabase_admin
+-- Name: study; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.study (
@@ -98,363 +97,17 @@ CREATE TABLE public.study (
 );
 
 
-ALTER TABLE public.study OWNER TO supabase_admin;
+ALTER TABLE public.study OWNER TO postgres;
 
 --
--- Name: COLUMN study.user_id; Type: COMMENT; Schema: public; Owner: supabase_admin
+-- Name: COLUMN study.user_id; Type: COMMENT; Schema: public; Owner: postgres
 --
 
 COMMENT ON COLUMN public.study.user_id IS 'UserId of study creator';
 
 
 --
--- Name: study_subject; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.study_subject (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    study_id uuid NOT NULL,
-    user_id uuid NOT NULL,
-    started_at timestamp with time zone DEFAULT now(),
-    selected_intervention_ids text[] NOT NULL,
-    invite_code text,
-    is_deleted boolean DEFAULT false NOT NULL
-);
-
-
-ALTER TABLE public.study_subject OWNER TO supabase_admin;
-
---
--- Name: tag; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.tag (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    name text NOT NULL UNIQUE
-);
-
-
-ALTER TABLE public.tag OWNER TO supabase_admin;
-
-
---
--- Name: study_tag; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.study_tag (
-    study_id uuid NOT NULL,
-    tag_id uuid NOT NULL
-);
-
-ALTER TABLE public.study_tag OWNER TO supabase_admin;
-
---
--- Name: app_config; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.app_config (
-    id text NOT NULL,
-    app_privacy jsonb NOT NULL,
-    app_terms jsonb NOT NULL,
-    designer_privacy jsonb NOT NULL,
-    designer_terms jsonb NOT NULL,
-    imprint jsonb NOT NULL,
-    contact jsonb DEFAULT '{"email": "hpi-info@hpi.de", "phone": "+49-(0)331 5509-0", "website": "https://hpi.de/", "organization": "Hasso Plattner Institute"}'::jsonb NOT NULL,
-    analytics jsonb
-);
-
-
-ALTER TABLE public.app_config OWNER TO supabase_admin;
-
---
--- Name: TABLE app_config; Type: COMMENT; Schema: public; Owner: supabase_admin
---
-
-COMMENT ON TABLE public.app_config IS 'Stores app config for different envs';
-
-
---
--- Name: repo; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.repo (
-    project_id text NOT NULL,
-    user_id uuid NOT NULL,
-    study_id uuid NOT NULL,
-    provider public.git_provider NOT NULL
-);
-
-
-ALTER TABLE public.repo OWNER TO supabase_admin;
-
---
--- Name: TABLE repo; Type: COMMENT; Schema: public; Owner: supabase_admin
---
-
-COMMENT ON TABLE public.repo IS 'Git repo where the generated project is stored';
-
-
---
--- Name: study_invite; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.study_invite (
-    code text NOT NULL,
-    study_id uuid NOT NULL,
-    preselected_intervention_ids text[]
-);
-
-
-ALTER TABLE public.study_invite OWNER TO supabase_admin;
-
---
--- Name: TABLE study_invite; Type: COMMENT; Schema: public; Owner: supabase_admin
---
-
-COMMENT ON TABLE public.study_invite IS 'Study invite codes';
-
-
---
--- Name: COLUMN study_invite.preselected_intervention_ids; Type: COMMENT; Schema: public; Owner: supabase_admin
---
-
-COMMENT ON COLUMN public.study_invite.preselected_intervention_ids IS 'Intervention Ids (and order) preselected by study creator';
-
-
---
--- Name: subject_progress; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public.subject_progress (
-    completed_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-    subject_id uuid NOT NULL,
-    intervention_id text NOT NULL,
-    task_id text NOT NULL,
-    result_type text NOT NULL,
-    result jsonb NOT NULL
-);
-
-
-ALTER TABLE public.subject_progress OWNER TO supabase_admin;
-
---
--- Name: study_progress_export; Type: VIEW; Schema: public; Owner: supabase_admin
---
-
-CREATE VIEW public.study_progress_export AS
- SELECT subject_progress.completed_at,
-    subject_progress.intervention_id,
-    subject_progress.task_id,
-    subject_progress.result_type,
-    subject_progress.result,
-    subject_progress.subject_id,
-    study_subject.user_id,
-    study_subject.study_id,
-    study_subject.started_at,
-    study_subject.selected_intervention_ids
-   FROM public.study_subject,
-    public.subject_progress
-  WHERE (study_subject.id = subject_progress.subject_id);
-
-
-ALTER TABLE public.study_progress_export OWNER TO supabase_admin;
-
---
--- Name: user; Type: TABLE; Schema: public; Owner: supabase_admin
---
-
-CREATE TABLE public."user" (
-    id uuid NOT NULL,
-    email text,
-    preferences jsonb
-);
-
-
-ALTER TABLE public."user" OWNER TO supabase_admin;
-
---
--- Name: TABLE "user"; Type: COMMENT; Schema: public; Owner: supabase_admin
---
-
-COMMENT ON TABLE public."user" IS 'Users get automatically added, when a new user is created in auth.users';
-
-
--- ======================== PRIMARY KEY CONSTRAINT ================================
---
--- Name: app_config AppConfig_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.app_config
-    ADD CONSTRAINT "AppConfig_pkey" PRIMARY KEY (id);
-
-
---
--- Name: subject_progress participant_progress_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.subject_progress
-    ADD CONSTRAINT participant_progress_pkey PRIMARY KEY (completed_at, subject_id);
-
-
---
--- Name: repo repo_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.repo
-    ADD CONSTRAINT repo_pkey PRIMARY KEY (project_id);
-
-
---
--- Name: study_invite study_invite_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_invite
-    ADD CONSTRAINT study_invite_pkey PRIMARY KEY (code);
-
-
---
--- Name: study study_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study
-    ADD CONSTRAINT study_pkey PRIMARY KEY (id);
-
-
---
--- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public."user"
-    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
-
-
---
--- Name: study_subject study_subject_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT study_subject_pkey PRIMARY KEY (id);
-
-
---
--- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.tag
-    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
-
-
---
--- Name: study_tag study_tag_pkey; Type: CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_tag
-    ADD CONSTRAINT "study_tag_pkey" PRIMARY KEY (study_id, tag_id);
-
-
--- ======================== FOREIGN KEY CONTRAINTS ======================================================
-
---
--- Name: subject_progress participant_progress_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.subject_progress
-    ADD CONSTRAINT "participant_progress_subjectId_fkey" FOREIGN KEY (subject_id) REFERENCES public.study_subject(id) ON DELETE CASCADE;
-
-
---
--- Name: repo repo_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.repo
-    ADD CONSTRAINT "repo_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
-
-
---
--- Name: repo repo_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.repo
-    ADD CONSTRAINT "repo_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
-
-
---
--- Name: study_invite study_invite_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_invite
-    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
-
-
---
--- Name: study_subject study_subject_loginCode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY (invite_code) REFERENCES public.study_invite(code) ON DELETE CASCADE;
-
-
---
--- Name: study_subject study_subject_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
-
-
---
--- Name: study_subject study_subject_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_subject
-    ADD CONSTRAINT "study_subject_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
-
-
---
--- Name: study study_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study
-    ADD CONSTRAINT "study_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
-
-
---
--- Name: tag study_tag_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_tag
-    ADD CONSTRAINT "study_tag_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
-
-
---
--- Name: tag study_tag_tagId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE ONLY public.study_tag
-    ADD CONSTRAINT "study_tag_tagId_fkey" FOREIGN KEY (tag_id) REFERENCES public.tag(id) ON DELETE CASCADE;
-
-
--- ======================== STUDY FUNCTIONS =====================================
-
---
--- Name: is_active_subject(uuid, integer); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) RETURNS boolean
-    LANGUAGE plpgsql SECURITY DEFINER
-    AS $$
-BEGIN
-  RETURN (
-    SELECT
-      (DATE(now()) - last_completed_task (psubject_id)) <= days_active);
-END;
-$$;
-
-
-ALTER FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) OWNER TO supabase_admin;
-
---
--- Name: active_subject_count(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: active_subject_count(public.study); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.active_subject_count(study public.study) RETURNS integer
@@ -477,22 +130,10 @@ CREATE FUNCTION public.active_subject_count(study public.study) RETURNS integer
 $$;
 
 
-ALTER FUNCTION public.active_subject_count(study public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.active_subject_count(study public.study) OWNER TO postgres;
 
 --
--- Name: user_email(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.user_email(user_id uuid) RETURNS text
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  SELECT email from "user" where id = user_id
-$$;
-
-ALTER FUNCTION public.user_email(user_id uuid) OWNER TO supabase_admin;
-
---
--- Name: can_edit(uuid, public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: can_edit(uuid, public.study); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.can_edit(user_id uuid, study_param public.study) RETURNS boolean
@@ -502,26 +143,10 @@ CREATE FUNCTION public.can_edit(user_id uuid, study_param public.study) RETURNS 
 $$;
 
 
-ALTER FUNCTION public.can_edit(user_id uuid, study_param public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.can_edit(user_id uuid, study_param public.study) OWNER TO postgres;
 
 --
--- Name: is_subject_of(uuid, public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) RETURNS boolean
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM study_subject
-    WHERE study_subject.user_id = _user_id AND study_subject.study_id = _study_id
-  )
-$$;
-
-
-ALTER FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) OWNER TO supabase_admin;
-
---
--- Name: get_study_from_invite(text); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: get_study_from_invite(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.get_study_from_invite(invite_code text) RETURNS TABLE(study_id uuid, preselected_intervention_ids text[])
@@ -533,14 +158,15 @@ CREATE FUNCTION public.get_study_from_invite(invite_code text) RETURNS TABLE(stu
 $$;
 
 
-ALTER FUNCTION public.get_study_from_invite(invite_code text) OWNER TO supabase_admin;
+ALTER FUNCTION public.get_study_from_invite(invite_code text) OWNER TO postgres;
 
 --
--- Name: get_study_record_from_invite(text); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: get_study_record_from_invite(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS public.study
-    LANGUAGE sql IMMUTABLE SECURITY DEFINER AS $$
+    LANGUAGE sql IMMUTABLE SECURITY DEFINER
+    AS $$
     SELECT * FROM study WHERE study.id = (
         SELECT study_invite.study_id
         FROM study_invite
@@ -549,10 +175,10 @@ CREATE FUNCTION public.get_study_record_from_invite(invite_code text) RETURNS pu
 $$;
 
 
-ALTER FUNCTION public.get_study_record_from_invite(invite_code text) OWNER TO supabase_admin;
+ALTER FUNCTION public.get_study_record_from_invite(invite_code text) OWNER TO postgres;
 
 --
--- Name: handle_new_user(); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: handle_new_user(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.handle_new_user() RETURNS trigger
@@ -566,10 +192,10 @@ end;
 $$;
 
 
-ALTER FUNCTION public.handle_new_user() OWNER TO supabase_admin;
+ALTER FUNCTION public.handle_new_user() OWNER TO postgres;
 
 --
--- Name: has_study_ended(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: has_study_ended(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.has_study_ended(psubject_id uuid) RETURNS boolean
@@ -586,10 +212,27 @@ END;
 $$;
 
 
-ALTER FUNCTION public.has_study_ended(psubject_id uuid) OWNER TO supabase_admin;
+ALTER FUNCTION public.has_study_ended(psubject_id uuid) OWNER TO postgres;
 
 --
--- Name: has_study_ended(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: study_subject; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.study_subject (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    study_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    started_at timestamp with time zone DEFAULT now(),
+    selected_intervention_ids text[] NOT NULL,
+    invite_code text,
+    is_deleted boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public.study_subject OWNER TO postgres;
+
+--
+-- Name: has_study_ended(public.study_subject); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.has_study_ended(subject public.study_subject) RETURNS boolean
@@ -606,10 +249,43 @@ END;
 $$;
 
 
-ALTER FUNCTION public.has_study_ended(subject public.study_subject) OWNER TO supabase_admin;
+ALTER FUNCTION public.has_study_ended(subject public.study_subject) OWNER TO postgres;
 
 --
--- Name: last_completed_task(uuid); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: is_active_subject(uuid, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) RETURNS boolean
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+BEGIN
+  RETURN (
+    SELECT
+      (DATE(now()) - last_completed_task (psubject_id)) <= days_active);
+END;
+$$;
+
+
+ALTER FUNCTION public.is_active_subject(psubject_id uuid, days_active integer) OWNER TO postgres;
+
+--
+-- Name: is_study_subject_of(uuid, uuid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) RETURNS boolean
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM study_subject
+    WHERE study_subject.user_id = _user_id AND study_subject.study_id = _study_id
+  )
+$$;
+
+
+ALTER FUNCTION public.is_study_subject_of(_user_id uuid, _study_id uuid) OWNER TO postgres;
+
+--
+-- Name: last_completed_task(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.last_completed_task(psubject_id uuid) RETURNS date
@@ -630,28 +306,10 @@ END;
 $$;
 
 
-ALTER FUNCTION public.last_completed_task(psubject_id uuid) OWNER TO supabase_admin;
+ALTER FUNCTION public.last_completed_task(psubject_id uuid) OWNER TO postgres;
 
 --
--- Name: subject_total_active_days(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
---
-
-CREATE FUNCTION public.subject_total_active_days(subject public.study_subject) RETURNS integer
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  SELECT
-    COUNT(DISTINCT DATE(completed_at))::int
-FROM
-    subject_progress
-WHERE subject_id = subject.id
-AND DATE(completed_at) < DATE(now());
-$$;
-
-
-ALTER FUNCTION public.subject_total_active_days(subject public.study_subject) OWNER TO supabase_admin;
-
---
--- Name: study_active_days(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: study_active_days(public.study); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.study_active_days(study_param public.study) RETURNS integer[]
@@ -662,10 +320,10 @@ where study_subject.study_id = study_param.id;
 $$;
 
 
-ALTER FUNCTION public.study_active_days(study_param public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.study_active_days(study_param public.study) OWNER TO postgres;
 
 --
--- Name: study_ended_count(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: study_ended_count(public.study); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.study_ended_count(study public.study) RETURNS integer
@@ -688,10 +346,10 @@ WHERE
 $$;
 
 
-ALTER FUNCTION public.study_ended_count(study public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.study_ended_count(study public.study) OWNER TO postgres;
 
 --
--- Name: study_length(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: study_length(public.study); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.study_length(study_param public.study) RETURNS integer
@@ -710,10 +368,55 @@ CREATE FUNCTION public.study_length(study_param public.study) RETURNS integer
 $$;
 
 
-ALTER FUNCTION public.study_length(study_param public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.study_length(study_param public.study) OWNER TO postgres;
 
 --
--- Name: subject_current_day(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: study_missed_days(public.study); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.study_missed_days(study_param public.study) RETURNS integer[]
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  select ARRAY_AGG(subject_current_day(study_subject) - subject_total_active_days(study_subject)) from study_subject
+where study_subject.study_id = study_param.id and study_subject.is_deleted = false;
+$$;
+
+
+ALTER FUNCTION public.study_missed_days(study_param public.study) OWNER TO postgres;
+
+--
+-- Name: study_participant_count(public.study); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.study_participant_count(study public.study) RETURNS integer
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  select count(1)::int
+    from study_subject
+    where study_id = study.id
+      and study_subject.is_deleted = false;
+$$;
+
+
+ALTER FUNCTION public.study_participant_count(study public.study) OWNER TO postgres;
+
+--
+-- Name: study_total_tasks(public.study_subject); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.study_total_tasks(subject public.study_subject) RETURNS integer
+    LANGUAGE sql SECURITY DEFINER
+    AS $$
+  select count(1)::int
+    from subject_progress
+    where subject_id = subject.id;
+$$;
+
+
+ALTER FUNCTION public.study_total_tasks(subject public.study_subject) OWNER TO postgres;
+
+--
+-- Name: subject_current_day(public.study_subject); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
 CREATE FUNCTION public.subject_current_day(subject public.study_subject) RETURNS integer
@@ -727,54 +430,224 @@ CREATE FUNCTION public.subject_current_day(subject public.study_subject) RETURNS
 $$;
 
 
-ALTER FUNCTION public.subject_current_day(subject public.study_subject) OWNER TO supabase_admin;
+ALTER FUNCTION public.subject_current_day(subject public.study_subject) OWNER TO postgres;
 
 --
--- Name: study_missed_days(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: subject_total_active_days(public.study_subject); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.study_missed_days(study_param public.study) RETURNS integer[]
+CREATE FUNCTION public.subject_total_active_days(subject public.study_subject) RETURNS integer
     LANGUAGE sql SECURITY DEFINER
     AS $$
-  select ARRAY_AGG(subject_current_day(study_subject) - subject_total_active_days(study_subject)) from study_subject
-where study_subject.study_id = study_param.id and study_subject.is_deleted = false;
+  SELECT
+    COUNT(DISTINCT DATE(completed_at))::int
+FROM
+    subject_progress
+WHERE subject_id = subject.id
+AND DATE(completed_at) < DATE(now());
 $$;
 
 
-ALTER FUNCTION public.study_missed_days(study_param public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.subject_total_active_days(subject public.study_subject) OWNER TO postgres;
 
 --
--- Name: study_participant_count(public.study); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: user_email(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.study_participant_count(study public.study) RETURNS integer
+CREATE FUNCTION public.user_email(user_id uuid) RETURNS text
     LANGUAGE sql SECURITY DEFINER
     AS $$
-  select count(1)::int
-    from study_subject
-    where study_id = study.id
-      and study_subject.is_deleted = false;
+  SELECT email from "user" where id = user_id
 $$;
 
 
-ALTER FUNCTION public.study_participant_count(study public.study) OWNER TO supabase_admin;
+ALTER FUNCTION public.user_email(user_id uuid) OWNER TO postgres;
 
 --
--- Name: study_total_tasks(public.study_subject); Type: FUNCTION; Schema: public; Owner: supabase_admin
+-- Name: app_config; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.study_total_tasks(subject public.study_subject) RETURNS integer
-    LANGUAGE sql SECURITY DEFINER
-    AS $$
-  select count(1)::int
-    from subject_progress
-    where subject_id = subject.id;
-$$;
+CREATE TABLE public.app_config (
+    id text NOT NULL,
+    app_privacy jsonb NOT NULL,
+    app_terms jsonb NOT NULL,
+    designer_privacy jsonb NOT NULL,
+    designer_terms jsonb NOT NULL,
+    imprint jsonb NOT NULL,
+    contact jsonb DEFAULT '{"email": "hpi-info@hpi.de", "phone": "+49-(0)331 5509-0", "website": "https://hpi.de/", "organization": "Hasso Plattner Institute"}'::jsonb NOT NULL,
+    analytics jsonb
+);
 
 
-ALTER FUNCTION public.study_total_tasks(subject public.study_subject) OWNER TO supabase_admin;
+ALTER TABLE public.app_config OWNER TO postgres;
 
--- ========================= TRIGGERS ==========================================
+--
+-- Name: TABLE app_config; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.app_config IS 'Stores app config for different envs';
+
+
+--
+-- Name: repo; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.repo (
+    project_id text NOT NULL,
+    user_id uuid NOT NULL,
+    study_id uuid NOT NULL,
+    provider public.git_provider NOT NULL
+);
+
+
+ALTER TABLE public.repo OWNER TO postgres;
+
+--
+-- Name: TABLE repo; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.repo IS 'Git repo where the generated project is stored';
+
+
+--
+-- Name: study_invite; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.study_invite (
+    code text NOT NULL,
+    study_id uuid NOT NULL,
+    preselected_intervention_ids text[]
+);
+
+
+ALTER TABLE public.study_invite OWNER TO postgres;
+
+--
+-- Name: TABLE study_invite; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.study_invite IS 'Study invite codes';
+
+
+--
+-- Name: COLUMN study_invite.preselected_intervention_ids; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.study_invite.preselected_intervention_ids IS 'Intervention Ids (and order) preselected by study creator';
+
+
+--
+-- Name: subject_progress; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.subject_progress (
+    completed_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+    subject_id uuid NOT NULL,
+    intervention_id text NOT NULL,
+    task_id text NOT NULL,
+    result_type text NOT NULL,
+    result jsonb NOT NULL
+);
+
+
+ALTER TABLE public.subject_progress OWNER TO postgres;
+
+--
+-- Name: study_progress_export; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.study_progress_export AS
+ SELECT subject_progress.completed_at,
+    subject_progress.intervention_id,
+    subject_progress.task_id,
+    subject_progress.result_type,
+    subject_progress.result,
+    subject_progress.subject_id,
+    study_subject.user_id,
+    study_subject.study_id,
+    study_subject.started_at,
+    study_subject.selected_intervention_ids
+   FROM public.study_subject,
+    public.subject_progress
+  WHERE (study_subject.id = subject_progress.subject_id);
+
+
+ALTER TABLE public.study_progress_export OWNER TO postgres;
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."user" (
+    id uuid NOT NULL,
+    email text
+);
+
+
+ALTER TABLE public."user" OWNER TO postgres;
+
+--
+-- Name: TABLE "user"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public."user" IS 'Users get automatically added, when a new user is created in auth.users';
+
+
+--
+-- Name: app_config AppConfig_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.app_config
+    ADD CONSTRAINT "AppConfig_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: subject_progress participant_progress_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subject_progress
+    ADD CONSTRAINT participant_progress_pkey PRIMARY KEY (completed_at, subject_id);
+
+
+--
+-- Name: repo repo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repo
+    ADD CONSTRAINT repo_pkey PRIMARY KEY (project_id);
+
+
+--
+-- Name: study_invite study_invite_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_invite
+    ADD CONSTRAINT study_invite_pkey PRIMARY KEY (code);
+
+
+--
+-- Name: study study_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study
+    ADD CONSTRAINT study_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: study_subject study_subject_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_subject
+    ADD CONSTRAINT study_subject_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: users on_auth_user_created; Type: TRIGGER; Schema: auth; Owner: postgres
@@ -782,25 +655,123 @@ ALTER FUNCTION public.study_total_tasks(subject public.study_subject) OWNER TO s
 
 CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
-
 --
--- Name: study handle_updated_at; Type: TRIGGER; Schema: public; Owner: supabase_admin
+-- Name: study handle_updated_at; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.study FOR EACH ROW EXECUTE FUNCTION extensions.moddatetime('updated_at');
 
 
--- ============================ ROW LEVEL SECURITY POLICIES ======================================
+--
+-- Name: subject_progress participant_progress_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.subject_progress
+    ADD CONSTRAINT "participant_progress_subjectId_fkey" FOREIGN KEY (subject_id) REFERENCES public.study_subject(id) ON DELETE CASCADE;
+
 
 --
--- Name: app_config Config is viewable by everyone; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: repo repo_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repo
+    ADD CONSTRAINT "repo_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
+
+
+--
+-- Name: repo repo_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repo
+    ADD CONSTRAINT "repo_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+
+
+--
+-- Name: study_invite study_invite_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_invite
+    ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
+
+
+--
+-- Name: study_subject study_subject_loginCode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_subject
+    ADD CONSTRAINT "study_subject_loginCode_fkey" FOREIGN KEY (invite_code) REFERENCES public.study_invite(code) ON DELETE CASCADE;
+
+
+--
+-- Name: study_subject study_subject_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_subject
+    ADD CONSTRAINT "study_subject_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
+
+
+--
+-- Name: study_subject study_subject_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_subject
+    ADD CONSTRAINT "study_subject_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: study study_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study
+    ADD CONSTRAINT "study_userId_fkey" FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: app_config Config is viewable by everyone; Type: POLICY; Schema: public; Owner: postgres
 --
 
 CREATE POLICY "Config is viewable by everyone" ON public.app_config FOR SELECT USING (true);
 
 
 --
--- Name: study_invite Editors can do everything with study invite codes; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: repo Repo is viewable by everyone; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Repo is viewable by everyone" ON public.repo FOR SELECT USING (true);
+
+
+--
+-- Name: repo Study creators can do everything with repos from their studies; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Study creators can do everything with repos from their studies" ON public.repo USING ((auth.uid() = ( SELECT study.user_id
+   FROM public.study
+  WHERE (repo.study_id = study.id))));
+
+
+--
+-- Name: study Study subjects can view their joined study; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (public.is_study_subject_of(auth.uid(), id));
+
+
+--
+-- Name: study Editors can do everything with their studies; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Editors can do everything with their studies" ON public.study USING (public.can_edit(auth.uid(), study.*));
+
+
+--
+-- Name: study Everybody can view (published and registry_published) studies; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Everybody can view designated published studies" ON public.study FOR SELECT USING (((published = true) AND (registry_published = true OR participation = 'open'::public.participation OR result_sharing = 'public'::public.result_sharing)));
+
+
+--
+-- Name: study_invite Editors can do everything with study invite codes; Type: POLICY; Schema: public; Owner: postgres
 --
 
 CREATE POLICY "Editors can do everything with study invite codes" ON public.study_invite USING (( SELECT public.can_edit(auth.uid(), study.*) AS can_edit
@@ -809,22 +780,23 @@ CREATE POLICY "Editors can do everything with study invite codes" ON public.stud
 
 
 --
--- Name: study Editors can do everything with their studies; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: study_subject Users can do everything with their subjects; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Editors can do everything with their studies" ON public.study USING (public.can_edit(auth.uid(), study.*));
-
-
---
--- Name: study_subject Editors can do everything with their study subjects; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Editors can do everything with their study subjects" ON public.study_subject AS PERMISSIVE FOR ALL
-TO public USING (( SELECT public.can_edit(auth.uid(), study) AS can_edit FROM public.study WHERE (study.id = study_subject.study_id)));
+CREATE POLICY "Users can do everything with their subjects" ON public.study_subject USING ((auth.uid() = user_id));
 
 
 --
--- Name: study_subject Editors can see subjects from their studies; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: study_subject Editors can do everything with their study subjects; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Editors can do everything with their study subjects" ON public.study_subject USING (( SELECT public.can_edit(auth.uid(), study.*) AS can_edit
+   FROM public.study
+  WHERE (study.id = study_subject.study_id)));
+
+
+--
+-- Name: study_subject Editors can see subjects from their studies; Type: POLICY; Schema: public; Owner: postgres
 --
 
 CREATE POLICY "Editors can see subjects from their studies" ON public.study_subject FOR SELECT USING (( SELECT public.can_edit(auth.uid(), study.*) AS can_edit
@@ -833,7 +805,15 @@ CREATE POLICY "Editors can see subjects from their studies" ON public.study_subj
 
 
 --
--- Name: subject_progress Editors can see their study subjects progress; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: study_subject Invite code needs to be valid (not possible in the app); Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Invite code needs to be valid (not possible in the app)" ON public.study_subject AS RESTRICTIVE FOR INSERT WITH CHECK (((invite_code IS NULL) OR (study_id IN ( SELECT code_fun.study_id
+   FROM public.get_study_from_invite(study_subject.invite_code) code_fun(study_id, preselected_intervention_ids)))));
+
+
+--
+-- Name: subject_progress Editors can see their study subjects progress; Type: POLICY; Schema: public; Owner: postgres
 --
 
 CREATE POLICY "Editors can see their study subjects progress" ON public.subject_progress FOR SELECT USING (( SELECT public.can_edit(auth.uid(), study.*) AS can_edit
@@ -843,44 +823,7 @@ CREATE POLICY "Editors can see their study subjects progress" ON public.subject_
 
 
 --
--- Name: study Everybody can view (published and open) studies; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Everybody can view (published and open) studies" ON public.study FOR SELECT USING ((published = true) AND (participation = 'open'::public.participation));
-
-
---
--- Name: study Study subjects can view their joined study; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (public.is_study_subject_of(auth.uid(), id));
-
---
--- Name: study_subject Invite code needs to be valid (not possible in the app); Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Invite code needs to be valid (not possible in the app)" ON public.study_subject AS RESTRICTIVE FOR INSERT WITH CHECK (((invite_code IS NULL) OR (study_id IN ( SELECT code_fun.study_id
-   FROM public.get_study_from_invite(study_subject.invite_code) code_fun(study_id, preselected_intervention_ids)))));
-
-
---
--- Name: repo Repo is viewable by everyone; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Repo is viewable by everyone" ON public.repo FOR SELECT USING (true);
-
-
---
--- Name: repo Study creators can do everything with repos from their studies; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Study creators can do everything with repos from their studies" ON public.repo USING ((auth.uid() = ( SELECT study.user_id
-   FROM public.study
-  WHERE (repo.study_id = study.id))));
-
-
---
--- Name: subject_progress Users can do everything with their progress; Type: POLICY; Schema: public; Owner: supabase_admin
+-- Name: subject_progress Users can do everything with their progress; Type: POLICY; Schema: public; Owner: postgres
 --
 
 CREATE POLICY "Users can do everything with their progress" ON public.subject_progress USING ((auth.uid() = ( SELECT study_subject.user_id
@@ -889,117 +832,48 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
 
 
 --
--- Name: study_subject Users can do everything with their subjects; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Users can do everything with their subjects" ON public.study_subject USING ((auth.uid() = user_id));
-
-
---
--- Name: tag Allow read access but deny write access for tags; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Allow read access, deny write access"
-  ON public.tag
-  FOR SELECT
-  USING (true);
-
-
---
--- Name: Allow study creators to manage tags; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Allow study creators to manage tags"
-  ON public.study_tag
-  FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1
-      FROM public.study
-      WHERE study.id = study_tag.study_id
-        AND study.user_id = auth.uid()
-    )
-  );
-
-
---
--- Name: Allow subscribed users to select study tags; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Allow subscribed users to select study tags"
-  ON public.study_tag
-  FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1
-      FROM public.study_subject
-      WHERE study_subject.study_id = study_tag.study_id
-        AND study_subject.user_id = auth.uid()
-    )
-  );
-
-
---
--- Name: Allow users to manage their own user; Type: POLICY; Schema: public; Owner: supabase_admin
---
-
-CREATE POLICY "Allow users to manage their own user"
-ON public."user" FOR ALL
-USING (
-  auth.uid() = id
-);
-
-
---
--- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.app_config ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: repo; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: repo; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.repo ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: study; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: study; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.study ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: study_invite; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: study_invite; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.study_invite ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: study_subject; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: study_subject; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.study_subject ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: tag; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE public.tag ENABLE ROW LEVEL SECURITY;
-
---
--- Name: study_tag; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
---
-
-ALTER TABLE public.study_tag ENABLE ROW LEVEL SECURITY;
-
---
--- Name: subject_progress; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: subject_progress; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public.subject_progress ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: user; Type: ROW SECURITY; Schema: public; Owner: supabase_admin
+-- Name: user; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
 ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
+
+--
+-- PostgreSQL database dump complete
+--
+

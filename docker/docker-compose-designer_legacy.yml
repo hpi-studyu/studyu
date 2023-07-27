@@ -2,10 +2,8 @@ version: '3'
 name: 'studyu'
 
 networks:
-  studyu_network:
+  default:
     name: studyu_network
-    driver: bridge
-    external: true
 
 services:
   designer_legacy:
@@ -18,8 +16,6 @@ services:
         FLUTTER_APP_FOLDER: designer
     ports:
       - 8081:8081
-    networks:
-      - studyu_network
     volumes:
       # To use the legacy designer instead of the new designer_v2
       # replace designer_v2 with designer in the file nginx/conf.d/designer.conf

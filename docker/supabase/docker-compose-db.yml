@@ -2,9 +2,8 @@ version: '3.8'
 name: 'studyu_database'
 
 networks:
-  studyu_network:
+  default:
     name: studyu_network
-    driver: bridge
 
 services:
   db:
@@ -30,8 +29,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATABASE: ${POSTGRES_DB}
       POSTGRES_DB: ${POSTGRES_DB}
-    networks:
-      - studyu_network
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
