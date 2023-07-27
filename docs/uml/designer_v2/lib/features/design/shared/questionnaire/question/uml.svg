@@ -133,9 +133,9 @@
 	  |
 	  +model: Q;
 	  +questionTypeControl: FormControl&lt;SurveyQuestionType&gt;;
+	  +form: FormGroup;
 	  +type: SurveyQuestionType;
-	  +titles: Map&lt;FormMode, String&gt;;
-	  +form: FormGroup
+	  +titles: Map&lt;FormMode, String&gt;
 	  |
 	  #dynamic onQuestionTypeChanged();
 	  +QuestionFormData buildFormData();
@@ -144,8 +144,8 @@
 	]
 	
 	[QuestionFormViewModelWrapper]o-[FormControl]
-	[QuestionFormViewModelWrapper]o-[SurveyQuestionType]
 	[QuestionFormViewModelWrapper]o-[FormGroup]
+	[QuestionFormViewModelWrapper]o-[SurveyQuestionType]
 	[&lt;abstract&gt;ManagedFormViewModel]&lt;:-[QuestionFormViewModelWrapper]
 	
 	[SurveyQuestionType
@@ -352,13 +352,13 @@
 					<g fill="#eee8d5">
 						<path d="M436.6 997.2 L425.9 997.1 L431.4 987.9 L442.2 988.0 Z"></path>
 					</g>
-					<path d="M620.0 1006.7 L620 1203 L754.75 1237.513043478261 L754.8 1237.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M625.3 997.3 L620.0 1006.7 L614.7 997.3 L620.0 988.0 Z"></path>
-					</g>
 					<path d="M905.2 951.6 L2050.25 1203 L3460.25 1281.0923076923077 L3460.3 1281.1 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M897.3 944.4 L905.2 951.6 L895.0 954.8 L887.0 947.6 Z"></path>
+					</g>
+					<path d="M620.0 1006.7 L620 1203 L754.75 1237.513043478261 L754.8 1237.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M625.3 997.3 L620.0 1006.7 L614.7 997.3 L620.0 988.0 Z"></path>
 					</g>
 					<path d="M985.5 49.4 L840 82 L840 328.5 L840 328.5 L840 575 L840 575 L689.3630573248407 790 L689.4 790.0 " fill="none"></path>
 					<path d="M986.7 54.6 L985.5 49.4 L984.4 44.2 L998.5 46.5 Z"></path>
@@ -675,9 +675,9 @@
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModelWrapper">
 								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModelWrapper">+model: Q</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModelWrapper">+questionTypeControl: FormControl&lt;SurveyQuestionType&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionFormViewModelWrapper">+type: SurveyQuestionType</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="QuestionFormViewModelWrapper">+titles: Map&lt;FormMode, String&gt;</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="QuestionFormViewModelWrapper">+form: FormGroup</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionFormViewModelWrapper">+form: FormGroup</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="QuestionFormViewModelWrapper">+type: SurveyQuestionType</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="QuestionFormViewModelWrapper">+titles: Map&lt;FormMode, String&gt;</text>
 								
 							</g>
 						</g>
