@@ -21,27 +21,36 @@ class QuestionFormViewModelWrapper<Q extends QuestionFormViewModel> extends Mana
     onValueChanged: onQuestionTypeChanged,
   );
 
+  @override
+  late final FormGroup form = FormGroup({
+    'questionType': questionTypeControl,
+    ...model.form.controls,
+  });
+
   @protected
   onQuestionTypeChanged(SurveyQuestionType? newType) {
-    model.form.markAsDirty();
     switch (newType) {
       case SurveyQuestionType.bool:
-        model = BoolQuestionFormViewModel(delegate: model.delegate, validationSet: model.validationSet) as Q;
+        model = BoolQuestionFormViewModel(delegate: model.delegate) as Q;
         break;
       case SurveyQuestionType.scale:
-        model = ScaleQuestionFormViewModel(delegate: model.delegate, validationSet: model.validationSet) as Q;
+        model = ScaleQuestionFormViewModel(delegate: model.delegate) as Q;
         break;
       case SurveyQuestionType.choice:
-        model = ChoiceQuestionFormViewModel(delegate: model.delegate, validationSet: model.validationSet) as Q;
+        model = ChoiceQuestionFormViewModel(delegate: model.delegate) as Q;
         break;
       default:
         throw UnimplementedError();
     }
+    for (final controlKey in form.controls.keys) {
+      if (controlKey != 'questionType') form.removeControl(controlKey, emitEvent: false);
+    }
+    form.addAll(model.form.controls);
+    markFormGroupChanged();
   }
 
   @override buildFormData() => model.buildFormData();
   @override void setControlsFrom(data) => model.setControlsFrom(data);
   @override ManagedFormViewModel<QuestionFormData> createDuplicate() => model.createDuplicate();
   @override Map<FormMode, String> get titles => model.titles;
-  @override FormGroup get form => model.form;
 }
