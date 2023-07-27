@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/bool_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/choice_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_type_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_wrapper.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/scale_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/bool_question_form_view.dart';
@@ -24,9 +24,9 @@ import 'package:studyu_designer_v2/theme.dart';
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]
 class SurveyQuestionFormView extends ConsumerStatefulWidget {
-  SurveyQuestionFormView({required QuestionFormViewModel formViewModel, this.isHtmlStyleable = true, super.key}): typeController = QuestionTypeController(formViewModel);
+  const SurveyQuestionFormView({required this.modelWrapper, this.isHtmlStyleable = true, super.key});
 
-  final QuestionTypeController typeController;
+  final QuestionFormViewModelWrapper modelWrapper;
   final bool isHtmlStyleable;
 
   @override
@@ -39,8 +39,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       .map((questionType) => FormControlOption(questionType, questionType.string))
       .toList();
 
-  QuestionTypeController get controller => widget.typeController;
-  QuestionFormViewModel get formViewModel => controller.formViewModel;
+  QuestionFormViewModel get formViewModel => widget.modelWrapper.model;
 
   late bool isQuestionHelpTextFieldVisible = formViewModel.questionInfoTextControl.value?.isNotEmpty ?? false;
   bool isStylingInformationDismissed = true;
@@ -55,7 +54,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel as BoolQuestionFormViewModel),
       SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel as ScaleQuestionFormViewModel),
     };
-    final questionType = controller.type;
+    final questionType = widget.modelWrapper.type;
 
     if (!questionTypeWidgets.containsKey(questionType)) {
       throw Exception("Failed to build widget for SurveyQuestionType $questionType because"
@@ -119,7 +118,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
               input: Theme(
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
-                  formControl: controller.questionTypeControl,
+                  formControl: widget.modelWrapper.questionTypeControl,
                   items: _questionTypeControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;

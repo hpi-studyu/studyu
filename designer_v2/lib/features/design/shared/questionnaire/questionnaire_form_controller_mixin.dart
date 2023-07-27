@@ -1,5 +1,6 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_wrapper.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/choice_question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
@@ -11,12 +12,12 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
-mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewModel<D>
+mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModelWrapper> on FormViewModel<D>
     implements IFormViewModelDelegate<Q>, IProviderArgsResolver<Q, QuestionFormRouteArgs> {
   late final FormArray questionsArray = FormArray([]);
-  late final questionFormViewModels = FormViewModelCollection<Q, QuestionFormData>([], questionsArray);
+  late final modelCollection = FormViewModelCollection<Q, QuestionFormData>([], questionsArray);
 
-  List<Q> get questionModels => questionFormViewModels.formViewModels;
+  List<Q> get modelWrappers => modelCollection.formViewModels;
 
   late final questionnaireControls = {
     'questions': questionsArray,
@@ -24,14 +25,14 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
 
   void setQuestionnaireControlsFrom(QuestionnaireFormData data) {
     if (data.questionsData != null) {
-      final viewModels = data.questionsData!.map((data) => provideQuestionFormViewModel(data)).toList();
-      questionFormViewModels.reset(viewModels);
+      final viewModels = data.questionsData!.map((data) => provideModelWrapper(data)).toList();
+      modelCollection.reset(viewModels);
     }
   }
 
   QuestionnaireFormData buildQuestionnaireFormData() {
     return QuestionnaireFormData(
-      questionsData: questionFormViewModels.formData,
+      questionsData: modelCollection.formData,
     );
   }
 
@@ -40,7 +41,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
 
   @override
   void read([D? formData]) {
-    questionFormViewModels.read();
+    modelCollection.read();
     super.read(formData);
   }
 
@@ -51,15 +52,15 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
   bool propagateOnSave = false;
 
   @override
-  void onCancel(Q formViewModel, FormMode prevFormMode) {
+  void onCancel(Q modelWrapper, FormMode prevFormMode) {
     return; // no-op
   }
 
   @override
-  Future onSave(Q formViewModel, FormMode prevFormMode) async {
+  Future onSave(Q modelWrapper, FormMode prevFormMode) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
-      questionFormViewModels.commit(formViewModel);
+      modelCollection.commit(modelWrapper);
     } else if (prevFormMode == FormMode.edit) {
       // nothing to do here
     }
@@ -75,24 +76,26 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel> on FormViewM
     if (args.questionId.isNewId) {
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
-      final viewModel = provideQuestionFormViewModel<ChoiceQuestionFormData>(null);
-      questionFormViewModels.stage(viewModel);
-      return viewModel;
+      final modelWrapper = provideModelWrapper<ChoiceQuestionFormData>(null);
+      modelCollection.stage(modelWrapper);
+      return modelWrapper;
     }
 
-    final viewModel = questionFormViewModels.findWhere((vm) => vm.questionId == args.questionId);
+    final viewModel = modelCollection.findWhere((vm) => vm.model.questionId == args.questionId);
     if (viewModel == null) {
       throw QuestionNotFoundException(); // TODO handle 404 not found
     }
     return viewModel;
   }
 
-  Q provideQuestionFormViewModel<FD extends QuestionFormData>(FD? formData) {
-    return QuestionFormViewModel.concrete<FD>(
+  Q provideModelWrapper<FD extends QuestionFormData>(FD? formData) {
+    // we need to specify <QuestionFormViewModel> here so it doesn't
+    // automatically use the concrete type
+    return QuestionFormViewModelWrapper<QuestionFormViewModel>(QuestionFormViewModel.concrete<FD>(
       formData: formData,
       delegate: this,
       validationSet: validationSet,
       titles: questionTitles.isNotEmpty ? questionTitles : null,
-    ) as Q;
+    )) as Q;
   }
 }

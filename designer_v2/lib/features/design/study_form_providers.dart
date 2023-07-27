@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/measurements/measurements_for
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/reports_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_wrapper.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -32,8 +32,8 @@ final enrollmentFormViewModelProvider = Provider.autoDispose.family<EnrollmentFo
   return ref.watch(studyFormViewModelProvider(studyId)).enrollmentFormViewModel;
 });
 
-final screenerQuestionFormViewModelProvider =
-    Provider.autoDispose.family<ScreenerQuestionFormViewModel, ScreenerQuestionFormRouteArgs>((ref, args) {
+final screenerQuestionFormViewModelWrapperProvider =
+    Provider.autoDispose.family<ScreenerQuestionFormViewModelWrapper, ScreenerQuestionFormRouteArgs>((ref, args) {
   final owner = ref.watch(enrollmentFormViewModelProvider(args.studyId));
   return owner.provide(args);
 });
@@ -77,7 +77,7 @@ final surveyFormViewModelProvider =
 });
 
 final surveyQuestionFormViewModelProvider =
-    Provider.autoDispose.family<QuestionFormViewModel, SurveyQuestionFormRouteArgs>((ref, args) {
+    Provider.autoDispose.family<QuestionFormViewModelWrapper, SurveyQuestionFormRouteArgs>((ref, args) {
   final owner = ref.watch(surveyFormViewModelProvider(args));
   return owner.provide(args);
 });

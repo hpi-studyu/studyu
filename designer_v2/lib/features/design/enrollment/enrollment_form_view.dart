@@ -81,21 +81,21 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ScreenerQuestionFormViewModel>(
+                    return FormArrayTable<ScreenerQuestionFormViewModelWrapper>(
                       control: formViewModel.questionsArray,
-                      items: formViewModel.questionModels,
-                      onSelectItem: (viewModel) {
-                        final routeArgs = formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
+                      items: formViewModel.modelWrappers,
+                      onSelectItem: (modelWrapper) {
+                        final routeArgs = formViewModel.buildScreenerQuestionFormRouteArgs(modelWrapper);
                         _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (modelWrapper, _) => formViewModel.availablePopupActions(modelWrapper),
                       onNewItem: () {
                         final routeArgs = formViewModel.buildNewScreenerQuestionFormRouteArgs();
                         _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
                       sectionDescription: tr.form_array_screener_questions_description,
                       onNewItemLabel: tr.form_array_screener_questions_new,
-                      rowTitle: (viewModel) => viewModel.formData?.questionText ?? '',
+                      rowTitle: (modelWrapper) => modelWrapper.formData?.questionText ?? '',
                       leadingWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -115,13 +115,13 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                               : const SizedBox.shrink(),
                         ],
                       ),
-                      rowPrefix: (context, viewModel, rowIdx) {
+                      rowPrefix: (context, modelWrapper, rowIdx) {
                         return Row(
                           children: [
                             Tooltip(
-                              message: viewModel.questionType.string,
+                              message: modelWrapper.type.string,
                               child: Icon(
-                                viewModel.questionType.icon,
+                                modelWrapper.type.icon,
                                 color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
                                 size: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.size,
                               ),
@@ -188,22 +188,22 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final formViewModel = ref.read(screenerQuestionFormViewModelProvider(routeArgs));
+    final modelWrapper = ref.read(screenerQuestionFormViewModelWrapperProvider(routeArgs));
 
-    showFormSideSheet<ScreenerQuestionFormViewModel>(
+    showFormSideSheet<ScreenerQuestionFormViewModelWrapper>(
       context: context,
-      formViewModel: formViewModel,
-      tabs: <FormSideSheetTab<ScreenerQuestionFormViewModel>>[
+      formViewModel: modelWrapper,
+      tabs: <FormSideSheetTab<ScreenerQuestionFormViewModelWrapper>>[
         FormSideSheetTab(
           title: tr.navlink_screener_question_content,
           index: 0,
-          formViewBuilder: (formViewModel) =>
-              SurveyQuestionFormView(formViewModel: formViewModel, isHtmlStyleable: false),
+          formViewBuilder: (modelWrapper) =>
+              SurveyQuestionFormView(modelWrapper: modelWrapper, isHtmlStyleable: false),
         ),
         FormSideSheetTab(
           title: tr.navlink_screener_question_logic,
           index: 1,
-          formViewBuilder: (formViewModel) => ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+          formViewBuilder: (formViewModel) => ScreenerQuestionLogicFormView(modelWrapper: formViewModel),
         ),
       ],
     );

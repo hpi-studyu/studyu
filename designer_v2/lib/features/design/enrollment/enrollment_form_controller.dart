@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_wrapper.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/models/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -25,11 +25,11 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
-    with WithQuestionnaireControls<EnrollmentFormData, ScreenerQuestionFormViewModel>
+    with WithQuestionnaireControls<EnrollmentFormData, ScreenerQuestionFormViewModelWrapper>
     implements
-        IFormViewModelDelegate<ScreenerQuestionFormViewModel>,
-        IListActionProvider<ScreenerQuestionFormViewModel>,
-        IProviderArgsResolver<ScreenerQuestionFormViewModel, QuestionFormRouteArgs> {
+        IFormViewModelDelegate<ScreenerQuestionFormViewModelWrapper>,
+        IListActionProvider<ScreenerQuestionFormViewModelWrapper>,
+        IProviderArgsResolver<ScreenerQuestionFormViewModelWrapper, QuestionFormRouteArgs> {
   EnrollmentFormViewModel({
     required this.study,
     required this.router,
@@ -109,7 +109,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   void read([EnrollmentFormData? formData]) {
-    questionFormViewModels.read();
+    modelCollection.read();
     consentItemFormViewModels.read();
     super.read(formData);
   }
@@ -117,23 +117,23 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   // - IListActionProvider
 
   @override
-  List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+  List<ModelAction> availableActions(ScreenerQuestionFormViewModelWrapper modelWrapper) {
+    final actions = modelCollection.availableActions(modelWrapper, onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model, isReadOnly: isReadonly);
+  List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModelWrapper modelWrapper) {
+    final actions = modelCollection.availablePopupActions(modelWrapper, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model, isReadOnly: isReadonly);
+  List<ModelAction> availableInlineActions(ScreenerQuestionFormViewModelWrapper modelWrapper) {
+    final actions = modelCollection.availableInlineActions(modelWrapper, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   @override
-  void onSelectItem(QuestionFormViewModel item) {
+  void onSelectItem(QuestionFormViewModelWrapper item) {
     // TODO: open sidesheet programmatically
   }
 
@@ -151,10 +151,10 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     );
   }
 
-  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModel model) {
+  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModelWrapper modelWrapper) {
     return ScreenerQuestionFormRouteArgs(
       studyId: study.id,
-      questionId: model.questionId,
+      questionId: modelWrapper.model.questionId,
     );
   }
 
@@ -191,13 +191,13 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       };
 
   @override
-  ScreenerQuestionFormViewModel provideQuestionFormViewModel<FD extends QuestionFormData>(FD? formData) {
-    return ScreenerQuestionFormViewModel.concrete(
+  ScreenerQuestionFormViewModelWrapper provideModelWrapper<FD extends QuestionFormData>(FD? formData) {
+    return ScreenerQuestionFormViewModelWrapper(ScreenerQuestionFormViewModel.concrete(
       formData: formData,
       delegate: this,
       validationSet: validationSet,
       titles: questionTitles.isNotEmpty ? questionTitles : null,
-    );
+    ));
   }
 }
 

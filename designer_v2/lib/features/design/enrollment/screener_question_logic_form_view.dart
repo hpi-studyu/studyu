@@ -15,9 +15,10 @@ abstract class IScreenerQuestionLogicFormViewModel {
 }
 
 class ScreenerQuestionLogicFormView extends FormConsumerWidget {
-  const ScreenerQuestionLogicFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const ScreenerQuestionLogicFormView({required this.modelWrapper, Key? key}) : super(key: key);
 
-  final ScreenerQuestionFormViewModel formViewModel;
+  final ScreenerQuestionFormViewModelWrapper modelWrapper;
+  ScreenerQuestionFormViewModel get formViewModel => modelWrapper.model;
 
   @override
   Widget build(BuildContext context, FormGroup form) {
@@ -44,7 +45,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   }
 
   _buildInfoBanner(BuildContext context) {
-    return (!formViewModel.isReadonly && formViewModel.isDirtyOptionsBannerVisible)
+    return (!modelWrapper.isReadonly && formViewModel.isDirtyOptionsBannerVisible)
         ? Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: BannerBox(
@@ -52,8 +53,8 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
               body: TextParagraph(text: tr.form_array_screener_question_logic_dirty_banner),
               padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,
-              isDismissed: formViewModel is ScreenerScaleQuestionFormViewModel
-                ? !(formViewModel as ScreenerScaleQuestionFormViewModel).isMidValuesClearedInfoVisible
+              isDismissed: modelWrapper is ScreenerScaleQuestionFormViewModel
+                ? !(modelWrapper as ScreenerScaleQuestionFormViewModel).isMidValuesClearedInfoVisible
                 : true,
               dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
             ),

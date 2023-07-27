@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/schedule.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_wrapper.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -21,9 +21,9 @@ import 'package:uuid/uuid.dart';
 class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSurveyFormData>
     with WithQuestionnaireControls, WithScheduleControls
     implements
-        IFormViewModelDelegate<QuestionFormViewModel>,
-        IListActionProvider<QuestionFormViewModel>,
-        IProviderArgsResolver<QuestionFormViewModel, QuestionFormRouteArgs> {
+        IFormViewModelDelegate<QuestionFormViewModelWrapper>,
+        IListActionProvider<QuestionFormViewModelWrapper>,
+        IProviderArgsResolver<QuestionFormViewModelWrapper, QuestionFormRouteArgs> {
   MeasurementSurveyFormViewModel({
     required this.study,
     super.delegate,
@@ -119,23 +119,23 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
   // - IListActionProvider
 
   @override
-  List<ModelAction> availableActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+  List<ModelAction> availableActions(QuestionFormViewModelWrapper modelWrapper) {
+    final actions = modelCollection.availableActions(modelWrapper, onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model, isReadOnly: isReadonly);
+  List<ModelAction> availablePopupActions(QuestionFormViewModelWrapper modelWrapper) {
+    final actions = modelCollection.availablePopupActions(modelWrapper, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model, isReadOnly: isReadonly);
+  List<ModelAction> availableInlineActions(QuestionFormViewModelWrapper modelWrapper) {
+    final actions = modelCollection.availableInlineActions(modelWrapper, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
   @override
-  void onSelectItem(QuestionFormViewModel item) {
+  void onSelectItem(QuestionFormViewModelWrapper item) {
     // TODO: open sidesheet programmatically
     print("select item");
   }
@@ -156,11 +156,11 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
     );
   }
 
-  SurveyQuestionFormRouteArgs buildFormRouteArgs(QuestionFormViewModel model) {
+  SurveyQuestionFormRouteArgs buildFormRouteArgs(QuestionFormViewModelWrapper modelWrapper) {
     final args = SurveyQuestionFormRouteArgs(
       studyId: study.id,
       measurementId: measurementId,
-      questionId: model.questionId,
+      questionId: modelWrapper.model.questionId,
     );
     return args;
   }

@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/controllers/question_form_wrapper.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/views/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -144,26 +144,26 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
           return ReactiveFormArray(
             formArray: widget.formViewModel.questionsArray,
             builder: (context, formArray, child) {
-              return FormArrayTable<QuestionFormViewModel>(
+              return FormArrayTable<QuestionFormViewModelWrapper>(
                 control: widget.formViewModel.questionsArray,
-                items: widget.formViewModel.questionModels,
-                onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
-                getActionsAt: (viewModel, _) => widget.formViewModel.availablePopupActions(viewModel),
+                items: widget.formViewModel.modelWrappers,
+                onSelectItem: (modelWrapper) => _onSelectItem(modelWrapper, context, ref),
+                getActionsAt: (modelWrapper, _) => widget.formViewModel.availablePopupActions(modelWrapper),
                 onNewItem: () => _onNewItem(context, ref),
                 onNewItemLabel: tr.form_array_measurement_survey_questions_new,
-                rowTitle: (viewModel) => viewModel.formData?.questionText ?? '',
+                rowTitle: (modelWrapper) => modelWrapper.formData?.questionText ?? '',
                 sectionTitle: tr.form_array_measurement_survey_questions,
                 emptyIcon: Icons.content_paste_off_rounded,
                 emptyTitle: tr.form_array_measurement_survey_questions_empty_title,
                 emptyDescription: tr.form_array_measurement_survey_questions_empty_description,
                 hideLeadingTrailingWhenEmpty: true,
-                rowPrefix: (context, viewModel, rowIdx) {
+                rowPrefix: (context, modelWrapper, rowIdx) {
                   return Row(
                     children: [
                       Tooltip(
-                        message: viewModel.questionType.string,
+                        message: modelWrapper.type.string,
                         child: Icon(
-                          viewModel.questionType.icon,
+                          modelWrapper.type.icon,
                           color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
                           size: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.size,
                         ),
@@ -187,7 +187,7 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
-  _onSelectItem(QuestionFormViewModel item, BuildContext context, WidgetRef ref) {
+  _onSelectItem(QuestionFormViewModelWrapper item, BuildContext context, WidgetRef ref) {
     final routeArgs = widget.formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
@@ -195,10 +195,10 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
   _showSidesheetWithArgs(SurveyQuestionFormRouteArgs routeArgs, BuildContext context, WidgetRef ref) {
     final surveyQuestionFormViewModel = ref.read(surveyQuestionFormViewModelProvider(routeArgs));
-    showFormSideSheet<QuestionFormViewModel>(
+    showFormSideSheet<QuestionFormViewModelWrapper>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
-      formViewBuilder: (formViewModel) => SurveyQuestionFormView(formViewModel: formViewModel),
+      formViewBuilder: (formViewModel) => SurveyQuestionFormView(modelWrapper: formViewModel),
       ignoreAppBar: true,
     );
   }
