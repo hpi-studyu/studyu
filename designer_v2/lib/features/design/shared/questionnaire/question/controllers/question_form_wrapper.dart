@@ -19,9 +19,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:uuid/uuid.dart';
 
 class QuestionFormViewModelWrapper<Q extends QuestionFormViewModel> extends ManagedFormViewModel<QuestionFormData> {
-  QuestionFormViewModelWrapper(this.model) {
-    super.validationSet = model.validationSet ?? StudyFormValidationSet.draft;
-  }
+  QuestionFormViewModelWrapper(this.model): super(delegate: model.delegate, validationSet: model.validationSet);
 
   Q model;
   SurveyQuestionType get type => model.questionType;
