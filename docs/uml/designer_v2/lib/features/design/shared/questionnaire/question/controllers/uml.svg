@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="2466.8" height="1371.0" viewbox="0 0 2466.75 1371" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="2954.0" height="1279.0" viewbox="0 0 2954 1279" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[&lt;abstract&gt;QuestionFormViewModel
 	  |
 	  +questionIdControl: FormControl&lt;String&gt;;
@@ -83,19 +83,6 @@
 	[BoolQuestionFormViewModel]o-[FormGroup]
 	[&lt;abstract&gt;QuestionFormViewModel]&lt;:-[BoolQuestionFormViewModel]
 	
-	[QuestionTypeController
-	  |
-	  +formViewModel: QuestionFormViewModel&lt;QuestionFormData&gt;;
-	  +questionTypeControl: FormControl&lt;SurveyQuestionType&gt;;
-	  +type: SurveyQuestionType
-	  |
-	  -dynamic _onQuestionTypeChanged()
-	]
-	
-	[QuestionTypeController]o-[&lt;abstract&gt;QuestionFormViewModel]
-	[QuestionTypeController]o-[FormControl]
-	[QuestionTypeController]o-[SurveyQuestionType]
-	
 	[ScaleQuestionFormViewModel
 	  |
 	  -_titleResources: Map&lt;FormMode, String Function()&gt;?;
@@ -142,111 +129,132 @@
 	[ScaleQuestionFormViewModel]o-[FormGroup]
 	[&lt;abstract&gt;QuestionFormViewModel]&lt;:-[ScaleQuestionFormViewModel]
 	
+	[QuestionFormViewModelWrapper
+	  |
+	  +model: Q;
+	  +questionTypeControl: FormControl&lt;SurveyQuestionType&gt;;
+	  +type: SurveyQuestionType;
+	  +titles: Map&lt;FormMode, String&gt;;
+	  +form: FormGroup
+	  |
+	  #dynamic onQuestionTypeChanged();
+	  +QuestionFormData buildFormData();
+	  +void setControlsFrom();
+	  +ManagedFormViewModel&lt;QuestionFormData&gt; createDuplicate()
+	]
+	
+	[QuestionFormViewModelWrapper]o-[FormControl]
+	[QuestionFormViewModelWrapper]o-[SurveyQuestionType]
+	[QuestionFormViewModelWrapper]o-[FormGroup]
+	[&lt;abstract&gt;ManagedFormViewModel]&lt;:-[QuestionFormViewModelWrapper]
+	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1371.0" width="2466.8" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="1279.0" width="2954.0" stroke="none"></rect>
 			</g>
-			<g transform="translate(8, 8)" fill="#33322E">
+			<g transform="translate(31.5, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M623.4 485.2 L42.25 636 L42.25 950 L42.25 950 L42.25 1264 L42.25 1264 L76.05281690140845 1284 L76.1 1284.0 " fill="none"></path>
+					<path d="M1163.1 356.0 L-23.5 544 L-23.5 858 L-23.5 858 L-23.5 1172 L-23.5 1172 L21.570422535211264 1192 L21.6 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M633.8 488.1 L623.4 485.2 L631.1 477.7 L641.5 480.6 Z"></path>
+						<path d="M1173.1 359.8 L1163.1 356.0 L1171.4 349.3 L1181.5 353.1 Z"></path>
 					</g>
-					<path d="M623.7 504.5 L202.25 636 L202.25 950 L202.25 950 L202.25 1264 L202.25 1264 L524 1294.5200400801602 L524.0 1294.5 " fill="none"></path>
+					<path d="M1163.1 362.7 L136.5 544 L136.5 858 L136.5 858 L136.5 1172 L136.5 1172 L793 1204.8712976022566 L793.0 1204.9 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M634.2 506.9 L623.7 504.5 L631.0 496.7 L641.5 499.0 Z"></path>
+						<path d="M1173.2 366.4 L1163.1 362.7 L1171.4 355.8 L1181.5 359.5 Z"></path>
 					</g>
-					<path d="M940.6 634.3 L940.25 636 L940.25 950 L940.25 950 L940.25 1264 L940.25 1264 L1906 1296.4583431952663 L1906.0 1296.5 " fill="none"></path>
+					<path d="M1532.5 542.7 L1532.5 544 L1532.5 858 L1532.5 858 L1532.5 1172 L1532.5 1172 L1962 1201.3216346153847 L1962.0 1201.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M947.8 626.2 L940.6 634.3 L937.3 624.0 L944.5 616.0 Z"></path>
+						<path d="M1537.8 533.3 L1532.5 542.7 L1527.2 533.3 L1532.5 524.0 Z"></path>
 					</g>
-					<path d="M1361.8 461.8 L2252 636 L2252 950 L2252 950 L2252 1264 L2252 1264 L2313.830985915493 1284 L2313.8 1284.0 " fill="none"></path>
+					<path d="M1901.8 372.0 L2754.5 544 L2754.5 858 L2754.5 858 L2754.5 1172 L2754.5 1172 L2788.3028169014083 1192 L2788.3 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1353.7 454.8 L1361.8 461.8 L1351.6 465.2 L1343.5 458.2 Z"></path>
+						<path d="M1893.7 364.9 L1901.8 372.0 L1891.6 375.4 L1883.5 368.3 Z"></path>
 					</g>
-					<path d="M205.0 79.4 L551.25 143 L641.5 193.4172804532578 L641.5 193.4 " fill="none"></path>
-					<path d="M206.0 74.2 L205.0 79.4 L204.0 84.7 L191.9 77.0 Z"></path>
+					<path d="M1278.4 33.0 L1399 51 L1409.8316430020284 71 L1409.8 71.0 " fill="none"></path>
+					<path d="M1279.2 27.7 L1278.4 33.0 L1277.6 38.2 L1265.2 31.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M1141.0 80.2 L1392.5 143 L1343.5 173.19625 L1343.5 173.2 " fill="none"></path>
+						<path d="M1572.5 44.3 L1572.5 51 L1569.2545638945232 71 L1569.3 71.0 " fill="none"></path>
 					</g>
-					<path d="M1142.3 75.1 L1141.0 80.2 L1139.7 85.4 L1128.1 77.0 Z"></path>
-					<path d="M319.6 1111.6 L82.25 1264 L93.51760563380282 1284 L93.5 1284.0 " fill="none"></path>
+					<path d="M1577.8 44.3 L1572.5 44.3 L1567.2 44.3 L1572.5 31.0 Z"></path>
+					<path d="M253.9 1019.6 L16.5 1172 L39.03521126760563 1192 L39.0 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M330.3 1111.0 L319.6 1111.6 L324.6 1102.1 L335.3 1101.5 Z"></path>
+						<path d="M264.6 1019.0 L253.9 1019.6 L258.8 1010.1 L269.6 1009.5 Z"></path>
 					</g>
-					<path d="M918.6 1013.4 L2292 1264 L2331.2957746478874 1284 L2331.3 1284.0 " fill="none"></path>
+					<path d="M853.0 905.7 L2794.5 1172 L2805.7676056338028 1192 L2805.8 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M910.4 1006.5 L918.6 1013.4 L908.5 1017.0 L900.3 1010.0 Z"></path>
+						<path d="M844.5 899.1 L853.0 905.7 L843.0 909.7 L834.5 903.1 Z"></path>
 					</g>
-					<path d="M917.8 1078.2 L1420.25 1264 L1906 1293.9247288503254 L1906.0 1293.9 " fill="none"></path>
+					<path d="M852.6 949.5 L1697 1172 L1962 1198.462728551336 L1962.0 1198.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M910.9 1069.9 L917.8 1078.2 L907.2 1079.9 L900.3 1071.7 Z"></path>
+						<path d="M844.9 941.9 L852.6 949.5 L842.2 952.2 L834.5 944.7 Z"></path>
 					</g>
-					<path d="M571.3 1120.2 L571.25 1264 L574.2077464788732 1284 L574.2 1284.0 " fill="none"></path>
+					<path d="M505.5 1028.2 L505.5 1172 L793 1202.0183823529412 L793.0 1202.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M576.6 1110.8 L571.3 1120.2 L565.9 1110.8 L571.3 1101.5 Z"></path>
+						<path d="M510.8 1018.8 L505.5 1028.2 L500.2 1018.8 L505.5 1009.5 Z"></path>
 					</g>
-					<path d="M630.0 601.6 L571.25 636 L571.25 798.5 L571.3 798.5 " fill="none"></path>
-					<path d="M632.7 606.2 L630.0 601.6 L627.3 597.0 L641.5 594.9 Z"></path>
-					<path d="M2051.5 1060.0 L2332 1264 L2348.760563380282 1284 L2348.8 1284.0 " fill="none"></path>
+					<path d="M1168.5 384.9 L505.5 544 L505.5 706.5 L505.5 706.5 " fill="none"></path>
+					<path d="M1169.8 390.0 L1168.5 384.9 L1167.3 379.7 L1181.5 381.7 Z"></path>
+					<path d="M2614.1 969.6 L2834.5 1172 L2823.2323943661972 1192 L2823.2 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2047.1 1050.2 L2051.5 1060.0 L2040.8 1058.8 L2036.4 1049.0 Z"></path>
+						<path d="M2610.8 959.4 L2614.1 969.6 L2603.6 967.2 L2600.3 957.0 Z"></path>
 					</g>
-					<path d="M1900.3 1067.7 L1900.25 1264 L1954.475352112676 1284 L1954.5 1284.0 " fill="none"></path>
+					<path d="M2379.8 970.2 L2177 1172 L2106.8591549295775 1192 L2106.9 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1905.6 1058.3 L1900.3 1067.7 L1894.9 1058.3 L1900.3 1049.0 Z"></path>
+						<path d="M2390.2 967.4 L2379.8 970.2 L2382.6 959.8 L2393.0 957.0 Z"></path>
 					</g>
-					<path d="M1660.2 1014.7 L735.75 1264 L629 1287.7967032967033 L629.0 1287.8 " fill="none"></path>
+					<path d="M2252.2 903.8 L845.5 1172 L845.5 1192 L845.5 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1670.6 1017.4 L1660.2 1014.7 L1667.9 1007.1 L1678.3 1009.9 Z"></path>
+						<path d="M2262.3 907.3 L2252.2 903.8 L2260.3 896.8 L2270.5 900.3 Z"></path>
 					</g>
-					<path d="M1356.4 488.3 L1900.25 636 L1900.25 851 L1900.3 851.0 " fill="none"></path>
-					<path d="M1357.8 483.2 L1356.4 488.3 L1355.0 493.5 L1343.5 484.8 Z"></path>
-					<path d="M1809.6 112.5 L1976.5 143 L1343.5 301.5716463414634 L1343.5 301.6 " fill="none"></path>
+					<path d="M1896.4 390.9 L2492.5 544 L2492.5 759 L2492.5 759.0 " fill="none"></path>
+					<path d="M1897.7 385.8 L1896.4 390.9 L1895.1 396.1 L1883.5 387.6 Z"></path>
+					<path d="M1554.1 917.1 L56.5 1172 L56.5 1192 L56.5 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1801.4 105.5 L1809.6 112.5 L1799.5 116.0 L1791.3 109.1 Z"></path>
+						<path d="M1564.2 920.8 L1554.1 917.1 L1562.4 910.3 L1572.5 914.0 Z"></path>
 					</g>
-					<path d="M1252.6 77.6 L122.25 143 L122.25 389.5 L122.25 389.5 L122.25 636 L122.25 636 L122.25 950 L122.25 950 L122.25 1264 L122.25 1264 L110.98239436619718 1284 L111.0 1284.0 " fill="none"></path>
+					<path d="M2248.3 969.9 L2874.5 1172 L2840.6971830985917 1192 L2840.7 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1262.2 82.4 L1252.6 77.6 L1261.6 71.8 L1271.3 76.5 Z"></path>
+						<path d="M2241.0 962.0 L2248.3 969.9 L2237.7 972.1 L2230.5 964.2 Z"></path>
 					</g>
-					<path d="M1809.8 96.9 L2172 143 L2172 389.5 L2172 389.5 L2172 636 L2172 636 L2172 950 L2172 950 L2172 1264 L2172 1264 L2073.1267605633802 1284 L2073.1 1284.0 " fill="none"></path>
+					<path d="M2210.1 1165.2 L2217 1172 L2124.323943661972 1192 L2124.3 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1801.2 90.5 L1809.8 96.9 L1799.8 101.0 L1791.3 94.6 Z"></path>
+						<path d="M2207.3 1154.8 L2210.1 1165.2 L2199.8 1162.4 L2196.9 1152.0 Z"></path>
 					</g>
-					<path d="M962.2 1045.0 L162.25 1264 L128.44718309859155 1284 L128.4 1284.0 " fill="none"></path>
+					<path d="M1554.7 965.2 L885.5 1172 L862.9647887323944 1192 L863.0 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M972.7 1047.7 L962.2 1045.0 L969.8 1037.4 L980.3 1040.1 Z"></path>
+						<path d="M1565.2 967.5 L1554.7 965.2 L1562.0 957.3 L1572.5 959.7 Z"></path>
 					</g>
-					<path d="M1656.2 1051.6 L2381.75 1264 L2370.4823943661972 1284 L2370.5 1284.0 " fill="none"></path>
+					<path d="M1882.6 531.4 L1901.5 544 L1901.5 564 L1901.5 564.0 " fill="none"></path>
+					<path d="M1885.6 527.0 L1882.6 531.4 L1879.7 535.8 L1871.6 524.0 Z"></path>
+					<path d="M856.6 943.6 L96.5 1172 L73.96478873239437 1192 L74.0 1192.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1648.7 1043.8 L1656.2 1051.6 L1645.7 1054.1 L1638.3 1046.3 Z"></path>
+						<path d="M867.1 946.0 L856.6 943.6 L864.0 935.8 L874.5 938.2 Z"></path>
 					</g>
-					<path d="M1655.9 1070.6 L2212 1264 L2087 1284.5916473317866 L2087.0 1284.6 " fill="none"></path>
+					<path d="M1426.8 917.6 L2643.5 1172 L2143 1202.063874788494 L2143.0 1202.1 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1648.8 1062.5 L1655.9 1070.6 L1645.3 1072.5 L1638.3 1064.4 Z"></path>
+						<path d="M1418.7 910.5 L1426.8 917.6 L1416.5 920.9 L1408.5 913.8 Z"></path>
 					</g>
-					<path d="M964.2 1153.1 L775.75 1264 L629 1290.14617314931 L629.0 1290.1 " fill="none"></path>
+					<path d="M1141.5 975.7 L1141.5 1172 L898 1201.2035472972973 L898.0 1201.2 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M974.9 1153.0 L964.2 1153.1 L969.5 1143.8 L980.3 1143.6 Z"></path>
+						<path d="M1146.8 966.3 L1141.5 975.7 L1136.2 966.3 L1141.5 957.0 Z"></path>
 					</g>
-					<path d="M1294.1 624.2 L1309.25 636 L1309.25 656 L1309.3 656.0 " fill="none"></path>
-					<path d="M1297.3 620.0 L1294.1 624.2 L1290.8 628.4 L1283.6 616.0 Z"></path>
+					<path d="M1146.2 42.6 L1141.5 51 L1141.5 297.5 L1141.5 297.5 L1141.5 544 L1141.5 544 L1141.5 759 L1141.5 759.0 " fill="none"></path>
+					<path d="M1150.9 45.2 L1146.2 42.6 L1141.6 40.0 L1152.8 31.0 Z"></path>
 					<g data-name="QuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormViewModel">
-							<rect x="641.5" y="163.0" height="453.0" width="702.0" data-name="QuestionFormViewModel"></rect>
-							<path d="M641.5 194.0 L1343.5 194.0" fill="none" data-name="QuestionFormViewModel"></path>
-							<path d="M641.5 480.0 L1343.5 480.0" fill="none" data-name="QuestionFormViewModel"></path>
+							<rect x="1181.5" y="71.0" height="453.0" width="702.0" data-name="QuestionFormViewModel"></rect>
+							<path d="M1181.5 102.0 L1883.5 102.0" fill="none" data-name="QuestionFormViewModel"></path>
+							<path d="M1181.5 388.0 L1883.5 388.0" fill="none" data-name="QuestionFormViewModel"></path>
 						</g>
-						<g transform="translate(641.5, 163)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionFormViewModel">
+						<g transform="translate(1181.5, 71)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormViewModel">
 								<text x="343.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormViewModel">QuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(641.5, 194)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
+						<g transform="translate(1181.5, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModel">+questionIdControl: FormControl&lt;String&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModel">+questionTextControl: FormControl&lt;String&gt;</text>
@@ -269,7 +277,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(641.5, 480)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
+						<g transform="translate(1181.5, 388)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModel">&lt;static&gt;+QuestionFormViewModel&lt;FD&gt; concrete()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModel">-List&lt;FormControlValidation&gt; _getValidationConfig()</text>
@@ -285,9 +293,9 @@
 					</g>
 					<g data-name="FormControl">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
-							<rect x="45.8" y="1284.0" height="31.0" width="113.0" data-name="FormControl"></rect>
+							<rect x="0.0" y="1192.0" height="31.0" width="113.0" data-name="FormControl"></rect>
 						</g>
-						<g transform="translate(45.75, 1284)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
+						<g transform="translate(0, 1192)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
 								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
 								
@@ -296,9 +304,9 @@
 					</g>
 					<g data-name="FormGroup">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
-							<rect x="524.0" y="1284.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
+							<rect x="793.0" y="1192.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
 						</g>
-						<g transform="translate(524, 1284)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+						<g transform="translate(793, 1192)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
 								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
 								
@@ -307,9 +315,9 @@
 					</g>
 					<g data-name="SurveyQuestionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SurveyQuestionType">
-							<rect x="1906.0" y="1284.0" height="31.0" width="181.0" data-name="SurveyQuestionType"></rect>
+							<rect x="1962.0" y="1192.0" height="31.0" width="181.0" data-name="SurveyQuestionType"></rect>
 						</g>
-						<g transform="translate(1906, 1284)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionType">
+						<g transform="translate(1962, 1192)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SurveyQuestionType">
 								<text x="82.5" y="13.5" stroke="none" text-anchor="middle" data-name="SurveyQuestionType">SurveyQuestionType</text>
 								
@@ -318,9 +326,9 @@
 					</g>
 					<g data-name="FormArray">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormArray">
-							<rect x="2312.8" y="1284.0" height="31.0" width="98.0" data-name="FormArray"></rect>
+							<rect x="2765.5" y="1192.0" height="31.0" width="98.0" data-name="FormArray"></rect>
 						</g>
-						<g transform="translate(2312.75, 1284)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
+						<g transform="translate(2765.5, 1192)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArray">
 								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArray">FormArray</text>
 								
@@ -329,9 +337,9 @@
 					</g>
 					<g data-name="ManagedFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
-							<rect x="0.0" y="46.0" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
+							<rect x="1054.0" y="0.0" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
 						</g>
-						<g transform="translate(0, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
+						<g transform="translate(1054, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
 								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
 								
@@ -340,9 +348,9 @@
 					</g>
 					<g data-name="IListActionProvider">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IListActionProvider">
-							<rect x="984.0" y="46.0" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
+							<rect x="1490.5" y="0.0" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
 						</g>
-						<g transform="translate(984, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
+						<g transform="translate(1490.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IListActionProvider">
 								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="IListActionProvider">IListActionProvider</text>
 								
@@ -351,17 +359,17 @@
 					</g>
 					<g data-name="ChoiceQuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestionFormViewModel">
-							<rect x="242.3" y="798.5" height="303.0" width="658.0" data-name="ChoiceQuestionFormViewModel"></rect>
-							<path d="M242.3 829.5 L900.3 829.5" fill="none" data-name="ChoiceQuestionFormViewModel"></path>
-							<path d="M242.3 1040.5 L900.3 1040.5" fill="none" data-name="ChoiceQuestionFormViewModel"></path>
+							<rect x="176.5" y="706.5" height="303.0" width="658.0" data-name="ChoiceQuestionFormViewModel"></rect>
+							<path d="M176.5 737.5 L834.5 737.5" fill="none" data-name="ChoiceQuestionFormViewModel"></path>
+							<path d="M176.5 948.5 L834.5 948.5" fill="none" data-name="ChoiceQuestionFormViewModel"></path>
 						</g>
-						<g transform="translate(242.25, 798.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestionFormViewModel">
+						<g transform="translate(176.5, 706.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceQuestionFormViewModel">
 								<text x="321.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceQuestionFormViewModel">ChoiceQuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(242.25, 829.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormViewModel">
+						<g transform="translate(176.5, 737.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionFormViewModel">-_titleResources: Map&lt;FormMode, String Function()&gt;?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceQuestionFormViewModel">+isMultipleChoiceControl: FormControl&lt;bool&gt;</text>
@@ -379,7 +387,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(242.25, 1040.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormViewModel">
+						<g transform="translate(176.5, 948.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionFormViewModel">+ChoiceQuestionFormData buildFormData()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceQuestionFormViewModel">+void setControlsFrom()</text>
@@ -390,17 +398,17 @@
 					</g>
 					<g data-name="BoolQuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="BoolQuestionFormViewModel">
-							<rect x="1678.3" y="851.0" height="198.0" width="444.0" data-name="BoolQuestionFormViewModel"></rect>
-							<path d="M1678.3 882.0 L2122.3 882.0" fill="none" data-name="BoolQuestionFormViewModel"></path>
-							<path d="M1678.3 1003.0 L2122.3 1003.0" fill="none" data-name="BoolQuestionFormViewModel"></path>
+							<rect x="2270.5" y="759.0" height="198.0" width="444.0" data-name="BoolQuestionFormViewModel"></rect>
+							<path d="M2270.5 790.0 L2714.5 790.0" fill="none" data-name="BoolQuestionFormViewModel"></path>
+							<path d="M2270.5 911.0 L2714.5 911.0" fill="none" data-name="BoolQuestionFormViewModel"></path>
 						</g>
-						<g transform="translate(1678.25, 851)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BoolQuestionFormViewModel">
+						<g transform="translate(2270.5, 759)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BoolQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BoolQuestionFormViewModel">
 								<text x="214.0" y="13.5" stroke="none" text-anchor="middle" data-name="BoolQuestionFormViewModel">BoolQuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1678.25, 882)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormViewModel">
+						<g transform="translate(2270.5, 790)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BoolQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="BoolQuestionFormViewModel">-_titleResources: Map&lt;FormMode, String Function()&gt;?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="BoolQuestionFormViewModel">-_responseOptionsArray: FormArray&lt;String&gt;</text>
@@ -412,7 +420,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(1678.25, 1003)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormViewModel">
+						<g transform="translate(2270.5, 911)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BoolQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="BoolQuestionFormViewModel">+BoolQuestionFormData buildFormData()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="BoolQuestionFormViewModel">+BoolQuestionFormViewModel createDuplicate()</text>
@@ -420,46 +428,19 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="QuestionTypeController">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionTypeController">
-							<rect x="1271.3" y="0.0" height="123.0" width="520.0" data-name="QuestionTypeController"></rect>
-							<path d="M1271.3 31.0 L1791.3 31.0" fill="none" data-name="QuestionTypeController"></path>
-							<path d="M1271.3 92.0 L1791.3 92.0" fill="none" data-name="QuestionTypeController"></path>
-						</g>
-						<g transform="translate(1271.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionTypeController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionTypeController">
-								<text x="252.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionTypeController">QuestionTypeController</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1271.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionTypeController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionTypeController">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionTypeController">+formViewModel: QuestionFormViewModel&lt;QuestionFormData&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionTypeController">+questionTypeControl: FormControl&lt;SurveyQuestionType&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionTypeController">+type: SurveyQuestionType</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1271.25, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionTypeController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionTypeController">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionTypeController">-dynamic _onQuestionTypeChanged()</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="ScaleQuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ScaleQuestionFormViewModel">
-							<rect x="980.3" y="656.0" height="588.0" width="658.0" data-name="ScaleQuestionFormViewModel"></rect>
-							<path d="M980.3 687.0 L1638.3 687.0" fill="none" data-name="ScaleQuestionFormViewModel"></path>
-							<path d="M980.3 1108.0 L1638.3 1108.0" fill="none" data-name="ScaleQuestionFormViewModel"></path>
+							<rect x="1572.5" y="564.0" height="588.0" width="658.0" data-name="ScaleQuestionFormViewModel"></rect>
+							<path d="M1572.5 595.0 L2230.5 595.0" fill="none" data-name="ScaleQuestionFormViewModel"></path>
+							<path d="M1572.5 1016.0 L2230.5 1016.0" fill="none" data-name="ScaleQuestionFormViewModel"></path>
 						</g>
-						<g transform="translate(980.25, 656)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScaleQuestionFormViewModel">
+						<g transform="translate(1572.5, 564)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScaleQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScaleQuestionFormViewModel">
 								<text x="321.0" y="13.5" stroke="none" text-anchor="middle" data-name="ScaleQuestionFormViewModel">ScaleQuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(980.25, 687)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionFormViewModel">
+						<g transform="translate(1572.5, 595)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScaleQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ScaleQuestionFormViewModel">-_titleResources: Map&lt;FormMode, String Function()&gt;?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ScaleQuestionFormViewModel">&lt;static&gt;+kDefaultScaleMinValue: int</text>
@@ -491,7 +472,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(980.25, 1108)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionFormViewModel">
+						<g transform="translate(1572.5, 1016)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScaleQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ScaleQuestionFormViewModel">+String? scaleMidLabelAt()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ScaleQuestionFormViewModel">-dynamic _onScaleRangeChanged()</text>
@@ -501,6 +482,38 @@
 								<text x="0.0" y="88.5" stroke="none" data-name="ScaleQuestionFormViewModel">+void initControls()</text>
 								<text x="0.0" y="103.5" stroke="none" data-name="ScaleQuestionFormViewModel">+void setControlsFrom()</text>
 								<text x="0.0" y="118.5" stroke="none" data-name="ScaleQuestionFormViewModel">+ScaleQuestionFormViewModel createDuplicate()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionFormViewModelWrapper">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormViewModelWrapper">
+							<rect x="874.5" y="759.0" height="198.0" width="534.0" data-name="QuestionFormViewModelWrapper"></rect>
+							<path d="M874.5 790.0 L1408.5 790.0" fill="none" data-name="QuestionFormViewModelWrapper"></path>
+							<path d="M874.5 881.0 L1408.5 881.0" fill="none" data-name="QuestionFormViewModelWrapper"></path>
+						</g>
+						<g transform="translate(874.5, 759)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionFormViewModelWrapper">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormViewModelWrapper">
+								<text x="259.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormViewModelWrapper">QuestionFormViewModelWrapper</text>
+								
+							</g>
+						</g>
+						<g transform="translate(874.5, 790)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModelWrapper">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModelWrapper">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModelWrapper">+model: Q</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModelWrapper">+questionTypeControl: FormControl&lt;SurveyQuestionType&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionFormViewModelWrapper">+type: SurveyQuestionType</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="QuestionFormViewModelWrapper">+titles: Map&lt;FormMode, String&gt;</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="QuestionFormViewModelWrapper">+form: FormGroup</text>
+								
+							</g>
+						</g>
+						<g transform="translate(874.5, 881)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModelWrapper">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModelWrapper">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModelWrapper">#dynamic onQuestionTypeChanged()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModelWrapper">+QuestionFormData buildFormData()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionFormViewModelWrapper">+void setControlsFrom()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="QuestionFormViewModelWrapper">+ManagedFormViewModel&lt;QuestionFormData&gt; createDuplicate()</text>
 								
 							</g>
 						</g>

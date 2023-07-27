@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="1913.5" height="337.0" viewbox="0 0 1913.5 337" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="2251.3" height="337.0" viewbox="0 0 2251.25 337" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[&lt;abstract&gt;IScaleQuestionFormViewModel
 	  |
 	  +isMidValuesClearedInfoVisible: bool
@@ -33,17 +33,17 @@
 	
 	[SurveyQuestionFormView
 	  |
-	  +typeController: QuestionTypeController;
+	  +modelWrapper: QuestionFormViewModelWrapper&lt;QuestionFormViewModel&lt;QuestionFormData&gt;&gt;;
 	  +isHtmlStyleable: bool
 	]
 	
-	[SurveyQuestionFormView]o-[QuestionTypeController]
+	[SurveyQuestionFormView]o-[QuestionFormViewModelWrapper]
 	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="337.0" width="1913.5" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="337.0" width="2251.3" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
@@ -63,9 +63,9 @@
 					</g>
 					<path d="M1197.8 57.4 L1345.5 97 L1345.5 117 L1345.5 117.0 " fill="none"></path>
 					<path d="M1199.2 52.3 L1197.8 57.4 L1196.4 62.6 L1184.9 54.0 Z"></path>
-					<path d="M1690.5 95.7 L1690.5 97 L1690.5 148 L1690.5 148.0 " fill="none"></path>
+					<path d="M1795.3 95.7 L1795.25 97 L1795.25 148 L1795.3 148.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1695.8 86.3 L1690.5 95.7 L1685.2 86.3 L1690.5 77.0 Z"></path>
+						<path d="M1800.6 86.3 L1795.3 95.7 L1789.9 86.3 L1795.3 77.0 Z"></path>
 					</g>
 					<g data-name="IScaleQuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IScaleQuestionFormViewModel">
@@ -199,30 +199,30 @@
 					</g>
 					<g data-name="SurveyQuestionFormView">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SurveyQuestionFormView">
-							<rect x="1523.5" y="0.0" height="77.0" width="334.0" data-name="SurveyQuestionFormView"></rect>
-							<path d="M1523.5 31.0 L1857.5 31.0" fill="none" data-name="SurveyQuestionFormView"></path>
+							<rect x="1395.3" y="0.0" height="77.0" width="800.0" data-name="SurveyQuestionFormView"></rect>
+							<path d="M1395.3 31.0 L2195.3 31.0" fill="none" data-name="SurveyQuestionFormView"></path>
 						</g>
-						<g transform="translate(1523.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionFormView">
+						<g transform="translate(1395.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SurveyQuestionFormView">
-								<text x="159.0" y="13.5" stroke="none" text-anchor="middle" data-name="SurveyQuestionFormView">SurveyQuestionFormView</text>
+								<text x="392.0" y="13.5" stroke="none" text-anchor="middle" data-name="SurveyQuestionFormView">SurveyQuestionFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1523.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SurveyQuestionFormView">
+						<g transform="translate(1395.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SurveyQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SurveyQuestionFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="SurveyQuestionFormView">+typeController: QuestionTypeController</text>
+								<text x="0.0" y="13.5" stroke="none" data-name="SurveyQuestionFormView">+modelWrapper: QuestionFormViewModelWrapper&lt;QuestionFormViewModel&lt;QuestionFormData&gt;&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SurveyQuestionFormView">+isHtmlStyleable: bool</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="QuestionTypeController">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionTypeController">
-							<rect x="1589.0" y="148.0" height="31.0" width="203.0" data-name="QuestionTypeController"></rect>
+					<g data-name="QuestionFormViewModelWrapper">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormViewModelWrapper">
+							<rect x="1655.3" y="148.0" height="31.0" width="280.0" data-name="QuestionFormViewModelWrapper"></rect>
 						</g>
-						<g transform="translate(1589, 148)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionTypeController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionTypeController">
-								<text x="93.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionTypeController">QuestionTypeController</text>
+						<g transform="translate(1655.25, 148)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionFormViewModelWrapper">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormViewModelWrapper">
+								<text x="132.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormViewModelWrapper">QuestionFormViewModelWrapper</text>
 								
 							</g>
 						</g>
