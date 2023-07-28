@@ -23,12 +23,7 @@ common use-cases to get you started quickly.
 
 Choose this method if you do not want to setup your own Supabase instance, but
 only launch StudyU applications with docker. This might be useful if you want to
-run StudyU after you made changes to the codebase. Switch to the `.env.local`
-[environment file](https://github.com/hpi-studyu/studyu/blob/dev/flutter_common/lib/envs/.env.local)
-to use the StudyU database with local StudyU applications. For this modify the
-`docker-compose-*.yml` files you want to run (see below), and replace
-`../flutter_common/lib/envs/.env.hpi` with
-`../flutter_common/lib/envs/.env.local` in the section `env_file`.
+run StudyU after you made changes to the codebase.
 
 To start both the StudyU App and the StudyU Designer, simply run `docker compose
 up`.
@@ -87,9 +82,9 @@ need to be changed and assigned to Supabase and StudyU.
 3. Replace the default secrets with your newly generated ones in the following
    files:
     - `supabase/.env`
-    - `flutter_common/lib/envs/.env.selfhost`
+    - `flutter_common/lib/envs/.env.local`
 4. Configure the other Supabase settings in `supabase/.env` and StudyU settings
-   in `flutter_common/lib/envs/.env.selfhost` according to your wishes.
+   in `flutter_common/lib/envs/.env.local` according to your wishes.
 
 Otherwise, if a custom domain or port should be used, refer to [Change hostname
 or ports](#change-hostname-or-ports).
@@ -167,7 +162,7 @@ The default ports are as follows:
 
 On the second machine where StudyU should be run, replace the default Supabase
 values with your custom ones in the file
-`flutter_common/lib/envs/.env.selfhost`. Make sure to set `STUDYU_SUPABASE_URL`
+`flutter_common/lib/envs/.env.local`. Make sure to set `STUDYU_SUPABASE_URL`
 to the correct URL of the Supabase instace of your first machine.
 
 Then run in the directory `docker`:
@@ -223,7 +218,7 @@ configuration.
 
 In order to change the hostname from localhost to a custom domain for either
 StudyU, or the self-hosted Supabase instance, the respective configuration files
-at `supabase/.env` and `flutter_common/lib/envs/.env.selfhost` have to be
+at `supabase/.env` and `flutter_common/lib/envs/.env.local` have to be
 adapted. Changes also need to be made to the nginx proxy by modifying the
 respective `nginx/conf.d/` files (`01_app.conf`, `02_designer.conf`,
 `03_supabase.conf`) and replacing `localhost` with the designated hostname.
