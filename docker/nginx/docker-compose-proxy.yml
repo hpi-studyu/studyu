@@ -1,5 +1,5 @@
 version: '3'
-name: 'studyu'
+name: 'studyu_proxy'
 
 networks:
   default:
