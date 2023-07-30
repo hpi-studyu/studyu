@@ -4,7 +4,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
-import 'package:studyu_designer_v2/common_views/badge.dart' as studybadge;
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -158,34 +157,7 @@ class StudiesTable extends StatelessWidget {
           );
         },
       ),
-      item.studyTags.isEmpty
-          ? Text(item.title ?? '[Missing study title]')
-          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(item.title ?? '[Missing study title]'),
-              const SizedBox(height: 8.0),
-              Wrap(
-                spacing: 8.0,
-                children: List<Widget>.generate(item.studyTags.length, (index) {
-                  // todo either use [StudyTagBadge] here or use [studybadge.Badge] at [StudyDesignInfoFormView]
-                  // try to style [StudyTagBadge] the same as Badge here because of delete function.
-                  // then replace this badge here with [StudyTagBadge]
-                  return MouseEventsRegion(
-                    //onTap: () => dashboardController.filterTag.add(item.studyTags.elementAt(index)),
-                    onTap: () {
-                      dashboardController.setSearchText(item.studyTags.elementAt(index).name);
-                      dashboardController.filterStudies(item.studyTags.elementAt(index).name);
-                    },
-                    builder: (context, mouseEventState) {
-                      return studybadge.Badge(
-                        label: item.studyTags.elementAt(index).name,
-                        type: studybadge.BadgeType.outlineFill,
-                        icon: null,
-                      );
-                    },
-                  );
-                }),
-              ),
-            ]),
+      Text(item.title ?? '[Missing study title]'),
       StudyStatusBadge(
         status: item.status,
         showPrefixIcon: false,

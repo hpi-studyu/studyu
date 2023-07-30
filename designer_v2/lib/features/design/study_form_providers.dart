@@ -17,7 +17,6 @@ import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
-import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
@@ -104,7 +103,6 @@ final studyPublishValidatorProvider = Provider.autoDispose.family<StudyFormViewM
   final formViewModel = StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
-    studyTagsRepository: ref.watch(studyTagRepositoryProvider(studyId)),
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
     validationSet: StudyFormValidationSet.publish,
@@ -122,7 +120,6 @@ final studyTestValidatorProvider = Provider.autoDispose.family<StudyFormViewMode
   final formViewModel = StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
-    studyTagsRepository: ref.watch(studyTagRepositoryProvider(studyId)),
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
     validationSet: StudyFormValidationSet.test,

@@ -6,13 +6,11 @@ import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
 import 'package:studyu_designer_v2/utils/validation.dart';
 
 class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   StudyInfoFormViewModel({
     required this.study,
-    required this.studyTagsRepository,
     super.delegate,
     super.formData,
     super.autosave = true,
@@ -20,18 +18,12 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   });
 
   final Study study;
-  final IStudyTagRepository studyTagsRepository;
 
   // - Form fields
 
   final FormControl<String> titleControl = FormControl();
   final FormControl<IconOption> iconControl = FormControl();
   final FormControl<String> descriptionControl = FormControl();
-  final FormControl<List<String>> studyTagsControl = FormControl(
-    validators: [
-      const TagsValidator(),
-    ],
-  );
   final FormControl<String> organizationControl = FormControl();
   final FormControl<String> reviewBoardControl = FormControl();
   final FormControl<String> reviewBoardNumberControl = FormControl();
@@ -46,7 +38,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     'title': titleControl,
     'icon': iconControl,
     'description': descriptionControl,
-    'studyTags': studyTagsControl,
     'organization': organizationControl,
     'institutionalReviewBoard': reviewBoardControl,
     'institutionalReviewBoardNumber': reviewBoardNumberControl,
@@ -62,7 +53,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     titleControl.value = data.title;
     iconControl.value = IconOption(data.iconName);
     descriptionControl.value = data.description;
-    studyTagsControl.value = data.studyTags.map((e) => e.name).toList();
     organizationControl.value = data.contactInfoFormData.organization;
     reviewBoardControl.value = data.contactInfoFormData.institutionalReviewBoard;
     reviewBoardNumberControl.value = data.contactInfoFormData.institutionalReviewBoardNumber;
@@ -79,7 +69,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         title: titleControl.value!, // required
         iconName: iconControl.value?.name ?? '',
         description: descriptionControl.value,
-        studyTags: studyTagsControl.value!.map((e) => study.studyTags.firstWhere((element) => element.name == e)).toList(),
         contactInfoFormData: StudyContactInfoFormData(
           organization: organizationControl.value,
           institutionalReviewBoard: reviewBoardControl.value,
@@ -105,7 +94,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   @override
   FormValidationConfigSet get sharedValidationConfig => {
         // TODO phoneFormat
-        StudyFormValidationSet.draft: [titleRequired, emailFormat, websiteFormat, tagsFormat],
+        StudyFormValidationSet.draft: [titleRequired, emailFormat, websiteFormat],
         StudyFormValidationSet.publish: [
           titleRequired,
           descriptionRequired,
@@ -118,7 +107,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           phoneRequired,
           emailFormat,
           websiteFormat,
-          tagsFormat,
         ],
         StudyFormValidationSet.test: [titleRequired],
       };
@@ -178,25 +166,4 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       ], validationMessages: {
         'pattern': (error) => tr.form_field_website_pattern,
       });
-
-  get tagsFormat => FormControlValidation(control: studyTagsControl, validators: [
-        const TagsValidator(),
-      ], validationMessages: {
-        'validateTags': (error) => tr.form_field_study_tags_error_length(3),
-      });
-}
-
-class TagsValidator extends Validator<dynamic> {
-  const TagsValidator() : super();
-
-  @override
-  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
-    print("accessing validator");
-    return control.isNotNull &&
-        control.value is List &&
-        control.value.length <= 3
-    // todo check if studyTagsControl already contains the new tag
-        ? null
-        : {'validateTags': true};
-  }
 }

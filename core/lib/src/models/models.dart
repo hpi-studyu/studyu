@@ -16,8 +16,6 @@ export 'tables/repo.dart';
 export 'tables/study.dart';
 export 'tables/study_invite.dart';
 export 'tables/study_subject.dart';
-export 'tables/study_tag.dart';
 export 'tables/subject_progress.dart';
-export 'tables/tag.dart';
 export 'tables/user.dart';
 export 'tasks/tasks.dart';

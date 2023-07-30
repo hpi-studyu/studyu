@@ -132,7 +132,6 @@ extension StudyDuplicateX on Study {
   }
 
   Study copyJsonIgnoredAttributes({required Study from, createdAt = false}) {
-    studyTags = from.studyTags;
     participantCount = from.participantCount;
     activeSubjectCount = from.activeSubjectCount;
     endedCount = from.endedCount;
@@ -148,7 +147,6 @@ extension StudyDuplicateX on Study {
   }
 
   Study resetJsonIgnoredAttributes() {
-    studyTags = [];
     participantCount = 0;
     activeSubjectCount = 0;
     endedCount = 0;

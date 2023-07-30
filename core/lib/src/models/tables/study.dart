@@ -70,8 +70,6 @@ class Study extends SupabaseObjectFunctions<Study> {
   late bool registryPublished = false;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
-  List<StudyTag> studyTags = [];
-  @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
   @JsonKey(includeToJson: false, includeFromJson: false)
   int endedCount = 0;
@@ -101,17 +99,6 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
-    final List? studyTags = json['study_tags'] as List?;
-    if (studyTags != null) {
-      study.studyTags = studyTags
-          .map(
-            (json) => StudyTag.fromTag(
-              studyId: study.id,
-              tag: Tag.fromJson(json as Map<String, dynamic>),
-            ),
-          )
-          .toList();
-    }
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
@@ -257,6 +244,6 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   @override
   String toString() {
-    return 'Study{id: $id, title: $title, description: $description, studyTags: $studyTags, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 }
