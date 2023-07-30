@@ -153,6 +153,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         backgroundColorLeft: ThemeConfig.bodyBackgroundColor(theme),
         backgroundColorRight: theme.colorScheme.primary,
         constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
+        scrollLeft: false,
+        scrollRight: false,
         stretchHeight: true,
         paddingLeft: widget.leftPanelPadding,
       ),
