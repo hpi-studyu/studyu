@@ -18,14 +18,12 @@
 | [supabase_functions.hooks](supabase_functions.hooks.md) | 5 | Supabase Functions Hooks: Audit trail for triggered hooks. | BASE TABLE |
 | [public.study](public.study.md) | 21 |  | BASE TABLE |
 | [public.study_subject](public.study_subject.md) | 7 |  | BASE TABLE |
-| [public.tag](public.tag.md) | 2 |  | BASE TABLE |
-| [public.study_tag](public.study_tag.md) | 2 |  | BASE TABLE |
 | [public.app_config](public.app_config.md) | 8 | Stores app config for different envs | BASE TABLE |
 | [public.repo](public.repo.md) | 4 | Git repo where the generated project is stored | BASE TABLE |
 | [public.study_invite](public.study_invite.md) | 3 | Study invite codes | BASE TABLE |
 | [public.subject_progress](public.subject_progress.md) | 6 |  | BASE TABLE |
 | [public.study_progress_export](public.study_progress_export.md) | 10 |  | VIEW |
-| [public.user](public.user.md) | 2 | Users get automatically added, when a new user is created in auth.users | BASE TABLE |
+| [public.user](public.user.md) | 3 | Users get automatically added, when a new user is created in auth.users | BASE TABLE |
 | [extensions.pg_stat_statements_info](extensions.pg_stat_statements_info.md) | 2 |  | VIEW |
 | [extensions.pg_stat_statements](extensions.pg_stat_statements.md) | 43 |  | VIEW |
 | [pgsodium.key](pgsodium.key.md) | 14 | This table holds metadata for derived keys given a key_id and key_context. The raw key is never stored. | BASE TABLE |

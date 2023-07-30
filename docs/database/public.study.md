@@ -6,7 +6,7 @@
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | uuid | gen_random_uuid() | false | [public.study_subject](public.study_subject.md) [public.study_tag](public.study_tag.md) [public.repo](public.repo.md) [public.study_invite](public.study_invite.md) |  |  |
+| id | uuid | gen_random_uuid() | false | [public.study_subject](public.study_subject.md) [public.repo](public.repo.md) [public.study_invite](public.study_invite.md) |  |  |
 | contact | jsonb |  | false |  |  |  |
 | title | text |  | false |  |  |  |
 | description | text |  | false |  |  |  |
