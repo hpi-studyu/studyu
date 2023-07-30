@@ -26,6 +26,10 @@ String tableName(Type cls) {
       return StudyInvite.tableName;
     case StudyUUser:
       return StudyUUser.tableName;
+    case StudyTag:
+      return StudyTag.tableName;
+    case Tag:
+      return Tag.tableName;
     default:
       print('$cls is not a supported Supabase type');
       throw TypeError();
@@ -49,6 +53,10 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return StudyInvite.fromJson(json) as T;
       case StudyUUser:
         return StudyUUser.fromJson(json) as T;
+      case StudyTag:
+        return StudyTag.fromJson(json) as T;
+      case Tag:
+        return Tag.fromJson(json) as T;
       default:
         print('$T is not a supported Supabase type');
         throw TypeError();

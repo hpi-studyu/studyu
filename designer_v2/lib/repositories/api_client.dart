@@ -16,6 +16,12 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
+  Future<List<Tag>> fetchAllTags();
+  Future<List<Tag>> fetchTag();
+  Future<Tag> saveTag(Tag tag);
+  Future<void> deleteTag(Tag tag);
+  Future<StudyTag> saveStudyTag(StudyTag studyTag);
+  Future<void> deleteStudyTag(StudyTag studyTag);
   Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants);
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
@@ -63,6 +69,7 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
 
   static final studyColumns = [
     '*',
+    'study_tags:tag(*)',
     'repo(*)',
     'study_invite!study_invite_studyId_fkey(*)',
     'study_participant_count',
@@ -165,6 +172,50 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     await _testDelay();
     // Delegate to [SupabaseObjectMethods]
     final request = invite.delete(); // upsert will override existing record
+    return _awaitGuarded<void>(request);
+  }
+
+  @override
+  Future<List<Tag>> fetchAllTags() async {
+    await _testDelay();
+    final request = getAll<Tag>();
+    return _awaitGuarded(request);
+  }
+
+  @override
+  Future<List<Tag>> fetchTag() async {
+    await _testDelay();
+    final request = getAll<Tag>();
+    return _awaitGuarded(request);
+  }
+
+  @override
+  Future<Tag> saveTag(Tag tag) async {
+    await _testDelay();
+    final Future<Tag> request = tag.save();
+    return _awaitGuarded<Tag>(request);
+  }
+
+  @override
+  Future<void> deleteTag(Tag tag) async {
+    await _testDelay();
+    // todo do not delete if tag is part of another study
+    final request = tag.delete();
+    return _awaitGuarded<void>(request);
+  }
+
+  @override
+  Future<StudyTag> saveStudyTag(StudyTag studyTag) async {
+    await _testDelay();
+    final Future<StudyTag> request = studyTag.save();
+    return _awaitGuarded<StudyTag>(request);
+  }
+
+  @override
+  Future<void> deleteStudyTag(StudyTag studyTag) async {
+    await _testDelay();
+    // Delegate to [SupabaseObjectMethods]
+    final request = studyTag.delete();
     return _awaitGuarded<void>(request);
   }
 

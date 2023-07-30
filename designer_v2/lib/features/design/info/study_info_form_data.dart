@@ -5,12 +5,14 @@ class StudyInfoFormData implements IStudyFormData {
   StudyInfoFormData({
     required this.title,
     this.description,
+    required this.studyTags,
     required this.contactInfoFormData,
     required this.iconName,
   });
 
   final String title;
   final String? description;
+  final List<StudyTag> studyTags;
   final String iconName;
   final StudyContactInfoFormData contactInfoFormData;
 
@@ -18,6 +20,7 @@ class StudyInfoFormData implements IStudyFormData {
     return StudyInfoFormData(
       title: study.title ?? '',
       description: study.description ?? '',
+      studyTags: study.studyTags,
       iconName: study.iconName,
       contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
     );
@@ -27,6 +30,7 @@ class StudyInfoFormData implements IStudyFormData {
   Study apply(Study study) {
     study.title = title;
     study.description = description;
+    study.studyTags = studyTags;
     study.iconName = iconName;
     contactInfoFormData.apply(study);
     return study;

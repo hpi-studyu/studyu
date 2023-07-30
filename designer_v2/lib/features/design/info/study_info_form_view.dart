@@ -6,12 +6,15 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/icon_picker.dart';
+import 'package:studyu_designer_v2/common_views/reactive_textfield_tags.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/study_tag_repository.dart';
+import 'package:studyu_designer_v2/repositories/tag_repository.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
   const StudyDesignInfoFormView(super.studyId, {super.key});
@@ -19,11 +22,12 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyControllerProvider(studyId));
-
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
         final formViewModel = ref.read(studyInfoFormViewModelProvider(studyId));
+        final tags = ref.watch(tagRepositoryProvider);
+        final studyTags = ref.watch(studyTagRepositoryProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -78,6 +82,52 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     ],
                     decoration: InputDecoration(hintText: tr.form_field_study_description_hint),
                   ),
+                ),
+                FormTableRow(
+                  control: formViewModel.studyTagsControl,
+                  label: tr.form_field_study_tags,
+                  labelHelpText: tr.form_field_study_tags_tooltip,
+                  input: FutureBuilder<List<Tag>>(
+                      future: tags.fetchAll(),
+                      builder: (BuildContext context, AsyncSnapshot<List<Tag>> snapshot) {
+                        if (snapshot.hasData) {
+                          return Row(children: [
+                            Expanded(
+                                child: ReactiveTextfieldTags(
+                                  formControl: formViewModel.studyTagsControl,
+                                  availableTags: snapshot.data!.map((e) => e.name).toList(),
+                                  validationMessages: formViewModel.studyTagsControl.validationMessages,
+                                  onSubmittedCb: (tags) {
+                                    studyTags.updateStudyTags(tags);
+                                  },
+                                  validator: (tag) {
+
+                                  },
+                                  helperText: tr.form_field_study_tags_helper(3),
+                                  hintText: tr.form_field_study_tags_hint,
+                                )
+                            )
+                          ]);
+                          /*ReactiveTextfieldTags(
+                              formControl: formViewModel.studyTagsControl,
+                              availableTags: snapshot.data!.map((e) => e.name).toList(),
+                            ),*/
+                          /*Expanded(
+                                child: ReactiveMul#tiSelectDialogField(
+                              formControl: formViewModel.studyTagsControl,
+                              items: snapshot.data!
+                                  .map((e) =>
+                                      MultiSelectItem<StudyTag>(StudyTag.fromTag(tag: e, studyId: studyId), e.name))
+                                  .toList(),
+                              dialogHeight: 200,
+                              dialogWidth: 300,
+                              searchable: true,
+                              chipDisplay: display,
+                            ))*/
+                        } else {
+                          return const SizedBox();
+                        }
+                      }),
                 ),
               ], columnWidths: const {
                 0: FixedColumnWidth(185.0),

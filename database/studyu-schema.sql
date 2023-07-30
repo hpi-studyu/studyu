@@ -231,6 +231,64 @@ CREATE TABLE public.study_subject (
 
 ALTER TABLE public.study_subject OWNER TO postgres;
 
+
+--
+-- Name: tag; Type: TABLE; Schema: public; Owner:
+--
+
+CREATE TABLE public.tag (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name text NOT NULL UNIQUE
+);
+
+
+ALTER TABLE public.tag OWNER TO postgres;
+
+
+--
+-- Name: study_tag; Type: TABLE; Schema: public; Owner:
+--
+
+CREATE TABLE public.study_tag (
+    study_id uuid NOT NULL,
+    tag_id uuid NOT NULL
+);
+
+ALTER TABLE public.study_tag OWNER TO postgres;
+
+
+--
+-- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public; Owner:
+--
+
+ALTER TABLE ONLY public.tag
+    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: study_tag study_tag_pkey; Type: CONSTRAINT; Schema: public; Owner:
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT "study_tag_pkey" PRIMARY KEY (study_id, tag_id);
+
+
+--
+-- Name: tag study_tag_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner:
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT "study_tag_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tag study_tag_tagId_fkey; Type: FK CONSTRAINT; Schema: public; Owner:
+--
+
+ALTER TABLE ONLY public.study_tag
+    ADD CONSTRAINT "study_tag_tagId_fkey" FOREIGN KEY (tag_id) REFERENCES public.tag(id) ON DELETE CASCADE;
+
+
 --
 -- Name: has_study_ended(public.study_subject); Type: FUNCTION; Schema: public; Owner: postgres
 --
@@ -833,6 +891,56 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
 
 
 --
+-- Name: tag Allow read access but deny write access for tags; Type: POLICY; Schema: public; Owner:
+--
+
+-- todo we need function to automatically delete a tag if it is not used in any study
+
+CREATE POLICY "Allow read access to tags"
+  ON public.tag
+  FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow add new tags"
+  ON public.tag
+  FOR INSERT
+  WITH CHECK (true);
+
+--
+-- Name: Allow study creators to manage tags; Type: POLICY; Schema: public; Owner:
+--
+
+CREATE POLICY "Allow study creators to manage tags"
+  ON public.study_tag
+  FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.study
+      WHERE study.id = study_tag.study_id
+        AND study.user_id = auth.uid()
+    )
+  );
+
+
+--
+-- Name: Allow subscribed users to select study tags; Type: POLICY; Schema: public; Owner:
+--
+
+CREATE POLICY "Allow subscribed users to select study tags"
+  ON public.study_tag
+  FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.study_subject
+      WHERE study_subject.study_id = study_tag.study_id
+        AND study_subject.user_id = auth.uid()
+    )
+  );
+
+
+--
 -- Name: Allow users to manage their own user; Type: POLICY; Schema: public; Owner:
 --
 
@@ -871,6 +979,18 @@ ALTER TABLE public.study_invite ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.study_subject ENABLE ROW LEVEL SECURITY;
+
+
+-- Name: tag; Type: ROW SECURITY; Schema: public; Owner:
+--
+
+ALTER TABLE public.tag ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: study_tag; Type: ROW SECURITY; Schema: public; Owner:
+--
+
+ALTER TABLE public.study_tag ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: subject_progress; Type: ROW SECURITY; Schema: public; Owner: postgres
