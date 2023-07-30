@@ -13,7 +13,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.0
   studyu_core: ^4.3.0-dev.7
-  supabase_flutter: ^1.10.6
+  supabase_flutter: ^1.10.10
   uuid: ^3.0.7
 
 dev_dependencies:
