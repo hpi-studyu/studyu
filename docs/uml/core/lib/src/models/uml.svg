@@ -236,7 +236,7 @@
 	  +designerPrivacy: Map&lt;String, String&gt;;
 	  +designerTerms: Map&lt;String, String&gt;;
 	  +imprint: Map&lt;String, String&gt;;
-	  +analytics: StudyUAnalytics;
+	  +analytics: StudyUAnalytics?;
 	  +primaryKeys: Map&lt;String, dynamic&gt;
 	  |
 	  +Map&lt;String, dynamic&gt; toJson();
@@ -1687,7 +1687,7 @@
 								<text x="0.0" y="88.5" stroke="none" data-name="AppConfig">+designerPrivacy: Map&lt;String, String&gt;</text>
 								<text x="0.0" y="103.5" stroke="none" data-name="AppConfig">+designerTerms: Map&lt;String, String&gt;</text>
 								<text x="0.0" y="118.5" stroke="none" data-name="AppConfig">+imprint: Map&lt;String, String&gt;</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="AppConfig">+analytics: StudyUAnalytics</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="AppConfig">+analytics: StudyUAnalytics?</text>
 								<text x="0.0" y="148.5" stroke="none" data-name="AppConfig">+primaryKeys: Map&lt;String, dynamic&gt;</text>
 								
 							</g>
