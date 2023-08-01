@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
-version_above_4(){
-    [ -z "$BASH_VERSION" ] && return 1
-    case "$BASH_VERSION" in
-        4.*) return 0 ;;
-        ?) return 1;;
-    esac
-}
-if  ! version_above_4; then
+if [[ "$(head -c 1 <<< "$BASH_VERSION")" -lt 4 ]]; then
     echo "Bash version equal or larger than 4 is required to run this script."
+    exit 1
 fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
