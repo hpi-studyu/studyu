@@ -36,8 +36,6 @@ enum SurveyQuestionType {
         return tr.question_type_scale;
       case SurveyQuestionType.image:
         return tr.question_type_image;
-      case SurveyQuestionType.image:
-        return tr.question_type_image;
       default:
         return "[Invalid SurveyQuestionType]";
     }
