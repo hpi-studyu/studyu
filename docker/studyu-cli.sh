@@ -1,4 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+version_above_4(){
+    [ -z "$BASH_VERSION" ] && return 1
+    case "$BASH_VERSION" in
+        4.*) return 0 ;;
+        ?) return 1;;
+    esac
+}
+if  ! version_above_4; then
+    echo "Bash version equal or larger than 4 is required to run this script."
+fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PARENT_DIR=$(dirname "$SCRIPT_DIR")
@@ -34,9 +45,13 @@ available_components+="  studyu-designer    StudyU Designer (includes proxy)"
 read_config() {
   local failOnError="${1:-true}"
 
-  if [ "$failOnError" = true ] && [ ! -f "$CONFIG_FILE" ]; then
-    echo -e "${red}Error: Configuration file not found. Run 'config' to create one.${reset}"
-    exit 1
+  if [[ ! -f "$CONFIG_FILE" ]]; then
+    if [[ "$failOnError" == false ]]; then
+      return 0
+    else
+      echo -e "${red}Error: Configuration file not found. Run 'config' to create one.${reset}"
+      exit 1
+    fi
   fi
 
   # Read the configuration file
@@ -46,7 +61,7 @@ read_config() {
   set +a
 
   # Check if the required variables are present
-  if [ "$failOnError" = true ] && { [ -z "$STUDYU_DEFAULT_COMPONENTS" ] || [ -z "$STUDYU_PATH" ] || [ -z "$STUDYU_BASE_BRANCH" ]; }; then
+  if [[ "$failOnError" = true && -z "$STUDYU_DEFAULT_COMPONENTS" || -z "$STUDYU_PATH" || -z "$STUDYU_BASE_BRANCH" ]]; then
     echo -e "${red}Error: Configuration file $CONFIG_FILE is missing some entries.${reset}"
     echo "Please run 'config' to set the required options."
     exit 1
@@ -59,7 +74,7 @@ read_config() {
 # Print CLI configuration file
 print_config() {
   local failOnError="${1:-true}"
-  read_config failOnError
+  read_config "$failOnError"
 
   # If the config file exists, display the current configuration
   if [ -f "$CONFIG_FILE" ]; then
@@ -106,7 +121,7 @@ validate_component_list() {
     fi
   done
 
-  if [ "$is_studyu_requested" == true ] && [ "$is_proxy_requested" == true ]; then
+  if [[ "$is_studyu_requested" == true && "$is_proxy_requested" == true ]]; then
     echo -e "${red}Error: Cannot run 'proxy' and a StudyU component simultaneously.${reset}"
     exit 1
   fi
@@ -122,12 +137,12 @@ validate_component_list() {
     fi
   done
 
-  if [ "$is_proxy_requested" = true ] && [ ${#studyu_components_running[@]} -gt 0 ]; then
+  if [[ "$is_proxy_requested" = true && ${#studyu_components_running[@]} -gt 0 ]]; then
     echo -e "${red}Error: Cannot start 'proxy' when the following StudyU component(s) are already running: ${studyu_components_running[*]}.${reset}"
     exit 1
   fi
 
-  if [ "$is_studyu_requested" = true ] && [ ${#studyu_components_running[@]} -gt 0 ]; then
+  if [[ "$is_studyu_requested" = true && ${#studyu_components_running[@]} -gt 0 ]]; then
     echo -e "${red}Error: Cannot start a StudyU component when 'proxy' is already running. The StudyU components include the proxy's functionality.${reset}"
     echo "Please run 'stop proxy' and try again."
     exit 1
@@ -243,7 +258,7 @@ manage_components() {
       exit 1;
     fi
 
-    if [[ "$action" == 'up'* ]] && [[ "$component" == 'supabase'* ]]; then
+    if [[ "$action" == 'up'* && "$component" == 'supabase'* ]]; then
       local supabase_path
       supabase_path="$STUDYU_PATH/docker/supabase"
       if [ ! -f "$supabase_path/.env" ]; then
