@@ -1,6 +1,10 @@
 version: '3'
 name: 'studyu'
 
+networks:
+  default:
+    name: studyu_network
+
 services:
   proxy:
     container_name: studyu-proxy
@@ -12,8 +16,3 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge

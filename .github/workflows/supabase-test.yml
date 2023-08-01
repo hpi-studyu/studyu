@@ -1,0 +1,49 @@
+name: Test Supabase
+on:
+  push:
+    paths:
+      - "database/**"
+      - "docker/**"
+  pull_request:
+    paths:
+      - "database/**"
+      - "docker/**"
+  workflow_dispatch:
+
+jobs:
+  pgtap:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: supabase/postgres:15.1.0.90
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Seed database
+        run: cp database/studyu-schema.sql docker/supabase/seed.sql
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Initialize Supabase
+        working-directory: docker
+        run: |
+          supabase db start
+
+      - name: Run Supabase Tests
+        working-directory: docker
+        run: |
+          supabase test db

@@ -20,8 +20,8 @@
 | ---- | ---- | ---------- |
 | study_subject_loginCode_fkey | FOREIGN KEY | FOREIGN KEY (invite_code) REFERENCES study_invite(code) ON DELETE CASCADE |
 | study_subject_studyId_fkey | FOREIGN KEY | FOREIGN KEY (study_id) REFERENCES study(id) ON DELETE CASCADE |
-| study_subject_userId_fkey | FOREIGN KEY | FOREIGN KEY (user_id) REFERENCES "user"(id) |
 | study_subject_pkey | PRIMARY KEY | PRIMARY KEY (id) |
+| study_subject_userId_fkey | FOREIGN KEY | FOREIGN KEY (user_id) REFERENCES "user"(id) |
 
 ## Indexes
 
