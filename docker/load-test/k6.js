@@ -1,3 +1,6 @@
+// Basic load-testing script for Supabase
+// Meant to be run with https://github.com/grafana/k6
+
 import http from "k6/http";
 import { check, sleep } from "k6";
 
@@ -17,7 +20,7 @@ export const options = {
 
 // Simulated user behavior
 export default function () {
-  let res = http.get("http://localhost:8082/rest/v1/tag");
+  let res = http.get("http://localhost:8082/rest/v1/study");
   // Validate response status
   check(res, { "status was 200": (r) => r.status == 200 });
   sleep(1);
