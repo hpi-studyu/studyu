@@ -21,4 +21,4 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
+      - ../flutter_common/lib/envs/.env.local
