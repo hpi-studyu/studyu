@@ -16,7 +16,13 @@ bold='\e[1m'
 reset='\e[0m'
 
 # Configuration file path
-CONFIG_FILE="$SCRIPT_DIR/.studyu_config"
+# Check if the STUDYU_CONFIG_FILE environment variable is set
+if [ -n "$STUDYU_CONFIG_FILE" ]; then
+    CONFIG_FILE="$STUDYU_CONFIG_FILE"
+else
+    # Otherwise, fallback to the hardcoded path
+    CONFIG_FILE="$SCRIPT_DIR/.studyu_config"
+fi
 
 # Dictionary to map components to Docker Compose files
 declare -A compose_files=(
