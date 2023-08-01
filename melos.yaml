@@ -86,18 +86,18 @@ scripts:
   dev:designer:
     run: |
       melos exec -c 1 -- \
-        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.hpi"
+        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_designer_v2
-    description: Runs designer in Chrome on port 3001 with hpi env for local development
+    description: Runs designer in Chrome on port 3001 with local env for local development
 
   dev:app:
     run: |
       melos exec -c 1 -- \
-        "flutter run --dart-define=STUDYU_ENV=.env.hpi"
+        "flutter run --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_app
-    description: Runs app with hpi env for local development
+    description: Runs app with local env for local development
 
   build:android:
     run: |
