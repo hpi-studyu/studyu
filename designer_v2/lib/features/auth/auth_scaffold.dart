@@ -112,7 +112,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SelectableText(
-                          "© HPI Digital Health Center 2022",
+                          "© HPI Digital Health Cluster 2023",
                           style: ThemeConfig.bodyTextBackground(theme),
                         ),
                         Row(
@@ -153,6 +153,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         backgroundColorLeft: ThemeConfig.bodyBackgroundColor(theme),
         backgroundColorRight: theme.colorScheme.primary,
         constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
+        scrollLeft: false,
+        scrollRight: false,
         stretchHeight: true,
         paddingLeft: widget.leftPanelPadding,
       ),
