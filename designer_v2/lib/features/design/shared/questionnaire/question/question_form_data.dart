@@ -275,10 +275,8 @@ class ImageQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, bool> get kResponseOptions => {
-        tr.form_array_response_options_bool_yes: true,
-        tr.form_array_response_options_bool_no: false,
-      };
+  static Map<String, String> get kResponseOptions =>
+      {tr.form_field_response_image: 'image'};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();

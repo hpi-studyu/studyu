@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pdf/widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:encrypted_media_capturing/take_picture_screen.dart';
 import 'question_widget.dart';
