@@ -68,7 +68,8 @@ class PersistentStorageHandler {
     }
   }
 
-  Future<void> storeImage(XFile image) async {
+  Future<void> storeImage(XFile image,
+      {void Function(String)? pathCallback}) async {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
     await _applicationDirectoryFuture;
     await _encrypterHandlerFuture;
@@ -82,8 +83,10 @@ class PersistentStorageHandler {
       PersistentStorageHandler._encryptedImageFileType
     ].join();
 
-    await File(path.join(_applicationMediaDirectory.path, fileName))
-        .writeAsBytes(encryptedImageByteContent);
+    final String targetPath =
+        path.join(_applicationMediaDirectory.path, fileName);
+
+    await File(targetPath).writeAsBytes(encryptedImageByteContent);
     /*
       The camera package writes back the captured images directly after
       capturing them. The save method only duplicates them to another location.
@@ -91,6 +94,9 @@ class PersistentStorageHandler {
       data not explicitly encrypted.
      */
     _deleteAllUnencryptedFileSystemEntities();
+    if (pathCallback != null) {
+      pathCallback(targetPath);
+    }
   }
 
   Future<void> _finalizeStoreAudio(String aStagingPath) async {

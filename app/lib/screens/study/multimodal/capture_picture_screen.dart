@@ -5,7 +5,9 @@ import 'package:studyu_core/core.dart';
 import 'package:flutter/material.dart';
 
 class CapturePictureScreen extends StatefulWidget {
-  const CapturePictureScreen({super.key});
+  final void Function(String) pathCallback;
+
+  const CapturePictureScreen({super.key, required this.pathCallback});
 
   @override
   CapturePictureScreenState createState() => CapturePictureScreenState();
@@ -56,7 +58,8 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
     // Ensure that the camera is initialized.
     await _initializeControllerFuture;
     final XFile image = await _cameraController.takePicture();
-    await _persistentStorageHandler.storeImage(image);
+    await _persistentStorageHandler.storeImage(image,
+        pathCallback: widget.pathCallback);
   }
 
   @override
@@ -96,20 +99,6 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
         floatingActionButton: Wrap(
           direction: Axis.horizontal,
           children: [
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: FloatingActionButton(
-                heroTag: "switchToLibrary",
-                onPressed: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => throw UnimplementedError(),
-                    ),
-                  );
-                },
-                child: const Icon(Icons.ac_unit),
-              ),
-            ),
             Container(
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
