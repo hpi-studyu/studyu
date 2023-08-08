@@ -284,6 +284,31 @@ manage_components() {
   done
 }
 
+# Check if components are running healthy
+status() {
+  container_names=$(docker ps --filter "name=supabase" --filter "name=studyu" --format "{{.Names}}")
+
+  if [ -z "$container_names" ]; then
+    echo -e "No components are currently running."
+    exit 2
+  fi
+
+  all_containers_healthy=true
+  for name in $container_names; do
+    health_status=$(docker inspect --format='{{.State.Running}}' "$name")
+
+    if [ "$health_status" != "true" ]; then
+      all_containers_healthy=false
+      echo -e "${red}Error: $name is not running healthy. Check 'docker-compose ps' for troubleshooting.${reset}"
+    fi
+  done
+
+  if [ "$all_containers_healthy" = true ]; then
+    echo -e "${green}The following components are currently running healthy:${reset} ${container_names[*]}"
+  else
+    exit 1
+  fi
+}
 
 # Start given components with docker compose
 start() {
@@ -464,6 +489,10 @@ case "$1" in
         configure
         ;;
     esac
+    ;;
+  status)
+    read_config
+    status "$@"
     ;;
   start)
     read_config
