@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
 import 'package:studyu_core/core.dart';
-import 'package:encrypted_media_capturing/take_picture_screen.dart';
 import 'question_widget.dart';
+import 'package:studyu_app/models/app_state.dart';
 
 class ImageCapturingWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
   final Function(Answer)? onDone;
 
-  const ImageCapturingWidget({Key? key, required this.question, this.onDone})
+  const ImageCapturingQuestionWidget(
+      {Key? key, required this.question, this.onDone})
       : super(key: key);
 
   @override
-  State<ImageCapturingWidget> createState() => _ImageCapturingWidgetState();
+  State<ImageCapturingQuestionWidget> createState() =>
+      _ImageCapturingQuestionWidgetState();
 }
 
-class _ImageCapturingWidgetState extends State<ImageCapturingWidget> {
-  String text = "empty";
-
+class _ImageCapturingQuestionWidgetState
+    extends State<ImageCapturingQuestionWidget> {
   @override
   void initState() {
     super.initState();
@@ -24,35 +27,21 @@ class _ImageCapturingWidgetState extends State<ImageCapturingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var txt = TextEditingController();
-
-    void setFilePath() {
-      print(text);
-      print(text.runtimeType);
-      txt.text = text;
-    }
-
-    void getFilePath() async {
-      final result = await Navigator.push(
+    Future<void> captureImage() async {
+      final pathAnswer = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TakePictureScreen(),
+            builder: (context) => CapturePictureScreen(
+              studyId: context.read<AppState>().activeSubject!.studyId,
+              userId: context.read<AppState>().activeSubject!.userId,
+            ),
           ));
-
-      setState(() {
-        text = result;
-        widget.onDone!(widget.question.constructAnswer(text!));
-      });
-
-      setFilePath();
+      widget.onDone!(widget.question.constructAnswer(pathAnswer));
     }
 
     return Column(
       children: [
-        TextButton(onPressed: getFilePath, child: Text("Capture!")),
-        TextField(
-          controller: txt,
-        ),
+        TextButton(onPressed: captureImage, child: const Text("Capture!")),
       ],
     );
   }
