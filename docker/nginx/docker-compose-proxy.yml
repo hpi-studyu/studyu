@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 name: 'studyu_proxy'
 
 networks:
@@ -14,5 +14,5 @@ services:
       - 8082:8082
     # - 443:443
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../nginx/.htpasswd:/etc/nginx/.htpasswd:ro
