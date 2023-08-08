@@ -134,6 +134,7 @@
   "question_type_bool": "Ja/Nein",
   "question_type_scale": "Skala",
   "question_type_image": "Bild",
+  "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
   "form_field_response_image": "Anweisungen für die Bildaufnahme bereitstellen",

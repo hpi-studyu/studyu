@@ -45,6 +45,9 @@ abstract class QuestionFormData implements IFormData {
     SurveyQuestionType.image: (question, eligibilityCriteria) =>
         ImageQuestionFormData.fromDomainModel(
             question as ImageCapturingQuestion, eligibilityCriteria),
+    SurveyQuestionType.audio: (question, eligibilityCriteria) =>
+        AudioQuestionFormData.fromDomainModel(
+            question as AudioRecordingQuestion, eligibilityCriteria),
   };
 
   QuestionFormData({
@@ -319,6 +322,63 @@ class ImageQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion() as ImageCapturingQuestion;
+    final value = kResponseOptions[responseOption] as String;
+    return question.constructAnswer(value);
+  }
+}
+
+class AudioQuestionFormData extends QuestionFormData {
+  AudioQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+  });
+
+  static Map<String, String> get kResponseOptions =>
+      {tr.form_field_response_image: 'audio'};
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory AudioQuestionFormData.fromDomainModel(
+    AudioRecordingQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = AudioQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.audio,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = AudioRecordingQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  AudioQuestionFormData copy() {
+    final data = AudioQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as AudioRecordingQuestion;
     final value = kResponseOptions[responseOption] as String;
     return question.constructAnswer(value);
   }

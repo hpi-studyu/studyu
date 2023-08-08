@@ -34,6 +34,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     imageResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
+    audioResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -115,6 +117,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           .toList();
   late final FormArray<String> imageResponseOptionsArray =
       FormArray(imageOptions);
+
+  // Audio
+  List<AbstractControl<String>> get audioOptions =>
+      AudioQuestionFormData.kResponseOptions.keys
+          .map((e) => FormControl(value: e, disabled: true))
+          .toList();
+  late final FormArray<String> audioResponseOptionsArray =
+      FormArray(audioOptions);
 
   // Scale
   static const int kDefaultScaleMinValue = 0;
@@ -400,6 +410,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );
       case SurveyQuestionType.image:
         return ImageQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+        );
+      case SurveyQuestionType.audio:
+        return AudioQuestionFormData(
           questionId: questionId,
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required

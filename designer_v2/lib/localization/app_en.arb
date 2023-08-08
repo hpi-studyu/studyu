@@ -135,6 +135,7 @@
   "question_type_bool": "Yes/no",
   "question_type_scale": "Scale",
   "question_type_image": "Image",
+  "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Yes",
   "form_array_response_options_bool_no": "No",
   "form_field_response_choice_multiple": "Select multiple",

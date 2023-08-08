@@ -12,6 +12,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/image_capturing_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/audio_recording_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -52,6 +53,8 @@ class _SurveyQuestionFormViewState
           ScaleQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.image: (_) =>
           ImageCapturingQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.audio: (_) =>
+          AudioRecordingQuestionFormView(formViewModel: formViewModel),
     };
     final questionType = formViewModel.questionType;
 
