@@ -1,3 +1,7 @@
+# Custom
+backup/
+docker/.studyu_config
+
 # Miscellaneous
 *.class
 *.log

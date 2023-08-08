@@ -1,5 +1,5 @@
-version: '3'
-name: 'studyu'
+version: '3.8'
+name: 'studyu_proxy'
 
 networks:
   default:
@@ -14,5 +14,5 @@ services:
       - 8082:8082
     # - 443:443
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../nginx/.htpasswd:/etc/nginx/.htpasswd:ro
