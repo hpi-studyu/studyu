@@ -62,9 +62,9 @@ Additionally, we have 4 environment files. Replace or create for more
 convenience:
 
 - `.env`: Production database used by default
-- `.env.staging`: Staging database, currently not ready to be used
+- `.env.dev`: Development database used by dev branch
 - `.env.local`: Used to run StudyU locally with Docker
-- `.env.hpi`: Used for a selfhost instance of Supabase at HPI
+- `.env.hpi`: Used for a self-hosted instance of Supabase at HPI
 
 Ideally we should only use the staging database or a local one for all our
 development work.
