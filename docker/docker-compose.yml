@@ -1,6 +1,10 @@
 version: '3'
 name: 'studyu'
 
+networks:
+  default:
+    name: studyu_network
+
 services:
   platform-full:
     container_name: studyu-platform-full
@@ -17,9 +21,4 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge
+      - ../flutter_common/lib/envs/.env.local
