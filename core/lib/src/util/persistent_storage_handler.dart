@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:cross_file/cross_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:studyu_core/src/util/blob_storage_handler.dart';
 import 'package:studyu_core/src/util/encrypted_audio_file.dart';
 import 'package:studyu_core/src/util/encrypter_handler.dart';
 
@@ -14,12 +15,17 @@ class PersistentStorageHandler {
   static const String _encryptedImageFileType = '.encryptedjpg';
   static const String _encryptedAudioFileType = '.encryptedm4a';
   static const String _nonEncryptedAudioFileType = ".m4a";
+  static const String _nonEncryptedImageFileType = ".jpg";
 
   late Directory _applicationBaseDirectory;
   late Directory _applicationMediaDirectory;
   late Future<void> _applicationDirectoryFuture;
   late EncrypterHandler _encrypterHandler;
   late Future<void> _encrypterHandlerFuture;
+  late BlobStorageHandler _blobStorageHandler;
+
+  final String _userId;
+  final String _studyId;
 
   static bool _isNotEncrypted(FileSystemEntity anEntity) {
     return !path
@@ -36,12 +42,15 @@ class PersistentStorageHandler {
   }
 
   // a file name does not include the file suffix/type, like .png
-  static String buildFileName(String participantID, String studyID) {
+  String _buildFileName() {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
-    return "${participantID}-${studyID}-${timestamp.toString()}";
+    return "user-id_${_userId}_study-id_${_studyId}_$timestamp";
   }
 
-  PersistentStorageHandler() {
+  PersistentStorageHandler(String aUserId, String aStudyId)
+      : _studyId = aStudyId,
+        _userId = aUserId,
+        _blobStorageHandler = BlobStorageHandler() {
     _applicationDirectoryFuture = _initializeRawDirectoryHandler();
     _encrypterHandlerFuture = _initializeEncrypterHandler();
   }
@@ -50,6 +59,9 @@ class PersistentStorageHandler {
     _applicationBaseDirectory = await getApplicationDocumentsDirectory();
     _applicationMediaDirectory =
         Directory("${_applicationBaseDirectory.path}/multimodal-artifacts");
+    if (!_applicationMediaDirectory.existsSync()) {
+      _applicationMediaDirectory.createSync();
+    }
   }
 
   Future<void> _initializeEncrypterHandler() async {
@@ -68,25 +80,37 @@ class PersistentStorageHandler {
     }
   }
 
-  Future<void> storeImage(XFile image,
-      {void Function(String)? pathCallback}) async {
-    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+  Future<void> storeImage(
+    XFile image, {
+    void Function(String)? pathCallback,
+  }) async {
     await _applicationDirectoryFuture;
     await _encrypterHandlerFuture;
     final Uint8List imageByteContent = await image.readAsBytes();
     final Uint8List encryptedImageByteContent =
         _encrypterHandler.encryptFile(imageByteContent);
 
-    final String fileName = [
+    final String fileName = _buildFileName();
+
+    final String encryptedFileName = [
       PersistentStorageHandler._encryptedBaseNamePrefix,
-      timestamp.toString(),
+      "_",
+      fileName,
       PersistentStorageHandler._encryptedImageFileType
     ].join();
 
-    final String targetPath =
-        path.join(_applicationMediaDirectory.path, fileName);
+    final String uploadFileName =
+        [fileName, PersistentStorageHandler._nonEncryptedImageFileType].join();
 
-    await File(targetPath).writeAsBytes(encryptedImageByteContent);
+    await _blobStorageHandler.uploadObservation(
+      uploadFileName,
+      File(image.path),
+    );
+
+    final String localTargetPath =
+        path.join(_applicationMediaDirectory.path, encryptedFileName);
+    final File encryptedFile = File(localTargetPath);
+    await encryptedFile.writeAsBytes(encryptedImageByteContent);
     /*
       The camera package writes back the captured images directly after
       capturing them. The save method only duplicates them to another location.
@@ -95,7 +119,7 @@ class PersistentStorageHandler {
      */
     _deleteAllUnencryptedFileSystemEntities();
     if (pathCallback != null) {
-      pathCallback(targetPath);
+      pathCallback(uploadFileName);
     }
   }
 
@@ -107,14 +131,16 @@ class PersistentStorageHandler {
     final Uint8List audioByteContent = await unencryptedAudio.readAsBytes();
     final Uint8List encryptedImageByteContent =
         _encrypterHandler.encryptFile(audioByteContent);
-    await File(path.join(
-            _applicationMediaDirectory.path,
-            [
-              PersistentStorageHandler._encryptedBaseNamePrefix,
-              timestamp.toString(),
-              PersistentStorageHandler._encryptedAudioFileType
-            ].join()))
-        .writeAsBytes(encryptedImageByteContent);
+    await File(
+      path.join(
+        _applicationMediaDirectory.path,
+        [
+          PersistentStorageHandler._encryptedBaseNamePrefix,
+          timestamp.toString(),
+          PersistentStorageHandler._encryptedAudioFileType
+        ].join(),
+      ),
+    ).writeAsBytes(encryptedImageByteContent);
     /*
       The recorder package writes back the captured audio directly after
       capturing them. The save method only duplicates them to another location.
@@ -134,25 +160,29 @@ class PersistentStorageHandler {
   String _getStagingAudioFilePath() {
     final int timestamp = DateTime.now().millisecondsSinceEpoch;
     return path.join(
-        _applicationMediaDirectory.path,
-        [
-          PersistentStorageHandler._stagingBaseNamePrefix,
-          timestamp.toString(),
-          PersistentStorageHandler._nonEncryptedAudioFileType
-        ].join());
+      _applicationMediaDirectory.path,
+      [
+        PersistentStorageHandler._stagingBaseNamePrefix,
+        timestamp.toString(),
+        PersistentStorageHandler._nonEncryptedAudioFileType
+      ].join(),
+    );
   }
 
   Future<List<Uint8List>> getSortedListOfImages() async {
     final List<FileSystemEntity> allFiles = await _getListOfFiles();
     allFiles.sort(PersistentStorageHandler._defaultFileListCompare);
     return allFiles.reversed
-        .where((FileSystemEntity anEntity) => anEntity.path
-            .contains(PersistentStorageHandler._encryptedImageFileType))
+        .where(
+          (FileSystemEntity anEntity) => anEntity.path
+              .contains(PersistentStorageHandler._encryptedImageFileType),
+        )
         // FileSystemEntity is the superclass of File
         .map((FileSystemEntity anEntity) => anEntity as File)
         .map((File aFile) => aFile.readAsBytesSync())
         .map(
-            (Uint8List aByteArray) => _encrypterHandler.decryptFile(aByteArray))
+          (Uint8List aByteArray) => _encrypterHandler.decryptFile(aByteArray),
+        )
         .toList();
   }
 
@@ -162,12 +192,13 @@ class PersistentStorageHandler {
     final Uint8List decryptedByteArray =
         _encrypterHandler.decryptFile(encryptedByteArray);
     final String temporaryPath = path.join(
-        _applicationMediaDirectory.path,
-        [
-          PersistentStorageHandler._stagingBaseNamePrefix,
-          "ActualPlaying",
-          PersistentStorageHandler._nonEncryptedAudioFileType
-        ].join());
+      _applicationMediaDirectory.path,
+      [
+        PersistentStorageHandler._stagingBaseNamePrefix,
+        "ActualPlaying",
+        PersistentStorageHandler._nonEncryptedAudioFileType
+      ].join(),
+    );
     await File(temporaryPath).writeAsBytes(decryptedByteArray);
     return temporaryPath;
   }
@@ -176,8 +207,10 @@ class PersistentStorageHandler {
     final List<FileSystemEntity> allFiles = await _getListOfFiles();
     allFiles.sort(PersistentStorageHandler._defaultFileListCompare);
     return allFiles.reversed
-        .where((FileSystemEntity anEntity) => anEntity.path
-            .contains(PersistentStorageHandler._encryptedAudioFileType))
+        .where(
+          (FileSystemEntity anEntity) => anEntity.path
+              .contains(PersistentStorageHandler._encryptedAudioFileType),
+        )
         .map((FileSystemEntity anEntity) => anEntity.path)
         .map((String aPath) => EncryptedAudioFile(this, aPath))
         .toList();

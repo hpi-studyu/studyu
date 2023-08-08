@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:studyu_core/src/env/env.dart' as env;
 
 class BlobStorageHandler {
-  Future<void> uploadObservation(File aFile) async {}
+  static const String _observationsBucketName = 'observations';
 
-  Future<void> uploadIntervention(File aFile) async {
-    print(await env.client.storage.listBuckets().then((value) => value.length));
-    await env.client.storage.from("intervention").upload("sample.png", aFile);
+  Future<void> uploadObservation(String aFileName, File aFile) async {
+    await env.client.storage
+        .from(_observationsBucketName)
+        .upload(aFileName, aFile);
   }
 }

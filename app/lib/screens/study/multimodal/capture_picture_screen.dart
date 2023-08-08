@@ -5,9 +5,11 @@ import 'package:studyu_core/core.dart';
 import 'package:flutter/material.dart';
 
 class CapturePictureScreen extends StatefulWidget {
-  final void Function(String) pathCallback;
+  final String userId;
+  final String studyId;
 
-  const CapturePictureScreen({super.key, required this.pathCallback});
+  const CapturePictureScreen(
+      {super.key, required this.userId, required this.studyId});
 
   @override
   CapturePictureScreenState createState() => CapturePictureScreenState();
@@ -20,11 +22,8 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
   late Future<void> _identifyCamerasFuture;
   Future<void> _initializeControllerFuture;
 
-  final PersistentStorageHandler _persistentStorageHandler;
-
   CapturePictureScreenState()
-      : _persistentStorageHandler = PersistentStorageHandler(),
-        _initializeControllerFuture = Completer<void>().future;
+      : _initializeControllerFuture = Completer<void>().future;
 
   Future<void> _identifyCameras() async {
     _cameras = (await availableCameras())
@@ -58,8 +57,10 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
     // Ensure that the camera is initialized.
     await _initializeControllerFuture;
     final XFile image = await _cameraController.takePicture();
-    await _persistentStorageHandler.storeImage(image,
-        pathCallback: widget.pathCallback);
+    PersistentStorageHandler aPersistentStorageHandler =
+        PersistentStorageHandler(widget.userId, widget.studyId);
+    await aPersistentStorageHandler.storeImage(image,
+        pathCallback: (String aPath) => Navigator.pop(context, aPath));
   }
 
   @override

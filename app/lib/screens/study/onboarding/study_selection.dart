@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:typed_data';
-import 'package:http/http.dart' as http;
 
 import '../../../models/app_state.dart';
 import '../../../routes.dart';
@@ -30,19 +26,6 @@ Future<void> navigateToStudyOverview(
   Navigator.pushNamed(context, Routes.studyOverview);
 }
 
-Future<void> prototype() async {
-  final directory = await getApplicationDocumentsDirectory();
-  final file = File("${directory.path}/image.png");
-  BlobStorageHandler sampleHandler = BlobStorageHandler();
-  const String address = "https://image.stern.de/33676288/t/zQ/v2/w1440/r1.7778/-/wildschwein.jpg";
-  final http.Response response = await http.get(Uri.parse(address));
-  Uint8List imageBytes = response.bodyBytes;
-  // ByteData bytes = await rootBundle.load("assets/pig.jpeg");
-  // Uint8List imageBytes = bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
-  file.writeAsBytes(imageBytes);
-  sampleHandler.uploadIntervention(file);
-}
-
 class StudySelectionScreen extends StatelessWidget {
   const StudySelectionScreen({Key? key}) : super(key: key);
 
@@ -58,18 +41,17 @@ class StudySelectionScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    Image(image: AssetImage('assets/pig.jpeg')),
                     Text(
                       AppLocalizations.of(context)!.study_selection_description,
                       style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
-                    const TextButton(child: Text("Upload Sample to Supabase"), onPressed: prototype),
                     RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single,
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -77,13 +59,17 @@ class StudySelectionScreen extends StatelessWidget {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single_why,
-                            style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single_why,
+                            style: theme.textTheme.titleSmall!
+                                .copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      content: Text(AppLocalizations.of(context)!.study_selection_single_reason),
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .study_selection_single_reason),
                                     ),
                                   ),
                           )
@@ -105,7 +91,8 @@ class StudySelectionScreen extends StatelessWidget {
                           child: Material(
                             child: StudyTile.fromStudy(
                               study: studies[index],
-                              onTap: () => navigateToStudyOverview(context, studies[index]),
+                              onTap: () => navigateToStudyOverview(
+                                  context, studies[index]),
                             ),
                           ),
                         );
@@ -119,7 +106,9 @@ class StudySelectionScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   icon: Icon(MdiIcons.key),
                   onPressed: () async {
-                    await showDialog(context: context, builder: (_) => const InviteCodeDialog());
+                    await showDialog(
+                        context: context,
+                        builder: (_) => const InviteCodeDialog());
                   },
                   label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
@@ -159,7 +148,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
           controller: _controller,
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.invite_code),
+          decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.invite_code),
         ),
         actions: [
           OutlinedButton.icon(
@@ -184,7 +174,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
               if (result == null) {
                 setState(() {
-                  _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+                  _errorMessage =
+                      AppLocalizations.of(context)!.invalid_invite_code;
                 });
               } else {
                 setState(() {

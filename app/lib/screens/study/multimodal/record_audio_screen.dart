@@ -16,7 +16,9 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
   final Record _audioRecorder;
   bool _isRecording = false;
   late Future<void> _initializeRecorderPermissionsFuture;
-  final PersistentStorageHandler _storageHandler = PersistentStorageHandler();
+  // TODO: change mock up values
+  final PersistentStorageHandler _storageHandler =
+      PersistentStorageHandler("Peter", "WhitenessStudy");
   late Function _storeFinalizer;
 
   Future<void> _initializeAudioRecorderPermissions() async {
