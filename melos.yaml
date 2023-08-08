@@ -86,18 +86,18 @@ scripts:
   dev:designer:
     run: |
       melos exec -c 1 -- \
-        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.selfhost"
+        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_designer_v2
-    description: Runs designer in Chrome on port 3001 with selfhost env for local development
+    description: Runs designer in Chrome on port 3001 with local env for local development
 
   dev:app:
     run: |
       melos exec -c 1 -- \
-        "flutter run --dart-define=STUDYU_ENV=.env.selfhost"
+        "flutter run --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_app
-    description: Runs app with selfhost env for local development
+    description: Runs app with local env for local development
 
   build:android:
     run: |
@@ -148,66 +148,54 @@ scripts:
     packageFilters:
       scope: studyu_designer_v2
 
-  # Staging Env
-
-  build:web:staging:
+  build:web:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.staging"
-    description: Build web staging.
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+    description: Build web dev.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
       dir-exists: web
 
-  build:web:app:staging:
+  build:web:app:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.staging"
-    description: Build web app staging.
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+    description: Build web app dev.
     packageFilters:
       scope: studyu_app
       dir-exists: web
 
-  build:web:designer:staging:
+  build:web:designer_v2:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.staging"
-    description: Build designer app staging.
-    packageFilters:
-      scope: studyu_designer
-      dir-exists: web
-
-  build:web:designer_v2:staging:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.staging"
-    description: Build designer_v2 staging.
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+    description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2
       dir-exists: web
 
-  # Selfhost Env
+  build:web:hpi:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
+    description: Build web hpi.
+    packageFilters:
+      scope: [studyu_app, studyu_designer_v2]
+      dir-exists: web
 
-  build:web:app:selfhost:
+  build:web:app:hpi:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.selfhost"
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
     description: Build app for Docker and self-hosted Supabase instance.
     packageFilters:
       scope: studyu_app
 
-  build:web:designer:selfhost:
+  build:web:designer_v2:hpi:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.selfhost"
-    description: Build designer for Docker and self-hosted Supabase instance.
-    packageFilters:
-      scope: studyu_designer
-
-  build:web:designer_v2:selfhost:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.selfhost"
+        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
     description: Build designer_v2 for Docker and self-hosted Supabase instance.
     packageFilters:
       scope: studyu_designer_v2
@@ -216,15 +204,23 @@ scripts:
   app:web:local:
     run: |
       melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.local"
+        "flutter run lib/main.dart -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_app
-    description: Runs app in chrome on port 3001 with local env
+    description: Runs app in chrome on port 8080 with local env
 
   designer:web:local:
     run: |
       melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 3000 --dart-define=STUDYU_ENV=.env.local"
+        "flutter run lib/main.dart -d chrome --web-port 8083 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_designer
-    description: Runs designer in chrome on port 3000 with local env
+    description: Runs designer in chrome on port 8083 with local env
+
+  designer_v2:web:local:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run lib/main.dart -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs designer in chrome on port 8081 with local env

@@ -1,6 +1,10 @@
 version: '3.8'
 name: 'studyu_database'
 
+networks:
+  default:
+    name: studyu_network
+
 services:
   db:
     container_name: supabase-db
@@ -35,11 +39,6 @@ services:
       - data:/var/lib/postgresql/data
       # Init sql data
       - ../../database/studyu-schema.sql:/docker-entrypoint-initdb.d/init-scripts/99-data.sql:Z
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge
 
 volumes:
   data:

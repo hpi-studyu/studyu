@@ -1,7 +1,8 @@
 {
   "projects": {
     "default": "studyu-e37af",
-    "dev": "studyu-dev"
+    "dev": "studyu-dev",
+    "hpi": "studyu-hpi"
   },
   "targets": {
     "studyu-e37af": {
@@ -17,10 +18,20 @@
     "studyu-dev": {
       "hosting": {
         "app": [
-          "studyu-dev-app-2"
+          "studyu-dev-app"
         ],
         "designer-v2": [
-          "studyu-dev-designer-2"
+          "studyu-dev-designer"
+        ]
+      }
+    },
+    "studyu-hpi": {
+      "hosting": {
+        "app": [
+          "studyu-hpi-app"
+        ],
+        "designer-v2": [
+          "studyu-hpi-designer"
         ]
       }
     }
