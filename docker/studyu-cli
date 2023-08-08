@@ -94,6 +94,11 @@ print_config() {
 component_is_running() {
   local component_name="$1"
 
+  if ! docker info &>/dev/null; then
+    echo "Docker daemon is not running."
+    exit 1
+  fi
+
   # Check if the container is running using Docker ps command
   local container_id
   container_id=$(docker ps -q -f name="$component_name")
