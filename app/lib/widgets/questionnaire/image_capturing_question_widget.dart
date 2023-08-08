@@ -5,7 +5,7 @@ import 'package:studyu_core/core.dart';
 import 'question_widget.dart';
 import 'package:studyu_app/models/app_state.dart';
 
-class ImageCapturingWidget extends QuestionWidget {
+class ImageCapturingQuestionWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
   final Function(Answer)? onDone;
 

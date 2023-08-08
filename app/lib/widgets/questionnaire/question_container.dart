@@ -7,7 +7,6 @@ import 'package:studyu_core/core.dart';
 import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
-import 'image_capturing_question_widget.dart';
 
 import 'question_header.dart';
 import 'question_widget.dart';
@@ -55,7 +54,7 @@ class _QuestionContainerState extends State<QuestionContainer>
           onDone: _onDone,
         );
       case ImageCapturingQuestion:
-        return ImageCapturingWidget(
+        return ImageCapturingQuestionWidget(
           question: widget.question as ImageCapturingQuestion,
           onDone: _onDone,
         );
