@@ -336,7 +336,7 @@ class AudioQuestionFormData extends QuestionFormData {
   });
 
   static Map<String, String> get kResponseOptions =>
-      {tr.form_field_response_image: 'audio'};
+      {tr.form_field_response_audio: 'audio'};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();

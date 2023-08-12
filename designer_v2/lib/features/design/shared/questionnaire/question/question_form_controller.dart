@@ -244,6 +244,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.image: FormGroup({
       'imageOptionsArray': imageResponseOptionsArray,
     }),
+    SurveyQuestionType.audio: FormGroup({
+      'audioOptionsArray': audioResponseOptionsArray,
+    }),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
