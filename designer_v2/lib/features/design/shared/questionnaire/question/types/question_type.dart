@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -7,8 +5,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 enum SurveyQuestionType {
   choice,
   bool,
-  scale,
-  image;
+  scale;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -17,7 +14,6 @@ enum SurveyQuestionType {
       ScaleQuestion.questionType: SurveyQuestionType.scale,
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
-      ImageCapturingQuestion.questionType: SurveyQuestionType.image,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
@@ -33,8 +29,6 @@ enum SurveyQuestionType {
         return tr.question_type_bool;
       case SurveyQuestionType.scale:
         return tr.question_type_scale;
-      case SurveyQuestionType.image:
-        return tr.question_type_image;
       default:
         return "[Invalid SurveyQuestionType]";
     }
@@ -48,8 +42,6 @@ enum SurveyQuestionType {
         return Icons.rule_rounded; // Icons.contrast
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
-      case SurveyQuestionType.image:
-        return Icons.picture_in_picture;
       default:
         return null;
     }
