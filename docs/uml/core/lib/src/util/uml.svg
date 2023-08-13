@@ -1,100 +1,5 @@
-<svg version="1.1" baseProfile="full" width="2186.8" height="1354.0" viewbox="0 0 2186.75 1354" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[EncryptedAudioFile
-	  |
-	  -_audioPlayer: AudioPlayer;
-	  -_encryptedAudioFilePath: String;
-	  -_temporaryUnencryptedFilePath: String;
-	  -_storageHandler: PersistentStorageHandler
-	  |
-	  +void preparePlay();
-	  +dynamic play();
-	  +dynamic stop();
-	  +void delete()
-	]
-	
-	[EncryptedAudioFile]o-[AudioPlayer]
-	[EncryptedAudioFile]o-[PersistentStorageHandler]
-	
-	[BlobStorageHandler
-	  |
-	  &lt;static&gt;-_observationsBucketName: String
-	  |
-	  +dynamic uploadObservation()
-	]
-	
-	[PersistentStorageHandler
-	  |
-	  &lt;static&gt;-_encryptedBaseNamePrefix: String;
-	  &lt;static&gt;-_stagingBaseNamePrefix: String;
-	  &lt;static&gt;-_encryptedImageFileType: String;
-	  &lt;static&gt;-_encryptedAudioFileType: String;
-	  &lt;static&gt;-_nonEncryptedAudioFileType: String;
-	  &lt;static&gt;-_nonEncryptedImageFileType: String;
-	  -_applicationBaseDirectory: Directory;
-	  -_applicationMediaDirectory: Directory;
-	  -_applicationDirectoryFuture: dynamic;
-	  -_encrypterHandler: EncrypterHandler;
-	  -_encrypterHandlerFuture: dynamic;
-	  -_blobStorageHandler: BlobStorageHandler;
-	  -_userId: String;
-	  -_studyId: String
-	  |
-	  &lt;static&gt;-bool _isNotEncrypted();
-	  &lt;static&gt;-bool _isFile();
-	  &lt;static&gt;-int _defaultFileListCompare();
-	  -String _buildFileName();
-	  -dynamic _initializeRawDirectoryHandler();
-	  -dynamic _initializeEncrypterHandler();
-	  -dynamic _deleteAllUnencryptedFileSystemEntities();
-	  +dynamic storeImage();
-	  -dynamic _finalizeStoreAudio();
-	  +dynamic ();
-	  +dynamic storeAudio();
-	  -String _getStagingAudioFilePath();
-	  +dynamic getSortedListOfImages();
-	  +dynamic provideUnencryptedAudio();
-	  +dynamic getSortedListOfEncryptedAudioFiles();
-	  -dynamic _getListOfFiles();
-	  +void deleteFile();
-	  +dynamic deleteAllFiles();
-	  +dynamic deleteFileByPath()
-	]
-	
-	[PersistentStorageHandler]o-[Directory]
-	[PersistentStorageHandler]o-[EncrypterHandler]
-	[PersistentStorageHandler]o-[BlobStorageHandler]
-	
-	[EncrypterHandler
-	  |
-	  -_keyStorage: KeyStorage
-	  |
-	  &lt;static&gt;-Encrypter _buildEncrypter();
-	  &lt;static&gt;+dynamic buildHandler();
-	  +String encryptText();
-	  +String decryptText();
-	  +Uint8List encryptFile();
-	  +Uint8List decryptFile()
-	]
-	
-	[EncrypterHandler]o-[KeyStorage]
-	
-	[KeyStorage
-	  |
-	  &lt;static&gt;+prefKeyForKey: String;
-	  &lt;static&gt;+pefKeyForIV: String;
-	  +keyValueStore: SharedPreferences
-	  |
-	  &lt;static&gt;+dynamic buildHandler();
-	  -void _initEncryptionKey();
-	  -void _initEncryptionIV();
-	  -T _getSharedPreferenceValue();
-	  +Key getEncryptionKey();
-	  +IV getIV()
-	]
-	
-	[KeyStorage]o-[SharedPreferences]
-	
-	[&lt;abstract&gt;SupabaseObject
+<svg version="1.1" baseProfile="full" width="1534.0" height="371.0" viewbox="0 0 1534 371" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[&lt;abstract&gt;SupabaseObject
 	  |
 	  +primaryKeys: Map&lt;String, dynamic&gt;
 	  |
@@ -150,276 +55,41 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1354.0" width="2186.8" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="371.0" width="1534.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M138.6 193.9 L126 203 L126 486.5 L126.0 486.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M149.3 192.8 L138.6 193.9 L143.1 184.1 L153.8 183.0 Z"></path>
-					</g>
-					<path d="M422.9 193.9 L435.5 203 L435.5 223 L435.5 223.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M418.4 184.1 L422.9 193.9 L412.2 192.8 L407.7 183.0 Z"></path>
-					</g>
-					<path d="M435.5 799.7 L435.5 801 L435.5 889.5 L435.5 889.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M440.8 790.3 L435.5 799.7 L430.2 790.3 L435.5 781.0 Z"></path>
-					</g>
-					<path d="M661.0 790.1 L669.5 801 L669.5 821 L669.5 821.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M659.5 779.5 L661.0 790.1 L651.1 786.1 L649.5 775.4 Z"></path>
-					</g>
-					<path d="M209.3 762.7 L176 801 L176 858.5 L176.0 858.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M219.4 759.1 L209.3 762.7 L211.4 752.1 L221.5 748.6 Z"></path>
-					</g>
-					<path d="M669.5 1007.7 L669.5 1009 L669.5 1029 L669.5 1029.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M674.8 998.3 L669.5 1007.7 L664.2 998.3 L669.5 989.0 Z"></path>
-					</g>
-					<path d="M669.5 1245.7 L669.5 1247 L669.5 1267 L669.5 1267.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M674.8 1236.3 L669.5 1245.7 L664.2 1236.3 L669.5 1227.0 Z"></path>
-					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M807.8 151.3 L807.75 203 L807.75 456 L807.8 456.0 " fill="none"></path>
+						<path d="M155.0 151.3 L155 203 L155 223 L155.0 223.0 " fill="none"></path>
 					</g>
-					<path d="M813.1 151.3 L807.8 151.3 L802.4 151.3 L807.8 138.0 Z"></path>
-					<path d="M1364.3 175.3 L1291 203 L1291 486.5 L1291.0 486.5 " fill="none"></path>
+					<path d="M160.3 151.3 L155.0 151.3 L149.7 151.3 L155.0 138.0 Z"></path>
+					<path d="M711.5 175.3 L638.25 203 L638.25 253.5 L638.3 253.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1374.9 177.0 L1364.3 175.3 L1371.1 167.0 L1381.8 168.7 Z"></path>
+						<path d="M722.2 177.0 L711.5 175.3 L718.4 167.0 L729.0 168.7 Z"></path>
 					</g>
-					<path d="M1663.2 198.1 L1666.75 203 L1666.75 486.5 L1666.8 486.5 " fill="none"></path>
+					<path d="M1010.5 198.1 L1014 203 L1014 253.5 L1014.0 253.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1662.1 187.4 L1663.2 198.1 L1653.4 193.7 L1652.3 183.0 Z"></path>
-					</g>
-					<g data-name="EncryptedAudioFile">
-						<g fill="#eee8d5" stroke="#33322E" data-name="EncryptedAudioFile">
-							<rect x="97.3" y="0.0" height="183.0" width="367.0" data-name="EncryptedAudioFile"></rect>
-							<path d="M97.3 31.0 L464.3 31.0" fill="none" data-name="EncryptedAudioFile"></path>
-							<path d="M97.3 107.0 L464.3 107.0" fill="none" data-name="EncryptedAudioFile"></path>
-						</g>
-						<g transform="translate(97.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EncryptedAudioFile">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EncryptedAudioFile">
-								<text x="175.5" y="13.5" stroke="none" text-anchor="middle" data-name="EncryptedAudioFile">EncryptedAudioFile</text>
-								
-							</g>
-						</g>
-						<g transform="translate(97.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncryptedAudioFile">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncryptedAudioFile">
-								<text x="0.0" y="13.5" stroke="none" data-name="EncryptedAudioFile">-_audioPlayer: AudioPlayer</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="EncryptedAudioFile">-_encryptedAudioFilePath: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="EncryptedAudioFile">-_temporaryUnencryptedFilePath: String</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="EncryptedAudioFile">-_storageHandler: PersistentStorageHandler</text>
-								
-							</g>
-						</g>
-						<g transform="translate(97.25, 107)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncryptedAudioFile">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncryptedAudioFile">
-								<text x="0.0" y="13.5" stroke="none" data-name="EncryptedAudioFile">+void preparePlay()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="EncryptedAudioFile">+dynamic play()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="EncryptedAudioFile">+dynamic stop()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="EncryptedAudioFile">+void delete()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="AudioPlayer">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AudioPlayer">
-							<rect x="70.5" y="486.5" height="31.0" width="111.0" data-name="AudioPlayer"></rect>
-						</g>
-						<g transform="translate(70.5, 486.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioPlayer">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AudioPlayer">
-								<text x="47.5" y="13.5" stroke="none" text-anchor="middle" data-name="AudioPlayer">AudioPlayer</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="PersistentStorageHandler">
-						<g fill="#eee8d5" stroke="#33322E" data-name="PersistentStorageHandler">
-							<rect x="221.5" y="223.0" height="558.0" width="428.0" data-name="PersistentStorageHandler"></rect>
-							<path d="M221.5 254.0 L649.5 254.0" fill="none" data-name="PersistentStorageHandler"></path>
-							<path d="M221.5 480.0 L649.5 480.0" fill="none" data-name="PersistentStorageHandler"></path>
-						</g>
-						<g transform="translate(221.5, 223)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PersistentStorageHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PersistentStorageHandler">
-								<text x="206.0" y="13.5" stroke="none" text-anchor="middle" data-name="PersistentStorageHandler">PersistentStorageHandler</text>
-								
-							</g>
-						</g>
-						<g transform="translate(221.5, 254)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PersistentStorageHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PersistentStorageHandler">
-								<text x="0.0" y="13.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_encryptedBaseNamePrefix: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_stagingBaseNamePrefix: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_encryptedImageFileType: String</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_encryptedAudioFileType: String</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_nonEncryptedAudioFileType: String</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_nonEncryptedImageFileType: String</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="PersistentStorageHandler">-_applicationBaseDirectory: Directory</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="PersistentStorageHandler">-_applicationMediaDirectory: Directory</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="PersistentStorageHandler">-_applicationDirectoryFuture: dynamic</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="PersistentStorageHandler">-_encrypterHandler: EncrypterHandler</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="PersistentStorageHandler">-_encrypterHandlerFuture: dynamic</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="PersistentStorageHandler">-_blobStorageHandler: BlobStorageHandler</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="PersistentStorageHandler">-_userId: String</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="PersistentStorageHandler">-_studyId: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(221.5, 480)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PersistentStorageHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PersistentStorageHandler">
-								<text x="0.0" y="13.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-bool _isNotEncrypted()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-bool _isFile()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-int _defaultFileListCompare()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="PersistentStorageHandler">-String _buildFileName()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _initializeRawDirectoryHandler()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _initializeEncrypterHandler()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _deleteAllUnencryptedFileSystemEntities()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="PersistentStorageHandler">+dynamic storeImage()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _finalizeStoreAudio()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="PersistentStorageHandler">+dynamic ()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="PersistentStorageHandler">+dynamic storeAudio()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="PersistentStorageHandler">-String _getStagingAudioFilePath()</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="PersistentStorageHandler">+dynamic getSortedListOfImages()</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="PersistentStorageHandler">+dynamic provideUnencryptedAudio()</text>
-								<text x="0.0" y="223.5" stroke="none" data-name="PersistentStorageHandler">+dynamic getSortedListOfEncryptedAudioFiles()</text>
-								<text x="0.0" y="238.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _getListOfFiles()</text>
-								<text x="0.0" y="253.5" stroke="none" data-name="PersistentStorageHandler">+void deleteFile()</text>
-								<text x="0.0" y="268.5" stroke="none" data-name="PersistentStorageHandler">+dynamic deleteAllFiles()</text>
-								<text x="0.0" y="283.5" stroke="none" data-name="PersistentStorageHandler">+dynamic deleteFileByPath()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="BlobStorageHandler">
-						<g fill="#eee8d5" stroke="#33322E" data-name="BlobStorageHandler">
-							<rect x="0.0" y="858.5" height="93.0" width="352.0" data-name="BlobStorageHandler"></rect>
-							<path d="M0.0 889.5 L352.0 889.5" fill="none" data-name="BlobStorageHandler"></path>
-							<path d="M0.0 920.5 L352.0 920.5" fill="none" data-name="BlobStorageHandler"></path>
-						</g>
-						<g transform="translate(0, 858.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BlobStorageHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BlobStorageHandler">
-								<text x="168.0" y="13.5" stroke="none" text-anchor="middle" data-name="BlobStorageHandler">BlobStorageHandler</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 889.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BlobStorageHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BlobStorageHandler">
-								<text x="0.0" y="13.5" stroke="none" data-name="BlobStorageHandler">&lt;static&gt;-_observationsBucketName: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 920.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BlobStorageHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BlobStorageHandler">
-								<text x="0.0" y="13.5" stroke="none" data-name="BlobStorageHandler">+dynamic uploadObservation()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Directory">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Directory">
-							<rect x="392.0" y="889.5" height="31.0" width="87.0" data-name="Directory"></rect>
-						</g>
-						<g transform="translate(392, 889.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Directory">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Directory">
-								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="Directory">Directory</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="EncrypterHandler">
-						<g fill="#eee8d5" stroke="#33322E" data-name="EncrypterHandler">
-							<rect x="519.0" y="821.0" height="168.0" width="301.0" data-name="EncrypterHandler"></rect>
-							<path d="M519.0 852.0 L820.0 852.0" fill="none" data-name="EncrypterHandler"></path>
-							<path d="M519.0 883.0 L820.0 883.0" fill="none" data-name="EncrypterHandler"></path>
-						</g>
-						<g transform="translate(519, 821)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EncrypterHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EncrypterHandler">
-								<text x="142.5" y="13.5" stroke="none" text-anchor="middle" data-name="EncrypterHandler">EncrypterHandler</text>
-								
-							</g>
-						</g>
-						<g transform="translate(519, 852)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncrypterHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncrypterHandler">
-								<text x="0.0" y="13.5" stroke="none" data-name="EncrypterHandler">-_keyStorage: KeyStorage</text>
-								
-							</g>
-						</g>
-						<g transform="translate(519, 883)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncrypterHandler">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncrypterHandler">
-								<text x="0.0" y="13.5" stroke="none" data-name="EncrypterHandler">&lt;static&gt;-Encrypter _buildEncrypter()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="EncrypterHandler">&lt;static&gt;+dynamic buildHandler()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="EncrypterHandler">+String encryptText()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="EncrypterHandler">+String decryptText()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="EncrypterHandler">+Uint8List encryptFile()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="EncrypterHandler">+Uint8List decryptFile()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="KeyStorage">
-						<g fill="#eee8d5" stroke="#33322E" data-name="KeyStorage">
-							<rect x="517.5" y="1029.0" height="198.0" width="304.0" data-name="KeyStorage"></rect>
-							<path d="M517.5 1060.0 L821.5 1060.0" fill="none" data-name="KeyStorage"></path>
-							<path d="M517.5 1121.0 L821.5 1121.0" fill="none" data-name="KeyStorage"></path>
-						</g>
-						<g transform="translate(517.5, 1029)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="KeyStorage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="KeyStorage">
-								<text x="144.0" y="13.5" stroke="none" text-anchor="middle" data-name="KeyStorage">KeyStorage</text>
-								
-							</g>
-						</g>
-						<g transform="translate(517.5, 1060)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
-								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+prefKeyForKey: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+pefKeyForIV: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="KeyStorage">+keyValueStore: SharedPreferences</text>
-								
-							</g>
-						</g>
-						<g transform="translate(517.5, 1121)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
-								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+dynamic buildHandler()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">-void _initEncryptionKey()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="KeyStorage">-void _initEncryptionIV()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="KeyStorage">-T _getSharedPreferenceValue()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="KeyStorage">+Key getEncryptionKey()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="KeyStorage">+IV getIV()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="SharedPreferences">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SharedPreferences">
-							<rect x="585.0" y="1267.0" height="31.0" width="169.0" data-name="SharedPreferences"></rect>
-						</g>
-						<g transform="translate(585, 1267)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SharedPreferences">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SharedPreferences">
-								<text x="76.5" y="13.5" stroke="none" text-anchor="middle" data-name="SharedPreferences">SharedPreferences</text>
-								
-							</g>
-						</g>
+						<path d="M1009.3 187.4 L1010.5 198.1 L1000.7 193.7 L999.6 183.0 Z"></path>
 					</g>
 					<g data-name="SupabaseObject">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseObject">
-							<rect x="652.8" y="45.0" height="93.0" width="310.0" data-name="SupabaseObject"></rect>
-							<path d="M652.8 76.0 L962.8 76.0" fill="none" data-name="SupabaseObject"></path>
-							<path d="M652.8 107.0 L962.8 107.0" fill="none" data-name="SupabaseObject"></path>
+							<rect x="0.0" y="45.0" height="93.0" width="310.0" data-name="SupabaseObject"></rect>
+							<path d="M0.0 76.0 L310.0 76.0" fill="none" data-name="SupabaseObject"></path>
+							<path d="M0.0 107.0 L310.0 107.0" fill="none" data-name="SupabaseObject"></path>
 						</g>
-						<g transform="translate(652.75, 45)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseObject">
+						<g transform="translate(0, 45)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseObject">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseObject">
 								<text x="147.0" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseObject">SupabaseObject</text>
 								
 							</g>
 						</g>
-						<g transform="translate(652.75, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObject">
+						<g transform="translate(0, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObject">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseObject">
 								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseObject">+primaryKeys: Map&lt;String, dynamic&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(652.75, 107)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObject">
+						<g transform="translate(0, 107)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObject">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseObject">
 								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseObject">+Map&lt;String, dynamic&gt; toJson()</text>
 								
@@ -428,16 +98,16 @@
 					</g>
 					<g data-name="SupabaseObjectFunctions">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseObjectFunctions">
-							<rect x="695.8" y="456.0" height="92.0" width="224.0" data-name="SupabaseObjectFunctions"></rect>
-							<path d="M695.8 487.0 L919.8 487.0" fill="none" data-name="SupabaseObjectFunctions"></path>
+							<rect x="43.0" y="223.0" height="92.0" width="224.0" data-name="SupabaseObjectFunctions"></rect>
+							<path d="M43.0 254.0 L267.0 254.0" fill="none" data-name="SupabaseObjectFunctions"></path>
 						</g>
-						<g transform="translate(695.75, 456)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseObjectFunctions">
+						<g transform="translate(43, 223)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseObjectFunctions">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseObjectFunctions">
 								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseObjectFunctions">SupabaseObjectFunctions</text>
 								
 							</g>
 						</g>
-						<g transform="translate(695.75, 487)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObjectFunctions">
+						<g transform="translate(43, 254)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObjectFunctions">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseObjectFunctions">
 								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseObjectFunctions">&lt;static&gt;+T fromJson()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseObjectFunctions">+dynamic delete()</text>
@@ -448,16 +118,16 @@
 					</g>
 					<g data-name="SupabaseQuery">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseQuery">
-							<rect x="1002.8" y="23.0" height="137.0" width="339.0" data-name="SupabaseQuery"></rect>
-							<path d="M1002.8 54.0 L1341.8 54.0" fill="none" data-name="SupabaseQuery"></path>
+							<rect x="350.0" y="23.0" height="137.0" width="339.0" data-name="SupabaseQuery"></rect>
+							<path d="M350.0 54.0 L689.0 54.0" fill="none" data-name="SupabaseQuery"></path>
 						</g>
-						<g transform="translate(1002.75, 23)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseQuery">
+						<g transform="translate(350, 23)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseQuery">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseQuery">
 								<text x="161.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseQuery">SupabaseQuery</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1002.75, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQuery">
+						<g transform="translate(350, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQuery">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseQuery">
 								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+dynamic getAll()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+dynamic getById()</text>
@@ -471,24 +141,24 @@
 					</g>
 					<g data-name="Analytics">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Analytics">
-							<rect x="1381.8" y="0.0" height="183.0" width="409.0" data-name="Analytics"></rect>
-							<path d="M1381.8 31.0 L1790.8 31.0" fill="none" data-name="Analytics"></path>
-							<path d="M1381.8 77.0 L1790.8 77.0" fill="none" data-name="Analytics"></path>
+							<rect x="729.0" y="0.0" height="183.0" width="409.0" data-name="Analytics"></rect>
+							<path d="M729.0 31.0 L1138.0 31.0" fill="none" data-name="Analytics"></path>
+							<path d="M729.0 77.0 L1138.0 77.0" fill="none" data-name="Analytics"></path>
 						</g>
-						<g transform="translate(1381.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Analytics">
+						<g transform="translate(729, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Analytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Analytics">
 								<text x="196.5" y="13.5" stroke="none" text-anchor="middle" data-name="Analytics">Analytics</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1381.75, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Analytics">
+						<g transform="translate(729, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Analytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Analytics">
 								<text x="0.0" y="13.5" stroke="none" data-name="Analytics">&lt;static&gt;+logger: Logger</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Analytics">&lt;static&gt;+onLog: StreamSubscription&lt;LogRecord&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1381.75, 77)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Analytics">
+						<g transform="translate(729, 77)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Analytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Analytics">
 								<text x="0.0" y="13.5" stroke="none" data-name="Analytics">&lt;static&gt;+void init()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Analytics">&lt;static&gt;+void dispose()</text>
@@ -502,9 +172,9 @@
 					</g>
 					<g data-name="Logger">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Logger">
-							<rect x="1255.0" y="486.5" height="31.0" width="72.0" data-name="Logger"></rect>
+							<rect x="602.3" y="253.5" height="31.0" width="72.0" data-name="Logger"></rect>
 						</g>
-						<g transform="translate(1255, 486.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Logger">
+						<g transform="translate(602.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Logger">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Logger">
 								<text x="28.0" y="13.5" stroke="none" text-anchor="middle" data-name="Logger">Logger</text>
 								
@@ -513,9 +183,9 @@
 					</g>
 					<g data-name="StreamSubscription">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StreamSubscription">
-							<rect x="1581.8" y="486.5" height="31.0" width="170.0" data-name="StreamSubscription"></rect>
+							<rect x="929.0" y="253.5" height="31.0" width="170.0" data-name="StreamSubscription"></rect>
 						</g>
-						<g transform="translate(1581.75, 486.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamSubscription">
+						<g transform="translate(929, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamSubscription">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StreamSubscription">
 								<text x="77.0" y="13.5" stroke="none" text-anchor="middle" data-name="StreamSubscription">StreamSubscription</text>
 								
@@ -524,17 +194,17 @@
 					</g>
 					<g data-name="StudyUAnalytics">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUAnalytics">
-							<rect x="1830.8" y="22.5" height="138.0" width="300.0" data-name="StudyUAnalytics"></rect>
-							<path d="M1830.8 53.5 L2130.8 53.5" fill="none" data-name="StudyUAnalytics"></path>
-							<path d="M1830.8 129.5 L2130.8 129.5" fill="none" data-name="StudyUAnalytics"></path>
+							<rect x="1178.0" y="22.5" height="138.0" width="300.0" data-name="StudyUAnalytics"></rect>
+							<path d="M1178.0 53.5 L1478.0 53.5" fill="none" data-name="StudyUAnalytics"></path>
+							<path d="M1178.0 129.5 L1478.0 129.5" fill="none" data-name="StudyUAnalytics"></path>
 						</g>
-						<g transform="translate(1830.75, 22.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUAnalytics">
+						<g transform="translate(1178, 22.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUAnalytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUAnalytics">
 								<text x="142.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUAnalytics">StudyUAnalytics</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1830.75, 53.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUAnalytics">
+						<g transform="translate(1178, 53.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUAnalytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUAnalytics">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyUAnalytics">+enabled: bool</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyUAnalytics">+dsn: String</text>
@@ -543,7 +213,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(1830.75, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUAnalytics">
+						<g transform="translate(1178, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUAnalytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUAnalytics">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyUAnalytics">+Map&lt;String, dynamic&gt; toJson()</text>
 								

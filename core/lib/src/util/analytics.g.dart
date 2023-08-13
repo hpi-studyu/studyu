@@ -6,7 +6,8 @@ part of 'analytics.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudyUAnalytics _$StudyUAnalyticsFromJson(Map<String, dynamic> json) => StudyUAnalytics(
+StudyUAnalytics _$StudyUAnalyticsFromJson(Map<String, dynamic> json) =>
+    StudyUAnalytics(
       json['enabled'] as bool,
       json['dsn'] as String,
       (json['samplingRate'] as num?)?.toDouble(),
