@@ -13,7 +13,7 @@ deployOnDockerHost:
       down
     - |
       docker-compose \
-      -f docker/docker-compose-proxy.yml \
+      -f docker/nginx/docker-compose-proxy.yml \
       down
     - |
       docker-compose \
@@ -34,5 +34,5 @@ deployOnDockerHost:
       up -d
     - |
       docker-compose \
-      -f docker/docker-compose-proxy.yml \
+      -f docker/nginx/docker-compose-proxy.yml \
       up -d
