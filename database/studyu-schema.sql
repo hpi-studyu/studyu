@@ -830,6 +830,38 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
    FROM public.study_subject
   WHERE (study_subject.id = subject_progress.subject_id))));
 
+--
+-- Name: create blob storage bucket for observations; Type: value; Schema: storage; Owner: postgres
+--
+
+insert into storage.buckets
+(id, name)
+values
+    ('observations', 'observations');
+
+--
+-- Name: authenticated Users can view their uploaded data; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow authenticated Users to view own observations" ON storage.objects FOR SELECT TO authenticated USING (((bucket_id = 'observations'::text) AND (owner = uid())));
+
+--
+-- Name: authenticated Users can upload observations to storage; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow authenticated Users to upload observations" ON storage.objects FOR INSERT TO authenticated WITH CHECK ((bucket_id = 'observations'::text));
+
+--
+-- Name: authenticated Users can delete own observations; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow authenticated Users to delete own observations" ON storage.objects FOR DELETE TO authenticated USING (((bucket_id = 'observations'::text) AND (owner = uid())));
+
+--
+-- Name: Researchers can view observations of studies which they created; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow Researchers to view observations related to their own studies" ON storage.objects FOR SELECT TO public USING (((bucket_id = 'observations'::text) AND (name ~~ ANY ( SELECT ('%'::text || ((study.id)::text || '%'::text)) AS study_id FROM study WHERE (study.user_id = uid())))));
 
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
