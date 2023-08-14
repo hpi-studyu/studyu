@@ -4,7 +4,7 @@
 #   Stop:           docker compose down
 #   Destroy:        docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
 
-version: "3.8"
+version: '3.8'
 name: 'studyu_supabase'
 
 volumes:

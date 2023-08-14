@@ -47,9 +47,6 @@ dependencies:
   url_launcher: ^6.1.11
   uuid: ^3.0.7
   wakelock_plus: ^1.0.0+3
-  loading_animation_widget: ^1.2.0+4
-  record: ^4.4.4
-  camera:
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

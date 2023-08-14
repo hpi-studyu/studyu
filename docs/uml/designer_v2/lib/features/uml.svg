@@ -1662,8 +1662,7 @@
 	  &lt;static&gt;+values: List&lt;SurveyQuestionType&gt;;
 	  &lt;static&gt;+choice: SurveyQuestionType;
 	  &lt;static&gt;+bool: SurveyQuestionType;
-	  &lt;static&gt;+scale: SurveyQuestionType;
-	  &lt;static&gt;+image: SurveyQuestionType
+	  &lt;static&gt;+scale: SurveyQuestionType
 	]
 	
 	[SurveyQuestionType]o-[SurveyQuestionType]
@@ -3099,9 +3098,9 @@
 					</g>
 					<path d="M26336.0 548.7 L30223 876 L30223 896 L30223.0 896.0 " fill="none"></path>
 					<path d="M26336.5 543.4 L26336.0 548.7 L26335.6 554.0 L26322.8 547.6 Z"></path>
-					<path d="M16102.5 2657.0 L16114.75 2653 L16122.25 2653 L16122.25 2653 L16129.75 2721.5 L16129.75 2721.5 L16122.25 2790 L16122.25 2790 L16114.75 2790 L16114.75 2790 L16084.75 2780.2836879432625 L16084.8 2780.3 " fill="none"></path>
+					<path d="M16102.7 2664.0 L16114.75 2660.5 L16122.25 2660.5 L16122.25 2660.5 L16129.75 2721.5 L16129.75 2721.5 L16122.25 2782.5 L16122.25 2782.5 L16114.75 2782.5 L16114.75 2782.5 L16084.75 2773.8475177304963 L16084.8 2773.8 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M16092.0 2654.8 L16102.5 2657.0 L16095.3 2664.9 L16084.8 2662.7 Z"></path>
+						<path d="M16092.2 2661.4 L16102.7 2664.0 L16095.2 2671.7 L16084.8 2669.2 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
 						<path d="M2724.2 2024.1 L2905 2535 L15721.75 2718.8958225145693 L15721.8 2718.9 " fill="none"></path>
@@ -7396,23 +7395,22 @@
 					</g>
 					<g data-name="SurveyQuestionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SurveyQuestionType">
-							<rect x="15721.8" y="2653.0" height="137.0" width="363.0" data-name="SurveyQuestionType"></rect>
-							<path d="M15721.8 2684.0 L16084.8 2684.0" fill="none" data-name="SurveyQuestionType"></path>
+							<rect x="15721.8" y="2660.5" height="122.0" width="363.0" data-name="SurveyQuestionType"></rect>
+							<path d="M15721.8 2691.5 L16084.8 2691.5" fill="none" data-name="SurveyQuestionType"></path>
 						</g>
-						<g transform="translate(15721.75, 2653)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionType">
+						<g transform="translate(15721.75, 2660.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SurveyQuestionType">
 								<text x="173.5" y="13.5" stroke="none" text-anchor="middle" data-name="SurveyQuestionType">SurveyQuestionType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(15721.75, 2684)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SurveyQuestionType">
+						<g transform="translate(15721.75, 2691.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SurveyQuestionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SurveyQuestionType">
 								<text x="0.0" y="13.5" stroke="none" data-name="SurveyQuestionType">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SurveyQuestionType">&lt;static&gt;+values: List&lt;SurveyQuestionType&gt;</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="SurveyQuestionType">&lt;static&gt;+choice: SurveyQuestionType</text>
 								<text x="0.0" y="58.5" stroke="none" data-name="SurveyQuestionType">&lt;static&gt;+bool: SurveyQuestionType</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="SurveyQuestionType">&lt;static&gt;+scale: SurveyQuestionType</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="SurveyQuestionType">&lt;static&gt;+image: SurveyQuestionType</text>
 								
 							</g>
 						</g>
