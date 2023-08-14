@@ -9,6 +9,7 @@ import 'annotated_scale_question_widget.dart';
 import 'boolean_question_widget.dart';
 import 'choice_question_widget.dart';
 
+
 import 'question_header.dart';
 import 'question_widget.dart';
 import 'visual_analogue_question_widget.dart';
@@ -18,19 +19,14 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer(
-      {required this.onDone,
-      required this.question,
-      required this.index,
-      Key? key})
+  const QuestionContainer({required this.onDone, required this.question, required this.index, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
 }
 
-class _QuestionContainerState extends State<QuestionContainer>
-    with AutomaticKeepAliveClientMixin {
+class _QuestionContainerState extends State<QuestionContainer> with AutomaticKeepAliveClientMixin {
   void _onDone(Answer answer) {
     widget.onDone(answer, widget.index);
   }
@@ -41,8 +37,7 @@ class _QuestionContainerState extends State<QuestionContainer>
         return ChoiceQuestionWidget(
           question: widget.question as ChoiceQuestion,
           onDone: _onDone,
-          multiSelectionText:
-              AppLocalizations.of(context)!.eligible_choice_multi_selection,
+          multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
       case BooleanQuestion:
         return BooleanQuestionWidget(

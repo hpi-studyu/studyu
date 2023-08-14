@@ -111,8 +111,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       FormArray(boolOptions);
 
   // Image
+
   List<AbstractControl<String>> get imageOptions =>
-      ImageQuestionFormData.kResponseOptions.keys
+      BoolQuestionFormData.kResponseOptions.keys
           .map((e) => FormControl(value: e, disabled: true))
           .toList();
   late final FormArray<String> imageResponseOptionsArray =
@@ -229,6 +230,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.choice: FormGroup({
       'isMultipleChoice': isMultipleChoiceControl,
       'choiceOptionsArray': choiceResponseOptionsArray,
+    }),
+    SurveyQuestionType.image: FormGroup({
+      'imageOptionsArray': imageResponseOptionsArray,
     }),
     SurveyQuestionType.scale: FormGroup({
       'scaleMinValue': scaleMinValueControl,
@@ -436,6 +440,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           isMultipleChoice: isMultipleChoiceControl.value!,
           // required
           answerOptions: validAnswerOptions,
+        );
+      case SurveyQuestionType.image:
+        return ImageQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
         );
       case SurveyQuestionType.scale:
         return ScaleQuestionFormData(

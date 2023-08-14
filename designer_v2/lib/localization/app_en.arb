@@ -138,6 +138,7 @@
   "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Yes",
   "form_array_response_options_bool_no": "No",
+  "form_field_response_image": "Image",
   "form_field_response_choice_multiple": "Select multiple",
   "form_field_response_image": "Provide directions for capturing image",
   "form_field_response_audio": "Provide directions for recording audio",
