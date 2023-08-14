@@ -55,7 +55,7 @@ class _QuestionContainerState extends State<QuestionContainer>
           onDone: _onDone,
         );
       case ImageCapturingQuestion:
-        return ImageCapturingWidget(
+        return ImageCapturingQuestionWidget(
           question: widget.question as ImageCapturingQuestion,
           onDone: _onDone,
         );
