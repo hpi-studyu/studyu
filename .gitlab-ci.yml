@@ -1,0 +1,38 @@
+stages:
+  - deploy
+deployOnDockerHost:
+  stage: deploy
+  only:
+    - deploy
+  script:
+    - cp /opt/studyu-backend_configuration docker/supabase/.env
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose-db.yml \
+      --env-file docker/supabase/.env \
+      down
+    - |
+      docker-compose \
+      -f docker/nginx/docker-compose-proxy.yml \
+      down
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose.yml \
+      --env-file docker/supabase/.env \
+      down
+    - rm docker/supabase/volumes/api/kong.yml
+    - cp /opt/kong.yml docker/supabase/volumes/api/kong.yml
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose-db.yml \
+      --env-file docker/supabase/.env \
+      up -d
+    - |
+      docker-compose \
+      -f docker/supabase/docker-compose.yml \
+      --env-file docker/supabase/.env \
+      up -d
+    - |
+      docker-compose \
+      -f docker/nginx/docker-compose-proxy.yml \
+      up -d

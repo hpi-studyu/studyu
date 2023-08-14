@@ -6,13 +6,16 @@ part of 'subject_progress.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) => SubjectProgress(
+SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) =>
+    SubjectProgress(
       subjectId: json['subject_id'] as String,
       interventionId: json['intervention_id'] as String,
       taskId: json['task_id'] as String,
       resultType: json['result_type'] as String,
       result: Result<dynamic>.fromJson(json['result'] as Map<String, dynamic>),
-    )..completedAt = json['completed_at'] == null ? null : DateTime.parse(json['completed_at'] as String);
+    )..completedAt = json['completed_at'] == null
+        ? null
+        : DateTime.parse(json['completed_at'] as String);
 
 Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) {
   final val = <String, dynamic>{};

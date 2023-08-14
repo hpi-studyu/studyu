@@ -6,22 +6,25 @@ part of 'scale_question.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ScaleQuestion _$ScaleQuestionFromJson(Map<String, dynamic> json) => ScaleQuestion()
-  ..type = json['type'] as String
-  ..id = json['id'] as String
-  ..prompt = json['prompt'] as String?
-  ..rationale = json['rationale'] as String?
-  ..conditional = json['conditional'] == null
-      ? null
-      : QuestionConditional<num>.fromJson(json['conditional'] as Map<String, dynamic>)
-  ..minimum = (json['minimum'] as num).toDouble()
-  ..maximum = (json['maximum'] as num).toDouble()
-  ..initial = (json['initial'] as num).toDouble()
-  ..annotations =
-      (json['annotations'] as List<dynamic>).map((e) => Annotation.fromJson(e as Map<String, dynamic>)).toList()
-  ..minColor = json['min_color'] as int?
-  ..maxColor = json['max_color'] as int?
-  ..step = (json['step'] as num).toDouble();
+ScaleQuestion _$ScaleQuestionFromJson(Map<String, dynamic> json) =>
+    ScaleQuestion()
+      ..type = json['type'] as String
+      ..id = json['id'] as String
+      ..prompt = json['prompt'] as String?
+      ..rationale = json['rationale'] as String?
+      ..conditional = json['conditional'] == null
+          ? null
+          : QuestionConditional<num>.fromJson(
+              json['conditional'] as Map<String, dynamic>)
+      ..minimum = (json['minimum'] as num).toDouble()
+      ..maximum = (json['maximum'] as num).toDouble()
+      ..initial = (json['initial'] as num).toDouble()
+      ..annotations = (json['annotations'] as List<dynamic>)
+          .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..minColor = json['min_color'] as int?
+      ..maxColor = json['max_color'] as int?
+      ..step = (json['step'] as num).toDouble();
 
 Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) {
   final val = <String, dynamic>{
