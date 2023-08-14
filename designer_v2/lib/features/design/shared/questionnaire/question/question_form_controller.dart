@@ -235,6 +235,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'scaleMinColor': scaleMinColorControl,
       'scaleMaxColor': scaleMaxColorControl,
     }),
+    SurveyQuestionType.image: FormGroup({
+      'imageOptionsArray': imageResponseOptionsArray,
+    }),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -394,6 +397,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     switch (questionType) {
       case SurveyQuestionType.bool:
         return BoolQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+        );
+      case SurveyQuestionType.image:
+        return ImageQuestionFormData(
           questionId: questionId,
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
