@@ -50,7 +50,8 @@ class StudySelectionScreen extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single,
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -58,13 +59,17 @@ class StudySelectionScreen extends StatelessWidget {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single_why,
-                            style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single_why,
+                            style: theme.textTheme.titleSmall!
+                                .copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      content: Text(AppLocalizations.of(context)!.study_selection_single_reason),
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .study_selection_single_reason),
                                     ),
                                   ),
                           )
@@ -86,7 +91,8 @@ class StudySelectionScreen extends StatelessWidget {
                           child: Material(
                             child: StudyTile.fromStudy(
                               study: studies[index],
-                              onTap: () => navigateToStudyOverview(context, studies[index]),
+                              onTap: () => navigateToStudyOverview(
+                                  context, studies[index]),
                             ),
                           ),
                         );
@@ -100,7 +106,9 @@ class StudySelectionScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   icon: Icon(MdiIcons.key),
                   onPressed: () async {
-                    await showDialog(context: context, builder: (_) => const InviteCodeDialog());
+                    await showDialog(
+                        context: context,
+                        builder: (_) => const InviteCodeDialog());
                   },
                   label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
@@ -140,7 +148,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
           controller: _controller,
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.invite_code),
+          decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.invite_code),
         ),
         actions: [
           OutlinedButton.icon(
@@ -165,7 +174,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
               if (result == null) {
                 setState(() {
-                  _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+                  _errorMessage =
+                      AppLocalizations.of(context)!.invalid_invite_code;
                 });
               } else {
                 setState(() {
