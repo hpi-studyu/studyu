@@ -20,8 +20,7 @@ enum SurveyQuestionType {
       ImageCapturingQuestion.questionType: SurveyQuestionType.image,
     };
     if (!typeMapping.containsKey(question.type)) {
-      throw UnimplementedError(
-          "Missing SurveyQuestionType for question of type: ${question.type}");
+      throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
     }
     return typeMapping[question.type]!;
   }
@@ -50,7 +49,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
       case SurveyQuestionType.image:
-        return Icons.photo_camera_rounded;
+        return Icons.picture_in_picture;
       default:
         return null;
     }
