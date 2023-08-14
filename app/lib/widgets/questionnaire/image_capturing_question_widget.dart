@@ -41,7 +41,7 @@ class _ImageCapturingQuestionWidgetState
 
     return Column(
       children: [
-        TextButton(onPressed: captureImage, child: const Text("Capture!")),
+        TextButton(onPressed: captureImage, child: const Text("Capture now!")),
       ],
     );
   }

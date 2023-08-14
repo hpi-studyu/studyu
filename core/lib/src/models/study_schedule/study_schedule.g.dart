@@ -6,7 +6,8 @@ part of 'study_schedule.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) => StudySchedule(
+StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) =>
+    StudySchedule(
       sequenceCustom: json['sequenceCustom'] as String? ?? 'ABAB',
     )
       ..numberOfCycles = json['numberOfCycles'] as int
@@ -14,7 +15,8 @@ StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) => StudySchedul
       ..includeBaseline = json['includeBaseline'] as bool
       ..sequence = $enumDecode(_$PhaseSequenceEnumMap, json['sequence']);
 
-Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) => <String, dynamic>{
+Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
+    <String, dynamic>{
       'numberOfCycles': instance.numberOfCycles,
       'phaseDuration': instance.phaseDuration,
       'includeBaseline': instance.includeBaseline,
