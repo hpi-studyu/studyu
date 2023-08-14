@@ -32,8 +32,8 @@ class _AudioRecordingQuestionWidgetState
           context,
           MaterialPageRoute(
             builder: (context) => RecordAudioScreen(
-              //studyId: context.read<AppState>().activeSubject!.studyId,
-              //userId: context.read<AppState>().activeSubject!.userId,
+              studyId: context.read<AppState>().activeSubject!.studyId,
+              userId: context.read<AppState>().activeSubject!.userId,
             ),
           ));
       widget.onDone!(widget.question.constructAnswer(pathAnswer));

@@ -6,7 +6,11 @@ import 'package:record/record.dart';
 import 'package:studyu_core/core.dart';
 
 class RecordAudioScreen extends StatefulWidget {
-  const RecordAudioScreen({super.key});
+  final String userId;
+  final String studyId;
+
+  const RecordAudioScreen(
+      {super.key, required this.userId, required this.studyId});
 
   @override
   RecordAudioScreenState createState() => RecordAudioScreenState();
@@ -16,9 +20,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
   final Record _audioRecorder;
   bool _isRecording = false;
   late Future<void> _initializeRecorderPermissionsFuture;
-  // TODO: change mock up values
-  final PersistentStorageHandler _storageHandler =
-      PersistentStorageHandler("Peter", "WhitenessStudy");
+  late PersistentStorageHandler _storageHandler;
   late Function _storeFinalizer;
 
   Future<void> _initializeAudioRecorderPermissions() async {
@@ -26,9 +28,9 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
   }
 
   RecordAudioScreenState() : _audioRecorder = Record() {
-    _audioRecorder.onStateChanged().listen((event) {
+    _audioRecorder.onStateChanged().listen((event) async {
       if (event == RecordState.stop || event == RecordState.pause) {
-        _storeFinalizer();
+        _storeFinalizer((String aPath) => Navigator.pop(context, aPath));
       }
     });
   }
@@ -48,7 +50,8 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
 
   Future<void> _startRecording() async {
     try {
-      var (stagingPath, finalizer) = _storageHandler.storeAudio();
+      _storageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
+      var (stagingPath, finalizer) = await _storageHandler.storeAudio();
       _storeFinalizer = finalizer;
       await _audioRecorder.start(path: stagingPath);
       setState(() {
