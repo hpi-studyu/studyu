@@ -437,6 +437,9 @@
 	]
 	
 	[RecordAudioScreen
+	  |
+	  +userId: String;
+	  +studyId: String
 	]
 	
 	[KickoffScreen
@@ -2699,11 +2702,19 @@
 					</g>
 					<g data-name="RecordAudioScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RecordAudioScreen">
-							<rect x="9076.0" y="173.5" height="31.0" width="174.0" data-name="RecordAudioScreen"></rect>
+							<rect x="9076.0" y="150.5" height="77.0" width="174.0" data-name="RecordAudioScreen"></rect>
+							<path d="M9076.0 181.5 L9250.0 181.5" fill="none" data-name="RecordAudioScreen"></path>
 						</g>
-						<g transform="translate(9076, 173.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RecordAudioScreen">
+						<g transform="translate(9076, 150.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RecordAudioScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RecordAudioScreen">
 								<text x="79.0" y="13.5" stroke="none" text-anchor="middle" data-name="RecordAudioScreen">RecordAudioScreen</text>
+								
+							</g>
+						</g>
+						<g transform="translate(9076, 181.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RecordAudioScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RecordAudioScreen">
+								<text x="0.0" y="13.5" stroke="none" data-name="RecordAudioScreen">+userId: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="RecordAudioScreen">+studyId: String</text>
 								
 							</g>
 						</g>
