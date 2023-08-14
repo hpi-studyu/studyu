@@ -1,14 +1,15 @@
-<svg version="1.1" baseProfile="full" width="869.5" height="535.0" viewbox="0 0 869.5 535" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;ValueExpression
+<svg version="1.1" baseProfile="full" width="748.0" height="698.0" viewbox="0 0 748 698" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[NotExpression
 	  |
 	  &lt;static&gt;+expressionType: String;
-	  +target: String?
+	  +expression: Expression
 	  |
-	  +bool checkValue();
+	  +Map&lt;String, dynamic&gt; toJson();
 	  +bool? evaluate()
 	]
 	
-	[&lt;abstract&gt;Expression]&lt;:-[&lt;abstract&gt;ValueExpression]
+	[NotExpression]o-[&lt;abstract&gt;Expression]
+	[&lt;abstract&gt;Expression]&lt;:-[NotExpression]
 	
 	[BooleanExpression
 	  |
@@ -20,6 +21,17 @@
 	
 	[&lt;abstract&gt;ValueExpression]&lt;:-[BooleanExpression]
 	
+	[&lt;abstract&gt;ValueExpression
+	  |
+	  &lt;static&gt;+expressionType: String;
+	  +target: String?
+	  |
+	  +bool checkValue();
+	  +bool? evaluate()
+	]
+	
+	[&lt;abstract&gt;Expression]&lt;:-[&lt;abstract&gt;ValueExpression]
+	
 	[ChoiceExpression
 	  |
 	  &lt;static&gt;+expressionType: String;
@@ -30,18 +42,6 @@
 	]
 	
 	[&lt;abstract&gt;ValueExpression]&lt;:-[ChoiceExpression]
-	
-	[NotExpression
-	  |
-	  &lt;static&gt;+expressionType: String;
-	  +expression: Expression
-	  |
-	  +Map&lt;String, dynamic&gt; toJson();
-	  +bool? evaluate()
-	]
-	
-	[NotExpression]o-[&lt;abstract&gt;Expression]
-	[&lt;abstract&gt;Expression]&lt;:-[NotExpression]
 	
 	[&lt;abstract&gt;Expression
 	  |
@@ -58,62 +58,62 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="535.0" width="869.5" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="698.0" width="748.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M316.7 159.4 L292 173 L292 193 L292.0 193.0 " fill="none"></path>
-					<path d="M319.3 164.1 L316.7 159.4 L314.1 154.8 L328.4 153.0 Z"></path>
-					<path d="M162.5 322.2 L136 336 L136 363.5 L136.0 363.5 " fill="none"></path>
-					<path d="M164.9 326.9 L162.5 322.2 L160.0 317.4 L174.3 316.0 Z"></path>
-					<path d="M421.5 322.2 L448 336 L448 356 L448.0 356.0 " fill="none"></path>
-					<path d="M424.0 317.4 L421.5 322.2 L419.1 326.9 L409.7 316.0 Z"></path>
-					<path d="M622.5 174.9 L623 173 L590.7720207253886 153 L590.8 153.0 " fill="none"></path>
+					<path d="M326.5 141.1 L326 143 L330.14507772020727 163 L330.1 163.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M615.1 182.7 L622.5 174.9 L625.5 185.2 L618.1 193.0 Z"></path>
+						<path d="M333.9 133.3 L326.5 141.1 L323.5 130.8 L330.9 123.0 Z"></path>
 					</g>
-					<path d="M467.5 166.3 L467.5 173 L500.7515337423313 193 L500.8 193.0 " fill="none"></path>
-					<path d="M472.8 166.3 L467.5 166.3 L462.2 166.3 L467.5 153.0 Z"></path>
-					<g data-name="ValueExpression">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ValueExpression">
-							<rect x="157.0" y="193.0" height="123.0" width="270.0" data-name="ValueExpression"></rect>
-							<path d="M157.0 224.0 L427.0 224.0" fill="none" data-name="ValueExpression"></path>
-							<path d="M157.0 270.0 L427.0 270.0" fill="none" data-name="ValueExpression"></path>
+					<path d="M364.6 149.9 L366 143 L361.0920245398773 123 L361.1 123.0 " fill="none"></path>
+					<path d="M359.3 148.9 L364.6 149.9 L369.8 151.0 L361.9 163.0 Z"></path>
+					<path d="M216.5 485.2 L190 499 L190 526.5 L190.0 526.5 " fill="none"></path>
+					<path d="M218.9 489.9 L216.5 485.2 L214.0 480.4 L228.3 479.0 Z"></path>
+					<path d="M346.0 329.3 L346 336 L346 356 L346.0 356.0 " fill="none"></path>
+					<path d="M351.3 329.3 L346.0 329.3 L340.7 329.3 L346.0 316.0 Z"></path>
+					<path d="M475.5 485.2 L502 499 L502 519 L502.0 519.0 " fill="none"></path>
+					<path d="M478.0 480.4 L475.5 485.2 L473.1 489.9 L463.7 479.0 Z"></path>
+					<g data-name="NotExpression">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NotExpression">
+							<rect x="210.0" y="0.0" height="123.0" width="272.0" data-name="NotExpression"></rect>
+							<path d="M210.0 31.0 L482.0 31.0" fill="none" data-name="NotExpression"></path>
+							<path d="M210.0 77.0 L482.0 77.0" fill="none" data-name="NotExpression"></path>
 						</g>
-						<g transform="translate(157, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ValueExpression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ValueExpression">
-								<text x="127.0" y="13.5" stroke="none" text-anchor="middle" data-name="ValueExpression">ValueExpression</text>
+						<g transform="translate(210, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotExpression">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotExpression">
+								<text x="128.0" y="13.5" stroke="none" text-anchor="middle" data-name="NotExpression">NotExpression</text>
 								
 							</g>
 						</g>
-						<g transform="translate(157, 224)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ValueExpression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ValueExpression">
-								<text x="0.0" y="13.5" stroke="none" data-name="ValueExpression">&lt;static&gt;+expressionType: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ValueExpression">+target: String?</text>
+						<g transform="translate(210, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotExpression">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotExpression">
+								<text x="0.0" y="13.5" stroke="none" data-name="NotExpression">&lt;static&gt;+expressionType: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NotExpression">+expression: Expression</text>
 								
 							</g>
 						</g>
-						<g transform="translate(157, 270)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ValueExpression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ValueExpression">
-								<text x="0.0" y="13.5" stroke="none" data-name="ValueExpression">+bool checkValue()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ValueExpression">+bool? evaluate()</text>
+						<g transform="translate(210, 77)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotExpression">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotExpression">
+								<text x="0.0" y="13.5" stroke="none" data-name="NotExpression">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NotExpression">+bool? evaluate()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="Expression">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Expression">
-							<rect x="121.5" y="0.0" height="153.0" width="692.0" data-name="Expression"></rect>
-							<path d="M121.5 31.0 L813.5 31.0" fill="none" data-name="Expression"></path>
-							<path d="M121.5 92.0 L813.5 92.0" fill="none" data-name="Expression"></path>
+							<rect x="0.0" y="163.0" height="153.0" width="692.0" data-name="Expression"></rect>
+							<path d="M0.0 194.0 L692.0 194.0" fill="none" data-name="Expression"></path>
+							<path d="M0.0 255.0 L692.0 255.0" fill="none" data-name="Expression"></path>
 						</g>
-						<g transform="translate(121.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Expression">
+						<g transform="translate(0, 163)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Expression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Expression">
 								<text x="338.0" y="13.5" stroke="none" text-anchor="middle" data-name="Expression">Expression</text>
 								
 							</g>
 						</g>
-						<g transform="translate(121.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Expression">
+						<g transform="translate(0, 194)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Expression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Expression">
 								<text x="0.0" y="13.5" stroke="none" data-name="Expression">&lt;static&gt;+expressionTypes: Map&lt;String, Expression Function(Map&lt;String, dynamic&gt;)&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Expression">&lt;static&gt;+keyType: String</text>
@@ -121,7 +121,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(121.5, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Expression">
+						<g transform="translate(0, 255)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Expression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Expression">
 								<text x="0.0" y="13.5" stroke="none" data-name="Expression">+Map&lt;String, dynamic&gt; toJson()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Expression">+String toString()</text>
@@ -132,23 +132,23 @@
 					</g>
 					<g data-name="BooleanExpression">
 						<g fill="#eee8d5" stroke="#33322E" data-name="BooleanExpression">
-							<rect x="0.0" y="363.5" height="108.0" width="272.0" data-name="BooleanExpression"></rect>
-							<path d="M0.0 394.5 L272.0 394.5" fill="none" data-name="BooleanExpression"></path>
-							<path d="M0.0 425.5 L272.0 425.5" fill="none" data-name="BooleanExpression"></path>
+							<rect x="54.0" y="526.5" height="108.0" width="272.0" data-name="BooleanExpression"></rect>
+							<path d="M54.0 557.5 L326.0 557.5" fill="none" data-name="BooleanExpression"></path>
+							<path d="M54.0 588.5 L326.0 588.5" fill="none" data-name="BooleanExpression"></path>
 						</g>
-						<g transform="translate(0, 363.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanExpression">
+						<g transform="translate(54, 526.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanExpression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BooleanExpression">
 								<text x="128.0" y="13.5" stroke="none" text-anchor="middle" data-name="BooleanExpression">BooleanExpression</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 394.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanExpression">
+						<g transform="translate(54, 557.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanExpression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BooleanExpression">
 								<text x="0.0" y="13.5" stroke="none" data-name="BooleanExpression">&lt;static&gt;+expressionType: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 425.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanExpression">
+						<g transform="translate(54, 588.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanExpression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BooleanExpression">
 								<text x="0.0" y="13.5" stroke="none" data-name="BooleanExpression">+Map&lt;String, dynamic&gt; toJson()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="BooleanExpression">+bool checkValue()</text>
@@ -156,56 +156,56 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="ValueExpression">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ValueExpression">
+							<rect x="211.0" y="356.0" height="123.0" width="270.0" data-name="ValueExpression"></rect>
+							<path d="M211.0 387.0 L481.0 387.0" fill="none" data-name="ValueExpression"></path>
+							<path d="M211.0 433.0 L481.0 433.0" fill="none" data-name="ValueExpression"></path>
+						</g>
+						<g transform="translate(211, 356)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ValueExpression">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ValueExpression">
+								<text x="127.0" y="13.5" stroke="none" text-anchor="middle" data-name="ValueExpression">ValueExpression</text>
+								
+							</g>
+						</g>
+						<g transform="translate(211, 387)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ValueExpression">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ValueExpression">
+								<text x="0.0" y="13.5" stroke="none" data-name="ValueExpression">&lt;static&gt;+expressionType: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ValueExpression">+target: String?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(211, 433)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ValueExpression">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ValueExpression">
+								<text x="0.0" y="13.5" stroke="none" data-name="ValueExpression">+bool checkValue()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ValueExpression">+bool? evaluate()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="ChoiceExpression">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceExpression">
-							<rect x="312.0" y="356.0" height="123.0" width="272.0" data-name="ChoiceExpression"></rect>
-							<path d="M312.0 387.0 L584.0 387.0" fill="none" data-name="ChoiceExpression"></path>
-							<path d="M312.0 433.0 L584.0 433.0" fill="none" data-name="ChoiceExpression"></path>
+							<rect x="366.0" y="519.0" height="123.0" width="272.0" data-name="ChoiceExpression"></rect>
+							<path d="M366.0 550.0 L638.0 550.0" fill="none" data-name="ChoiceExpression"></path>
+							<path d="M366.0 596.0 L638.0 596.0" fill="none" data-name="ChoiceExpression"></path>
 						</g>
-						<g transform="translate(312, 356)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceExpression">
+						<g transform="translate(366, 519)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceExpression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceExpression">
 								<text x="128.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceExpression">ChoiceExpression</text>
 								
 							</g>
 						</g>
-						<g transform="translate(312, 387)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceExpression">
+						<g transform="translate(366, 550)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceExpression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceExpression">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceExpression">&lt;static&gt;+expressionType: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceExpression">+choices: Set&lt;dynamic&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(312, 433)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceExpression">
+						<g transform="translate(366, 596)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceExpression">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceExpression">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceExpression">+Map&lt;String, dynamic&gt; toJson()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceExpression">+bool checkValue()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="NotExpression">
-						<g fill="#eee8d5" stroke="#33322E" data-name="NotExpression">
-							<rect x="467.0" y="193.0" height="123.0" width="272.0" data-name="NotExpression"></rect>
-							<path d="M467.0 224.0 L739.0 224.0" fill="none" data-name="NotExpression"></path>
-							<path d="M467.0 270.0 L739.0 270.0" fill="none" data-name="NotExpression"></path>
-						</g>
-						<g transform="translate(467, 193)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotExpression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotExpression">
-								<text x="128.0" y="13.5" stroke="none" text-anchor="middle" data-name="NotExpression">NotExpression</text>
-								
-							</g>
-						</g>
-						<g transform="translate(467, 224)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotExpression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotExpression">
-								<text x="0.0" y="13.5" stroke="none" data-name="NotExpression">&lt;static&gt;+expressionType: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="NotExpression">+expression: Expression</text>
-								
-							</g>
-						</g>
-						<g transform="translate(467, 270)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotExpression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotExpression">
-								<text x="0.0" y="13.5" stroke="none" data-name="NotExpression">+Map&lt;String, dynamic&gt; toJson()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="NotExpression">+bool? evaluate()</text>
 								
 							</g>
 						</g>

@@ -8,7 +8,8 @@ enum SurveyQuestionType {
   choice,
   bool,
   scale,
-  image;
+  image,
+  audio;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -18,6 +19,7 @@ enum SurveyQuestionType {
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
       ImageCapturingQuestion.questionType: SurveyQuestionType.image,
+      AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError(
@@ -36,6 +38,8 @@ enum SurveyQuestionType {
         return tr.question_type_scale;
       case SurveyQuestionType.image:
         return tr.question_type_image;
+      case SurveyQuestionType.audio:
+        return tr.question_type_audio;
       default:
         return "[Invalid SurveyQuestionType]";
     }
@@ -51,6 +55,8 @@ enum SurveyQuestionType {
         return Icons.tune_rounded;
       case SurveyQuestionType.image:
         return Icons.photo_camera_rounded;
+      case SurveyQuestionType.audio:
+        return Icons.mic;
       default:
         return null;
     }

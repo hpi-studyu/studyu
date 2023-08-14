@@ -10,7 +10,7 @@ import 'package:studyu_core/src/util/encrypted_audio_file.dart';
 import 'package:studyu_core/src/util/encrypter_handler.dart';
 
 class PersistentStorageHandler {
-  static const String _encryptedBaseNamePrefix = 'encrypted';
+  static const String _encryptedBaseNamePrefix = 'encrypted_';
   static const String _stagingBaseNamePrefix = 'staging';
   static const String _encryptedImageFileType = '.encryptedjpg';
   static const String _encryptedAudioFileType = '.encryptedm4a';
@@ -94,7 +94,6 @@ class PersistentStorageHandler {
 
     final String encryptedFileName = [
       PersistentStorageHandler._encryptedBaseNamePrefix,
-      "_",
       fileName,
       PersistentStorageHandler._encryptedImageFileType
     ].join();
@@ -123,23 +122,32 @@ class PersistentStorageHandler {
     }
   }
 
-  Future<void> _finalizeStoreAudio(String aStagingPath) async {
-    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+  Future<void> _finalizeStoreAudio(
+    String aStagingPath,
+    void Function(String)? pathCallback,
+  ) async {
     final File unencryptedAudio = File(aStagingPath);
     await _applicationDirectoryFuture;
     await _encrypterHandlerFuture;
+    final String fileName = _buildFileName();
+    final String encryptedFileName = [
+      PersistentStorageHandler._encryptedBaseNamePrefix,
+      fileName,
+      PersistentStorageHandler._encryptedAudioFileType
+    ].join();
+    final String uploadFileName =
+        [fileName, PersistentStorageHandler._nonEncryptedAudioFileType].join();
+    await _blobStorageHandler.uploadObservation(
+      uploadFileName,
+      File(aStagingPath),
+    );
     final Uint8List audioByteContent = await unencryptedAudio.readAsBytes();
     final Uint8List encryptedImageByteContent =
         _encrypterHandler.encryptFile(audioByteContent);
+    final String localTargetPath =
+        path.join(_applicationMediaDirectory.path, encryptedFileName);
     await File(
-      path.join(
-        _applicationMediaDirectory.path,
-        [
-          PersistentStorageHandler._encryptedBaseNamePrefix,
-          timestamp.toString(),
-          PersistentStorageHandler._encryptedAudioFileType
-        ].join(),
-      ),
+      localTargetPath,
     ).writeAsBytes(encryptedImageByteContent);
     /*
       The recorder package writes back the captured audio directly after
@@ -148,22 +156,27 @@ class PersistentStorageHandler {
       data not explicitly encrypted.
      */
     _deleteAllUnencryptedFileSystemEntities();
+    if (pathCallback != null) {
+      pathCallback(uploadFileName);
+    }
     return;
   }
 
-  (String, Function) storeAudio() {
-    final String stagingPath = _getStagingAudioFilePath();
-    void finalize() => _finalizeStoreAudio(stagingPath);
+  Future<(String, Function)> storeAudio() async {
+    final String stagingPath = await _getStagingAudioFilePath();
+    void finalize(void Function(String)? pathCallback) =>
+        _finalizeStoreAudio(stagingPath, pathCallback);
     return (stagingPath, finalize);
   }
 
-  String _getStagingAudioFilePath() {
-    final int timestamp = DateTime.now().millisecondsSinceEpoch;
+  Future<String> _getStagingAudioFilePath() async {
+    await _applicationDirectoryFuture;
+    final fileName = _buildFileName();
     return path.join(
       _applicationMediaDirectory.path,
       [
         PersistentStorageHandler._stagingBaseNamePrefix,
-        timestamp.toString(),
+        fileName,
         PersistentStorageHandler._nonEncryptedAudioFileType
       ].join(),
     );

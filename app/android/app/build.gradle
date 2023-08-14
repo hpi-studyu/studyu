@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId "health.studyu.app"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -59,7 +59,8 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile rootProject.file(keystoreProperties['storeFile'])
+            // storeFile rootProject.file(keystoreProperties['storeFile'])
+            storeFile file("key.jks")
             storePassword keystoreProperties['storePassword']
         }
     }
@@ -71,8 +72,8 @@ android {
             }
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // signingConfig signingConfigs.debug
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.release
         }
     }
 }
