@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/theme.dart';
 
 class Search extends StatefulWidget {
   final Function(String) onQueryChanged;
@@ -48,17 +47,17 @@ class SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SizedBox(
         width: 400.0,
         child: SearchBar(
           hintText: widget.hintText ?? "Search",
           controller: _searchController,
           leading: const Icon(Icons.search),
-          backgroundColor: MaterialStateProperty.resolveWith((states) {
-            return ThemeConfig.sidesheetBackgroundColor(theme).withOpacity(0.5);
+          shadowColor: MaterialStateProperty.resolveWith((states) {
+            return Colors.transparent;
           }),
-        ));
+        )
+    );
   }
 
   @override
