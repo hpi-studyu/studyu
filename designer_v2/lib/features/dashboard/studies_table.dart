@@ -134,13 +134,10 @@ class StudiesTable extends StatelessWidget {
     Widget getRespectivePinIcon(Set<MaterialState> state) {
       final bool contains = pinnedStudies.contains(item.id);
       final bool hovers = state.contains(MaterialState.hovered);
-      switch (hovers) {
-        case true:
-          return contains ? icon(MdiIcons.pinOff) : icon(MdiIcons.pin);
-        case false:
-          return contains ? icon(MdiIcons.pin) : const SizedBox.shrink();
-        default:
-          return const SizedBox.shrink();
+      if (hovers) {
+        return contains ? icon(MdiIcons.pinOff) : icon(MdiIcons.pin);
+      } else {
+        return contains ? icon(MdiIcons.pin) : const SizedBox.shrink();
       }
     }
 
