@@ -247,9 +247,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
 
   int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending, bool? useSortPredicate}) {
     final sortPredicate = widget.sortColumnPredicates;
-    if (useSortPredicate != null && useSortPredicate &&
-        sortPredicate != null && sortPredicate[columnIndex] != null
-    ) {
+    if (useSortPredicate != null && useSortPredicate && sortPredicate != null && sortPredicate[columnIndex] != null) {
       final int res;
       if (sortAscending ?? true) {
         res = sortPredicate[columnIndex]!(a, b);

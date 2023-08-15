@@ -56,8 +56,7 @@ class SearchState extends State<Search> {
           shadowColor: MaterialStateProperty.resolveWith((states) {
             return Colors.transparent;
           }),
-        )
-    );
+        ));
   }
 
   @override
