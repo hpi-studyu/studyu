@@ -81,11 +81,6 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         ));
   }
 
-  /*@override
-  Future save() {
-    return super.save();
-  }*/
-
   @override
   Map<FormMode, String> get titles => throw UnimplementedError(); // unused
 
