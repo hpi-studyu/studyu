@@ -245,10 +245,22 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     }
   }
 
-  int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending}) {
+  int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending, bool? useSortPredicate}) {
     final sortPredicate = widget.sortColumnPredicates;
-    if (sortPredicate != null && sortPredicate[columnIndex] != null) {
-      return sortAscending ?? true ? sortPredicate[columnIndex]!(a, b) : sortPredicate[columnIndex]!(b, a);
+    if (useSortPredicate != null && useSortPredicate &&
+        sortPredicate != null && sortPredicate[columnIndex] != null
+    ) {
+      final int res;
+      if (sortAscending ?? true) {
+        res = sortPredicate[columnIndex]!(a, b);
+      } else {
+        res = sortPredicate[columnIndex]!(b, a);
+      }
+      if (res == 0) {
+        // Fallback to default sorting algorithm
+        return _sortLogic(a, b, columnIndex: columnIndex, sortAscending: sortAscending, useSortPredicate: false);
+      }
+      return res;
     } else if (a is Comparable && b is Comparable) {
       // If sortPredicate is not provided, use default comparison logic
       return sortAscending ?? true ? Comparable.compare(a, b) : Comparable.compare(b, a);

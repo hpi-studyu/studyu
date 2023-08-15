@@ -35,7 +35,7 @@ enum ResultSharing {
 }
 
 @JsonSerializable()
-class Study extends SupabaseObjectFunctions<Study> {
+class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> {
   static const String tableName = 'study';
 
   @override
@@ -245,5 +245,10 @@ class Study extends SupabaseObjectFunctions<Study> {
   @override
   String toString() {
     return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+  }
+
+  @override
+  int compareTo(Study other) {
+    return id.compareTo(other.id);
   }
 }
