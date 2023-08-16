@@ -9,14 +9,14 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 dependencies:
   collection: ^1.17.1 # flutter_test sdk
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^4.0.2
   cupertino_icons: ^1.0.5
   # extended_math: # todo remove for null safety support
   # git: https://github.com/nstrelow/extended_math.git
   fl_chart: ^0.63.0
   flutter:
     sdk: flutter
-  flutter_file_dialog: ^3.0.1
+  flutter_file_dialog: ^3.0.2
   flutter_local_notifications: ^15.1.0+1
   flutter_localizations:
     sdk: flutter
@@ -28,7 +28,7 @@ dependencies:
   intersperse: ^2.0.0
   intl: ^0.18.0 # flutter_localizations
   material_design_icons_flutter: ^7.0.7296
-  package_info_plus: ^4.0.2
+  package_info_plus: ^4.1.0
   pdf: ^3.10.4
   permission_handler: ^10.4.3
   provider: ^6.0.5
@@ -39,8 +39,8 @@ dependencies:
   shared_preferences: ^2.2.0
   studyu_core: ^4.3.0-dev.7
   studyu_flutter_common: ^1.6.2-dev.8
-  supabase: ^1.9.8
-  supabase_flutter: ^1.10.10
+  supabase: ^1.11.0
+  supabase_flutter: ^1.10.13
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
   universal_html: ^2.2.3

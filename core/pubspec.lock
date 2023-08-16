@@ -5,18 +5,18 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "0816708f5fbcacca324d811297153fe3c8e047beb5c6752e12292d2974c17045"
+      sha256: eb376e9acf6938204f90eb3b1f00b578640d3188b4c8a8ec054f9f479af8d051
       url: "https://pub.dev"
     source: hosted
-    version: "62.0.0"
+    version: "64.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "21862995c9932cd082f89d72ae5f5e2c110d1a0204ad06e4ebaee8307b76b834"
+      sha256: "69f54f967773f6c26c7dcb13e93d7ccee8b17a641689da39e878d5cf13b06893"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "6.2.0"
   args:
     dependency: transitive
     description:
@@ -161,14 +161,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.2"
-  dart_internal:
-    dependency: transitive
-    description:
-      name: dart_internal
-      sha256: "689dccc3d5f62affd339534cca548dce12b3a6b32f0f10861569d3025efc0567"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.9"
   dart_style:
     dependency: transitive
     description:
@@ -221,10 +213,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: c816f23e73cc8bd92f60d7d2332e4962f8b614e9a66d6a800a3c1231021d12ba
+      sha256: "6ba95e38c06af30d4a365112b433567df70f83d5853923274cb894ea9702c5fa"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.1"
+    version: "1.11.2"
   graphs:
     dependency: transitive
     description:
@@ -373,10 +365,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: "6a0f28f33af4582a9874ce15520531280d39831f356f9740839ec142fc8deeff"
+      sha256: d6cc0f60c7dc761f84d1c6d11d9e02b3ad90399bd84639a28c1c024adbaa9bde
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   pub_semver:
     dependency: transitive
     description:
@@ -405,10 +397,10 @@ packages:
     dependency: transitive
     description:
       name: realtime_client
-      sha256: "5428b673dc373b6b834f52dda5a9a92e18eeafaa5171565540b87c8fe0d100cb"
+      sha256: "69187110a1930e8db2b121cad25a247283f384f078d213ab87072814be12b1a4"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.2.0"
   retry:
     dependency: transitive
     description:
@@ -549,10 +541,10 @@ packages:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: "48c0e8e05f1c6da10b9f220804bf88ec7ded82901e3abb3e2d94e7db8a4ba1cd"
+      sha256: "2f274a29c28e0b0fe7642196c099efeba50a83a570aac6b86577389585a7da82"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.8"
+    version: "1.11.0"
   term_glyph:
     dependency: transitive
     description:
@@ -565,10 +557,10 @@ packages:
     dependency: "direct dev"
     description:
       name: test
-      sha256: "67ec5684c7a19b2aba91d2831f3d305a6fd8e1504629c5818f8d64478abf4f38"
+      sha256: "9b0dd8e36af4a5b1569029949d50a52cb2a2a2fdaa20cebb96e6603b9ae241f9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.24.4"
+    version: "1.24.6"
   test_api:
     dependency: transitive
     description:
@@ -581,10 +573,10 @@ packages:
     dependency: transitive
     description:
       name: test_core
-      sha256: "6b753899253c38ca0523bb0eccff3934ec83d011705dae717c61ecf209e333c9"
+      sha256: "4bef837e56375537055fdbbbf6dd458b1859881f4c7e6da936158f77d61ab265"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.4"
+    version: "0.5.6"
   timing:
     dependency: transitive
     description:
@@ -621,10 +613,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: ada49637c27973c183dad90beb6bd781eea4c9f5f955d35da172de0af7bd3440
+      sha256: "0fae432c85c4ea880b33b497d32824b97795b04cdaa74d270219572a1f50268d"
       url: "https://pub.dev"
     source: hosted
-    version: "11.8.0"
+    version: "11.9.0"
   watcher:
     dependency: transitive
     description:
@@ -666,4 +658,4 @@ packages:
     source: hosted
     version: "1.1.1"
 sdks:
-  dart: ">=3.0.0 <3.3.0"
+  dart: ">=3.0.0 <4.0.0"
