@@ -35,7 +35,7 @@ enum ResultSharing {
 }
 
 @JsonSerializable()
-class Study extends SupabaseObjectFunctions<Study> {
+class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> {
   static const String tableName = 'study';
 
   @override
@@ -99,18 +99,22 @@ class Study extends SupabaseObjectFunctions<Study> {
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
+
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
       study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
     }
+
     final List? invites = json['study_invite'] as List?;
     if (invites != null) {
       study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
     }
+
     final List? participants = json['study_subject'] as List?;
     if (participants != null) {
       study.participants = participants.map((json) => StudySubject.fromJson(json as Map<String, dynamic>)).toList();
     }
+
     List? participantsProgress = json['study_progress'] as List?;
     participantsProgress = json['study_progress_export'] as List?;
     participantsProgress ??= json['subject_progress'] as List?;
@@ -118,26 +122,32 @@ class Study extends SupabaseObjectFunctions<Study> {
       study.participantsProgress =
           participantsProgress.map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>)).toList();
     }
+
     final int? participantCount = json['study_participant_count'] as int?;
     if (participantCount != null) {
       study.participantCount = participantCount;
     }
+
     final int? endedCount = json['study_ended_count'] as int?;
     if (endedCount != null) {
       study.endedCount = endedCount;
     }
+
     final int? activeSubjectCount = json['active_subject_count'] as int?;
     if (activeSubjectCount != null) {
       study.activeSubjectCount = activeSubjectCount;
     }
+
     final List? missedDays = json['study_missed_days'] as List?;
     if (missedDays != null) {
       study.missedDays = List<int>.from(json['study_missed_days'] as List);
     }
+
     final String? createdAt = json['created_at'] as String?;
     if (createdAt != null && createdAt.isNotEmpty) {
       study.createdAt = DateTime.parse(createdAt);
     }
+
     return study;
   }
 
@@ -235,5 +245,10 @@ class Study extends SupabaseObjectFunctions<Study> {
   @override
   String toString() {
     return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+  }
+
+  @override
+  int compareTo(Study other) {
+    return id.compareTo(other.id);
   }
 }

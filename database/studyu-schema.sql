@@ -73,7 +73,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.study (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
     contact jsonb NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
@@ -580,7 +580,8 @@ ALTER TABLE public.study_progress_export OWNER TO postgres;
 
 CREATE TABLE public."user" (
     id uuid NOT NULL,
-    email text
+    email text,
+    preferences jsonb
 );
 
 
@@ -830,6 +831,16 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
    FROM public.study_subject
   WHERE (study_subject.id = subject_progress.subject_id))));
 
+
+--
+-- Name: Allow users to manage their own user; Type: POLICY; Schema: public; Owner:
+--
+
+CREATE POLICY "Allow users to manage their own user"
+ON public."user" FOR ALL
+USING (
+  auth.uid() = id
+);
 
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres

@@ -101,7 +101,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           emailRequired,
           phoneRequired,
           emailFormat,
-          websiteFormat
+          websiteFormat,
         ],
         StudyFormValidationSet.test: [titleRequired],
       };

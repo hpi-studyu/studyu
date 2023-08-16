@@ -112,7 +112,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SelectableText(
-                          "© HPI Digital Health Cluster 2023",
+                          "© HPI Digital Health Cluster ${DateTime.now().year}",
                           style: ThemeConfig.bodyTextBackground(theme),
                         ),
                         Row(

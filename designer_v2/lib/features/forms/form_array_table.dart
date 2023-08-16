@@ -62,9 +62,9 @@ class FormArrayTable<T> extends StatelessWidget {
   final bool hideLeadingTrailingWhenEmpty;
 
   static final List<StandardTableColumn> columns = [
-    const StandardTableColumn(
+    StandardTableColumn(
         label: '', // don't care (showTableHeader=false)
-        columnWidth: FlexColumnWidth()),
+        columnWidth: const FlexColumnWidth()),
   ];
 
   @override

@@ -78,7 +78,7 @@ scripts:
   generate:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter pub run build_runner build --delete-conflicting-outputs"
+        "dart run build_runner build --delete-conflicting-outputs"
     description: Generate files with build_runner
     packageFilters:
       scope: studyu_core
