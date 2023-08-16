@@ -34,7 +34,7 @@ class StudyInvitesTable extends StatelessWidget {
     return StandardTable<StudyInvite>(
       items: invites,
       columns: [
-        const StandardTableColumn(label: '#', columnWidth: FixedColumnWidth(60)),
+        StandardTableColumn(label: '#', columnWidth: const FixedColumnWidth(60)),
         StandardTableColumn(
             label: tr.code_list_header_code,
             columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),

@@ -1,13 +1,17 @@
-version: '3'
+version: '3.8'
 name: 'studyu'
+
+networks:
+  default:
+    name: studyu_network
 
 services:
   platform-full:
     container_name: studyu-platform-full
     restart: unless-stopped
     build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
+      context: ../../
+      dockerfile: ./docker/studyu/Dockerfile.single
     ports:
       - 8080:8080 # StudyU App
       - 8081:8081 # StudyU Designer
@@ -17,9 +21,4 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
     env_file:
-      - ../flutter_common/lib/envs/.env.selfhost
-
-networks:
-  default:
-    name: studyu_network
-    driver: bridge
+      - ../../flutter_common/lib/envs/.env.local

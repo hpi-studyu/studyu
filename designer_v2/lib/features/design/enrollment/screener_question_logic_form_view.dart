@@ -65,17 +65,17 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
       builder: (context, formArray, child) {
         return StandardTable<AbstractControl>(
           items: formViewModel.responseOptionsDisabledControls,
-          columns: const [
+          columns: [
             StandardTableColumn(
               label: '', // don't care (showTableHeader=false)
-              columnWidth: FixedColumnWidth(32.0),
+              columnWidth: const FixedColumnWidth(32.0),
             ),
             StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)
-                columnWidth: FlexColumnWidth(5)),
+                columnWidth: const FlexColumnWidth(5)),
             StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)
-                columnWidth: FlexColumnWidth(4)),
+                columnWidth: const FlexColumnWidth(4)),
           ],
           onSelectItem: (_) => {}, // no-op
           buildCellsAt: (context, item, rowIdx, __) {

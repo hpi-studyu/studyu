@@ -79,7 +79,9 @@ abstract class IModelRepositoryDelegate<T> {
   Future<List<T>> fetchAll();
   Future<T> fetch(ModelID modelId);
   Future<T> save(T model);
+  // todo saveAll(List<T> models);
   Future<void> delete(T model);
+  // todo deleteAll(List<T> models);
   T createNewInstance();
   T createDuplicate(T model);
   onError(Object error, StackTrace? stackTrace);

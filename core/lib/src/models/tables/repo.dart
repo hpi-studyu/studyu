@@ -22,9 +22,9 @@ class Repo extends SupabaseObjectFunctions<Repo> {
   String studyId;
   GitProvider provider;
   @JsonKey(name: 'web_url')
-  String webUrl;
+  String? webUrl;
   @JsonKey(name: 'git_url')
-  String gitUrl;
+  String? gitUrl;
 
   Repo(this.projectId, this.userId, this.studyId, this.provider, this.webUrl, this.gitUrl);
 

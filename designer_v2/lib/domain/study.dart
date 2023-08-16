@@ -6,6 +6,8 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 enum StudyActionType {
+  pin,
+  pinoff,
   edit,
   duplicate,
   duplicateDraft,
@@ -18,6 +20,10 @@ enum StudyActionType {
 extension StudyActionTypeFormatted on StudyActionType {
   String get string {
     switch (this) {
+      case StudyActionType.pin:
+        return tr.action_pin;
+      case StudyActionType.pinoff:
+        return tr.action_unpin;
       case StudyActionType.edit:
         return tr.action_edit;
       case StudyActionType.delete:
@@ -27,7 +33,7 @@ extension StudyActionTypeFormatted on StudyActionType {
       case StudyActionType.duplicateDraft:
         return tr.action_study_duplicate_draft;
       case StudyActionType.addCollaborator:
-        return "[StudyActionType.addCollaborator]"; // not implemented yet
+        return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
       default:
