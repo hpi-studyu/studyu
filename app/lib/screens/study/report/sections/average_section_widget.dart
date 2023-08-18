@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart' as charts;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
@@ -166,7 +165,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         .toList();
   }*/
 
-  charts.BarChartData getChartData() {
+  BarChartData getChartData() {
     //final colorPalette = getInterventionPalette(subject.selectedInterventions);
     //final interventionNames = getInterventionNames(subject.selectedInterventions);
 /*
@@ -175,7 +174,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         .firstWhere((element) => element.id == section.resultProperty!.property);
     print(task.toString());
 */
-    return charts.BarChartData(
+    return BarChartData(
       //minX: 1,
       //maxX: subject.study.schedule.length.toDouble(),
       titlesData: FlTitlesData(
@@ -193,7 +192,7 @@ class AverageSectionWidget extends ReportSectionWidget {
             showTitles: false,
           ))),
       // ignore: prefer_const_constructors
-      gridData: charts.FlGridData(
+      gridData: FlGridData(
         drawHorizontalLine: false,
         drawVerticalLine: false,
         /*checkToShowVerticalLine: (val) => true,
@@ -286,7 +285,7 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
     for (var entry in data) {
       starter[entry.x.round()] = BarChartGroupData(x: entry.x.round(), barRods: [
-        charts.BarChartRodData(
+        BarChartRodData(
           toY: entry.value.toDouble(),
           color: getColor(entry, subject),
         )
