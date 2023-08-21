@@ -16,9 +16,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   @override
   Widget build(BuildContext context) {
     final data = getAggregatedData().toList();
-    final taskTitle = subject.study.observations.firstWhereOrNull(
-      (element) => element.id == section.resultProperty!.task
-    )?.title;
+    final taskTitle =
+        subject.study.observations.firstWhereOrNull((element) => element.id == section.resultProperty!.task)?.title;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -49,8 +48,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   Widget getLegend(BuildContext context, List<DiagramDatum> data) {
     final interventionNames = getInterventionNames(context);
     final legends = {
-      for (var entry in data) interventionNames[entry.intervention]!:
-      Legend(interventionNames[entry.intervention]!, getColor(entry))
+      for (var entry in data)
+        interventionNames[entry.intervention]!: Legend(interventionNames[entry.intervention]!, getColor(entry))
     };
     return LegendsListWidget(legends: legends.values.toList());
   }
@@ -142,10 +141,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
     var starter = List<BarChartGroupData>.generate(barCount, barGenerator);
     for (var entry in data) {
-      starter[entry.x.round()] = barGenerator(
-        entry.x.round(),
-        y: entry.value.toDouble(),
-        color: getColor(entry));
+      starter[entry.x.round()] = barGenerator(entry.x.round(), y: entry.value.toDouble(), color: getColor(entry));
     }
     return starter;
   }
@@ -153,9 +149,9 @@ class AverageSectionWidget extends ReportSectionWidget {
   FlGridData getGridData(List<BarChartGroupData> barGroups) {
     if (section.aggregate != TemporalAggregation.day) {
       return const FlGridData(
-          drawHorizontalLine: false,
-          drawVerticalLine: false,
-        );
+        drawHorizontalLine: false,
+        drawVerticalLine: false,
+      );
     }
     // the grid lines are always at positions in [0, 1] so this is a bit tricky
     // also note that this math is only correct with
@@ -167,6 +163,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       // draw when we are at the border between two phases
       return (val * lineCount % (2 * subject.study.schedule.phaseDuration)).toInt() == 0;
     }
+
     return FlGridData(
       drawHorizontalLine: false,
       drawVerticalLine: true,
@@ -258,7 +255,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Map<String, String?> getInterventionNames(BuildContext context) {
-    final names = { for (var intervention in subject.study.interventions) intervention.id: intervention.name };
+    final names = {for (var intervention in subject.study.interventions) intervention.id: intervention.name};
     names['__baseline'] = AppLocalizations.of(context)!.baseline;
     return names;
   }

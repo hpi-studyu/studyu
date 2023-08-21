@@ -16,7 +16,8 @@ class LegendWidget extends StatelessWidget {
   LegendWidget({
     super.key,
     required Legend legend,
-  }): name = legend.name, color = legend.color;
+  })  : name = legend.name,
+        color = legend.color;
 
   final String name;
   final Color color;
@@ -56,9 +57,7 @@ class LegendsListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 16,
-      children: legends
-          .map((legend) => LegendWidget(legend: legend))
-          .toList(),
+      children: legends.map((legend) => LegendWidget(legend: legend)).toList(),
     );
   }
 }
