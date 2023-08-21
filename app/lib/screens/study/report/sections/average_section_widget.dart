@@ -57,14 +57,14 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
     return BarChart(
-      getChartData(data),
+      getChartData(context, data),
       swapAnimationDuration: const Duration(milliseconds: 150), // Optional
       swapAnimationCurve: Curves.linear, // Optional
     );
   }
 
-  BarChartData getChartData(List<DiagramDatum> data) {
-    final barGroups = getBarGroups(data);
+  BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
+    final barGroups = getBarGroups(context, data);
     return BarChartData(
       titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
@@ -110,31 +110,37 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
-  List<BarChartGroupData> getBarGroups(List<DiagramDatum> data) {
+  List<BarChartGroupData> getBarGroups(BuildContext context, List<DiagramDatum> data) {
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
 
+    int barCount = 0;
+    switch (section.aggregate) {
+      case TemporalAggregation.day:
+        barCount = subject.study.schedule.length;
+      case TemporalAggregation.phase:
+        barCount = subject.interventionOrder.length;
+      case TemporalAggregation.intervention:
+        barCount = subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
+      default:
+    }
 
+    // there is no good way of dynamically setting the width of bars so they
+    // fill the chart :( the author of fl_charts themselves recommended using
+    // media queries: https://github.com/imaNNeo/fl_chart/issues/370
+    // so we take a wild guess and say the bars should fill about half of the
+    // space the chart gets which seems to be fine
+    final barWidth = MediaQuery.of(context).size.width / 2 / barCount;
     BarChartGroupData barGenerator(int index, {double y = 0, Color? color}) {
       final rod = BarChartRodData(
         toY: y,
         color: color,
+        width: barWidth,
         borderRadius: const BorderRadius.all(Radius.circular(1)),
       );
       return BarChartGroupData(x: index, barsSpace: 0, barRods: [rod]);
     }
 
-    List<BarChartGroupData> starter = List.empty();
-    switch (section.aggregate) {
-      case TemporalAggregation.day:
-        starter = List<BarChartGroupData>.generate(subject.study.schedule.length, barGenerator);
-      case TemporalAggregation.phase:
-        starter = List<BarChartGroupData>.generate(subject.interventionOrder.length, barGenerator);
-      case TemporalAggregation.intervention:
-        int interventionCount =
-            subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
-        starter = List<BarChartGroupData>.generate(interventionCount, barGenerator);
-      default:
-    }
+    var starter = List<BarChartGroupData>.generate(barCount, barGenerator);
     for (var entry in data) {
       starter[entry.x.round()] = barGenerator(
         entry.x.round(),
