@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,15 @@ class AverageSectionWidget extends ReportSectionWidget {
   @override
   Widget build(BuildContext context) {
     final data = getAggregatedData().toList();
+    final taskTitle = subject.study.observations.firstWhereOrNull(
+      (element) => element.id == section.resultProperty!.task
+    )?.title;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (taskTitle != null) Text(taskTitle),
+        const SizedBox(height: 8),
         getLegend(context, data),
         const SizedBox(height: 8),
         AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
@@ -179,14 +186,6 @@ class AverageSectionWidget extends ReportSectionWidget {
   }*/
 
   BarChartData getChartData(List<DiagramDatum> data) {
-    //final colorPalette = getInterventionPalette(subject.selectedInterventions);
-    //final interventionNames = getInterventionNames(subject.selectedInterventions);
-/*
-    final task = subject.study.observations.firstWhere((element) =>
-    element.id == section.resultProperty!.task).
-        .firstWhere((element) => element.id == section.resultProperty!.property);
-    print(task.toString());
-*/
     return BarChartData(
       //minX: 1,
       //maxX: subject.study.schedule.length.toDouble(),
@@ -216,8 +215,6 @@ class AverageSectionWidget extends ReportSectionWidget {
       barTouchData: BarTouchData(
         enabled: false, // todo enable with x and y value
       ),
-      //maxY: ; // todo get min and max values of question
-      // todo add question title to top of diagram (e.g. "pain rating")
     );
   }
 
