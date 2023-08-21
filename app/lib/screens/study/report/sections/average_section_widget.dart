@@ -206,11 +206,20 @@ class AverageSectionWidget extends ReportSectionWidget {
     return c;
   }
 
+  int getDayIndex(DateTime key) {
+    if (subject.study.schedule.includeBaseline) return subject.getDayOfStudyFor(key);
+    final schedule = subject.scheduleFor(subject.startedAt!);
+    // this always has to be found because studies have to have at least 2
+    // interventions
+    final offset = schedule.indexWhere((task) => task.id != Study.baselineID);
+    return subject.getDayOfStudyFor(key) - offset;
+  }
+
   Iterable<DiagramDatum> getAggregatedData() {
     final values = section.resultProperty!.retrieveFromResults(subject);
     final data = values.entries.map(
       (e) => DiagramDatum(
-        subject.getDayOfStudyFor(e.key),
+        getDayIndex(e.key),
         e.value,
         e.key,
         subject.getInterventionForDate(e.key)!.id,
