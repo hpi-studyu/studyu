@@ -259,7 +259,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   Map<String, String?> getInterventionNames(BuildContext context) {
     final names = {for (var intervention in subject.study.interventions) intervention.id: intervention.name};
-    names['__baseline'] = AppLocalizations.of(context)!.baseline;
+    names[Study.baselineID] = AppLocalizations.of(context)!.baseline;
     return names;
   }
 }
