@@ -113,8 +113,14 @@ class AverageSectionWidget extends ReportSectionWidget {
   List<BarChartGroupData> getBarGroups(List<DiagramDatum> data) {
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
 
-    BarChartGroupData barGenerator(int index) {
-      return BarChartGroupData(x: index, barRods: [BarChartRodData(toY: 0)]);
+
+    BarChartGroupData barGenerator(int index, {double y = 0, Color? color}) {
+      final rod = BarChartRodData(
+        toY: y,
+        color: color,
+        borderRadius: const BorderRadius.all(Radius.circular(1)),
+      );
+      return BarChartGroupData(x: index, barsSpace: 0, barRods: [rod]);
     }
 
     List<BarChartGroupData> starter = List.empty();
@@ -130,12 +136,10 @@ class AverageSectionWidget extends ReportSectionWidget {
       default:
     }
     for (var entry in data) {
-      starter[entry.x.round()] = BarChartGroupData(x: entry.x.round(), barRods: [
-        BarChartRodData(
-          toY: entry.value.toDouble(),
-          color: getColor(entry),
-        )
-      ]);
+      starter[entry.x.round()] = barGenerator(
+        entry.x.round(),
+        y: entry.value.toDouble(),
+        color: getColor(entry));
     }
     return starter;
   }
