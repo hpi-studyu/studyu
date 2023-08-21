@@ -18,6 +18,8 @@ class AverageSectionWidget extends ReportSectionWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        getLegend(context, data),
+        const SizedBox(height: 8),
         AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
       ],
     );
@@ -39,6 +41,15 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
   //bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
+
+  Widget getLegend(BuildContext context, List<DiagramDatum> data) {
+    final interventionNames = getInterventionNames(context);
+    final legends = {
+      for (var entry in data) interventionNames[entry.intervention]!:
+      Legend(interventionNames[entry.intervention]!, getColor(entry))
+    };
+    return LegendsListWidget(legends: legends.values.toList());
+  }
 
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
     return BarChart(
@@ -207,7 +218,6 @@ class AverageSectionWidget extends ReportSectionWidget {
       ),
       //maxY: ; // todo get min and max values of question
       // todo add question title to top of diagram (e.g. "pain rating")
-      // todo add legend
     );
   }
 
