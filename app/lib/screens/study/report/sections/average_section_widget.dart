@@ -13,10 +13,11 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = getAggregatedData().toList();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AspectRatio(aspectRatio: 1.5, child: getDiagram(context)),
+        AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
       ],
     );
   }
@@ -38,9 +39,9 @@ class AverageSectionWidget extends ReportSectionWidget {
   //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
   //bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
 
-  Widget getDiagram(BuildContext context) {
+  Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
     return BarChart(
-      getChartData(),
+      getChartData(data),
       swapAnimationDuration: const Duration(milliseconds: 150), // Optional
       swapAnimationCurve: Curves.linear, // Optional
     );
@@ -165,7 +166,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         .toList();
   }*/
 
-  BarChartData getChartData() {
+  BarChartData getChartData(List<DiagramDatum> data) {
     //final colorPalette = getInterventionPalette(subject.selectedInterventions);
     //final interventionNames = getInterventionNames(subject.selectedInterventions);
 /*
@@ -199,7 +200,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         getDrawingVerticalLine: (val) => FlLine(color: Colors.black),
         verticalInterval: subject.study.schedule.phaseDuration.toDouble(),*/
       ),
-      barGroups: getBarGroups(),
+      barGroups: getBarGroups(data),
       barTouchData: BarTouchData(
         enabled: false, // todo enable with x and y value
       ),
@@ -235,9 +236,8 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
-  List<BarChartGroupData> getBarGroups() {
+  List<BarChartGroupData> getBarGroups(List<DiagramDatum> data) {
     // groupBy((datum) => datum.intervention)
-    final data = getAggregatedData().toList();
     //data.add(DiagramDatum(1, 10, DateTime.now(), subject.selectedInterventions.first.id));
     //data.add(DiagramDatum(100, 3, DateTime.now(), subject.selectedInterventions.first.id));
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
