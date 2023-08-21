@@ -81,7 +81,7 @@ class InterventionCardTitle extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   final description =
-                      intervention!.isBaseline() ? AppLocalizations.of(context)!.baseline : intervention!.description;
+                      intervention!.isBaseline() ? AppLocalizations.of(context)!.baseline_description : intervention!.description;
                   return AlertDialog(
                     title: ListTile(
                       leading: Icon(MdiIcons.fromString(intervention!.icon), color: theme.colorScheme.secondary),
@@ -108,7 +108,7 @@ class InterventionCardDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final description = intervention.isBaseline() ? AppLocalizations.of(context)!.baseline : intervention.description;
+    final description = intervention.isBaseline() ? AppLocalizations.of(context)!.baseline_description : intervention.description;
     if (description == null) return Container();
 
     return Padding(

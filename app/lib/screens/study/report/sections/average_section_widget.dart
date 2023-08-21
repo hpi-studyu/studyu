@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 
@@ -412,6 +413,12 @@ class AverageSectionWidget extends ReportSectionWidget {
           )
           .map((e) => e.value);
     }
+  }
+
+  Map<String, String?> getInterventionNames(BuildContext context) {
+    final names = { for (var intervention in subject.study.interventions) intervention.id: intervention.name };
+    names['__baseline'] = AppLocalizations.of(context)!.baseline;
+    return names;
   }
 }
 
