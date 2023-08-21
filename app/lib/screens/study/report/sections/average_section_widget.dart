@@ -65,6 +65,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
     final barGroups = getBarGroups(context, data);
+    final maxY = (data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ?? 0) * 1.2;
     return BarChartData(
       titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
@@ -82,6 +83,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       alignment: BarChartAlignment.spaceAround,
       barGroups: barGroups,
       barTouchData: BarTouchData(enabled: true),
+      maxY: maxY,
     );
   }
 
