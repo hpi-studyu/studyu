@@ -157,8 +157,9 @@ class AverageSectionWidget extends ReportSectionWidget {
           drawVerticalLine: false,
         );
     }
-    // the grid lines are always at positions in [0, 1] so this is a tricky
-    // also note that this maths only works with BarChartAlignment.spaceAround
+    // the grid lines are always at positions in [0, 1] so this is a bit tricky
+    // also note that this math is only correct with
+    // BarChartAlignment.spaceAround, otherwise it would get even uglier
 
     // resolution
     final lineCount = barGroups.length * 2;
