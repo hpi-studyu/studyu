@@ -186,6 +186,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   }*/
 
   BarChartData getChartData(List<DiagramDatum> data) {
+    final barGroups = getBarGroups(data);
     return BarChartData(
       //minX: 1,
       //maxX: subject.study.schedule.length.toDouble(),
@@ -204,14 +205,9 @@ class AverageSectionWidget extends ReportSectionWidget {
             showTitles: false,
           ))),
       // ignore: prefer_const_constructors
-      gridData: FlGridData(
-        drawHorizontalLine: false,
-        drawVerticalLine: false,
-        /*checkToShowVerticalLine: (val) => true,
-        getDrawingVerticalLine: (val) => FlLine(color: Colors.black),
-        verticalInterval: subject.study.schedule.phaseDuration.toDouble(),*/
-      ),
-      barGroups: getBarGroups(data),
+      gridData: getGridData(barGroups),
+      alignment: BarChartAlignment.spaceAround,
+      barGroups: barGroups,
       barTouchData: BarTouchData(
         enabled: false, // todo enable with x and y value
       ),
@@ -330,6 +326,30 @@ class AverageSectionWidget extends ReportSectionWidget {
           )
         ],
       ));*/
+  }
+
+  FlGridData getGridData(List<BarChartGroupData> barGroups) {
+    if (section.aggregate != TemporalAggregation.day) {
+      return const FlGridData(
+          drawHorizontalLine: false,
+          drawVerticalLine: false,
+        );
+    }
+    // the grid lines are always at positions in [0, 1] so this is a tricky
+    // also note that this maths only works with BarChartAlignment.spaceAround
+
+    // resolution
+    final lineCount = barGroups.length * 2;
+    bool drawLine(double val) {
+      // draw when we are at the border between two phases
+      return (val * lineCount % (2 * subject.study.schedule.phaseDuration)).toInt() == 0;
+    }
+    return FlGridData(
+      drawHorizontalLine: false,
+      drawVerticalLine: true,
+      checkToShowVerticalLine: drawLine,
+      verticalInterval: 1 / lineCount,
+    );
   }
 
   MaterialColor getColor(DiagramDatum diagram) {
