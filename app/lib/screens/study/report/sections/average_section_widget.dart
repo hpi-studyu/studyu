@@ -208,9 +208,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       gridData: getGridData(barGroups),
       alignment: BarChartAlignment.spaceAround,
       barGroups: barGroups,
-      barTouchData: BarTouchData(
-        enabled: false, // todo enable with x and y value
-      ),
+      barTouchData: BarTouchData(enabled: true),
     );
   }
 
