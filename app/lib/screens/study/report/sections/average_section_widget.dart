@@ -241,50 +241,22 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   List<BarChartGroupData> getBarGroups(List<DiagramDatum> data) {
-    // groupBy((datum) => datum.intervention)
-    //data.add(DiagramDatum(1, 10, DateTime.now(), subject.selectedInterventions.first.id));
-    //data.add(DiagramDatum(100, 3, DateTime.now(), subject.selectedInterventions.first.id));
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
-    //data.sort((a, b) => a.timestamp!.compareTo(b.timestamp!));
-    //final numberOfPhases = subject.interventionOrder.length;
-    //final phaseDuration = subject.study.schedule.phaseDuration;
+
+    BarChartGroupData barGenerator(int index) {
+      return BarChartGroupData(x: index, barRods: [BarChartRodData(toY: 0)]);
+    }
+
     List<BarChartGroupData> starter = List.empty();
     switch (section.aggregate) {
       case TemporalAggregation.day:
-        starter = List<BarChartGroupData>.generate(
-            subject.study.schedule.length,
-            (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: 0,
-                    )
-                  ],
-                ));
+        starter = List<BarChartGroupData>.generate(subject.study.schedule.length, barGenerator);
       case TemporalAggregation.phase:
-        starter = List<BarChartGroupData>.generate(
-            subject.interventionOrder.length,
-            (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: 0,
-                    )
-                  ],
-                ));
+        starter = List<BarChartGroupData>.generate(subject.interventionOrder.length, barGenerator);
       case TemporalAggregation.intervention:
         int interventionCount =
             subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
-        starter = List<BarChartGroupData>.generate(
-            interventionCount,
-            (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: 0,
-                    )
-                  ],
-                ));
+        starter = List<BarChartGroupData>.generate(interventionCount, barGenerator);
       default:
     }
     for (var entry in data) {
@@ -296,36 +268,6 @@ class AverageSectionWidget extends ReportSectionWidget {
       ]);
     }
     return starter;
-
-    /*return data.mapIndexed((idx, entry) {
-      //print(idx);
-      //if (idx < data.length) {
-      return BarChartGroupData(x: entry.x.round(), barRods: [
-        charts.BarChartRodData(
-          toY: entry.value.toDouble(),
-          color: getColor(entry, subject),
-        )
-      ]);
-      //}
-      /*return BarChartGroupData(
-        x: idx+1,
-        barRods: [
-          charts.BarChartRodData(
-            toY: 5,
-            /*color: getColor(DiagramDatum(idx+1, 5, null, subject.selectedInterventions[0].id), subject),*/
-          )
-        ]
-      );*/
-    }).toList();*/
-    /*return List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
-        x: index + 1,
-        barRods: [
-          BarChartRodData(
-            toY: Random().nextInt(11).toDouble(),
-            color: getColor(index),
-          )
-        ],
-      ));*/
   }
 
   FlGridData getGridData(List<BarChartGroupData> barGroups) {
