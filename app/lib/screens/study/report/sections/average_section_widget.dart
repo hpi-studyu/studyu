@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../util/data_processing.dart';
@@ -22,7 +23,7 @@ class AverageSectionWidget extends ReportSectionWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (taskTitle != null) Text(taskTitle),
+        if (taskTitle != null) Text(taskTitle, style: theme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         getLegend(context, data),
         const SizedBox(height: 8),
