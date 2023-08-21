@@ -230,7 +230,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           return const SizedBox.shrink();
         }
       case TemporalAggregation.phase:
-        return Text("${value + 1}");
+        return Text("${value.toInt() + 1}");
       case TemporalAggregation.intervention:
         return const SizedBox.shrink();
       default:
