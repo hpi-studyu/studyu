@@ -288,7 +288,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       starter[entry.x.round()] = BarChartGroupData(x: entry.x.round(), barRods: [
         BarChartRodData(
           toY: entry.value.toDouble(),
-          color: getColor(entry, subject),
+          color: getColor(entry),
         )
       ]);
     }
@@ -325,7 +325,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       ));*/
   }
 
-  MaterialColor getColor(DiagramDatum diagram, StudySubject subject) {
+  MaterialColor getColor(DiagramDatum diagram) {
     const baselineColor = Colors.grey;
     final colors = [Colors.blue, Colors.orange];
     MaterialColor? c = Colors.teal;
