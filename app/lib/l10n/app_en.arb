@@ -38,7 +38,8 @@
   "study_publisher": "Study Publisher",
 
   "tasks_daily": "Tasks:",
-  "baseline": "The baseline is a phase within a study in which the initial state is measured to allow later comparisons. During the baseline phase you should behave as usual, no study-specific interventions are carried out yet.",
+  "baseline_description": "The baseline is a phase within a study in which the initial state is measured to allow later comparisons. During the baseline phase you should behave as usual, no study-specific interventions are carried out yet.",
+  "baseline": "Baseline",
   "days_left": "days left",
 
   "today_tasks": "Today's tasks",
