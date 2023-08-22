@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - dev
+      - fix/hpi-firebase-deployment
     paths:
       - '**.dart'
       - '**/pubspec.yaml'
