@@ -4,6 +4,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
+import 'package:uuid/uuid.dart';
 
 enum StudyActionType {
   pin,
@@ -116,9 +117,18 @@ extension StudyDuplicateX on Study {
     copy.collaboratorEmails = [];
     copy.createdAt = DateTime.now();
 
-    // Generate a new random UID
-    final dummy = Study.withId(userId);
-    copy.id = dummy.id;
+    // Generate a new random UUIDs
+    const uuid = Uuid();
+    copy.id = uuid.v4();
+    for (var intervention in copy.interventions) {
+      intervention.id = uuid.v4();
+    }
+    for (var observation in copy.observations) {
+      observation.id = uuid.v4();
+    }
+    for (var report in [copy.reportSpecification.primary, ...copy.reportSpecification.secondary]) {
+      report?.id = uuid.v4();
+    }
 
     return copy;
   }
