@@ -2,7 +2,7 @@
   "projects": {
     "default": "studyu-e37af",
     "dev": "studyu-dev",
-    "hpi": "studyu-hpi"
+    "hpi": "studyu-hpi-dev"
   },
   "targets": {
     "studyu-e37af": {
@@ -25,7 +25,7 @@
         ]
       }
     },
-    "studyu-hpi": {
+    "studyu-hpi-dev": {
       "hosting": {
         "app": [
           "studyu-hpi-app"
