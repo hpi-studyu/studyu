@@ -1,3 +1,9 @@
+## 2.5.0
+
+ - **FIX**: make analytics fully optional. ([67d58887](https://github.com/hpi-studyu/studyu/commit/67d588879a69a9105cd2e54c08f2a2feae1224a2))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+ - **FEAT**: make study tags reactive. ([f2f8ecaf](https://github.com/hpi-studyu/studyu/commit/f2f8ecafb4f21d21128ce089eb99608778b91e2e))
+
 ## 2.4.7
 
  - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))

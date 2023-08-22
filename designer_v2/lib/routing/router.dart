@@ -46,8 +46,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     // Carry original location through the redirect flow so that we can
     // redirect the user to where they came from after initialization
     final String? from;
-    if (state.queryParameters.containsKey('from')) {
-      from = state.queryParameters['from'];
+    if (state.uri.queryParameters.containsKey('from')) {
+      from = state.uri.queryParameters['from'];
     } else {
       if (state.matchedLocation.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
         from = state.matchedLocation;

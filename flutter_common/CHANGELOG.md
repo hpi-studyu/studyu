@@ -1,3 +1,9 @@
+## 1.6.2-dev.9
+
+ - **REFACTOR**: rename .env.selfhost to .env.hpi. ([dae7d461](https://github.com/hpi-studyu/studyu/commit/dae7d4617a3a45df595172672851c0f61ff14de5))
+ - **REFACTOR**: rename .env.selfhost to .env.hpi. ([0c3d2252](https://github.com/hpi-studyu/studyu/commit/0c3d2252edaf7f564a417e5b8f4243161514cc37))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+
 ## 1.6.2-dev.8
 
  - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
