@@ -199,7 +199,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         if (subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[diagram.x.round() - 1];
+          c = colors[diagram.x.round() - (subject.study.schedule.includeBaseline ? 1 : 0)];
         }
       default:
     }
