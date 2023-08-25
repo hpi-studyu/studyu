@@ -107,6 +107,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
     enrollmentFormViewModel.read();
     measurementsFormViewModel.read();
     interventionsFormViewModel.read();
+    reportsFormViewModel.read();
     super.read(formData);
   }
 
