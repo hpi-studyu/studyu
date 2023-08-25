@@ -64,7 +64,6 @@ convenience:
 - `.env`: Production database used by default
 - `.env.dev`: Development database used by dev branch
 - `.env.local`: Used to run StudyU locally with Docker
-- `.env.hpi`: Used for a self-hosted instance of Supabase at HPI
 
 Ideally we should only use the staging database or a local one for all our
 development work.

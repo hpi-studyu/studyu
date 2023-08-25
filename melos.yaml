@@ -167,31 +167,6 @@ scripts:
       scope: studyu_designer_v2
       dir-exists: web
 
-  build:web:hpi:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
-    description: Build web hpi.
-    packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
-
-  build:web:app:hpi:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
-    description: Build app for Docker and self-hosted Supabase instance.
-    packageFilters:
-      scope: studyu_app
-
-  build:web:designer_v2:hpi:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
-    description: Build designer_v2 for Docker and self-hosted Supabase instance.
-    packageFilters:
-      scope: studyu_designer_v2
-
   # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
   app:web:local:
     run: |
