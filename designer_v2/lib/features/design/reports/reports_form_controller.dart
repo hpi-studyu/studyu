@@ -216,7 +216,7 @@ class ReportFormItemDelegate
         model.save();
       },
     );
-    if(!owner.isReadonly) {
+    if (!owner.isReadonly) {
       actions.insert(0, modalAction);
     }
 
