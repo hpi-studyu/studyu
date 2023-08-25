@@ -105,7 +105,7 @@ cases can be found [here](docker).
 3. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
    Supabase.
 4. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
-   up` to the nginx reverse proxy.
+   up` to launch the nginx reverse proxy.
 
 If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote
 control enabled and the splits layout, you can omit steps 2-4 and instead run

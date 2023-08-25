@@ -42,7 +42,6 @@ Have a look into the use cases below for more details on the different
 configurations.
 
 ```bash
-chmod +x studyu-cli.sh
 ./studyu-cli.sh config
 ./studyu-cli.sh start
 ```
