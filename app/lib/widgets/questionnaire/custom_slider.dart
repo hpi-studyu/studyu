@@ -83,53 +83,139 @@ class CustomSlider extends StatelessWidget {
       return index + minValue! == value;
     }
 
+    // todo verify if everything works if minValue and maxValue are not 1 to 10 but 11 to 20
+
     String annotation(index) => annotations
         .firstWhere((annotation) => annotation.value == index + minValue!, orElse: () => Annotation())
         .annotation;
+
+    maxFlex(int index) {
+      int flexNum = 1;
+
+      if (index >= steps!.maximum || annotation(index + 1).isNotEmpty || annotation(index).isEmpty) return flexNum;
+
+      if (index < steps!.maximum) {
+        int currIndex = index + 1;
+        while (annotation(currIndex).isEmpty && annotation(currIndex+1).isEmpty && currIndex <= steps!.maximum) {
+          currIndex++;
+        }
+        flexNum = currIndex - index;
+      }
+
+      if (index == steps!.maximum) {
+        int currIndex = index - 1;
+        while (annotation(currIndex).isEmpty && annotation(currIndex-1).isEmpty && currIndex >= steps!.minimum) {
+          currIndex--;
+        }
+        flexNum = currIndex + index;
+      }
+
+      return flexNum;
+    }
+
+    /*
+                    // old: let text overflow until there is another annotation taking space
+                    // e.g. use table and
+                    UnconstrainedBox(
+                      //textDirection: index == (maxValue!-1) ? TextDirection.rtl : TextDirection.ltr,
+                        alignment: index < (maxValue!-1) ? Alignment.centerLeft : Alignment.centerRight,*/
 
     return Column(
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: List.generate(
-            divisions + 1,
-            (index) => Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  onChanged!(index + minValue!);
-                  onChangeEnd!(index + minValue!);
-                },
-                child: Column(
-                  children: [
-                    index % (minorTick! + 1) == 0 && annotation(index).isNotEmpty
-                        ? Container(
-                            alignment: Alignment.bottomCenter,
-                            //height: valueHeight,
-                            child: Text(
-                              //linearStep
-                              //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
-                              /*:*/
-                              annotation(index),
-                              style: labelTextStyle!
-                                  .copyWith(fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
-                              textAlign: TextAlign.center,
-                            ))
-                        : const SizedBox.shrink(),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      height: tickHeight,
-                      child: VerticalDivider(
-                        indent: index % (minorTick! + 1) == 0 ? 2 : 6,
-                        thickness: 1.8,
-                        color: isValueSelected(index) ? thumbColor ?? primaryColor : Colors.grey.shade300,
-                      ),
-                    ),
-                  ],
+          children: [
+            for (int index = 0; index <= divisions; index++)
+              Flexible(
+                flex: maxFlex(index),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    onChanged!(index + minValue!);
+                    onChangeEnd!(index + minValue!);
+                  },
+                  child: Column(
+                    children: [
+                      index % (minorTick! + 1) == 0 && annotation(index).isNotEmpty
+                      ? Container(
+                          alignment: Alignment.bottomCenter,
+                          child: OverflowDetectingText(
+                            text: annotation(index),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            alternateWidget: Column(
+                              children: [
+                                Text(
+                                  annotation(index),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.info_outline),
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: ListTile(
+                                          leading: const Icon(Icons.info_outline),
+                                          title: Text("Description for axis step ${index + 1}"),
+                                        ),
+                                        content: Text(annotation(index)),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: labelTextStyle!.copyWith(
+                              fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                      ) :
+                          Expanded(flex: 0, child: Container()),
+                      /*Expanded(
+                          flex: 0,
+                          child: Container(
+                              alignment: Alignment.bottomCenter,
+                              child: const SizedBox.shrink()
+                          )
+                      )*/
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
+          ],
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            for (int index = 0; index <= divisions; index++)
+              Flexible(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    onChanged!(index + minValue!);
+                    onChangeEnd!(index + minValue!);
+                  },
+                  child: Column(
+                    children: [
+                      if (index % (minorTick! + 1) == 0)
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          height: tickHeight,
+                          child: VerticalDivider(
+                            indent: 2,
+                            thickness: 1.8,
+                            color: isValueSelected(index) ? thumbColor ?? primaryColor : Colors.grey.shade300,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: labelOffset),
@@ -195,5 +281,52 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
     final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+}
+
+class OverflowDetectingText extends StatelessWidget {
+  final String text;
+  final Widget alternateWidget;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+
+  const OverflowDetectingText({
+    super.key,
+    required this.text,
+    required this.alternateWidget,
+    this.maxLines,
+    this.overflow,
+    this.style,
+    this.textAlign,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final textSpan = TextSpan(text: text, style: style);
+        final textPainter = TextPainter(
+          text: textSpan,
+          textDirection: TextDirection.ltr,
+          maxLines: maxLines ?? 2,
+        );
+
+        textPainter.layout(maxWidth: constraints.maxWidth);
+
+        if (textPainter.didExceedMaxLines) {
+          return alternateWidget;
+        } else {
+          return Text(
+            text,
+            maxLines: maxLines,
+            overflow: overflow,
+            style: style,
+            textAlign: textAlign,
+          );
+        }
+      },
+    );
   }
 }
