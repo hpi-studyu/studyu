@@ -83,8 +83,6 @@ class CustomSlider extends StatelessWidget {
       return index + minValue! == value;
     }
 
-    // todo verify if everything works if minValue and maxValue are not 1 to 10 but 11 to 20
-
     String annotation(index) => annotations
         .firstWhere((annotation) => annotation.value == index + minValue!, orElse: () => Annotation())
         .annotation;
@@ -92,38 +90,48 @@ class CustomSlider extends StatelessWidget {
     maxFlex(int index) {
       int flexNum = 1;
 
-      if (index >= steps!.maximum || annotation(index + 1).isNotEmpty || annotation(index).isEmpty) return flexNum;
+      if (index > divisions || annotation(index + 1).isNotEmpty || annotation(index).isEmpty) return flexNum;
 
-      if (index < steps!.maximum) {
+      if (index == 0) {
         int currIndex = index + 1;
-        while (annotation(currIndex).isEmpty && annotation(currIndex+1).isEmpty && currIndex <= steps!.maximum) {
+        while (annotation(currIndex).isEmpty && annotation(currIndex+1).isEmpty && currIndex <= divisions) {
           currIndex++;
         }
-        flexNum = currIndex - index;
+        flexNum = currIndex;
       }
 
-      if (index == steps!.maximum) {
+      if (index == divisions) {
         int currIndex = index - 1;
-        while (annotation(currIndex).isEmpty && annotation(currIndex-1).isEmpty && currIndex >= steps!.minimum) {
+        while (annotation(currIndex).isEmpty && annotation(currIndex-1).isEmpty && currIndex >= 0) {
           currIndex--;
         }
-        flexNum = currIndex + index;
+        flexNum = divisions - currIndex;
       }
-
       return flexNum;
+    }
+    
+    Alignment alignment(int index) {
+      if (index == 0) return Alignment.bottomLeft;
+      if (index == divisions) return Alignment.bottomRight;
+      return Alignment.bottomCenter;
+    }
+
+    TextAlign textAlign(int index) {
+      if (index == 0) return TextAlign.left;
+      if (index == divisions) return TextAlign.right;
+      return TextAlign.center;
     }
 
     /*
-                    // old: let text overflow until there is another annotation taking space
-                    // e.g. use table and
-                    UnconstrainedBox(
-                      //textDirection: index == (maxValue!-1) ? TextDirection.rtl : TextDirection.ltr,
-                        alignment: index < (maxValue!-1) ? Alignment.centerLeft : Alignment.centerRight,*/
+    // old: let text overflow until there is another annotation taking space
+    // e.g. use table and
+    UnconstrainedBox(
+      //textDirection: index == (maxValue!-1) ? TextDirection.rtl : TextDirection.ltr,
+        alignment: index < (maxValue!-1) ? Alignment.centerLeft : Alignment.centerRight,*/
 
     return Column(
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             for (int index = 0; index <= divisions; index++)
               Flexible(
@@ -138,10 +146,11 @@ class CustomSlider extends StatelessWidget {
                     children: [
                       index % (minorTick! + 1) == 0 && annotation(index).isNotEmpty
                       ? Container(
-                          alignment: Alignment.bottomCenter,
+                          alignment: alignment(index),
                           child: OverflowDetectingText(
                             text: annotation(index),
-                            maxLines: 4,
+                            maxLines: 3,
+                            textAlign: textAlign(index),
                             overflow: TextOverflow.ellipsis,
                             alternateWidget: Column(
                               children: [
@@ -171,17 +180,9 @@ class CustomSlider extends StatelessWidget {
                             style: labelTextStyle!.copyWith(
                               fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                       ) :
-                          Expanded(flex: 0, child: Container()),
-                      /*Expanded(
-                          flex: 0,
-                          child: Container(
-                              alignment: Alignment.bottomCenter,
-                              child: const SizedBox.shrink()
-                          )
-                      )*/
+                      Expanded(flex: 0, child: Container()),
                     ],
                   ),
                 ),
