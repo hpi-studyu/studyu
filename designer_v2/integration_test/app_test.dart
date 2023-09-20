@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/app.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -10,14 +8,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
-import 'package:flutter/rendering.dart';
+
+import 'robots/app_robot.dart';
+import 'robots/auth_robot.dart';
+import 'robots/studies_robot.dart';
 
 void main() {
   late SharedPreferences sharedPreferences;
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
-    debugRepaintRainbowEnabled = true;
     await loadEnv();
     await runAsync(prefetchEmojiFont);
     // Turn off the # in the URLs on the web
@@ -27,75 +27,63 @@ void main() {
 
   group('end-to-end tests', () {
     testWidgets('Start and splash screen', (tester) async {
+      final appRobot = AppRobot(tester);
+
       await tester.pumpWidget(ProviderScope(overrides: [sharedPreferencesProvider.overrideWithValue(sharedPreferences)], child: const App()));
       await tester.pump();
-      // Check if we see the splash screen
-      expect(find.text('Loading...'), findsOneWidget);
+      await appRobot.validateOnSplashScreen();
       await tester.pump();
-      // Make sure we are loaded properly
-      expect(find.text('Learn'), findsOneWidget);
-      print('Pass 1');
+      await appRobot.validateOnAuthScreen();
     });
     testWidgets('Sign up -> Sign out flow test', (tester) async {
+      final appRobot = AppRobot(tester);
+      final authRobot = AuthRobot(tester);
+      final studiesRobot = StudiesRobot(tester);
+
       await tester.pumpWidget(ProviderScope(overrides: [sharedPreferencesProvider.overrideWithValue(sharedPreferences)], child: const App()));
       await tester.pump();
-      // Check if we see the splash screen
-      expect(find.text('Loading...'), findsOneWidget);
+      await appRobot.validateOnSplashScreen();
       await tester.pump();
-      // Make sure we are loaded properly
-      expect(find.text('Learn'), findsOneWidget);
-      // Move to the sign up page
-      await tester.tap(find.text('Sign up'));
+      await appRobot.validateOnAuthScreen();
+      await authRobot.navigateToSignUpScreen();
       await tester.pump();
-      // Enter details into the appropriate form fields
-      await tester.enterText(find.widgetWithText(ReactiveTextField, 'Email'), 'test@email.com');
+      await authRobot.enterEmail('test@email.com');
       await tester.pump();
-      await tester.enterText(find.widgetWithText(ReactiveTextField, 'Password'), 'password');
+      await authRobot.enterPassword('password');
       await tester.pump();
-      await tester.enterText(find.widgetWithText(ReactiveTextField, 'Confirm password'), 'password');
+      await authRobot.enterPasswordConfirmation('password');
       await tester.pump();
-      await tester.tap(find.byType(Checkbox));
+      await authRobot.tapTermsCheckbox();
       await tester.pump();
-      // Tap on the sign up button and wait for the home screen to appear
-      await tester.runAsync(() => tester.tap(find.text('Create account')));
+      await authRobot.tapSignUpButton();
+      await tester.pump(const Duration(seconds: 3));
+      await studiesRobot.validateOnStudiesScreen();
+      await studiesRobot.tapSignOutButton();
       await tester.pump();
-      // Check if the homescreen has appeared
-      expect(find.text('My Studies'), findsWidgets);
-      // Wait until the API call returns
-      await tester.pump(const Duration(seconds: 1));
-      // Click the sign out button
-      await tester.tap(find.text('Sign out'));
-      await tester.pump();
-      // Check if we are back on the auth screen
-      expect(find.text('Learn'), findsOneWidget);
-      print('Pass 2');
+      await tester.pump(const Duration(seconds: 3));
+      await appRobot.validateOnAuthScreen();
     });
     testWidgets('Sign in -> Sign out flow test', (tester) async {
+      final appRobot = AppRobot(tester);
+      final authRobot = AuthRobot(tester);
+      final studiesRobot = StudiesRobot(tester);
+
       await tester.pumpWidget(ProviderScope(overrides: [sharedPreferencesProvider.overrideWithValue(sharedPreferences)], child: const App()));
       await tester.pump();
-      // Check if we see the splash screen
-      expect(find.text('Loading...'), findsOneWidget);
+      appRobot.validateOnSplashScreen();
       await tester.pump();
-      // Make sure we are loaded properly
-      expect(find.text('Learn'), findsOneWidget);
-       // Enter details into the appropriate form fields
-      await tester.enterText(find.widgetWithText(ReactiveTextField, 'Email'), 'test@email.com');
+      appRobot.validateOnAuthScreen();
+      authRobot.enterEmail('test@email.com');
       await tester.pump();
-      await tester.enterText(find.widgetWithText(ReactiveTextField, 'Password'), 'password');
+      authRobot.enterPassword('password');
       await tester.pump();
-      // Tap on the sign up button and wait for the home screen to appear
-      await tester.runAsync(() => tester.tap(find.text('Sign in')));
+      await authRobot.tapSignInButton();
+      await tester.pump(const Duration(seconds: 3));
+      await studiesRobot.validateOnStudiesScreen();
+      await studiesRobot.tapSignOutButton();
       await tester.pump();
-      // Check if the homescreen has appeared
-      expect(find.text('My Studies'), findsWidgets);
-      // Wait until the API call returns
-      await tester.pump(const Duration(seconds: 1));
-      // Click the sign out button
-      await tester.tap(find.text('Sign out'));
-      await tester.pump();
-      // Check if we are back on the auth screen
-      expect(find.text('Learn'), findsOneWidget);
-      print('Pass 3');
-    }); 
+      await tester.pump(const Duration(seconds: 3));
+      await appRobot.validateOnAuthScreen();
+    });
   });
 }

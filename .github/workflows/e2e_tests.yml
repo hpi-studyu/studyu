@@ -1,0 +1,52 @@
+name: E2E tests
+
+on: 
+  push:
+    branches:
+      - issue/508-feature-integration-testing-for-three-scenarios
+    paths:
+      - 'designer_v2/**'
+
+concurrency:
+  group: ${{ github.ref }}-e2e-tests
+  cancel-in-progress: true
+
+jobs:
+  drive_web:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: supabase/postgres:15.1.0.90
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - uses: nanasess/setup-chromedriver@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      
+      - name: Seed database
+        run: cp database/studyu-schema.sql docker/supabase/seed.sql
+
+      - name: Initialize Supabase
+        working-directory: docker
+        run: |
+          supabase db start
+
+      - name: Start Chrome Driver
+        run: chromedriver --url-base=/wd/hub --port=4444
+
+      - name: Run Flutter E2E tests
+        run: flutter drive --driver=designer_v2/test_driver/integration_driver.dart --target=designer_v2/integration_test/app_test.dart -d web-server
