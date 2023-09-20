@@ -46,7 +46,10 @@ jobs:
           supabase db start
 
       - name: Start Chrome Driver
-        run: chromedriver --url-base=/wd/hub --port=4444
+        run: | 
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub --port=4444 &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
 
       - name: Run Flutter E2E tests
         run: flutter drive --driver=designer_v2/test_driver/integration_driver.dart --target=designer_v2/integration_test/app_test.dart -d web-server
