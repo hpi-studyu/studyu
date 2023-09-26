@@ -308,12 +308,11 @@ configuration.
 
 ### Change hostname or ports
 
-In order to change the hostname from localhost to a custom domain for either
-StudyU, or the self-hosted Supabase instance, the respective configuration files
-at `supabase/.env` and `flutter_common/lib/envs/.env.local` have to be
-adapted. Changes also need to be made to the nginx proxy by modifying the
-respective `nginx/conf.d/` files (`01_app.conf`, `02_designer.conf`,
-`03_supabase.conf`) and replacing `localhost` with the designated hostname.
+In order to change the hostname from localhost to a custom domain for StudyU, 
+the configuration file at `supabase/.env` has to be adapted. Changes also need
+to be made to the nginx proxy by modifying the respective `nginx/conf.d/` files
+(`01_app.conf`, `02_designer.conf`, `03_supabase.conf`) and replacing `localhost`
+with the designated hostname.
 
 The default ports can be changed by replacing the old port with the new one in
 the same files as above. Additionally, the `docker-compose-*.yml` files have to
