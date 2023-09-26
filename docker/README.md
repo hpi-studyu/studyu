@@ -137,7 +137,7 @@ need to be changed and assigned to Supabase and StudyU.
    Auth](https://supabase.com/docs/learn/auth-deep-dive/auth-deep-dive-jwts)
    with
    at least 32 characters. Then
-   [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the
+   [generate](https://supabase.com/docs/guides/self-hosting/docker#generate-api-keys) the
    corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
 3. Replace the default secrets with your newly generated ones in the following
    files:
