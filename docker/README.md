@@ -323,7 +323,8 @@ be modified.
 Since all requests to StudyU and Supabase are going through the nginx server,
 SSL can be implemented by adding port 443 to the `docker-compose-*.yml` files,
 listening on port 443 in the nginx configuration, and enabling the
-`nginx/conf.d/ssl.conf.example` file.
+`nginx/conf.d/ssl.conf.example` file. Moreover, the ports inside the 
+`nginx/conf.d/` files should be adapted.
 
 As a next step, SSL certificates can be mounted via a docker volume, or obtained
 without cost by using [certbot](https://certbot.eff.org/). There are a variety
