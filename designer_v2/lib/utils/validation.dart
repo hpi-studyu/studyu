@@ -52,8 +52,9 @@ class CountWhereValidator<T> extends Validator<T> {
   }
 }
 
-class MustMatchValidator extends Validator<dynamic> {
-  MustMatchValidator({this.control, this.matchingControl}) : super();
+// todo replace this with reactive forms validator
+class StudyUMustMatchValidator extends Validator<dynamic> {
+  StudyUMustMatchValidator({this.control, this.matchingControl}) : super();
 
   final AbstractControl? control;
   final AbstractControl? matchingControl;

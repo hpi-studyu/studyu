@@ -94,7 +94,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     'passwordConfirmation': passwordConfirmationControl,
     'termsOfService': termsOfServiceControl,
   }, validators: [
-    MustMatchValidator(control: passwordControl, matchingControl: passwordConfirmationControl)
+    StudyUMustMatchValidator(control: passwordControl, matchingControl: passwordConfirmationControl)
   ]);
 
   late final FormGroup passwordForgotForm = FormGroup({
@@ -105,7 +105,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     'password': passwordControl,
     'passwordConfirmation': passwordConfirmationControl,
   }, validators: [
-    MustMatchValidator(control: passwordControl, matchingControl: passwordConfirmationControl)
+    StudyUMustMatchValidator(control: passwordControl, matchingControl: passwordConfirmationControl)
   ]);
 
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>> controlValidatorsByForm = {
