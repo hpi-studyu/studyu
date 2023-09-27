@@ -135,10 +135,9 @@ need to be changed and assigned to Supabase and StudyU.
 2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a
    `JWT_SECRET` for [Supabase
    Auth](https://supabase.com/docs/learn/auth-deep-dive/auth-deep-dive-jwts)
-   with
-   at least 32 characters. Then
-   [generate](https://supabase.com/docs/guides/self-hosting/docker#generate-api-keys) the
-   corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
+   with at least 32 characters. Then
+   [generate](https://supabase.com/docs/guides/self-hosting/docker#generate-api-keys)
+   the corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
 3. Replace the default secrets with your newly generated ones in the following
    files:
     - `supabase/.env`
@@ -308,7 +307,7 @@ configuration.
 
 ### Change hostname or ports
 
-In order to change the hostname from localhost to a custom domain for StudyU, 
+In order to change the hostname from localhost to a custom domain for StudyU,
 the configuration file at `supabase/.env` has to be adapted. Changes also need
 to be made to the nginx proxy by modifying the respective `nginx/conf.d/` files
 (`01_app.conf`, `02_designer.conf`, `03_supabase.conf`) and replacing `localhost`
@@ -323,7 +322,7 @@ be modified.
 Since all requests to StudyU and Supabase are going through the nginx server,
 SSL can be implemented by adding port 443 to the `docker-compose-*.yml` files,
 listening on port 443 in the nginx configuration, and enabling the
-`nginx/conf.d/ssl.conf.example` file. Moreover, the ports inside the 
+`nginx/conf.d/ssl.conf.example` file. Moreover, the ports inside the
 `nginx/conf.d/` files should be adapted.
 
 As a next step, SSL certificates can be mounted via a docker volume, or obtained
