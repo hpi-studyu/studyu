@@ -7,7 +7,7 @@ abstract class Expression {
   static Map<String, ExpressionParser> expressionTypes = {
     BooleanExpression.expressionType: (data) => BooleanExpression.fromJson(data),
     ChoiceExpression.expressionType: (data) => ChoiceExpression.fromJson(data),
-    NotExpression.expressionType: (data) => NotExpression.fromJson(data)
+    NotExpression.expressionType: (data) => NotExpression.fromJson(data),
   };
   static const String keyType = 'type';
   String? type;

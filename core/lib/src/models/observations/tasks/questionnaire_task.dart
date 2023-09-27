@@ -33,7 +33,7 @@ class QuestionnaireTask extends Observation {
   }
 
   @override
-  Map<String, Type> getAvailableProperties() => {for (var q in questions.questions) q.id: q.getAnswerType()};
+  Map<String, Type> getAvailableProperties() => {for (final q in questions.questions) q.id: q.getAnswerType()};
 
   @override
   String? getHumanReadablePropertyName(String property) =>

@@ -162,7 +162,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
           'study_participant_count',
           'study_ended_count',
           'active_subject_count',
-          'study_missed_days'
+          'study_missed_days',
         ],
       );
 
@@ -219,7 +219,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
       tableHeaders,
       ...flattenedQuestions.map(
         (progress) => tableHeaders.map((header) => progress[header] ?? '').toList(growable: false),
-      )
+      ),
     ];
     return const ListToCsvConverter().convert(resultsTable);
   }

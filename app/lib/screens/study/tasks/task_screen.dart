@@ -117,6 +117,7 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
   } catch (exception, stackTrace) {
     Analytics.logger.severe("Could not save results");
     Analytics.captureException(exception, stackTrace: stackTrace);
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppLocalizations.of(context)!.could_not_save_results),

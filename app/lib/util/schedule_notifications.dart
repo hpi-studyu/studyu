@@ -85,8 +85,7 @@ Future<void> scheduleNotifications(BuildContext context) async {
   final appState = context.read<AppState>();
   final subject = appState.activeSubject!;
   final body = AppLocalizations.of(context)!.study_notification_body;
-  final studyNotifications =
-      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
+  final studyNotifications = appState.studyNotifications ?? await StudyNotifications.create(subject, context);
 
   final notificationsPlugin = studyNotifications.flutterLocalNotificationsPlugin;
   await notificationsPlugin.cancelAll();
@@ -128,8 +127,7 @@ void testNotifications(BuildContext context) async {
   if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject;
-  final studyNotifications =
-      context.read<AppState>().studyNotifications ?? await StudyNotifications.create(subject, context);
+  final studyNotifications = appState.studyNotifications ?? await StudyNotifications.create(subject, context);
   await studyNotifications.flutterLocalNotificationsPlugin.show(
     /*******************/
     99,
