@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_designer_v2` - `v1.5.1`](#studyu_designer_v2---v151)
+
+---
+
+#### `studyu_designer_v2` - `v1.5.1`
+
+ - **FIX**: rename custom MustMatchValidator. ([613e14a4](https://github.com/hpi-studyu/studyu/commit/613e14a4c846cae5a4ba3f83294a70978d907ca1))
+
+
+## 2023-09-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.6.0`](#studyu_app---v260)
  - [`studyu_core` - `v4.3.0-dev.9`](#studyu_core---v430-dev9)
  - [`studyu_designer_v2` - `v1.5.0`](#studyu_designer_v2---v150)
