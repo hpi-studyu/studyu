@@ -1,3 +1,11 @@
+## 1.5.0
+
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+ - **FIX**: report button visible for read-only studies. ([99daed13](https://github.com/hpi-studyu/studyu/commit/99daed1356840eceb640755a06daa967a8c28fb1))
+ - **FIX**: regenerate ids when duplicating a study. ([79b411c3](https://github.com/hpi-studyu/studyu/commit/79b411c3b4dfe9467c412a7cd2c47508ce766623))
+ - **FEAT**: localization additions. ([787f2ba6](https://github.com/hpi-studyu/studyu/commit/787f2ba659a39427ae988181ef89f20f24cdb121))
+
 ## 1.4.0
 
  - **REFACTOR**: format. ([595a717f](https://github.com/hpi-studyu/studyu/commit/595a717f0e09a3ba311984ad1f4b584252e091ec))

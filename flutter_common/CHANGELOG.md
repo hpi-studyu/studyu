@@ -1,3 +1,8 @@
+## 1.6.2-dev.10
+
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+
 ## 1.6.2-dev.9
 
  - **REFACTOR**: rename .env.selfhost to .env.hpi. ([dae7d461](https://github.com/hpi-studyu/studyu/commit/dae7d4617a3a45df595172672851c0f61ff14de5))
