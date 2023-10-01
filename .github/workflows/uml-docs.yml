@@ -10,6 +10,8 @@ on:
       - 'flutter_common/**/*.dart'
       - 'core/**/*.dart'
       - 'designer_v2/**/*.dart'
+      - '!designer_v2/integration_test/**'
+      - '!designer_v2/integration_driver/**'
       - 'app/**/*.dart'
 
 concurrency:
