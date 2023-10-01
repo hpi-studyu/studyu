@@ -1,15 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:patrol_finders/patrol_finders.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class AppRobot {
-  const AppRobot(this.tester);
+  const AppRobot(this.$);
 
-  final WidgetTester tester;
+  final PatrolTester $;
 
   Future<void> validateOnSplashScreen() async {
-    expect(find.text('Loading...'), findsOneWidget);
+    await $(tr.loading_message).waitUntilVisible();
   }
 
-  Future<void> validateOnAuthScreen() async {
-    expect(find.text('Learn'), findsOneWidget);
+  Future<void> validateOnLoginScreen() async {
+    await $(tr.login_page_title).waitUntilVisible();
   }
 }
