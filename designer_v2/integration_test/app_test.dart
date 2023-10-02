@@ -37,8 +37,10 @@ void main() {
     //  it could be a good practice to keep it so that the test instances
     //  do not share any information in the app cache
     setUp(() async => await sharedPreferences.clear()); // RM
-
-    patrolWidgetTest('Sign up -> Sign out flow test', ($) async {
+    
+    // Disable semantics because of known Flutter test issue:
+    // https://github.com/flutter/flutter/issues/97606
+    patrolWidgetTest('Sign up -> Sign out flow test', semanticsEnabled: false, ($) async {
       final appRobot = AppRobot($);
       final authRobot = AuthRobot($);
       final studiesRobot = StudiesRobot($);
@@ -60,7 +62,7 @@ void main() {
       await appRobot.validateOnLoginScreen();
     });
 
-    patrolWidgetTest('Sign in test', ($) async {
+    patrolWidgetTest('Sign in test', semanticsEnabled: false, ($) async {
       final appRobot = AppRobot($);
       final authRobot = AuthRobot($);
       final studiesRobot = StudiesRobot($);
@@ -83,7 +85,7 @@ void main() {
        The hope is that the Session key will persist across test app instances
        and the user will stay logged in 
     */
-    patrolWidgetTest('Remember me function test', skip: true, ($) async {
+    patrolWidgetTest('Remember me function test', semanticsEnabled: false, skip: true, ($) async {
       final studiesRobot = StudiesRobot($);
 
       await $.pumpWidgetAndSettle(ProviderScope(overrides: [
@@ -93,7 +95,7 @@ void main() {
       studiesRobot.validateOnStudiesScreen();
     });
 
-    patrolWidgetTest('Create a study/rename it test', ($) async {
+    patrolWidgetTest('Create a study/rename it test', semanticsEnabled: false, ($) async {
       final appRobot = AppRobot($); // RM
       final authRobot = AuthRobot($); // RM
       final studiesRobot = StudiesRobot($);
@@ -125,7 +127,7 @@ void main() {
       await studiesRobot.tapSignOutButton(); // RM
     });
 
-    patrolWidgetTest('Publish a study test', ($) async {
+    patrolWidgetTest('Publish a study test', semanticsEnabled: false, ($) async {
       final appRobot = AppRobot($); // RM
       final authRobot = AuthRobot($); // RM
       final studiesRobot = StudiesRobot($);
@@ -160,9 +162,7 @@ void main() {
       await studyDesignRobot.validateChangesSaved();
 
       await studyDesignRobot.navigateToParticipationScreen();
-      // NO-OP because exception in participation screening questionnare:
-      //
-      // TODO: add participation questionnare testing
+      // NO-OP because exception in participation screening questionnare
 
       await studyDesignRobot.navigateToInterventionsScreen();
       // Repeat twice for two interventions
@@ -174,6 +174,7 @@ void main() {
       await studyInterventionsRobot.enterInterventionTaskDescription('Task 1A Description');
       await studyInterventionsRobot.tapSaveInterventionTaskButton();
       await studyInterventionsRobot.tapSaveInterventionButton();
+      await studyDesignRobot.validateChangesSaved();
 
       await studyInterventionsRobot.tapAddInterventionButton();
       await studyInterventionsRobot.enterInterventionName('Test Intervention B');
@@ -183,6 +184,7 @@ void main() {
       await studyInterventionsRobot.enterInterventionTaskDescription('Task 1B Description');
       await studyInterventionsRobot.tapSaveInterventionTaskButton();
       await studyInterventionsRobot.tapSaveInterventionButton();
+      await studyDesignRobot.validateChangesSaved();
 
       await studyDesignRobot.navigateToMeasurementsScreen();
       await studyMeasurementsRobot.tapAddSurveyButton();
@@ -195,6 +197,7 @@ void main() {
       await studyMeasurementsRobot.enterSurveyQuestionOption2('Test Option 2');
       await studyMeasurementsRobot.tapSaveSurveyQuestionButton();
       await studyMeasurementsRobot.tapSaveSurveyButton();
+      await studyDesignRobot.validateChangesSaved();
 
       await studyDesignRobot.tapPublishButton();
       await studyDesignRobot.tapConfirmPublishButton();
