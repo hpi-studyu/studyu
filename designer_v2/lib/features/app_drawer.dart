@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
-import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
@@ -118,7 +118,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         localizedTitle: () => tr.navlink_logout,
         icon: Icons.logout_rounded,
         onSelected: (context, ref) {
-          ref.read(authFormControllerProvider(AuthFormKey.login).notifier).signOut();
+          ref.read(authRepositoryProvider).signOut();
         },
       ),
     ],
