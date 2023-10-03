@@ -60,7 +60,7 @@ class RouteParams {
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConf {
-  static late final GoRouter router;
+  static late GoRouter router;
 
   static final List<GoRoute> routes = publicRoutes + privateRoutes;
 
