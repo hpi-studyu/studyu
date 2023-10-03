@@ -184,6 +184,9 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
           ),
           input: ReactiveTextField(
             formControl: formViewModel.questionTextControl,
+            decoration: InputDecoration(
+              hintText: tr.form_field_question,
+            ),
             validationMessages: formViewModel.questionTextControl.validationMessages,
             minLines: 3,
             maxLines: 3,

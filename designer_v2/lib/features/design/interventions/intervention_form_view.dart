@@ -49,6 +49,9 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   Expanded(
                     child: ReactiveTextField(
                       formControl: widget.formViewModel.interventionTitleControl,
+                      decoration: InputDecoration(
+                        hintText: tr.form_field_intervention_title,
+                      ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(200),
                       ],
@@ -99,6 +102,9 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
               ),
               input: ReactiveTextField(
                 formControl: widget.formViewModel.interventionDescriptionControl,
+                decoration: InputDecoration(
+                  hintText: tr.form_field_intervention_description_hint,
+                ),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
@@ -106,9 +112,6 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: tr.form_field_intervention_description_hint,
-                ),
               ),
             ),
           ],
