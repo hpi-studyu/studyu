@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.6.0
+version: 2.6.1
 description: An app to facilitate N-of-1 trials
 publish_to: none
 homepage: https://hpi.de/lippert/projects/studyu.html
@@ -37,8 +37,8 @@ dependencies:
   sentry_flutter: ^7.10.1
   sentry_logging: ^7.10.1
   shared_preferences: ^2.2.2
-  studyu_core: ^4.3.0-dev.9
-  studyu_flutter_common: ^1.6.2-dev.10
+  studyu_core: ^4.3.0-dev.10
+  studyu_flutter_common: ^1.6.2-dev.11
   supabase: ^1.11.9
   supabase_flutter: ^1.10.22
   timeline_tile: ^2.0.0

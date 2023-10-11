@@ -1,3 +1,7 @@
+## 1.5.2
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+
 ## 1.5.1
 
  - **FIX**: rename custom MustMatchValidator. ([613e14a4](https://github.com/hpi-studyu/studyu/commit/613e14a4c846cae5a4ba3f83294a70978d907ca1))

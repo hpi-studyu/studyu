@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-10-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.6.1`](#studyu_app---v261)
+ - [`studyu_core` - `v4.3.0-dev.10`](#studyu_core---v430-dev10)
+ - [`studyu_designer_v2` - `v1.5.2`](#studyu_designer_v2---v152)
+ - [`studyu_flutter_common` - `v1.6.2-dev.11`](#studyu_flutter_common---v162-dev11)
+
+---
+
+#### `studyu_app` - `v2.6.1`
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+ - **FIX**: update cocoapod. ([ed45f6f5](https://github.com/hpi-studyu/studyu/commit/ed45f6f5a71e8227652d291232769bcc0bb75ba6))
+
+#### `studyu_core` - `v4.3.0-dev.10`
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+
+#### `studyu_designer_v2` - `v1.5.2`
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+
+#### `studyu_flutter_common` - `v1.6.2-dev.11`
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+ - **FEAT**: switch to hpi env. ([7f1a1817](https://github.com/hpi-studyu/studyu/commit/7f1a1817d96d955cf2f9e7c7fb7467f317bec53b))
+
+
 ## 2023-09-27
 
 ### Changes

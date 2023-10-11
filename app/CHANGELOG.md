@@ -1,3 +1,8 @@
+## 2.6.1
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+ - **FIX**: update cocoapod. ([ed45f6f5](https://github.com/hpi-studyu/studyu/commit/ed45f6f5a71e8227652d291232769bcc0bb75ba6))
+
 ## 2.6.0
 
  - **REFACTOR**: hardcoded baseline id. ([aeac14a2](https://github.com/hpi-studyu/studyu/commit/aeac14a2e2b01c0d48799d9ed69264d72f170353))

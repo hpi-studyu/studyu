@@ -1,3 +1,7 @@
+## 4.3.0-dev.10
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+
 ## 4.3.0-dev.9
 
  - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
