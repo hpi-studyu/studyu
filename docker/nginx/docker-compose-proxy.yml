@@ -17,4 +17,3 @@ services:
       - 4000:4000 # Supabase Analytics
     volumes:
       - ./conf.d:/etc/nginx/conf.d:ro
-      - .htpasswd:/etc/nginx/.htpasswd:ro
