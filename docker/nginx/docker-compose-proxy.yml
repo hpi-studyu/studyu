@@ -4,15 +4,16 @@ name: 'studyu_proxy'
 networks:
   default:
     name: studyu_network
+    external: true
 
 services:
-  proxy:
+  nginx:
     container_name: studyu-proxy
     image: nginx:stable-alpine
     restart: unless-stopped
     ports:
       - 8082:8082
-    # - 443:443
+      # - 443:443
+      - 4000:4000 # Supabase Analytics
     volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d:ro
-      - ../nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./conf.d:/etc/nginx/conf.d:ro

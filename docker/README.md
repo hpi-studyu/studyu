@@ -28,18 +28,17 @@ you want to run. The following components are available:
 
 - `supabase-db`: A PostgreSQL database for Supabase
 - `supabase`: A self-hosted Supabase instance (needs `supabase-db`)
-- `proxy`: Nginx reverse proxy to access Supabase if no StudyU component is running
+- `proxy`: Nginx reverse proxy to access Supabase
 - `studyu-app`: The StudyU App (includes `proxy`)
 - `studyu-designer`: The StudyU Designer (includes `proxy`)
 
-A minimal full setup would be `supabase-db`, `supabase`, `studyu-app` and
-`studyu-designer`. If you only want to run a self-hosted Supabase
-instance and deploy StudyU elsewhere, you can choose `proxy` instead of
-`studyu-app` and `studyu-designer` to access Supabase Studio. Otherwise, if you
-only want to run the StudyU App and the StudyU Designer and not self-host Supabase,
-you can choose the respective component without `supabase-db` and `supabase`.
-Have a look into the use cases below for more details on the different
-configurations.
+A minimal full setup would be `supabase-db`, `supabase`, `proxy`, `studyu-app`,
+and `studyu-designer`. If you only want to run a self-hosted Supabase instance
+and deploy StudyU elsewhere, only choose `supabase-db`, `supabase`, `proxy`.
+Otherwise, if you only want to run the StudyU App and the StudyU Designer and
+not self-host Supabase, you can choose the respective component(s) without
+`supabase-db`, `supabase`, and `proxy`. Have a look into the use cases below for
+more details on the different configurations.
 
 ```bash
 ./studyu-cli.sh config
@@ -173,11 +172,11 @@ Manual Docker Compose steps:
 - `docker compose -f supabase/docker-compose.yml up` (Start Supabase)
 - `docker compose -f studyu/docker-compose.yml up` (Start StudyU App and StudyU Designer)
 
-Operation:
+How to start:
 
 Open your local Supabase Studio instance on
-[http://localhost:8082](http://localhost:8082) (default basic authentication
-with username: studyu, password: studyu). The StudyU database scheme is
+[http://localhost:8082](http://localhost:8082)
+(username: studyu, password: studyu). The StudyU database scheme is
 automatically applied. Navigate to the table editor. Add a row to the table
 `app_config` with the id `prod` and insert the links to the terms of services
 and privacy policies with respect to their language
@@ -272,11 +271,8 @@ Some more modifications can be done to customize and secure the setup.
 ### Secure the Supabase backend
 
 By default, the Supabase backend is not secure if you deploy it, since it can be
-accessed by anyone. Supabase itself does not offer any access control for
-Supabase Studio. We have added basic authentication as an easy way to remedy
-this potential vulnerability. However, the defaults credentials need to be
-changed in the `nginx/.htpasswd` file. Consult your favorite search engine on
-how to do this.
+accessed by anyone. Supabase itself offers basic authentication access control.
+However, the defaults credentials need to be changed in the `supabase/.env` file.
 
 Additional security measures can be added by allowing only certain IP ranges to
 access the nginx reverse proxy. Have a look at the
