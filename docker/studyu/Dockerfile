@@ -1,5 +1,7 @@
 FROM ghcr.io/cirruslabs/flutter:stable as builder
 
+ARG FLUTTER_APP_FOLDER
+
 ENV PATH ${PATH}:/root/.pub-cache/bin/
 
 # Create workdir
@@ -18,16 +20,17 @@ RUN melos clean
 RUN dart pub get
 RUN melos bootstrap
 
-# Build apps
-RUN melos run build:web:app
-RUN melos run build:web:designer_v2
+# Build app
+RUN melos run build:web:$FLUTTER_APP_FOLDER
 
 # Configure webserver
 FROM nginx:stable-alpine
 
+ARG FLUTTER_APP_FOLDER
+
 # Copy web builds from the builder image to the webserver
-COPY --from=builder /src/app/build/web /usr/share/nginx/html/app
-COPY --from=builder /src/designer_v2/build/web /usr/share/nginx/html/designer_v2
+COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
 
 # Loads all env vars starting with "STUDYU" into the .env file
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/app/assets/packages/studyu_flutter_common/envs/.env && printenv | grep STUDYU_ > /usr/share/nginx/html/designer_v2/assets/packages/studyu_flutter_common/envs/.env && nginx -g 'daemon off;'"]
+ENV FLUTTER_APP_FOLDER=$FLUTTER_APP_FOLDER
+CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/${FLUTTER_APP_FOLDER}/assets/packages/studyu_flutter_common/envs/.env && nginx -g 'daemon off;'"]
