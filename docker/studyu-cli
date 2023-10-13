@@ -276,7 +276,7 @@ stop() {
   manage_components "stop" "${@:2}"
 }
 
-remove() {
+down() {
   manage_components "down" "${@:2}"
 }
 
@@ -422,7 +422,7 @@ print_help() {
   echo "  start <components>      Start components"
   echo "  restart <components>    Restart components"
   echo "  stop <components>       Stop components"
-  echo "  remove <components>       Remove components"
+  echo "  down <components>       Stop and remove components"
   echo "  update                  Perform StudyU update from specified branch"
   echo "  backup                  Backup StudyU data"
   echo "  delete                  Delete components and data (use with caution!)"
@@ -464,7 +464,7 @@ case "$1" in
     read_config
     stop "$@"
     ;;
-  remove)
+  down)
     read_config
     down "$@"
     ;;

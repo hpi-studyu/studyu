@@ -342,8 +342,8 @@ services:
       # Uncomment to use Big Query backend for analytics
       # GOOGLE_PROJECT_ID: ${GOOGLE_PROJECT_ID}
       # GOOGLE_PROJECT_NUMBER: ${GOOGLE_PROJECT_NUMBER}
-    # ports:
-    #   - 4000:4000
+    ports:
+      - 4000:4000
     entrypoint: |
                   sh -c `cat <<'EOF' > run.sh && sh run.sh
                   ./logflare eval Logflare.Release.migrate
