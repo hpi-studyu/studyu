@@ -9,9 +9,9 @@
 # - TRIGGER on_auth_user_created is not included
 # - Policies are sorted alphabetically, which does not make sense
 
-OLD_DB_HOST=localhost
-OLD_DB_PASS=your-super-secret-and-long-postgres-password
-OLD_DB_PORT=5433
+DB_HOST=localhost
+DB_PASS=your-super-secret-and-long-postgres-password
+DB_PORT=5433
 
 # Default case for Linux sed, just use "-i"
 #sedi=(-i)
@@ -20,11 +20,11 @@ OLD_DB_PORT=5433
 #  Darwin*) sedi=(-i "")
 #esac
 
-pg_dump postgres://postgres:"$OLD_DB_PASS"@"$OLD_DB_HOST":"$OLD_DB_PORT"/postgres \
+pg_dump postgres://postgres:"$DB_PASS"@"$DB_HOST":"$DB_PORT"/postgres \
   --schema 'public' \
   --schema-only \
   --no-privileges \
-  > dump.sql
+  > schema.sql
 
 # We could use sed in the future to correct some of the issues automatically
 
