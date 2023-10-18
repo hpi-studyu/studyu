@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# Default PostgreSQL username and database name
 default_username="postgres"
-default_database="postgres"
-
-# Specify the path to the .env file in the parent directory
 env_file="../.env"
 
 # Check if the .env file exists
@@ -19,6 +15,8 @@ else
   exit 1
 fi
 
+db_username="${POSTGRES_USERNAME:-$default_username}"
+
 # Check if the Docker container is running
 if ! docker ps -a --format '{{.Names}}' | grep -q "^$POSTGRES_HOST$"; then
   echo "Docker container '$POSTGRES_HOST' is not running."
@@ -26,7 +24,7 @@ if ! docker ps -a --format '{{.Names}}' | grep -q "^$POSTGRES_HOST$"; then
 fi
 
 # Get the container's IP address
-container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $POSTGRES_HOST)
+container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$POSTGRES_HOST")
 
 # Extract the SQL file from the script argument
 if [ "$#" -ne 1 ]; then
@@ -36,15 +34,11 @@ fi
 
 sql_file="$1"
 
-# Set the PostgreSQL username and database name, using default values if not provided in .env
-db_username="${POSTGRES_USERNAME:-$default_username}"
-db_name="${POSTGRES_DBNAME:-$default_database}"
-
 # Copy the SQL file to the container
 docker cp "$sql_file" "$POSTGRES_HOST:/tmp/"
 
 # Connect to the PostgreSQL database and execute the SQL file from within the container
-docker exec -i $POSTGRES_HOST psql -h $container_ip -U $db_username -d $db_name -c "\i /tmp/$(basename $sql_file)" > execute_supabase_sql_output.txt 2>&1
+docker exec -i "$POSTGRES_HOST" psql -h "$container_ip" -U "$db_username" -d "$POSTGRES_DB" -c "\i /tmp/$(basename "$sql_file")" > execute_supabase_sql_output.txt 2>&1
 
 # Check the exit code to see if the SQL script execution was successful
 if [ $? -eq 0 ]; then

@@ -9,9 +9,30 @@
 # - TRIGGER on_auth_user_created is not included
 # - Policies are sorted alphabetically, which does not make sense
 
-DB_HOST=localhost
-DB_PASS=your-super-secret-and-long-postgres-password
-DB_PORT=5433
+dump_file="studyu_schema_dump.sql"
+dump_schema_name="public"
+default_username="postgres"
+env_file="../.env"
+
+# Check if the .env file exists
+if [ -f "$env_file" ]; then
+  # Source the .env file to set environment variables
+  set -a
+  # shellcheck source=../.env
+  . "$env_file"
+  set +a
+else
+  echo "Error: .env file not found."
+  exit 1
+fi
+
+db_username="${POSTGRES_USERNAME:-$default_username}"
+
+# Check if the Docker container is running
+if ! docker ps -a --format '{{.Names}}' | grep -q "^$POSTGRES_HOST$"; then
+  echo "Docker container '$POSTGRES_HOST' is not running."
+  exit 1
+fi
 
 # Default case for Linux sed, just use "-i"
 #sedi=(-i)
@@ -20,11 +41,11 @@ DB_PORT=5433
 #  Darwin*) sedi=(-i "")
 #esac
 
-pg_dump postgres://postgres:"$DB_PASS"@"$DB_HOST":"$DB_PORT"/postgres \
-  --schema 'public' \
+pg_dump postgres://"$db_username":"$POSTGRES_PASSWORD"@"$POSTGRES_HOST":"$POSTGRES_PORT"/"$POSTGRES_DB" \
+  --schema "$dump_schema_name" \
   --schema-only \
   --no-privileges \
-  > schema.sql
+  > "$dump_file"
 
 # We could use sed in the future to correct some of the issues automatically
 
