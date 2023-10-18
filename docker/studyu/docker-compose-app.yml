@@ -1,0 +1,23 @@
+version: '3.8'
+name: 'studyu_app'
+
+networks:
+  default:
+    name: studyu_network
+    external: true
+
+services:
+  web:
+    container_name: studyu-app
+    restart: unless-stopped
+    build:
+      context: ../../
+      dockerfile: ./docker/studyu/Dockerfile
+      args:
+        FLUTTER_APP_FOLDER: app
+    ports:
+      - 8080:8080
+    volumes:
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+    env_file:
+      - ../../flutter_common/lib/envs/.env.local

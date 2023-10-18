@@ -1,23 +1,23 @@
 name: studyu_flutter_common
-version: 1.5.0
+version: 1.6.2-dev.11
 description: StudyU common flutter components and functions for app and designer
 homepage: https://hpi.de/lippert/projects/studyu.html
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_dotenv: ^5.0.2
-  shared_preferences: ^2.1.0
-  studyu_core: ^4.1.0
-  supabase_flutter: ^1.8.1
-  uuid: ^3.0.7
+  flutter_dotenv: ^5.1.0
+  shared_preferences: ^2.2.2
+  studyu_core: ^4.3.0-dev.10
+  supabase_flutter: ^1.10.16
+  uuid: ^3.0.0
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.3
   flutter_test:
     sdk: flutter
 
@@ -25,6 +25,5 @@ flutter:
   generate: true
   assets:
     - packages/studyu_flutter_common/envs/.env
+    - packages/studyu_flutter_common/envs/.env.dev
     - packages/studyu_flutter_common/envs/.env.local
-    - packages/studyu_flutter_common/envs/.env.selfhost
-    - packages/studyu_flutter_common/envs/.env.staging

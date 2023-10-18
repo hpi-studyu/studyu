@@ -246,8 +246,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   get numValidChoiceOptions => FormControlValidation(control: choiceResponseOptionsArray, validators: [
         CountWhereValidator<dynamic>((value) => value != null && value.isNotEmpty,
-                minCount: customOptionsMin, maxCount: customOptionsMax)
-            .validate
+            minCount: customOptionsMin, maxCount: customOptionsMax)
       ], validationMessages: {
         CountWhereValidator.kValidationMessageMaxCount: (error) =>
             tr.form_array_response_options_choice_countmax(customOptionsMax),

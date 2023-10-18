@@ -3,27 +3,27 @@ import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
 class CustomSlider extends StatelessWidget {
-  final double value;
-  final double minValue;
-  final double maxValue;
+  final double? value;
+  final double? minValue;
+  final double? maxValue;
 
   //final int majorTick;
-  final int minorTick;
-  final Function(double) onChanged; // nullable
-  final Function(double) onChangeEnd; // nullable
-  final Color activeColor; // nullable
-  final Color inactiveColor; // nullable
-  final Color minColor;
-  final Color maxColor;
-  final Color thumbColor;
+  final int? minorTick;
+  final Function(double)? onChanged; // nullable
+  final Function(double)? onChangeEnd; // nullable
+  final Color? activeColor; // nullable
+  final Color? inactiveColor; // nullable
+  final Color? minColor;
+  final Color? maxColor;
+  final Color? thumbColor;
   final bool isColored;
   final int labelValuePrecision;
   final int tickValuePrecision;
   final bool linearStep;
-  final AnnotatedScaleQuestion steps; // nullable
+  final AnnotatedScaleQuestion? steps; // nullable
 
   const CustomSlider(
-      {Key key,
+      {Key? key,
       // required
       this.value,
       this.minValue,
@@ -49,9 +49,9 @@ class CustomSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     final allocatedHeight = MediaQuery.of(context).size.height;
     final allocatedWidth = MediaQuery.of(context).size.width - 32; // -32 horizontal padding
-    final divisions = (steps.maximum - steps.minimum) ~/ steps.step;
+    final divisions = (steps!.maximum - steps!.minimum) ~/ steps!.step;
     //final divisions = steps.annotations.length; // (majorTick - 1) * minorTick + majorTick;
-    final double valueHeight = allocatedHeight * 0.05 < 41 ? 41 : allocatedHeight * 0.05;
+    // final double valueHeight = allocatedHeight * 0.05 < 41 ? 41 : allocatedHeight * 0.05;
     final double tickHeight = allocatedHeight * 0.0125 < 20 ? 20 : allocatedHeight * 0.0125;
     // todo finetune label positions
     final labelOffset = (allocatedWidth / (divisions + 2)) * 0.5;
@@ -59,15 +59,15 @@ class CustomSlider extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final labelTextStyle = textTheme.bodyLarge;
 
-    List<Annotation> annotations = [...steps.annotations];
+    List<Annotation> annotations = [...steps!.annotations];
     if (annotations.isEmpty) return const SizedBox.shrink();
 
     // Ensure annotation order is correct for widget generation
-    double startPosValue = steps.minimum;
+    double startPosValue = steps!.minimum;
     annotations.sort((a, b) => a.value.compareTo(b.value));
-    if (steps.maximum < steps.minimum) {
+    if (steps!.maximum < steps!.minimum) {
       annotations = annotations.reversed.toList();
-      startPosValue = steps.maximum;
+      startPosValue = steps!.maximum;
     }
 
     // Ensure that there is always an annotation object at the very start
@@ -80,46 +80,47 @@ class CustomSlider extends StatelessWidget {
     }
 
     bool isValueSelected(int index) {
-      return index + minValue == value;
+      return index + minValue! == value;
     }
+
+    String annotation(index) => annotations
+        .firstWhere((annotation) => annotation.value == index + minValue!, orElse: () => Annotation())
+        .annotation;
 
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: List.generate(
             divisions + 1,
             (index) => Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
-                  onChanged(index + minValue);
-                  onChangeEnd(index + minValue);
+                  onChanged!(index + minValue!);
+                  onChangeEnd!(index + minValue!);
                 },
                 child: Column(
                   children: [
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      height: valueHeight,
-                      child: index % (minorTick + 1) == 0
-                          ? Text(
+                    index % (minorTick! + 1) == 0 && annotation(index).isNotEmpty
+                        ? Container(
+                            alignment: Alignment.bottomCenter,
+                            //height: valueHeight,
+                            child: Text(
                               //linearStep
                               //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
                               /*:*/
-                              annotations
-                                  .firstWhere((annotation) => annotation.value == index + minValue,
-                                      orElse: () => Annotation())
-                                  .annotation,
-                              style: labelTextStyle.copyWith(
-                                  fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
+                              annotation(index),
+                              style: labelTextStyle!
+                                  .copyWith(fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
                               textAlign: TextAlign.center,
-                            )
-                          : null,
-                    ),
+                            ))
+                        : const SizedBox.shrink(),
                     Container(
                       alignment: Alignment.bottomCenter,
                       height: tickHeight,
                       child: VerticalDivider(
-                        indent: index % (minorTick + 1) == 0 ? 2 : 6,
+                        indent: index % (minorTick! + 1) == 0 ? 2 : 6,
                         thickness: 1.8,
                         color: isValueSelected(index) ? thumbColor ?? primaryColor : Colors.grey.shade300,
                       ),
@@ -156,20 +157,20 @@ class CustomSlider extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
                       gradient: LinearGradient(
-                        colors: [minColor, maxColor],
+                        colors: [minColor!, maxColor!],
                       ),
                     ),
                   )
                 else
                   const SizedBox.shrink(),
                 Slider(
-                  value: value,
-                  min: minValue,
-                  max: maxValue,
+                  value: value!,
+                  min: minValue!,
+                  max: maxValue!,
                   divisions: divisions,
                   onChanged: onChanged,
                   onChangeEnd: onChangeEnd,
-                  label: value.toStringAsFixed(labelValuePrecision),
+                  label: value!.toStringAsFixed(labelValuePrecision),
                 ),
               ],
             ),
@@ -183,13 +184,13 @@ class CustomSlider extends StatelessWidget {
 class CustomTrackShape extends RoundedRectSliderTrackShape {
   @override
   Rect getPreferredRect({
-    RenderBox parentBox,
+    required RenderBox parentBox,
     Offset offset = Offset.zero,
-    SliderThemeData sliderTheme,
+    required SliderThemeData sliderTheme,
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
-    final double trackHeight = sliderTheme.trackHeight;
+    final double trackHeight = sliderTheme.trackHeight!;
     final double trackLeft = offset.dx;
     final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;

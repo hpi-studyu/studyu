@@ -1,4 +1,4 @@
-import 'package:extended_math/extended_math.dart';
+/*import 'package:extended_math/extended_math.dart';
 import 'package:grizzly_distuv/grizzly_distuv.dart';
 import 'package:grizzly_distuv/math.dart';
 
@@ -15,6 +15,12 @@ class LinearRegressionResult<T> {
 
   const LinearRegressionResult(this.intercept, this.variables);
 }
+
+/*
+* TODO Refactor this and drop the following packages to support null safety:
+*  - extended_math
+*  - grizzly_distuv
+ */
 
 class LinearRegression {
   Matrix designMatrix;
@@ -109,3 +115,4 @@ class LinearRegression {
 
   num _squaredStandardError() => _getResiduals().dot(_getResiduals()) / _getDegreesOfFreedom();
 }
+*/

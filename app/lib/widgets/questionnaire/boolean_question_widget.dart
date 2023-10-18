@@ -8,16 +8,16 @@ import 'question_widget.dart';
 
 class BooleanQuestionWidget extends QuestionWidget {
   final BooleanQuestion question;
-  final Function(Answer) onDone;
+  final Function(Answer)? onDone;
 
-  const BooleanQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const BooleanQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
 
   @override
   State<BooleanQuestionWidget> createState() => _BooleanQuestionWidgetState();
 }
 
 class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
-  bool selected;
+  bool? selected;
 
   @override
   void initState() {
@@ -25,10 +25,10 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
     selected = null;
   }
 
-  void tapped({bool choice}) {
+  void tapped({bool? choice}) {
     setState(() {
       selected = choice;
-      widget.onDone(widget.question.constructAnswer(selected));
+      widget.onDone!(widget.question.constructAnswer(selected!));
     });
   }
 
@@ -39,13 +39,13 @@ class _BooleanQuestionWidgetState extends State<BooleanQuestionWidget> {
         SelectableButton(
           selected: selected == true,
           onTap: () => tapped(choice: true),
-          child: Text(AppLocalizations.of(context).yes),
+          child: Text(AppLocalizations.of(context)!.yes),
         ),
         const SizedBox(height: 8),
         SelectableButton(
           selected: selected == false,
           onTap: () => tapped(choice: false),
-          child: Text(AppLocalizations.of(context).no),
+          child: Text(AppLocalizations.of(context)!.no),
         ),
       ],
     );

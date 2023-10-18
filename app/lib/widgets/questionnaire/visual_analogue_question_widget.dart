@@ -7,9 +7,9 @@ import 'question_widget.dart';
 @Deprecated('Use [AnnotatedScaleQuestionWidget]')
 class VisualAnalogueQuestionWidget extends QuestionWidget {
   final VisualAnalogueQuestion question;
-  final Function(Answer) onDone;
+  final Function(Answer)? onDone;
 
-  const VisualAnalogueQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const VisualAnalogueQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
 
   @override
   State<VisualAnalogueQuestionWidget> createState() => _VisualAnalogueQuestionWidgetState();
@@ -17,7 +17,7 @@ class VisualAnalogueQuestionWidget extends QuestionWidget {
 
 @Deprecated('Use [_AnnotatedScaleQuestionWidgetState]')
 class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWidget> {
-  double value;
+  late double value;
 
   @override
   void initState() {
@@ -63,8 +63,8 @@ class _VisualAnalogueQuestionWidgetState extends State<VisualAnalogueQuestionWid
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
-            onPressed: () => widget.onDone(widget.question.constructAnswer(value)),
-            child: Text(AppLocalizations.of(context).done),
+            onPressed: () => widget.onDone!(widget.question.constructAnswer(value)),
+            child: Text(AppLocalizations.of(context)!.done),
           ),
         )
       ],

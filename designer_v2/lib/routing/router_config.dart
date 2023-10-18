@@ -127,13 +127,13 @@ class RouterConf {
       path: "/studies",
       name: studiesRouteName,
       builder: (context, state) => DashboardScreen(filter: () {
-        if (state.queryParameters[RouteParams.studiesFilter] == null) {
+        if (state.uri.queryParameters[RouteParams.studiesFilter] == null) {
           return null;
         }
         final idx = StudiesFilter.values
             .map((v) => v.toShortString())
             .toList()
-            .indexOf(state.queryParameters[RouteParams.studiesFilter]!);
+            .indexOf(state.uri.queryParameters[RouteParams.studiesFilter]!);
         return (idx != -1) ? StudiesFilter.values[idx] : null;
       }() // call anonymous closure to resolve param to enum
           ),
@@ -286,7 +286,7 @@ class RouterConf {
         name: studyTestRouteName,
         pageBuilder: (context, state) {
           final studyId = state.pathParameters[RouteParams.studyId]!;
-          final appRoute = state.queryParameters[RouteParams.testAppRoute];
+          final appRoute = state.uri.queryParameters[RouteParams.testAppRoute];
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(

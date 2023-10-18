@@ -16,7 +16,7 @@ class IconPack {
     final List<IconOption> iconOptions = [];
 
     // TODO: migrate app + designer to standard material icons & remove library
-    final iconNames = MdiIcons.getIconsName();
+    final iconNames = MdiIcons.getNames();
     for (final iconName in iconNames) {
       final iconData = MdiIcons.fromString(iconName);
       if (iconData != null) {

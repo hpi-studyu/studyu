@@ -11,17 +11,15 @@ on:
     tags:
       - 'studyu_core-v*'
       - 'studyu_flutter_common-v*'
-      - 'studyu_repo_generator-v*'
-      - 'studyu_notebook_uploader-v*'
   workflow_dispatch:
 
 jobs:
   publishing:
+    name: 'Publish to Pub.dev'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
-
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:
@@ -37,20 +35,4 @@ jobs:
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: flutter_common
           flutter: true
-          # dryRunOnly: true
-
-      - name: '>> Dart package repo_generator <<'
-        uses: k-paxian/dart-package-publisher@master
-        with:
-          accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
-          refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          relativePath: repo_generator
-          # dryRunOnly: true
-
-      - name: '>> Dart package notebook_uploader <<'
-        uses: k-paxian/dart-package-publisher@master
-        with:
-          accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
-          refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
-          relativePath: notebook_uploader
           # dryRunOnly: true

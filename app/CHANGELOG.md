@@ -1,3 +1,104 @@
+## 2.6.1
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+ - **FIX**: update cocoapod. ([ed45f6f5](https://github.com/hpi-studyu/studyu/commit/ed45f6f5a71e8227652d291232769bcc0bb75ba6))
+
+## 2.6.0
+
+ - **REFACTOR**: hardcoded baseline id. ([aeac14a2](https://github.com/hpi-studyu/studyu/commit/aeac14a2e2b01c0d48799d9ed69264d72f170353))
+ - **REFACTOR**: bar generator. ([a05c7808](https://github.com/hpi-studyu/studyu/commit/a05c78082828551381483c15434cddf25ab681ac))
+ - **REFACTOR**: remove code duplication. ([a3ff4203](https://github.com/hpi-studyu/studyu/commit/a3ff4203f883170e0730e79d5b0aa677e0f1aa8a))
+ - **REFACTOR**: remove unnecessary passing of instance variable. ([5142f0e8](https://github.com/hpi-studyu/studyu/commit/5142f0e8a088acacfd881d4d1dbcf0c01d5a603b))
+ - **REFACTOR**: pass diagram data. ([7062d4f0](https://github.com/hpi-studyu/studyu/commit/7062d4f034d8fa0a24886bed7ab12525d674ea39))
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+ - **FIX**: revert minSdkVersion to 19. ([c928cf9b](https://github.com/hpi-studyu/studyu/commit/c928cf9b893455d8cc9ce436799f7a83930f742c))
+ - **FIX**: reports for studies without baseline. ([231915ae](https://github.com/hpi-studyu/studyu/commit/231915aef5f7d22e5749600b779177ba36b7f9e8))
+ - **FIX**: day offset when baseline is excluded. ([5b3577aa](https://github.com/hpi-studyu/studyu/commit/5b3577aa381b2d554c11a88d24798c82b361a7ca))
+ - **FIX**: chart import. ([7d616580](https://github.com/hpi-studyu/studyu/commit/7d616580ccc11473117a255f0f94ee08432db639))
+ - **FIX**: bump minimum required sdk version to 33 and set target to flutter.compileSdkVersion. ([92bec536](https://github.com/hpi-studyu/studyu/commit/92bec536c676b1ff361030e4b045428c9c1b025d))
+ - **FEAT**: add 20% y-padding. ([0d5694d6](https://github.com/hpi-studyu/studyu/commit/0d5694d61e74f368a450fc1cba075f9599713dfd))
+ - **FEAT**: bold title. ([e2c9914e](https://github.com/hpi-studyu/studyu/commit/e2c9914ec1243ebb89b7218f975faa3948646a7b))
+ - **FEAT**: dynamic bar width. ([474f9223](https://github.com/hpi-studyu/studyu/commit/474f922325f42c525691f0c2e0b84446181190af))
+ - **FEAT**: display phase number as integer. ([0dab0269](https://github.com/hpi-studyu/studyu/commit/0dab026951c13c13b7f8c96f85c5c1109ca40fcb))
+ - **FEAT**: enable tooltips. ([3b642f5b](https://github.com/hpi-studyu/studyu/commit/3b642f5b99376dad324da41a9b69470f36470c90))
+ - **FEAT**: phase separator lines. ([5b6921a5](https://github.com/hpi-studyu/studyu/commit/5b6921a565ec7f8c3fb1cdbdfd84e2a8e8dfb9b1))
+ - **FEAT**: add question title. ([0450f925](https://github.com/hpi-studyu/studyu/commit/0450f925bbe388d4dc4eb8a49061b93e8b92587c))
+ - **FEAT**: chart legend. ([4a5984e2](https://github.com/hpi-studyu/studyu/commit/4a5984e29220cc1ce88ba981d6ba2679681fe2b0))
+ - **FEAT**: get intervention names. ([8525cc7d](https://github.com/hpi-studyu/studyu/commit/8525cc7d838ec2c4a97d4454747b56e474c45c5f))
+ - **FEAT**: legend widgets. ([8031b88e](https://github.com/hpi-studyu/studyu/commit/8031b88e491152ed4c37b83b34ec2b8f5b2af051))
+
+## 2.5.0
+
+ - **FIX**: make analytics fully optional. ([67d58887](https://github.com/hpi-studyu/studyu/commit/67d588879a69a9105cd2e54c08f2a2feae1224a2))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+ - **FEAT**: make study tags reactive. ([f2f8ecaf](https://github.com/hpi-studyu/studyu/commit/f2f8ecafb4f21d21128ce089eb99608778b91e2e))
+
+## 2.4.7
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+## 2.4.6
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+ - **FIX**: modify xcode version and ios target platform. ([67ec1562](https://github.com/hpi-studyu/studyu/commit/67ec15621054606f2e1995caa9f2b778e1d6593e))
+ - **FIX**: change provisioning profile name. ([5d84a1fc](https://github.com/hpi-studyu/studyu/commit/5d84a1fc7939674e509aff7a72581b10df0d969a))
+ - **FIX**: const constructor. ([1629003a](https://github.com/hpi-studyu/studyu/commit/1629003ae93d6fd6a495b3cbe6c23dd84ae3bcd8))
+
+## 2.4.5
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+## 2.4.4
+
+ - **FIX**(deps): new temporary wakelock fix repo. ([414364c5](https://github.com/hpi-studyu/studyu/commit/414364c5373092994b20765c986cba75e21b3dc4))
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+## 2.4.3
+
+ - **FIX**(deps): new temporary wakelock fix repo. ([bc2d90b2](https://github.com/hpi-studyu/studyu/commit/bc2d90b2f2859a79481e0c7ae9840c0e30cb7503))
+ - **FIX**: upgrade deps. ([b2926c39](https://github.com/hpi-studyu/studyu/commit/b2926c395988077d4aa172490dbd9c6fd75d52c6))
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+## 2.4.2
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+## 2.4.1
+
+ - **FIX**: analytics same key. ([b2412c42](https://github.com/hpi-studyu/studyu/commit/b2412c422263c8f1e08f5fe6197ac412fe5941c6))
+ - **DOCS**: add todo, describe bug. ([4316341c](https://github.com/hpi-studyu/studyu/commit/4316341c601bd884daf271c6b6ef5805828bc32e))
+
+## 2.4.0
+
+ - **FEAT**: store analytics data in the backend and support caching. ([f3e70610](https://github.com/hpi-studyu/studyu/commit/f3e7061081f631d74c6df0ea78024ace6ea1f333))
+
+## 2.3.4
+
+ - **FIX**: overwrite universal_html dep. ([19f30c86](https://github.com/hpi-studyu/studyu/commit/19f30c863dbb59c4f176694c177fc8c0f964dc24))
+ - **FIX**: deps quickfix. ([99cc4ea6](https://github.com/hpi-studyu/studyu/commit/99cc4ea642b4d97c3d59ffe1412eb1e2c231615b))
+
+## 2.3.3
+
+ - **FIX**: downgrade deps to stable release. ([773ec700](https://github.com/hpi-studyu/studyu/commit/773ec7003716877115632102eadcf704a5a270e3))
+
+## 2.3.2
+
+ - **FIX**: do not show notifications after study was left. ([f478ab9d](https://github.com/hpi-studyu/studyu/commit/f478ab9de6463b666d7c3f55ad2afcdbc65cf72f))
+
+## 2.3.1
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+ - **FIX**: only invalidate questions if necessary. ([c33d5162](https://github.com/hpi-studyu/studyu/commit/c33d5162b18965787a0a80d2cc98c3194281c693))
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
+## 2.3.0
+
+ - **REFACTOR**: button for null safety. ([9c2796e3](https://github.com/hpi-studyu/studyu/commit/9c2796e311c5729759c7bbe6c9ad054423a2b3fe))
+ - **FIX**: add untouched slider buttons again. ([9775f7ef](https://github.com/hpi-studyu/studyu/commit/9775f7eff28001b0fdff7e45fe1c266085dec878))
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
 ## 2.2.1
 
  - **FIX**: study cannot be left inadvertently anymore via about. ([b8237b5b](https://github.com/hpi-studyu/studyu/commit/b8237b5b4e0b4c1e35d3b22efe22fd89d2990ba5))

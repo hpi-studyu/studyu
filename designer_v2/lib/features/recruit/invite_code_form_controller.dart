@@ -26,7 +26,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   late final codeControl = FormControl<String>(
     validators: [Validators.required, Validators.minLength(8), Validators.maxLength(24)],
-    asyncValidators: [_uniqueInviteCode],
+    asyncValidators: [Validators.delegateAsync((control) => _uniqueInviteCode(control))],
     asyncValidatorsDebounceTime: 200,
     touched: true,
   );
@@ -120,7 +120,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final inviteCodeFormViewModelProvider = Provider.autoDispose.family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
   print("inviteCodeFormViewModelProvider($studyId");
-  // Reactively bind to & obtain [StudyController]'s current study
+  // Reactively bind to and obtain [StudyController]'s current study
   final study = ref.watch(studyControllerProvider(studyId).select((state) => state.study));
   final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
 

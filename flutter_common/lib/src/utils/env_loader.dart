@@ -5,29 +5,36 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 const envsAssetPath = 'packages/studyu_flutter_common/envs';
 
-// load env from envs/.env or from the filename specified in the ENV runtime-variable
+// load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
 String envFilePath() {
-  const env = String.fromEnvironment('ENV');
+  const env = String.fromEnvironment('STUDYU_ENV');
   return env.isNotEmpty ? '$envsAssetPath/$env' : '$envsAssetPath/.env';
+}
+
+String? getEnv(String name) {
+  return dotenv.env[name] ?? (bool.hasEnvironment(name) ? String.fromEnvironment(name) : null);
 }
 
 Future<void> loadEnv() async {
   await dotenv.load(fileName: envFilePath());
-  final supabaseUrl = dotenv.env['STUDYU_SUPABASE_URL']!;
-  final supabaseAnonKey = dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!;
+  final supabaseUrl = getEnv('STUDYU_SUPABASE_URL');
+  final supabaseAnonKey = getEnv('STUDYU_SUPABASE_PUBLIC_ANON_KEY');
+  final envAppUrl = getEnv('STUDYU_APP_URL');
+  final envDesignerUrl = getEnv('STUDYU_DESIGNER_URL');
+  final envProjectGeneratorUrl = getEnv('STUDYU_PROJECT_GENERATOR_URL');
   await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
-    // todo adapt for v2
+    url: supabaseUrl!,
+    anonKey: supabaseAnonKey!,
     authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
-    debug: true, // optional
+    debug: true,
+    // optional
   );
   env.setEnv(
-    dotenv.env['STUDYU_SUPABASE_URL']!,
-    dotenv.env['STUDYU_SUPABASE_PUBLIC_ANON_KEY']!,
-    envAppUrl: dotenv.env['STUDYU_APP_URL'],
-    envDesignerUrl: dotenv.env['STUDYU_DESIGNER_URL'],
-    envProjectGeneratorUrl: dotenv.env['STUDYU_PROJECT_GENERATOR_URL'],
+    supabaseUrl,
+    supabaseAnonKey,
+    envAppUrl: envAppUrl,
+    envDesignerUrl: envDesignerUrl,
+    envProjectGeneratorUrl: envProjectGeneratorUrl,
     supabaseClient: Supabase.instance.client,
   );
 }

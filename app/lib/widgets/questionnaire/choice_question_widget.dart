@@ -10,19 +10,18 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final Function(Answer) onDone;
   final String multiSelectionText;
 
-  const ChoiceQuestionWidget(
-      {Key key, @required this.question, @required this.onDone, @required this.multiSelectionText})
+  const ChoiceQuestionWidget({Key? key, required this.question, required this.onDone, required this.multiSelectionText})
       : super(key: key);
 
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
 
   @override
-  String get subtitle => question.multiple ? multiSelectionText : null;
+  String? get subtitle => question.multiple ? multiSelectionText : null;
 }
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
-  List<Choice> selected;
+  late List<Choice> selected;
 
   @override
   void initState() {
@@ -66,7 +65,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
             backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
           ),
-          child: Text(AppLocalizations.of(context).confirm),
+          child: Text(AppLocalizations.of(context)!.confirm),
         ),
       );
     }

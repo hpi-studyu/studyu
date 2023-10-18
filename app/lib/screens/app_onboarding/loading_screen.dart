@@ -1,23 +1,22 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import '../../models/app_state.dart';
-import '../../routes.dart';
-import '../../util/schedule_notifications.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
 import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
-  final String sessionString;
-  final Map<String, String> queryParameters;
+  final String? sessionString;
+  final Map<String, String>? queryParameters;
 
-  const LoadingScreen({Key key, this.sessionString, this.queryParameters}) : super(key: key);
+  const LoadingScreen({Key? key, this.sessionString, this.queryParameters}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
@@ -32,8 +31,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
+    Analytics.init();
 
-    if (widget.queryParameters != null && widget.queryParameters.isNotEmpty) {
+    if (widget.queryParameters != null && widget.queryParameters!.isNotEmpty) {
       Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
@@ -107,8 +107,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // todo not sure which includeBaseline statement is needed.
           // Either one of here or in preview.createFakeSubject
           // maybe remove
-          state.selectedStudy.schedule.includeBaseline = false;
-          state.activeSubject.study.schedule.includeBaseline = false;
+          state.selectedStudy!.schedule.includeBaseline = false;
+          state.activeSubject!.study.schedule.includeBaseline = false;
           // print("[PreviewApp]: Route preview");
           if (!mounted) return;
           // print("[PreviewApp]: Go to dashboard");
@@ -119,9 +119,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         // OBSERVATION [i]
         if (preview.selectedRoute == '/observation') {
-          print(state.selectedStudy.observations.first.id);
+          print(state.selectedStudy!.observations.first.id);
           final tasks = <Task>[
-            ...state.selectedStudy.observations.where((observation) => observation.id == preview.extra),
+            ...state.selectedStudy!.observations.where((observation) => observation.id == preview.extra),
           ];
           if (!mounted) return;
           await Navigator.push<bool>(
@@ -174,9 +174,22 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
-    StudySubject subject;
+    StudySubject? subject;
     try {
-      subject = await SupabaseQuery.getById<StudySubject>(
+      /*
+        try {
+         InternetAddress.lookup(Uri.parse(supabaseUrl).host);
+      } on SocketException catch (_) {
+        Analytics.logger.warning('Could not connect to supabase url. Fallback to offline mode');
+        subject = await Cache.loadSubject();
+      }
+       */
+      final connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        Analytics.logger.warning("Could not find any connection. Going to offline mode");
+        subject = await Cache.loadSubject();
+      }
+      subject ??= await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
         selectedColumns: [
           '*',
@@ -184,12 +197,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
           'subject_progress(*)',
         ],
       );
-    } catch (exception, stackTrace) {
-      Analytics.logger.warning("Could not retrieve subject, maybe JWT is expired, try logging in");
-      await Analytics.captureEvent(
+    } catch (exception) {
+      Analytics.logger
+          .warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+      /*await Analytics.captureEvent(
         SentryEvent(throwable: exception),
         stackTrace: stackTrace,
-      );
+      );*/
       bool signInRes = false;
       try {
         // Try signing in again. Needed if JWT is expired
@@ -204,21 +218,41 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ],
           );
         }
-      } catch (exception, stackTrace) {
-        Analytics.logger.severe('Error when trying to login and retrieve the study subject');
-        await Analytics.captureException(
-          exception,
-          stackTrace: stackTrace,
-        );
+      } catch (exception) {
+        try {
+          // TODO further analyze this. How to recreate:
+          // 1. Participate in a study and wait some time until playstore uploads
+          // a backup of your current subject
+          // 2. Leave the study via the menu to delete all remote data
+          // 3. Uninstall the app and reinstall
+          // 4. Open the app but do not join a study
+          // 5. Restart the app. Either only this error shows up, worst case is
+          // app hangs and is unresponsive
+
+          Analytics.logger.warning('Could not login and retrieve the study subject.'
+              'One reason for this might be that the study subject is no '
+              'longer available and only resides in app backup');
+          /*await Analytics.captureEvent(
+            SentryEvent(throwable: exception),
+            stackTrace: stackTrace,
+          );*/
+          // subject = await Cache.loadSubject();
+        } catch (exception, stackTrace) {
+          Analytics.logger.severe('Error when initializing offline mode: ${exception.toString()}');
+          await Analytics.captureException(
+            exception,
+            stackTrace: stackTrace,
+          );
+        }
       }
       /*if (!signInRes) {
-        final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
+        final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
         if (migrateRes) {
-          print("Successfully migrated to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Update erfolgreich. Vielen Dank für Ihre Mithilfe!')));
+          print("Successfully migrated to the new database");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to the new database.')));
         } else {
-          print("Error when trying to migrate to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bei dem Update trat ein Fehler auf. Bitte der Studienleitung melden!')));
+          print("Error when trying to migrate to the new database");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error when migrating to the new database.')));
         }
         initStudy();
         return;
@@ -227,10 +261,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
+      // storeCache(subject);
+      subject = await Cache.synchronize(subject);
+      if (!mounted) return;
       state.activeSubject = subject;
-      scheduleNotifications(context);
-      Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
-      state.analytics.initAdvanced();
+      state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       Analytics.logger.severe('Subject is null -> welcome');
@@ -247,7 +282,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${AppLocalizations.of(context).loading}...',
+                '${AppLocalizations.of(context)!.loading}...',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const CircularProgressIndicator(),
@@ -258,7 +293,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-/*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {
@@ -268,14 +303,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // by matching a study_subject entry with the current subject ID
           try {
             await Supabase.instance.client.rpc(
-              'migrate_to_v2',
+              'migrate_db',
               params: {
                 'participant_user_id': Supabase.instance.client.auth.currentUser?.id,
                 'participant_subject_id': selectedStudyObjectId,
               },
             ).single();
           } on PostgrestException catch (error) {
-            print('Supabase migrate_to_v2 Error: ${error.message}');
+            print('Supabase migrate_db Error: ${error.message}');
           }
           return true;
         } else {

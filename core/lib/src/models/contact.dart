@@ -11,6 +11,7 @@ class Contact {
   String email = '';
   String website = '';
   String phone = '';
+  String? additionalInfo;
 
   Contact();
 

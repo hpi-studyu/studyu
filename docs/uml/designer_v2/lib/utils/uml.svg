@@ -1,0 +1,1161 @@
+<svg version="1.1" baseProfile="full" width="7749.3" height="548.0" viewbox="0 0 7749.25 548" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[CombinedStreamNotifier
+	  |
+	  -_subscriptions: List&lt;StreamSubscription&lt;dynamic&gt;&gt;
+	  |
+	  +void dispose()
+	]
+	
+	[ChangeNotifier]&lt;:-[CombinedStreamNotifier]
+	
+	[Tuple
+	  |
+	  +first: T1;
+	  +second: T2;
+	  +props: List&lt;Object?&gt;
+	  |
+	  +Map&lt;String, dynamic&gt; toJson();
+	  &lt;static&gt;+Tuple&lt;dynamic, dynamic&gt; fromJson();
+	  +Tuple&lt;T1, T2&gt; copy();
+	  +Tuple&lt;T1, T2&gt; copyWith()
+	]
+	
+	[&lt;abstract&gt;Equatable]&lt;:-[Tuple]
+	
+	[OptimisticUpdate
+	  |
+	  +applyOptimistic: void Function();
+	  +apply: dynamic Function();
+	  +rollback: void Function();
+	  +onUpdate: void Function()?;
+	  +onError: void Function(Object, StackTrace?)?;
+	  +rethrowErrors: bool;
+	  +runOptimistically: bool;
+	  +completeFutureOptimistically: bool
+	  |
+	  +dynamic execute();
+	  -void _runUpdateHandlerIfAny()
+	]
+	
+	[OptimisticUpdate]o-[void Function()]
+	[OptimisticUpdate]o-[dynamic Function()]
+	[OptimisticUpdate]o-[void Function()?]
+	[OptimisticUpdate]o-[void Function(Object, StackTrace?)?]
+	
+	[&lt;abstract&gt;ExecutionLimiter
+	  |
+	  +milliseconds: int;
+	  &lt;static&gt;-_timer: Timer?
+	  |
+	  +void dispose()
+	]
+	
+	[&lt;abstract&gt;ExecutionLimiter]o-[Timer]
+	
+	[Debouncer
+	  |
+	  +leading: bool;
+	  +cancelUncompleted: bool;
+	  -_uncompletedFutureOperation: CancelableOperation&lt;dynamic&gt;?
+	  |
+	  +dynamic call()
+	]
+	
+	[Debouncer]o-[CancelableOperation]
+	[&lt;abstract&gt;ExecutionLimiter]&lt;:-[Debouncer]
+	
+	[Throttler
+	  |
+	  +dynamic call()
+	]
+	
+	[&lt;abstract&gt;ExecutionLimiter]&lt;:-[Throttler]
+	
+	[&lt;abstract&gt;FileFormatEncoder
+	  |
+	  +dynamic encodeAsync();
+	  +String encode();
+	  +dynamic call()
+	]
+	
+	[CSVStringEncoder
+	  |
+	  +String encode()
+	]
+	
+	[&lt;abstract&gt;FileFormatEncoder]&lt;:-[CSVStringEncoder]
+	
+	[JsonStringEncoder
+	  |
+	  +String encode()
+	]
+	
+	[&lt;abstract&gt;FileFormatEncoder]&lt;:-[JsonStringEncoder]
+	
+	[CountWhereValidator
+	  |
+	  +predicate: bool Function(T?);
+	  +minCount: int?;
+	  +maxCount: int?;
+	  &lt;static&gt;+kValidationMessageMinCount: String;
+	  &lt;static&gt;+kValidationMessageMaxCount: String
+	  |
+	  +Map&lt;String, dynamic&gt;? validate()
+	]
+	
+	[CountWhereValidator]o-[bool Function(T?)]
+	[&lt;abstract&gt;Validator]&lt;:-[CountWhereValidator]
+	
+	[MustMatchValidator
+	  |
+	  +control: AbstractControl&lt;dynamic&gt;?;
+	  +matchingControl: AbstractControl&lt;dynamic&gt;?
+	  |
+	  +Map&lt;String, dynamic&gt;? validate()
+	]
+	
+	[MustMatchValidator]o-[&lt;abstract&gt;AbstractControl]
+	[&lt;abstract&gt;Validator]&lt;:-[MustMatchValidator]
+	
+	[FieldValidators
+	  |
+	  &lt;static&gt;+String? emailValidator()
+	]
+	
+	[Patterns
+	  |
+	  &lt;static&gt;+timeFormatString: String;
+	  &lt;static&gt;+emailFormatString: String;
+	  &lt;static&gt;+url: String
+	]
+	
+	[Time
+	  |
+	  &lt;static&gt;+dynamic fromTimeOfDay();
+	  +Map&lt;String, dynamic&gt; toJson();
+	  &lt;static&gt;+Time fromJson()
+	]
+	
+	[TimeOfDay]&lt;:-[Time]
+	
+	[TimeValueAccessor
+	  |
+	  +String modelToViewValue();
+	  +Time? viewToModelValue();
+	  -String _addLeadingZeroIfNeeded()
+	]
+	
+	[&lt;abstract&gt;ControlValueAccessor]&lt;:-[TimeValueAccessor]
+	
+	[NumericalRangeFormatter
+	  |
+	  +min: int?;
+	  +max: int?
+	  |
+	  +TextEditingValue formatEditUpdate()
+	]
+	
+	[&lt;abstract&gt;TextInputFormatter]&lt;:-[NumericalRangeFormatter]
+	
+	[StudySequenceFormatter
+	  |
+	  +TextEditingValue formatEditUpdate()
+	]
+	
+	[&lt;abstract&gt;TextInputFormatter]&lt;:-[StudySequenceFormatter]
+	
+	[&lt;abstract&gt;IProviderArgsResolver
+	  |
+	  +R provide()
+	]
+	
+	[&lt;abstract&gt;JsonFileLoader
+	  |
+	  +jsonAssetsPath: String
+	  |
+	  +dynamic loadJson();
+	  +dynamic parseJsonMapFromAssets();
+	  +dynamic parseJsonListFromAssets()
+	]
+	
+	[ModelAction
+	  |
+	  +type: T;
+	  +label: String;
+	  +icon: IconData?;
+	  +onExecute: Function;
+	  +isAvailable: bool;
+	  +isDestructive: bool
+	]
+	
+	[ModelAction]o-[IconData]
+	
+	[&lt;abstract&gt;IModelActionProvider
+	  |
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()
+	]
+	
+	[&lt;abstract&gt;IListActionProvider
+	  |
+	  +void onSelectItem();
+	  +void onNewItem()
+	]
+	
+	[&lt;abstract&gt;IModelActionProvider]&lt;:-[&lt;abstract&gt;IListActionProvider]
+	
+	[ModelActionType
+	  |
+	  +index: int;
+	  &lt;static&gt;+values: List&lt;ModelActionType&gt;;
+	  &lt;static&gt;+edit: ModelActionType;
+	  &lt;static&gt;+delete: ModelActionType;
+	  &lt;static&gt;+remove: ModelActionType;
+	  &lt;static&gt;+duplicate: ModelActionType;
+	  &lt;static&gt;+clipboard: ModelActionType;
+	  &lt;static&gt;+primary: ModelActionType
+	]
+	
+	[ModelActionType]o-[ModelActionType]
+	[Enum]&lt;:--[ModelActionType]
+	
+	[SuppressedBehaviorSubject
+	  |
+	  +subject: BehaviorSubject&lt;T&gt;;
+	  +didSuppressInitialEvent: bool;
+	  -_controller: StreamController&lt;T&gt;
+	  |
+	  -StreamController&lt;T&gt; _buildDerivedController();
+	  +dynamic close()
+	]
+	
+	[SuppressedBehaviorSubject]o-[BehaviorSubject]
+	[SuppressedBehaviorSubject]o-[StreamController]
+	
+	[SerializableColor
+	  |
+	  +Map&lt;String, dynamic&gt; toJson();
+	  &lt;static&gt;+SerializableColor fromJson()
+	]
+	
+	[Color]&lt;:-[SerializableColor]
+	
+	[StudyUException
+	  |
+	  +message: String
+	  |
+	  +String toString()
+	]
+	
+	[Exception]&lt;:--[StudyUException]
+	
+	</desc>
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+			<g stroke="transparent" fill="transparent">
+				<rect x="0.0" y="0.0" height="548.0" width="7749.3" stroke="none"></rect>
+			</g>
+			<g transform="translate(8, 8)" fill="#33322E">
+				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M217.5 135.3 L217.5 233 L217.5 290.5 L217.5 290.5 " fill="none"></path>
+					<path d="M222.8 135.3 L217.5 135.3 L212.2 135.3 L217.5 122.0 Z"></path>
+					<path d="M667.0 135.3 L667 233 L667 253 L667.0 253.0 " fill="none"></path>
+					<path d="M672.3 135.3 L667.0 135.3 L661.7 135.3 L667.0 122.0 Z"></path>
+					<path d="M1082.1 187.8 L966 233 L966 321.5 L966.0 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1092.7 189.4 L1082.1 187.8 L1088.9 179.5 L1099.5 181.0 Z"></path>
+					</g>
+					<path d="M1164.2 225.8 L1156.5 233 L1156.5 321.5 L1156.5 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1174.6 223.3 L1164.2 225.8 L1167.3 215.5 L1177.8 213.0 Z"></path>
+					</g>
+					<path d="M1350.5 229.8 L1352 233 L1352 321.5 L1352.0 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1351.2 219.1 L1350.5 229.8 L1341.6 223.7 L1342.4 213.0 Z"></path>
+					</g>
+					<path d="M1499.9 187.8 L1616 233 L1616 321.5 L1616.0 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1493.1 179.5 L1499.9 187.8 L1489.3 189.4 L1482.5 181.0 Z"></path>
+					</g>
+					<path d="M2078.9 147.6 L1838 233 L1838 321.5 L1838.0 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2089.5 149.5 L2078.9 147.6 L2085.9 139.5 L2096.5 141.4 Z"></path>
+					</g>
+					<path d="M2176.0 417.2 L2176 441 L2176 461 L2176.0 461.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2181.3 407.8 L2176.0 417.2 L2170.7 407.8 L2176.0 398.5 Z"></path>
+					</g>
+					<path d="M2184.9 173.7 L2176 233 L2176 275.5 L2176.0 275.5 " fill="none"></path>
+					<path d="M2190.2 174.5 L2184.9 173.7 L2179.6 172.9 L2186.9 160.5 Z"></path>
+					<path d="M2306.1 145.9 L2552 233 L2552 306 L2552.0 306.0 " fill="none"></path>
+					<path d="M2307.8 140.8 L2306.1 145.9 L2304.3 150.9 L2293.5 141.4 Z"></path>
+					<path d="M2797.5 162.9 L2741 233 L2741 306 L2741.0 306.0 " fill="none"></path>
+					<path d="M2801.7 166.2 L2797.5 162.9 L2793.4 159.5 L2805.9 152.5 Z"></path>
+					<path d="M2888.5 162.9 L2945 233 L2945 306 L2945.0 306.0 " fill="none"></path>
+					<path d="M2892.6 159.5 L2888.5 162.9 L2884.3 166.2 L2880.1 152.5 Z"></path>
+					<path d="M3259.5 432.2 L3259.5 441 L3259.5 461 L3259.5 461.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3264.8 422.8 L3259.5 432.2 L3254.2 422.8 L3259.5 413.5 Z"></path>
+					</g>
+					<path d="M3433.6 128.8 L3259.5 233 L3259.5 260.5 L3259.5 260.5 " fill="none"></path>
+					<path d="M3436.4 133.4 L3433.6 128.8 L3430.9 124.3 L3445.1 122.0 Z"></path>
+					<path d="M3682.5 409.7 L3682.5 441 L3682.5 461 L3682.5 461.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3687.8 400.3 L3682.5 409.7 L3677.2 400.3 L3682.5 391.0 Z"></path>
+					</g>
+					<path d="M3508.4 128.8 L3682.5 233 L3682.5 283 L3682.5 283.0 " fill="none"></path>
+					<path d="M3511.1 124.3 L3508.4 128.8 L3505.6 133.4 L3496.9 122.0 Z"></path>
+					<path d="M4258.8 135.3 L4258.75 233 L4258.75 291 L4258.8 291.0 " fill="none"></path>
+					<path d="M4264.1 135.3 L4258.8 135.3 L4253.4 135.3 L4258.8 122.0 Z"></path>
+					<path d="M4593.8 135.3 L4593.75 233 L4593.75 291 L4593.8 291.0 " fill="none"></path>
+					<path d="M4599.1 135.3 L4593.8 135.3 L4588.4 135.3 L4593.8 122.0 Z"></path>
+					<path d="M5082.8 129.8 L4938.75 233 L4938.75 283 L4938.8 283.0 " fill="none"></path>
+					<path d="M5085.9 134.1 L5082.8 129.8 L5079.7 125.4 L5093.6 122.0 Z"></path>
+					<path d="M5162.3 127.4 L5399.75 233 L5399.75 306 L5399.8 306.0 " fill="none"></path>
+					<path d="M5164.5 122.5 L5162.3 127.4 L5160.1 132.3 L5150.1 122.0 Z"></path>
+					<path d="M5924.3 193.7 L5924.25 233 L5924.25 321.5 L5924.3 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M5929.6 184.3 L5924.3 193.7 L5918.9 184.3 L5924.3 175.0 Z"></path>
+					</g>
+					<path d="M6259.8 150.8 L6259.75 233 L6259.75 298.5 L6259.8 298.5 " fill="none"></path>
+					<path d="M6265.1 150.8 L6259.8 150.8 L6254.4 150.8 L6259.8 137.5 Z"></path>
+					<path d="M6740.4 258.9 L6753.25 253.5 L6760.75 253.5 L6760.75 253.5 L6768.25 337 L6768.25 337 L6760.75 420.5 L6760.75 420.5 L6753.25 420.5 L6753.25 420.5 L6723.25 407.78426395939084 L6723.3 407.8 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M6729.8 257.7 L6740.4 258.9 L6733.9 267.5 L6723.3 266.2 Z"></path>
+					</g>
+					<g stroke-dasharray="6 6">
+						<path d="M6556.3 135.3 L6556.25 233 L6556.25 253.5 L6556.3 253.5 " fill="none"></path>
+					</g>
+					<path d="M6561.6 135.3 L6556.3 135.3 L6550.9 135.3 L6556.3 122.0 Z"></path>
+					<path d="M6917.2 190.5 L6885.75 233 L6885.75 321.5 L6885.8 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M6927.0 186.2 L6917.2 190.5 L6918.4 179.8 L6928.3 175.5 Z"></path>
+					</g>
+					<path d="M7041.3 190.5 L7072.75 233 L7072.75 321.5 L7072.8 321.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M7040.1 179.8 L7041.3 190.5 L7031.5 186.2 L7030.3 175.5 Z"></path>
+					</g>
+					<path d="M7343.3 135.3 L7343.25 233 L7343.25 298.5 L7343.3 298.5 " fill="none"></path>
+					<path d="M7348.6 135.3 L7343.3 135.3 L7337.9 135.3 L7343.3 122.0 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M7616.3 135.3 L7616.25 233 L7616.25 290.5 L7616.3 290.5 " fill="none"></path>
+					</g>
+					<path d="M7621.6 135.3 L7616.3 135.3 L7610.9 135.3 L7616.3 122.0 Z"></path>
+					<g data-name="CombinedStreamNotifier">
+						<g fill="#eee8d5" stroke="#33322E" data-name="CombinedStreamNotifier">
+							<rect x="0.0" y="290.5" height="93.0" width="435.0" data-name="CombinedStreamNotifier"></rect>
+							<path d="M0.0 321.5 L435.0 321.5" fill="none" data-name="CombinedStreamNotifier"></path>
+							<path d="M0.0 352.5 L435.0 352.5" fill="none" data-name="CombinedStreamNotifier"></path>
+						</g>
+						<g transform="translate(0, 290.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CombinedStreamNotifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CombinedStreamNotifier">
+								<text x="209.5" y="13.5" stroke="none" text-anchor="middle" data-name="CombinedStreamNotifier">CombinedStreamNotifier</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CombinedStreamNotifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CombinedStreamNotifier">
+								<text x="0.0" y="13.5" stroke="none" data-name="CombinedStreamNotifier">-_subscriptions: List&lt;StreamSubscription&lt;dynamic&gt;&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 352.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CombinedStreamNotifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CombinedStreamNotifier">
+								<text x="0.0" y="13.5" stroke="none" data-name="CombinedStreamNotifier">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ChangeNotifier">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ChangeNotifier">
+							<rect x="150.5" y="91.0" height="31.0" width="134.0" data-name="ChangeNotifier"></rect>
+						</g>
+						<g transform="translate(150.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChangeNotifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChangeNotifier">
+								<text x="59.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChangeNotifier">ChangeNotifier</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Tuple">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Tuple">
+							<rect x="475.0" y="253.0" height="168.0" width="384.0" data-name="Tuple"></rect>
+							<path d="M475.0 284.0 L859.0 284.0" fill="none" data-name="Tuple"></path>
+							<path d="M475.0 345.0 L859.0 345.0" fill="none" data-name="Tuple"></path>
+						</g>
+						<g transform="translate(475, 253)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Tuple">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Tuple">
+								<text x="184.0" y="13.5" stroke="none" text-anchor="middle" data-name="Tuple">Tuple</text>
+								
+							</g>
+						</g>
+						<g transform="translate(475, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tuple">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Tuple">
+								<text x="0.0" y="13.5" stroke="none" data-name="Tuple">+first: T1</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Tuple">+second: T2</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Tuple">+props: List&lt;Object?&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(475, 345)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tuple">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Tuple">
+								<text x="0.0" y="13.5" stroke="none" data-name="Tuple">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Tuple">&lt;static&gt;+Tuple&lt;dynamic, dynamic&gt; fromJson()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Tuple">+Tuple&lt;T1, T2&gt; copy()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="Tuple">+Tuple&lt;T1, T2&gt; copyWith()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Equatable">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Equatable">
+							<rect x="619.0" y="91.0" height="31.0" width="96.0" data-name="Equatable"></rect>
+						</g>
+						<g transform="translate(619, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Equatable">
+								<text x="40.0" y="13.5" stroke="none" text-anchor="middle" data-name="Equatable">Equatable</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="OptimisticUpdate">
+						<g fill="#eee8d5" stroke="#33322E" data-name="OptimisticUpdate">
+							<rect x="1099.5" y="0.0" height="213.0" width="383.0" data-name="OptimisticUpdate"></rect>
+							<path d="M1099.5 31.0 L1482.5 31.0" fill="none" data-name="OptimisticUpdate"></path>
+							<path d="M1099.5 167.0 L1482.5 167.0" fill="none" data-name="OptimisticUpdate"></path>
+						</g>
+						<g transform="translate(1099.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="OptimisticUpdate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="OptimisticUpdate">
+								<text x="183.5" y="13.5" stroke="none" text-anchor="middle" data-name="OptimisticUpdate">OptimisticUpdate</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1099.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OptimisticUpdate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="OptimisticUpdate">
+								<text x="0.0" y="13.5" stroke="none" data-name="OptimisticUpdate">+applyOptimistic: void Function()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="OptimisticUpdate">+apply: dynamic Function()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="OptimisticUpdate">+rollback: void Function()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="OptimisticUpdate">+onUpdate: void Function()?</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="OptimisticUpdate">+onError: void Function(Object, StackTrace?)?</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="OptimisticUpdate">+rethrowErrors: bool</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="OptimisticUpdate">+runOptimistically: bool</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="OptimisticUpdate">+completeFutureOptimistically: bool</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1099.5, 167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OptimisticUpdate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="OptimisticUpdate">
+								<text x="0.0" y="13.5" stroke="none" data-name="OptimisticUpdate">+dynamic execute()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="OptimisticUpdate">-void _runUpdateHandlerIfAny()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function()">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function()">
+							<rect x="899.0" y="321.5" height="31.0" width="134.0" data-name="void Function()"></rect>
+						</g>
+						<g transform="translate(899, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function()">
+								<text x="59.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function()">void Function()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="dynamic Function()">
+						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function()">
+							<rect x="1073.0" y="321.5" height="31.0" width="167.0" data-name="dynamic Function()"></rect>
+						</g>
+						<g transform="translate(1073, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function()">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function()">
+								<text x="75.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function()">dynamic Function()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function()?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function()?">
+							<rect x="1280.0" y="321.5" height="31.0" width="144.0" data-name="void Function()?"></rect>
+						</g>
+						<g transform="translate(1280, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function()?">
+								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function()?">void Function()?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function(Object, StackTrace?)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(Object, StackTrace?)?">
+							<rect x="1464.0" y="321.5" height="31.0" width="304.0" data-name="void Function(Object, StackTrace?)?"></rect>
+						</g>
+						<g transform="translate(1464, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(Object, StackTrace?)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(Object, StackTrace?)?">
+								<text x="144.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(Object, StackTrace?)?">void Function(Object, StackTrace?)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ExecutionLimiter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ExecutionLimiter">
+							<rect x="2096.5" y="52.5" height="108.0" width="197.0" data-name="ExecutionLimiter"></rect>
+							<path d="M2096.5 83.5 L2293.5 83.5" fill="none" data-name="ExecutionLimiter"></path>
+							<path d="M2096.5 129.5 L2293.5 129.5" fill="none" data-name="ExecutionLimiter"></path>
+						</g>
+						<g transform="translate(2096.5, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ExecutionLimiter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExecutionLimiter">
+								<text x="90.5" y="13.5" stroke="none" text-anchor="middle" data-name="ExecutionLimiter">ExecutionLimiter</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2096.5, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExecutionLimiter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExecutionLimiter">
+								<text x="0.0" y="13.5" stroke="none" data-name="ExecutionLimiter">+milliseconds: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ExecutionLimiter">&lt;static&gt;-_timer: Timer?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2096.5, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExecutionLimiter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExecutionLimiter">
+								<text x="0.0" y="13.5" stroke="none" data-name="ExecutionLimiter">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Timer">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Timer">
+							<rect x="1808.0" y="321.5" height="31.0" width="60.0" data-name="Timer"></rect>
+						</g>
+						<g transform="translate(1808, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Timer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Timer">
+								<text x="22.0" y="13.5" stroke="none" text-anchor="middle" data-name="Timer">Timer</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Debouncer">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Debouncer">
+							<rect x="1908.0" y="275.5" height="123.0" width="536.0" data-name="Debouncer"></rect>
+							<path d="M1908.0 306.5 L2444.0 306.5" fill="none" data-name="Debouncer"></path>
+							<path d="M1908.0 367.5 L2444.0 367.5" fill="none" data-name="Debouncer"></path>
+						</g>
+						<g transform="translate(1908, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Debouncer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Debouncer">
+								<text x="260.0" y="13.5" stroke="none" text-anchor="middle" data-name="Debouncer">Debouncer</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1908, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Debouncer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Debouncer">
+								<text x="0.0" y="13.5" stroke="none" data-name="Debouncer">+leading: bool</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Debouncer">+cancelUncompleted: bool</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Debouncer">-_uncompletedFutureOperation: CancelableOperation&lt;dynamic&gt;?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1908, 367.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Debouncer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Debouncer">
+								<text x="0.0" y="13.5" stroke="none" data-name="Debouncer">+dynamic call()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="CancelableOperation">
+						<g fill="#eee8d5" stroke="#33322E" data-name="CancelableOperation">
+							<rect x="2084.5" y="461.0" height="31.0" width="183.0" data-name="CancelableOperation"></rect>
+						</g>
+						<g transform="translate(2084.5, 461)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CancelableOperation">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CancelableOperation">
+								<text x="83.5" y="13.5" stroke="none" text-anchor="middle" data-name="CancelableOperation">CancelableOperation</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Throttler">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Throttler">
+							<rect x="2484.0" y="306.0" height="62.0" width="136.0" data-name="Throttler"></rect>
+							<path d="M2484.0 337.0 L2620.0 337.0" fill="none" data-name="Throttler"></path>
+						</g>
+						<g transform="translate(2484, 306)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Throttler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Throttler">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="Throttler">Throttler</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2484, 337)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Throttler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Throttler">
+								<text x="0.0" y="13.5" stroke="none" data-name="Throttler">+dynamic call()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FileFormatEncoder">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FileFormatEncoder">
+							<rect x="2735.0" y="60.5" height="92.0" width="216.0" data-name="FileFormatEncoder"></rect>
+							<path d="M2735.0 91.5 L2951.0 91.5" fill="none" data-name="FileFormatEncoder"></path>
+						</g>
+						<g transform="translate(2735, 60.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FileFormatEncoder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FileFormatEncoder">
+								<text x="100.0" y="13.5" stroke="none" text-anchor="middle" data-name="FileFormatEncoder">FileFormatEncoder</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2735, 91.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FileFormatEncoder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FileFormatEncoder">
+								<text x="0.0" y="13.5" stroke="none" data-name="FileFormatEncoder">+dynamic encodeAsync()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="FileFormatEncoder">+String encode()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="FileFormatEncoder">+dynamic call()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="CSVStringEncoder">
+						<g fill="#eee8d5" stroke="#33322E" data-name="CSVStringEncoder">
+							<rect x="2660.0" y="306.0" height="62.0" width="162.0" data-name="CSVStringEncoder"></rect>
+							<path d="M2660.0 337.0 L2822.0 337.0" fill="none" data-name="CSVStringEncoder"></path>
+						</g>
+						<g transform="translate(2660, 306)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CSVStringEncoder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CSVStringEncoder">
+								<text x="73.0" y="13.5" stroke="none" text-anchor="middle" data-name="CSVStringEncoder">CSVStringEncoder</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2660, 337)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CSVStringEncoder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CSVStringEncoder">
+								<text x="0.0" y="13.5" stroke="none" data-name="CSVStringEncoder">+String encode()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="JsonStringEncoder">
+						<g fill="#eee8d5" stroke="#33322E" data-name="JsonStringEncoder">
+							<rect x="2862.0" y="306.0" height="62.0" width="166.0" data-name="JsonStringEncoder"></rect>
+							<path d="M2862.0 337.0 L3028.0 337.0" fill="none" data-name="JsonStringEncoder"></path>
+						</g>
+						<g transform="translate(2862, 306)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="JsonStringEncoder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="JsonStringEncoder">
+								<text x="75.0" y="13.5" stroke="none" text-anchor="middle" data-name="JsonStringEncoder">JsonStringEncoder</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2862, 337)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="JsonStringEncoder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="JsonStringEncoder">
+								<text x="0.0" y="13.5" stroke="none" data-name="JsonStringEncoder">+String encode()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="CountWhereValidator">
+						<g fill="#eee8d5" stroke="#33322E" data-name="CountWhereValidator">
+							<rect x="3068.0" y="260.5" height="153.0" width="383.0" data-name="CountWhereValidator"></rect>
+							<path d="M3068.0 291.5 L3451.0 291.5" fill="none" data-name="CountWhereValidator"></path>
+							<path d="M3068.0 382.5 L3451.0 382.5" fill="none" data-name="CountWhereValidator"></path>
+						</g>
+						<g transform="translate(3068, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CountWhereValidator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CountWhereValidator">
+								<text x="183.5" y="13.5" stroke="none" text-anchor="middle" data-name="CountWhereValidator">CountWhereValidator</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3068, 291.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CountWhereValidator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CountWhereValidator">
+								<text x="0.0" y="13.5" stroke="none" data-name="CountWhereValidator">+predicate: bool Function(T?)</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="CountWhereValidator">+minCount: int?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="CountWhereValidator">+maxCount: int?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="CountWhereValidator">&lt;static&gt;+kValidationMessageMinCount: String</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="CountWhereValidator">&lt;static&gt;+kValidationMessageMaxCount: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3068, 382.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CountWhereValidator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CountWhereValidator">
+								<text x="0.0" y="13.5" stroke="none" data-name="CountWhereValidator">+Map&lt;String, dynamic&gt;? validate()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="bool Function(T?)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="bool Function(T?)">
+							<rect x="3182.0" y="461.0" height="31.0" width="155.0" data-name="bool Function(T?)"></rect>
+						</g>
+						<g transform="translate(3182, 461)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="bool Function(T?)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="bool Function(T?)">
+								<text x="69.5" y="13.5" stroke="none" text-anchor="middle" data-name="bool Function(T?)">bool Function(T?)</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Validator">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Validator">
+							<rect x="3428.0" y="91.0" height="31.0" width="86.0" data-name="Validator"></rect>
+						</g>
+						<g transform="translate(3428, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Validator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Validator">
+								<text x="35.0" y="13.5" stroke="none" text-anchor="middle" data-name="Validator">Validator</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MustMatchValidator">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MustMatchValidator">
+							<rect x="3491.0" y="283.0" height="108.0" width="383.0" data-name="MustMatchValidator"></rect>
+							<path d="M3491.0 314.0 L3874.0 314.0" fill="none" data-name="MustMatchValidator"></path>
+							<path d="M3491.0 360.0 L3874.0 360.0" fill="none" data-name="MustMatchValidator"></path>
+						</g>
+						<g transform="translate(3491, 283)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MustMatchValidator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MustMatchValidator">
+								<text x="183.5" y="13.5" stroke="none" text-anchor="middle" data-name="MustMatchValidator">MustMatchValidator</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3491, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MustMatchValidator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MustMatchValidator">
+								<text x="0.0" y="13.5" stroke="none" data-name="MustMatchValidator">+control: AbstractControl&lt;dynamic&gt;?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MustMatchValidator">+matchingControl: AbstractControl&lt;dynamic&gt;?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3491, 360)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MustMatchValidator">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MustMatchValidator">
+								<text x="0.0" y="13.5" stroke="none" data-name="MustMatchValidator">+Map&lt;String, dynamic&gt;? validate()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AbstractControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AbstractControl">
+							<rect x="3613.5" y="461.0" height="31.0" width="138.0" data-name="AbstractControl"></rect>
+						</g>
+						<g transform="translate(3613.5, 461)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AbstractControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AbstractControl">
+								<text x="61.0" y="13.5" stroke="none" text-anchor="middle" data-name="AbstractControl">AbstractControl</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FieldValidators">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FieldValidators">
+							<rect x="3567.3" y="75.5" height="62.0" width="273.0" data-name="FieldValidators"></rect>
+							<path d="M3567.3 106.5 L3840.3 106.5" fill="none" data-name="FieldValidators"></path>
+						</g>
+						<g transform="translate(3567.25, 75.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FieldValidators">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FieldValidators">
+								<text x="128.5" y="13.5" stroke="none" text-anchor="middle" data-name="FieldValidators">FieldValidators</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3567.25, 106.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FieldValidators">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FieldValidators">
+								<text x="0.0" y="13.5" stroke="none" data-name="FieldValidators">&lt;static&gt;+String? emailValidator()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Patterns">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Patterns">
+							<rect x="3880.3" y="60.5" height="92.0" width="287.0" data-name="Patterns"></rect>
+							<path d="M3880.3 91.5 L4167.3 91.5" fill="none" data-name="Patterns"></path>
+						</g>
+						<g transform="translate(3880.25, 60.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Patterns">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Patterns">
+								<text x="135.5" y="13.5" stroke="none" text-anchor="middle" data-name="Patterns">Patterns</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3880.25, 91.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Patterns">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Patterns">
+								<text x="0.0" y="13.5" stroke="none" data-name="Patterns">&lt;static&gt;+timeFormatString: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Patterns">&lt;static&gt;+emailFormatString: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Patterns">&lt;static&gt;+url: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Time">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Time">
+							<rect x="4112.3" y="291.0" height="92.0" width="293.0" data-name="Time"></rect>
+							<path d="M4112.3 322.0 L4405.3 322.0" fill="none" data-name="Time"></path>
+						</g>
+						<g transform="translate(4112.25, 291)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Time">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Time">
+								<text x="138.5" y="13.5" stroke="none" text-anchor="middle" data-name="Time">Time</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4112.25, 322)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Time">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Time">
+								<text x="0.0" y="13.5" stroke="none" data-name="Time">&lt;static&gt;+dynamic fromTimeOfDay()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Time">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Time">&lt;static&gt;+Time fromJson()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="TimeOfDay">
+						<g fill="#eee8d5" stroke="#33322E" data-name="TimeOfDay">
+							<rect x="4207.3" y="91.0" height="31.0" width="103.0" data-name="TimeOfDay"></rect>
+						</g>
+						<g transform="translate(4207.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TimeOfDay">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TimeOfDay">
+								<text x="43.5" y="13.5" stroke="none" text-anchor="middle" data-name="TimeOfDay">TimeOfDay</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="TimeValueAccessor">
+						<g fill="#eee8d5" stroke="#33322E" data-name="TimeValueAccessor">
+							<rect x="4445.3" y="291.0" height="92.0" width="297.0" data-name="TimeValueAccessor"></rect>
+							<path d="M4445.3 322.0 L4742.3 322.0" fill="none" data-name="TimeValueAccessor"></path>
+						</g>
+						<g transform="translate(4445.25, 291)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TimeValueAccessor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TimeValueAccessor">
+								<text x="140.5" y="13.5" stroke="none" text-anchor="middle" data-name="TimeValueAccessor">TimeValueAccessor</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4445.25, 322)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TimeValueAccessor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TimeValueAccessor">
+								<text x="0.0" y="13.5" stroke="none" data-name="TimeValueAccessor">+String modelToViewValue()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="TimeValueAccessor">+Time? viewToModelValue()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="TimeValueAccessor">-String _addLeadingZeroIfNeeded()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ControlValueAccessor">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ControlValueAccessor">
+							<rect x="4498.3" y="91.0" height="31.0" width="191.0" data-name="ControlValueAccessor"></rect>
+						</g>
+						<g transform="translate(4498.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ControlValueAccessor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ControlValueAccessor">
+								<text x="87.5" y="13.5" stroke="none" text-anchor="middle" data-name="ControlValueAccessor">ControlValueAccessor</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="NumericalRangeFormatter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NumericalRangeFormatter">
+							<rect x="4782.3" y="283.0" height="108.0" width="313.0" data-name="NumericalRangeFormatter"></rect>
+							<path d="M4782.3 314.0 L5095.3 314.0" fill="none" data-name="NumericalRangeFormatter"></path>
+							<path d="M4782.3 360.0 L5095.3 360.0" fill="none" data-name="NumericalRangeFormatter"></path>
+						</g>
+						<g transform="translate(4782.25, 283)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NumericalRangeFormatter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NumericalRangeFormatter">
+								<text x="148.5" y="13.5" stroke="none" text-anchor="middle" data-name="NumericalRangeFormatter">NumericalRangeFormatter</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4782.25, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NumericalRangeFormatter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NumericalRangeFormatter">
+								<text x="0.0" y="13.5" stroke="none" data-name="NumericalRangeFormatter">+min: int?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NumericalRangeFormatter">+max: int?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4782.25, 360)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NumericalRangeFormatter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NumericalRangeFormatter">
+								<text x="0.0" y="13.5" stroke="none" data-name="NumericalRangeFormatter">+TextEditingValue formatEditUpdate()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="TextInputFormatter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="TextInputFormatter">
+							<rect x="5032.3" y="91.0" height="31.0" width="166.0" data-name="TextInputFormatter"></rect>
+						</g>
+						<g transform="translate(5032.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="TextInputFormatter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TextInputFormatter">
+								<text x="75.0" y="13.5" stroke="none" text-anchor="middle" data-name="TextInputFormatter">TextInputFormatter</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudySequenceFormatter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudySequenceFormatter">
+							<rect x="5243.3" y="306.0" height="62.0" width="313.0" data-name="StudySequenceFormatter"></rect>
+							<path d="M5243.3 337.0 L5556.3 337.0" fill="none" data-name="StudySequenceFormatter"></path>
+						</g>
+						<g transform="translate(5243.25, 306)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySequenceFormatter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudySequenceFormatter">
+								<text x="148.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudySequenceFormatter">StudySequenceFormatter</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5243.25, 337)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySequenceFormatter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudySequenceFormatter">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudySequenceFormatter">+TextEditingValue formatEditUpdate()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IProviderArgsResolver">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IProviderArgsResolver">
+							<rect x="5238.3" y="75.5" height="62.0" width="193.0" data-name="IProviderArgsResolver"></rect>
+							<path d="M5238.3 106.5 L5431.3 106.5" fill="none" data-name="IProviderArgsResolver"></path>
+						</g>
+						<g transform="translate(5238.25, 75.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IProviderArgsResolver">
+								<text x="88.5" y="13.5" stroke="none" text-anchor="middle" data-name="IProviderArgsResolver">IProviderArgsResolver</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5238.25, 106.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IProviderArgsResolver">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IProviderArgsResolver">
+								<text x="0.0" y="13.5" stroke="none" data-name="IProviderArgsResolver">+R provide()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="JsonFileLoader">
+						<g fill="#eee8d5" stroke="#33322E" data-name="JsonFileLoader">
+							<rect x="5471.3" y="45.0" height="123.0" width="319.0" data-name="JsonFileLoader"></rect>
+							<path d="M5471.3 76.0 L5790.3 76.0" fill="none" data-name="JsonFileLoader"></path>
+							<path d="M5471.3 107.0 L5790.3 107.0" fill="none" data-name="JsonFileLoader"></path>
+						</g>
+						<g transform="translate(5471.25, 45)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="JsonFileLoader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="JsonFileLoader">
+								<text x="151.5" y="13.5" stroke="none" text-anchor="middle" data-name="JsonFileLoader">JsonFileLoader</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5471.25, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="JsonFileLoader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="JsonFileLoader">
+								<text x="0.0" y="13.5" stroke="none" data-name="JsonFileLoader">+jsonAssetsPath: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5471.25, 107)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="JsonFileLoader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="JsonFileLoader">
+								<text x="0.0" y="13.5" stroke="none" data-name="JsonFileLoader">+dynamic loadJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="JsonFileLoader">+dynamic parseJsonMapFromAssets()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="JsonFileLoader">+dynamic parseJsonListFromAssets()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ModelAction">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ModelAction">
+							<rect x="5830.3" y="38.0" height="137.0" width="188.0" data-name="ModelAction"></rect>
+							<path d="M5830.3 69.0 L6018.3 69.0" fill="none" data-name="ModelAction"></path>
+						</g>
+						<g transform="translate(5830.25, 38)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelAction">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelAction">
+								<text x="86.0" y="13.5" stroke="none" text-anchor="middle" data-name="ModelAction">ModelAction</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5830.25, 69)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelAction">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ModelAction">
+								<text x="0.0" y="13.5" stroke="none" data-name="ModelAction">+type: T</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ModelAction">+label: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ModelAction">+icon: IconData?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ModelAction">+onExecute: Function</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="ModelAction">+isAvailable: bool</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="ModelAction">+isDestructive: bool</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IconData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IconData">
+							<rect x="5880.8" y="321.5" height="31.0" width="87.0" data-name="IconData"></rect>
+						</g>
+						<g transform="translate(5880.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IconData">
+								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="IconData">IconData</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IModelActionProvider">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IModelActionProvider">
+							<rect x="6058.3" y="75.5" height="62.0" width="403.0" data-name="IModelActionProvider"></rect>
+							<path d="M6058.3 106.5 L6461.3 106.5" fill="none" data-name="IModelActionProvider"></path>
+						</g>
+						<g transform="translate(6058.25, 75.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelActionProvider">
+								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="IModelActionProvider">IModelActionProvider</text>
+								
+							</g>
+						</g>
+						<g transform="translate(6058.25, 106.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IModelActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IModelActionProvider">
+								<text x="0.0" y="13.5" stroke="none" data-name="IModelActionProvider">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IListActionProvider">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IListActionProvider">
+							<rect x="6170.3" y="298.5" height="77.0" width="179.0" data-name="IListActionProvider"></rect>
+							<path d="M6170.3 329.5 L6349.3 329.5" fill="none" data-name="IListActionProvider"></path>
+						</g>
+						<g transform="translate(6170.25, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IListActionProvider">
+								<text x="81.5" y="13.5" stroke="none" text-anchor="middle" data-name="IListActionProvider">IListActionProvider</text>
+								
+							</g>
+						</g>
+						<g transform="translate(6170.25, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IListActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IListActionProvider">
+								<text x="0.0" y="13.5" stroke="none" data-name="IListActionProvider">+void onSelectItem()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="IListActionProvider">+void onNewItem()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ModelActionType">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ModelActionType">
+							<rect x="6389.3" y="253.5" height="167.0" width="334.0" data-name="ModelActionType"></rect>
+							<path d="M6389.3 284.5 L6723.3 284.5" fill="none" data-name="ModelActionType"></path>
+						</g>
+						<g transform="translate(6389.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelActionType">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelActionType">
+								<text x="159.0" y="13.5" stroke="none" text-anchor="middle" data-name="ModelActionType">ModelActionType</text>
+								
+							</g>
+						</g>
+						<g transform="translate(6389.25, 284.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelActionType">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ModelActionType">
+								<text x="0.0" y="13.5" stroke="none" data-name="ModelActionType">+index: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+values: List&lt;ModelActionType&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+edit: ModelActionType</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+delete: ModelActionType</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+remove: ModelActionType</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+duplicate: ModelActionType</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+clipboard: ModelActionType</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="ModelActionType">&lt;static&gt;+primary: ModelActionType</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Enum">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
+							<rect x="6525.8" y="91.0" height="31.0" width="61.0" data-name="Enum"></rect>
+						</g>
+						<g transform="translate(6525.75, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
+								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SuppressedBehaviorSubject">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SuppressedBehaviorSubject">
+							<rect x="6785.3" y="37.5" height="138.0" width="388.0" data-name="SuppressedBehaviorSubject"></rect>
+							<path d="M6785.3 68.5 L7173.3 68.5" fill="none" data-name="SuppressedBehaviorSubject"></path>
+							<path d="M6785.3 129.5 L7173.3 129.5" fill="none" data-name="SuppressedBehaviorSubject"></path>
+						</g>
+						<g transform="translate(6785.25, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SuppressedBehaviorSubject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SuppressedBehaviorSubject">
+								<text x="186.0" y="13.5" stroke="none" text-anchor="middle" data-name="SuppressedBehaviorSubject">SuppressedBehaviorSubject</text>
+								
+							</g>
+						</g>
+						<g transform="translate(6785.25, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SuppressedBehaviorSubject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SuppressedBehaviorSubject">
+								<text x="0.0" y="13.5" stroke="none" data-name="SuppressedBehaviorSubject">+subject: BehaviorSubject&lt;T&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SuppressedBehaviorSubject">+didSuppressInitialEvent: bool</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SuppressedBehaviorSubject">-_controller: StreamController&lt;T&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(6785.25, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SuppressedBehaviorSubject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SuppressedBehaviorSubject">
+								<text x="0.0" y="13.5" stroke="none" data-name="SuppressedBehaviorSubject">-StreamController&lt;T&gt; _buildDerivedController()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SuppressedBehaviorSubject">+dynamic close()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="BehaviorSubject">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BehaviorSubject">
+							<rect x="6813.3" y="321.5" height="31.0" width="145.0" data-name="BehaviorSubject"></rect>
+						</g>
+						<g transform="translate(6813.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BehaviorSubject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BehaviorSubject">
+								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="BehaviorSubject">BehaviorSubject</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StreamController">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StreamController">
+							<rect x="6998.3" y="321.5" height="31.0" width="149.0" data-name="StreamController"></rect>
+						</g>
+						<g transform="translate(6998.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StreamController">
+								<text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="StreamController">StreamController</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SerializableColor">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SerializableColor">
+							<rect x="7187.3" y="298.5" height="77.0" width="312.0" data-name="SerializableColor"></rect>
+							<path d="M7187.3 329.5 L7499.3 329.5" fill="none" data-name="SerializableColor"></path>
+						</g>
+						<g transform="translate(7187.25, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SerializableColor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SerializableColor">
+								<text x="148.0" y="13.5" stroke="none" text-anchor="middle" data-name="SerializableColor">SerializableColor</text>
+								
+							</g>
+						</g>
+						<g transform="translate(7187.25, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SerializableColor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SerializableColor">
+								<text x="0.0" y="13.5" stroke="none" data-name="SerializableColor">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SerializableColor">&lt;static&gt;+SerializableColor fromJson()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Color">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Color">
+							<rect x="7314.3" y="91.0" height="31.0" width="58.0" data-name="Color"></rect>
+						</g>
+						<g transform="translate(7314.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Color">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Color">
+								<text x="21.0" y="13.5" stroke="none" text-anchor="middle" data-name="Color">Color</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyUException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUException">
+							<rect x="7539.3" y="290.5" height="93.0" width="154.0" data-name="StudyUException"></rect>
+							<path d="M7539.3 321.5 L7693.3 321.5" fill="none" data-name="StudyUException"></path>
+							<path d="M7539.3 352.5 L7693.3 352.5" fill="none" data-name="StudyUException"></path>
+						</g>
+						<g transform="translate(7539.25, 290.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUException">
+								<text x="69.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUException">StudyUException</text>
+								
+							</g>
+						</g>
+						<g transform="translate(7539.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUException">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyUException">+message: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(7539.25, 352.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUException">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyUException">+String toString()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Exception">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Exception">
+							<rect x="7569.3" y="91.0" height="31.0" width="94.0" data-name="Exception"></rect>
+						</g>
+						<g transform="translate(7569.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Exception">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Exception">
+								<text x="39.0" y="13.5" stroke="none" text-anchor="middle" data-name="Exception">Exception</text>
+								
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

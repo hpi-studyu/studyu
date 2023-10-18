@@ -1,4 +1,19 @@
-import 'package:charts_common/common.dart';
+import 'package:flutter/material.dart';
+import 'package:studyu_app/screens/study/report/report_section_widget.dart';
+import 'package:studyu_core/core.dart';
+
+class LinearRegressionSectionWidget extends ReportSectionWidget {
+  final LinearRegressionSection section;
+
+  const LinearRegressionSectionWidget(StudySubject subject, this.section, {Key? key}) : super(subject, key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text("LinearRegression is currently not supported");
+  }
+}
+
+/*import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -168,4 +183,4 @@ class _ResultDatum {
   final Range<num> confidenceInterval;
 
   _ResultDatum(this.pos, this.value, this.confidenceInterval);
-}
+}*/

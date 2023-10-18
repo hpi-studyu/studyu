@@ -14,7 +14,8 @@ Contact _$ContactFromJson(Map<String, dynamic> json) => Contact()
   ..researchers = json['researchers'] as String?
   ..email = json['email'] as String
   ..website = json['website'] as String
-  ..phone = json['phone'] as String;
+  ..phone = json['phone'] as String
+  ..additionalInfo = json['additionalInfo'] as String?;
 
 Map<String, dynamic> _$ContactToJson(Contact instance) {
   final val = <String, dynamic>{
@@ -34,5 +35,6 @@ Map<String, dynamic> _$ContactToJson(Contact instance) {
   val['email'] = instance.email;
   val['website'] = instance.website;
   val['phone'] = instance.phone;
+  writeNotNull('additionalInfo', instance.additionalInfo);
   return val;
 }

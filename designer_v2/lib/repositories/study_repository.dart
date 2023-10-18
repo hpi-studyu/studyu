@@ -20,11 +20,12 @@ import 'package:studyu_designer_v2/utils/performance.dart';
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
-//Future<void> deleteProgress(Study study);
+  // Future<void> deleteProgress(Study study);
 }
 
 class StudyRepository extends ModelRepository<Study> implements IStudyRepository {
   StudyRepository({
+    this.sortCallback,
     required this.apiClient,
     required this.authRepository,
     required this.ref,
@@ -38,6 +39,8 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
   final ProviderRef ref;
+
+  final VoidCallback? sortCallback;
 
   @override
   ModelID getKey(Study model) {

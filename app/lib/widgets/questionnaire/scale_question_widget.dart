@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
@@ -7,30 +8,31 @@ import 'question_widget.dart';
 
 class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
-  final Function(Answer) onDone;
+  final Function(Answer)? onDone;
 
-  const ScaleQuestionWidget({Key key, @required this.question, this.onDone}) : super(key: key);
+  const ScaleQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
 
   @override
   State<ScaleQuestionWidget> createState() => _ScaleQuestionWidgetState();
 }
 
 class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
-  double value;
-  bool sliderTouched;
+  double? value;
+  late bool sliderTouched;
 
   @override
   void initState() {
     super.initState();
     value = widget.question.initial;
+    sliderTouched = false;
   }
 
   @override
   Widget build(BuildContext context) {
     final sliderRange = (widget.question.maximum - widget.question.minimum).abs();
 
-    Color minColor = widget.question.minColor != null ? Color(widget.question.minColor) : null;
-    Color maxColor = widget.question.maxColor != null ? Color(widget.question.maxColor) : null;
+    Color? minColor = widget.question.minColor != null ? Color(widget.question.minColor!) : null;
+    Color? maxColor = widget.question.maxColor != null ? Color(widget.question.maxColor!) : null;
 
     final isColored = minColor != null || maxColor != null;
     if (isColored) {
@@ -42,7 +44,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
     final theme = Theme.of(context);
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
     final thumbColor = isColored
-        ? Color.lerp(minColor, maxColor, (value - widget.question.minimum) / sliderRange).withOpacity(1)
+        ? Color.lerp(minColor, maxColor, (value! - widget.question.minimum) / sliderRange)!.withOpacity(1)
         : null;
     final activeTrackColor = isColored ? coloredSliderTheme.activeTrackColor : null;
     final inactiveTrackColor = isColored ? coloredSliderTheme.inactiveTrackColor : null;
@@ -55,7 +57,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                 data: isColored
                     ? theme.copyWith(
                         sliderTheme: SliderThemeData(
-                          overlayColor: thumbColor.withOpacity(0.5),
+                          overlayColor: thumbColor!.withOpacity(0.5),
                         ),
                       )
                     : theme,
@@ -72,7 +74,8 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   }),
                   onChangeEnd: (val) => setState(() {
                     value = val;
-                    widget.onDone(widget.question.constructAnswer(value));
+                    sliderTouched = true;
+                    widget.onDone!(widget.question.constructAnswer(value!));
                   }),
                   activeColor: activeTrackColor,
                   inactiveColor: inactiveTrackColor,
@@ -85,6 +88,19 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                 )),
           ],
         ),
+        if (!sliderTouched)
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () {
+                setState(() {
+                  sliderTouched = true;
+                });
+                widget.onDone!(widget.question.constructAnswer(value!));
+              },
+              child: Text(AppLocalizations.of(context)!.done),
+            ),
+          )
       ],
     );
   }

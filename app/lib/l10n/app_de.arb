@@ -38,7 +38,8 @@
   "study_publisher": "Studienherausgeber",
 
   "tasks_daily": "Aufgaben:",
-  "baseline": "Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.",
+  "baseline_description": "Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.",
+  "baseline": "Baseline",
   "days_left": "Tage übrig",
 
   "today_tasks": "Aufgaben heute",
@@ -166,5 +167,6 @@
   "researchers": "Forscher",
   "website": "Website",
   "email": "Email",
-  "phone": "Telefon"
+  "phone": "Telefon",
+  "additionalInfo": "Zusätzliche Informationen"
 }

@@ -2,7 +2,6 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -31,17 +30,6 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    /*
-    // is this handled by supabase internally?
-    // move this to appController.onAppStart()
-    final uriParameters = SupabaseAuth.instance.parseUriParameters(Uri.base);
-    if (uriParameters.containsKey('access_token') &&
-        uriParameters.containsKey('refresh_token') &&
-        uriParameters.containsKey('expires_in')) {
-      /// Uri.base is a auth redirect link
-      /// Call recoverSessionFromUrl to continue
-      recoverSessionFromUrl(Uri.base);
-    }*/
   }
 }
 
@@ -90,6 +78,7 @@ class _AppContentState extends ConsumerState<AppContent> {
             final themeProvider = ThemeProvider.of(context);
             final theme = themeProvider.light(settings.value.sourceColor);
             return MaterialApp.router(
+              title: 'StudyU Designer'.hardcoded,
               scaffoldMessengerKey: scaffoldMessengerKey,
               builder: (context, widget) => NotificationDispatcher(
                 scaffoldMessengerKey: scaffoldMessengerKey,
@@ -97,7 +86,6 @@ class _AppContentState extends ConsumerState<AppContent> {
                 child: widget,
               ),
               debugShowCheckedModeBanner: Config.isDebugMode,
-              title: 'StudyU Designer V2'.hardcoded,
               color: theme.colorScheme.surface,
               theme: theme,
               routeInformationProvider: router.routeInformationProvider,
@@ -108,7 +96,7 @@ class _AppContentState extends ConsumerState<AppContent> {
               localizationsDelegates: const [
                 ...AppLocalizations.localizationsDelegates,
                 // See: https://github.com/danvick/flutter_form_builder/blob/master/packages/form_builder_validators/README.md#l10n
-                FormBuilderLocalizations.delegate,
+                // FormBuilderLocalizations.delegate,
               ],
             );
           },

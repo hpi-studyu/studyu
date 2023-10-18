@@ -6,13 +6,13 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({Key key}) : super(key: key);
+  const AboutScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).what_is_studyu),
+        title: Text(AppLocalizations.of(context)!.what_is_studyu),
       ),
       body: PageView(
         scrollDirection: Axis.vertical,
@@ -25,7 +25,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.food, size: 80, color: Colors.black),
                     ),
@@ -39,7 +39,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 100),
                 Text(
-                  AppLocalizations.of(context).description_part1,
+                  AppLocalizations.of(context)!.description_part1,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -67,7 +67,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.help, size: 80, color: Colors.orange),
                     ),
@@ -75,7 +75,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 100),
                 Text(
-                  AppLocalizations.of(context).description_part2,
+                  AppLocalizations.of(context)!.description_part2,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -103,7 +103,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.accountQuestion, size: 80, color: Colors.blue),
                     ),
@@ -111,7 +111,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part3,
+                  AppLocalizations.of(context)!.description_part3,
                   textAlign: TextAlign.justify,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -139,7 +139,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.exclamationThick, size: 80, color: Colors.blue),
                     )
@@ -147,7 +147,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part4,
+                  AppLocalizations.of(context)!.description_part4,
                   textAlign: TextAlign.justify,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -175,11 +175,11 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.alphaNBoxOutline, size: 80, color: Colors.blue),
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Text(
                         'of',
                         textAlign: TextAlign.center,
@@ -193,7 +193,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part5,
+                  AppLocalizations.of(context)!.description_part5,
                   textAlign: TextAlign.justify,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -221,7 +221,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.notebookOutline, size: 80, color: Colors.blue),
                     ),
@@ -229,7 +229,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part6,
+                  AppLocalizations.of(context)!.description_part6,
                   textAlign: TextAlign.justify,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -257,7 +257,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.alignVerticalBottom, size: 80, color: Colors.blue),
                     ),
@@ -265,7 +265,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part7,
+                  AppLocalizations.of(context)!.description_part7,
                   textAlign: TextAlign.justify,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -293,7 +293,7 @@ class AboutScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 50),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: Icon(MdiIcons.progressCheck, size: 80, color: Colors.blue),
                     ),
@@ -301,7 +301,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part8,
+                  AppLocalizations.of(context)!.description_part8,
                   textAlign: TextAlign.justify,
                   style: const TextStyle(fontSize: 18),
                 ),
@@ -330,16 +330,16 @@ class AboutScreen extends StatelessWidget {
                 const Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
                 const SizedBox(height: 50),
                 Text(
-                  AppLocalizations.of(context).description_part9,
+                  AppLocalizations.of(context)!.description_part9,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 40),
                 if (context.read<AppState>().activeSubject == null)
                   OutlinedButton.icon(
-                    icon: const Icon(MdiIcons.rocket),
+                    icon: Icon(MdiIcons.rocket),
                     onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                    label: Text(AppLocalizations.of(context).get_started, style: const TextStyle(fontSize: 20)),
+                    label: Text(AppLocalizations.of(context)!.get_started, style: const TextStyle(fontSize: 20)),
                   ),
               ],
             ),

@@ -63,7 +63,10 @@
           serviceWorkerVersion: serviceWorkerVersion,
         }
       }).then(function(engineInitializer) {
-        return engineInitializer.initializeEngine();
+        return engineInitializer.initializeEngine({
+          // Enable color emojis again for flutter 3.10
+          useColorEmoji: true,
+        });
       }).then(function(appRunner) {
         return appRunner.runApp();
       });

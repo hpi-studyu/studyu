@@ -22,6 +22,7 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   @JsonKey(name: 'designer_terms')
   Map<String, String> designerTerms;
   Map<String, String> imprint;
+  StudyUAnalytics? analytics;
 
   AppConfig(
     this.id, {
@@ -31,6 +32,7 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
     required this.designerPrivacy,
     required this.designerTerms,
     required this.imprint,
+    required this.analytics,
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);

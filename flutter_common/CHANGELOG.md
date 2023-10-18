@@ -1,3 +1,67 @@
+## 1.6.2-dev.11
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+ - **FEAT**: switch to hpi env. ([7f1a1817](https://github.com/hpi-studyu/studyu/commit/7f1a1817d96d955cf2f9e7c7fb7467f317bec53b))
+
+## 1.6.2-dev.10
+
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+
+## 1.6.2-dev.9
+
+ - **REFACTOR**: rename .env.selfhost to .env.hpi. ([dae7d461](https://github.com/hpi-studyu/studyu/commit/dae7d4617a3a45df595172672851c0f61ff14de5))
+ - **REFACTOR**: rename .env.selfhost to .env.hpi. ([0c3d2252](https://github.com/hpi-studyu/studyu/commit/0c3d2252edaf7f564a417e5b8f4243161514cc37))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+
+## 1.6.2-dev.8
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+## 1.6.2-dev.7
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+## 1.6.2-dev.6
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+## 1.6.2-dev.5
+
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+## 1.6.2-dev.4
+
+ - **FIX**: upgrade deps. ([b2926c39](https://github.com/hpi-studyu/studyu/commit/b2926c395988077d4aa172490dbd9c6fd75d52c6))
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+## 1.6.2-dev.3
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+## 1.6.2-dev.2
+
+ - **REFACTOR**: rename ENV to STUDY_ENV. ([1ee25b50](https://github.com/hpi-studyu/studyu/commit/1ee25b50e2544f6a62e77ac4266b5fd4c8ba9bf2))
+
+## 1.6.2-dev.1
+
+ - **FIX**: add dhc db to .env. ([f81a44c0](https://github.com/hpi-studyu/studyu/commit/f81a44c0350acadb0f00c42fa5ad4a37ee604fd5))
+
+## 1.6.2-dev.0
+
+ - **FIX**: .env.selfhost use localhost as default. ([5dc73afb](https://github.com/hpi-studyu/studyu/commit/5dc73afb27806256a659243342fe2c16aad61cb7))
+ - **DOCS**: modified docker setup. ([21897dd5](https://github.com/hpi-studyu/studyu/commit/21897dd507669d3208eb2ad0aecea3761caa3086))
+
+## 1.6.1
+
+ - **FIX**: improve offline mode, check earlier if device is offline. ([c7a143f5](https://github.com/hpi-studyu/studyu/commit/c7a143f5d2b16220ac72e6b533cee18ac25cd0d3))
+
+## 1.6.0
+
+ - **FEAT**: implement limited offline mode for app. ([cbc898f3](https://github.com/hpi-studyu/studyu/commit/cbc898f34a47535e8f950365ded92ef210137e23))
+
 ## 1.5.0
 
  - **FEAT**: sentry integration in core. ([0fae767f](https://github.com/hpi-studyu/studyu/commit/0fae767f0a7dc3c3409dd5179eeb870429b580cd))

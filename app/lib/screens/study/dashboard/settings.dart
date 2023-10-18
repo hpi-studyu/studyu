@@ -1,30 +1,32 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:studyu_app/util/app_analytics.dart';
-import 'package:studyu_core/core.dart';
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/localization.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key key}) : super(key: key);
+  const Settings({Key? key}) : super(key: key);
 
   @override
   State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
-  Locale _selectedValue;
-  bool _analyticsValue;
-  StudySubject subject;
+  Locale? _selectedValue;
+  bool? _analyticsValue;
+  StudySubject? subject;
 
   @override
   void initState() {
     super.initState();
-    _analyticsValue = AppAnalytics.isEnabled;
+    _analyticsValue = AppAnalytics.isUserEnabled;
     _selectedValue = context.read<AppLanguage>().appLocal;
     subject = context.read<AppState>().activeSubject;
   }
@@ -36,7 +38,7 @@ class _SettingsState extends State<Settings> {
       dropDownItems.add(
         DropdownMenuItem(
           value: locale,
-          child: Text(localeName(context, locale.languageCode)),
+          child: Text(localeName(context, locale.languageCode)!),
         ),
       );
     }
@@ -52,7 +54,7 @@ class _SettingsState extends State<Settings> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('${AppLocalizations.of(context).language}:'),
+            Text('${AppLocalizations.of(context)!.language}:'),
             const SizedBox(
               width: 5,
             ),
@@ -69,12 +71,12 @@ class _SettingsState extends State<Settings> {
           ],
         ),
         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Text('${AppLocalizations.of(context).allow_analytics}: '),
+          Text('${AppLocalizations.of(context)!.allow_analytics}: '),
           Tooltip(
             triggerMode: TooltipTriggerMode.tap,
             showDuration: const Duration(milliseconds: 10000),
             margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-            message: AppLocalizations.of(context).allow_analytics_desc,
+            message: AppLocalizations.of(context)!.allow_analytics_desc,
             child: const Icon(
               Icons.info,
             ),
@@ -83,7 +85,7 @@ class _SettingsState extends State<Settings> {
             width: 5,
           ),
           Switch(
-              value: _analyticsValue,
+              value: _analyticsValue!,
               onChanged: (value) {
                 setState(() {
                   _analyticsValue = value;
@@ -100,7 +102,7 @@ class _SettingsState extends State<Settings> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).settings),
+        title: Text(AppLocalizations.of(context)!.settings),
       ),
       body: Center(
         child: Column(
@@ -110,13 +112,13 @@ class _SettingsState extends State<Settings> {
             getDropdownRow(context),
             const SizedBox(height: 24),
             Text(
-              '${AppLocalizations.of(context).study_current} ${subject.study.title}',
+              '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
               style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             ElevatedButton.icon(
-              icon: const Icon(MdiIcons.exitToApp),
-              label: Text(AppLocalizations.of(context).opt_out),
+              icon: Icon(MdiIcons.exitToApp),
+              label: Text(AppLocalizations.of(context)!.opt_out),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
@@ -125,7 +127,7 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               icon: const Icon(Icons.delete),
-              label: Text(AppLocalizations.of(context).delete_data),
+              label: Text(AppLocalizations.of(context)!.delete_data),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog(subject: subject));
@@ -139,15 +141,15 @@ class _SettingsState extends State<Settings> {
 }
 
 class OptOutAlertDialog extends StatelessWidget {
-  final StudySubject subject;
+  final StudySubject? subject;
 
-  const OptOutAlertDialog({Key key, @required this.subject}) : super(key: key);
+  const OptOutAlertDialog({Key? key, required this.subject}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text('${AppLocalizations.of(context).opt_out} ?'),
+      title: Text('${AppLocalizations.of(context)!.opt_out} ?'),
       content: RichText(
         text: TextSpan(
           style: const TextStyle(color: Colors.black),
@@ -155,7 +157,7 @@ class OptOutAlertDialog extends StatelessWidget {
             // todo translate
             const TextSpan(text: 'You will lose your progress in '),
             TextSpan(
-              text: subject.study.title,
+              text: subject!.study.title,
               style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const TextSpan(
@@ -168,12 +170,16 @@ class OptOutAlertDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton.icon(
-          icon: const Icon(MdiIcons.exitToApp),
-          label: Text(AppLocalizations.of(context).opt_out),
+          icon: Icon(MdiIcons.exitToApp),
+          label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800], elevation: 0),
           onPressed: () async {
-            await subject.softDelete();
+            await subject!.softDelete();
             await deleteActiveStudyReference();
+            if (context.mounted) {
+              final studyNotifications = context.read<AppState>().studyNotifications?.flutterLocalNotificationsPlugin;
+              await studyNotifications?.cancelAll();
+            }
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
             }
@@ -185,13 +191,13 @@ class OptOutAlertDialog extends StatelessWidget {
 }
 
 class DeleteAlertDialog extends StatelessWidget {
-  final StudySubject subject;
+  final StudySubject? subject;
 
-  const DeleteAlertDialog({Key key, @required this.subject}) : super(key: key);
+  const DeleteAlertDialog({Key? key, required this.subject}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('${AppLocalizations.of(context).delete_data} ?'),
+        title: Text('${AppLocalizations.of(context)!.delete_data} ?'),
         // todo translate
         content: const Text(
           'You are about to delete all data from your device & our servers. '
@@ -201,14 +207,21 @@ class DeleteAlertDialog extends StatelessWidget {
         actions: [
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
-            label: Text(AppLocalizations.of(context).delete_data),
+            label: Text(AppLocalizations.of(context)!.delete_data),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
             onPressed: () async {
-              await subject.delete(); // hard-delete
-              await deleteLocalData();
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
-              }
+              try {
+                await subject!.delete(); // hard-delete
+                await deleteLocalData();
+                if (context.mounted) {
+                  final studyNotifications =
+                      context.read<AppState>().studyNotifications?.flutterLocalNotificationsPlugin;
+                  await studyNotifications?.cancelAll();
+                }
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+                }
+              } on SocketException catch (_) {}
             },
           )
         ],

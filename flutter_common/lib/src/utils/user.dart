@@ -7,6 +7,7 @@ const fakeStudyUEmailDomain = 'fake-studyu-email-domain.com';
 String selectedSubjectIdKey = 'selected_study_object_id';
 const userEmailKey = 'user_email';
 const userPasswordKey = 'user_password';
+const cacheSubjectKey = "cache_subject";
 
 Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
   final prefs = await SharedPreferences.getInstance();
@@ -81,6 +82,7 @@ Future<void> deleteLocalData() async {
   await prefs.remove(userEmailKey);
   await prefs.remove(userPasswordKey);
   await prefs.remove(selectedSubjectIdKey);
+  await prefs.remove(cacheSubjectKey);
 }
 
 void previewSubjectIdKey() {

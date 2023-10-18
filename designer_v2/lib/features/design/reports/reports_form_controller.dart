@@ -206,7 +206,6 @@ class ReportFormItemDelegate
       onExecute: () async {
         for (var e in formViewModelCollection.formViewModels) {
           if (e.formData!.isPrimary) {
-            // todo make this more efficient
             e.formData!.isPrimary = false;
             e.buildFormData().isPrimary = false;
             formViewModelCollection.add(e);
@@ -215,10 +214,11 @@ class ReportFormItemDelegate
         }
         model.formData!.isPrimary = true;
         model.save();
-        //await owner.save(); with propagateOnSave=false
       },
     );
-    actions.insert(0, modalAction);
+    if (!owner.isReadonly) {
+      actions.insert(0, modalAction);
+    }
 
     return withIcons(actions, modelActionIcons);
   }

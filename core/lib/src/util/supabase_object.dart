@@ -1,11 +1,7 @@
+import 'dart:io';
+
+import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
-import 'package:studyu_core/src/models/tables/app_config.dart';
-import 'package:studyu_core/src/models/tables/repo.dart';
-import 'package:studyu_core/src/models/tables/study.dart';
-import 'package:studyu_core/src/models/tables/study_invite.dart';
-import 'package:studyu_core/src/models/tables/study_subject.dart';
-import 'package:studyu_core/src/models/tables/subject_progress.dart';
-import 'package:studyu_core/src/util/analytics.dart';
 import 'package:supabase/supabase.dart';
 
 abstract class SupabaseObject {
@@ -28,6 +24,8 @@ String tableName(Type cls) {
       return Repo.tableName;
     case StudyInvite:
       return StudyInvite.tableName;
+    case StudyUUser:
+      return StudyUUser.tableName;
     default:
       print('$cls is not a supported Supabase type');
       throw TypeError();
@@ -49,6 +47,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         return Repo.fromJson(json) as T;
       case StudyInvite:
         return StudyInvite.fromJson(json) as T;
+      case StudyUUser:
+        return StudyUUser.fromJson(json) as T;
       default:
         print('$T is not a supported Supabase type');
         throw TypeError();
@@ -88,8 +88,14 @@ class SupabaseQuery {
     }
   }
 
-  static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async =>
-      SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
+  static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async {
+    try {
+      return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
+    } catch (error, stacktrace) {
+      catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
 
   static List<T> extractSupabaseList<T extends SupabaseObject>(List<Map<String, dynamic>> response) {
     return List<T>.from(
@@ -104,15 +110,18 @@ class SupabaseQuery {
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
     Analytics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
-      print('Message: ${error.message}');
-      print('Hint: ${error.hint}');
-      print('Details: ${error.details}');
-      print('Code: ${error.code}');
-      print('Stacktrace: $stacktrace');
+      Analytics.logger.severe('Message: ${error.message}');
+      Analytics.logger.severe('Hint: ${error.hint}');
+      Analytics.logger.severe('Details: ${error.details}');
+      Analytics.logger.severe('Code: ${error.code}');
+      Analytics.logger.severe('Stacktrace: $stacktrace');
+      throw error;
+    } else if (error is SocketException) {
+      Analytics.logger.info("App is suspected to be offline");
       throw error;
     } else {
-      print('Caught Supabase Error: $error');
-      print('Stacktrace: $stacktrace');
+      Analytics.logger.severe('Caught Supabase Error: $error');
+      Analytics.logger.severe('Stacktrace: $stacktrace');
       throw error;
     }
   }

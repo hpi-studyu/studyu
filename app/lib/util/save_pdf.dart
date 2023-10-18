@@ -4,7 +4,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-Future<String> savePDF(BuildContext context, String title, List<pw.Widget> content) async {
+Future<String?> savePDF(BuildContext context, String title, List<pw.Widget> content) async {
   final doc = pw.Document();
   final logo = pw.MemoryImage((await rootBundle.load('assets/images/icon_wide.png')).buffer.asUint8List());
   doc.addPage(
@@ -24,7 +24,7 @@ Future<String> savePDF(BuildContext context, String title, List<pw.Widget> conte
     final pdfFileName = '${title.replaceAll(' ', '_')}.pdf';
 
     final params = SaveFileDialogParams(data: savedDoc, fileName: pdfFileName);
-    final filePath = await FlutterFileDialog.saveFile(params: params);
+    final filePath = (await FlutterFileDialog.saveFile(params: params))!;
     print('$pdfFileName was saved under $filePath.');
 
     return filePath.split(':')[1];

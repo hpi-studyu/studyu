@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/util/app_analytics.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'main.dart';
@@ -11,8 +12,9 @@ import 'routes.dart';
 import 'theme.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.queryParameters, {Key key}) : super(key: key);
+  const MyApp(this.queryParameters, this.appConfig, {Key? key}) : super(key: key);
   final Map<String, String> queryParameters;
+  final AppConfig? appConfig;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -29,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
-        ChangeNotifierProvider<AppState>(create: (context) => AppState()),
+        ChangeNotifierProvider<AppState>(create: (context) => AppState(widget.appConfig)),
       ],
       child: Consumer<AppLanguage>(
         builder: (context, model, child) {

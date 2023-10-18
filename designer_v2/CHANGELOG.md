@@ -1,3 +1,79 @@
+## 1.5.2
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+
+## 1.5.1
+
+ - **FIX**: rename custom MustMatchValidator. ([613e14a4](https://github.com/hpi-studyu/studyu/commit/613e14a4c846cae5a4ba3f83294a70978d907ca1))
+
+## 1.5.0
+
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+ - **FIX**: report button visible for read-only studies. ([99daed13](https://github.com/hpi-studyu/studyu/commit/99daed1356840eceb640755a06daa967a8c28fb1))
+ - **FIX**: regenerate ids when duplicating a study. ([79b411c3](https://github.com/hpi-studyu/studyu/commit/79b411c3b4dfe9467c412a7cd2c47508ce766623))
+ - **FEAT**: localization additions. ([787f2ba6](https://github.com/hpi-studyu/studyu/commit/787f2ba659a39427ae988181ef89f20f24cdb121))
+
+## 1.4.0
+
+ - **REFACTOR**: format. ([595a717f](https://github.com/hpi-studyu/studyu/commit/595a717f0e09a3ba311984ad1f4b584252e091ec))
+ - **REFACTOR**: pin changes to user_repository.dart. ([e6579c8b](https://github.com/hpi-studyu/studyu/commit/e6579c8bc9f6b9c5e828c81fe7d185ccbfa7f8d0))
+ - **REFACTOR**: cleanup. ([b4a987e7](https://github.com/hpi-studyu/studyu/commit/b4a987e7add7100a23f2366a83d6551b6d861567))
+ - **REFACTOR**: rename. ([c1bf13dd](https://github.com/hpi-studyu/studyu/commit/c1bf13dd8f0f8d1ea4ea3ee8fe4663c0700d486a))
+ - **REFACTOR**: make tags more reactive. ([d7cb5f30](https://github.com/hpi-studyu/studyu/commit/d7cb5f30f10834a3bf90c2b74e400cd7103846e0))
+ - **REFACTOR**: fix dashboard pin null value. ([eda8ccfb](https://github.com/hpi-studyu/studyu/commit/eda8ccfb3a0da3a1d6a2eb986c85bd24526aea0d))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+ - **FIX**: study was not returned completely. ([324e2ceb](https://github.com/hpi-studyu/studyu/commit/324e2ceb2afe25df5ee06cd2450865137efe7ae1))
+ - **FIX**: non-working pin. ([5729a096](https://github.com/hpi-studyu/studyu/commit/5729a096d599827026b68cfce910e6a78e309a35))
+ - **FIX**: tag color. ([9baddd1d](https://github.com/hpi-studyu/studyu/commit/9baddd1d3df22ebb45fa5117f724fd9b98b31b98))
+ - **FIX**: tag related sql. ([59882b7e](https://github.com/hpi-studyu/studyu/commit/59882b7e86b7145131733c4d6851cf621b676fc8))
+ - **FIX**: make color nullable and int, add tags to dashboard. ([ef7532a3](https://github.com/hpi-studyu/studyu/commit/ef7532a3e571abd140cfbeee1e2e1b6fd14f9ed6))
+ - **FIX**: update copyright. ([515785bd](https://github.com/hpi-studyu/studyu/commit/515785bd4717693d5cb65c7fd79a1c70ecf8c441))
+ - **FIX**: remove Designer V2 version number from page title. ([362a4fe5](https://github.com/hpi-studyu/studyu/commit/362a4fe5f5a31b4364d9695f8f2b7193d3ac811e))
+ - **FEAT**: make study tags reactive. ([f2f8ecaf](https://github.com/hpi-studyu/studyu/commit/f2f8ecafb4f21d21128ce089eb99608778b91e2e))
+ - **FEAT**: refactor Search to widget and make tags clickable. ([95f33064](https://github.com/hpi-studyu/studyu/commit/95f33064444b9e594d9497bc6321c529253ee0bd))
+ - **FEAT**: working tags with foreign key study_tag. ([8d4eaa92](https://github.com/hpi-studyu/studyu/commit/8d4eaa925c8a921bfa70f0afae6a57a155a55c9e))
+ - **FEAT**: display and update tags correctly. ([b96dcf8a](https://github.com/hpi-studyu/studyu/commit/b96dcf8a25def52dfc59bc65206177e0ab4a25d8))
+ - **FEAT**: initial study tags. ([615d5b62](https://github.com/hpi-studyu/studyu/commit/615d5b629a2ae5d9998d50b1a0f119fa62a2bc87))
+
+## 1.3.9
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+## 1.3.8
+
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([9112f5f0](https://github.com/hpi-studyu/studyu/commit/9112f5f0a9c778e2abf24f6aa585bc9f539e6ccf))
+
+## 1.3.7
+
+ - **FIX**: add await-workflow action to wait for pub.dev publishing. ([7206a006](https://github.com/hpi-studyu/studyu/commit/7206a00663657f6d6256b99b0c3aca33e9b263bb))
+
+## 1.3.6
+
+ - **FIX**: upgrade deps. ([35c629aa](https://github.com/hpi-studyu/studyu/commit/35c629aa28fc5761a707168d998a425307ec6d9a))
+
+## 1.3.5
+
+ - **FIX**: upgrade deps. ([b2926c39](https://github.com/hpi-studyu/studyu/commit/b2926c395988077d4aa172490dbd9c6fd75d52c6))
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+## 1.3.4
+
+ - **FIX**: upgrade deps. ([daad1465](https://github.com/hpi-studyu/studyu/commit/daad146590e874bedee3f82bb72bf4b94e5c3801))
+
+## 1.3.3
+
+ - **FIX**: enable emojis again for designer_v2 web. ([d2ccd3f0](https://github.com/hpi-studyu/studyu/commit/d2ccd3f0f997f304871c223f913c3392b91304c3))
+
+## 1.3.2
+
+ - **REFACTOR**: initial null safety support. ([82c119f9](https://github.com/hpi-studyu/studyu/commit/82c119f980f647133bff1c3748625e148cbc6ffe))
+
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
 ## 1.3.0
 
  - **FIX**: more slider usability fixes. ([d8309803](https://github.com/hpi-studyu/studyu/commit/d83098037f6f1cf9bdc0f150df6d94156c81f19d))

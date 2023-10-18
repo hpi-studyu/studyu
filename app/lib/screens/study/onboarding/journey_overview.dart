@@ -12,18 +12,18 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
-  const JourneyOverviewScreen({Key key}) : super(key: key);
+  const JourneyOverviewScreen({Key? key}) : super(key: key);
 
   @override
   State<JourneyOverviewScreen> createState() => _JourneyOverviewScreen();
 }
 
 class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
-  StudySubject subject;
+  StudySubject? subject;
 
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
-    bool consentGiven;
-    if (subject.study.hasConsentCheck) {
+    bool? consentGiven;
+    if (subject!.study.hasConsentCheck) {
       consentGiven = await Navigator.pushNamed<bool>(context, Routes.consent);
     } else {
       consentGiven = true;
@@ -34,7 +34,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).user_did_not_give_consent),
+          content: Text(AppLocalizations.of(context)!.user_did_not_give_consent),
           duration: const Duration(seconds: 30),
         ),
       );
@@ -51,8 +51,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).your_journey),
-        leading: const Icon(MdiIcons.mapMarkerPath),
+        title: Text(AppLocalizations.of(context)!.your_journey),
+        leading: Icon(MdiIcons.mapMarkerPath),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -76,14 +76,14 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 }
 
 class Timeline extends StatelessWidget {
-  final StudySubject subject;
+  final StudySubject? subject;
 
-  const Timeline({@required this.subject, Key key}) : super(key: key);
+  const Timeline({required this.subject, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final interventionsInOrder = subject.getInterventionsInOrder();
+    final interventionsInOrder = subject!.getInterventionsInOrder();
     final now = DateTime.now();
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -95,16 +95,16 @@ class Timeline extends StatelessWidget {
             title: intervention.name,
             iconName: intervention.icon,
             color: intervention.isBaseline() ? Colors.grey : theme.colorScheme.secondary,
-            date: now.add(Duration(days: index * subject.study.schedule.phaseDuration)),
+            date: now.add(Duration(days: index * subject!.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
         }),
         InterventionTile(
-          title: AppLocalizations.of(context).journey_results_available,
+          title: AppLocalizations.of(context)!.journey_results_available,
           iconName: 'flagCheckered',
           color: Colors.green,
           isLast: true,
-          date: subject.endDate(now),
+          date: subject!.endDate(now),
         )
       ],
     );
@@ -112,21 +112,21 @@ class Timeline extends StatelessWidget {
 }
 
 class InterventionTile extends StatelessWidget {
-  final String title;
+  final String? title;
   final String iconName;
   final DateTime date;
-  final Color color;
+  final Color? color;
   final bool isFirst;
   final bool isLast;
 
   const InterventionTile({
-    @required this.title,
-    @required this.iconName,
-    @required this.date,
+    required this.title,
+    required this.iconName,
+    required this.date,
     this.color,
     this.isFirst = false,
     this.isLast = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -146,7 +146,7 @@ class InterventionTile extends StatelessWidget {
       beforeLineStyle: LineStyle(color: theme.primaryColor),
       afterLineStyle: LineStyle(color: theme.primaryColor),
       endChild: TimelineChild(
-        child: Text(title, style: theme.textTheme.titleLarge.copyWith(color: theme.primaryColor)),
+        child: Text(title!, style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor)),
       ),
       startChild: TimelineChild(
         child: Text(DateFormat('dd-MM-yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -157,9 +157,9 @@ class InterventionTile extends StatelessWidget {
 
 class IconIndicator extends StatelessWidget {
   final String iconName;
-  final Color color;
+  final Color? color;
 
-  const IconIndicator({@required this.iconName, this.color, Key key}) : super(key: key);
+  const IconIndicator({required this.iconName, this.color, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +173,9 @@ class IconIndicator extends StatelessWidget {
 }
 
 class TimelineChild extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const TimelineChild({Key key, this.child}) : super(key: key);
+  const TimelineChild({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

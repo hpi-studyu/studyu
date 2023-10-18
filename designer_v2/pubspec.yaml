@@ -1,43 +1,45 @@
 name: studyu_designer_v2
-version: 1.3.0
+version: 1.5.2
 publish_to: none
 description: Create digital N-of-1 studies with StudyU
 
-environment: 
-  sdk: '>=2.17.0 <3.0.0'
+environment:
+  sdk: '>=2.17.0 <4.0.0'
 
 dependencies:
-  archive: ^3.3.7
-  async: ^2.10.0 # flutter_test
+  archive: ^3.4.6
+  async: ^2.11.0
   csv: ^5.0.2
-  cupertino_icons: ^1.0.5
-  dynamic_color: ^1.6.3 # material_color_utilities <=0.5.0
+  cupertino_icons: ^1.0.6
+  dynamic_color:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
-  flutter_riverpod: ^2.3.6
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^2.4.3
   flutter_web_plugins:
     sdk: flutter
-  form_builder_validators: ^8.6.1
-  go_router: ^7.0.0
-  material_color_utilities: ^0.2.0 # flutter_test
-  material_design_icons_flutter: ^6.0.7096
-  pointer_interceptor: ^0.9.3+4
-  reactive_color_picker: ^0.4.0 # form_builder_validators <= 8.5.0
-  reactive_forms: ^14.1.0 # form_builder_validators <=8.5.0
+  go_router: ^11.1.3
+  material_color_utilities:
+  material_design_icons_flutter: ^7.0.7296
+  pointer_interceptor: ^0.9.3+6
+  reactive_color_picker: ^2.0.0
+  reactive_forms: ^16.1.0
+  reactive_multi_select_flutter: ^2.0.0
   rxdart: ^0.27.7
-  shared_preferences: ^2.1.0
-  studyu_core: ^4.1.0
-  studyu_flutter_common: ^1.5.0
-  supabase: ^1.7.0
-  supabase_flutter: ^1.8.1
-  url_launcher: ^6.1.10
-  uuid: ^3.0.7
+  shared_preferences: ^2.2.2
+  studyu_core: ^4.3.0-dev.10
+  studyu_flutter_common: ^1.6.2-dev.11
+  supabase: ^1.11.9
+  supabase_flutter: ^1.10.22
+  url_launcher: ^6.1.14
+  uuid: ^3.0.0
 
 dev_dependencies: 
-  flutter_lints: ^2.0.1
-  flutter_test: 
+  flutter_lints: ^2.0.3
+  flutter_test:
     sdk: flutter
 
 flutter:

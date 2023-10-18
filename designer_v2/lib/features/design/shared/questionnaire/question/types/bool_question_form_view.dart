@@ -18,14 +18,14 @@ class BoolQuestionFormView extends ConsumerWidget {
           opacity: 0.5,
           child: StandardTable<AbstractControl>(
             items: formViewModel.answerOptionsControls,
-            columns: const [
+            columns: [
               StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)
-                columnWidth: FixedColumnWidth(32.0),
+                columnWidth: const FixedColumnWidth(32.0),
               ),
               StandardTableColumn(
                   label: '', // don't care (showTableHeader=false)
-                  columnWidth: FlexColumnWidth()),
+                  columnWidth: const FlexColumnWidth()),
             ],
             onSelectItem: (_) => {}, // no-op
             buildCellsAt: (context, control, _, __) => buildChoiceOptionRow(context, control),

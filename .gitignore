@@ -1,3 +1,7 @@
+# Custom
+backup/
+docker/.studyu_config
+
 # Miscellaneous
 *.class
 *.log
@@ -31,7 +35,7 @@ local.properties
 .packages
 .pub-cache/
 .pub/
-/build/
+**/build/
 flutter_*.png
 linked_*.ds
 unlinked.ds

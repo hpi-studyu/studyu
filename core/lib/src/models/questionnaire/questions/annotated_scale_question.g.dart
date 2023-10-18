@@ -19,8 +19,8 @@ AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
               json['conditional'] as Map<String, dynamic>)
       ..minimum = (json['minimum'] as num).toDouble()
       ..maximum = (json['maximum'] as num).toDouble()
-      ..initial = (json['initial'] as num).toDouble()
       ..step = (json['step'] as num).toDouble()
+      ..initial = (json['initial'] as num).toDouble()
       ..annotations = (json['annotations'] as List<dynamic>)
           .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -43,8 +43,8 @@ Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
   writeNotNull('conditional', instance.conditional?.toJson());
   val['minimum'] = instance.minimum;
   val['maximum'] = instance.maximum;
-  val['initial'] = instance.initial;
   val['step'] = instance.step;
+  val['initial'] = instance.initial;
   val['annotations'] = instance.annotations.map((e) => e.toJson()).toList();
   return val;
 }

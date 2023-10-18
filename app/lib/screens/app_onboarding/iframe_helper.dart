@@ -8,7 +8,7 @@ import "package:universal_html/html.dart" as html;
 class IFrameHelper {
   void postRouteFinished() {
     // Go back to the selected origin route
-    html.window.parent.postMessage('routeFinished', env.designerUrl);
+    html.window.parent!.postMessage('routeFinished', env.designerUrl!);
   }
 
   void listen(AppState state) {

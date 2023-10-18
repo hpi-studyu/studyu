@@ -107,6 +107,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
     enrollmentFormViewModel.read();
     measurementsFormViewModel.read();
     interventionsFormViewModel.read();
+    reportsFormViewModel.read();
     super.read(formData);
   }
 
@@ -151,7 +152,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   Future _applyAndSaveSubform(IStudyFormData subformData) {
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
-    // Flush the on-write study copy to the repository & clear it
+    // Flush the on-write study copy to the repository and clear it
     return studyRepository.save(studyDirtyCopy!).then((study) => studyDirtyCopy = null);
   }
 }
