@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-10-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_flutter_common` - `v1.6.2`](#studyu_flutter_common---v162)
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.3.0`](#studyu_core---v430)
+ - [`studyu_app` - `v2.6.2`](#studyu_app---v262)
+ - [`studyu_designer_v2` - `v1.5.3`](#studyu_designer_v2---v153)
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_core` - `v4.3.0`
+ - `studyu_flutter_common` - `v1.6.2`
+
+---
+
+#### `studyu_flutter_common` - `v1.6.2`
+
+#### `studyu_core` - `v4.3.0`
+
+#### `studyu_app` - `v2.6.2`
+
+ - **FIX**: update descriptions and rename imprint. ([6d3757f4](https://github.com/hpi-studyu/studyu/commit/6d3757f425dd5b95ee581e10b6ad675f8e71786a))
+
+#### `studyu_designer_v2` - `v1.5.3`
+
+ - **FIX**: update descriptions and rename imprint. ([6d3757f4](https://github.com/hpi-studyu/studyu/commit/6d3757f425dd5b95ee581e10b6ad675f8e71786a))
+
+
 ## 2023-10-11
 
 ### Changes

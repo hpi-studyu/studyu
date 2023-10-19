@@ -1,3 +1,7 @@
+## 1.6.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 1.6.2-dev.11
 
  - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
