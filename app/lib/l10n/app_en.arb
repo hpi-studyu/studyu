@@ -115,14 +115,14 @@
 
   "terms": "Terms of Use",
   "terms_read": "Read Terms of Use",
-  "terms_content": "The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the imprint.",
+  "terms_content": "The terms of use give an overview on the purpose and use of the StudyU app. In case you have any questions please reach out to us via the contact information in the legal notice.",
   "terms_agree": "I have read and agree to the terms of use",
 
   "privacy": "Privacy Policy",
   "privacy_read": "Read Privacy Policy",
-  "privacy_content": "The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the imprint.",
+  "privacy_content": "The privacy policy describes which data is stored, why, when, where, access rights, and which rights you have. In case you have any questions please reach out to us via the contact information in the legal notice.",
   "privacy_agree": "I have read and agree to the privacy policy",
-  "imprint_read": "Read Imprint",
+  "imprint_read": "Read Legal Notice",
 
   "invite_code_button": "Use invite code",
   "private_study_invite_code": "Private study invite code",

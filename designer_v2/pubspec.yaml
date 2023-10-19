@@ -1,7 +1,7 @@
 name: studyu_designer_v2
 version: 1.5.2
 publish_to: none
-description: Create digital N-of-1 studies with StudyU
+description: Implement digital N-of-1 studies seamlessly with the brand new StudyU Designer
 
 environment:
   sdk: '>=2.17.0 <4.0.0'
