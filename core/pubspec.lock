@@ -141,10 +141,10 @@ packages:
     dependency: transitive
     description:
       name: coverage
-      sha256: "595a29b55ce82d53398e1bcc2cba525d7bd7c59faeb2d2540e9d42c390cfeeeb"
+      sha256: "0cec992efb6feaa6141779723bf0119d5f511ebd658aa5225d9bac53cb7e609e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.4"
+    version: "1.7.0"
   crypto:
     dependency: transitive
     description:
@@ -157,10 +157,10 @@ packages:
     dependency: "direct main"
     description:
       name: csv
-      sha256: "016b31a51a913744a0a1655c74ff13c9379e1200e246a03d96c81c5d9ed297b5"
+      sha256: "142bdf2b24f4a49e35a0fc4398f21d861c4c0f9015e8054dcacd0bb8e23ee27d"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "5.1.0"
   dart_style:
     dependency: transitive
     description:
@@ -557,10 +557,10 @@ packages:
     dependency: "direct dev"
     description:
       name: test
-      sha256: a20ddc0723556dc6dd56094e58ec1529196d5d7774156604cb14e8445a5a82ff
+      sha256: d983a57c33dde6d44b1fb8635f67c91f4b41d26cf227c147963affa97d63563d
       url: "https://pub.dev"
     source: hosted
-    version: "1.24.7"
+    version: "1.24.8"
   test_api:
     dependency: transitive
     description:
@@ -573,10 +573,10 @@ packages:
     dependency: transitive
     description:
       name: test_core
-      sha256: "96382d0bc826e260b077bb496259e58bc82e90b603ab16cd5ae95dfe1dfcba8b"
+      sha256: "2f866bf4b20c11327ac166ee6036bddafb7fe9e35505ff8324f788e66913f967"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.7"
+    version: "0.5.8"
   timing:
     dependency: transitive
     description:

@@ -9,7 +9,7 @@ environment:
 dependencies:
   archive: ^3.4.6
   async: ^2.11.0
-  csv: ^5.0.2
+  csv: ^5.1.0
   cupertino_icons: ^1.0.6
   dynamic_color:
   equatable: ^2.0.5
@@ -18,10 +18,10 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter_localizations:
     sdk: flutter
-  flutter_riverpod: ^2.4.3
+  flutter_riverpod: ^2.4.4
   flutter_web_plugins:
     sdk: flutter
-  go_router: ^11.1.3
+  go_router: ^12.0.0
   material_color_utilities:
   material_design_icons_flutter: ^7.0.7296
   pointer_interceptor: ^0.9.3+6
@@ -35,10 +35,10 @@ dependencies:
   supabase: ^1.11.9
   supabase_flutter: ^1.10.22
   url_launcher: ^6.1.14
-  uuid: ^3.0.0
+  uuid: ^3.0.0 # sentry <= ^7.10.1
 
 dev_dependencies: 
-  flutter_lints: ^2.0.3
+  flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
 
