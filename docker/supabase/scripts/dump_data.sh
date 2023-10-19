@@ -17,6 +17,9 @@ else
 fi
 
 db_username="${POSTGRES_USERNAME:-$default_username}"
+# todo include option to connect to external db via host and password specified in this file
+# todo same for dump_schema.sh
+
 
 # Check if the Docker container is running
 if ! docker ps -a --format '{{.Names}}' | grep -q "^$POSTGRES_HOST$"; then
