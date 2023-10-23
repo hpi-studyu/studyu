@@ -32,9 +32,9 @@ services:
       timeout: 5s
       interval: 5s
       retries: 3
-    depends_on:
-      analytics:
-        condition: service_healthy
+    # depends_on:
+    #   analytics:
+    #     condition: service_healthy
     environment:
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -64,9 +64,9 @@ services:
     # ports:
     #  - ${KONG_HTTP_PORT}:8000/tcp
     #  - ${KONG_HTTPS_PORT}:8443/tcp
-    depends_on:
-      analytics:
-        condition: service_healthy
+    # depends_on:
+    #   analytics:
+    #     condition: service_healthy
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
@@ -86,12 +86,12 @@ services:
   auth:
     container_name: supabase-auth
     image: supabase/gotrue:v2.99.0
-    depends_on:
+    # depends_on:
       # db:
         # Disable this if you are using an external Postgres database
         # condition: service_healthy
-      analytics:
-        condition: service_healthy
+      # analytics:
+      #   condition: service_healthy
     healthcheck:
       test:
         [
@@ -145,12 +145,12 @@ services:
   rest:
     container_name: supabase-rest
     image: postgrest/postgrest:v11.2.0
-    depends_on:
+    # depends_on:
       # db:
         # Disable this if you are using an external Postgres database
         # condition: service_healthy
-      analytics:
-        condition: service_healthy
+      # analytics:
+      #   condition: service_healthy
     restart: unless-stopped
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
@@ -165,12 +165,12 @@ services:
   realtime:
     container_name: realtime-dev.supabase-realtime
     image: supabase/realtime:v2.10.1
-    depends_on:
+    # depends_on:
       # db:
         # Disable this if you are using an external Postgres database
         # condition: service_healthy
-      analytics:
-        condition: service_healthy
+      # analytics:
+      #   condition: service_healthy
     healthcheck:
       test:
         [
@@ -264,12 +264,12 @@ services:
   meta:
     container_name: supabase-meta
     image: supabase/postgres-meta:v0.68.0
-    depends_on:
+    # depends_on:
       # db:
         # Disable this if you are using an external Postgres database
         # condition: service_healthy
-      analytics:
-        condition: service_healthy
+      # analytics:
+      #   condition: service_healthy
     restart: unless-stopped
     environment:
       PG_META_PORT: 8080
@@ -283,9 +283,9 @@ services:
     container_name: supabase-edge-functions
     image: supabase/edge-runtime:v1.18.1
     restart: unless-stopped
-    depends_on:
-      analytics:
-        condition: service_healthy
+    # depends_on:
+      # analytics:
+        # condition: service_healthy
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SUPABASE_URL: http://kong:8000
