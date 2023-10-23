@@ -35,7 +35,7 @@ declare -A compose_files=(
 available_components="${bold}Available components:\n${reset}"
 available_components+="  supabase-db        Postgres database used as Supabase backend\n"
 available_components+="  supabase           Supabase middleware (needs supabase-db)\n"
-available_components+="  proxy              Nginx reverse proxy to access the Supabase frontend\n"
+available_components+="  proxy              Nginx reverse proxy to access the Supabase\n"
 available_components+="  studyu-app         StudyU App (includes proxy)\n"
 available_components+="  studyu-designer    StudyU Designer (includes proxy)"
 
@@ -145,7 +145,9 @@ configure() {
 
   # STUDYU_BASE_BRANCH
   read -rp "$(echo -e 'Enter the StudyU repository base branch for updating (default: dev): ')" base_branch
-  base_branch=${base_branch:-"dev"} # Set default if empty input
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  # Set base_branch to name of current branch, or "main" if current_branch is empty
+  base_branch="${current_branch:-'main'}"
 
   # STUDYU_SECRETS_MANAGER
   read -rp "$(echo -e 'Enter an optional secrets manager to run with '\''docker compose'\'' (default: empty): ')" secrets_manager
