@@ -100,11 +100,12 @@ cases can be found [here](docker).
 
 1. Copy the [`docker/supabase/.env.example`](docker/supabase/.env.example) to
    create `docker/supabase/.env`. You can leave all values as they are.
-2. In [`docker/supabase/`](docker/supabase), run `docker compose -f
+2. Create a new docker network `docker network create --driver bridge studyu_network`
+3. In [`docker/supabase/`](docker/supabase), run `docker compose -f
    docker-compose-db.yml up` to launch the Postgres database.
-3. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
+4. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
    Supabase.
-4. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
+5. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
    up` to launch the nginx reverse proxy.
 
 If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote
