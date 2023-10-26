@@ -5,6 +5,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -16,7 +17,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import 'dashboard_state.dart';
 
-class DashboardController extends StateNotifier<DashboardState> implements IModelActionProvider<Study> {
+class DashboardController extends StateNotifier<DashboardState>
+    implements IModelActionProvider<Study> {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -80,6 +82,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     sortStudies();
   }
 
+  void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
+    state = state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
+  }
+
   void filterStudies(String? query) async {
     state = state.copyWith(
       query: query,
@@ -92,6 +98,12 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
       studies: () => AsyncValue.data(studies),
     );
   }
+
+  bool isSortingActiveForColumn(StudiesTableColumn column) {
+    return state.sortByColumn == column;
+  }
+
+  bool get isSortAscending => state.sortAscending;
 
   bool isPinned(Study study) {
     return userRepository.user.preferences.pinnedStudies.contains(study.id);
@@ -131,7 +143,8 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   }
 }
 
-final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
+final dashboardControllerProvider =
+    StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
   final dashboardController = DashboardController(
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
