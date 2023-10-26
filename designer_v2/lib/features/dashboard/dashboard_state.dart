@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,6 +13,8 @@ class DashboardState extends Equatable {
     this.studies = const AsyncValue.loading(),
     this.studiesFilter = defaultFilter,
     this.query = '',
+    this.sortByColumn = StudiesTableColumn.title,
+    this.sortAscending = true,
     required this.currentUser,
   });
 
@@ -20,22 +23,32 @@ class DashboardState extends Equatable {
   final AsyncValue<List<Study>> studies;
 
   /// Currently selected filter to be applied to the list of studies
-  /// in order to determine the [visibleStudies]
+  /// in order to determine the [displayedStudies]
   final StudiesFilter studiesFilter;
+
+  /// Currently selected sort column to be applied to the list of studies
+  /// in order to determine the [displayedStudies]
+  final StudiesTableColumn sortByColumn;
+
+  /// Currently selected sort direction to be applied to the list of studies
+  /// in order to determine the [displayedStudies]
+  final bool sortAscending;
 
   /// Currently authenticated user (used for filtering studies)
   final User currentUser;
 
   final String query;
 
-  /// The currently visible list of studies as by the selected filter
+  /// The currently displayed list of studies as by the selected filter,
+  /// selected sort column, and selected sort direction
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> visibleStudies(Set<String> pinnedStudies, String query) {
+  AsyncValue<List<Study>> displayedStudies(Set<String> pinnedStudies, String query) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
+        List<Study> updatedStudies =
+            studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
         updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(updatedStudies);
@@ -55,7 +68,67 @@ class DashboardState extends Equatable {
 
   List<Study> sort({required Set<String> pinnedStudies, List<Study>? studiesToSort}) {
     final sortedStudies = studiesToSort ?? studies.value!;
-    sortedStudies.sort((study, other) => study.title!.compareTo(other.title!));
+    switch (sortByColumn) {
+      case StudiesTableColumn.title:
+        if (sortAscending) {
+          sortedStudies.sort((study, other) => study.title!.compareTo(other.title!));
+        } else {
+          sortedStudies.sort((study, other) => other.title!.compareTo(study.title!));
+        }
+        break;
+      case StudiesTableColumn.status:
+        if (sortAscending) {
+          sortedStudies.sort((study, other) => study.status.index.compareTo(other.status.index));
+        } else {
+          sortedStudies.sort((study, other) => other.status.index.compareTo(study.status.index));
+        }
+        break;
+      case StudiesTableColumn.participation:
+        if (sortAscending) {
+          sortedStudies.sort(
+              (study, other) => study.participation.index.compareTo(other.participation.index));
+        } else {
+          sortedStudies.sort(
+              (study, other) => other.participation.index.compareTo(study.participation.index));
+        }
+        break;
+      case StudiesTableColumn.createdAt:
+        if (sortAscending) {
+          sortedStudies.sort((study, other) => study.createdAt!.compareTo(other.createdAt!));
+        } else {
+          sortedStudies.sort((study, other) => other.createdAt!.compareTo(study.createdAt!));
+        }
+        break;
+      case StudiesTableColumn.enrolled:
+        if (sortAscending) {
+          sortedStudies
+              .sort((study, other) => study.participantCount.compareTo(other.participantCount));
+        } else {
+          sortedStudies
+              .sort((study, other) => other.participantCount.compareTo(study.participantCount));
+        }
+        break;
+      case StudiesTableColumn.active:
+        if (sortAscending) {
+          sortedStudies
+              .sort((study, other) => study.activeSubjectCount.compareTo(other.activeSubjectCount));
+        } else {
+          sortedStudies
+              .sort((study, other) => other.activeSubjectCount.compareTo(study.activeSubjectCount));
+        }
+        break;
+      case StudiesTableColumn.completed:
+        if (sortAscending) {
+          sortedStudies.sort((study, other) => study.endedCount.compareTo(other.endedCount));
+        } else {
+          sortedStudies.sort((study, other) => other.endedCount.compareTo(study.endedCount));
+        }
+        break;
+      case StudiesTableColumn.pin:
+      case StudiesTableColumn.action:
+        break;
+    }
+
     if (pinnedStudies.isNotEmpty) {
       // Extract pinned studies and remove them from filteredStudies
       final List<Study> pinned = [];
@@ -78,13 +151,16 @@ class DashboardState extends Equatable {
     StudiesFilter Function()? studiesFilter,
     User Function()? currentUser,
     String? query,
+    StudiesTableColumn? sortByColumn,
+    bool? sortAscending,
   }) {
     return DashboardState(
-      studies: studies != null ? studies() : this.studies,
-      studiesFilter: studiesFilter != null ? studiesFilter() : this.studiesFilter,
-      currentUser: currentUser != null ? currentUser() : this.currentUser,
-      query: query ?? this.query,
-    );
+        studies: studies != null ? studies() : this.studies,
+        studiesFilter: studiesFilter != null ? studiesFilter() : this.studiesFilter,
+        currentUser: currentUser != null ? currentUser() : this.currentUser,
+        query: query ?? this.query,
+        sortByColumn: sortByColumn ?? this.sortByColumn,
+        sortAscending: sortAscending ?? this.sortAscending);
   }
 
   // - Equatable
