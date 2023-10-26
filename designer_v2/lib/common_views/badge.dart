@@ -14,8 +14,8 @@ class Badge extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
     this.type = BadgeType.plain,
     this.center = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final IconData? icon;
   final Color? color;
