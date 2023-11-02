@@ -1,111 +1,11 @@
-<svg version="1.1" baseProfile="full" width="702.0" height="453.0" viewbox="0 0 702 453" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[QuestionnaireTask
-	  |
-	  &lt;static&gt;+taskType: String;
-	  +questions: StudyUQuestionnaire
-	  |
-	  +Map&lt;String, dynamic&gt; toJson();
-	  +Map&lt;DateTime, T&gt; extractPropertyResults();
-	  +Map&lt;String, Type&gt; getAvailableProperties();
-	  +String? getHumanReadablePropertyName()
-	]
-	
-	[QuestionnaireTask]o-[StudyUQuestionnaire]
-	[&lt;abstract&gt;Observation]&lt;:-[QuestionnaireTask]
-	
-	[&lt;abstract&gt;Observation
-	  |
-	  &lt;static&gt;+taskTypes: Map&lt;String, Observation Function(Map&lt;String, dynamic&gt;)&gt;
-	]
-	
-	[&lt;abstract&gt;Task]&lt;:-[&lt;abstract&gt;Observation]
-	
-	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="453.0" width="702.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M323.0 344.7 L323 346 L323 366 L323.0 366.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M328.3 335.3 L323.0 344.7 L317.7 335.3 L323.0 326.0 Z"></path>
-					</g>
-					<path d="M323.0 146.3 L323 153 L323 173 L323.0 173.0 " fill="none"></path>
-					<path d="M328.3 146.3 L323.0 146.3 L317.7 146.3 L323.0 133.0 Z"></path>
-					<path d="M323.0 44.3 L323 51 L323 71 L323.0 71.0 " fill="none"></path>
-					<path d="M328.3 44.3 L323.0 44.3 L317.7 44.3 L323.0 31.0 Z"></path>
-					<g data-name="QuestionnaireTask">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTask">
-							<rect x="137.0" y="173.0" height="153.0" width="372.0" data-name="QuestionnaireTask"></rect>
-							<path d="M137.0 204.0 L509.0 204.0" fill="none" data-name="QuestionnaireTask"></path>
-							<path d="M137.0 250.0 L509.0 250.0" fill="none" data-name="QuestionnaireTask"></path>
-						</g>
-						<g transform="translate(137, 173)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTask">
-								<text x="178.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTask">QuestionnaireTask</text>
-								
-							</g>
-						</g>
-						<g transform="translate(137, 204)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireTask">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireTask">&lt;static&gt;+taskType: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireTask">+questions: StudyUQuestionnaire</text>
-								
-							</g>
-						</g>
-						<g transform="translate(137, 250)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireTask">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireTask">+Map&lt;String, dynamic&gt; toJson()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireTask">+Map&lt;DateTime, T&gt; extractPropertyResults()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionnaireTask">+Map&lt;String, Type&gt; getAvailableProperties()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="QuestionnaireTask">+String? getHumanReadablePropertyName()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyUQuestionnaire">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUQuestionnaire">
-							<rect x="231.0" y="366.0" height="31.0" width="184.0" data-name="StudyUQuestionnaire"></rect>
-						</g>
-						<g transform="translate(231, 366)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUQuestionnaire">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUQuestionnaire">
-								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUQuestionnaire">StudyUQuestionnaire</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Observation">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Observation">
-							<rect x="0.0" y="71.0" height="62.0" width="646.0" data-name="Observation"></rect>
-							<path d="M0.0 102.0 L646.0 102.0" fill="none" data-name="Observation"></path>
-						</g>
-						<g transform="translate(0, 71)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Observation">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Observation">
-								<text x="315.0" y="13.5" stroke="none" text-anchor="middle" data-name="Observation">Observation</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Observation">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Observation">
-								<text x="0.0" y="13.5" stroke="none" data-name="Observation">&lt;static&gt;+taskTypes: Map&lt;String, Observation Function(Map&lt;String, dynamic&gt;)&gt;</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Task">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Task">
-							<rect x="296.0" y="0.0" height="31.0" width="54.0" data-name="Task"></rect>
-						</g>
-						<g transform="translate(296, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Task">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Task">
-								<text x="19.0" y="13.5" stroke="none" text-anchor="middle" data-name="Task">Task</text>
-								
-							</g>
-						</g>
-					</g>
-				</g>
+				
 			</g>
 		</g>
 	</g>
