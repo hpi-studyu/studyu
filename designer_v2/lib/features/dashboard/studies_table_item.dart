@@ -13,7 +13,7 @@ import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudiesTableItem extends StatefulWidget {
-  final Study study;
+  final StudyGroup studyGroup;
   final double itemHeight;
   final double itemPadding;
   final double rowSpacing;
@@ -21,17 +21,17 @@ class StudiesTableItem extends StatefulWidget {
   final List<ModelAction> actions;
   final List<StudiesTableColumnSize> columnSizes;
   final bool isPinned;
-  final void Function(Study, bool)? onPinnedChanged;
-  final void Function(Study)? onTap;
+  final void Function(StudyGroup, bool)? onPinnedChanged;
+  final void Function(Study)? onTapStudy;
 
   StudiesTableItem(
       {super.key,
-      required this.study,
+      required this.studyGroup,
       required this.actions,
       required this.columnSizes,
       required this.isPinned,
       this.onPinnedChanged,
-      this.onTap,
+      this.onTapStudy,
       this.itemHeight = 60.0,
       this.itemPadding = 10.0,
       this.rowSpacing = 9.0,
@@ -46,15 +46,49 @@ class StudiesTableItem extends StatefulWidget {
 class _StudiesTableItemState extends State<StudiesTableItem> {
   bool isHovering = false;
   bool isHoveringPin = false;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    return Container(
+      //height: widget.itemHeight,
+      margin: EdgeInsets.only(bottom: widget.rowSpacing),
+      child: LayoutBuilder(builder: (_, constraints) {
+        return Material(
+          color: theme.colorScheme.onPrimary,
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          elevation: isHovering ? 4.0 : 1.5,
+          child: _buildRow(theme, widget.studyGroup),
+        );
+      }),
+    );
+  }
 
-    TextStyle? mutedTextStyleIfZero(int value) {
-      return (value > 0) ? null : ThemeConfig.bodyTextBackground(theme);
+  Widget _buildRow(ThemeData theme, StudyGroup studyGroup) {
+    if (!isExpanded || studyGroup.isSingleStudy) {
+      return _buildSingleStudyOrGroupHeaderRow(theme, studyGroup);
     }
 
+    final rows = [_buildSingleStudyOrGroupHeaderRow(theme, studyGroup)];
+    for (final study in studyGroup.studies) {
+      rows.add(_buildSingleStudyOrGroupHeaderRow(theme, StudyGroup.single(study)));
+      rows.add(const Divider(
+        thickness: 0.3,
+      ));
+    }
+    rows.removeLast();
+    rows.add(const Divider(
+      thickness: 0.3,
+      color: Colors.transparent,
+    ));
+
+    return Column(
+      children: rows,
+    );
+  }
+
+  Widget _buildSingleStudyOrGroupHeaderRow(ThemeData theme, StudyGroup studyGroup) {
     Icon icon(IconData iconData) {
       return Icon(
         iconData,
@@ -63,6 +97,17 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       );
     }
 
+    final normalTextStyle = isExpanded && !studyGroup.isSingleStudy
+        ? const TextStyle(fontWeight: FontWeight.bold)
+        : null;
+
+    TextStyle? mutedTextStyleIfZero(int value) {
+      return (value > 0)
+          ? normalTextStyle
+          : ThemeConfig.bodyTextBackground(theme).merge(normalTextStyle);
+    }
+
+    // TODO: Add pin feature again
     Widget getRespectivePinIcon(Set<MaterialState> state) {
       if (isHoveringPin) {
         return widget.isPinned ? icon(MdiIcons.pinOff) : icon(MdiIcons.pin);
@@ -71,90 +116,102 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       }
     }
 
-    return Container(
-      height: widget.itemHeight,
-      margin: EdgeInsets.only(bottom: widget.rowSpacing),
-      child: LayoutBuilder(builder: (_, constraints) {
-        return Material(
-          color: theme.colorScheme.onPrimary,
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          elevation: isHovering ? 4.0 : 1.5,
-          child: InkWell(
-            onTap: () => widget.onTap?.call(widget.study),
-            onHover: (hover) {
-              setState(() {
-                isHovering = hover;
-              });
-            },
-            hoverColor: theme.colorScheme.onPrimary,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: widget.itemPadding),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  widget.columnSizes[0].createContainer(
-                    height: widget.itemHeight,
-                    child: MouseEventsRegion(
-                      onTap: () => widget.onPinnedChanged?.call(widget.study, !widget.isPinned),
-                      onEnter: (_) => setState(() => isHoveringPin = true),
-                      onExit: (_) => setState(() => isHoveringPin = false),
-                      builder: (context, mouseEventState) {
-                        return getRespectivePinIcon(mouseEventState);
-                      },
-                    ),
+    final row = InkWell(
+      onTap: () {
+        if (studyGroup.isSingleStudy) {
+          widget.onTapStudy?.call(studyGroup.first);
+          return;
+        }
+
+        setState(() {
+          isExpanded = !isExpanded;
+        });
+      },
+      onHover: (hover) {
+        setState(() {
+          isHovering = hover;
+        });
+      },
+      hoverColor: theme.colorScheme.onPrimary,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: widget.itemPadding),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                widget.columnSizes[0].createContainer(
+                  height: widget.itemHeight,
+                  child: !studyGroup.isSingleStudy
+                      ? (isExpanded ? icon(MdiIcons.chevronDown) : icon(MdiIcons.chevronRight))
+                      : const SizedBox.shrink(),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[1].createContainer(
+                  child: Text(
+                    studyGroup.title ?? '[Missing study title]',
+                    style: normalTextStyle,
                   ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[1].createContainer(
-                    child: Text(widget.study.title ?? '[Missing study title]'),
-                  ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[2].createContainer(
-                    child: StudyStatusBadge(
-                      status: widget.study.status,
-                      showPrefixIcon: false,
-                      showTooltip: false,
-                    ),
-                  ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[3].createContainer(
-                    child: StudyParticipationBadge(
-                      participation: widget.study.participation,
-                      center: false,
-                    ),
-                  ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[4].createContainer(
-                      child: Text(widget.study.createdAt?.toTimeAgoString() ?? '')),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[5].createContainer(
-                    child: Text(widget.study.participantCount.toString(),
-                        style: mutedTextStyleIfZero(widget.study.participantCount)),
-                  ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[6].createContainer(
-                    child: Text(widget.study.activeSubjectCount.toString(),
-                        style: mutedTextStyleIfZero(widget.study.activeSubjectCount)),
-                  ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[7].createContainer(
-                    child: Text(widget.study.endedCount.toString(),
-                        style: mutedTextStyleIfZero(widget.study.endedCount)),
-                  ),
-                  SizedBox(width: widget.columnSpacing),
-                  widget.columnSizes[8].createContainer(
-                    child: _buildActionMenu(context, widget.actions),
-                  ),
-                  SizedBox(
-                    width: widget.columnSpacing,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[2].createContainer(
+                  child: studyGroup.isSingleStudy
+                      ? StudyStatusBadge(
+                          status: studyGroup.first.status,
+                          showPrefixIcon: false,
+                          showTooltip: false,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[3].createContainer(
+                  child: studyGroup.isSingleStudy
+                      ? StudyParticipationBadge(
+                          participation: studyGroup.first.participation,
+                          center: false,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[4].createContainer(
+                    child: Text(studyGroup.createdAt?.toTimeAgoString() ?? '',
+                        style: normalTextStyle)),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[5].createContainer(
+                  child: Text(studyGroup.participantCount.toString(),
+                      style: mutedTextStyleIfZero(studyGroup.participantCount)),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[6].createContainer(
+                  child: Text(studyGroup.activeSubjectCount.toString(),
+                      style: mutedTextStyleIfZero(studyGroup.activeSubjectCount)),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[7].createContainer(
+                  child: Text(studyGroup.endedCount.toString(),
+                      style: mutedTextStyleIfZero(studyGroup.endedCount)),
+                ),
+                SizedBox(width: widget.columnSpacing),
+                widget.columnSizes[8].createContainer(
+                  child: _buildActionMenu(context, widget.actions),
+                ),
+                SizedBox(
+                  width: widget.columnSpacing,
+                ),
+              ],
             ),
-          ),
-        );
-      }),
+          ],
+        ),
+      ),
     );
+    return !studyGroup.isSingleStudy
+        ? Material(
+            color: theme.colorScheme.onPrimary,
+            elevation: isExpanded ? 1.5 : 0.0,
+            child: row,
+          )
+        : row;
   }
 
   Widget _buildActionMenu(BuildContext context, List<ModelAction> actions) {

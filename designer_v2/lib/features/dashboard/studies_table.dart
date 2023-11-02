@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
@@ -11,6 +12,29 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+
+class StudyGroup {
+  final bool isSingleStudy;
+  final String id;
+  final String? title;
+  final List<Study> studies;
+  Study get first => studies.first;
+  DateTime? get createdAt => studies
+      .where((s) => s.createdAt != null)
+      .sortedBy((s) => s.createdAt!)
+      .firstOrNull
+      ?.createdAt;
+  int get participantCount => studies.map((s) => s.participantCount).sum;
+  int get activeSubjectCount => studies.map((s) => s.activeSubjectCount).sum;
+  int get endedCount => studies.map((s) => s.endedCount).sum;
+
+  StudyGroup(this.studies, this.title, this.id, {this.isSingleStudy = false}) {
+    if (studies.isEmpty) {
+      throw ArgumentError("The studies list should not be empty.");
+    }
+  }
+  StudyGroup.single(Study study) : this([study], study.title, study.id, isSingleStudy: true);
+}
 
 enum StudiesTableColumn {
   pin,
@@ -43,7 +67,7 @@ class StudiesTableColumnSize {
 
 class StudiesTable extends StatelessWidget {
   const StudiesTable({
-    required this.studies,
+    required this.studyGroups,
     required this.onSelect,
     required this.getActions,
     required this.emptyWidget,
@@ -60,16 +84,16 @@ class StudiesTable extends StatelessWidget {
   final double itemPadding;
   final double rowSpacing;
   final double columnSpacing;
-  final List<Study> studies;
+  final List<StudyGroup> studyGroups;
   final OnSelectHandler<Study> onSelect;
-  final ActionsProviderFor<Study> getActions;
+  final ActionsProviderFor<StudyGroup> getActions;
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
 
   @override
   Widget build(BuildContext context) {
-    if (studies.isEmpty) {
+    if (studyGroups.isEmpty) {
       return emptyWidget;
     }
 
@@ -85,10 +109,9 @@ class StudiesTable extends StatelessWidget {
 
     // Calculate the minimum status column width
     final statuses = HashSet<StudyStatus>();
-    for (final study in studies) {
-      statuses.add(study.status);
-      if (studies.length >= StudyStatus.values.length) {
-        break;
+    for (final studyGroup in studyGroups) {
+      for (final study in studyGroup.studies) {
+        statuses.add(study.status);
       }
     }
     int maxStatusLength = statuses.fold(
@@ -98,10 +121,9 @@ class StudiesTable extends StatelessWidget {
 
     // Calculate the minimum participation column width
     final participations = HashSet<Participation>();
-    for (final study in studies) {
-      participations.add(study.participation);
-      if (participations.length >= Participation.values.length) {
-        break;
+    for (final studyGroup in studyGroups) {
+      for (final study in studyGroup.studies) {
+        participations.add(study.participation);
       }
     }
     int maxParticipationLength = participations.fold(
@@ -188,13 +210,13 @@ class StudiesTable extends StatelessWidget {
         ),
         SizedBox(height: rowSpacing),
         ListView.builder(
-          itemCount: studies.length,
-          itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
+          itemCount: studyGroups.length,
+          //itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            final item = studies[index];
+            final item = studyGroups[index];
             return StudiesTableItem(
-              study: item,
+              studyGroup: item,
               columnSizes: columnDefinitionsMap.values.toList(),
               actions: getActions(item),
               isPinned: pinnedStudies.contains(item.id),
@@ -206,7 +228,7 @@ class StudiesTable extends StatelessWidget {
                     ? dashboardController.pinOffStudy(item.id)
                     : dashboardController.pinStudy(item.id);
               },
-              onTap: (study) => onSelect.call(study),
+              onTapStudy: (study) => onSelect.call(study),
             );
           },
         )

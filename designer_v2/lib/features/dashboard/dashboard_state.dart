@@ -44,18 +44,41 @@ class DashboardState extends Equatable {
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> displayedStudies(Set<String> pinnedStudies, String query) {
+  AsyncValue<List<StudyGroup>> displayedStudies(Set<String> pinnedStudies, String query) {
     return studies.when(
       data: (studies) {
         List<Study> updatedStudies =
             studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
         updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
-        return AsyncValue.data(updatedStudies);
+        return AsyncValue.data(group(updatedStudies));
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
       loading: () => const AsyncValue.loading(),
     );
+  }
+
+  List<StudyGroup> group(List<Study> studies) {
+    //TODO: change to real implementation
+    const String keyWord = "N-of-1 trials to improve sleep";
+    final List<Study> group = [];
+    int? index;
+    studies.removeWhere((study) {
+      if (study.title != null && study.title!.startsWith(keyWord)) {
+        index ??= studies.indexOf(study);
+        group.add(study);
+        return true;
+      }
+      return false;
+    });
+
+    final studyGroups = studies.map((s) => StudyGroup.single(s)).toList();
+
+    if (index != null && group.isNotEmpty) {
+      studyGroups.insert(
+          index!, StudyGroup(group, "N-of-1 trials to improve sleep", "group_id_123"));
+    }
+    return studyGroups;
   }
 
   List<Study> filter({List<Study>? studiesToFilter}) {

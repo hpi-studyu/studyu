@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'dashboard_state.dart';
 
 class DashboardController extends StateNotifier<DashboardState>
-    implements IModelActionProvider<Study> {
+    implements IModelActionProvider<StudyGroup> {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -110,7 +110,8 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 
   @override
-  List<ModelAction> availableActions(Study model) {
+  List<ModelAction> availableActions(StudyGroup model) {
+    // TODO(hig): Adapt for study group
     final pinActions = [
       ModelAction(
         type: StudyActionType.pin,
@@ -118,7 +119,7 @@ class DashboardController extends StateNotifier<DashboardState>
         onExecute: () async {
           await pinStudy(model.id);
         },
-        isAvailable: !isPinned(model),
+        isAvailable: !isPinned(model.first),
       ),
       ModelAction(
         type: StudyActionType.pinoff,
@@ -126,12 +127,12 @@ class DashboardController extends StateNotifier<DashboardState>
         onExecute: () async {
           await pinOffStudy(model.id);
         },
-        isAvailable: isPinned(model),
+        isAvailable: isPinned(model.first),
       )
     ].where((action) => action.isAvailable).toList();
 
     return withIcons(
-      [...pinActions, ...studyRepository.availableActions(model)],
+      [...pinActions, ...studyRepository.availableActions(model.first)],
       studyActionIcons,
     );
   }
