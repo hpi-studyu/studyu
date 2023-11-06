@@ -19,8 +19,8 @@ dependencies:
   shared_preferences: "^2.1.1"
   encrypt: ^5.0.1
   cross_file: ^0.3.3+4
-  path_provider:
-  path:
+  path_provider: ^2.1.1
+  path: ^1.8.3
   audioplayers: ^4.1.0
   record: ^4.4.4
 
