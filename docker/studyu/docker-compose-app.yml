@@ -1,24 +1,23 @@
 version: '3.8'
-name: 'studyu'
+name: 'studyu_app'
 
 networks:
   default:
     name: studyu_network
+    external: true
 
 services:
-  app:
+  web:
     container_name: studyu-app
     restart: unless-stopped
     build:
       context: ../../
-      dockerfile: ./docker/studyu/Dockerfile.single
+      dockerfile: ./docker/studyu/Dockerfile
       args:
         FLUTTER_APP_FOLDER: app
     ports:
-      - 8080:8080 # StudyU App
-      - 8082:8082 # Supabase Studio (disable if you do not want to self-host Supabase on this machine)
+      - 8080:8080
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ../nginx/conf.d:/etc/nginx/conf.d:ro
     env_file:
       - ../../flutter_common/lib/envs/.env.local

@@ -11,7 +11,7 @@ class Schedule {
     CompletionPeriod.noId(
       unlockTime: StudyUTimeOfDay(hour: 8),
       lockTime: StudyUTimeOfDay(hour: 20),
-    )
+    ),
   ];
   List<StudyUTimeOfDay> reminders = [];
 

@@ -1,6 +1,8 @@
-import 'package:fl_chart/fl_chart.dart' as charts;
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../util/data_processing.dart';
@@ -14,10 +16,18 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = getAggregatedData().toList();
+    final taskTitle =
+        subject.study.observations.firstWhereOrNull((element) => element.id == section.resultProperty!.task)?.title;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AspectRatio(aspectRatio: 1.5, child: getDiagram(context)),
+        if (taskTitle != null) Text(taskTitle, style: theme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        getLegend(context, data),
+        const SizedBox(height: 8),
+        AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
       ],
     );
   }
@@ -36,148 +46,27 @@ class AverageSectionWidget extends ReportSectionWidget {
     return Iterable<int>.generate(numberOfPhases).map((i) => (i + 1) * phaseDuration).toList();
   }
 
-  //bool get needsSeparators => section.aggregate == TemporalAggregation.day;
-  //bool get needsDomainLabel => section.aggregate != TemporalAggregation.intervention;
+  Widget getLegend(BuildContext context, List<DiagramDatum> data) {
+    final interventionNames = getInterventionNames(context);
+    final legends = {
+      for (var entry in data)
+        interventionNames[entry.intervention]!: Legend(interventionNames[entry.intervention]!, getColor(entry))
+    };
+    return LegendsListWidget(legends: legends.values.toList());
+  }
 
-  Widget getDiagram(BuildContext context) {
+  Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
     return BarChart(
-      getChartData(),
+      getChartData(context, data),
       swapAnimationDuration: const Duration(milliseconds: 150), // Optional
       swapAnimationCurve: Curves.linear, // Optional
     );
-
-    /*return charts.NumericComboChart(
-      getBarData(),
-      animate: true,
-      behaviors: [
-        charts.SeriesLegend(desiredMaxColumns: 2),
-        if (needsSeparators) generateSeperators(numberOfPhases, phaseDuration),
-        if (needsDomainLabel)
-          charts.ChartTitle(
-            AppLocalizations.of(context).report_axis_phase,
-            behaviorPosition: charts.BehaviorPosition.bottom,
-            titleStyleSpec: convertTextTheme(Theme.of(context).textTheme.bodySmall),
-          )
-      ],
-      domainAxis: charts.NumericAxisSpec(
-        viewport: getExtents(numberOfPhases, phaseDuration),
-        tickProviderSpec: generateTicks(numberOfPhases, phaseDuration),
-      ),
-      defaultRenderer: charts.BarRendererConfig<num>(groupingType: charts.BarGroupingType.stacked),
-    );*/
   }
 
-  /*charts.RangeAnnotation<num> generateSeperators(int numberOfPhases, int phaseDuration) => charts.RangeAnnotation<num>(
-    Iterable<int>.generate(numberOfPhases + 1).map((i) => createPlotSeparator(i * phaseDuration - 0.5)).toList(),
-  );
-
-  charts.StaticNumericTickProviderSpec generateTicks(int numberOfPhases, int phaseDuration) {
-    if (section.aggregate == TemporalAggregation.intervention) {
-      return const charts.StaticNumericTickProviderSpec([]);
-    } else if (section.aggregate == TemporalAggregation.phase) {
-      return createNumericTicks(
-        Iterable<int>.generate(numberOfPhases).map((i) => MapEntry(i, (i + 1).toString())),
-      );
-    } else {
-      return createNumericTicks(
-        Iterable<int>.generate(numberOfPhases)
-            .map((i) => MapEntry(i * phaseDuration + (phaseDuration - 1) / 2, (i + 1).toString())),
-      );
-    }
-  }
-
-  charts.NumericExtents getExtents(int numberOfPhases, int phaseDuration) {
-    if (section.aggregate == TemporalAggregation.intervention) {
-      return charts.NumericExtents(subject.study.schedule.includeBaseline ? 0 : 1, 2);
-    } else if (section.aggregate == TemporalAggregation.phase) {
-      return charts.NumericExtents(0, numberOfPhases - 1);
-    } else {
-      return charts.NumericExtents(0, (numberOfPhases * phaseDuration) - 1);
-    }
-  }
-
-  Iterable<DiagramDatum> getAggregatedData() {
-    final values = section.resultProperty.retrieveFromResults(subject);
-    final data = values.entries.map(
-      (e) => DiagramDatum(
-        subject.getDayOfStudyFor(e.key),
-        e.value,
-        e.key,
-        subject.getInterventionForDate(e.key).id,
-      ),
-    );
-
-    if (section.aggregate == TemporalAggregation.day) {
-      return data
-          .groupBy((e) => e.x)
-          .aggregateWithKey(
-            (data, day) => DiagramDatum(
-              day,
-              foldAggregateMean()(data.map((e) => e.value)),
-              null,
-              data.first.intervention,
-            ),
-          )
-          .map((e) => e.value);
-    } else if (section.aggregate == TemporalAggregation.phase) {
-      return data
-          .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp))
-          .aggregateWithKey(
-            (data, phase) => DiagramDatum(
-              phase,
-              foldAggregateMean()(data.map((e) => e.value)),
-              null,
-              data.first.intervention,
-            ),
-          )
-          .map((e) => e.value);
-    } else {
-      final order = getInterventionPositions(subject.selectedInterventions);
-      return data
-          .groupBy((e) => e.intervention)
-          .aggregateWithKey(
-            (data, intervention) => DiagramDatum(
-              order[intervention],
-              foldAggregateMean()(data.map((e) => e.value)),
-              null,
-              intervention,
-            ),
-          )
-          .map((e) => e.value);
-    }
-  }
-
-  List<charts.Series<DiagramDatum, num>> getBarData() {
-    final colorPalette = getInterventionPalette(subject.selectedInterventions);
-    final interventionNames = getInterventionNames(subject.selectedInterventions);
-
-    return getAggregatedData()
-        .groupBy((datum) => datum.intervention)
-        .map(
-          (entry) => charts.Series<DiagramDatum, num>(
-            id: entry.key,
-            displayName: interventionNames[entry.key],
-            seriesColor: colorPalette[entry.key],
-            domainFn: (datum, _) => datum.x,
-            measureFn: (datum, _) => datum.value,
-            data: entry.value.toList(),
-          ),
-        )
-        .toList();
-  }*/
-
-  charts.BarChartData getChartData() {
-    //final colorPalette = getInterventionPalette(subject.selectedInterventions);
-    //final interventionNames = getInterventionNames(subject.selectedInterventions);
-/*
-    final task = subject.study.observations.firstWhere((element) =>
-    element.id == section.resultProperty!.task).
-        .firstWhere((element) => element.id == section.resultProperty!.property);
-    print(task.toString());
-*/
-    return charts.BarChartData(
-      //minX: 1,
-      //maxX: subject.study.schedule.length.toDouble(),
+  BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
+    final barGroups = getBarGroups(context, data);
+    final maxY = ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ?? 0) * 1.1).ceilToDouble();
+    return BarChartData(
       titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
               axisNameWidget:
@@ -186,24 +75,15 @@ class AverageSectionWidget extends ReportSectionWidget {
                 showTitles: true,
                 getTitlesWidget: getTitles,
               )),
-          topTitles: AxisTitles(
+          topTitles: const AxisTitles(
               sideTitles: SideTitles(
             showTitles: false,
           ))),
-      gridData: charts.FlGridData(
-        drawHorizontalLine: false,
-        drawVerticalLine: false,
-        /*checkToShowVerticalLine: (val) => true,
-        getDrawingVerticalLine: (val) => FlLine(color: Colors.black),
-        verticalInterval: subject.study.schedule.phaseDuration.toDouble(),*/
-      ),
-      barGroups: getBarGroups(),
-      barTouchData: BarTouchData(
-        enabled: false, // todo enable with x and y value
-      ),
-      //maxY: ; // todo get min and max values of question
-      // todo add question title to top of diagram (e.g. "pain rating")
-      // todo add legend
+      gridData: getGridData(barGroups),
+      alignment: BarChartAlignment.spaceAround,
+      barGroups: barGroups,
+      barTouchData: BarTouchData(enabled: true),
+      maxY: maxY,
     );
   }
 
@@ -211,7 +91,6 @@ class AverageSectionWidget extends ReportSectionWidget {
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: getValues(value),
-      //space: 4,
     );
   }
 
@@ -225,7 +104,7 @@ class AverageSectionWidget extends ReportSectionWidget {
           return const SizedBox.shrink();
         }
       case TemporalAggregation.phase:
-        return Text("${value + 1}");
+        return Text("${value.toInt() + 1}");
       case TemporalAggregation.intervention:
         return const SizedBox.shrink();
       default:
@@ -233,96 +112,70 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
-  List<BarChartGroupData> getBarGroups() {
-    // groupBy((datum) => datum.intervention)
-    final data = getAggregatedData().toList();
-    //data.add(DiagramDatum(1, 10, DateTime.now(), subject.selectedInterventions.first.id));
-    //data.add(DiagramDatum(100, 3, DateTime.now(), subject.selectedInterventions.first.id));
+  List<BarChartGroupData> getBarGroups(BuildContext context, List<DiagramDatum> data) {
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
-    //data.sort((a, b) => a.timestamp!.compareTo(b.timestamp!));
-    //final numberOfPhases = subject.interventionOrder.length;
-    //final phaseDuration = subject.study.schedule.phaseDuration;
-    List<BarChartGroupData> starter = List.empty();
+
+    int barCount = 0;
     switch (section.aggregate) {
       case TemporalAggregation.day:
-        starter = List<BarChartGroupData>.generate(
-            subject.study.schedule.length,
-            (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: 0,
-                    )
-                  ],
-                ));
+        barCount = subject.study.schedule.length;
       case TemporalAggregation.phase:
-        starter = List<BarChartGroupData>.generate(
-            subject.interventionOrder.length,
-            (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: 0,
-                    )
-                  ],
-                ));
+        barCount = subject.interventionOrder.length;
       case TemporalAggregation.intervention:
-        int interventionCount =
-            subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
-        starter = List<BarChartGroupData>.generate(
-            interventionCount,
-            (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: 0,
-                    )
-                  ],
-                ));
+        barCount = subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
       default:
     }
+
+    // there is no good way of dynamically setting the width of bars so they
+    // fill the chart :( the author of fl_charts themselves recommended using
+    // media queries: https://github.com/imaNNeo/fl_chart/issues/370
+    // so we take a wild guess and say the bars should fill about half of the
+    // space the chart gets which seems to be fine
+    final barWidth = MediaQuery.of(context).size.width / 2 / barCount;
+    BarChartGroupData barGenerator(int index, {double y = 0, Color? color}) {
+      final rod = BarChartRodData(
+        toY: y,
+        color: color,
+        width: barWidth,
+        borderRadius: const BorderRadius.all(Radius.circular(1)),
+      );
+      return BarChartGroupData(x: index, barsSpace: 0, barRods: [rod]);
+    }
+
+    var starter = List<BarChartGroupData>.generate(barCount, barGenerator);
     for (var entry in data) {
-      starter[entry.x.round()] = BarChartGroupData(x: entry.x.round(), barRods: [
-        charts.BarChartRodData(
-          toY: entry.value.toDouble(),
-          color: getColor(entry, subject),
-        )
-      ]);
+      starter[entry.x.round()] = barGenerator(entry.x.round(), y: entry.value.toDouble(), color: getColor(entry));
     }
     return starter;
-
-    /*return data.mapIndexed((idx, entry) {
-      //print(idx);
-      //if (idx < data.length) {
-      return BarChartGroupData(x: entry.x.round(), barRods: [
-        charts.BarChartRodData(
-          toY: entry.value.toDouble(),
-          color: getColor(entry, subject),
-        )
-      ]);
-      //}
-      /*return BarChartGroupData(
-        x: idx+1,
-        barRods: [
-          charts.BarChartRodData(
-            toY: 5,
-            /*color: getColor(DiagramDatum(idx+1, 5, null, subject.selectedInterventions[0].id), subject),*/
-          )
-        ]
-      );*/
-    }).toList();*/
-    /*return List<BarChartGroupData>.generate(subject.study.schedule.length, (index) =>  BarChartGroupData(
-        x: index + 1,
-        barRods: [
-          BarChartRodData(
-            toY: Random().nextInt(11).toDouble(),
-            color: getColor(index),
-          )
-        ],
-      ));*/
   }
 
-  MaterialColor getColor(DiagramDatum diagram, StudySubject subject) {
+  FlGridData getGridData(List<BarChartGroupData> barGroups) {
+    if (section.aggregate != TemporalAggregation.day) {
+      return const FlGridData(
+        drawHorizontalLine: false,
+        drawVerticalLine: false,
+      );
+    }
+    // the grid lines are always at positions in [0, 1] so this is a bit tricky
+    // also note that this math is only correct with
+    // BarChartAlignment.spaceAround, otherwise it would get even uglier
+
+    // resolution
+    final lineCount = barGroups.length * 2;
+    bool drawLine(double val) {
+      // draw when we are at the border between two phases
+      return (val * lineCount % (2 * subject.study.schedule.phaseDuration)).toInt() == 0;
+    }
+
+    return FlGridData(
+      drawHorizontalLine: false,
+      drawVerticalLine: true,
+      checkToShowVerticalLine: drawLine,
+      verticalInterval: 1 / lineCount,
+    );
+  }
+
+  MaterialColor getColor(DiagramDatum diagram) {
     const baselineColor = Colors.grey;
     final colors = [Colors.blue, Colors.orange];
     MaterialColor? c = Colors.teal;
@@ -346,26 +199,27 @@ class AverageSectionWidget extends ReportSectionWidget {
         if (subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[diagram.x.round() - 1];
+          c = colors[diagram.x.round() - (subject.study.schedule.includeBaseline ? 1 : 0)];
         }
       default:
     }
-    /*phasePos.forEachIndexed((index, phaseBreak) {
-      if (includeBaseline && pos <= phasePos[0]) {
-        c = Colors.grey;
-      }
-      if (pos <= phaseBreak && c == null) {
-        c = colors[(index % colors.length)];
-      }
-    });*/
-    return c; //?? Colors.green;
+    return c;
+  }
+
+  int getDayIndex(DateTime key) {
+    if (subject.study.schedule.includeBaseline) return subject.getDayOfStudyFor(key);
+    final schedule = subject.scheduleFor(subject.startedAt!);
+    // this always has to be found because studies have to have at least 2
+    // interventions
+    final offset = schedule.indexWhere((task) => task.id != Study.baselineID);
+    return subject.getDayOfStudyFor(key) - offset;
   }
 
   Iterable<DiagramDatum> getAggregatedData() {
     final values = section.resultProperty!.retrieveFromResults(subject);
     final data = values.entries.map(
       (e) => DiagramDatum(
-        subject.getDayOfStudyFor(e.key),
+        getDayIndex(e.key),
         e.value,
         e.key,
         subject.getInterventionForDate(e.key)!.id,
@@ -410,6 +264,12 @@ class AverageSectionWidget extends ReportSectionWidget {
           )
           .map((e) => e.value);
     }
+  }
+
+  Map<String, String?> getInterventionNames(BuildContext context) {
+    final names = {for (var intervention in subject.study.interventions) intervention.id: intervention.name};
+    names[Study.baselineID] = AppLocalizations.of(context)!.baseline;
+    return names;
   }
 }
 

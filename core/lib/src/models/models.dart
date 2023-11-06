@@ -17,4 +17,5 @@ export 'tables/study.dart';
 export 'tables/study_invite.dart';
 export 'tables/study_subject.dart';
 export 'tables/subject_progress.dart';
+export 'tables/user.dart';
 export 'tasks/tasks.dart';

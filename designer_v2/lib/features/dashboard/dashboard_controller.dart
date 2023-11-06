@@ -1,13 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -18,16 +20,20 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
+  final IUserRepository userRepository;
 
   /// Reference to services injected via Riverpod
   final GoRouter router;
 
-  /// A subscription for synchronizing state between the repository & controller
+  /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
+
+  final SearchController searchController = SearchController();
 
   DashboardController({
     required this.studyRepository,
     required this.authRepository,
+    required this.userRepository,
     required this.router,
   }) : super(DashboardState(currentUser: authRepository.currentUser!)) {
     _subscribeStudies();
@@ -48,6 +54,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     });
   }
 
+  setSearchText(String? text) {
+    searchController.setText(text ?? state.query);
+  }
+
   setStudiesFilter(StudiesFilter? filter) {
     state = state.copyWith(studiesFilter: () => filter ?? DashboardState.defaultFilter);
   }
@@ -60,10 +70,56 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     router.dispatch(RoutingIntents.studyNew);
   }
 
+  Future<void> pinStudy(String modelId) async {
+    await userRepository.updatePreferences(PreferenceAction.pin, modelId);
+    sortStudies();
+  }
+
+  Future<void> pinOffStudy(String modelId) async {
+    await userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
+    sortStudies();
+  }
+
+  void filterStudies(String? query) async {
+    state = state.copyWith(
+      query: query,
+    );
+  }
+
+  void sortStudies() async {
+    final studies = state.sort(pinnedStudies: userRepository.user.preferences.pinnedStudies);
+    state = state.copyWith(
+      studies: () => AsyncValue.data(studies),
+    );
+  }
+
+  bool isPinned(Study study) {
+    return userRepository.user.preferences.pinnedStudies.contains(study.id);
+  }
+
   @override
   List<ModelAction> availableActions(Study model) {
+    final pinActions = [
+      ModelAction(
+        type: StudyActionType.pin,
+        label: StudyActionType.pin.string,
+        onExecute: () async {
+          await pinStudy(model.id);
+        },
+        isAvailable: !isPinned(model),
+      ),
+      ModelAction(
+        type: StudyActionType.pinoff,
+        label: StudyActionType.pinoff.string,
+        onExecute: () async {
+          await pinOffStudy(model.id);
+        },
+        isAvailable: isPinned(model),
+      )
+    ].where((action) => action.isAvailable).toList();
+
     return withIcons(
-      studyRepository.availableActions(model),
+      [...pinActions, ...studyRepository.availableActions(model)],
       studyActionIcons,
     );
   }
@@ -79,6 +135,7 @@ final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardC
   final dashboardController = DashboardController(
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
+    userRepository: ref.watch(userRepositoryProvider),
     router: ref.watch(routerProvider),
   );
   dashboardController.addListener((state) {

@@ -64,7 +64,6 @@ convenience:
 - `.env`: Production database used by default
 - `.env.dev`: Development database used by dev branch
 - `.env.local`: Used to run StudyU locally with Docker
-- `.env.hpi`: Used for a self-hosted instance of Supabase at HPI
 
 Ideally we should only use the staging database or a local one for all our
 development work.
@@ -101,12 +100,13 @@ cases can be found [here](docker).
 
 1. Copy the [`docker/supabase/.env.example`](docker/supabase/.env.example) to
    create `docker/supabase/.env`. You can leave all values as they are.
-2. In [`docker/supabase/`](docker/supabase), run `docker compose -f
+2. Create a new docker network `docker network create --driver bridge studyu_network`
+3. In [`docker/supabase/`](docker/supabase), run `docker compose -f
    docker-compose-db.yml up` to launch the Postgres database.
-3. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
+4. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
    Supabase.
-4. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
-   up` to the nginx reverse proxy.
+5. In [`docker/`](docker), run `docker compose -f docker-compose-proxy.yml
+   up` to launch the nginx reverse proxy.
 
 If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote
 control enabled and the splits layout, you can omit steps 2-4 and instead run

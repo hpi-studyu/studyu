@@ -13,11 +13,13 @@ volumes:
 networks:
   default:
     name: studyu_network
+    external: true
 
 services:
+
   studio:
     container_name: supabase-studio
-    image: supabase/studio:v0.23.06
+    image: supabase/studio:20230921-d657f29
     restart: unless-stopped
     healthcheck:
       test:
@@ -30,8 +32,6 @@ services:
       timeout: 5s
       interval: 5s
       retries: 3
-    # ports:
-    #  - ${STUDIO_PORT}:3000/tcp
     environment:
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -43,6 +43,14 @@ services:
       SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+
+      LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
+      LOGFLARE_URL: http://analytics:4000
+      NEXT_PUBLIC_ENABLE_LOGS: true
+      # Comment to use Big Query backend for analytics
+      NEXT_ANALYTICS_BACKEND_PROVIDER: postgres
+      # Uncomment to use Big Query backend for analytics
+      # NEXT_ANALYTICS_BACKEND_PROVIDER: bigquery
 
   kong:
     container_name: supabase-kong
@@ -58,18 +66,20 @@ services:
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
       # https://github.com/supabase/cli/issues/14
       KONG_DNS_ORDER: LAST,A,CNAME
-      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
       KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
       KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      DASHBOARD_USERNAME: ${DASHBOARD_USERNAME}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
     volumes:
       # https://github.com/supabase/supabase/issues/12661
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro
 
   auth:
     container_name: supabase-auth
-    image: supabase/gotrue:v2.62.1
+    image: supabase/gotrue:v2.99.0
     healthcheck:
       test:
         [
@@ -119,11 +129,10 @@ services:
 
       GOTRUE_EXTERNAL_PHONE_ENABLED: ${ENABLE_PHONE_SIGNUP}
       GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
-      MFA_ENABLED: ${MFA_ENABLED}
 
   rest:
     container_name: supabase-rest
-    image: postgrest/postgrest:v11.1.0
+    image: postgrest/postgrest:v11.2.0
     restart: unless-stopped
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
@@ -131,6 +140,9 @@ services:
       PGRST_DB_ANON_ROLE: anon
       PGRST_JWT_SECRET: ${JWT_SECRET}
       PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
+    command: "postgrest"
 
   realtime:
     container_name: realtime-dev.supabase-realtime
@@ -224,7 +236,7 @@ services:
 
   meta:
     container_name: supabase-meta
-    image: supabase/postgres-meta:v0.66.3
+    image: supabase/postgres-meta:v0.68.0
     restart: unless-stopped
     environment:
       PG_META_PORT: 8080
@@ -236,7 +248,7 @@ services:
 
   functions:
     container_name: supabase-edge-functions
-    image: supabase/edge-runtime:v1.6.6
+    image: supabase/edge-runtime:v1.18.1
     restart: unless-stopped
     environment:
       JWT_SECRET: ${JWT_SECRET}
@@ -253,4 +265,4 @@ services:
       - --main-service
       - /home/deno/functions/main
 
-# If you want to use logging, please run with `docker compose -f docker-compose.yml -f docker-compose-logging.yml up`
+  # TODO: For analytics check guidelines at: https://supabase.com/docs/reference/self-hosting-analytics/list-endpoints#production-recommendations

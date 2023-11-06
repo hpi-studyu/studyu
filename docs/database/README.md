@@ -23,7 +23,7 @@
 | [public.study_invite](public.study_invite.md) | 3 | Study invite codes | BASE TABLE |
 | [public.subject_progress](public.subject_progress.md) | 6 |  | BASE TABLE |
 | [public.study_progress_export](public.study_progress_export.md) | 10 |  | VIEW |
-| [public.user](public.user.md) | 2 | Users get automatically added, when a new user is created in auth.users | BASE TABLE |
+| [public.user](public.user.md) | 3 | Users get automatically added, when a new user is created in auth.users | BASE TABLE |
 | [extensions.pg_stat_statements_info](extensions.pg_stat_statements_info.md) | 2 |  | VIEW |
 | [extensions.pg_stat_statements](extensions.pg_stat_statements.md) | 43 |  | VIEW |
 | [pgsodium.key](pgsodium.key.md) | 14 | This table holds metadata for derived keys given a key_id and key_context. The raw key is never stored. | BASE TABLE |

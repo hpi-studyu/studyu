@@ -66,7 +66,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
-        ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index])
+        ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index]),
       ];
 
   List<Intervention> get selectedInterventions {

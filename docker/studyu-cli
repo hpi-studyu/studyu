@@ -29,15 +29,13 @@ declare -A compose_files=(
   ["supabase-db"]="supabase/docker-compose-db.yml"
   ["supabase"]="supabase/docker-compose.yml"
   ["proxy"]="nginx/docker-compose-proxy.yml"
-  # ["studyu"]="studyu/docker-compose.yml"
   ["studyu-app"]="studyu/docker-compose-app.yml"
   ["studyu-designer"]="studyu/docker-compose-designer.yml"
 )
 available_components="${bold}Available components:\n${reset}"
 available_components+="  supabase-db        Postgres database used as Supabase backend\n"
 available_components+="  supabase           Supabase middleware (needs supabase-db)\n"
-available_components+="  proxy              Nginx reverse proxy to access the Supabase frontend if no StudyU component is started\n"
-# available_components+="  studyu             StudyU App and StudyU Designer (includes proxy)\n"
+available_components+="  proxy              Nginx reverse proxy to access the Supabase\n"
 available_components+="  studyu-app         StudyU App (includes proxy)\n"
 available_components+="  studyu-designer    StudyU Designer (includes proxy)"
 
@@ -113,49 +111,6 @@ component_is_running() {
 }
 
 
-# Check that proxy and a studyu component are not run together
-validate_component_list() {
-  local is_proxy_requested=false
-  local is_studyu_requested=false
-
-  for component in "$@"; do
-    if [[ "$component" == "studyu"* ]]; then
-      is_studyu_requested=true
-    elif [[ "$component" == "proxy" ]]; then
-      is_proxy_requested=true
-    fi
-  done
-
-  if [[ "$is_studyu_requested" == true && "$is_proxy_requested" == true ]]; then
-    echo -e "${red}Error: Cannot run 'proxy' and a StudyU component simultaneously.${reset}"
-    exit 1
-  fi
-
-  # If the "proxy" component is requested, check if any StudyU component is running
-  # Likewise, if any StudyU component is running, do not start the "proxy" component
-  local studyu_components_running=()
-
-  # Check if any StudyU component (excluding proxy) is already running
-  for component in "${!compose_files[@]}"; do
-    if [[ "$component" == studyu* ]] && component_is_running "$component"; then
-      studyu_components_running+=("$component")
-    fi
-  done
-
-  if [[ "$is_proxy_requested" = true && ${#studyu_components_running[@]} -gt 0 ]]; then
-    echo -e "${red}Error: Cannot start 'proxy' when the following StudyU component(s) are already running: ${studyu_components_running[*]}.${reset}"
-    exit 1
-  fi
-
-  if [[ "$is_studyu_requested" = true && ${#studyu_components_running[@]} -gt 0 ]]; then
-    echo -e "${red}Error: Cannot start a StudyU component when 'proxy' is already running. The StudyU components include the proxy's functionality.${reset}"
-    echo "Please run 'stop proxy' and try again."
-    exit 1
-  fi
-
-}
-
-
 # Function to set configuration options
 configure() {
   print_config false
@@ -167,8 +122,8 @@ configure() {
   # STUDYU_DEFAULT_COMPONENTS
   echo "Define the components that should be managed by the CLI if no components are specified."
   echo -e "$available_components"
-  read -rp "$(echo -e "${bold}Choose components (default: supabase-db supabase studyu-app studyu-designer): ${reset}")" default_components
-  default_components=${default_components:-"supabase-db supabase studyu-app studyu-designer"} # Set default if empty input
+  read -rp "$(echo -e "${bold}Choose components (default: supabase-db supabase proxy studyu-app studyu-designer): ${reset}")" default_components
+  default_components=${default_components:-"supabase-db supabase proxy studyu-app studyu-designer"} # Set default if empty input
 
   # Validate selected components
   for component in $default_components; do
@@ -177,9 +132,6 @@ configure() {
       exit 1
   fi
   done
-
-  IFS=' ' read -r -a arr <<< "$default_components"
-  validate_component_list "${arr[@]}"
 
   # STUDYU_PATH
   read -rp "$(echo -e "Enter the path to the StudyU directory (default: $PARENT_DIR): ")" studyu_path
@@ -193,7 +145,9 @@ configure() {
 
   # STUDYU_BASE_BRANCH
   read -rp "$(echo -e 'Enter the StudyU repository base branch for updating (default: dev): ')" base_branch
-  base_branch=${base_branch:-"dev"} # Set default if empty input
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  # Set base_branch to name of current branch, or "main" if current_branch is empty
+  base_branch="${current_branch:-'main'}"
 
   # STUDYU_SECRETS_MANAGER
   read -rp "$(echo -e 'Enter an optional secrets manager to run with '\''docker compose'\'' (default: empty): ')" secrets_manager
@@ -253,8 +207,6 @@ manage_components() {
     components=("$STUDYU_DEFAULT_COMPONENTS")
   fi
 
-  validate_component_list "${components[@]}"
-
   for component in ${components[*]}; do
     local compose_file="${compose_files[$component]}"
     if [ -z "$compose_file" ]; then
@@ -312,6 +264,9 @@ status() {
 
 # Start given components with docker compose
 start() {
+  # Check if studyu_network exists, if not create it
+  docker network inspect studyu_network >/dev/null 2>&1 || \
+      docker network create --driver bridge studyu_network
   manage_components 'up -d' "${@:2}"
 }
 
@@ -321,6 +276,10 @@ restart() {
 
 stop() {
   manage_components "stop" "${@:2}"
+}
+
+down() {
+  manage_components "down" "${@:2}"
 }
 
 
@@ -462,12 +421,13 @@ print_help() {
   echo "Usage: $0 [options]"
   echo "Options:"
   echo "  config [--list]         Configure StudyU CLI settings"
-  echo "  start <components>      Start StudyU components"
-  echo "  restart <components>    Restart StudyU components"
-  echo "  stop <components>       Stop StudyU components"
-  echo "  update                  Update StudyU from specified branch"
+  echo "  start <components>      Start components"
+  echo "  restart <components>    Restart components"
+  echo "  stop <components>       Stop components"
+  echo "  down <components>       Stop and remove components"
+  echo "  update                  Perform StudyU update from specified branch"
   echo "  backup                  Backup StudyU data"
-  echo "  delete                  Delete StudyU components and data (use with caution!)"
+  echo "  delete                  Delete components and data (use with caution!)"
   echo "  help                    Display this help message"
   echo -e "$available_components"
 }
@@ -505,6 +465,10 @@ case "$1" in
   stop)
     read_config
     stop "$@"
+    ;;
+  down)
+    read_config
+    down "$@"
     ;;
   update)
     read_config

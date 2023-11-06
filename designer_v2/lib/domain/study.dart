@@ -4,8 +4,11 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
+import 'package:uuid/uuid.dart';
 
 enum StudyActionType {
+  pin,
+  pinoff,
   edit,
   duplicate,
   duplicateDraft,
@@ -18,6 +21,10 @@ enum StudyActionType {
 extension StudyActionTypeFormatted on StudyActionType {
   String get string {
     switch (this) {
+      case StudyActionType.pin:
+        return tr.action_pin;
+      case StudyActionType.pinoff:
+        return tr.action_unpin;
       case StudyActionType.edit:
         return tr.action_edit;
       case StudyActionType.delete:
@@ -27,7 +34,7 @@ extension StudyActionTypeFormatted on StudyActionType {
       case StudyActionType.duplicateDraft:
         return tr.action_study_duplicate_draft;
       case StudyActionType.addCollaborator:
-        return "[StudyActionType.addCollaborator]"; // not implemented yet
+        return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
       default:
@@ -110,9 +117,18 @@ extension StudyDuplicateX on Study {
     copy.collaboratorEmails = [];
     copy.createdAt = DateTime.now();
 
-    // Generate a new random UID
-    final dummy = Study.withId(userId);
-    copy.id = dummy.id;
+    // Generate a new random UUIDs
+    const uuid = Uuid();
+    copy.id = uuid.v4();
+    for (var intervention in copy.interventions) {
+      intervention.id = uuid.v4();
+    }
+    for (var observation in copy.observations) {
+      observation.id = uuid.v4();
+    }
+    for (var report in [copy.reportSpecification.primary, ...copy.reportSpecification.secondary]) {
+      report?.id = uuid.v4();
+    }
 
     return copy;
   }

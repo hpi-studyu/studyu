@@ -246,13 +246,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       }
       /*if (!signInRes) {
-        final migrateRes = await migrateParticipantToV2(selectedStudyObjectId);
+        final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
         if (migrateRes) {
-          print("Successfully migrated to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Update erfolgreich. Vielen Dank für Ihre Mithilfe!')));
+          print("Successfully migrated to the new database");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully migrated to the new database.')));
         } else {
-          print("Error when trying to migrate to V2");
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bei dem Update trat ein Fehler auf. Bitte der Studienleitung melden!')));
+          print("Error when trying to migrate to the new database");
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error when migrating to the new database.')));
         }
         initStudy();
         return;
@@ -293,7 +293,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-/*Future<bool> migrateParticipantToV2(String selectedStudyObjectId) async {
+/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
       try {
@@ -303,14 +303,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // by matching a study_subject entry with the current subject ID
           try {
             await Supabase.instance.client.rpc(
-              'migrate_to_v2',
+              'migrate_db',
               params: {
                 'participant_user_id': Supabase.instance.client.auth.currentUser?.id,
                 'participant_subject_id': selectedStudyObjectId,
               },
             ).single();
           } on PostgrestException catch (error) {
-            print('Supabase migrate_to_v2 Error: ${error.message}');
+            print('Supabase migrate_db Error: ${error.message}');
           }
           return true;
         } else {

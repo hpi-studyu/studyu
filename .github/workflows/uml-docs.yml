@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
       - '!dev'
-      - '!master'
+      - '!main'
     paths:
       - 'flutter_common/**/*.dart'
       - 'core/**/*.dart'

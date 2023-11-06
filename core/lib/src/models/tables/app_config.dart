@@ -22,7 +22,7 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   @JsonKey(name: 'designer_terms')
   Map<String, String> designerTerms;
   Map<String, String> imprint;
-  StudyUAnalytics analytics;
+  StudyUAnalytics? analytics;
 
   AppConfig(
     this.id, {

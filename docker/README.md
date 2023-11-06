@@ -28,21 +28,19 @@ you want to run. The following components are available:
 
 - `supabase-db`: A PostgreSQL database for Supabase
 - `supabase`: A self-hosted Supabase instance (needs `supabase-db`)
-- `proxy`: Nginx reverse proxy to access Supabase if no StudyU component is running
+- `proxy`: Nginx reverse proxy to access Supabase
 - `studyu-app`: The StudyU App (includes `proxy`)
 - `studyu-designer`: The StudyU Designer (includes `proxy`)
 
-A minimal full setup would be `supabase-db`, `supabase`, `studyu-app` and
-`studyu-designer`. If you only want to run a self-hosted Supabase
-instance and deploy StudyU elsewhere, you can choose `proxy` instead of
-`studyu-app` and `studyu-designer` to access Supabase Studio. Otherwise, if you
-only want to run the StudyU App and the StudyU Designer and not self-host Supabase,
-you can choose the respective component without `supabase-db` and `supabase`.
-Have a look into the use cases below for more details on the different
-configurations.
+A minimal full setup would be `supabase-db`, `supabase`, `proxy`, `studyu-app`,
+and `studyu-designer`. If you only want to run a self-hosted Supabase instance
+and deploy StudyU elsewhere, only choose `supabase-db`, `supabase`, `proxy`.
+Otherwise, if you only want to run the StudyU App and the StudyU Designer and
+not self-host Supabase, you can choose the respective component(s) without
+`supabase-db`, `supabase`, and `proxy`. Have a look into the use cases below for
+more details on the different configurations.
 
 ```bash
-chmod +x studyu-cli.sh
 ./studyu-cli.sh config
 ./studyu-cli.sh start
 ```
@@ -136,10 +134,9 @@ need to be changed and assigned to Supabase and StudyU.
 2. Choose a password for the postgres database (`POSTGRES_PASSWORD`) and a
    `JWT_SECRET` for [Supabase
    Auth](https://supabase.com/docs/learn/auth-deep-dive/auth-deep-dive-jwts)
-   with
-   at least 32 characters. Then
-   [generate](https://supabase.com/docs/guides/hosting/overview#api-keys) the
-   corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
+   with at least 32 characters. Then
+   [generate](https://supabase.com/docs/guides/self-hosting/docker#generate-api-keys)
+   the corresponding `ANON_KEY` and the `SERVICE_ROLE_KEY` for the API.
 3. Replace the default secrets with your newly generated ones in the following
    files:
     - `supabase/.env`
@@ -175,11 +172,11 @@ Manual Docker Compose steps:
 - `docker compose -f supabase/docker-compose.yml up` (Start Supabase)
 - `docker compose -f studyu/docker-compose.yml up` (Start StudyU App and StudyU Designer)
 
-Operation:
+How to start:
 
 Open your local Supabase Studio instance on
-[http://localhost:8082](http://localhost:8082) (default basic authentication
-with username: studyu, password: studyu). The StudyU database scheme is
+[http://localhost:8082](http://localhost:8082)
+(username: studyu, password: studyu). The StudyU database scheme is
 automatically applied. Navigate to the table editor. Add a row to the table
 `app_config` with the id `prod` and insert the links to the terms of services
 and privacy policies with respect to their language
@@ -274,11 +271,8 @@ Some more modifications can be done to customize and secure the setup.
 ### Secure the Supabase backend
 
 By default, the Supabase backend is not secure if you deploy it, since it can be
-accessed by anyone. Supabase itself does not offer any access control for
-Supabase Studio. We have added basic authentication as an easy way to remedy
-this potential vulnerability. However, the defaults credentials need to be
-changed in the `nginx/.htpasswd` file. Consult your favorite search engine on
-how to do this.
+accessed by anyone. Supabase itself offers basic authentication access control.
+However, the defaults credentials need to be changed in the `supabase/.env` file.
 
 Additional security measures can be added by allowing only certain IP ranges to
 access the nginx reverse proxy. Have a look at the
@@ -309,12 +303,11 @@ configuration.
 
 ### Change hostname or ports
 
-In order to change the hostname from localhost to a custom domain for either
-StudyU, or the self-hosted Supabase instance, the respective configuration files
-at `supabase/.env` and `flutter_common/lib/envs/.env.local` have to be
-adapted. Changes also need to be made to the nginx proxy by modifying the
-respective `nginx/conf.d/` files (`01_app.conf`, `02_designer.conf`,
-`03_supabase.conf`) and replacing `localhost` with the designated hostname.
+In order to change the hostname from localhost to a custom domain for StudyU,
+the configuration file at `supabase/.env` has to be adapted. Changes also need
+to be made to the nginx proxy by modifying the respective `nginx/conf.d/` files
+(`01_app.conf`, `02_designer.conf`, `03_supabase.conf`) and replacing `localhost`
+with the designated hostname.
 
 The default ports can be changed by replacing the old port with the new one in
 the same files as above. Additionally, the `docker-compose-*.yml` files have to
@@ -325,7 +318,8 @@ be modified.
 Since all requests to StudyU and Supabase are going through the nginx server,
 SSL can be implemented by adding port 443 to the `docker-compose-*.yml` files,
 listening on port 443 in the nginx configuration, and enabling the
-`nginx/conf.d/ssl.conf.example` file.
+`nginx/conf.d/ssl.conf.example` file. Moreover, the ports inside the
+`nginx/conf.d/` files should be adapted.
 
 As a next step, SSL certificates can be mounted via a docker volume, or obtained
 without cost by using [certbot](https://certbot.eff.org/). There are a variety

@@ -33,14 +33,14 @@ class ChoiceQuestionFormView extends ConsumerWidget {
           builder: (context, formArray, child) {
             return StandardTable<AbstractControl>(
               items: formViewModel.answerOptionsControls,
-              columns: const [
+              columns: [
                 StandardTableColumn(
                   label: '', // don't care (showTableHeader=false)
-                  columnWidth: FixedColumnWidth(32.0),
+                  columnWidth: const FixedColumnWidth(32.0),
                 ),
                 StandardTableColumn(
                     label: '', // don't care (showTableHeader=false)
-                    columnWidth: FlexColumnWidth()),
+                    columnWidth: const FlexColumnWidth()),
               ],
               onSelectItem: (_) => {},
               // no-op

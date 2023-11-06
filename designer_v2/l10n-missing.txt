@@ -45,7 +45,6 @@
     "form_field_report_alphaConfidence_number",
     "form_field_report_data_source_title",
     "form_field_report_data_source_tooltip",
-    "form_field_report_data_source_required",
-    "action_reportPrimary"
+    "form_field_report_data_source_required"
   ]
 }

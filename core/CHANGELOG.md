@@ -1,3 +1,31 @@
+## 4.3.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.3.0-dev.10
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+
+## 4.3.0-dev.9
+
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+
+## 4.3.0-dev.8
+
+ - **FIX**: make analytics fully optional. ([67d58887](https://github.com/hpi-studyu/studyu/commit/67d588879a69a9105cd2e54c08f2a2feae1224a2))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+ - **FIX**: study was not returned completely. ([324e2ceb](https://github.com/hpi-studyu/studyu/commit/324e2ceb2afe25df5ee06cd2450865137efe7ae1))
+ - **FIX**: make Repo urls optional. ([d0a96ea8](https://github.com/hpi-studyu/studyu/commit/d0a96ea8413bed3e86a4448da6f06b35b4b9adca))
+ - **FIX**: tag color. ([9baddd1d](https://github.com/hpi-studyu/studyu/commit/9baddd1d3df22ebb45fa5117f724fd9b98b31b98))
+ - **FIX**: tag related sql. ([59882b7e](https://github.com/hpi-studyu/studyu/commit/59882b7e86b7145131733c4d6851cf621b676fc8))
+ - **FIX**: study_tags was null for new studies. ([db57e09f](https://github.com/hpi-studyu/studyu/commit/db57e09f841164b39d587c5ba6479a1f7a73b57e))
+ - **FIX**: make color nullable and int, add tags to dashboard. ([ef7532a3](https://github.com/hpi-studyu/studyu/commit/ef7532a3e571abd140cfbeee1e2e1b6fd14f9ed6))
+ - **FIX**: tag type. ([cf39195b](https://github.com/hpi-studyu/studyu/commit/cf39195b540fe6b65e4d600586041b3c19d90d52))
+ - **FEAT**: working tags with foreign key study_tag. ([8d4eaa92](https://github.com/hpi-studyu/studyu/commit/8d4eaa925c8a921bfa70f0afae6a57a155a55c9e))
+ - **FEAT**: display and update tags correctly. ([b96dcf8a](https://github.com/hpi-studyu/studyu/commit/b96dcf8a25def52dfc59bc65206177e0ab4a25d8))
+ - **FEAT**: initial study tags. ([615d5b62](https://github.com/hpi-studyu/studyu/commit/615d5b629a2ae5d9998d50b1a0f119fa62a2bc87))
+
 ## 4.3.0-dev.7
 
  - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))

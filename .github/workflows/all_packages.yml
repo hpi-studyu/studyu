@@ -3,7 +3,7 @@ name: All packages
 on:
   push:
     branches:
-      - master
+      - main
       - dev
     paths:
       - "app/**"

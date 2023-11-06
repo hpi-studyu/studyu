@@ -23,7 +23,7 @@ class TaskInstance {
   static Task _taskFromStudy(String taskInstanceId, Study study, DateTime date) {
     final tasks = <Task>[
       ...study.observations,
-      ...study.interventions.map((intervention) => intervention.tasks).expand((element) => element)
+      ...study.interventions.map((intervention) => intervention.tasks).expand((element) => element),
     ];
     return tasks.firstWhere((task) {
       if (task.schedule.completionPeriods.any((completionPeriod) => completionPeriod.id == taskInstanceId)) {

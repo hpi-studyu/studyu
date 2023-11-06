@@ -296,7 +296,7 @@ INSERT INTO public.study (
 --
 
 -- plan tests in advance, this ensures the proper number of tests have been run.
-SELECT plan(17);
+SELECT plan(19);
 
 -- UNRESTRICTED TESTS
 

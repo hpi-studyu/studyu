@@ -78,7 +78,7 @@ scripts:
   generate:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter pub run build_runner build --delete-conflicting-outputs"
+        "dart run build_runner build --delete-conflicting-outputs"
     description: Generate files with build_runner
     packageFilters:
       scope: studyu_core
@@ -132,14 +132,6 @@ scripts:
     packageFilters:
       scope: studyu_app
 
-  build:web:designer:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
-    description: Build designer for Web.
-    packageFilters:
-      scope: studyu_designer
-
   build:web:designer_v2:
     run: |
       melos exec -c 1 --fail-fast -- \
@@ -175,31 +167,6 @@ scripts:
       scope: studyu_designer_v2
       dir-exists: web
 
-  build:web:hpi:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
-    description: Build web hpi.
-    packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
-
-  build:web:app:hpi:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
-    description: Build app for Docker and self-hosted Supabase instance.
-    packageFilters:
-      scope: studyu_app
-
-  build:web:designer_v2:hpi:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.hpi"
-    description: Build designer_v2 for Docker and self-hosted Supabase instance.
-    packageFilters:
-      scope: studyu_designer_v2
-
   # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
   app:web:local:
     run: |
@@ -208,14 +175,6 @@ scripts:
     packageFilters:
       scope: studyu_app
     description: Runs app in chrome on port 8080 with local env
-
-  designer:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8083 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_designer
-    description: Runs designer in chrome on port 8083 with local env
 
   designer_v2:web:local:
     run: |

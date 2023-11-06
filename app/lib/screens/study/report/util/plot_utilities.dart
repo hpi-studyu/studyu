@@ -1,61 +1,68 @@
+import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 
 Map<String, int> getInterventionPositions(List<Intervention> interventions) {
   final order = <String, int>{};
-  if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
-    order[Study.baselineID] = 0;
-    interventions.removeWhere((intervention) => intervention.id == Study.baselineID);
+  for (var intervention in interventions) {
+    if (!order.containsKey(intervention.id)) {
+      order[intervention.id] = order.length;
+    }
   }
-  order[interventions.first.id] = 1;
-  order[interventions.last.id] = 2;
   return order;
 }
 
-/*
-Map<String, charts.Color> getInterventionPalette(List<Intervention> interventions) {
-  final colors = <String, charts.Color>{};
-  if (interventions.any((intervention) => intervention.id == Study.baselineID)) {
-    colors[Study.baselineID] = charts.MaterialPalette.gray.shadeDefault;
-    interventions.removeWhere((intervention) => intervention.id == Study.baselineID);
+class LegendWidget extends StatelessWidget {
+  LegendWidget({
+    super.key,
+    required Legend legend,
+  })  : name = legend.name,
+        color = legend.color;
+
+  final String name;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          name,
+          style: textTheme.bodyLarge,
+        ),
+      ],
+    );
   }
-  colors[interventions.first.id] = charts.MaterialPalette.blue.shadeDefault;
-  colors[interventions.last.id] = charts.MaterialPalette.deepOrange.shadeDefault;
-  return colors;
 }
 
-List<Intervention> getInterventionsWithoutBaseline(List<Intervention> interventions) =>
-    interventions.where((intervention) => intervention.id != Study.baselineID).toList();
+class LegendsListWidget extends StatelessWidget {
+  const LegendsListWidget({
+    super.key,
+    required this.legends,
+  });
+  final List<Legend> legends;
 
-String getInterventionA(List<Intervention> interventions) => getInterventionsWithoutBaseline(interventions)[0].id;
-
-String getInterventionB(List<Intervention> interventions) => getInterventionsWithoutBaseline(interventions)[1].id;
-
-Map<String, String> getInterventionNames(List<Intervention> interventions) =>
-    {for (var intervention in interventions) intervention.id: intervention.name};
-
-charts.LineAnnotationSegment<T> createPlotSeparator<T>(
-  T value, {
-  charts.RangeAnnotationAxisType axis = charts.RangeAnnotationAxisType.domain,
-}) =>
-    charts.LineAnnotationSegment<T>(
-      value,
-      axis,
-      color: charts.MaterialPalette.gray.shade400,
-      strokeWidthPx: 1,
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 16,
+      children: legends.map((legend) => LegendWidget(legend: legend)).toList(),
     );
+  }
+}
 
-charts.StaticNumericTickProviderSpec createNumericTicks(
-  Iterable<MapEntry<num, String>> ticks, {
-  charts.TextStyleSpec style,
-}) =>
-    charts.StaticNumericTickProviderSpec(
-      ticks.map((entry) => charts.TickSpec<num>(entry.key, label: entry.value, style: style)).toList(),
-    );
-
-charts.TextStyleSpec convertTextTheme(TextStyle style) => charts.TextStyleSpec(
-      fontFamily: style.fontFamily,
-      fontSize: style.fontSize.toInt(),
-      lineHeight: style.height,
-      color: charts.Color(r: style.color.red, g: style.color.green, b: style.color.blue, a: style.color.alpha),
-    );
-*/
+class Legend {
+  Legend(this.name, this.color);
+  final String name;
+  final Color color;
+}

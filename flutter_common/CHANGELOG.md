@@ -1,3 +1,23 @@
+## 1.6.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.6.2-dev.11
+
+ - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))
+ - **FEAT**: switch to hpi env. ([7f1a1817](https://github.com/hpi-studyu/studyu/commit/7f1a1817d96d955cf2f9e7c7fb7467f317bec53b))
+
+## 1.6.2-dev.10
+
+ - **FIX**: upgrade deps. ([7cdc7c55](https://github.com/hpi-studyu/studyu/commit/7cdc7c559f64cfdd63ee07efbeeb028c418f6f4e))
+ - **FIX**: upgrade deps. ([17213746](https://github.com/hpi-studyu/studyu/commit/172137469ed236dc694979bbfe017708faabbd77))
+
+## 1.6.2-dev.9
+
+ - **REFACTOR**: rename .env.selfhost to .env.hpi. ([dae7d461](https://github.com/hpi-studyu/studyu/commit/dae7d4617a3a45df595172672851c0f61ff14de5))
+ - **REFACTOR**: rename .env.selfhost to .env.hpi. ([0c3d2252](https://github.com/hpi-studyu/studyu/commit/0c3d2252edaf7f564a417e5b8f4243161514cc37))
+ - **FIX**: upgrade deps. ([aa2cb251](https://github.com/hpi-studyu/studyu/commit/aa2cb2512e3db4e31f97edea8d2bccf55e91f9d2))
+
 ## 1.6.2-dev.8
 
  - **FIX**: upgrade deps (switch to wakelock_plus). ([177e5057](https://github.com/hpi-studyu/studyu/commit/177e5057fb41821a2f924ffda79e1faa3119859d))
