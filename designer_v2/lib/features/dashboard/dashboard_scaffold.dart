@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class DashboardScaffold extends StatelessWidget {
-  const DashboardScaffold({required this.body, Key? key}) : super(key: key);
+  const DashboardScaffold({required this.body, super.key});
 
   final Widget body;
 

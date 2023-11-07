@@ -10,7 +10,7 @@ import '../../../models/app_state.dart';
 import 'report_details.dart';
 
 class ReportHistoryScreen extends StatelessWidget {
-  const ReportHistoryScreen({Key? key}) : super(key: key);
+  const ReportHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ReportHistoryScreen extends StatelessWidget {
 class ReportHistoryItem extends StatelessWidget {
   final StudySubject subject;
 
-  const ReportHistoryItem(this.subject, {Key? key}) : super(key: key);
+  const ReportHistoryItem(this.subject, {super.key});
 
   @override
   Widget build(BuildContext context) {

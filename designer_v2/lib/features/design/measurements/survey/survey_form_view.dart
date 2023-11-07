@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class MeasurementSurveyFormView extends ConsumerStatefulWidget {
-  const MeasurementSurveyFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const MeasurementSurveyFormView({required this.formViewModel, super.key});
 
   final MeasurementSurveyFormViewModel formViewModel;
 

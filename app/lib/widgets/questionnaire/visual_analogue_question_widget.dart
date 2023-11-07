@@ -9,7 +9,7 @@ class VisualAnalogueQuestionWidget extends QuestionWidget {
   final VisualAnalogueQuestion question;
   final Function(Answer)? onDone;
 
-  const VisualAnalogueQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
+  const VisualAnalogueQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
   State<VisualAnalogueQuestionWidget> createState() => _VisualAnalogueQuestionWidgetState();

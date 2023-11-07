@@ -14,8 +14,7 @@ class TaskOverview extends StatefulWidget {
   final List<TaskInstance>? scheduleToday;
   final String? interventionIcon;
 
-  const TaskOverview({required this.subject, required this.scheduleToday, Key? key, this.interventionIcon})
-      : super(key: key);
+  const TaskOverview({required this.subject, required this.scheduleToday, super.key, this.interventionIcon});
 
   @override
   State<TaskOverview> createState() => _TaskOverviewState();

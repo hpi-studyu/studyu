@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 class PasswordForgotForm extends FormConsumerRefWidget {
-  const PasswordForgotForm({Key? key}) : super(key: key);
+  const PasswordForgotForm({super.key});
 
   final AuthFormKey formKey = AuthFormKey.passwordForgot;
 

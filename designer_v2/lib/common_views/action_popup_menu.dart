@@ -19,8 +19,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
       this.disableSplashEffect = false,
       this.hideOnEmpty = true,
       this.enabled = true,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final List<ModelAction> actions;
   final Color? triggerIconColor;

@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 typedef InterventionProvider = Intervention? Function(String id);
 
 class StudyRecruitScreen extends StudyPageWidget {
-  const StudyRecruitScreen(studyId, {Key? key}) : super(studyId, key: key);
+  const StudyRecruitScreen(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

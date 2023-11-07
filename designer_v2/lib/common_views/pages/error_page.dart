@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 class ErrorPage extends ConsumerWidget {
   final Exception? error;
 
-  const ErrorPage({required this.error, Key? key}) : super(key: key);
+  const ErrorPage({required this.error, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

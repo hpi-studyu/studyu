@@ -20,8 +20,7 @@ class ReportSectionContainer extends StatelessWidget {
   final bool primary;
   final GestureTapCallback? onTap;
 
-  const ReportSectionContainer(this.section, {Key? key, required this.subject, this.onTap, this.primary = false})
-      : super(key: key);
+  const ReportSectionContainer(this.section, {super.key, required this.subject, this.onTap, this.primary = false});
 
   ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType]!(section, subject);
 

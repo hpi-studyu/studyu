@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 /// A cancel / dismiss button for use with [FormScaffold] [showFormSideSheet)
 /// Heavily inspired by [CloseButton]
 class DismissButton extends StatelessWidget {
-  const DismissButton({this.text, this.onPressed, Key? key}) : super(key: key);
+  const DismissButton({this.text, this.onPressed, super.key});
 
   /// An override callback to perform instead of the default behavior which is
   /// to pop the [Navigator].

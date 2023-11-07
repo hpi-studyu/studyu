@@ -12,7 +12,7 @@ import 'routes.dart';
 import 'theme.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.queryParameters, this.appConfig, {Key? key}) : super(key: key);
+  const MyApp(this.queryParameters, this.appConfig, {super.key});
   final Map<String, String> queryParameters;
   final AppConfig? appConfig;
 

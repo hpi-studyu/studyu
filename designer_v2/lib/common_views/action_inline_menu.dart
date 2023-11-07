@@ -11,8 +11,7 @@ class ActionMenuInline extends StatelessWidget {
       this.visible = true,
       this.paddingHorizontal = 2.0,
       this.paddingVertical = 0.0,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final List<ModelAction> actions;
   final MaterialStateProperty<Color>? iconColor;

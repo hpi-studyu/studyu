@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class InterventionFormView extends ConsumerStatefulWidget {
-  const InterventionFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const InterventionFormView({required this.formViewModel, super.key});
 
   final InterventionFormViewModel formViewModel;
 
