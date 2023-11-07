@@ -17,8 +17,8 @@ class StandardDialog extends StatelessWidget {
     this.actionButtons = const [],
     this.backgroundColor,
     this.borderRadius = 20.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget? title;
   final String? titleText;

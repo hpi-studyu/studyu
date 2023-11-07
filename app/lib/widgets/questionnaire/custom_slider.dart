@@ -23,7 +23,7 @@ class CustomSlider extends StatelessWidget {
   final AnnotatedScaleQuestion? steps; // nullable
 
   const CustomSlider(
-      {Key? key,
+      {super.key,
       // required
       this.value,
       this.minValue,
@@ -42,8 +42,7 @@ class CustomSlider extends StatelessWidget {
       this.labelValuePrecision = 2,
       this.tickValuePrecision = 1,
       this.linearStep = true,
-      this.steps})
-      : super(key: key);
+      this.steps});
 
   @override
   Widget build(BuildContext context) {

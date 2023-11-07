@@ -18,8 +18,8 @@ class StudyInvitesTable extends StatelessWidget {
     required this.getActions,
     required this.getIntervention,
     required this.getParticipantCountForInvite,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<StudyInvite> invites;
   final OnSelectHandler<StudyInvite> onSelect;

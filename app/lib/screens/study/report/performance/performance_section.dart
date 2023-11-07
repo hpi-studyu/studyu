@@ -8,8 +8,7 @@ import 'package:studyu_core/core.dart';
 import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {
-  const PerformanceSection(StudySubject? subject, {Key? key, GestureTapCallback? onTap})
-      : super(subject, key: key, onTap: onTap);
+  const PerformanceSection(super.subject, {super.key, super.onTap});
 
   // TODO move to model
   double get minimumRatio => 0.1;
@@ -123,7 +122,7 @@ class PerformanceBar extends StatelessWidget {
   final double progress;
   final double? minimum;
 
-  const PerformanceBar({required this.progress, this.minimum, Key? key}) : super(key: key);
+  const PerformanceBar({required this.progress, this.minimum, super.key});
 
   @override
   Widget build(BuildContext context) {

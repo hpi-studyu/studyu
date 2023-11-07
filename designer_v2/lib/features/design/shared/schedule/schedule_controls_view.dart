@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/time_of_day.dart';
 
 class ScheduleControls extends FormConsumerWidget {
-  const ScheduleControls({required this.formViewModel, Key? key}) : super(key: key);
+  const ScheduleControls({required this.formViewModel, super.key});
 
   final WithScheduleControls formViewModel;
 

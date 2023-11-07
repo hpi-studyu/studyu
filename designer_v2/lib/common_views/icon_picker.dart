@@ -92,8 +92,8 @@ class IconPicker extends StatelessWidget {
     this.onSelect,
     this.isDisabled = false,
     this.focusNode,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<IconOption> iconOptions;
   final IconOption? selectedOption;
@@ -129,8 +129,7 @@ class IconPickerField extends StatelessWidget {
       this.onSelect,
       this.isDisabled = false,
       this.focusNode,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final List<IconOption> iconOptions;
 
@@ -171,8 +170,7 @@ class IconPickerField extends StatelessWidget {
 }
 
 class IconPickerGallery extends StatelessWidget {
-  const IconPickerGallery({required this.iconOptions, required this.iconSize, this.onSelect, Key? key})
-      : super(key: key);
+  const IconPickerGallery({required this.iconOptions, required this.iconSize, this.onSelect, super.key});
 
   final List<IconOption> iconOptions;
   final VoidCallbackOn<IconOption>? onSelect;

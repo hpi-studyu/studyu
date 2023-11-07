@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
 
 class BoolQuestionFormView extends ConsumerWidget {
-  const BoolQuestionFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const BoolQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 

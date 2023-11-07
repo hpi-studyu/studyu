@@ -5,8 +5,8 @@ class HtmlText extends StatelessWidget {
   const HtmlText(
     this.text, {
     this.style,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String? text;
   final TextStyle? style;
