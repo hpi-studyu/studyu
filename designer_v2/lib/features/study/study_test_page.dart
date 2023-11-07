@@ -18,11 +18,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class StudyTestScreen extends StudyPageWidget {
-  const StudyTestScreen(
-    studyId, {
-    this.previewRoute,
-    Key? key,
-  }) : super(studyId, key: key);
+  const StudyTestScreen(super.studyId, {this.previewRoute, super.key,});
 
   final String? previewRoute;
 

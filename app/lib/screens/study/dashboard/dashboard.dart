@@ -22,7 +22,7 @@ import 'task_overview_tab/task_overview.dart';
 class DashboardScreen extends StatefulWidget {
   final String? error;
 
-  const DashboardScreen({Key? key, this.error}) : super(key: key);
+  const DashboardScreen({super.key, this.error});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -271,7 +271,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 class StudyFinishedPlaceholder extends StatelessWidget {
   static const space = SizedBox(height: 80);
 
-  const StudyFinishedPlaceholder({Key? key}) : super(key: key);
+  const StudyFinishedPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {

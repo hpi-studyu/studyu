@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FAQ extends StatelessWidget {
-  const FAQ({Key? key}) : super(key: key);
+  const FAQ({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +250,7 @@ final data_de = <Entry>[
 ];
 
 class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry, {Key? key}) : super(key: key);
+  const EntryItem(this.entry, {super.key});
 
   final Entry entry;
 

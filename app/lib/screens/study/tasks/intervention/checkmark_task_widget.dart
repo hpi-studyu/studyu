@@ -10,7 +10,7 @@ class CheckmarkTaskWidget extends StatefulWidget {
   final CheckmarkTask? task;
   final CompletionPeriod? completionPeriod;
 
-  const CheckmarkTaskWidget({this.task, this.completionPeriod, Key? key}) : super(key: key);
+  const CheckmarkTaskWidget({this.task, this.completionPeriod, super.key});
 
   @override
   State<CheckmarkTaskWidget> createState() => _CheckmarkTaskWidgetState();

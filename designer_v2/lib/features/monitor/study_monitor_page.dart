@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/common_views/under_construction.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 
 class StudyMonitorScreen extends StudyPageWidget {
-  const StudyMonitorScreen(studyId, {Key? key}) : super(studyId, key: key);
+  const StudyMonitorScreen(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

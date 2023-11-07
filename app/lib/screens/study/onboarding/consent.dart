@@ -16,7 +16,7 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class ConsentScreen extends StatefulWidget {
-  const ConsentScreen({Key? key}) : super(key: key);
+  const ConsentScreen({super.key});
 
   @override
   State<ConsentScreen> createState() => _ConsentScreenState();
@@ -171,7 +171,7 @@ class ConsentCard extends StatelessWidget {
   final Function(int) onTapped;
   final bool? isChecked;
 
-  const ConsentCard({Key? key, this.consent, this.index, required this.onTapped, this.isChecked}) : super(key: key);
+  const ConsentCard({super.key, this.consent, this.index, required this.onTapped, this.isChecked});
 
   @override
   Widget build(BuildContext context) {

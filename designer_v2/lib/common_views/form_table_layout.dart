@@ -35,8 +35,8 @@ class FormTableLayout extends StatelessWidget {
     this.rowDivider,
     this.rowLayout = FormTableRowLayout.horizontal,
     this.rowLabelStyle,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<FormTableRow> rows;
   final Map<int, TableColumnWidth> columnWidths;
@@ -148,8 +148,8 @@ class FormSectionHeader extends StatelessWidget {
     this.helpTextDisabled = false,
     this.titleTextStyle,
     this.divider = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String title;
   final TextStyle? titleTextStyle;
@@ -188,8 +188,8 @@ class FormLabel extends StatelessWidget {
     this.helpText,
     this.labelTextStyle,
     this.layout = FormTableRowLayout.vertical,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String? labelText;
   final String? helpText;

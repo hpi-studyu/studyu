@@ -9,7 +9,7 @@ class AnnotatedScaleQuestionWidget extends QuestionWidget {
   final AnnotatedScaleQuestion question;
   final Function(Answer)? onDone;
 
-  const AnnotatedScaleQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
+  const AnnotatedScaleQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
   State<AnnotatedScaleQuestionWidget> createState() => _AnnotatedScaleQuestionWidgetState();

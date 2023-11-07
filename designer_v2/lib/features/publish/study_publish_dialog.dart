@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class PublishDialog extends StudyPageWidget {
-  const PublishDialog(super.studyId, {Key? key}) : super(key: key);
+  const PublishDialog(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

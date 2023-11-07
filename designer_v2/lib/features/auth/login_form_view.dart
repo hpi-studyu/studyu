@@ -12,7 +12,7 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 class LoginForm extends FormConsumerRefWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  const LoginForm({super.key});
 
   final AuthFormKey formKey = AuthFormKey.login;
 

@@ -43,8 +43,8 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.actionsPadding = 4.0,
     this.appbarHeight = 56.0,
     this.appbarSubnavHeight = 44.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study

@@ -24,7 +24,7 @@ class EligibilityScreen extends StatefulWidget {
         settings: const RouteSettings(name: '/eligibilityCheck'),
       );
 
-  const EligibilityScreen({required this.study, Key? key}) : super(key: key);
+  const EligibilityScreen({required this.study, super.key});
 
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();

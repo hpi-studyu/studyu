@@ -11,11 +11,11 @@ enum LanguagePickerType { field, icon }
 
 class LanguagePicker extends ConsumerStatefulWidget {
   const LanguagePicker({
-    Key? key,
+    super.key,
     this.languagePickerType = LanguagePickerType.field,
     this.iconColor,
     this.offset,
-  }) : super(key: key);
+  });
 
   final LanguagePickerType languagePickerType;
   final Color? iconColor;

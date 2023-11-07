@@ -12,7 +12,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -143,7 +143,7 @@ class _SettingsState extends State<Settings> {
 class OptOutAlertDialog extends StatelessWidget {
   final StudySubject? subject;
 
-  const OptOutAlertDialog({Key? key, required this.subject}) : super(key: key);
+  const OptOutAlertDialog({super.key, required this.subject});
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +193,7 @@ class OptOutAlertDialog extends StatelessWidget {
 class DeleteAlertDialog extends StatelessWidget {
   final StudySubject? subject;
 
-  const DeleteAlertDialog({Key? key, required this.subject}) : super(key: key);
+  const DeleteAlertDialog({super.key, required this.subject});
 
   @override
   Widget build(BuildContext context) => AlertDialog(

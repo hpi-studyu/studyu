@@ -12,7 +12,7 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
-  const JourneyOverviewScreen({Key? key}) : super(key: key);
+  const JourneyOverviewScreen({super.key});
 
   @override
   State<JourneyOverviewScreen> createState() => _JourneyOverviewScreen();
@@ -78,7 +78,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 class Timeline extends StatelessWidget {
   final StudySubject? subject;
 
-  const Timeline({required this.subject, Key? key}) : super(key: key);
+  const Timeline({required this.subject, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +126,8 @@ class InterventionTile extends StatelessWidget {
     this.color,
     this.isFirst = false,
     this.isLast = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +159,7 @@ class IconIndicator extends StatelessWidget {
   final String iconName;
   final Color? color;
 
-  const IconIndicator({required this.iconName, this.color, Key? key}) : super(key: key);
+  const IconIndicator({required this.iconName, this.color, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +175,7 @@ class IconIndicator extends StatelessWidget {
 class TimelineChild extends StatelessWidget {
   final Widget? child;
 
-  const TimelineChild({Key? key, this.child}) : super(key: key);
+  const TimelineChild({super.key, this.child});
 
   @override
   Widget build(BuildContext context) {

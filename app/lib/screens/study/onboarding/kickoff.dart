@@ -10,7 +10,7 @@ import '../../../models/app_state.dart';
 import '../../../routes.dart';
 
 class KickoffScreen extends StatefulWidget {
-  const KickoffScreen({Key? key}) : super(key: key);
+  const KickoffScreen({super.key});
 
   @override
   State<KickoffScreen> createState() => _KickoffScreen();

@@ -12,7 +12,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
   final Widget? progress;
 
   const BottomOnboardingNavigation({
-    Key? key,
+    super.key,
     this.onNext,
     this.onBack,
     this.backLabel,
@@ -21,7 +21,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
     this.nextIcon,
     this.backIcon,
     this.progress,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -63,8 +63,8 @@ class AppDrawer extends ConsumerStatefulWidget {
     this.logoMaxHeight = 30,
     this.logoSectionMinHeight = 110,
     this.logoSectionMaxHeight = double.infinity,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String title;
   final int width;
