@@ -41,7 +41,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 color: theme.colorScheme.onSurface.withOpacity(0.8),
               ),
             ),
-            widget.sortable ? _getIcon() ?? const SizedBox(width: 17) : const SizedBox.shrink(),
+            _buildSortingArrow(),
           ],
         );
       },
@@ -51,22 +51,25 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     );
   }
 
-  Icon? _getIcon() {
-    final ascendingIcon = Icon(MdiIcons.arrowUp);
-    final descendingIcon = Icon(MdiIcons.arrowDown);
-    final hoveredAscendingIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
-    final hoveredDescendingIcon = Icon(MdiIcons.arrowDown, color: Colors.grey);
-
+  Widget _buildSortingArrow() {
     if (!widget.sortable) {
-      return null;
+      return const SizedBox.shrink();
     }
 
-    if (!widget.sortingActive) {
-      return isHovering
-          ? (widget.sortAscending ? hoveredAscendingIcon : hoveredDescendingIcon)
-          : null;
+    if (!widget.sortingActive && !isHovering) {
+      return const SizedBox(
+        width: 17,
+      );
     }
 
-    return widget.sortAscending ? ascendingIcon : descendingIcon;
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 250),
+      opacity: widget.sortingActive ? 1.0 : 0.5,
+      child: AnimatedRotation(
+        duration: const Duration(milliseconds: 250),
+        turns: widget.sortAscending ? 0 : 0.5,
+        child: Icon(MdiIcons.arrowUp),
+      ),
+    );
   }
 }
