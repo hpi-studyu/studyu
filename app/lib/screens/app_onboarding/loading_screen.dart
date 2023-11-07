@@ -16,7 +16,7 @@ class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
 
-  const LoadingScreen({Key? key, this.sessionString, this.queryParameters}) : super(key: key);
+  const LoadingScreen({super.key, this.sessionString, this.queryParameters});
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();

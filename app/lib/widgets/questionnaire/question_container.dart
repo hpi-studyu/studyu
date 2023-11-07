@@ -15,8 +15,7 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer({required this.onDone, required this.question, required this.index, Key? key})
-      : super(key: key);
+  const QuestionContainer({required this.onDone, required this.question, required this.index, super.key});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
@@ -29,30 +28,30 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
 
   QuestionWidget? getQuestionBody(BuildContext context) {
     switch (widget.question.runtimeType) {
-      case ChoiceQuestion:
+      case ChoiceQuestion _:
         return ChoiceQuestionWidget(
           question: widget.question as ChoiceQuestion,
           onDone: _onDone,
           multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
-      case BooleanQuestion:
+      case BooleanQuestion _:
         return BooleanQuestionWidget(
           question: widget.question as BooleanQuestion,
           onDone: _onDone,
         );
-      case ScaleQuestion:
+      case ScaleQuestion _:
         return ScaleQuestionWidget(
           question: widget.question as ScaleQuestion,
           onDone: _onDone,
         );
-      case VisualAnalogueQuestion:
+      case VisualAnalogueQuestion _:
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
           question: widget.question as VisualAnalogueQuestion,
           onDone: _onDone,
         );
-      case AnnotatedScaleQuestion:
+      case AnnotatedScaleQuestion _:
         return AnnotatedScaleQuestionWidget(
           question: widget.question as AnnotatedScaleQuestion,
           onDone: _onDone,

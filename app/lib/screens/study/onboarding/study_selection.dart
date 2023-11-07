@@ -27,7 +27,7 @@ Future<void> navigateToStudyOverview(
 }
 
 class StudySelectionScreen extends StatelessWidget {
-  const StudySelectionScreen({Key? key}) : super(key: key);
+  const StudySelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class StudySelectionScreen extends StatelessWidget {
 }
 
 class InviteCodeDialog extends StatefulWidget {
-  const InviteCodeDialog({Key? key}) : super(key: key);
+  const InviteCodeDialog({super.key});
 
   @override
   State<InviteCodeDialog> createState() => _InviteCodeDialogState();

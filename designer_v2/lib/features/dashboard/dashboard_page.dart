@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({required this.filter, Key? key}) : super(key: key);
+  const DashboardScreen({required this.filter, super.key});
 
   final StudiesFilter? filter;
 

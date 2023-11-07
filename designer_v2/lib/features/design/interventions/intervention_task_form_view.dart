@@ -13,7 +13,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class InterventionTaskFormView extends StatefulWidget {
-  const InterventionTaskFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const InterventionTaskFormView({required this.formViewModel, super.key});
 
   final InterventionTaskFormViewModel formViewModel;
   @override

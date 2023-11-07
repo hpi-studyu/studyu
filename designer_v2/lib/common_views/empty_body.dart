@@ -9,8 +9,8 @@ class EmptyBody extends StatelessWidget {
     required this.title,
     required this.description,
     this.button,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final IconData? icon;
   final Widget? leading;

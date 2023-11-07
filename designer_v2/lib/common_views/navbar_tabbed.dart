@@ -44,8 +44,8 @@ class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
     this.overlayColor,
     this.labelColorHover,
     this.unselectedLabelColorHover,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<T> tabs;
   final T? selectedTab;

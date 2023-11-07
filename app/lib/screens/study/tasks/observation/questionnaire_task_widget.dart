@@ -11,7 +11,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, Key? key}) : super(key: key);
+  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, super.key});
 
   @override
   State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
@@ -65,7 +65,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                   _isLoading = true;
                 });
                 switch (response.runtimeType) {
-                  case QuestionnaireState:
+                  case QuestionnaireState _:
                     await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
                     break;
                 }
