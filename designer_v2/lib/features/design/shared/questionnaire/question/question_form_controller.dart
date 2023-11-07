@@ -87,6 +87,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         SurveyQuestionType.choice: choiceResponseOptionsArray,
         SurveyQuestionType.scale: _scaleResponseOptionsArray,
         SurveyQuestionType.image: imageResponseOptionsArray,
+        SurveyQuestionType.audio: audioResponseOptionsArray,
       }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -111,7 +112,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       FormArray(boolOptions);
 
   // Image
-
   List<AbstractControl<String>> get imageOptions =>
       BoolQuestionFormData.kResponseOptions.keys
           .map((e) => FormControl(value: e, disabled: true))
