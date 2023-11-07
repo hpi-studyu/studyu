@@ -36,13 +36,13 @@ class _TaskScreenState extends State<TaskScreen> {
 
   Widget? _buildTask() {
     switch (taskInstance.task.runtimeType) {
-      case CheckmarkTask _:
+      case == CheckmarkTask:
         return CheckmarkTaskWidget(
           task: taskInstance.task as CheckmarkTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
-      case QuestionnaireTask _:
+      case == QuestionnaireTask:
         return QuestionnaireTaskWidget(
           task: taskInstance.task as QuestionnaireTask,
           key: UniqueKey(),
