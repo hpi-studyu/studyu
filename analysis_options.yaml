@@ -2,9 +2,6 @@ include: package:lint/strict.yaml
 
 analyzer:
   exclude:
-    - designer/**
-    - notebook_uploader/**
-    - repo_generator/**
     - "**/*.g.dart"
 
 # You can customize the lint rules set to your own liking. A list of all rules
