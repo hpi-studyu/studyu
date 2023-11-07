@@ -1,12 +1,40 @@
-<svg version="1.1" baseProfile="full" width="2174.3" height="713.0" viewbox="0 0 2174.25 713" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[DashboardController
+<svg version="1.1" baseProfile="full" width="3098.0" height="788.0" viewbox="0 0 3098 788" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[StudiesTableItem
+	  |
+	  +study: Study;
+	  +itemHeight: double;
+	  +itemPadding: double;
+	  +rowSpacing: double;
+	  +columnSpacing: double;
+	  +actions: List&lt;ModelAction&lt;dynamic&gt;&gt;;
+	  +columnSizes: List&lt;StudiesTableColumnSize&gt;;
+	  +isPinned: bool;
+	  +onPinnedChanged: void Function(Study, bool)?;
+	  +onTap: void Function(Study)?
+	]
+	
+	[StudiesTableItem]o-[Study]
+	[StudiesTableItem]o-[void Function(Study, bool)?]
+	[StudiesTableItem]o-[void Function(Study)?]
+	
+	[DashboardScaffold
+	  |
+	  +body: Widget
+	  |
+	  +Widget build()
+	]
+	
+	[DashboardScaffold]o-[&lt;abstract&gt;Widget]
+	
+	[DashboardController
 	  |
 	  +studyRepository: IStudyRepository;
 	  +authRepository: IAuthRepository;
 	  +userRepository: IUserRepository;
 	  +router: GoRouter;
 	  -_studiesSubscription: StreamSubscription&lt;List&lt;WrappedModel&lt;Study&gt;&gt;&gt;?;
-	  +searchController: SearchController
+	  +searchController: SearchController;
+	  +isSortAscending: bool
 	  |
 	  -dynamic _subscribeStudies();
 	  +dynamic setSearchText();
@@ -15,8 +43,10 @@
 	  +dynamic onClickNewStudy();
 	  +dynamic pinStudy();
 	  +dynamic pinOffStudy();
+	  +void setSorting();
 	  +void filterStudies();
 	  +void sortStudies();
+	  +bool isSortingActiveForColumn();
 	  +bool isPinned();
 	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions();
 	  +void dispose()
@@ -30,36 +60,6 @@
 	[DashboardController]o-[SearchController]
 	[&lt;abstract&gt;IModelActionProvider]&lt;:--[DashboardController]
 	
-	[StudiesTable
-	  |
-	  +studies: List&lt;Study&gt;;
-	  +onSelect: void Function(Study);
-	  +getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study);
-	  +emptyWidget: Widget;
-	  +pinnedStudies: Iterable&lt;String&gt;;
-	  +dashboardController: DashboardController;
-	  +pinnedPredicates: int Function(Study, Study);
-	  -_sortColumns: List&lt;int Function(Study, Study)?&gt;
-	  |
-	  +Widget build();
-	  -List&lt;Widget&gt; _buildRow()
-	]
-	
-	[StudiesTable]o-[void Function(Study)]
-	[StudiesTable]o-[List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)]
-	[StudiesTable]o-[&lt;abstract&gt;Widget]
-	[StudiesTable]o-[DashboardController]
-	[StudiesTable]o-[int Function(Study, Study)]
-	
-	[DashboardScaffold
-	  |
-	  +body: Widget
-	  |
-	  +Widget build()
-	]
-	
-	[DashboardScaffold]o-[&lt;abstract&gt;Widget]
-	
 	[StudiesFilter
 	  |
 	  +index: int;
@@ -68,6 +68,54 @@
 	
 	[Enum]&lt;:--[StudiesFilter]
 	
+	[StudiesTableColumnSize
+	  |
+	  +flex: int?;
+	  +width: double?
+	  |
+	  +Widget createContainer()
+	]
+	
+	[StudiesTable
+	  |
+	  +itemHeight: double;
+	  +itemPadding: double;
+	  +rowSpacing: double;
+	  +columnSpacing: double;
+	  +studies: List&lt;Study&gt;;
+	  +onSelect: void Function(Study);
+	  +getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study);
+	  +emptyWidget: Widget;
+	  +pinnedStudies: Iterable&lt;String&gt;;
+	  +dashboardController: DashboardController
+	  |
+	  +Widget build();
+	  -Widget _buildColumnHeader()
+	]
+	
+	[StudiesTable]o-[void Function(Study)]
+	[StudiesTable]o-[List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)]
+	[StudiesTable]o-[&lt;abstract&gt;Widget]
+	[StudiesTable]o-[DashboardController]
+	
+	[StudiesTableColumn
+	  |
+	  +index: int;
+	  &lt;static&gt;+values: List&lt;StudiesTableColumn&gt;;
+	  &lt;static&gt;+pin: StudiesTableColumn;
+	  &lt;static&gt;+title: StudiesTableColumn;
+	  &lt;static&gt;+status: StudiesTableColumn;
+	  &lt;static&gt;+participation: StudiesTableColumn;
+	  &lt;static&gt;+createdAt: StudiesTableColumn;
+	  &lt;static&gt;+enrolled: StudiesTableColumn;
+	  &lt;static&gt;+active: StudiesTableColumn;
+	  &lt;static&gt;+completed: StudiesTableColumn;
+	  &lt;static&gt;+action: StudiesTableColumn
+	]
+	
+	[StudiesTableColumn]o-[StudiesTableColumn]
+	[Enum]&lt;:--[StudiesTableColumn]
+	
 	[DashboardScreen
 	  |
 	  +filter: StudiesFilter?
@@ -75,87 +123,214 @@
 	
 	[DashboardScreen]o-[StudiesFilter]
 	
+	[StudiesTableColumnHeader
+	  |
+	  +title: String;
+	  +sortable: bool;
+	  +sortAscending: bool;
+	  +sortingActive: bool;
+	  +onSort: void Function()?
+	]
+	
+	[StudiesTableColumnHeader]o-[void Function()?]
+	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="713.0" width="2174.3" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="788.0" width="3098.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M88.5 596.8 L75.5 606 L75.5 626 L75.5 626.0 " fill="none"></path>
+					<path d="M437.0 219.8 L532.5 263 L532.5 456.5 L532.5 456.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M99.2 595.7 L88.5 596.8 L93.0 587.0 L103.7 586.0 Z"></path>
+						<path d="M430.7 211.1 L437.0 219.8 L426.3 220.8 L420.0 212.1 Z"></path>
 					</g>
-					<path d="M263.1 603.3 L262 606 L262 626 L262.0 626.0 " fill="none"></path>
+					<path d="M319.7 234.0 L345.5 263 L345.5 456.5 L345.5 456.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M271.6 596.7 L263.1 603.3 L261.7 592.6 L270.2 586.0 Z"></path>
+						<path d="M317.5 223.4 L319.7 234.0 L309.6 230.5 L307.4 220.0 Z"></path>
 					</g>
-					<path d="M442.4 602.2 L444.5 606 L444.5 626 L444.5 626.0 " fill="none"></path>
+					<path d="M120.3 234.0 L94.5 263 L94.5 456.5 L94.5 456.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M442.4 591.5 L442.4 602.2 L433.1 596.7 L433.2 586.0 Z"></path>
+						<path d="M130.4 230.5 L120.3 234.0 L122.5 223.4 L132.6 220.0 Z"></path>
 					</g>
-					<path d="M589.0 596.8 L602 606 L602 626 L602.0 626.0 " fill="none"></path>
+					<path d="M681.8 186.7 L681.75 263 L1264.25 459.9943365695793 L1264.3 460.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M584.5 587.0 L589.0 596.8 L578.3 595.7 L573.8 586.0 Z"></path>
+						<path d="M687.1 177.3 L681.8 186.7 L676.4 177.3 L681.8 168.0 Z"></path>
 					</g>
-					<path d="M662.9 558.7 L773 606 L773 626 L773.0 626.0 " fill="none"></path>
+					<path d="M1234.0 620.8 L1365 681 L1365 701 L1365.0 701.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M656.4 550.1 L662.9 558.7 L652.2 559.9 L645.8 551.3 Z"></path>
+						<path d="M1227.7 612.1 L1234.0 620.8 L1223.3 621.8 L1217.0 613.0 Z"></path>
 					</g>
-					<path d="M663.7 515.1 L972.5 606 L972.5 626 L972.5 626.0 " fill="none"></path>
+					<path d="M1167.5 672.5 L1178.5 681 L1178.5 701 L1178.5 701.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M656.2 507.4 L663.7 515.1 L653.2 517.6 L645.8 509.8 Z"></path>
+						<path d="M1163.4 662.5 L1167.5 672.5 L1156.9 670.9 L1152.8 661.0 Z"></path>
+					</g>
+					<path d="M994.9 678.3 L996 681 L996 701 L996.0 701.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M996.3 667.6 L994.9 678.3 L986.4 671.7 L987.8 661.0 Z"></path>
+					</g>
+					<path d="M839.3 678.7 L838.5 681 L838.5 701 L838.5 701.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M847.4 671.6 L839.3 678.7 L837.3 668.1 L845.3 661.0 Z"></path>
+					</g>
+					<path d="M676.6 673.2 L667.5 681 L667.5 701 L667.5 701.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M687.1 671.1 L676.6 673.2 L680.2 663.1 L690.7 661.0 Z"></path>
+					</g>
+					<path d="M586.1 625.1 L468 681 L468 701 L468.0 701.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M596.8 626.0 L586.1 625.1 L592.3 616.3 L603.0 617.2 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M318.8 135.3 L318.75 233 L320.8947721179625 253 L320.9 253.0 " fill="none"></path>
+						<path d="M897.3 150.3 L897.25 263 L898.4700956937799 283 L898.5 283.0 " fill="none"></path>
 					</g>
-					<path d="M324.1 135.3 L318.8 135.3 L313.4 135.3 L318.8 122.0 Z"></path>
-					<path d="M950.3 181.9 L775.25 233 L775.25 404 L775.3 404.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M960.8 184.4 L950.3 181.9 L957.8 174.1 L968.3 176.6 Z"></path>
+					<path d="M902.6 150.3 L897.3 150.3 L891.9 150.3 L897.3 137.0 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M2663.5 150.3 L2663.5 263 L2663.5 433.5 L2663.5 433.5 " fill="none"></path>
 					</g>
-					<path d="M1098.9 226.8 L1093.25 233 L1093.25 404 L1093.3 404.0 " fill="none"></path>
+					<path d="M2668.8 150.3 L2663.5 150.3 L2658.2 150.3 L2663.5 137.0 Z"></path>
+					<path d="M1828.1 233.3 L1896.5 263 L1896.5 456.5 L1896.5 456.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1109.1 223.5 L1098.9 226.8 L1101.2 216.3 L1111.4 213.0 Z"></path>
+						<path d="M1821.7 224.7 L1828.1 233.3 L1817.4 234.4 L1811.0 225.8 Z"></path>
 					</g>
-					<path d="M1244.6 230.9 L1245.25 233 L1393.5569705093833 404 L1393.6 404.0 " fill="none"></path>
+					<path d="M1578.4 261.6 L1578.5 263 L1578.5 456.5 L1578.5 456.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1247.1 220.5 L1244.6 230.9 L1236.9 223.5 L1239.4 213.0 Z"></path>
+						<path d="M1583.3 252.0 L1578.4 261.6 L1572.6 252.6 L1577.4 243.0 Z"></path>
 					</g>
-					<path d="M949.9 155.2 L537 233 L515.7399463806971 253 L515.7 253.0 " fill="none"></path>
+					<path d="M1334.4 252.0 L1314.5 263 L1300.843899521531 456.5 L1300.8 456.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M960.1 158.7 L949.9 155.2 L958.1 148.2 L968.3 151.7 Z"></path>
+						<path d="M1345.2 252.2 L1334.4 252.0 L1340.0 242.8 L1350.8 243.0 Z"></path>
 					</g>
-					<path d="M1466.0 191.3 L1592.5 233 L1592.5 404 L1592.5 404.0 " fill="none"></path>
+					<path d="M1313.1 199.5 L1103.25 263 L1084.7571770334928 283 L1084.8 283.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1458.8 183.4 L1466.0 191.3 L1455.4 193.5 L1448.3 185.5 Z"></path>
+						<path d="M1323.6 201.9 L1313.1 199.5 L1320.5 191.7 L1331.0 194.1 Z"></path>
 					</g>
-					<path d="M1527.0 168.1 L1479.75 233 L1413.0462466487936 404 L1413.0 404.0 " fill="none"></path>
+					<path d="M2442.2 372.7 L2455.5 366 L2463 366 L2463 366 L2470.5 472 L2470.5 472 L2463 578 L2463 578 L2455.5 578 L2455.5 578 L2425.5 562.8931116389549 L2425.5 562.9 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1536.8 163.7 L1527.0 168.1 L1528.1 157.4 L1537.9 153.0 Z"></path>
+						<path d="M2431.4 372.1 L2442.2 372.7 L2436.2 381.7 L2425.5 381.1 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M1810.8 135.3 L1810.75 233 L1937.323726541555 381 L1937.3 381.0 " fill="none"></path>
+						<path d="M2620.4 136.1 L2245 263 L2245 366 L2245.0 366.0 " fill="none"></path>
 					</g>
-					<path d="M1816.1 135.3 L1810.8 135.3 L1805.4 135.3 L1810.8 122.0 Z"></path>
-					<path d="M1970.3 156.2 L1970.25 233 L1970.25 381 L1970.3 381.0 " fill="none"></path>
+					<path d="M2622.1 141.1 L2620.4 136.1 L2618.7 131.0 L2633.0 131.8 Z"></path>
+					<path d="M2205.0 171.2 L2205 263 L2579.0394736842104 433.5 L2579.0 433.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1975.6 146.8 L1970.3 156.2 L1964.9 146.8 L1970.3 137.5 Z"></path>
+						<path d="M2210.3 161.8 L2205.0 171.2 L2199.7 161.8 L2205.0 152.5 Z"></path>
+					</g>
+					<path d="M2923.5 201.2 L2923.5 263 L2923.5 456.5 L2923.5 456.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2928.8 191.8 L2923.5 201.2 L2918.2 191.8 L2923.5 182.5 Z"></path>
+					</g>
+					<g data-name="StudiesTableItem">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTableItem">
+							<rect x="20.0" y="23.0" height="197.0" width="400.0" data-name="StudiesTableItem"></rect>
+							<path d="M20.0 54.0 L420.0 54.0" fill="none" data-name="StudiesTableItem"></path>
+						</g>
+						<g transform="translate(20, 23)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTableItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTableItem">
+								<text x="192.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTableItem">StudiesTableItem</text>
+								
+							</g>
+						</g>
+						<g transform="translate(20, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableItem">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableItem">+study: Study</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTableItem">+itemHeight: double</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTableItem">+itemPadding: double</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudiesTableItem">+rowSpacing: double</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudiesTableItem">+columnSpacing: double</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudiesTableItem">+actions: List&lt;ModelAction&lt;dynamic&gt;&gt;</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudiesTableItem">+columnSizes: List&lt;StudiesTableColumnSize&gt;</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudiesTableItem">+isPinned: bool</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudiesTableItem">+onPinnedChanged: void Function(Study, bool)?</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTableItem">+onTap: void Function(Study)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Study">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
+							<rect x="502.0" y="456.5" height="31.0" width="61.0" data-name="Study"></rect>
+						</g>
+						<g transform="translate(502, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
+								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function(Study, bool)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(Study, bool)?">
+							<rect x="229.0" y="456.5" height="31.0" width="233.0" data-name="void Function(Study, bool)?"></rect>
+						</g>
+						<g transform="translate(229, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(Study, bool)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(Study, bool)?">
+								<text x="108.5" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(Study, bool)?">void Function(Study, bool)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function(Study)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(Study)?">
+							<rect x="0.0" y="456.5" height="31.0" width="189.0" data-name="void Function(Study)?"></rect>
+						</g>
+						<g transform="translate(0, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(Study)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(Study)?">
+								<text x="86.5" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(Study)?">void Function(Study)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="DashboardScaffold">
+						<g fill="#eee8d5" stroke="#33322E" data-name="DashboardScaffold">
+							<rect x="598.3" y="75.0" height="93.0" width="167.0" data-name="DashboardScaffold"></rect>
+							<path d="M598.3 106.0 L765.3 106.0" fill="none" data-name="DashboardScaffold"></path>
+							<path d="M598.3 137.0 L765.3 137.0" fill="none" data-name="DashboardScaffold"></path>
+						</g>
+						<g transform="translate(598.25, 75)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardScaffold">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DashboardScaffold">
+								<text x="75.5" y="13.5" stroke="none" text-anchor="middle" data-name="DashboardScaffold">DashboardScaffold</text>
+								
+							</g>
+						</g>
+						<g transform="translate(598.25, 106)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardScaffold">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardScaffold">
+								<text x="0.0" y="13.5" stroke="none" data-name="DashboardScaffold">+body: Widget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(598.25, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardScaffold">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardScaffold">
+								<text x="0.0" y="13.5" stroke="none" data-name="DashboardScaffold">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Widget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget">
+							<rect x="1264.3" y="456.5" height="31.0" width="71.0" data-name="Widget"></rect>
+						</g>
+						<g transform="translate(1264.25, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget">
+								<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget">Widget</text>
+								
+							</g>
+						</g>
 					</g>
 					<g data-name="DashboardController">
 						<g fill="#eee8d5" stroke="#33322E" data-name="DashboardController">
-							<rect x="31.8" y="253.0" height="333.0" width="614.0" data-name="DashboardController"></rect>
-							<path d="M31.8 284.0 L645.8 284.0" fill="none" data-name="DashboardController"></path>
-							<path d="M31.8 390.0 L645.8 390.0" fill="none" data-name="DashboardController"></path>
+							<rect x="603.0" y="283.0" height="378.0" width="614.0" data-name="DashboardController"></rect>
+							<path d="M603.0 314.0 L1217.0 314.0" fill="none" data-name="DashboardController"></path>
+							<path d="M603.0 435.0 L1217.0 435.0" fill="none" data-name="DashboardController"></path>
 						</g>
-						<g transform="translate(31.75, 253)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardController">
+						<g transform="translate(603, 283)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DashboardController">
 								<text x="299.0" y="13.5" stroke="none" text-anchor="middle" data-name="DashboardController">DashboardController</text>
 								
 							</g>
 						</g>
-						<g transform="translate(31.75, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
+						<g transform="translate(603, 314)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardController">
 								<text x="0.0" y="13.5" stroke="none" data-name="DashboardController">+studyRepository: IStudyRepository</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="DashboardController">+authRepository: IAuthRepository</text>
@@ -163,10 +338,11 @@
 								<text x="0.0" y="58.5" stroke="none" data-name="DashboardController">+router: GoRouter</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="DashboardController">-_studiesSubscription: StreamSubscription&lt;List&lt;WrappedModel&lt;Study&gt;&gt;&gt;?</text>
 								<text x="0.0" y="88.5" stroke="none" data-name="DashboardController">+searchController: SearchController</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="DashboardController">+isSortAscending: bool</text>
 								
 							</g>
 						</g>
-						<g transform="translate(31.75, 390)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
+						<g transform="translate(603, 435)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardController">
 								<text x="0.0" y="13.5" stroke="none" data-name="DashboardController">-dynamic _subscribeStudies()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="DashboardController">+dynamic setSearchText()</text>
@@ -175,20 +351,22 @@
 								<text x="0.0" y="73.5" stroke="none" data-name="DashboardController">+dynamic onClickNewStudy()</text>
 								<text x="0.0" y="88.5" stroke="none" data-name="DashboardController">+dynamic pinStudy()</text>
 								<text x="0.0" y="103.5" stroke="none" data-name="DashboardController">+dynamic pinOffStudy()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="DashboardController">+void filterStudies()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="DashboardController">+void sortStudies()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="DashboardController">+bool isPinned()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="DashboardController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="DashboardController">+void dispose()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="DashboardController">+void setSorting()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="DashboardController">+void filterStudies()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="DashboardController">+void sortStudies()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="DashboardController">+bool isSortingActiveForColumn()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="DashboardController">+bool isPinned()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="DashboardController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="DashboardController">+void dispose()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="IStudyRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IStudyRepository">
-							<rect x="0.0" y="626.0" height="31.0" width="151.0" data-name="IStudyRepository"></rect>
+							<rect x="1289.5" y="701.0" height="31.0" width="151.0" data-name="IStudyRepository"></rect>
 						</g>
-						<g transform="translate(0, 626)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyRepository">
+						<g transform="translate(1289.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IStudyRepository">
 								<text x="67.5" y="13.5" stroke="none" text-anchor="middle" data-name="IStudyRepository">IStudyRepository</text>
 								
@@ -197,9 +375,9 @@
 					</g>
 					<g data-name="IAuthRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IAuthRepository">
-							<rect x="191.0" y="626.0" height="31.0" width="142.0" data-name="IAuthRepository"></rect>
+							<rect x="1107.5" y="701.0" height="31.0" width="142.0" data-name="IAuthRepository"></rect>
 						</g>
-						<g transform="translate(191, 626)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAuthRepository">
+						<g transform="translate(1107.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IAuthRepository">
 								<text x="63.0" y="13.5" stroke="none" text-anchor="middle" data-name="IAuthRepository">IAuthRepository</text>
 								
@@ -208,9 +386,9 @@
 					</g>
 					<g data-name="IUserRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IUserRepository">
-							<rect x="373.0" y="626.0" height="31.0" width="143.0" data-name="IUserRepository"></rect>
+							<rect x="924.5" y="701.0" height="31.0" width="143.0" data-name="IUserRepository"></rect>
 						</g>
-						<g transform="translate(373, 626)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IUserRepository">
+						<g transform="translate(924.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IUserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IUserRepository">
 								<text x="63.5" y="13.5" stroke="none" text-anchor="middle" data-name="IUserRepository">IUserRepository</text>
 								
@@ -219,9 +397,9 @@
 					</g>
 					<g data-name="GoRouter">
 						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
-							<rect x="556.0" y="626.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
+							<rect x="792.5" y="701.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
 						</g>
-						<g transform="translate(556, 626)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
+						<g transform="translate(792.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
 								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
 								
@@ -230,9 +408,9 @@
 					</g>
 					<g data-name="StreamSubscription">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StreamSubscription">
-							<rect x="688.0" y="626.0" height="31.0" width="170.0" data-name="StreamSubscription"></rect>
+							<rect x="582.5" y="701.0" height="31.0" width="170.0" data-name="StreamSubscription"></rect>
 						</g>
-						<g transform="translate(688, 626)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamSubscription">
+						<g transform="translate(582.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamSubscription">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StreamSubscription">
 								<text x="77.0" y="13.5" stroke="none" text-anchor="middle" data-name="StreamSubscription">StreamSubscription</text>
 								
@@ -241,9 +419,9 @@
 					</g>
 					<g data-name="SearchController">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SearchController">
-							<rect x="898.0" y="626.0" height="31.0" width="149.0" data-name="SearchController"></rect>
+							<rect x="393.5" y="701.0" height="31.0" width="149.0" data-name="SearchController"></rect>
 						</g>
-						<g transform="translate(898, 626)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SearchController">
+						<g transform="translate(393.5, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SearchController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SearchController">
 								<text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="SearchController">SearchController</text>
 								
@@ -252,129 +430,27 @@
 					</g>
 					<g data-name="IModelActionProvider">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IModelActionProvider">
-							<rect x="226.8" y="91.0" height="31.0" width="184.0" data-name="IModelActionProvider"></rect>
+							<rect x="805.3" y="106.0" height="31.0" width="184.0" data-name="IModelActionProvider"></rect>
 						</g>
-						<g transform="translate(226.75, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
+						<g transform="translate(805.25, 106)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelActionProvider">
 								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelActionProvider">IModelActionProvider</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="StudiesTable">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTable">
-							<rect x="968.3" y="0.0" height="213.0" width="480.0" data-name="StudiesTable"></rect>
-							<path d="M968.3 31.0 L1448.3 31.0" fill="none" data-name="StudiesTable"></path>
-							<path d="M968.3 167.0 L1448.3 167.0" fill="none" data-name="StudiesTable"></path>
-						</g>
-						<g transform="translate(968.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTable">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTable">
-								<text x="232.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTable">StudiesTable</text>
-								
-							</g>
-						</g>
-						<g transform="translate(968.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTable">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTable">+studies: List&lt;Study&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTable">+onSelect: void Function(Study)</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTable">+getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudiesTable">+emptyWidget: Widget</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="StudiesTable">+pinnedStudies: Iterable&lt;String&gt;</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="StudiesTable">+dashboardController: DashboardController</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="StudiesTable">+pinnedPredicates: int Function(Study, Study)</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="StudiesTable">-_sortColumns: List&lt;int Function(Study, Study)?&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(968.25, 167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTable">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTable">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTable">-List&lt;Widget&gt; _buildRow()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="void Function(Study)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(Study)">
-							<rect x="685.8" y="404.0" height="31.0" width="179.0" data-name="void Function(Study)"></rect>
-						</g>
-						<g transform="translate(685.75, 404)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(Study)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(Study)">
-								<text x="81.5" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(Study)">void Function(Study)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
-							<rect x="904.8" y="404.0" height="31.0" width="377.0" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)"></rect>
-						</g>
-						<g transform="translate(904.75, 404)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
-								<text x="180.5" y="13.5" stroke="none" text-anchor="middle" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Widget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Widget">
-							<rect x="1371.5" y="404.0" height="31.0" width="71.0" data-name="Widget"></rect>
-						</g>
-						<g transform="translate(1371.5, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget">
-								<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget">Widget</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="int Function(Study, Study)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="int Function(Study, Study)">
-							<rect x="1482.5" y="404.0" height="31.0" width="220.0" data-name="int Function(Study, Study)"></rect>
-						</g>
-						<g transform="translate(1482.5, 404)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="int Function(Study, Study)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="int Function(Study, Study)">
-								<text x="102.0" y="13.5" stroke="none" text-anchor="middle" data-name="int Function(Study, Study)">int Function(Study, Study)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="DashboardScaffold">
-						<g fill="#eee8d5" stroke="#33322E" data-name="DashboardScaffold">
-							<rect x="1488.3" y="60.0" height="93.0" width="167.0" data-name="DashboardScaffold"></rect>
-							<path d="M1488.3 91.0 L1655.3 91.0" fill="none" data-name="DashboardScaffold"></path>
-							<path d="M1488.3 122.0 L1655.3 122.0" fill="none" data-name="DashboardScaffold"></path>
-						</g>
-						<g transform="translate(1488.25, 60)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardScaffold">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DashboardScaffold">
-								<text x="75.5" y="13.5" stroke="none" text-anchor="middle" data-name="DashboardScaffold">DashboardScaffold</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1488.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardScaffold">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardScaffold">
-								<text x="0.0" y="13.5" stroke="none" data-name="DashboardScaffold">+body: Widget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1488.25, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardScaffold">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardScaffold">
-								<text x="0.0" y="13.5" stroke="none" data-name="DashboardScaffold">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="StudiesFilter">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesFilter">
-							<rect x="1822.3" y="381.0" height="77.0" width="296.0" data-name="StudiesFilter"></rect>
-							<path d="M1822.3 412.0 L2118.3 412.0" fill="none" data-name="StudiesFilter"></path>
+							<rect x="2515.5" y="433.5" height="77.0" width="296.0" data-name="StudiesFilter"></rect>
+							<path d="M2515.5 464.5 L2811.5 464.5" fill="none" data-name="StudiesFilter"></path>
 						</g>
-						<g transform="translate(1822.25, 381)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesFilter">
+						<g transform="translate(2515.5, 433.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesFilter">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesFilter">
 								<text x="140.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesFilter">StudiesFilter</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1822.25, 412)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesFilter">
+						<g transform="translate(2515.5, 464.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesFilter">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesFilter">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudiesFilter">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudiesFilter">&lt;static&gt;+values: List&lt;StudiesFilter&gt;</text>
@@ -384,29 +460,173 @@
 					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="1780.3" y="91.0" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="2633.0" y="106.0" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(1780.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(2633, 106)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="StudiesTableColumnSize">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTableColumnSize">
+							<rect x="1851.0" y="67.5" height="108.0" width="225.0" data-name="StudiesTableColumnSize"></rect>
+							<path d="M1851.0 98.5 L2076.0 98.5" fill="none" data-name="StudiesTableColumnSize"></path>
+							<path d="M1851.0 144.5 L2076.0 144.5" fill="none" data-name="StudiesTableColumnSize"></path>
+						</g>
+						<g transform="translate(1851, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTableColumnSize">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTableColumnSize">
+								<text x="104.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTableColumnSize">StudiesTableColumnSize</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1851, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableColumnSize">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableColumnSize">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableColumnSize">+flex: int?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTableColumnSize">+width: double?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1851, 144.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableColumnSize">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableColumnSize">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableColumnSize">+Widget createContainer()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudiesTable">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTable">
+							<rect x="1331.0" y="0.0" height="243.0" width="480.0" data-name="StudiesTable"></rect>
+							<path d="M1331.0 31.0 L1811.0 31.0" fill="none" data-name="StudiesTable"></path>
+							<path d="M1331.0 197.0 L1811.0 197.0" fill="none" data-name="StudiesTable"></path>
+						</g>
+						<g transform="translate(1331, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTable">
+								<text x="232.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTable">StudiesTable</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1331, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTable">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTable">+itemHeight: double</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTable">+itemPadding: double</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTable">+rowSpacing: double</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudiesTable">+columnSpacing: double</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudiesTable">+studies: List&lt;Study&gt;</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudiesTable">+onSelect: void Function(Study)</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudiesTable">+getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudiesTable">+emptyWidget: Widget</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudiesTable">+pinnedStudies: Iterable&lt;String&gt;</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTable">+dashboardController: DashboardController</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1331, 197)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTable">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTable">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTable">-Widget _buildColumnHeader()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function(Study)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(Study)">
+							<rect x="1807.0" y="456.5" height="31.0" width="179.0" data-name="void Function(Study)"></rect>
+						</g>
+						<g transform="translate(1807, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(Study)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(Study)">
+								<text x="81.5" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(Study)">void Function(Study)</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
+							<rect x="1390.0" y="456.5" height="31.0" width="377.0" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)"></rect>
+						</g>
+						<g transform="translate(1390, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">
+								<text x="180.5" y="13.5" stroke="none" text-anchor="middle" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)">List&lt;ModelAction&lt;dynamic&gt;&gt; Function(Study)</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudiesTableColumn">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTableColumn">
+							<rect x="2064.5" y="366.0" height="212.0" width="361.0" data-name="StudiesTableColumn"></rect>
+							<path d="M2064.5 397.0 L2425.5 397.0" fill="none" data-name="StudiesTableColumn"></path>
+						</g>
+						<g transform="translate(2064.5, 366)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTableColumn">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTableColumn">
+								<text x="172.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTableColumn">StudiesTableColumn</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2064.5, 397)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableColumn">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableColumn">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableColumn">+index: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+values: List&lt;StudiesTableColumn&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+pin: StudiesTableColumn</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+title: StudiesTableColumn</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+status: StudiesTableColumn</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+participation: StudiesTableColumn</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+createdAt: StudiesTableColumn</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+enrolled: StudiesTableColumn</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+active: StudiesTableColumn</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+completed: StudiesTableColumn</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+action: StudiesTableColumn</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="DashboardScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="DashboardScreen">
-							<rect x="1881.3" y="75.5" height="62.0" width="178.0" data-name="DashboardScreen"></rect>
-							<path d="M1881.3 106.5 L2059.3 106.5" fill="none" data-name="DashboardScreen"></path>
+							<rect x="2116.0" y="90.5" height="62.0" width="178.0" data-name="DashboardScreen"></rect>
+							<path d="M2116.0 121.5 L2294.0 121.5" fill="none" data-name="DashboardScreen"></path>
 						</g>
-						<g transform="translate(1881.25, 75.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardScreen">
+						<g transform="translate(2116, 90.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DashboardScreen">
 								<text x="81.0" y="13.5" stroke="none" text-anchor="middle" data-name="DashboardScreen">DashboardScreen</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1881.25, 106.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardScreen">
+						<g transform="translate(2116, 121.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardScreen">
 								<text x="0.0" y="13.5" stroke="none" data-name="DashboardScreen">+filter: StudiesFilter?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudiesTableColumnHeader">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTableColumnHeader">
+							<rect x="2805.0" y="60.5" height="122.0" width="237.0" data-name="StudiesTableColumnHeader"></rect>
+							<path d="M2805.0 91.5 L3042.0 91.5" fill="none" data-name="StudiesTableColumnHeader"></path>
+						</g>
+						<g transform="translate(2805, 60.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTableColumnHeader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTableColumnHeader">
+								<text x="110.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTableColumnHeader">StudiesTableColumnHeader</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2805, 91.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableColumnHeader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableColumnHeader">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableColumnHeader">+title: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTableColumnHeader">+sortable: bool</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTableColumnHeader">+sortAscending: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudiesTableColumnHeader">+sortingActive: bool</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudiesTableColumnHeader">+onSort: void Function()?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function()?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function()?">
+							<rect x="2851.5" y="456.5" height="31.0" width="144.0" data-name="void Function()?"></rect>
+						</g>
+						<g transform="translate(2851.5, 456.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function()?">
+								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function()?">void Function()?</text>
 								
 							</g>
 						</g>
