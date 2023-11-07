@@ -17,8 +17,8 @@ class SyncIndicator<T> extends StatefulWidget {
     this.lastSynced,
     this.animationDuration = 1500,
     this.iconSize = 15.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final AsyncValue<T> state;
   final DateTime? lastSynced;

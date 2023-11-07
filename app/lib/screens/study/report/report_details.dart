@@ -18,7 +18,7 @@ class ReportDetailsScreen extends StatelessWidget {
         settings: const RouteSettings(name: Routes.reportDetails),
       );
 
-  const ReportDetailsScreen(this.subject, {Key? key}) : super(key: key);
+  const ReportDetailsScreen(this.subject, {super.key});
 
   @override
   Widget build(BuildContext context) {

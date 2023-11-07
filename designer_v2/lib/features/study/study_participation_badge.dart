@@ -5,8 +5,7 @@ import 'package:studyu_designer_v2/domain/participation.dart';
 
 class StudyParticipationBadge extends StatelessWidget {
   const StudyParticipationBadge(
-      {required this.participation, this.type = studybadge.BadgeType.plain, this.showPrefixIcon = true, Key? key})
-      : super(key: key);
+      {required this.participation, this.type = studybadge.BadgeType.plain, this.showPrefixIcon = true, super.key});
 
   final Participation participation;
   final studybadge.BadgeType type;

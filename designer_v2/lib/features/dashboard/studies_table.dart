@@ -19,8 +19,8 @@ class StudiesTable extends StatelessWidget {
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<Study> studies;
   final OnSelectHandler<Study> onSelect;

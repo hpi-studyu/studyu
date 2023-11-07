@@ -12,7 +12,7 @@ import '../../routes.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({Key? key}) : super(key: key);
+  const TermsScreen({super.key});
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
@@ -111,7 +111,7 @@ class LegalSection extends StatelessWidget {
   final ValueChanged<bool?>? onChange;
 
   const LegalSection({
-    Key? key,
+    super.key,
     this.title,
     this.description,
     this.icon,
@@ -120,7 +120,7 @@ class LegalSection extends StatelessWidget {
     this.acknowledgment,
     this.isChecked,
     this.onChange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

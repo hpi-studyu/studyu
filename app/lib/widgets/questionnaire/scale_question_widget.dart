@@ -10,7 +10,7 @@ class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
   final Function(Answer)? onDone;
 
-  const ScaleQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
+  const ScaleQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
   State<ScaleQuestionWidget> createState() => _ScaleQuestionWidgetState();

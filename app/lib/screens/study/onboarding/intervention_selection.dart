@@ -12,7 +12,7 @@ import '../../../widgets/intervention_card.dart';
 import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
-  const InterventionSelectionScreen({Key? key}) : super(key: key);
+  const InterventionSelectionScreen({super.key});
 
   @override
   State<InterventionSelectionScreen> createState() => _InterventionSelectionScreenState();

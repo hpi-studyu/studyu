@@ -17,7 +17,7 @@ class TaskScreen extends StatefulWidget {
         builder: (_) => TaskScreen(taskInstance: taskInstance),
       );
 
-  const TaskScreen({required this.taskInstance, Key? key}) : super(key: key);
+  const TaskScreen({required this.taskInstance, super.key});
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -36,13 +36,13 @@ class _TaskScreenState extends State<TaskScreen> {
 
   Widget? _buildTask() {
     switch (taskInstance.task.runtimeType) {
-      case CheckmarkTask:
+      case CheckmarkTask _:
         return CheckmarkTaskWidget(
           task: taskInstance.task as CheckmarkTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
-      case QuestionnaireTask:
+      case QuestionnaireTask _:
         return QuestionnaireTaskWidget(
           task: taskInstance.task as QuestionnaireTask,
           key: UniqueKey(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class HelpIcon extends StatelessWidget {
-  const HelpIcon({this.tooltipText, Key? key}) : super(key: key);
+  const HelpIcon({this.tooltipText, super.key});
 
   final String? tooltipText;
 

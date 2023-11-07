@@ -4,5 +4,5 @@ import 'package:studyu_core/core.dart';
 abstract class ReportSectionWidget extends StatelessWidget {
   final StudySubject subject;
 
-  const ReportSectionWidget(this.subject, {Key? key}) : super(key: key);
+  const ReportSectionWidget(this.subject, {super.key});
 }

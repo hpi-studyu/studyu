@@ -14,8 +14,8 @@ class PrimaryButton extends StatefulWidget {
     this.showLoadingEarliestAfterMs = 100,
     this.innerPadding = const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
     this.minimumSize,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The text displayed as the button label
   final String text;

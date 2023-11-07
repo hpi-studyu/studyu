@@ -44,7 +44,7 @@ abstract class PlatformController {
 class WebController extends PlatformController {
   late html.IFrameElement iFrameElement;
 
-  WebController(String baseSrc, String studyId) : super(baseSrc, studyId) {
+  WebController(super.baseSrc, super.studyId) {
     super.frameWidget = Container();
     routeInformation = RouteInformation(null, null, null, null);
   }
@@ -148,7 +148,7 @@ class WebController extends PlatformController {
 
 // Mostly unfinished, since we only support Desktop for now
 class MobileController extends PlatformController {
-  MobileController(String previewSrc, studyId) : super(previewSrc, studyId) {
+  MobileController(super.previewSrc, super.studyId) {
     frameWidget = const MobileFrame();
   }
 

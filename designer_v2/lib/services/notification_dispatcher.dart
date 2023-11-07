@@ -17,8 +17,7 @@ class NotificationDispatcher extends ConsumerStatefulWidget {
       this.snackbarInnerPadding = 16.0,
       this.snackbarBehavior = SnackBarBehavior.fixed,
       this.snackbarDefaultDuration = 2500,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   /// Pass-through widget that is rendered as is
   final Widget? child;

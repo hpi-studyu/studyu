@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ChoiceQuestionFormView extends ConsumerWidget {
-  const ChoiceQuestionFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const ChoiceQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 

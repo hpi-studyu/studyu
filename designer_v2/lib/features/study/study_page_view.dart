@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
 
 abstract class StudyPageWidget extends ConsumerWidget implements IWithBanner {
-  const StudyPageWidget(this.studyId, {Key? key}) : super(key: key);
+  const StudyPageWidget(this.studyId, {super.key});
 
   final String studyId;
 

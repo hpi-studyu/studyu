@@ -15,11 +15,11 @@ class TaskBox extends StatefulWidget {
   final Function() onCompleted;
 
   const TaskBox({
-    Key? key,
+    super.key,
     required this.taskInstance,
     required this.icon,
     required this.onCompleted,
-  }) : super(key: key);
+  });
 
   @override
   State<TaskBox> createState() => _TaskBoxState();
