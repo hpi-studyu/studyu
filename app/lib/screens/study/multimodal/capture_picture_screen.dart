@@ -9,8 +9,7 @@ class CapturePictureScreen extends StatefulWidget {
   final String userId;
   final String studyId;
 
-  const CapturePictureScreen(
-      {super.key, required this.userId, required this.studyId});
+  const CapturePictureScreen({super.key, required this.userId, required this.studyId});
 
   @override
   CapturePictureScreenState createState() => CapturePictureScreenState();
@@ -23,8 +22,7 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
   late Future<void> _identifyCamerasFuture;
   Future<void> _initializeControllerFuture;
 
-  CapturePictureScreenState()
-      : _initializeControllerFuture = Completer<void>().future;
+  CapturePictureScreenState() : _initializeControllerFuture = Completer<void>().future;
 
   Future<void> _identifyCameras() async {
     _cameras = (await availableCameras())
@@ -37,8 +35,7 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
   Future<void> _initializeCameraController() async {
     await _identifyCamerasFuture;
     setState(() {
-      _cameraController = CameraController(
-          _cameras[_selectedCameraID], ResolutionPreset.medium,
+      _cameraController = CameraController(_cameras[_selectedCameraID], ResolutionPreset.medium,
           imageFormatGroup: ImageFormatGroup.bgra8888);
       _initializeControllerFuture = _cameraController.initialize();
     });
@@ -58,10 +55,8 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
     // Ensure that the camera is initialized.
     await _initializeControllerFuture;
     final XFile image = await _cameraController.takePicture();
-    PersistentStorageHandler aPersistentStorageHandler =
-        PersistentStorageHandler(widget.userId, widget.studyId);
-    await aPersistentStorageHandler.storeImage(image,
-        pathCallback: (String aPath) => Navigator.pop(context, aPath));
+    PersistentStorageHandler aPersistentStorageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
+    await aPersistentStorageHandler.storeImage(image, pathCallback: (String aPath) => Navigator.pop(context, aPath));
   }
 
   @override
@@ -89,10 +84,8 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               // If the Future is complete, display the preview.
-              return Column(children: [
-                CameraPreview(_cameraController),
-                Text(_cameras[_selectedCameraID].lensDirection.name)
-              ]);
+              return Column(
+                  children: [CameraPreview(_cameraController), Text(_cameras[_selectedCameraID].lensDirection.name)]);
             } else {
               return const Center(child: CircularProgressIndicator());
             }

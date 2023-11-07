@@ -6,8 +6,7 @@ class KeyStorage {
   static const String pefKeyForIV = "StudyU_MediaEncryptionIV";
 
   static Future<KeyStorage> buildHandler() async {
-    final SharedPreferences aSharedPreferences =
-        await SharedPreferences.getInstance();
+    final SharedPreferences aSharedPreferences = await SharedPreferences.getInstance();
     return KeyStorage(aSharedPreferences);
   }
 
@@ -25,24 +24,36 @@ class KeyStorage {
     keyValueStore.setString(KeyStorage.pefKeyForIV, iv.base64);
   }
 
-  T _getSharedPreferenceValue<T>(void Function() initIfNotExist,
-      String accessKey, T Function(String) convertRep,) {
+  T _getSharedPreferenceValue<T>(
+    void Function() initIfNotExist,
+    String accessKey,
+    T Function(String) convertRep,
+  ) {
     final String? valueRep = keyValueStore.getString(accessKey);
     if (valueRep == null) {
       initIfNotExist();
       return _getSharedPreferenceValue<T>(
-          initIfNotExist, accessKey, convertRep,);
+        initIfNotExist,
+        accessKey,
+        convertRep,
+      );
     }
     return convertRep(valueRep);
   }
 
   Key getEncryptionKey() {
     return _getSharedPreferenceValue<Key>(
-        _initEncryptionKey, KeyStorage.prefKeyForKey, Key.fromBase64,);
+      _initEncryptionKey,
+      KeyStorage.prefKeyForKey,
+      Key.fromBase64,
+    );
   }
 
   IV getIV() {
     return _getSharedPreferenceValue(
-        _initEncryptionIV, KeyStorage.pefKeyForIV, IV.fromBase64,);
+      _initEncryptionIV,
+      KeyStorage.pefKeyForIV,
+      IV.fromBase64,
+    );
   }
 }

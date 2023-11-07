@@ -14,11 +14,9 @@ class AudioRecordingQuestion extends Question<AudioRecordingQuestion> {
 
   AudioRecordingQuestion.withId() : super.withId(questionType);
 
-  factory AudioRecordingQuestion.fromJson(Map<String, dynamic> json) =>
-      _$AudioRecordingQuestionFromJson(json);
+  factory AudioRecordingQuestion.fromJson(Map<String, dynamic> json) => _$AudioRecordingQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$AudioRecordingQuestionToJson(this);
 
-  Answer<String> constructAnswer(String response) =>
-      Answer.forQuestion(this, response);
+  Answer<String> constructAnswer(String response) => Answer.forQuestion(this, response);
 }

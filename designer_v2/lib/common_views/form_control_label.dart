@@ -6,7 +6,12 @@ typedef FormControlVoidCallback<T> = void Function(AbstractControl<T> formContro
 
 class FormControlLabel extends StatelessWidget {
   const FormControlLabel(
-      {required this.formControl, required this.text, this.textStyle, this.isClickable = true, this.onClick, super.key});
+      {required this.formControl,
+      required this.text,
+      this.textStyle,
+      this.isClickable = true,
+      this.onClick,
+      super.key});
 
   final AbstractControl<dynamic> formControl;
   final String text;

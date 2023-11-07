@@ -20,7 +20,7 @@ class Hyperlink extends StatefulWidget {
     this.icon,
     this.iconSize,
     super.key,
-  })  : assert((url != null && onClick == null) || (url == null && onClick != null),
+  }) : assert((url != null && onClick == null) || (url == null && onClick != null),
             "Must provide either url or onClick handler");
 
   final String text;

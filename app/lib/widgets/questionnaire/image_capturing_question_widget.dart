@@ -9,16 +9,13 @@ class ImageCapturingQuestionWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
   final Function(Answer)? onDone;
 
-  const ImageCapturingQuestionWidget(
-      {super.key, required this.question, this.onDone});
+  const ImageCapturingQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
-  State<ImageCapturingQuestionWidget> createState() =>
-      _ImageCapturingQuestionWidgetState();
+  State<ImageCapturingQuestionWidget> createState() => _ImageCapturingQuestionWidgetState();
 }
 
-class _ImageCapturingQuestionWidgetState
-    extends State<ImageCapturingQuestionWidget> {
+class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWidget> {
   @override
   void initState() {
     super.initState();

@@ -10,8 +10,7 @@ class RecordAudioScreen extends StatefulWidget {
   final String userId;
   final String studyId;
 
-  const RecordAudioScreen(
-      {super.key, required this.userId, required this.studyId});
+  const RecordAudioScreen({super.key, required this.userId, required this.studyId});
 
   @override
   RecordAudioScreenState createState() => RecordAudioScreenState();
@@ -39,8 +38,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeRecorderPermissionsFuture =
-        _initializeAudioRecorderPermissions();
+    _initializeRecorderPermissionsFuture = _initializeAudioRecorderPermissions();
   }
 
   @override
@@ -95,13 +93,11 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
                 return Column(
                   children: [
                     _isRecording
-                        ? LoadingAnimationWidget.staggeredDotsWave(
-                            color: const Color(0xFFEA3799), size: 200)
+                        ? LoadingAnimationWidget.staggeredDotsWave(color: const Color(0xFFEA3799), size: 200)
                         : Container(),
                     ElevatedButton(
                       onPressed: _toggleRecording,
-                      child: Text(
-                          _isRecording ? 'Stop Recording' : 'Start Recording'),
+                      child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
                     )
                   ],
                 );

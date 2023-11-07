@@ -9,16 +9,13 @@ class AudioRecordingQuestionWidget extends QuestionWidget {
   final AudioRecordingQuestion question;
   final Function(Answer)? onDone;
 
-  const AudioRecordingQuestionWidget(
-      {super.key, required this.question, this.onDone});
+  const AudioRecordingQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
-  State<AudioRecordingQuestionWidget> createState() =>
-      _AudioRecordingQuestionWidgetState();
+  State<AudioRecordingQuestionWidget> createState() => _AudioRecordingQuestionWidgetState();
 }
 
-class _AudioRecordingQuestionWidgetState
-    extends State<AudioRecordingQuestionWidget> {
+class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWidget> {
   @override
   void initState() {
     super.initState();

@@ -11,14 +11,10 @@ abstract class Question<V> {
     BooleanQuestion.questionType: (json) => BooleanQuestion.fromJson(json),
     ChoiceQuestion.questionType: (json) => ChoiceQuestion.fromJson(json),
     ScaleQuestion.questionType: (json) => ScaleQuestion.fromJson(json),
-    AnnotatedScaleQuestion.questionType: (json) =>
-        AnnotatedScaleQuestion.fromJson(json),
-    VisualAnalogueQuestion.questionType: (json) =>
-        VisualAnalogueQuestion.fromJson(json),
-    ImageCapturingQuestion.questionType: (json) =>
-        ImageCapturingQuestion.fromJson(json),
-    AudioRecordingQuestion.questionType: (json) =>
-        AudioRecordingQuestion.fromJson(json),
+    AnnotatedScaleQuestion.questionType: (json) => AnnotatedScaleQuestion.fromJson(json),
+    VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
+    ImageCapturingQuestion.questionType: (json) => ImageCapturingQuestion.fromJson(json),
+    AudioRecordingQuestion.questionType: (json) => AudioRecordingQuestion.fromJson(json),
   };
   static const String keyType = 'type';
   String type;

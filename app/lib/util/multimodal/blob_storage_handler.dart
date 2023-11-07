@@ -6,8 +6,6 @@ class BlobStorageHandler {
   static const String _observationsBucketName = 'observations';
 
   Future<void> uploadObservation(String aFileName, File aFile) async {
-    await env.client.storage
-        .from(_observationsBucketName)
-        .upload(aFileName, aFile);
+    await env.client.storage.from(_observationsBucketName).upload(aFileName, aFile);
   }
 }

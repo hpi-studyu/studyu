@@ -63,8 +63,7 @@ class AlertIntent extends NotificationIntent {
     super.icon,
     super.actions,
     this.dismissOnAction = true,
-  }) : super(
-            type: NotificationType.alert);
+  }) : super(type: NotificationType.alert);
 
   final String title;
   final bool dismissOnAction;

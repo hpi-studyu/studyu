@@ -24,8 +24,10 @@ class EncrypterHandler {
 
   String decryptText(String anEncryptedText) {
     final Encrypter encrypter = _buildEncrypter(this);
-    return encrypter.decrypt(Encrypted.fromBase64(anEncryptedText),
-        iv: _keyStorage.getIV(),);
+    return encrypter.decrypt(
+      Encrypted.fromBase64(anEncryptedText),
+      iv: _keyStorage.getIV(),
+    );
   }
 
   Uint8List encryptFile(Uint8List aFileContent) {
@@ -36,8 +38,10 @@ class EncrypterHandler {
   Uint8List decryptFile(Uint8List anEncryptedFileContent) {
     final Encrypter encrypter = _buildEncrypter(this);
     return Uint8List.fromList(
-      encrypter.decryptBytes(Encrypted(anEncryptedFileContent),
-          iv: _keyStorage.getIV(),),
+      encrypter.decryptBytes(
+        Encrypted(anEncryptedFileContent),
+        iv: _keyStorage.getIV(),
+      ),
     );
   }
 }

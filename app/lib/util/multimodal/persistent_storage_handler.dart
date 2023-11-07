@@ -28,9 +28,7 @@ class PersistentStorageHandler {
   final String _studyId;
 
   static bool _isNotEncrypted(FileSystemEntity anEntity) {
-    return !path
-        .basename(anEntity.path)
-        .startsWith(PersistentStorageHandler._encryptedBaseNamePrefix);
+    return !path.basename(anEntity.path).startsWith(PersistentStorageHandler._encryptedBaseNamePrefix);
   }
 
   static bool _isFile(FileSystemEntity anEntity) {
@@ -57,8 +55,7 @@ class PersistentStorageHandler {
 
   Future<void> _initializeRawDirectoryHandler() async {
     _applicationBaseDirectory = await getApplicationDocumentsDirectory();
-    _applicationMediaDirectory =
-        Directory("${_applicationBaseDirectory.path}/multimodal-artifacts");
+    _applicationMediaDirectory = Directory("${_applicationBaseDirectory.path}/multimodal-artifacts");
     if (!_applicationMediaDirectory.existsSync()) {
       _applicationMediaDirectory.createSync();
     }
@@ -70,11 +67,10 @@ class PersistentStorageHandler {
 
   Future<void> _deleteAllUnencryptedFileSystemEntities() async {
     await _applicationDirectoryFuture;
-    final List<FileSystemEntity> unencryptedEntities =
-        _applicationMediaDirectory
-            .listSync(followLinks: false)
-            .where(PersistentStorageHandler._isNotEncrypted)
-            .toList();
+    final List<FileSystemEntity> unencryptedEntities = _applicationMediaDirectory
+        .listSync(followLinks: false)
+        .where(PersistentStorageHandler._isNotEncrypted)
+        .toList();
     for (final FileSystemEntity unencryptedEntity in unencryptedEntities) {
       unencryptedEntity.deleteSync(recursive: true);
     }
@@ -87,8 +83,7 @@ class PersistentStorageHandler {
     await _applicationDirectoryFuture;
     await _encrypterHandlerFuture;
     final Uint8List imageByteContent = await image.readAsBytes();
-    final Uint8List encryptedImageByteContent =
-        _encrypterHandler.encryptFile(imageByteContent);
+    final Uint8List encryptedImageByteContent = _encrypterHandler.encryptFile(imageByteContent);
 
     final String fileName = _buildFileName();
 
@@ -98,16 +93,14 @@ class PersistentStorageHandler {
       PersistentStorageHandler._encryptedImageFileType,
     ].join();
 
-    final String uploadFileName =
-        [fileName, PersistentStorageHandler._nonEncryptedImageFileType].join();
+    final String uploadFileName = [fileName, PersistentStorageHandler._nonEncryptedImageFileType].join();
 
     await _blobStorageHandler.uploadObservation(
       uploadFileName,
       File(image.path),
     );
 
-    final String localTargetPath =
-        path.join(_applicationMediaDirectory.path, encryptedFileName);
+    final String localTargetPath = path.join(_applicationMediaDirectory.path, encryptedFileName);
     final File encryptedFile = File(localTargetPath);
     await encryptedFile.writeAsBytes(encryptedImageByteContent);
     /*
@@ -135,17 +128,14 @@ class PersistentStorageHandler {
       fileName,
       PersistentStorageHandler._encryptedAudioFileType,
     ].join();
-    final String uploadFileName =
-        [fileName, PersistentStorageHandler._nonEncryptedAudioFileType].join();
+    final String uploadFileName = [fileName, PersistentStorageHandler._nonEncryptedAudioFileType].join();
     await _blobStorageHandler.uploadObservation(
       uploadFileName,
       File(aStagingPath),
     );
     final Uint8List audioByteContent = await unencryptedAudio.readAsBytes();
-    final Uint8List encryptedImageByteContent =
-        _encrypterHandler.encryptFile(audioByteContent);
-    final String localTargetPath =
-        path.join(_applicationMediaDirectory.path, encryptedFileName);
+    final Uint8List encryptedImageByteContent = _encrypterHandler.encryptFile(audioByteContent);
+    final String localTargetPath = path.join(_applicationMediaDirectory.path, encryptedFileName);
     await File(
       localTargetPath,
     ).writeAsBytes(encryptedImageByteContent);
@@ -164,8 +154,7 @@ class PersistentStorageHandler {
 
   Future<(String, Function)> storeAudio() async {
     final String stagingPath = await _getStagingAudioFilePath();
-    void finalize(void Function(String)? pathCallback) =>
-        _finalizeStoreAudio(stagingPath, pathCallback);
+    void finalize(void Function(String)? pathCallback) => _finalizeStoreAudio(stagingPath, pathCallback);
     return (stagingPath, finalize);
   }
 
@@ -187,8 +176,7 @@ class PersistentStorageHandler {
     allFiles.sort(PersistentStorageHandler._defaultFileListCompare);
     return allFiles.reversed
         .where(
-          (FileSystemEntity anEntity) => anEntity.path
-              .contains(PersistentStorageHandler._encryptedImageFileType),
+          (FileSystemEntity anEntity) => anEntity.path.contains(PersistentStorageHandler._encryptedImageFileType),
         )
         // FileSystemEntity is the superclass of File
         .map((FileSystemEntity anEntity) => anEntity as File)
@@ -200,10 +188,8 @@ class PersistentStorageHandler {
   }
 
   Future<String> provideUnencryptedAudio(String anEncryptedAudioPath) async {
-    final Uint8List encryptedByteArray =
-        File(anEncryptedAudioPath).readAsBytesSync();
-    final Uint8List decryptedByteArray =
-        _encrypterHandler.decryptFile(encryptedByteArray);
+    final Uint8List encryptedByteArray = File(anEncryptedAudioPath).readAsBytesSync();
+    final Uint8List decryptedByteArray = _encrypterHandler.decryptFile(encryptedByteArray);
     final String temporaryPath = path.join(
       _applicationMediaDirectory.path,
       [
@@ -221,8 +207,7 @@ class PersistentStorageHandler {
     allFiles.sort(PersistentStorageHandler._defaultFileListCompare);
     return allFiles.reversed
         .where(
-          (FileSystemEntity anEntity) => anEntity.path
-              .contains(PersistentStorageHandler._encryptedAudioFileType),
+          (FileSystemEntity anEntity) => anEntity.path.contains(PersistentStorageHandler._encryptedAudioFileType),
         )
         .map((FileSystemEntity anEntity) => anEntity.path)
         .map((String aPath) => EncryptedAudioFile(this, aPath))
@@ -231,10 +216,7 @@ class PersistentStorageHandler {
 
   Future<List<FileSystemEntity>> _getListOfFiles() async {
     await _applicationDirectoryFuture;
-    return _applicationMediaDirectory
-        .listSync(followLinks: false)
-        .where(PersistentStorageHandler._isFile)
-        .toList();
+    return _applicationMediaDirectory.listSync(followLinks: false).where(PersistentStorageHandler._isFile).toList();
   }
 
   void deleteFile(FileSystemEntity file) {
