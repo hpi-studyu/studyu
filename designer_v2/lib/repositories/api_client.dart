@@ -206,10 +206,10 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
       if (onError == null) {
         throw _apiException(error: e);
       }
-      if (e.statusCode == null || !onError.containsKey(e.statusCode)) {
+      if (e.statusCode == null || !onError.containsKey(int.parse(e.statusCode!))) {
         throw _apiException(error: e);
       }
-      final errorHandler = onError[e.statusCode]!;
+      final errorHandler = onError[int.parse(e.statusCode!)]!;
       errorHandler(e);
     }
     throw _apiException();
