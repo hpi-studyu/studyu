@@ -1,0 +1,348 @@
+<svg version="1.1" baseProfile="full" width="876.0" height="1384.0" viewbox="0 0 876 1384" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[KeyStorage
+	  |
+	  &lt;static&gt;+prefKeyForKey: String;
+	  &lt;static&gt;+pefKeyForIV: String;
+	  +keyValueStore: SharedPreferences
+	  |
+	  &lt;static&gt;+dynamic buildHandler();
+	  -void _initEncryptionKey();
+	  -void _initEncryptionIV();
+	  -T _getSharedPreferenceValue();
+	  +Key getEncryptionKey();
+	  +IV getIV()
+	]
+	
+	[KeyStorage]o-[SharedPreferences]
+	
+	[EncryptedAudioFile
+	  |
+	  -_audioPlayer: AudioPlayer;
+	  -_encryptedAudioFilePath: String;
+	  -_temporaryUnencryptedFilePath: String;
+	  -_storageHandler: PersistentStorageHandler
+	  |
+	  +void preparePlay();
+	  +dynamic play();
+	  +dynamic stop();
+	  +void delete()
+	]
+	
+	[EncryptedAudioFile]o-[AudioPlayer]
+	[EncryptedAudioFile]o-[PersistentStorageHandler]
+	
+	[BlobStorageHandler
+	  |
+	  &lt;static&gt;-_observationsBucketName: String
+	  |
+	  +dynamic uploadObservation()
+	]
+	
+	[EncrypterHandler
+	  |
+	  -_keyStorage: KeyStorage
+	  |
+	  &lt;static&gt;-Encrypter _buildEncrypter();
+	  &lt;static&gt;+dynamic buildHandler();
+	  +String encryptText();
+	  +String decryptText();
+	  +Uint8List encryptFile();
+	  +Uint8List decryptFile()
+	]
+	
+	[EncrypterHandler]o-[KeyStorage]
+	
+	[PersistentStorageHandler
+	  |
+	  &lt;static&gt;-_encryptedBaseNamePrefix: String;
+	  &lt;static&gt;-_stagingBaseNamePrefix: String;
+	  &lt;static&gt;-_encryptedImageFileType: String;
+	  &lt;static&gt;-_encryptedAudioFileType: String;
+	  &lt;static&gt;-_nonEncryptedAudioFileType: String;
+	  &lt;static&gt;-_nonEncryptedImageFileType: String;
+	  -_applicationBaseDirectory: Directory;
+	  -_applicationMediaDirectory: Directory;
+	  -_applicationDirectoryFuture: dynamic;
+	  -_encrypterHandler: EncrypterHandler;
+	  -_encrypterHandlerFuture: dynamic;
+	  -_blobStorageHandler: BlobStorageHandler;
+	  -_userId: String;
+	  -_studyId: String
+	  |
+	  &lt;static&gt;-bool _isNotEncrypted();
+	  &lt;static&gt;-bool _isFile();
+	  &lt;static&gt;-int _defaultFileListCompare();
+	  -String _buildFileName();
+	  -dynamic _initializeRawDirectoryHandler();
+	  -dynamic _initializeEncrypterHandler();
+	  -dynamic _deleteAllUnencryptedFileSystemEntities();
+	  +dynamic storeImage();
+	  -dynamic _finalizeStoreAudio();
+	  +dynamic Future();
+	  +dynamic ();
+	  +dynamic &gt;();
+	  +dynamic storeAudio();
+	  -dynamic _getStagingAudioFilePath();
+	  +dynamic getSortedListOfImages();
+	  +dynamic provideUnencryptedAudio();
+	  +dynamic getSortedListOfEncryptedAudioFiles();
+	  -dynamic _getListOfFiles();
+	  +void deleteFile();
+	  +dynamic deleteAllFiles();
+	  +dynamic deleteFileByPath()
+	]
+	
+	[PersistentStorageHandler]o-[Directory]
+	[PersistentStorageHandler]o-[EncrypterHandler]
+	[PersistentStorageHandler]o-[BlobStorageHandler]
+	
+	</desc>
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+			<g stroke="transparent" fill="transparent">
+				<rect x="0.0" y="0.0" height="1384.0" width="876.0" stroke="none"></rect>
+			</g>
+			<g transform="translate(8, 8)" fill="#33322E">
+				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M542.5 1275.7 L542.5 1277 L542.5 1297 L542.5 1297.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M547.8 1266.3 L542.5 1275.7 L537.2 1266.3 L542.5 1257.0 Z"></path>
+					</g>
+					<path d="M245.6 193.9 L233 203 L233 501.5 L233.0 501.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M256.3 192.8 L245.6 193.9 L250.1 184.1 L260.8 183.0 Z"></path>
+					</g>
+					<path d="M529.9 193.9 L542.5 203 L542.5 223 L542.5 223.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M525.4 184.1 L529.9 193.9 L519.2 192.8 L514.7 183.0 Z"></path>
+					</g>
+					<path d="M542.5 1037.7 L542.5 1039 L542.5 1059 L542.5 1059.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M547.8 1028.3 L542.5 1037.7 L537.2 1028.3 L542.5 1019.0 Z"></path>
+					</g>
+					<path d="M767.7 819.1 L776.5 831 L776.5 919.5 L776.5 919.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M766.4 808.5 L767.7 819.1 L757.8 814.8 L756.5 804.2 Z"></path>
+					</g>
+					<path d="M542.5 829.7 L542.5 831 L542.5 851 L542.5 851.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M547.8 820.3 L542.5 829.7 L537.2 820.3 L542.5 811.0 Z"></path>
+					</g>
+					<path d="M314.3 712.5 L176 831 L176 888.5 L176.0 888.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M324.9 710.5 L314.3 712.5 L317.9 702.4 L328.5 700.3 Z"></path>
+					</g>
+					<g data-name="KeyStorage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="KeyStorage">
+							<rect x="390.5" y="1059.0" height="198.0" width="304.0" data-name="KeyStorage"></rect>
+							<path d="M390.5 1090.0 L694.5 1090.0" fill="none" data-name="KeyStorage"></path>
+							<path d="M390.5 1151.0 L694.5 1151.0" fill="none" data-name="KeyStorage"></path>
+						</g>
+						<g transform="translate(390.5, 1059)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="KeyStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="KeyStorage">
+								<text x="144.0" y="13.5" stroke="none" text-anchor="middle" data-name="KeyStorage">KeyStorage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(390.5, 1090)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
+								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+prefKeyForKey: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+pefKeyForIV: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="KeyStorage">+keyValueStore: SharedPreferences</text>
+								
+							</g>
+						</g>
+						<g transform="translate(390.5, 1151)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
+								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+dynamic buildHandler()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">-void _initEncryptionKey()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="KeyStorage">-void _initEncryptionIV()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="KeyStorage">-T _getSharedPreferenceValue()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="KeyStorage">+Key getEncryptionKey()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="KeyStorage">+IV getIV()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SharedPreferences">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SharedPreferences">
+							<rect x="458.0" y="1297.0" height="31.0" width="169.0" data-name="SharedPreferences"></rect>
+						</g>
+						<g transform="translate(458, 1297)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SharedPreferences">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SharedPreferences">
+								<text x="76.5" y="13.5" stroke="none" text-anchor="middle" data-name="SharedPreferences">SharedPreferences</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="EncryptedAudioFile">
+						<g fill="#eee8d5" stroke="#33322E" data-name="EncryptedAudioFile">
+							<rect x="204.3" y="0.0" height="183.0" width="367.0" data-name="EncryptedAudioFile"></rect>
+							<path d="M204.3 31.0 L571.3 31.0" fill="none" data-name="EncryptedAudioFile"></path>
+							<path d="M204.3 107.0 L571.3 107.0" fill="none" data-name="EncryptedAudioFile"></path>
+						</g>
+						<g transform="translate(204.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EncryptedAudioFile">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EncryptedAudioFile">
+								<text x="175.5" y="13.5" stroke="none" text-anchor="middle" data-name="EncryptedAudioFile">EncryptedAudioFile</text>
+								
+							</g>
+						</g>
+						<g transform="translate(204.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncryptedAudioFile">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncryptedAudioFile">
+								<text x="0.0" y="13.5" stroke="none" data-name="EncryptedAudioFile">-_audioPlayer: AudioPlayer</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="EncryptedAudioFile">-_encryptedAudioFilePath: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="EncryptedAudioFile">-_temporaryUnencryptedFilePath: String</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="EncryptedAudioFile">-_storageHandler: PersistentStorageHandler</text>
+								
+							</g>
+						</g>
+						<g transform="translate(204.25, 107)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncryptedAudioFile">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncryptedAudioFile">
+								<text x="0.0" y="13.5" stroke="none" data-name="EncryptedAudioFile">+void preparePlay()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="EncryptedAudioFile">+dynamic play()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="EncryptedAudioFile">+dynamic stop()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="EncryptedAudioFile">+void delete()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AudioPlayer">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AudioPlayer">
+							<rect x="177.5" y="501.5" height="31.0" width="111.0" data-name="AudioPlayer"></rect>
+						</g>
+						<g transform="translate(177.5, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioPlayer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AudioPlayer">
+								<text x="47.5" y="13.5" stroke="none" text-anchor="middle" data-name="AudioPlayer">AudioPlayer</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="PersistentStorageHandler">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PersistentStorageHandler">
+							<rect x="328.5" y="223.0" height="588.0" width="428.0" data-name="PersistentStorageHandler"></rect>
+							<path d="M328.5 254.0 L756.5 254.0" fill="none" data-name="PersistentStorageHandler"></path>
+							<path d="M328.5 480.0 L756.5 480.0" fill="none" data-name="PersistentStorageHandler"></path>
+						</g>
+						<g transform="translate(328.5, 223)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PersistentStorageHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PersistentStorageHandler">
+								<text x="206.0" y="13.5" stroke="none" text-anchor="middle" data-name="PersistentStorageHandler">PersistentStorageHandler</text>
+								
+							</g>
+						</g>
+						<g transform="translate(328.5, 254)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PersistentStorageHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PersistentStorageHandler">
+								<text x="0.0" y="13.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_encryptedBaseNamePrefix: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_stagingBaseNamePrefix: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_encryptedImageFileType: String</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_encryptedAudioFileType: String</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_nonEncryptedAudioFileType: String</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-_nonEncryptedImageFileType: String</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="PersistentStorageHandler">-_applicationBaseDirectory: Directory</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="PersistentStorageHandler">-_applicationMediaDirectory: Directory</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="PersistentStorageHandler">-_applicationDirectoryFuture: dynamic</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="PersistentStorageHandler">-_encrypterHandler: EncrypterHandler</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="PersistentStorageHandler">-_encrypterHandlerFuture: dynamic</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="PersistentStorageHandler">-_blobStorageHandler: BlobStorageHandler</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="PersistentStorageHandler">-_userId: String</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="PersistentStorageHandler">-_studyId: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(328.5, 480)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PersistentStorageHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PersistentStorageHandler">
+								<text x="0.0" y="13.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-bool _isNotEncrypted()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-bool _isFile()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="PersistentStorageHandler">&lt;static&gt;-int _defaultFileListCompare()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="PersistentStorageHandler">-String _buildFileName()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _initializeRawDirectoryHandler()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _initializeEncrypterHandler()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _deleteAllUnencryptedFileSystemEntities()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="PersistentStorageHandler">+dynamic storeImage()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _finalizeStoreAudio()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="PersistentStorageHandler">+dynamic Future()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="PersistentStorageHandler">+dynamic ()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="PersistentStorageHandler">+dynamic &gt;()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="PersistentStorageHandler">+dynamic storeAudio()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _getStagingAudioFilePath()</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="PersistentStorageHandler">+dynamic getSortedListOfImages()</text>
+								<text x="0.0" y="238.5" stroke="none" data-name="PersistentStorageHandler">+dynamic provideUnencryptedAudio()</text>
+								<text x="0.0" y="253.5" stroke="none" data-name="PersistentStorageHandler">+dynamic getSortedListOfEncryptedAudioFiles()</text>
+								<text x="0.0" y="268.5" stroke="none" data-name="PersistentStorageHandler">-dynamic _getListOfFiles()</text>
+								<text x="0.0" y="283.5" stroke="none" data-name="PersistentStorageHandler">+void deleteFile()</text>
+								<text x="0.0" y="298.5" stroke="none" data-name="PersistentStorageHandler">+dynamic deleteAllFiles()</text>
+								<text x="0.0" y="313.5" stroke="none" data-name="PersistentStorageHandler">+dynamic deleteFileByPath()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="BlobStorageHandler">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BlobStorageHandler">
+							<rect x="0.0" y="888.5" height="93.0" width="352.0" data-name="BlobStorageHandler"></rect>
+							<path d="M0.0 919.5 L352.0 919.5" fill="none" data-name="BlobStorageHandler"></path>
+							<path d="M0.0 950.5 L352.0 950.5" fill="none" data-name="BlobStorageHandler"></path>
+						</g>
+						<g transform="translate(0, 888.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BlobStorageHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BlobStorageHandler">
+								<text x="168.0" y="13.5" stroke="none" text-anchor="middle" data-name="BlobStorageHandler">BlobStorageHandler</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 919.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BlobStorageHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BlobStorageHandler">
+								<text x="0.0" y="13.5" stroke="none" data-name="BlobStorageHandler">&lt;static&gt;-_observationsBucketName: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 950.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BlobStorageHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BlobStorageHandler">
+								<text x="0.0" y="13.5" stroke="none" data-name="BlobStorageHandler">+dynamic uploadObservation()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="EncrypterHandler">
+						<g fill="#eee8d5" stroke="#33322E" data-name="EncrypterHandler">
+							<rect x="392.0" y="851.0" height="168.0" width="301.0" data-name="EncrypterHandler"></rect>
+							<path d="M392.0 882.0 L693.0 882.0" fill="none" data-name="EncrypterHandler"></path>
+							<path d="M392.0 913.0 L693.0 913.0" fill="none" data-name="EncrypterHandler"></path>
+						</g>
+						<g transform="translate(392, 851)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EncrypterHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EncrypterHandler">
+								<text x="142.5" y="13.5" stroke="none" text-anchor="middle" data-name="EncrypterHandler">EncrypterHandler</text>
+								
+							</g>
+						</g>
+						<g transform="translate(392, 882)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncrypterHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncrypterHandler">
+								<text x="0.0" y="13.5" stroke="none" data-name="EncrypterHandler">-_keyStorage: KeyStorage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(392, 913)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EncrypterHandler">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EncrypterHandler">
+								<text x="0.0" y="13.5" stroke="none" data-name="EncrypterHandler">&lt;static&gt;-Encrypter _buildEncrypter()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="EncrypterHandler">&lt;static&gt;+dynamic buildHandler()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="EncrypterHandler">+String encryptText()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="EncrypterHandler">+String decryptText()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="EncrypterHandler">+Uint8List encryptFile()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="EncrypterHandler">+Uint8List decryptFile()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Directory">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Directory">
+							<rect x="733.0" y="919.5" height="31.0" width="87.0" data-name="Directory"></rect>
+						</g>
+						<g transform="translate(733, 919.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Directory">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Directory">
+								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="Directory">Directory</text>
+								
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

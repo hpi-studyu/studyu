@@ -21,24 +21,24 @@
 	[LanguagePickerType]o-[LanguagePickerType]
 	[Enum]&lt;:--[LanguagePickerType]
 	
-	[PlatformLocaleWeb
-	  |
-	  +Locale getPlatformLocale()
-	]
-	
-	[&lt;abstract&gt;PlatformLocale]&lt;:--[PlatformLocaleWeb]
-	
-	[&lt;abstract&gt;PlatformLocale
-	  |
-	  +Locale getPlatformLocale()
-	]
-	
 	[PlatformLocaleMobile
 	  |
 	  +Locale getPlatformLocale()
 	]
 	
 	[&lt;abstract&gt;PlatformLocale]&lt;:--[PlatformLocaleMobile]
+	
+	[&lt;abstract&gt;PlatformLocale
+	  |
+	  +Locale getPlatformLocale()
+	]
+	
+	[PlatformLocaleWeb
+	  |
+	  +Locale getPlatformLocale()
+	]
+	
+	[&lt;abstract&gt;PlatformLocale]&lt;:--[PlatformLocaleWeb]
 	
 	[AppTranslation
 	  |
@@ -155,20 +155,20 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="PlatformLocaleWeb">
-						<g fill="#eee8d5" stroke="#33322E" data-name="PlatformLocaleWeb">
-							<rect x="658.3" y="154.5" height="62.0" width="239.0" data-name="PlatformLocaleWeb"></rect>
-							<path d="M658.3 185.5 L897.3 185.5" fill="none" data-name="PlatformLocaleWeb"></path>
+					<g data-name="PlatformLocaleMobile">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PlatformLocaleMobile">
+							<rect x="658.3" y="154.5" height="62.0" width="239.0" data-name="PlatformLocaleMobile"></rect>
+							<path d="M658.3 185.5 L897.3 185.5" fill="none" data-name="PlatformLocaleMobile"></path>
 						</g>
-						<g transform="translate(658.25, 154.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PlatformLocaleWeb">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PlatformLocaleWeb">
-								<text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="PlatformLocaleWeb">PlatformLocaleWeb</text>
+						<g transform="translate(658.25, 154.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PlatformLocaleMobile">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PlatformLocaleMobile">
+								<text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="PlatformLocaleMobile">PlatformLocaleMobile</text>
 								
 							</g>
 						</g>
-						<g transform="translate(658.25, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlatformLocaleWeb">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PlatformLocaleWeb">
-								<text x="0.0" y="13.5" stroke="none" data-name="PlatformLocaleWeb">+Locale getPlatformLocale()</text>
+						<g transform="translate(658.25, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlatformLocaleMobile">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PlatformLocaleMobile">
+								<text x="0.0" y="13.5" stroke="none" data-name="PlatformLocaleMobile">+Locale getPlatformLocale()</text>
 								
 							</g>
 						</g>
@@ -191,20 +191,20 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="PlatformLocaleMobile">
-						<g fill="#eee8d5" stroke="#33322E" data-name="PlatformLocaleMobile">
-							<rect x="937.3" y="154.5" height="62.0" width="239.0" data-name="PlatformLocaleMobile"></rect>
-							<path d="M937.3 185.5 L1176.3 185.5" fill="none" data-name="PlatformLocaleMobile"></path>
+					<g data-name="PlatformLocaleWeb">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PlatformLocaleWeb">
+							<rect x="937.3" y="154.5" height="62.0" width="239.0" data-name="PlatformLocaleWeb"></rect>
+							<path d="M937.3 185.5 L1176.3 185.5" fill="none" data-name="PlatformLocaleWeb"></path>
 						</g>
-						<g transform="translate(937.25, 154.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PlatformLocaleMobile">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PlatformLocaleMobile">
-								<text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="PlatformLocaleMobile">PlatformLocaleMobile</text>
+						<g transform="translate(937.25, 154.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PlatformLocaleWeb">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PlatformLocaleWeb">
+								<text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="PlatformLocaleWeb">PlatformLocaleWeb</text>
 								
 							</g>
 						</g>
-						<g transform="translate(937.25, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlatformLocaleMobile">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PlatformLocaleMobile">
-								<text x="0.0" y="13.5" stroke="none" data-name="PlatformLocaleMobile">+Locale getPlatformLocale()</text>
+						<g transform="translate(937.25, 185.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PlatformLocaleWeb">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PlatformLocaleWeb">
+								<text x="0.0" y="13.5" stroke="none" data-name="PlatformLocaleWeb">+Locale getPlatformLocale()</text>
 								
 							</g>
 						</g>

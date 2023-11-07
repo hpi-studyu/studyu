@@ -1,17 +1,5 @@
-<svg version="1.1" baseProfile="full" width="4335.0" height="638.0" viewbox="0 0 4335 638" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[ChoiceQuestionWidget
-	  |
-	  +question: ChoiceQuestion;
-	  +onDone: dynamic Function(Answer&lt;dynamic&gt;);
-	  +multiSelectionText: String;
-	  +subtitle: String?
-	]
-	
-	[ChoiceQuestionWidget]o-[ChoiceQuestion]
-	[ChoiceQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)]
-	[&lt;abstract&gt;QuestionWidget]&lt;:-[ChoiceQuestionWidget]
-	
-	[AnnotatedScaleQuestionWidget
+<svg version="1.1" baseProfile="full" width="5485.3" height="638.0" viewbox="0 0 5485.25 638" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[AnnotatedScaleQuestionWidget
 	  |
 	  +question: AnnotatedScaleQuestion;
 	  +onDone: dynamic Function(Answer&lt;dynamic&gt;)?
@@ -31,10 +19,60 @@
 	[AudioRecordingQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)?]
 	[&lt;abstract&gt;QuestionWidget]&lt;:-[AudioRecordingQuestionWidget]
 	
-	[&lt;abstract&gt;QuestionWidget
+	[VisualAnalogueQuestionWidget
 	  |
+	  +question: VisualAnalogueQuestion;
+	  +onDone: dynamic Function(Answer&lt;dynamic&gt;)?
+	]
+	
+	[VisualAnalogueQuestionWidget]o-[VisualAnalogueQuestion]
+	[VisualAnalogueQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)?]
+	[&lt;abstract&gt;QuestionWidget]&lt;:-[VisualAnalogueQuestionWidget]
+	
+	[CustomSlider
+	  |
+	  +value: double?;
+	  +minValue: double?;
+	  +maxValue: double?;
+	  +minorTick: int?;
+	  +onChanged: dynamic Function(double)?;
+	  +onChangeEnd: dynamic Function(double)?;
+	  +activeColor: Color?;
+	  +inactiveColor: Color?;
+	  +minColor: Color?;
+	  +maxColor: Color?;
+	  +thumbColor: Color?;
+	  +isColored: bool;
+	  +labelValuePrecision: int;
+	  +tickValuePrecision: int;
+	  +linearStep: bool;
+	  +steps: AnnotatedScaleQuestion?
+	  |
+	  +Widget build()
+	]
+	
+	[CustomSlider]o-[dynamic Function(double)?]
+	[CustomSlider]o-[Color]
+	[CustomSlider]o-[AnnotatedScaleQuestion]
+	
+	[CustomTrackShape
+	  |
+	  +Rect getPreferredRect()
+	]
+	
+	[RoundedRectSliderTrackShape]&lt;:-[CustomTrackShape]
+	
+	[ChoiceQuestionWidget
+	  |
+	  +question: ChoiceQuestion;
+	  +onDone: dynamic Function(Answer&lt;dynamic&gt;);
+	  +multiSelectionText: String;
 	  +subtitle: String?
 	]
+	
+	[ChoiceQuestionWidget]o-[ChoiceQuestion]
+	[ChoiceQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)]
+	[&lt;abstract&gt;QuestionWidget]&lt;:-[ChoiceQuestionWidget]
 	
 	[ScaleQuestionWidget
 	  |
@@ -46,15 +84,21 @@
 	[ScaleQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)?]
 	[&lt;abstract&gt;QuestionWidget]&lt;:-[ScaleQuestionWidget]
 	
-	[VisualAnalogueQuestionWidget
+	[QuestionHeader
 	  |
-	  +question: VisualAnalogueQuestion;
-	  +onDone: dynamic Function(Answer&lt;dynamic&gt;)?
+	  +prompt: String?;
+	  +subtitle: String?;
+	  +rationale: String?
+	  |
+	  -List&lt;Widget&gt; _buildSubtitle();
+	  -List&lt;Widget&gt; _buildRationaleButton();
+	  +Widget build()
 	]
 	
-	[VisualAnalogueQuestionWidget]o-[VisualAnalogueQuestion]
-	[VisualAnalogueQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)?]
-	[&lt;abstract&gt;QuestionWidget]&lt;:-[VisualAnalogueQuestionWidget]
+	[&lt;abstract&gt;QuestionWidget
+	  |
+	  +subtitle: String?
+	]
 	
 	[QuestionnaireWidget
 	  |
@@ -101,223 +145,118 @@
 	[ImageCapturingQuestionWidget]o-[dynamic Function(Answer&lt;dynamic&gt;)?]
 	[&lt;abstract&gt;QuestionWidget]&lt;:-[ImageCapturingQuestionWidget]
 	
-	[QuestionHeader
-	  |
-	  +prompt: String?;
-	  +subtitle: String?;
-	  +rationale: String?
-	  |
-	  -List&lt;Widget&gt; _buildSubtitle();
-	  -List&lt;Widget&gt; _buildRationaleButton();
-	  +Widget build()
-	]
-	
-	[CustomSlider
-	  |
-	  +value: double?;
-	  +minValue: double?;
-	  +maxValue: double?;
-	  +minorTick: int?;
-	  +onChanged: dynamic Function(double)?;
-	  +onChangeEnd: dynamic Function(double)?;
-	  +activeColor: Color?;
-	  +inactiveColor: Color?;
-	  +minColor: Color?;
-	  +maxColor: Color?;
-	  +thumbColor: Color?;
-	  +isColored: bool;
-	  +labelValuePrecision: int;
-	  +tickValuePrecision: int;
-	  +linearStep: bool;
-	  +steps: AnnotatedScaleQuestion?
-	  |
-	  +Widget build()
-	]
-	
-	[CustomSlider]o-[dynamic Function(double)?]
-	[CustomSlider]o-[Color]
-	[CustomSlider]o-[AnnotatedScaleQuestion]
-	
-	[CustomTrackShape
-	  |
-	  +Rect getPreferredRect()
-	]
-	
-	[RoundedRectSliderTrackShape]&lt;:-[CustomTrackShape]
-	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="638.0" width="4335.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="638.0" width="5485.3" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M3004.1 412.5 L3297.25 531 L3583.5 559.4447165850245 L3583.5 559.4 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2997.5 404.1 L3004.1 412.5 L2993.5 413.9 L2986.8 405.5 Z"></path>
-					</g>
-					<path d="M2842.2 423.9 L2824 531 L2824 551 L2824.0 551.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2849.1 415.6 L2842.2 423.9 L2838.6 413.8 L2845.4 405.5 Z"></path>
-					</g>
-					<path d="M1992.8 85.4 L2854.5 173 L2854.5 298.5 L2854.5 298.5 " fill="none"></path>
-					<path d="M1993.3 80.1 L1992.8 85.4 L1992.2 90.7 L1979.5 84.1 Z"></path>
-					<path d="M2473.2 403.0 L2615.5 531 L3223.25 561.2278458844133 L3223.3 561.2 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2469.8 392.8 L2473.2 403.0 L2462.7 400.7 L2459.3 390.5 Z"></path>
-					</g>
-					<path d="M2359.2 402.9 L2215 531 L1381 560.7707390648567 L1381.0 560.8 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2369.7 400.7 L2359.2 402.9 L2362.6 392.7 L2373.2 390.5 Z"></path>
-					</g>
-					<path d="M1992.6 93.0 L2416.5 173 L2416.5 313.5 L2416.5 313.5 " fill="none"></path>
-					<path d="M1993.6 87.8 L1992.6 93.0 L1991.6 98.3 L1979.5 90.6 Z"></path>
-					<path d="M2030.8 402.9 L2175 531 L2327.5 551.9025096525097 L2327.5 551.9 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2027.4 392.7 L2030.8 402.9 L2020.3 400.7 L2016.8 390.5 Z"></path>
-					</g>
-					<path d="M1916.2 402.9 L1772 531 L1381 556.1686310063463 L1381.0 556.2 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1926.7 400.7 L1916.2 402.9 L1919.6 392.7 L1930.2 390.5 Z"></path>
-					</g>
-					<path d="M1934.7 118.4 L1973.5 173 L1973.5 313.5 L1973.5 313.5 " fill="none"></path>
-					<path d="M1939.1 115.3 L1934.7 118.4 L1930.4 121.5 L1927.0 107.5 Z"></path>
-					<path d="M1587.8 402.9 L1732 531 L2041 560.2910547396529 L2041.0 560.3 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1584.4 392.7 L1587.8 402.9 L1577.3 400.7 L1573.8 390.5 Z"></path>
-					</g>
-					<path d="M1473.2 402.9 L1329 531 L1267.8732394366198 551 L1267.9 551.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1483.7 400.7 L1473.2 402.9 L1476.6 392.7 L1487.2 390.5 Z"></path>
-					</g>
-					<path d="M1817.6 99.0 L1530.5 173 L1530.5 313.5 L1530.5 313.5 " fill="none"></path>
-					<path d="M1818.9 104.2 L1817.6 99.0 L1816.3 93.9 L1830.5 95.7 Z"></path>
-					<path d="M1109.0 407.9 L1156.25 531 L971.25 553.6465517241379 L971.3 553.6 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1110.6 397.3 L1109.0 407.9 L1100.7 401.1 L1102.3 390.5 Z"></path>
-					</g>
-					<path d="M1030.2 402.9 L886 531 L1074.4507042253522 551 L1074.5 551.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1040.7 400.7 L1030.2 402.9 L1033.6 392.7 L1044.2 390.5 Z"></path>
-					</g>
-					<path d="M1817.3 86.9 L1087.5 173 L1087.5 313.5 L1087.5 313.5 " fill="none"></path>
-					<path d="M1817.9 92.2 L1817.3 86.9 L1816.6 81.6 L1830.5 85.3 Z"></path>
-					<path d="M696.4 403.7 L824.25 531 L610.25 557.196551724138 L610.3 557.2 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M693.5 393.3 L696.4 403.7 L686.0 400.9 L683.2 390.5 Z"></path>
-					</g>
-					<path d="M587.2 402.9 L443 531 L1060 559.1717041800644 L1060.0 559.2 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M597.7 400.7 L587.2 402.9 L590.6 392.7 L601.2 390.5 Z"></path>
-					</g>
-					<path d="M1817.2 83.2 L644.5 173 L644.5 313.5 L644.5 313.5 " fill="none"></path>
-					<path d="M1817.6 88.5 L1817.2 83.2 L1816.8 77.9 L1830.5 82.2 Z"></path>
-					<path d="M3408.0 141.2 L3408 173 L3408 336.5 L3408.0 336.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3413.3 131.8 L3408.0 141.2 L3402.7 131.8 L3408.0 122.5 Z"></path>
-					</g>
-					<path d="M3260.0 128.7 L3134.5 173 L3134.5 336.5 L3134.5 336.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3270.6 130.6 L3260.0 128.7 L3267.1 120.6 L3277.6 122.5 Z"></path>
-					</g>
-					<path d="M258.8 402.9 L403 531 L289.4788732394366 551 L289.5 551.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M255.4 392.7 L258.8 402.9 L248.3 400.7 L244.8 390.5 Z"></path>
-					</g>
-					<path d="M195.1 409.1 L181.5 531 L1060 561.0161212704523 L1060.0 561.0 " fill="none"></path>
+					<path d="M195.1 409.1 L181.5 531 L896.5 561.9165651644336 L896.5 561.9 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M201.5 400.4 L195.1 409.1 L190.9 399.2 L197.2 390.5 Z"></path>
 					</g>
-					<path d="M1817.2 81.5 L201.5 173 L201.5 313.5 L201.5 313.5 " fill="none"></path>
-					<path d="M1817.5 86.8 L1817.2 81.5 L1816.9 76.1 L1830.5 80.7 Z"></path>
-					<path d="M3998.5 455.6 L4143 531 L4143 551 L4143.0 551.0 " fill="none"></path>
+					<path d="M258.8 402.9 L403 531 L1767.5 562.7637704918033 L1767.5 562.8 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3992.7 446.6 L3998.5 455.6 L3987.8 456.0 L3982.0 447.0 Z"></path>
+						<path d="M255.4 392.7 L258.8 402.9 L248.3 400.7 L244.8 390.5 Z"></path>
 					</g>
-					<path d="M3953.2 525.0 L3958.5 531 L3958.5 551 L3958.5 551.0 " fill="none"></path>
+					<path d="M2229.2 80.5 L201.5 173 L201.5 313.5 L201.5 313.5 " fill="none"></path>
+					<path d="M2229.4 85.8 L2229.2 80.5 L2228.9 75.2 L2242.5 79.9 Z"></path>
+					<path d="M587.2 402.9 L443 531 L318.2112676056338 551 L318.2 551.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3951.0 514.5 L3953.2 525.0 L3943.0 521.5 L3940.8 511.0 Z"></path>
+						<path d="M597.7 400.7 L587.2 402.9 L590.6 392.7 L601.2 390.5 Z"></path>
 					</g>
-					<path d="M3601.3 450.1 L3437.5 531 L3376.5140845070423 551 L3376.5 551.0 " fill="none"></path>
+					<path d="M701.8 402.9 L846 531 L1767.5 561.2340573012939 L1767.5 561.2 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3612.0 450.8 L3601.3 450.1 L3607.3 441.2 L3618.0 441.9 Z"></path>
+						<path d="M698.4 392.7 L701.8 402.9 L691.3 400.7 L687.8 390.5 Z"></path>
 					</g>
-					<path d="M4147.0 105.3 L4147 173 L4147 321 L4147.0 321.0 " fill="none"></path>
-					<path d="M4152.3 105.3 L4147.0 105.3 L4141.7 105.3 L4147.0 92.0 Z"></path>
-					<g data-name="ChoiceQuestionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestionWidget">
-							<rect x="2658.0" y="298.5" height="107.0" width="393.0" data-name="ChoiceQuestionWidget"></rect>
-							<path d="M2658.0 329.5 L3051.0 329.5" fill="none" data-name="ChoiceQuestionWidget"></path>
-						</g>
-						<g transform="translate(2658, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceQuestionWidget">
-								<text x="188.5" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceQuestionWidget">ChoiceQuestionWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2658, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionWidget">+question: ChoiceQuestion</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ChoiceQuestionWidget">+multiSelectionText: String</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ChoiceQuestionWidget">+subtitle: String?</text>
-								
-							</g>
-						</g>
+					<path d="M2229.2 81.6 L644.5 173 L644.5 313.5 L644.5 313.5 " fill="none"></path>
+					<path d="M2229.5 86.9 L2229.2 81.6 L2228.9 76.2 L2242.5 80.8 Z"></path>
+					<path d="M1045.3 402.2 L886 531 L1148.5 556.3571428571429 L1148.5 556.4 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1056.0 400.5 L1045.3 402.2 L1049.2 392.2 L1059.9 390.5 Z"></path>
 					</g>
-					<g data-name="ChoiceQuestion">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestion">
-							<rect x="3583.5" y="551.0" height="31.0" width="142.0" data-name="ChoiceQuestion"></rect>
-						</g>
-						<g transform="translate(3583.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceQuestion">
-								<text x="63.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceQuestion">ChoiceQuestion</text>
-								
-							</g>
-						</g>
+					<path d="M1157.4 404.0 L1279.25 531 L1767.5 557.7173410404624 L1767.5 557.7 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1154.8 393.5 L1157.4 404.0 L1147.1 400.9 L1144.4 390.5 Z"></path>
 					</g>
-					<g data-name="dynamic Function(Answer&lt;dynamic&gt;)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function(Answer&lt;dynamic&gt;)">
-							<rect x="2668.5" y="551.0" height="31.0" width="311.0" data-name="dynamic Function(Answer&lt;dynamic&gt;)"></rect>
-						</g>
-						<g transform="translate(2668.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(Answer&lt;dynamic&gt;)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function(Answer&lt;dynamic&gt;)">
-								<text x="147.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function(Answer&lt;dynamic&gt;)">dynamic Function(Answer&lt;dynamic&gt;)</text>
-								
-							</g>
-						</g>
+					<path d="M2229.2 83.5 L1107.5 173 L1107.5 313.5 L1107.5 313.5 " fill="none"></path>
+					<path d="M2229.6 88.8 L2229.2 83.5 L2228.8 78.2 L2242.5 82.4 Z"></path>
+					<path d="M1334.7 517.9 L1319.25 531 L1428.968309859155 551 L1429.0 551.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1345.3 515.9 L1334.7 517.9 L1338.4 507.8 L1349.0 505.9 Z"></path>
 					</g>
-					<g data-name="QuestionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionWidget">
-							<rect x="1830.5" y="45.5" height="62.0" width="149.0" data-name="QuestionWidget"></rect>
-							<path d="M1830.5 76.5 L1979.5 76.5" fill="none" data-name="QuestionWidget"></path>
-						</g>
-						<g transform="translate(1830.5, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionWidget">
-								<text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionWidget">QuestionWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1830.5, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionWidget">+subtitle: String?</text>
-								
-							</g>
-						</g>
+					<path d="M1531.0 529.7 L1531 531 L1669.5 560.3537313432836 L1669.5 560.4 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1536.3 520.3 L1531.0 529.7 L1525.7 520.3 L1531.0 511.0 Z"></path>
 					</g>
+					<path d="M1570.6 529.2 L1571 531 L1108.5 559.8808267370273 L1108.5 559.9 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1573.8 518.9 L1570.6 529.2 L1563.4 521.3 L1566.5 511.0 Z"></path>
+					</g>
+					<path d="M3945.3 105.3 L3945.25 173 L3945.25 321 L3945.3 321.0 " fill="none"></path>
+					<path d="M3950.6 105.3 L3945.3 105.3 L3939.9 105.3 L3945.3 92.0 Z"></path>
+					<path d="M1920.6 419.1 L1814.75 531 L2655.25 563.7347778387274 L2655.3 563.7 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1930.9 415.9 L1920.6 419.1 L1923.1 408.6 L1933.4 405.5 Z"></path>
+					</g>
+					<path d="M2057.4 418.0 L2183 531 L2837.25 559.682772460636 L2837.3 559.7 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2054.0 407.8 L2057.4 418.0 L2046.9 415.7 L2043.5 405.5 Z"></path>
+					</g>
+					<path d="M2229.7 101.8 L1984 173 L1984 298.5 L1984.0 298.5 " fill="none"></path>
+					<path d="M2231.2 106.9 L2229.7 101.8 L2228.2 96.7 L2242.5 98.1 Z"></path>
+					<path d="M2394.7 407.2 L2333.5 531 L3188.25 563.9732409671285 L3188.3 564.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2403.6 401.2 L2394.7 407.2 L2394.0 396.5 L2403.0 390.5 Z"></path>
+					</g>
+					<path d="M2428.4 409.1 L2442 531 L2088.5 555.4148832684825 L2088.5 555.4 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2432.6 399.2 L2428.4 409.1 L2422.0 400.4 L2426.3 390.5 Z"></path>
+					</g>
+					<path d="M2360.5 116.5 L2422 173 L2422 313.5 L2422.0 313.5 " fill="none"></path>
+					<path d="M2364.2 112.6 L2360.5 116.5 L2356.9 120.4 L2350.7 107.5 Z"></path>
+					<path d="M3096.5 402.9 L2952.25 531 L3490 562.1040733197556 L3490.0 562.1 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3107.0 400.7 L3096.5 402.9 L3099.9 392.7 L3110.4 390.5 Z"></path>
+					</g>
+					<path d="M3211.0 402.9 L3355.25 531 L2088.5 562.5078822911192 L2088.5 562.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3207.6 392.7 L3211.0 402.9 L3200.5 400.7 L3197.1 390.5 Z"></path>
+					</g>
+					<path d="M2404.7 86.6 L3153.75 173 L3153.75 313.5 L3153.8 313.5 " fill="none"></path>
+					<path d="M2405.4 81.3 L2404.7 86.6 L2404.1 91.9 L2391.5 85.1 Z"></path>
+					<path d="M4989.0 122.8 L4740.25 173 L4740.25 336.5 L4740.3 336.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4999.2 126.2 L4989.0 122.8 L4997.0 115.7 L5007.3 119.1 Z"></path>
+					</g>
+					<path d="M5293.5 133.8 L5345 173 L5345 336.5 L5345.0 336.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M5289.3 123.9 L5293.5 133.8 L5282.9 132.4 L5278.7 122.5 Z"></path>
+					</g>
+					<path d="M3539.5 402.9 L3395.25 531 L3902.5 560.3399185336049 L3902.5 560.3 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3550.0 400.7 L3539.5 402.9 L3542.9 392.7 L3553.4 390.5 Z"></path>
+					</g>
+					<path d="M3603.1 409.1 L3616.75 531 L2088.5 563.1260547742413 L2088.5 563.1 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3607.4 399.2 L3603.1 409.1 L3596.8 400.4 L3601.1 390.5 Z"></path>
+					</g>
+					<path d="M2404.8 83.1 L3596.75 173 L3596.75 313.5 L3596.8 313.5 " fill="none"></path>
+					<path d="M2405.2 77.8 L2404.8 83.1 L2404.4 88.4 L2391.5 82.1 Z"></path>
 					<g data-name="AnnotatedScaleQuestionWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AnnotatedScaleQuestionWidget">
-							<rect x="2215.0" y="313.5" height="77.0" width="403.0" data-name="AnnotatedScaleQuestionWidget"></rect>
-							<path d="M2215.0 344.5 L2618.0 344.5" fill="none" data-name="AnnotatedScaleQuestionWidget"></path>
+							<rect x="0.0" y="313.5" height="77.0" width="403.0" data-name="AnnotatedScaleQuestionWidget"></rect>
+							<path d="M0.0 344.5 L403.0 344.5" fill="none" data-name="AnnotatedScaleQuestionWidget"></path>
 						</g>
-						<g transform="translate(2215, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AnnotatedScaleQuestionWidget">
+						<g transform="translate(0, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AnnotatedScaleQuestionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AnnotatedScaleQuestionWidget">
 								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="AnnotatedScaleQuestionWidget">AnnotatedScaleQuestionWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2215, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AnnotatedScaleQuestionWidget">
+						<g transform="translate(0, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AnnotatedScaleQuestionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AnnotatedScaleQuestionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="AnnotatedScaleQuestionWidget">+question: AnnotatedScaleQuestion</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AnnotatedScaleQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
@@ -327,9 +266,9 @@
 					</g>
 					<g data-name="AnnotatedScaleQuestion">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AnnotatedScaleQuestion">
-							<rect x="3223.3" y="551.0" height="31.0" width="212.0" data-name="AnnotatedScaleQuestion"></rect>
+							<rect x="896.5" y="551.0" height="31.0" width="212.0" data-name="AnnotatedScaleQuestion"></rect>
 						</g>
-						<g transform="translate(3223.25, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AnnotatedScaleQuestion">
+						<g transform="translate(896.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AnnotatedScaleQuestion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AnnotatedScaleQuestion">
 								<text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="AnnotatedScaleQuestion">AnnotatedScaleQuestion</text>
 								
@@ -338,27 +277,45 @@
 					</g>
 					<g data-name="dynamic Function(Answer&lt;dynamic&gt;)?">
 						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function(Answer&lt;dynamic&gt;)?">
-							<rect x="1060.0" y="551.0" height="31.0" width="321.0" data-name="dynamic Function(Answer&lt;dynamic&gt;)?"></rect>
+							<rect x="1767.5" y="551.0" height="31.0" width="321.0" data-name="dynamic Function(Answer&lt;dynamic&gt;)?"></rect>
 						</g>
-						<g transform="translate(1060, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(Answer&lt;dynamic&gt;)?">
+						<g transform="translate(1767.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(Answer&lt;dynamic&gt;)?">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function(Answer&lt;dynamic&gt;)?">
 								<text x="152.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function(Answer&lt;dynamic&gt;)?">dynamic Function(Answer&lt;dynamic&gt;)?</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="QuestionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionWidget">
+							<rect x="2242.5" y="45.5" height="62.0" width="149.0" data-name="QuestionWidget"></rect>
+							<path d="M2242.5 76.5 L2391.5 76.5" fill="none" data-name="QuestionWidget"></path>
+						</g>
+						<g transform="translate(2242.5, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionWidget">
+								<text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionWidget">QuestionWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2242.5, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionWidget">+subtitle: String?</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="AudioRecordingQuestionWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AudioRecordingQuestionWidget">
-							<rect x="1772.0" y="313.5" height="77.0" width="403.0" data-name="AudioRecordingQuestionWidget"></rect>
-							<path d="M1772.0 344.5 L2175.0 344.5" fill="none" data-name="AudioRecordingQuestionWidget"></path>
+							<rect x="443.0" y="313.5" height="77.0" width="403.0" data-name="AudioRecordingQuestionWidget"></rect>
+							<path d="M443.0 344.5 L846.0 344.5" fill="none" data-name="AudioRecordingQuestionWidget"></path>
 						</g>
-						<g transform="translate(1772, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioRecordingQuestionWidget">
+						<g transform="translate(443, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioRecordingQuestionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AudioRecordingQuestionWidget">
 								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="AudioRecordingQuestionWidget">AudioRecordingQuestionWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1772, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AudioRecordingQuestionWidget">
+						<g transform="translate(443, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AudioRecordingQuestionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AudioRecordingQuestionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="AudioRecordingQuestionWidget">+question: AudioRecordingQuestion</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AudioRecordingQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
@@ -368,57 +325,27 @@
 					</g>
 					<g data-name="AudioRecordingQuestion">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AudioRecordingQuestion">
-							<rect x="2327.5" y="551.0" height="31.0" width="213.0" data-name="AudioRecordingQuestion"></rect>
+							<rect x="115.0" y="551.0" height="31.0" width="213.0" data-name="AudioRecordingQuestion"></rect>
 						</g>
-						<g transform="translate(2327.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioRecordingQuestion">
+						<g transform="translate(115, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioRecordingQuestion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AudioRecordingQuestion">
 								<text x="98.5" y="13.5" stroke="none" text-anchor="middle" data-name="AudioRecordingQuestion">AudioRecordingQuestion</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ScaleQuestionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ScaleQuestionWidget">
-							<rect x="1329.0" y="313.5" height="77.0" width="403.0" data-name="ScaleQuestionWidget"></rect>
-							<path d="M1329.0 344.5 L1732.0 344.5" fill="none" data-name="ScaleQuestionWidget"></path>
-						</g>
-						<g transform="translate(1329, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScaleQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScaleQuestionWidget">
-								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="ScaleQuestionWidget">ScaleQuestionWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1329, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScaleQuestionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="ScaleQuestionWidget">+question: ScaleQuestion</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ScaleQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ScaleQuestion">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ScaleQuestion">
-							<rect x="2041.0" y="551.0" height="31.0" width="131.0" data-name="ScaleQuestion"></rect>
-						</g>
-						<g transform="translate(2041, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScaleQuestion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScaleQuestion">
-								<text x="57.5" y="13.5" stroke="none" text-anchor="middle" data-name="ScaleQuestion">ScaleQuestion</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="VisualAnalogueQuestionWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="VisualAnalogueQuestionWidget">
-							<rect x="886.0" y="313.5" height="77.0" width="403.0" data-name="VisualAnalogueQuestionWidget"></rect>
-							<path d="M886.0 344.5 L1289.0 344.5" fill="none" data-name="VisualAnalogueQuestionWidget"></path>
+							<rect x="906.0" y="313.5" height="77.0" width="403.0" data-name="VisualAnalogueQuestionWidget"></rect>
+							<path d="M906.0 344.5 L1309.0 344.5" fill="none" data-name="VisualAnalogueQuestionWidget"></path>
 						</g>
-						<g transform="translate(886, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="VisualAnalogueQuestionWidget">
+						<g transform="translate(906, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="VisualAnalogueQuestionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="VisualAnalogueQuestionWidget">
 								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="VisualAnalogueQuestionWidget">VisualAnalogueQuestionWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(886, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="VisualAnalogueQuestionWidget">
+						<g transform="translate(906, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="VisualAnalogueQuestionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="VisualAnalogueQuestionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="VisualAnalogueQuestionWidget">+question: VisualAnalogueQuestion</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="VisualAnalogueQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
@@ -428,205 +355,28 @@
 					</g>
 					<g data-name="VisualAnalogueQuestion">
 						<g fill="#eee8d5" stroke="#33322E" data-name="VisualAnalogueQuestion">
-							<rect x="761.3" y="551.0" height="31.0" width="210.0" data-name="VisualAnalogueQuestion"></rect>
+							<rect x="1148.5" y="551.0" height="31.0" width="210.0" data-name="VisualAnalogueQuestion"></rect>
 						</g>
-						<g transform="translate(761.25, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="VisualAnalogueQuestion">
+						<g transform="translate(1148.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="VisualAnalogueQuestion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="VisualAnalogueQuestion">
 								<text x="97.0" y="13.5" stroke="none" text-anchor="middle" data-name="VisualAnalogueQuestion">VisualAnalogueQuestion</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="QuestionnaireWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireWidget">
-							<rect x="2516.3" y="23.0" height="107.0" width="318.0" data-name="QuestionnaireWidget"></rect>
-							<path d="M2516.3 54.0 L2834.3 54.0" fill="none" data-name="QuestionnaireWidget"></path>
-						</g>
-						<g transform="translate(2516.25, 23)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireWidget">
-								<text x="151.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireWidget">QuestionnaireWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2516.25, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireWidget">+title: String?</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireWidget">+header: String?</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionnaireWidget">+footer: String?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="QuestionnaireWidget">+questions: List&lt;Question&lt;dynamic&gt;&gt;</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="HtmlTextBox">
-						<g fill="#eee8d5" stroke="#33322E" data-name="HtmlTextBox">
-							<rect x="2874.3" y="30.0" height="93.0" width="136.0" data-name="HtmlTextBox"></rect>
-							<path d="M2874.3 61.0 L3010.3 61.0" fill="none" data-name="HtmlTextBox"></path>
-							<path d="M2874.3 92.0 L3010.3 92.0" fill="none" data-name="HtmlTextBox"></path>
-						</g>
-						<g transform="translate(2874.25, 30)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="HtmlTextBox">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="HtmlTextBox">
-								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="HtmlTextBox">HtmlTextBox</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2874.25, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlTextBox">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HtmlTextBox">
-								<text x="0.0" y="13.5" stroke="none" data-name="HtmlTextBox">+text: String?</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2874.25, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlTextBox">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HtmlTextBox">
-								<text x="0.0" y="13.5" stroke="none" data-name="HtmlTextBox">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="BooleanQuestionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="BooleanQuestionWidget">
-							<rect x="443.0" y="313.5" height="77.0" width="403.0" data-name="BooleanQuestionWidget"></rect>
-							<path d="M443.0 344.5 L846.0 344.5" fill="none" data-name="BooleanQuestionWidget"></path>
-						</g>
-						<g transform="translate(443, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BooleanQuestionWidget">
-								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="BooleanQuestionWidget">BooleanQuestionWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(443, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BooleanQuestionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="BooleanQuestionWidget">+question: BooleanQuestion</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="BooleanQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="BooleanQuestion">
-						<g fill="#eee8d5" stroke="#33322E" data-name="BooleanQuestion">
-							<rect x="458.3" y="551.0" height="31.0" width="152.0" data-name="BooleanQuestion"></rect>
-						</g>
-						<g transform="translate(458.25, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanQuestion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BooleanQuestion">
-								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="BooleanQuestion">BooleanQuestion</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="QuestionContainer">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionContainer">
-							<rect x="3197.0" y="30.5" height="92.0" width="422.0" data-name="QuestionContainer"></rect>
-							<path d="M3197.0 61.5 L3619.0 61.5" fill="none" data-name="QuestionContainer"></path>
-						</g>
-						<g transform="translate(3197, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionContainer">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionContainer">
-								<text x="203.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionContainer">QuestionContainer</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3197, 61.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionContainer">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionContainer">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionContainer">+onDone: dynamic Function(Answer&lt;dynamic&gt;, int)</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionContainer">+question: Question&lt;dynamic&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionContainer">+index: int</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
-							<rect x="3238.0" y="336.5" height="31.0" width="340.0" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)"></rect>
-						</g>
-						<g transform="translate(3238, 336.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
-								<text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">dynamic Function(Answer&lt;dynamic&gt;, int)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Question">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Question">
-							<rect x="3091.0" y="336.5" height="31.0" width="87.0" data-name="Question"></rect>
-						</g>
-						<g transform="translate(3091, 336.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Question">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Question">
-								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="Question">Question</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ImageCapturingQuestionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ImageCapturingQuestionWidget">
-							<rect x="0.0" y="313.5" height="77.0" width="403.0" data-name="ImageCapturingQuestionWidget"></rect>
-							<path d="M0.0 344.5 L403.0 344.5" fill="none" data-name="ImageCapturingQuestionWidget"></path>
-						</g>
-						<g transform="translate(0, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImageCapturingQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ImageCapturingQuestionWidget">
-								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="ImageCapturingQuestionWidget">ImageCapturingQuestionWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ImageCapturingQuestionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ImageCapturingQuestionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="ImageCapturingQuestionWidget">+question: ImageCapturingQuestion</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ImageCapturingQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ImageCapturingQuestion">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ImageCapturingQuestion">
-							<rect x="95.0" y="551.0" height="31.0" width="213.0" data-name="ImageCapturingQuestion"></rect>
-						</g>
-						<g transform="translate(95, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImageCapturingQuestion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ImageCapturingQuestion">
-								<text x="98.5" y="13.5" stroke="none" text-anchor="middle" data-name="ImageCapturingQuestion">ImageCapturingQuestion</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="QuestionHeader">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionHeader">
-							<rect x="3659.0" y="0.0" height="153.0" width="316.0" data-name="QuestionHeader"></rect>
-							<path d="M3659.0 31.0 L3975.0 31.0" fill="none" data-name="QuestionHeader"></path>
-							<path d="M3659.0 92.0 L3975.0 92.0" fill="none" data-name="QuestionHeader"></path>
-						</g>
-						<g transform="translate(3659, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionHeader">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionHeader">
-								<text x="150.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionHeader">QuestionHeader</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3659, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionHeader">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionHeader">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionHeader">+prompt: String?</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionHeader">+subtitle: String?</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionHeader">+rationale: String?</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3659, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionHeader">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionHeader">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionHeader">-List&lt;Widget&gt; _buildSubtitle()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionHeader">-List&lt;Widget&gt; _buildRationaleButton()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionHeader">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="CustomSlider">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CustomSlider">
-							<rect x="3618.0" y="193.0" height="318.0" width="364.0" data-name="CustomSlider"></rect>
-							<path d="M3618.0 224.0 L3982.0 224.0" fill="none" data-name="CustomSlider"></path>
-							<path d="M3618.0 480.0 L3982.0 480.0" fill="none" data-name="CustomSlider"></path>
+							<rect x="1349.0" y="193.0" height="318.0" width="364.0" data-name="CustomSlider"></rect>
+							<path d="M1349.0 224.0 L1713.0 224.0" fill="none" data-name="CustomSlider"></path>
+							<path d="M1349.0 480.0 L1713.0 480.0" fill="none" data-name="CustomSlider"></path>
 						</g>
-						<g transform="translate(3618, 193)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CustomSlider">
+						<g transform="translate(1349, 193)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CustomSlider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CustomSlider">
 								<text x="174.0" y="13.5" stroke="none" text-anchor="middle" data-name="CustomSlider">CustomSlider</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3618, 224)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomSlider">
+						<g transform="translate(1349, 224)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomSlider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomSlider">
 								<text x="0.0" y="13.5" stroke="none" data-name="CustomSlider">+value: double?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="CustomSlider">+minValue: double?</text>
@@ -647,7 +397,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3618, 480)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomSlider">
+						<g transform="translate(1349, 480)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomSlider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomSlider">
 								<text x="0.0" y="13.5" stroke="none" data-name="CustomSlider">+Widget build()</text>
 								
@@ -656,9 +406,9 @@
 					</g>
 					<g data-name="dynamic Function(double)?">
 						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function(double)?">
-							<rect x="4027.5" y="551.0" height="31.0" width="231.0" data-name="dynamic Function(double)?"></rect>
+							<rect x="1398.5" y="551.0" height="31.0" width="231.0" data-name="dynamic Function(double)?"></rect>
 						</g>
-						<g transform="translate(4027.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(double)?">
+						<g transform="translate(1398.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(double)?">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function(double)?">
 								<text x="107.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function(double)?">dynamic Function(double)?</text>
 								
@@ -667,9 +417,9 @@
 					</g>
 					<g data-name="Color">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Color">
-							<rect x="3929.5" y="551.0" height="31.0" width="58.0" data-name="Color"></rect>
+							<rect x="1669.5" y="551.0" height="31.0" width="58.0" data-name="Color"></rect>
 						</g>
-						<g transform="translate(3929.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Color">
+						<g transform="translate(1669.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Color">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Color">
 								<text x="21.0" y="13.5" stroke="none" text-anchor="middle" data-name="Color">Color</text>
 								
@@ -678,16 +428,16 @@
 					</g>
 					<g data-name="CustomTrackShape">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CustomTrackShape">
-							<rect x="4040.0" y="321.0" height="62.0" width="214.0" data-name="CustomTrackShape"></rect>
-							<path d="M4040.0 352.0 L4254.0 352.0" fill="none" data-name="CustomTrackShape"></path>
+							<rect x="3838.3" y="321.0" height="62.0" width="214.0" data-name="CustomTrackShape"></rect>
+							<path d="M3838.3 352.0 L4052.3 352.0" fill="none" data-name="CustomTrackShape"></path>
 						</g>
-						<g transform="translate(4040, 321)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CustomTrackShape">
+						<g transform="translate(3838.25, 321)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CustomTrackShape">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CustomTrackShape">
 								<text x="99.0" y="13.5" stroke="none" text-anchor="middle" data-name="CustomTrackShape">CustomTrackShape</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4040, 352)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomTrackShape">
+						<g transform="translate(3838.25, 352)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomTrackShape">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomTrackShape">
 								<text x="0.0" y="13.5" stroke="none" data-name="CustomTrackShape">+Rect getPreferredRect()</text>
 								
@@ -696,11 +446,261 @@
 					</g>
 					<g data-name="RoundedRectSliderTrackShape">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoundedRectSliderTrackShape">
-							<rect x="4015.0" y="61.0" height="31.0" width="264.0" data-name="RoundedRectSliderTrackShape"></rect>
+							<rect x="3813.3" y="61.0" height="31.0" width="264.0" data-name="RoundedRectSliderTrackShape"></rect>
 						</g>
-						<g transform="translate(4015, 61)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoundedRectSliderTrackShape">
+						<g transform="translate(3813.25, 61)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoundedRectSliderTrackShape">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoundedRectSliderTrackShape">
 								<text x="124.0" y="13.5" stroke="none" text-anchor="middle" data-name="RoundedRectSliderTrackShape">RoundedRectSliderTrackShape</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ChoiceQuestionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestionWidget">
+							<rect x="1787.5" y="298.5" height="107.0" width="393.0" data-name="ChoiceQuestionWidget"></rect>
+							<path d="M1787.5 329.5 L2180.5 329.5" fill="none" data-name="ChoiceQuestionWidget"></path>
+						</g>
+						<g transform="translate(1787.5, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceQuestionWidget">
+								<text x="188.5" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceQuestionWidget">ChoiceQuestionWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1787.5, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionWidget">+question: ChoiceQuestion</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ChoiceQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ChoiceQuestionWidget">+multiSelectionText: String</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ChoiceQuestionWidget">+subtitle: String?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ChoiceQuestion">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestion">
+							<rect x="2655.3" y="551.0" height="31.0" width="142.0" data-name="ChoiceQuestion"></rect>
+						</g>
+						<g transform="translate(2655.25, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceQuestion">
+								<text x="63.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceQuestion">ChoiceQuestion</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="dynamic Function(Answer&lt;dynamic&gt;)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function(Answer&lt;dynamic&gt;)">
+							<rect x="2837.3" y="551.0" height="31.0" width="311.0" data-name="dynamic Function(Answer&lt;dynamic&gt;)"></rect>
+						</g>
+						<g transform="translate(2837.25, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(Answer&lt;dynamic&gt;)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function(Answer&lt;dynamic&gt;)">
+								<text x="147.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function(Answer&lt;dynamic&gt;)">dynamic Function(Answer&lt;dynamic&gt;)</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ScaleQuestionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ScaleQuestionWidget">
+							<rect x="2220.5" y="313.5" height="77.0" width="403.0" data-name="ScaleQuestionWidget"></rect>
+							<path d="M2220.5 344.5 L2623.5 344.5" fill="none" data-name="ScaleQuestionWidget"></path>
+						</g>
+						<g transform="translate(2220.5, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScaleQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScaleQuestionWidget">
+								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="ScaleQuestionWidget">ScaleQuestionWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2220.5, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScaleQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScaleQuestionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="ScaleQuestionWidget">+question: ScaleQuestion</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ScaleQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ScaleQuestion">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ScaleQuestion">
+							<rect x="3188.3" y="551.0" height="31.0" width="131.0" data-name="ScaleQuestion"></rect>
+						</g>
+						<g transform="translate(3188.25, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScaleQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScaleQuestion">
+								<text x="57.5" y="13.5" stroke="none" text-anchor="middle" data-name="ScaleQuestion">ScaleQuestion</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionHeader">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionHeader">
+							<rect x="4117.3" y="0.0" height="153.0" width="316.0" data-name="QuestionHeader"></rect>
+							<path d="M4117.3 31.0 L4433.3 31.0" fill="none" data-name="QuestionHeader"></path>
+							<path d="M4117.3 92.0 L4433.3 92.0" fill="none" data-name="QuestionHeader"></path>
+						</g>
+						<g transform="translate(4117.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionHeader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionHeader">
+								<text x="150.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionHeader">QuestionHeader</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4117.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionHeader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionHeader">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionHeader">+prompt: String?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionHeader">+subtitle: String?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionHeader">+rationale: String?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4117.25, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionHeader">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionHeader">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionHeader">-List&lt;Widget&gt; _buildSubtitle()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionHeader">-List&lt;Widget&gt; _buildRationaleButton()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionHeader">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionnaireWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireWidget">
+							<rect x="4473.3" y="23.0" height="107.0" width="318.0" data-name="QuestionnaireWidget"></rect>
+							<path d="M4473.3 54.0 L4791.3 54.0" fill="none" data-name="QuestionnaireWidget"></path>
+						</g>
+						<g transform="translate(4473.25, 23)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireWidget">
+								<text x="151.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireWidget">QuestionnaireWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4473.25, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireWidget">+title: String?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireWidget">+header: String?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionnaireWidget">+footer: String?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="QuestionnaireWidget">+questions: List&lt;Question&lt;dynamic&gt;&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="HtmlTextBox">
+						<g fill="#eee8d5" stroke="#33322E" data-name="HtmlTextBox">
+							<rect x="4831.3" y="30.0" height="93.0" width="136.0" data-name="HtmlTextBox"></rect>
+							<path d="M4831.3 61.0 L4967.3 61.0" fill="none" data-name="HtmlTextBox"></path>
+							<path d="M4831.3 92.0 L4967.3 92.0" fill="none" data-name="HtmlTextBox"></path>
+						</g>
+						<g transform="translate(4831.25, 30)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="HtmlTextBox">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="HtmlTextBox">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="HtmlTextBox">HtmlTextBox</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4831.25, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlTextBox">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HtmlTextBox">
+								<text x="0.0" y="13.5" stroke="none" data-name="HtmlTextBox">+text: String?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4831.25, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlTextBox">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HtmlTextBox">
+								<text x="0.0" y="13.5" stroke="none" data-name="HtmlTextBox">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="BooleanQuestionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BooleanQuestionWidget">
+							<rect x="2952.3" y="313.5" height="77.0" width="403.0" data-name="BooleanQuestionWidget"></rect>
+							<path d="M2952.3 344.5 L3355.3 344.5" fill="none" data-name="BooleanQuestionWidget"></path>
+						</g>
+						<g transform="translate(2952.25, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BooleanQuestionWidget">
+								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="BooleanQuestionWidget">BooleanQuestionWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2952.25, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BooleanQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BooleanQuestionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="BooleanQuestionWidget">+question: BooleanQuestion</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="BooleanQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="BooleanQuestion">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BooleanQuestion">
+							<rect x="3490.0" y="551.0" height="31.0" width="152.0" data-name="BooleanQuestion"></rect>
+						</g>
+						<g transform="translate(3490, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BooleanQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BooleanQuestion">
+								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="BooleanQuestion">BooleanQuestion</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionContainer">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionContainer">
+							<rect x="5007.3" y="30.5" height="92.0" width="422.0" data-name="QuestionContainer"></rect>
+							<path d="M5007.3 61.5 L5429.3 61.5" fill="none" data-name="QuestionContainer"></path>
+						</g>
+						<g transform="translate(5007.25, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionContainer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionContainer">
+								<text x="203.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionContainer">QuestionContainer</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5007.25, 61.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionContainer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionContainer">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionContainer">+onDone: dynamic Function(Answer&lt;dynamic&gt;, int)</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionContainer">+question: Question&lt;dynamic&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="QuestionContainer">+index: int</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
+							<rect x="4570.3" y="336.5" height="31.0" width="340.0" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)"></rect>
+						</g>
+						<g transform="translate(4570.25, 336.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">
+								<text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function(Answer&lt;dynamic&gt;, int)">dynamic Function(Answer&lt;dynamic&gt;, int)</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Question">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Question">
+							<rect x="5301.5" y="336.5" height="31.0" width="87.0" data-name="Question"></rect>
+						</g>
+						<g transform="translate(5301.5, 336.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Question">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Question">
+								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="Question">Question</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ImageCapturingQuestionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ImageCapturingQuestionWidget">
+							<rect x="3395.3" y="313.5" height="77.0" width="403.0" data-name="ImageCapturingQuestionWidget"></rect>
+							<path d="M3395.3 344.5 L3798.3 344.5" fill="none" data-name="ImageCapturingQuestionWidget"></path>
+						</g>
+						<g transform="translate(3395.25, 313.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImageCapturingQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ImageCapturingQuestionWidget">
+								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="ImageCapturingQuestionWidget">ImageCapturingQuestionWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3395.25, 344.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ImageCapturingQuestionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ImageCapturingQuestionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="ImageCapturingQuestionWidget">+question: ImageCapturingQuestion</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ImageCapturingQuestionWidget">+onDone: dynamic Function(Answer&lt;dynamic&gt;)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ImageCapturingQuestion">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ImageCapturingQuestion">
+							<rect x="3902.5" y="551.0" height="31.0" width="213.0" data-name="ImageCapturingQuestion"></rect>
+						</g>
+						<g transform="translate(3902.5, 551)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImageCapturingQuestion">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ImageCapturingQuestion">
+								<text x="98.5" y="13.5" stroke="none" text-anchor="middle" data-name="ImageCapturingQuestion">ImageCapturingQuestion</text>
 								
 							</g>
 						</g>
