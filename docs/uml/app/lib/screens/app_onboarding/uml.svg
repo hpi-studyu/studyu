@@ -26,9 +26,15 @@
 	[Preview]o-[Study]
 	[Preview]o-[StudySubject]
 	
-	[WelcomeScreen
+	[AboutScreen
 	  |
 	  +Widget build()
+	]
+	
+	[IFrameHelper
+	  |
+	  +void postRouteFinished();
+	  +void listen()
 	]
 	
 	[TermsScreen
@@ -51,13 +57,7 @@
 	[LegalSection]o-[Icon]
 	[LegalSection]o-[void Function(bool?)?]
 	
-	[IFrameHelper
-	  |
-	  +void postRouteFinished();
-	  +void listen()
-	]
-	
-	[AboutScreen
+	[WelcomeScreen
 	  |
 	  +Widget build()
 	]
@@ -84,17 +84,17 @@
 					<g fill="#eee8d5">
 						<path d="M237.0 340.0 L235.1 350.6 L227.0 343.6 L228.8 333.0 Z"></path>
 					</g>
-					<path d="M354.5 264.6 L521.75 353 L521.75 373 L521.8 373.0 " fill="none"></path>
+					<path d="M355.4 238.9 L649.25 353 L649.25 373 L649.3 373.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M348.7 255.5 L354.5 264.6 L343.8 264.9 L338.0 255.9 Z"></path>
+						<path d="M348.6 230.5 L355.4 238.9 L344.8 240.5 L338.0 232.1 Z"></path>
 					</g>
-					<path d="M736.7 277.5 L646.75 353 L646.75 373 L646.8 373.0 " fill="none"></path>
+					<path d="M962.5 252.6 L774.25 353 L774.25 373 L774.3 373.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M747.3 275.6 L736.7 277.5 L740.4 267.4 L751.0 265.5 Z"></path>
+						<path d="M973.3 252.9 L962.5 252.6 L968.3 243.5 L979.0 243.8 Z"></path>
 					</g>
-					<path d="M918.5 282.7 L948.5 353 L948.5 373 L948.5 373.0 " fill="none"></path>
+					<path d="M1173.5 282.7 L1203.5 353 L1203.5 373 L1203.5 373.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M919.8 272.0 L918.5 282.7 L910.0 276.2 L911.2 265.5 Z"></path>
+						<path d="M1174.8 272.0 L1173.5 282.7 L1165.0 276.2 L1166.2 265.5 Z"></path>
 					</g>
 					<g data-name="Preview">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Preview">
@@ -161,38 +161,57 @@
 					</g>
 					<g data-name="StudySubject">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudySubject">
-							<rect x="461.8" y="373.0" height="31.0" width="120.0" data-name="StudySubject"></rect>
+							<rect x="589.3" y="373.0" height="31.0" width="120.0" data-name="StudySubject"></rect>
 						</g>
-						<g transform="translate(461.75, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySubject">
+						<g transform="translate(589.25, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySubject">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudySubject">
 								<text x="52.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudySubject">StudySubject</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="WelcomeScreen">
-						<g fill="#eee8d5" stroke="#33322E" data-name="WelcomeScreen">
-							<rect x="378.0" y="135.5" height="62.0" width="145.0" data-name="WelcomeScreen"></rect>
-							<path d="M378.0 166.5 L523.0 166.5" fill="none" data-name="WelcomeScreen"></path>
+					<g data-name="AboutScreen">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AboutScreen">
+							<rect x="378.0" y="135.5" height="62.0" width="136.0" data-name="AboutScreen"></rect>
+							<path d="M378.0 166.5 L514.0 166.5" fill="none" data-name="AboutScreen"></path>
 						</g>
-						<g transform="translate(378, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WelcomeScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WelcomeScreen">
-								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="WelcomeScreen">WelcomeScreen</text>
+						<g transform="translate(378, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AboutScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AboutScreen">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="AboutScreen">AboutScreen</text>
 								
 							</g>
 						</g>
-						<g transform="translate(378, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WelcomeScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WelcomeScreen">
-								<text x="0.0" y="13.5" stroke="none" data-name="WelcomeScreen">+Widget build()</text>
+						<g transform="translate(378, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AboutScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AboutScreen">
+								<text x="0.0" y="13.5" stroke="none" data-name="AboutScreen">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IFrameHelper">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IFrameHelper">
+							<rect x="554.0" y="128.0" height="77.0" width="224.0" data-name="IFrameHelper"></rect>
+							<path d="M554.0 159.0 L778.0 159.0" fill="none" data-name="IFrameHelper"></path>
+						</g>
+						<g transform="translate(554, 128)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IFrameHelper">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFrameHelper">
+								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="IFrameHelper">IFrameHelper</text>
+								
+							</g>
+						</g>
+						<g transform="translate(554, 159)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFrameHelper">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IFrameHelper">
+								<text x="0.0" y="13.5" stroke="none" data-name="IFrameHelper">+void postRouteFinished()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="IFrameHelper">+void listen()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="TermsScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="TermsScreen">
-							<rect x="563.0" y="151.0" height="31.0" width="121.0" data-name="TermsScreen"></rect>
+							<rect x="818.0" y="151.0" height="31.0" width="121.0" data-name="TermsScreen"></rect>
 						</g>
-						<g transform="translate(563, 151)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TermsScreen">
+						<g transform="translate(818, 151)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TermsScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TermsScreen">
 								<text x="52.5" y="13.5" stroke="none" text-anchor="middle" data-name="TermsScreen">TermsScreen</text>
 								
@@ -201,17 +220,17 @@
 					</g>
 					<g data-name="LegalSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="LegalSection">
-							<rect x="724.0" y="67.5" height="198.0" width="290.0" data-name="LegalSection"></rect>
-							<path d="M724.0 98.5 L1014.0 98.5" fill="none" data-name="LegalSection"></path>
-							<path d="M724.0 234.5 L1014.0 234.5" fill="none" data-name="LegalSection"></path>
+							<rect x="979.0" y="67.5" height="198.0" width="290.0" data-name="LegalSection"></rect>
+							<path d="M979.0 98.5 L1269.0 98.5" fill="none" data-name="LegalSection"></path>
+							<path d="M979.0 234.5 L1269.0 234.5" fill="none" data-name="LegalSection"></path>
 						</g>
-						<g transform="translate(724, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LegalSection">
+						<g transform="translate(979, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LegalSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LegalSection">
 								<text x="137.0" y="13.5" stroke="none" text-anchor="middle" data-name="LegalSection">LegalSection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(724, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
+						<g transform="translate(979, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LegalSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="LegalSection">+title: String?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="LegalSection">+description: String?</text>
@@ -224,7 +243,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(724, 234.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
+						<g transform="translate(979, 234.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LegalSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="LegalSection">+Widget build()</text>
 								
@@ -233,9 +252,9 @@
 					</g>
 					<g data-name="Icon">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Icon">
-							<rect x="621.8" y="373.0" height="31.0" width="50.0" data-name="Icon"></rect>
+							<rect x="749.3" y="373.0" height="31.0" width="50.0" data-name="Icon"></rect>
 						</g>
-						<g transform="translate(621.75, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Icon">
+						<g transform="translate(749.25, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Icon">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Icon">
 								<text x="17.0" y="13.5" stroke="none" text-anchor="middle" data-name="Icon">Icon</text>
 								
@@ -244,48 +263,29 @@
 					</g>
 					<g data-name="void Function(bool?)?">
 						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(bool?)?">
-							<rect x="854.5" y="373.0" height="31.0" width="188.0" data-name="void Function(bool?)?"></rect>
+							<rect x="1109.5" y="373.0" height="31.0" width="188.0" data-name="void Function(bool?)?"></rect>
 						</g>
-						<g transform="translate(854.5, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(bool?)?">
+						<g transform="translate(1109.5, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(bool?)?">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(bool?)?">
 								<text x="86.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(bool?)?">void Function(bool?)?</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="IFrameHelper">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IFrameHelper">
-							<rect x="1054.0" y="128.0" height="77.0" width="224.0" data-name="IFrameHelper"></rect>
-							<path d="M1054.0 159.0 L1278.0 159.0" fill="none" data-name="IFrameHelper"></path>
+					<g data-name="WelcomeScreen">
+						<g fill="#eee8d5" stroke="#33322E" data-name="WelcomeScreen">
+							<rect x="1309.0" y="135.5" height="62.0" width="145.0" data-name="WelcomeScreen"></rect>
+							<path d="M1309.0 166.5 L1454.0 166.5" fill="none" data-name="WelcomeScreen"></path>
 						</g>
-						<g transform="translate(1054, 128)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IFrameHelper">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFrameHelper">
-								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="IFrameHelper">IFrameHelper</text>
+						<g transform="translate(1309, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WelcomeScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WelcomeScreen">
+								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="WelcomeScreen">WelcomeScreen</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1054, 159)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFrameHelper">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IFrameHelper">
-								<text x="0.0" y="13.5" stroke="none" data-name="IFrameHelper">+void postRouteFinished()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IFrameHelper">+void listen()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="AboutScreen">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AboutScreen">
-							<rect x="1318.0" y="135.5" height="62.0" width="136.0" data-name="AboutScreen"></rect>
-							<path d="M1318.0 166.5 L1454.0 166.5" fill="none" data-name="AboutScreen"></path>
-						</g>
-						<g transform="translate(1318, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AboutScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AboutScreen">
-								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="AboutScreen">AboutScreen</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1318, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AboutScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AboutScreen">
-								<text x="0.0" y="13.5" stroke="none" data-name="AboutScreen">+Widget build()</text>
+						<g transform="translate(1309, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WelcomeScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WelcomeScreen">
+								<text x="0.0" y="13.5" stroke="none" data-name="WelcomeScreen">+Widget build()</text>
 								
 							</g>
 						</g>
