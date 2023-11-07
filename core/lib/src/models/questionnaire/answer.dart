@@ -27,15 +27,15 @@ class Answer<V> {
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];
     switch (value.runtimeType) {
-      case bool:
+      case const (bool):
         return Answer<bool>.parseJson(data);
-      case num:
+      case const (num):
         return Answer<num>.parseJson(data);
-      case int:
+      case const (int):
         return Answer<num>.parseJson(data);
-      case double:
+      case const (double):
         return Answer<num>.parseJson(data);
-      case String:
+      case const (String):
         return Answer<String>.parseJson(data);
       default:
         // todo Why is value List<dynamic> instead of List<String>?

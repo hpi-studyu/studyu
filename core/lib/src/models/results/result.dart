@@ -27,12 +27,10 @@ class Result<T> {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> resultMap;
     switch (T) {
-      case QuestionnaireState:
+      case == QuestionnaireState:
         resultMap = {keyResult: (result as QuestionnaireState).toJson()};
-        break;
-      case bool:
+      case const (bool):
         resultMap = {keyResult: result};
-        break;
       default:
         print('Unsupported question type: $T');
         resultMap = {keyResult: ''};

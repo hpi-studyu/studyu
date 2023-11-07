@@ -2,7 +2,7 @@
 
 import 'dart:html' as html;
 import 'dart:js' as js;
-import 'dart:ui' as ui;
+import 'dart:ui_web' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;

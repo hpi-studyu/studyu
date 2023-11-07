@@ -12,19 +12,19 @@ abstract class SupabaseObject {
 
 String tableName(Type cls) {
   switch (cls) {
-    case Study:
+    case == Study:
       return Study.tableName;
-    case StudySubject:
+    case == StudySubject:
       return StudySubject.tableName;
-    case SubjectProgress:
+    case == SubjectProgress:
       return SubjectProgress.tableName;
-    case AppConfig:
+    case == AppConfig:
       return AppConfig.tableName;
-    case Repo:
+    case == Repo:
       return Repo.tableName;
-    case StudyInvite:
+    case == StudyInvite:
       return StudyInvite.tableName;
-    case StudyUUser:
+    case == StudyUUser:
       return StudyUUser.tableName;
     default:
       print('$cls is not a supported Supabase type');
@@ -35,19 +35,19 @@ String tableName(Type cls) {
 abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements SupabaseObject {
   static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) {
     switch (T) {
-      case Study:
+      case == Study:
         return Study.fromJson(json) as T;
-      case StudySubject:
+      case == StudySubject:
         return StudySubject.fromJson(json) as T;
-      case SubjectProgress:
+      case == SubjectProgress:
         return SubjectProgress.fromJson(json) as T;
-      case AppConfig:
+      case == AppConfig:
         return AppConfig.fromJson(json) as T;
-      case Repo:
+      case == Repo:
         return Repo.fromJson(json) as T;
-      case StudyInvite:
+      case == StudyInvite:
         return StudyInvite.fromJson(json) as T;
-      case StudyUUser:
+      case == StudyUUser:
         return StudyUUser.fromJson(json) as T;
       default:
         print('$T is not a supported Supabase type');

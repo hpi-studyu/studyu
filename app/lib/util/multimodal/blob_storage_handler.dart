@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:studyu_core/src/env/env.dart' as env;
+import 'package:studyu_core/env.dart' as env;
 
 class BlobStorageHandler {
   static const String _observationsBucketName = 'observations';

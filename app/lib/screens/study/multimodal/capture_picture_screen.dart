@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:camera/camera.dart';
-import 'package:studyu_core/core.dart';
 import 'package:flutter/material.dart';
+
+import '../../../util/multimodal/persistent_storage_handler.dart';
 
 class CapturePictureScreen extends StatefulWidget {
   final String userId;

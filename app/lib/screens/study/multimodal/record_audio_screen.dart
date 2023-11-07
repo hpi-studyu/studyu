@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
-import 'package:studyu_core/core.dart';
+
+import '../../../util/multimodal/persistent_storage_handler.dart';
 
 class RecordAudioScreen extends StatefulWidget {
   final String userId;
@@ -17,7 +18,7 @@ class RecordAudioScreen extends StatefulWidget {
 }
 
 class RecordAudioScreenState extends State<RecordAudioScreen> {
-  final Record _audioRecorder;
+  final AudioRecorder _audioRecorder;
   bool _isRecording = false;
   late Future<void> _initializeRecorderPermissionsFuture;
   late PersistentStorageHandler _storageHandler;
@@ -27,7 +28,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
     await Permission.microphone.request();
   }
 
-  RecordAudioScreenState() : _audioRecorder = Record() {
+  RecordAudioScreenState() : _audioRecorder = AudioRecorder() {
     _audioRecorder.onStateChanged().listen((event) async {
       if (event == RecordState.stop || event == RecordState.pause) {
         _storeFinalizer((String aPath) => Navigator.pop(context, aPath));
@@ -53,7 +54,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
       _storageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
       var (stagingPath, finalizer) = await _storageHandler.storeAudio();
       _storeFinalizer = finalizer;
-      await _audioRecorder.start(path: stagingPath);
+      await _audioRecorder.start(const RecordConfig(), path: stagingPath);
       setState(() {
         _isRecording = true;
       });

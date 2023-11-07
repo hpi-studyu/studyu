@@ -231,9 +231,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'isMultipleChoice': isMultipleChoiceControl,
       'choiceOptionsArray': choiceResponseOptionsArray,
     }),
-    SurveyQuestionType.image: FormGroup({
-      'imageOptionsArray': imageResponseOptionsArray,
-    }),
     SurveyQuestionType.scale: FormGroup({
       'scaleMinValue': scaleMinValueControl,
       'scaleMaxValue': scaleMaxValueControl,
@@ -374,6 +371,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         break;
       case SurveyQuestionType.image:
         break;
+      case SurveyQuestionType.audio:
+        break;
       case SurveyQuestionType.choice:
         data = data as ChoiceQuestionFormData;
         isMultipleChoiceControl.value = data.isMultipleChoice;
@@ -440,13 +439,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           isMultipleChoice: isMultipleChoiceControl.value!,
           // required
           answerOptions: validAnswerOptions,
-        );
-      case SurveyQuestionType.image:
-        return ImageQuestionFormData(
-          questionId: questionId,
-          questionText: questionTextControl.value!, // required
-          questionType: questionTypeControl.value!, // required
-          questionInfoText: questionInfoTextControl.value,
         );
       case SurveyQuestionType.scale:
         return ScaleQuestionFormData(

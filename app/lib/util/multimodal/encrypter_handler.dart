@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart';
-import 'package:studyu_core/src/util/key_storage.dart';
+import 'key_storage.dart';
 
 class EncrypterHandler {
   static Encrypter _buildEncrypter(EncrypterHandler handler) {
@@ -25,7 +25,7 @@ class EncrypterHandler {
   String decryptText(String anEncryptedText) {
     final Encrypter encrypter = _buildEncrypter(this);
     return encrypter.decrypt(Encrypted.fromBase64(anEncryptedText),
-        iv: _keyStorage.getIV());
+        iv: _keyStorage.getIV(),);
   }
 
   Uint8List encryptFile(Uint8List aFileContent) {
@@ -37,7 +37,7 @@ class EncrypterHandler {
     final Encrypter encrypter = _buildEncrypter(this);
     return Uint8List.fromList(
       encrypter.decryptBytes(Encrypted(anEncryptedFileContent),
-          iv: _keyStorage.getIV()),
+          iv: _keyStorage.getIV(),),
     );
   }
 }

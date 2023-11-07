@@ -5,9 +5,9 @@ import 'dart:typed_data';
 import 'package:cross_file/cross_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:studyu_core/src/util/blob_storage_handler.dart';
-import 'package:studyu_core/src/util/encrypted_audio_file.dart';
-import 'package:studyu_core/src/util/encrypter_handler.dart';
+import 'blob_storage_handler.dart';
+import 'encrypted_audio_file.dart';
+import 'encrypter_handler.dart';
 
 class PersistentStorageHandler {
   static const String _encryptedBaseNamePrefix = 'encrypted_';
@@ -22,7 +22,7 @@ class PersistentStorageHandler {
   late Future<void> _applicationDirectoryFuture;
   late EncrypterHandler _encrypterHandler;
   late Future<void> _encrypterHandlerFuture;
-  late BlobStorageHandler _blobStorageHandler;
+  late final BlobStorageHandler _blobStorageHandler;
 
   final String _userId;
   final String _studyId;
@@ -95,7 +95,7 @@ class PersistentStorageHandler {
     final String encryptedFileName = [
       PersistentStorageHandler._encryptedBaseNamePrefix,
       fileName,
-      PersistentStorageHandler._encryptedImageFileType
+      PersistentStorageHandler._encryptedImageFileType,
     ].join();
 
     final String uploadFileName =
@@ -133,7 +133,7 @@ class PersistentStorageHandler {
     final String encryptedFileName = [
       PersistentStorageHandler._encryptedBaseNamePrefix,
       fileName,
-      PersistentStorageHandler._encryptedAudioFileType
+      PersistentStorageHandler._encryptedAudioFileType,
     ].join();
     final String uploadFileName =
         [fileName, PersistentStorageHandler._nonEncryptedAudioFileType].join();
@@ -177,7 +177,7 @@ class PersistentStorageHandler {
       [
         PersistentStorageHandler._stagingBaseNamePrefix,
         fileName,
-        PersistentStorageHandler._nonEncryptedAudioFileType
+        PersistentStorageHandler._nonEncryptedAudioFileType,
       ].join(),
     );
   }
@@ -209,7 +209,7 @@ class PersistentStorageHandler {
       [
         PersistentStorageHandler._stagingBaseNamePrefix,
         "ActualPlaying",
-        PersistentStorageHandler._nonEncryptedAudioFileType
+        PersistentStorageHandler._nonEncryptedAudioFileType,
       ].join(),
     );
     await File(temporaryPath).writeAsBytes(decryptedByteArray);

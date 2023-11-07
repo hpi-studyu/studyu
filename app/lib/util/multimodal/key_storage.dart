@@ -26,23 +26,23 @@ class KeyStorage {
   }
 
   T _getSharedPreferenceValue<T>(void Function() initIfNotExist,
-      String accessKey, T Function(String) convertRep) {
+      String accessKey, T Function(String) convertRep,) {
     final String? valueRep = keyValueStore.getString(accessKey);
     if (valueRep == null) {
       initIfNotExist();
       return _getSharedPreferenceValue<T>(
-          initIfNotExist, accessKey, convertRep);
+          initIfNotExist, accessKey, convertRep,);
     }
     return convertRep(valueRep);
   }
 
   Key getEncryptionKey() {
     return _getSharedPreferenceValue<Key>(
-        _initEncryptionKey, KeyStorage.prefKeyForKey, Key.fromBase64);
+        _initEncryptionKey, KeyStorage.prefKeyForKey, Key.fromBase64,);
   }
 
   IV getIV() {
     return _getSharedPreferenceValue(
-        _initEncryptionIV, KeyStorage.pefKeyForIV, IV.fromBase64);
+        _initEncryptionIV, KeyStorage.pefKeyForIV, IV.fromBase64,);
   }
 }

@@ -1,18 +1,18 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:studyu_core/src/util/persistent_storage_handler.dart';
+import 'package:studyu_app/util/multimodal/persistent_storage_handler.dart';
 
 class EncryptedAudioFile {
   late AudioPlayer _audioPlayer;
   final String _encryptedAudioFilePath;
   late String _temporaryUnencryptedFilePath;
   final PersistentStorageHandler _storageHandler;
-  late Function _playStateUpdater;
+  late void Function(bool) _playStateUpdater;
 
   EncryptedAudioFile(PersistentStorageHandler aStorageHandler, String anEncryptedAudioFilePath)
       : _encryptedAudioFilePath = anEncryptedAudioFilePath,
         _storageHandler = aStorageHandler;
 
-  void preparePlay(Function aPlayStateUpdater) {
+  void preparePlay(Function(bool) aPlayStateUpdater) {
     _audioPlayer = AudioPlayer();
     _playStateUpdater = aPlayStateUpdater;
     _audioPlayer.onPlayerComplete.listen((event) {

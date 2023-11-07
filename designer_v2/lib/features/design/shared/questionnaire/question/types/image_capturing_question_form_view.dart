@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 
 class ImageCapturingQuestionFormView extends ConsumerWidget {
-  const ImageCapturingQuestionFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const ImageCapturingQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 
