@@ -56,15 +56,9 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
       return const SizedBox.shrink();
     }
 
-    if (!widget.sortingActive && !isHovering) {
-      return const SizedBox(
-        width: 17,
-      );
-    }
-
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 250),
-      opacity: widget.sortingActive ? 1.0 : 0.5,
+      opacity: widget.sortingActive ? 1.0 : (isHovering ? 0.5 : 0.0),
       child: AnimatedRotation(
         duration: const Duration(milliseconds: 250),
         turns: widget.sortAscending ? 0 : 0.5,
