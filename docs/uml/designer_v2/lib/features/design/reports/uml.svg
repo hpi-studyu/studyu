@@ -1,16 +1,190 @@
-<svg version="1.1" baseProfile="full" width="6781.0" height="1414.0" viewbox="0 0 6781 1414" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[ReportBadge
+<svg version="1.1" baseProfile="full" width="5614.3" height="1414.0" viewbox="0 0 5614.25 1414" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[ReportsFormData
 	  |
-	  +status: ReportStatus?;
-	  +type: BadgeType;
-	  +showPrefixIcon: bool;
-	  +showTooltip: bool
+	  +reportItems: List&lt;ReportItemFormData&gt;;
+	  +id: String
+	  |
+	  +Study apply();
+	  +ReportsFormData copy()
+	]
+	
+	[&lt;abstract&gt;IStudyFormData]&lt;:--[ReportsFormData]
+	
+	[ReportStatus
+	  |
+	  +index: int;
+	  &lt;static&gt;+values: List&lt;ReportStatus&gt;;
+	  &lt;static&gt;+primary: ReportStatus;
+	  &lt;static&gt;+secondary: ReportStatus
+	]
+	
+	[ReportStatus]o-[ReportStatus]
+	[Enum]&lt;:--[ReportStatus]
+	
+	[ReportItemFormData
+	  |
+	  +isPrimary: bool;
+	  +section: ReportSection;
+	  +id: String
+	  |
+	  &lt;static&gt;+dynamic fromDomainModel();
+	  +ReportItemFormData copy()
+	]
+	
+	[ReportItemFormData]o-[&lt;abstract&gt;ReportSection]
+	[&lt;abstract&gt;IFormData]&lt;:-[ReportItemFormData]
+	
+	[ReportItemFormView
+	  |
+	  +formViewModel: ReportItemFormViewModel;
+	  +studyId: String;
+	  +reportSectionColumnWidth: dynamic;
+	  +sectionTypeBodyBuilder: Widget Function(BuildContext)
+	  |
+	  +Widget build();
+	  -dynamic _buildSectionText();
+	  -dynamic _buildSectionTypeHeader()
+	]
+	
+	[ReportItemFormView]o-[ReportItemFormViewModel]
+	[ReportItemFormView]o-[Widget Function(BuildContext)]
+	
+	[DataReferenceEditor
+	  |
+	  +formControl: FormControl&lt;DataReferenceIdentifier&lt;T&gt;&gt;;
+	  +availableTasks: List&lt;Task&gt;;
+	  +buildReactiveDropdownField: ReactiveDropdownField&lt;dynamic&gt;
+	  |
+	  +FormTableRow buildFormTableRow();
+	  -List&lt;DropdownMenuItem&lt;DataReferenceIdentifier&lt;dynamic&gt;&gt;&gt; _dataReferenceItems()
+	]
+	
+	[DataReferenceEditor]o-[FormControl]
+	[DataReferenceEditor]o-[ReactiveDropdownField]
+	
+	[AverageSectionFormView
+	  |
+	  +formViewModel: ReportItemFormViewModel;
+	  +studyId: String;
+	  +reportSectionColumnWidth: Map&lt;int, TableColumnWidth&gt;
 	  |
 	  +Widget build()
 	]
 	
-	[ReportBadge]o-[ReportStatus]
-	[ReportBadge]o-[BadgeType]
+	[AverageSectionFormView]o-[ReportItemFormViewModel]
+	[&lt;abstract&gt;ConsumerWidget]&lt;:-[AverageSectionFormView]
+	
+	[DataReferenceIdentifier
+	  |
+	  +hashCode: int
+	  |
+	  +bool ==()
+	]
+	
+	[DataReference]&lt;:-[DataReferenceIdentifier]
+	
+	[TemporalAggregationFormatted
+	  |
+	  -_value: TemporalAggregation;
+	  &lt;static&gt;+values: List&lt;TemporalAggregationFormatted&gt;;
+	  +value: TemporalAggregation;
+	  +string: String;
+	  +icon: IconData?;
+	  +hashCode: int
+	  |
+	  +bool ==();
+	  +String toString();
+	  +String toJson();
+	  &lt;static&gt;+TemporalAggregationFormatted fromJson()
+	]
+	
+	[TemporalAggregationFormatted]o-[TemporalAggregation]
+	[TemporalAggregationFormatted]o-[IconData]
+	
+	[ImprovementDirectionFormatted
+	  |
+	  -_value: ImprovementDirection;
+	  &lt;static&gt;+values: List&lt;ImprovementDirectionFormatted&gt;;
+	  +value: ImprovementDirection;
+	  +string: String;
+	  +icon: IconData?;
+	  +hashCode: int
+	  |
+	  +bool ==();
+	  +String toString();
+	  +String toJson();
+	  &lt;static&gt;+ImprovementDirectionFormatted fromJson()
+	]
+	
+	[ImprovementDirectionFormatted]o-[ImprovementDirection]
+	[ImprovementDirectionFormatted]o-[IconData]
+	
+	[ReportSectionType
+	  |
+	  +index: int;
+	  &lt;static&gt;+values: List&lt;ReportSectionType&gt;;
+	  &lt;static&gt;+average: ReportSectionType;
+	  &lt;static&gt;+linearRegression: ReportSectionType
+	]
+	
+	[ReportSectionType]o-[ReportSectionType]
+	[Enum]&lt;:--[ReportSectionType]
+	
+	[LinearRegressionSectionFormView
+	  |
+	  +formViewModel: ReportItemFormViewModel;
+	  +studyId: String;
+	  +reportSectionColumnWidth: Map&lt;int, TableColumnWidth&gt;
+	  |
+	  +Widget build()
+	]
+	
+	[LinearRegressionSectionFormView]o-[ReportItemFormViewModel]
+	[&lt;abstract&gt;ConsumerWidget]&lt;:-[LinearRegressionSectionFormView]
+	
+	[ReportItemFormViewModel
+	  |
+	  &lt;static&gt;+defaultSectionType: ReportSectionType;
+	  +sectionIdControl: FormControl&lt;String&gt;;
+	  +sectionTypeControl: FormControl&lt;ReportSectionType&gt;;
+	  +titleControl: FormControl&lt;String&gt;;
+	  +descriptionControl: FormControl&lt;String&gt;;
+	  +sectionControl: FormControl&lt;ReportSection&gt;;
+	  +dataReferenceControl: FormControl&lt;DataReferenceIdentifier&lt;num&gt;&gt;;
+	  +temporalAggregationControl: FormControl&lt;TemporalAggregationFormatted&gt;;
+	  +improvementDirectionControl: FormControl&lt;ImprovementDirectionFormatted&gt;;
+	  +alphaControl: FormControl&lt;double&gt;;
+	  -_controlsBySectionType: Map&lt;ReportSectionType, FormGroup&gt;;
+	  -_sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
+	  -_validationConfigsBySectionType: Map&lt;ReportSectionType, Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;&gt;;
+	  +sectionBaseControls: Map&lt;String, AbstractControl&lt;dynamic&gt;&gt;;
+	  +form: FormGroup;
+	  +sectionId: String;
+	  +sectionType: ReportSectionType;
+	  &lt;static&gt;+sectionTypeControlOptions: List&lt;FormControlOption&lt;ReportSectionType&gt;&gt;;
+	  &lt;static&gt;+temporalAggregationControlOptions: List&lt;FormControlOption&lt;TemporalAggregationFormatted&gt;&gt;;
+	  &lt;static&gt;+improvementDirectionControlOptions: List&lt;FormControlOption&lt;ImprovementDirectionFormatted&gt;&gt;;
+	  +titles: Map&lt;FormMode, String&gt;;
+	  +sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
+	  +titleRequired: dynamic;
+	  +descriptionRequired: dynamic;
+	  +dataReferenceRequired: dynamic;
+	  +aggregationRequired: dynamic;
+	  +improvementDirectionRequired: dynamic;
+	  +alphaConfidenceRequired: dynamic
+	  |
+	  -List&lt;FormControlValidation&gt; _getValidationConfig();
+	  +ReportItemFormData buildFormData();
+	  +ReportItemFormViewModel createDuplicate();
+	  +dynamic onSectionTypeChanged();
+	  -void _updateFormControls();
+	  +void setControlsFrom()
+	]
+	
+	[ReportItemFormViewModel]o-[ReportSectionType]
+	[ReportItemFormViewModel]o-[FormControl]
+	[ReportItemFormViewModel]o-[FormGroup]
+	[&lt;abstract&gt;ManagedFormViewModel]&lt;:-[ReportItemFormViewModel]
 	
 	[ReportsFormViewModel
 	  |
@@ -67,6 +241,19 @@
 	[&lt;abstract&gt;IListActionProvider]&lt;:--[ReportFormItemDelegate]
 	[&lt;abstract&gt;IProviderArgsResolver]&lt;:--[ReportFormItemDelegate]
 	
+	[ReportBadge
+	  |
+	  +status: ReportStatus?;
+	  +type: BadgeType;
+	  +showPrefixIcon: bool;
+	  +showTooltip: bool
+	  |
+	  +Widget build()
+	]
+	
+	[ReportBadge]o-[ReportStatus]
+	[ReportBadge]o-[BadgeType]
+	
 	[StudyDesignReportsFormView
 	  |
 	  +Widget build();
@@ -75,635 +262,184 @@
 	
 	[&lt;abstract&gt;StudyDesignPageWidget]&lt;:-[StudyDesignReportsFormView]
 	
-	[ReportsFormData
-	  |
-	  +reportItems: List&lt;ReportItemFormData&gt;;
-	  +id: String
-	  |
-	  +Study apply();
-	  +ReportsFormData copy()
-	]
-	
-	[&lt;abstract&gt;IStudyFormData]&lt;:--[ReportsFormData]
-	
-	[ReportStatus
-	  |
-	  +index: int;
-	  &lt;static&gt;+values: List&lt;ReportStatus&gt;;
-	  &lt;static&gt;+primary: ReportStatus;
-	  &lt;static&gt;+secondary: ReportStatus
-	]
-	
-	[ReportStatus]o-[ReportStatus]
-	[Enum]&lt;:--[ReportStatus]
-	
-	[ReportItemFormViewModel
-	  |
-	  &lt;static&gt;+defaultSectionType: ReportSectionType;
-	  +sectionIdControl: FormControl&lt;String&gt;;
-	  +sectionTypeControl: FormControl&lt;ReportSectionType&gt;;
-	  +titleControl: FormControl&lt;String&gt;;
-	  +descriptionControl: FormControl&lt;String&gt;;
-	  +sectionControl: FormControl&lt;ReportSection&gt;;
-	  +dataReferenceControl: FormControl&lt;DataReferenceIdentifier&lt;num&gt;&gt;;
-	  +temporalAggregationControl: FormControl&lt;TemporalAggregationFormatted&gt;;
-	  +improvementDirectionControl: FormControl&lt;ImprovementDirectionFormatted&gt;;
-	  +alphaControl: FormControl&lt;double&gt;;
-	  -_controlsBySectionType: Map&lt;ReportSectionType, FormGroup&gt;;
-	  -_sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
-	  -_validationConfigsBySectionType: Map&lt;ReportSectionType, Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;&gt;;
-	  +sectionBaseControls: Map&lt;String, AbstractControl&lt;dynamic&gt;&gt;;
-	  +form: FormGroup;
-	  +sectionId: String;
-	  +sectionType: ReportSectionType;
-	  &lt;static&gt;+sectionTypeControlOptions: List&lt;FormControlOption&lt;ReportSectionType&gt;&gt;;
-	  &lt;static&gt;+temporalAggregationControlOptions: List&lt;FormControlOption&lt;TemporalAggregationFormatted&gt;&gt;;
-	  &lt;static&gt;+improvementDirectionControlOptions: List&lt;FormControlOption&lt;ImprovementDirectionFormatted&gt;&gt;;
-	  +titles: Map&lt;FormMode, String&gt;;
-	  +sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
-	  +titleRequired: dynamic;
-	  +descriptionRequired: dynamic;
-	  +dataReferenceRequired: dynamic;
-	  +aggregationRequired: dynamic;
-	  +improvementDirectionRequired: dynamic;
-	  +alphaConfidenceRequired: dynamic
-	  |
-	  -List&lt;FormControlValidation&gt; _getValidationConfig();
-	  +ReportItemFormData buildFormData();
-	  +ReportItemFormViewModel createDuplicate();
-	  +dynamic onSectionTypeChanged();
-	  -void _updateFormControls();
-	  +void setControlsFrom()
-	]
-	
-	[ReportItemFormViewModel]o-[ReportSectionType]
-	[ReportItemFormViewModel]o-[FormControl]
-	[ReportItemFormViewModel]o-[FormGroup]
-	[&lt;abstract&gt;ManagedFormViewModel]&lt;:-[ReportItemFormViewModel]
-	
-	[ReportItemFormData
-	  |
-	  +isPrimary: bool;
-	  +section: ReportSection;
-	  +id: String
-	  |
-	  &lt;static&gt;+dynamic fromDomainModel();
-	  +ReportItemFormData copy()
-	]
-	
-	[ReportItemFormData]o-[&lt;abstract&gt;ReportSection]
-	[&lt;abstract&gt;IFormData]&lt;:-[ReportItemFormData]
-	
-	[ReportItemFormView
-	  |
-	  +formViewModel: ReportItemFormViewModel;
-	  +studyId: String;
-	  +reportSectionColumnWidth: dynamic;
-	  +sectionTypeBodyBuilder: Widget Function(BuildContext)
-	  |
-	  +Widget build();
-	  -dynamic _buildSectionText();
-	  -dynamic _buildSectionTypeHeader()
-	]
-	
-	[ReportItemFormView]o-[ReportItemFormViewModel]
-	[ReportItemFormView]o-[Widget Function(BuildContext)]
-	
-	[TemporalAggregationFormatted
-	  |
-	  -_value: TemporalAggregation;
-	  &lt;static&gt;+values: List&lt;TemporalAggregationFormatted&gt;;
-	  +value: TemporalAggregation;
-	  +string: String;
-	  +icon: IconData?;
-	  +hashCode: int
-	  |
-	  +bool ==();
-	  +String toString();
-	  +String toJson();
-	  &lt;static&gt;+TemporalAggregationFormatted fromJson()
-	]
-	
-	[TemporalAggregationFormatted]o-[TemporalAggregation]
-	[TemporalAggregationFormatted]o-[IconData]
-	
-	[ImprovementDirectionFormatted
-	  |
-	  -_value: ImprovementDirection;
-	  &lt;static&gt;+values: List&lt;ImprovementDirectionFormatted&gt;;
-	  +value: ImprovementDirection;
-	  +string: String;
-	  +icon: IconData?;
-	  +hashCode: int
-	  |
-	  +bool ==();
-	  +String toString();
-	  +String toJson();
-	  &lt;static&gt;+ImprovementDirectionFormatted fromJson()
-	]
-	
-	[ImprovementDirectionFormatted]o-[ImprovementDirection]
-	[ImprovementDirectionFormatted]o-[IconData]
-	
-	[ReportSectionType
-	  |
-	  +index: int;
-	  &lt;static&gt;+values: List&lt;ReportSectionType&gt;;
-	  &lt;static&gt;+average: ReportSectionType;
-	  &lt;static&gt;+linearRegression: ReportSectionType
-	]
-	
-	[ReportSectionType]o-[ReportSectionType]
-	[Enum]&lt;:--[ReportSectionType]
-	
-	[DataReferenceIdentifier
-	  |
-	  +hashCode: int
-	  |
-	  +bool ==()
-	]
-	
-	[DataReference]&lt;:-[DataReferenceIdentifier]
-	
-	[LinearRegressionSectionFormView
-	  |
-	  +formViewModel: ReportItemFormViewModel;
-	  +studyId: String;
-	  +reportSectionColumnWidth: Map&lt;int, TableColumnWidth&gt;
-	  |
-	  +Widget build()
-	]
-	
-	[LinearRegressionSectionFormView]o-[ReportItemFormViewModel]
-	[&lt;abstract&gt;ConsumerWidget]&lt;:-[LinearRegressionSectionFormView]
-	
-	[DataReferenceEditor
-	  |
-	  +formControl: FormControl&lt;DataReferenceIdentifier&lt;T&gt;&gt;;
-	  +availableTasks: List&lt;Task&gt;;
-	  +buildReactiveDropdownField: ReactiveDropdownField&lt;dynamic&gt;
-	  |
-	  +FormTableRow buildFormTableRow();
-	  -List&lt;DropdownMenuItem&lt;DataReferenceIdentifier&lt;dynamic&gt;&gt;&gt; _dataReferenceItems()
-	]
-	
-	[DataReferenceEditor]o-[FormControl]
-	[DataReferenceEditor]o-[ReactiveDropdownField]
-	
-	[AverageSectionFormView
-	  |
-	  +formViewModel: ReportItemFormViewModel;
-	  +studyId: String;
-	  +reportSectionColumnWidth: Map&lt;int, TableColumnWidth&gt;
-	  |
-	  +Widget build()
-	]
-	
-	[AverageSectionFormView]o-[ReportItemFormViewModel]
-	[&lt;abstract&gt;ConsumerWidget]&lt;:-[AverageSectionFormView]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1414.0" width="6781.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="1414.0" width="5614.3" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M92.8 835.1 L78.5 1054 L424.5 1142.1550855991943 L424.5 1142.2 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M98.7 826.2 L92.8 835.1 L88.1 825.5 L94.0 816.5 Z"></path>
-					</g>
-					<path d="M159.6 831.6 L321 1054 L125.76284584980237 1165 L125.8 1165.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M158.4 820.9 L159.6 831.6 L149.8 827.2 L148.6 816.5 Z"></path>
-					</g>
-					<path d="M576.5 934.1 L444.5 1054 L249.26284584980237 1165 L249.3 1165.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M587.0 931.7 L576.5 934.1 L579.8 923.8 L590.3 921.5 Z"></path>
-					</g>
-					<path d="M645.5 936.6 L561 1054 L365.7628458498024 1165 L365.8 1165.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M655.3 932.2 L645.5 936.6 L646.6 926.0 L656.4 921.5 Z"></path>
-					</g>
-					<path d="M756.2 940.0 L741 1054 L1335.5 1128.0199311023623 L1335.5 1128.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M762.7 931.5 L756.2 940.0 L752.1 930.0 L758.6 921.5 Z"></path>
-					</g>
-					<path d="M918.9 936.6 L1004 1054 L1004 1165 L1004.0 1165.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M917.7 925.9 L918.9 936.6 L909.1 932.2 L907.9 921.5 Z"></path>
-					</g>
-					<path d="M971.7 934.6 L1093 1054 L1093 1180.5 L1093 1180.5 L1093 1307 L1093 1307 L1207.0845070422536 1327 L1207.1 1327.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M968.8 924.2 L971.7 934.6 L961.4 931.8 L958.4 921.5 Z"></path>
-					</g>
-					<path d="M1141.9 929.9 L1386.75 1054 L3061.75 1176.6555716353112 L3061.8 1176.7 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1135.9 921.0 L1141.9 929.9 L1131.1 930.5 L1125.2 921.5 Z"></path>
-					</g>
-					<path d="M741.8 365.8 L741.75 441 L759.0420065252855 573.5 L759.0 573.5 " fill="none"></path>
-					<path d="M747.1 365.8 L741.8 365.8 L736.4 365.8 L741.8 352.5 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M1435.0 353.3 L781.75 441 L781.75 573.5 L781.8 573.5 " fill="none"></path>
+						<path d="M169.0 135.3 L169 233 L169 275.5 L169.0 275.5 " fill="none"></path>
 					</g>
-					<path d="M1435.7 358.6 L1435.0 353.3 L1434.3 348.0 L1448.3 351.6 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M1983.9 362.0 L1906 441 L1211.75 630.2707360462531 L1211.8 630.3 " fill="none"></path>
-					</g>
-					<path d="M1987.7 365.7 L1983.9 362.0 L1980.1 358.3 L1993.2 352.5 Z"></path>
-					<path d="M1757.0 1305.7 L1757 1307 L1405 1334.076923076923 L1405.0 1334.1 " fill="none"></path>
+					<path d="M174.3 135.3 L169.0 135.3 L163.7 135.3 L169.0 122.0 Z"></path>
+					<path d="M870.4 1171.3 L1688.75 1127 L1898 1127 L1898 1127 L2107.25 1180.5 L2107.25 1180.5 L1898 1234 L1898 1234 L1688.75 1234 L1688.75 1234 L851.75 1188.653670886076 L851.8 1188.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1762.3 1296.3 L1757.0 1305.7 L1751.7 1296.3 L1757.0 1287.0 Z"></path>
-					</g>
-					<path d="M1461.5 1067.3 L1426.75 1054 L1147.9163947797715 921.5 L1147.9 921.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1468.3 1075.6 L1461.5 1067.3 L1472.2 1065.7 L1479.0 1074.0 Z"></path>
+						<path d="M860.8 1166.5 L870.4 1171.3 L861.4 1177.2 L851.8 1172.3 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M1615.5 356.8 L1866 441 L1866 747.5 L1866 747.5 L1866 1054 L1866 1054 L1848.7667984189723 1074 L1848.8 1074.0 " fill="none"></path>
+						<path d="M376.8 772.7 L113 1054 L550.75 1148.1357841053973 L550.8 1148.1 " fill="none"></path>
 					</g>
-					<path d="M1617.2 351.7 L1615.5 356.8 L1613.8 361.8 L1602.8 352.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M1638.3 776.3 L1638.25 1054 L1657.0247035573123 1074 L1657.0 1074.0 " fill="none"></path>
-					</g>
-					<path d="M1643.6 776.3 L1638.3 776.3 L1632.9 776.3 L1638.3 763.0 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M2093.1 355.3 L2489 441 L2489 747.5 L2489 747.5 L2489 1054 L2489 1054 L2178.5 1107.65881147541 L2178.5 1107.7 " fill="none"></path>
-					</g>
-					<path d="M2094.3 350.1 L2093.1 355.3 L2092.0 360.5 L2080.1 352.5 Z"></path>
-					<path d="M2341.5 135.3 L2341.5 233 L2341.5 298.5 L2341.5 298.5 " fill="none"></path>
-					<path d="M2346.8 135.3 L2341.5 135.3 L2336.2 135.3 L2341.5 122.0 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M2747.0 135.3 L2747 233 L2747 275.5 L2747.0 275.5 " fill="none"></path>
-					</g>
-					<path d="M2752.3 135.3 L2747.0 135.3 L2741.7 135.3 L2747.0 122.0 Z"></path>
-					<path d="M743.8 1147.5 L848.5 1127 L879.25 1127 L879.25 1127 L910 1180.5 L910 1180.5 L879.25 1234 L879.25 1234 L848.5 1234 L848.5 1234 L725.5 1209.9396709323582 L725.5 1209.9 " fill="none"></path>
+					<path d="M380.7 776.4 L376.8 772.7 L372.9 769.1 L386.0 763.0 Z"></path>
+					<path d="M535.0 424.7 L535 441 L535 732 L535.0 732.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M733.6 1144.0 L743.8 1147.5 L735.7 1154.5 L725.5 1151.1 Z"></path>
+						<path d="M540.3 415.3 L535.0 424.7 L529.7 415.3 L535.0 406.0 Z"></path>
 					</g>
-					<g stroke-dasharray="6 6">
-						<path d="M1785.5 776.1 L1734.5 1054 L725.5 1164.0806382061232 L725.5 1164.1 " fill="none"></path>
-					</g>
-					<path d="M1790.7 777.1 L1785.5 776.1 L1780.3 775.2 L1787.9 763.0 Z"></path>
-					<path d="M3179.5 915.1 L2755.75 1054 L3206.75 1142.7961089494163 L3206.8 1142.8 " fill="none"></path>
+					<path d="M535.0 135.3 L535 233 L535 268 L535.0 268.0 " fill="none"></path>
+					<path d="M540.3 135.3 L535.0 135.3 L529.7 135.3 L535.0 122.0 Z"></path>
+					<path d="M1787.2 421.1 L1846.75 441 L1984.75 507.97862232779096 L1984.8 508.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3190.0 917.2 L3179.5 915.1 L3186.7 907.1 L3197.3 909.3 Z"></path>
+						<path d="M1780.0 413.1 L1787.2 421.1 L1776.7 423.2 L1769.5 415.1 Z"></path>
 					</g>
-					<path d="M3802.8 1051.5 L3803.75 1054 L4094.1926877470355 1165 L4094.2 1165.0 " fill="none"></path>
+					<path d="M1516.3 439.3 L1516 441 L1516 732 L1516.0 732.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3804.6 1040.9 L3802.8 1051.5 L3794.6 1044.6 L3796.4 1034.0 Z"></path>
+						<path d="M1523.3 431.2 L1516.3 439.3 L1512.8 429.2 L1519.8 421.0 Z"></path>
 					</g>
-					<path d="M4200.6 1028.1 L4247.75 1054 L3166.75 1174.6409351565947 L3166.8 1174.6 " fill="none"></path>
+					<path d="M1256.1 821.6 L2080.25 1054 L2193.0049407114625 1165 L2193.0 1165.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4195.0 1018.9 L4200.6 1028.1 L4189.9 1028.2 L4184.3 1019.1 Z"></path>
+						<path d="M1248.6 813.9 L1256.1 821.6 L1245.7 824.2 L1238.2 816.5 Z"></path>
 					</g>
-					<path d="M3063.5 365.8 L3063.5 441 L3197.25 506.3557194101236 L3197.3 506.4 " fill="none"></path>
-					<path d="M3068.8 365.8 L3063.5 365.8 L3058.2 365.8 L3063.5 352.5 Z"></path>
-					<path d="M6568.0 424.7 L6568 441 L6568 732 L6568.0 732.0 " fill="none"></path>
+					<path d="M1366.4 814.0 L2713.25 1054 L2713.25 1165 L2713.3 1165.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M6573.3 415.3 L6568.0 424.7 L6562.7 415.3 L6568.0 406.0 Z"></path>
+						<path d="M1358.1 807.1 L1366.4 814.0 L1356.3 817.6 L1348.0 810.7 Z"></path>
 					</g>
-					<path d="M6568.0 135.3 L6568 233 L6568 268 L6568.0 268.0 " fill="none"></path>
-					<path d="M6573.3 135.3 L6568.0 135.3 L6562.7 135.3 L6568.0 122.0 Z"></path>
-					<path d="M3737.6 380.5 L3387 441 L3406.820554649266 461 L3406.8 461.0 " fill="none"></path>
+					<path d="M2123.3 417.2 L2123.25 441 L2146.4147634584015 461 L2146.4 461.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3747.7 384.1 L3737.6 380.5 L3745.9 373.6 L3756.0 377.3 Z"></path>
+						<path d="M2128.6 407.8 L2123.3 417.2 L2117.9 407.8 L2123.3 398.5 Z"></path>
 					</g>
-					<path d="M4241.4 379.2 L4611 441 L5076.457585644372 732 L5076.5 732.0 " fill="none"></path>
+					<path d="M2706.6 123.3 L2123.25 233 L2123.25 275.5 L2123.3 275.5 " fill="none"></path>
+					<path d="M2707.6 128.5 L2706.6 123.3 L2705.7 118.0 L2719.8 120.8 Z"></path>
+					<path d="M2055.7 125.1 L2504.75 233 L2504.75 290.5 L2504.8 290.5 " fill="none"></path>
+					<path d="M2057.0 119.9 L2055.7 125.1 L2054.5 130.3 L2042.8 122.0 Z"></path>
+					<path d="M2551.7 177.7 L2739.75 233 L2739.75 321.5 L2739.8 321.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4233.1 372.4 L4241.4 379.2 L4231.3 382.9 L4223.0 376.1 Z"></path>
+						<path d="M2544.2 169.9 L2551.7 177.7 L2541.2 180.1 L2533.8 172.4 Z"></path>
 					</g>
-					<path d="M3550.9 169.1 L3304 233 L3304 321.5 L3304.0 321.5 " fill="none"></path>
+					<path d="M2552.0 160.6 L2876.25 233 L2910.2884615384614 321.5 L2910.3 321.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3561.3 171.9 L3550.9 169.1 L3558.6 161.6 L3569.0 164.4 Z"></path>
+						<path d="M2544.0 153.3 L2552.0 160.6 L2541.7 163.8 L2533.8 156.5 Z"></path>
 					</g>
-					<path d="M4035.6 129.8 L5112.75 233 L5195.931490384615 321.5 L5195.9 321.5 " fill="none"></path>
+					<path d="M3189.0 197.5 L3094.25 233 L3094.25 321.5 L3094.3 321.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4026.8 123.6 L4035.6 129.8 L4025.8 134.2 L4017.0 128.0 Z"></path>
+						<path d="M3199.6 199.2 L3189.0 197.5 L3195.9 189.2 L3206.5 191.0 Z"></path>
 					</g>
-					<path d="M5660.7 231.4 L5660.5 233 L5877.920673076923 321.5 L5877.9 321.5 " fill="none"></path>
+					<path d="M3188.5 175.4 L2985.25 233 L2926.533653846154 321.5 L2926.5 321.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5667.5 223.1 L5660.7 231.4 L5656.9 221.4 L5663.7 213.0 Z"></path>
+						<path d="M3199.0 178.0 L3188.5 175.4 L3196.1 167.8 L3206.5 170.4 Z"></path>
 					</g>
-					<path d="M5700.3 231.4 L5700.5 233 L5254 327.7673469387755 L5254.0 327.8 " fill="none"></path>
+					<path d="M3256.3 1155.2 L3490.25 1127 L3553.375 1127 L3553.375 1127 L3616.5 1180.5 L3616.5 1180.5 L3553.375 1234 L3553.375 1234 L3490.25 1234 L3490.25 1234 L3237.75 1203.5748873873874 L3237.8 1203.6 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5704.1 221.4 L5700.3 231.4 L5693.5 223.1 L5697.3 213.0 Z"></path>
-					</g>
-					<path d="M3608.3 1157.4 L3885.4166666666665 1127 L3959.3333333333335 1127 L3959.3333333333335 1127 L4033.25 1180.5 L4033.25 1180.5 L3959.3333333333335 1234 L3959.3333333333335 1234 L3885.4166666666665 1234 L3885.4166666666665 1234 L3589.75 1201.5302771125555 L3589.8 1201.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3598.4 1153.1 L3608.3 1157.4 L3599.6 1163.8 L3589.8 1159.5 Z"></path>
+						<path d="M3246.4 1151.0 L3256.3 1155.2 L3247.7 1161.6 L3237.8 1157.4 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M1792.6 776.3 L1810.75 1054 L3206.75 1165.24031496063 L3206.8 1165.2 " fill="none"></path>
+						<path d="M444.2 752.9 L2899.75 1054 L2984.2915019762845 1127 L2984.3 1127.0 " fill="none"></path>
 					</g>
-					<path d="M1798.0 776.0 L1792.6 776.3 L1787.3 776.7 L1791.8 763.0 Z"></path>
-					<path d="M6269.0 135.3 L6269 233 L6269 290.5 L6269.0 290.5 " fill="none"></path>
-					<path d="M6274.3 135.3 L6269.0 135.3 L6263.7 135.3 L6269.0 122.0 Z"></path>
-					<path d="M4887.5 417.2 L4887.5 441 L4184.25 621.1095675788595 L4184.3 621.1 " fill="none"></path>
+					<path d="M444.9 747.6 L444.2 752.9 L443.6 758.2 L431.0 751.2 Z"></path>
+					<path d="M3468.3 417.2 L3468.25 441 L2971.75 594.714393939394 L2971.8 594.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4892.8 407.8 L4887.5 417.2 L4882.2 407.8 L4887.5 398.5 Z"></path>
+						<path d="M3473.6 407.8 L3468.3 417.2 L3462.9 407.8 L3468.3 398.5 Z"></path>
 					</g>
-					<path d="M5274.2 130.6 L5152.75 233 L5044.354567307692 275.5 L5044.4 275.5 " fill="none"></path>
-					<path d="M5277.6 134.7 L5274.2 130.6 L5270.7 126.5 L5284.4 122.0 Z"></path>
-					<path d="M4578.8 835.2 L4578.75 1054 L4189.153162055336 1165 L4189.2 1165.0 " fill="none"></path>
+					<path d="M2884.9 123.3 L3468.25 233 L3468.25 275.5 L3468.3 275.5 " fill="none"></path>
+					<path d="M2885.8 118.0 L2884.9 123.3 L2883.9 128.5 L2871.8 120.8 Z"></path>
+					<path d="M2988.3 1013.4 L3066.25 1054 L3054.7084980237155 1127 L3054.7 1127.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4584.1 825.8 L4578.8 835.2 L4573.4 825.8 L4578.8 816.5 Z"></path>
+						<path d="M2982.5 1004.3 L2988.3 1013.4 L2977.6 1013.8 L2971.8 1004.7 Z"></path>
 					</g>
-					<path d="M4612.3 833.9 L4697.75 1054 L4697.75 1165 L4697.8 1165.0 " fill="none"></path>
+					<path d="M2593.3 1051.5 L2594.25 1054 L2255.9851778656125 1165 L2256.0 1165.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4613.9 823.3 L4612.3 833.9 L4603.9 827.1 L4605.5 816.5 Z"></path>
+						<path d="M2595.0 1040.8 L2593.3 1051.5 L2585.0 1044.6 L2586.7 1034.0 Z"></path>
 					</g>
-					<path d="M5542.0 417.2 L5542 441 L4184.25 665.7942606347062 L4184.3 665.8 " fill="none"></path>
+					<path d="M2989.7 891.5 L3567 1054 L3695.98814229249 1165 L3696.0 1165.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5547.3 407.8 L5542.0 417.2 L5536.7 407.8 L5542.0 398.5 Z"></path>
+						<path d="M2982.2 883.8 L2989.7 891.5 L2979.3 894.1 L2971.8 886.4 Z"></path>
 					</g>
-					<path d="M5331.4 130.6 L5453.5 233 L5489.665865384615 275.5 L5489.7 275.5 " fill="none"></path>
-					<path d="M5334.9 126.5 L5331.4 130.6 L5328.0 134.7 L5321.2 122.0 Z"></path>
-					<g data-name="ReportBadge">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportBadge">
-							<rect x="0.0" y="678.5" height="138.0" width="197.0" data-name="ReportBadge"></rect>
-							<path d="M0.0 709.5 L197.0 709.5" fill="none" data-name="ReportBadge"></path>
-							<path d="M0.0 785.5 L197.0 785.5" fill="none" data-name="ReportBadge"></path>
-						</g>
-						<g transform="translate(0, 678.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportBadge">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportBadge">
-								<text x="90.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportBadge">ReportBadge</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 709.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportBadge">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportBadge">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportBadge">+status: ReportStatus?</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportBadge">+type: BadgeType</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportBadge">+showPrefixIcon: bool</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportBadge">+showTooltip: bool</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 785.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportBadge">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportBadge">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportBadge">+Widget build()</text>
-								
-							</g>
-						</g>
+					<path d="M3855.3 365.8 L3855.25 441 L2971.75 637.6541394335512 L2971.8 637.7 " fill="none"></path>
+					<path d="M3860.6 365.8 L3855.3 365.8 L3849.9 365.8 L3855.3 352.5 Z"></path>
+					<path d="M4080.7 930.0 L3837 1054 L3837 1165 L3837.0 1165.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4091.5 930.5 L4080.7 930.0 L4086.6 921.0 L4097.4 921.5 Z"></path>
 					</g>
-					<g data-name="ReportStatus">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportStatus">
-							<rect x="424.5" y="1127.0" height="107.0" width="301.0" data-name="ReportStatus"></rect>
-							<path d="M424.5 1158.0 L725.5 1158.0" fill="none" data-name="ReportStatus"></path>
-						</g>
-						<g transform="translate(424.5, 1127)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportStatus">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportStatus">
-								<text x="142.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportStatus">ReportStatus</text>
-								
-							</g>
-						</g>
-						<g transform="translate(424.5, 1158)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportStatus">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportStatus">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportStatus">+index: int</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportStatus">&lt;static&gt;+values: List&lt;ReportStatus&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportStatus">&lt;static&gt;+primary: ReportStatus</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportStatus">&lt;static&gt;+secondary: ReportStatus</text>
-								
-							</g>
-						</g>
+					<path d="M4147.7 931.5 L3953.5 1054 L3953.5 1165 L3953.5 1165.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4158.4 931.0 L4147.7 931.5 L4152.8 922.0 L4163.5 921.5 Z"></path>
 					</g>
-					<g data-name="BadgeType">
-						<g fill="#eee8d5" stroke="#33322E" data-name="BadgeType">
-							<rect x="45.5" y="1165.0" height="31.0" width="106.0" data-name="BadgeType"></rect>
-						</g>
-						<g transform="translate(45.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BadgeType">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BadgeType">
-								<text x="45.0" y="13.5" stroke="none" text-anchor="middle" data-name="BadgeType">BadgeType</text>
-								
-							</g>
-						</g>
+					<path d="M4662.2 933.5 L4806.75 1054 L4845.010869565217 1074 L4845.0 1074.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4658.5 923.4 L4662.2 933.5 L4651.6 931.6 L4647.9 921.5 Z"></path>
 					</g>
-					<g data-name="ReportsFormViewModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportsFormViewModel">
-							<rect x="351.8" y="573.5" height="348.0" width="860.0" data-name="ReportsFormViewModel"></rect>
-							<path d="M351.8 604.5 L1211.8 604.5" fill="none" data-name="ReportsFormViewModel"></path>
-							<path d="M351.8 770.5 L1211.8 770.5" fill="none" data-name="ReportsFormViewModel"></path>
-						</g>
-						<g transform="translate(351.75, 573.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportsFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportsFormViewModel">
-								<text x="422.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportsFormViewModel">ReportsFormViewModel</text>
-								
-							</g>
-						</g>
-						<g transform="translate(351.75, 604.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportsFormViewModel">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportsFormViewModel">+study: Study</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportsFormViewModel">+router: GoRouter</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportsFormViewModel">+reportItemDelegate: ReportFormItemDelegate</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportsFormViewModel">+reportItemArray: FormArray&lt;dynamic&gt;</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="ReportsFormViewModel">+reportItemFormViewModels: FormViewModelCollection&lt;ReportItemFormViewModel, ReportItemFormData&gt;</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="ReportsFormViewModel">+form: FormGroup</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="ReportsFormViewModel">+reportItemModels: List&lt;ReportItemFormViewModel&gt;</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="ReportsFormViewModel">+sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="ReportsFormViewModel">+titles: Map&lt;FormMode, String&gt;</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="ReportsFormViewModel">+canTestConsent: bool</text>
-								
-							</g>
-						</g>
-						<g transform="translate(351.75, 770.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportsFormViewModel">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportsFormViewModel">+void setControlsFrom()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportsFormViewModel">+ReportsFormData buildFormData()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportsFormViewModel">+void read()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportsFormViewModel">+ReportItemFormRouteArgs buildNewReportItemFormRouteArgs()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="ReportsFormViewModel">+ReportItemFormRouteArgs buildReportItemFormRouteArgs()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="ReportsFormViewModel">+dynamic testReport()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="ReportsFormViewModel">+void onCancel()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="ReportsFormViewModel">+dynamic onSave()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="ReportsFormViewModel">+ReportItemFormViewModel provide()</text>
-								
-							</g>
-						</g>
+					<path d="M4249.5 934.6 L4128.5 1054 L4128.5 1165 L4128.5 1165.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4259.9 931.9 L4249.5 934.6 L4252.4 924.3 L4262.8 921.5 Z"></path>
 					</g>
-					<g data-name="Study">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
-							<rect x="191.5" y="1165.0" height="31.0" width="61.0" data-name="Study"></rect>
-						</g>
-						<g transform="translate(191.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
-								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
-								
-							</g>
-						</g>
+					<path d="M4197.5 932.9 L4039.5 1054 L4039.5 1180.5 L4039.5 1180.5 L4039.5 1307 L4039.5 1307 L4788.25 1337.970725313137 L4788.3 1338.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4208.2 931.4 L4197.5 932.9 L4201.7 922.9 L4212.3 921.5 Z"></path>
 					</g>
-					<g data-name="GoRouter">
-						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
-							<rect x="292.5" y="1165.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
-						</g>
-						<g transform="translate(292.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
-								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
-								
-							</g>
-						</g>
+					<path d="M4034.1 929.1 L3755.5 1054 L3719.084980237154 1165 L3719.1 1165.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4044.8 930.2 L4034.1 929.1 L4040.4 920.5 L4051.1 921.5 Z"></path>
 					</g>
-					<g data-name="ReportFormItemDelegate">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportFormItemDelegate">
-							<rect x="1335.5" y="1074.0" height="213.0" width="843.0" data-name="ReportFormItemDelegate"></rect>
-							<path d="M1335.5 1105.0 L2178.5 1105.0" fill="none" data-name="ReportFormItemDelegate"></path>
-							<path d="M1335.5 1181.0 L2178.5 1181.0" fill="none" data-name="ReportFormItemDelegate"></path>
-						</g>
-						<g transform="translate(1335.5, 1074)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportFormItemDelegate">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportFormItemDelegate">
-								<text x="413.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportFormItemDelegate">ReportFormItemDelegate</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1335.5, 1105)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportFormItemDelegate">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportFormItemDelegate">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportFormItemDelegate">+formViewModelCollection: FormViewModelCollection&lt;ReportItemFormViewModel, ReportItemFormData&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportFormItemDelegate">+owner: ReportsFormViewModel</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportFormItemDelegate">+propagateOnSave: bool</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportFormItemDelegate">+validationSet: dynamic</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1335.5, 1181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportFormItemDelegate">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportFormItemDelegate">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportFormItemDelegate">+void onCancel()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportFormItemDelegate">+dynamic onSave()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportFormItemDelegate">+ReportItemFormViewModel provide()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportFormItemDelegate">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="ReportFormItemDelegate">+void onNewItem()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="ReportFormItemDelegate">+void onSelectItem()</text>
-								
-							</g>
-						</g>
+					<path d="M4073.3 365.8 L4073.25 441 L4231.471859706362 573.5 L4231.5 573.5 " fill="none"></path>
+					<path d="M4078.6 365.8 L4073.3 365.8 L4067.9 365.8 L4073.3 352.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M4725.9 356.8 L4480.5 441 L4462.6676182708 573.5 L4462.7 573.5 " fill="none"></path>
 					</g>
-					<g data-name="FormArray">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormArray">
-							<rect x="955.0" y="1165.0" height="31.0" width="98.0" data-name="FormArray"></rect>
-						</g>
-						<g transform="translate(955, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArray">
-								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArray">FormArray</text>
-								
-							</g>
-						</g>
+					<path d="M4727.7 361.9 L4725.9 356.8 L4724.2 351.8 L4738.6 352.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M4955.4 355.8 L4623 441 L4543.56484502447 573.5 L4543.6 573.5 " fill="none"></path>
 					</g>
-					<g data-name="FormViewModelCollection">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModelCollection">
-							<rect x="1186.0" y="1327.0" height="31.0" width="219.0" data-name="FormViewModelCollection"></rect>
-						</g>
-						<g transform="translate(1186, 1327)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModelCollection">
-								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModelCollection">FormViewModelCollection</text>
-								
-							</g>
-						</g>
+					<path d="M4956.7 361.0 L4955.4 355.8 L4954.0 350.6 L4968.3 352.5 Z"></path>
+					<path d="M5048.8 1305.7 L5048.75 1307 L4963.679577464789 1327 L4963.7 1327.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M5054.1 1296.3 L5048.8 1305.7 L5043.4 1296.3 L5048.8 1287.0 Z"></path>
 					</g>
-					<g data-name="FormGroup">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
-							<rect x="3061.8" y="1165.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
-						</g>
-						<g transform="translate(3061.75, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
-								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
-								
-							</g>
-						</g>
+					<path d="M5199.8 1062.5 L5210.75 1054 L4869.25 918.3295528191834 L4869.3 918.3 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M5189.2 1064.1 L5199.8 1062.5 L5195.8 1072.5 L5185.1 1074.0 Z"></path>
 					</g>
-					<g data-name="FormViewModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModel">
-							<rect x="671.3" y="321.5" height="31.0" width="141.0" data-name="FormViewModel"></rect>
-						</g>
-						<g transform="translate(671.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModel">
-								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModel">FormViewModel</text>
-								
-							</g>
-						</g>
+					<g stroke-dasharray="6 6">
+						<path d="M4815.8 360.4 L4926.25 441 L4926.25 747.5 L4926.25 747.5 L4926.25 1054 L4926.25 1054 L4945.617588932806 1074 L4945.6 1074.0 " fill="none"></path>
 					</g>
-					<g data-name="IFormViewModelDelegate">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IFormViewModelDelegate">
-							<rect x="1448.3" y="321.5" height="31.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
-						</g>
-						<g transform="translate(1448.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormViewModelDelegate">
-								<text x="100.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormViewModelDelegate">IFormViewModelDelegate</text>
-								
-							</g>
-						</g>
+					<path d="M4818.9 356.1 L4815.8 360.4 L4812.6 364.7 L4805.0 352.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M5048.3 776.3 L5048.25 1054 L5048.329051383399 1074 L5048.3 1074.0 " fill="none"></path>
 					</g>
-					<g data-name="IProviderArgsResolver">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IProviderArgsResolver">
-							<rect x="1912.0" y="321.5" height="31.0" width="193.0" data-name="IProviderArgsResolver"></rect>
-						</g>
-						<g transform="translate(1912, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IProviderArgsResolver">
-								<text x="88.5" y="13.5" stroke="none" text-anchor="middle" data-name="IProviderArgsResolver">IProviderArgsResolver</text>
-								
-							</g>
-						</g>
+					<path d="M5053.6 776.3 L5048.3 776.3 L5042.9 776.3 L5048.3 763.0 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M5060.7 360.4 L5170.75 441 L5170.75 747.5 L5170.75 747.5 L5170.75 1054 L5170.75 1054 L5151.461462450593 1074 L5151.5 1074.0 " fill="none"></path>
 					</g>
-					<g data-name="IListActionProvider">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IListActionProvider">
-							<rect x="1556.3" y="732.0" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
-						</g>
-						<g transform="translate(1556.25, 732)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IListActionProvider">
-								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="IListActionProvider">IListActionProvider</text>
-								
-							</g>
-						</g>
+					<path d="M5063.8 356.1 L5060.7 360.4 L5057.5 364.7 L5049.9 352.5 Z"></path>
+					<path d="M3585.4 769.1 L2040.25 1054 L851.75 1166.2817401045556 L851.8 1166.3 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3595.5 772.6 L3585.4 769.1 L3593.6 762.1 L3603.8 765.7 Z"></path>
 					</g>
-					<g data-name="StudyDesignReportsFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignReportsFormView">
-							<rect x="2145.0" y="298.5" height="77.0" width="393.0" data-name="StudyDesignReportsFormView"></rect>
-							<path d="M2145.0 329.5 L2538.0 329.5" fill="none" data-name="StudyDesignReportsFormView"></path>
-						</g>
-						<g transform="translate(2145, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyDesignReportsFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignReportsFormView">
-								<text x="188.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignReportsFormView">StudyDesignReportsFormView</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2145, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyDesignReportsFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyDesignReportsFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyDesignReportsFormView">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyDesignReportsFormView">-dynamic _showReportItemSidesheetWithArgs()</text>
-								
-							</g>
-						</g>
+					<path d="M3817.2 809.5 L4270.5 1054 L4270.5 1165 L4270.5 1165.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3811.5 800.4 L3817.2 809.5 L3806.4 809.8 L3800.8 800.6 Z"></path>
 					</g>
-					<g data-name="StudyDesignPageWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignPageWidget">
-							<rect x="2235.5" y="91.0" height="31.0" width="212.0" data-name="StudyDesignPageWidget"></rect>
-						</g>
-						<g transform="translate(2235.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyDesignPageWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignPageWidget">
-								<text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignPageWidget">StudyDesignPageWidget</text>
-								
-							</g>
-						</g>
-					</g>
+					<path d="M5361.8 135.3 L5361.75 233 L5361.75 298.5 L5361.8 298.5 " fill="none"></path>
+					<path d="M5367.1 135.3 L5361.8 135.3 L5356.4 135.3 L5361.8 122.0 Z"></path>
 					<g data-name="ReportsFormData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ReportsFormData">
-							<rect x="2578.0" y="275.5" height="123.0" width="338.0" data-name="ReportsFormData"></rect>
-							<path d="M2578.0 306.5 L2916.0 306.5" fill="none" data-name="ReportsFormData"></path>
-							<path d="M2578.0 352.5 L2916.0 352.5" fill="none" data-name="ReportsFormData"></path>
+							<rect x="0.0" y="275.5" height="123.0" width="338.0" data-name="ReportsFormData"></rect>
+							<path d="M0.0 306.5 L338.0 306.5" fill="none" data-name="ReportsFormData"></path>
+							<path d="M0.0 352.5 L338.0 352.5" fill="none" data-name="ReportsFormData"></path>
 						</g>
-						<g transform="translate(2578, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportsFormData">
+						<g transform="translate(0, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportsFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportsFormData">
 								<text x="161.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportsFormData">ReportsFormData</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2578, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormData">
+						<g transform="translate(0, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportsFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="ReportsFormData">+reportItems: List&lt;ReportItemFormData&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ReportsFormData">+id: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2578, 352.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormData">
+						<g transform="translate(0, 352.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportsFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="ReportsFormData">+Study apply()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ReportsFormData">+ReportsFormData copy()</text>
@@ -713,39 +449,140 @@
 					</g>
 					<g data-name="IStudyFormData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IStudyFormData">
-							<rect x="2675.5" y="91.0" height="31.0" width="143.0" data-name="IStudyFormData"></rect>
+							<rect x="97.5" y="91.0" height="31.0" width="143.0" data-name="IStudyFormData"></rect>
 						</g>
-						<g transform="translate(2675.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyFormData">
+						<g transform="translate(97.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IStudyFormData">
 								<text x="63.5" y="13.5" stroke="none" text-anchor="middle" data-name="IStudyFormData">IStudyFormData</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="ReportStatus">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportStatus">
+							<rect x="550.8" y="1127.0" height="107.0" width="301.0" data-name="ReportStatus"></rect>
+							<path d="M550.8 1158.0 L851.8 1158.0" fill="none" data-name="ReportStatus"></path>
+						</g>
+						<g transform="translate(550.75, 1127)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportStatus">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportStatus">
+								<text x="142.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportStatus">ReportStatus</text>
+								
+							</g>
+						</g>
+						<g transform="translate(550.75, 1158)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportStatus">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportStatus">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportStatus">+index: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportStatus">&lt;static&gt;+values: List&lt;ReportStatus&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportStatus">&lt;static&gt;+primary: ReportStatus</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportStatus">&lt;static&gt;+secondary: ReportStatus</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="1760.3" y="732.0" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="370.0" y="732.0" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(1760.25, 732)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(370, 732)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="ReportItemFormData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormData">
+							<rect x="378.0" y="268.0" height="138.0" width="314.0" data-name="ReportItemFormData"></rect>
+							<path d="M378.0 299.0 L692.0 299.0" fill="none" data-name="ReportItemFormData"></path>
+							<path d="M378.0 360.0 L692.0 360.0" fill="none" data-name="ReportItemFormData"></path>
+						</g>
+						<g transform="translate(378, 268)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormData">
+								<text x="149.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormData">ReportItemFormData</text>
+								
+							</g>
+						</g>
+						<g transform="translate(378, 299)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormData">+isPrimary: bool</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormData">+section: ReportSection</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportItemFormData">+id: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(378, 360)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormData">&lt;static&gt;+dynamic fromDomainModel()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormData">+ReportItemFormData copy()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportSection">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSection">
+							<rect x="471.0" y="732.0" height="31.0" width="128.0" data-name="ReportSection"></rect>
+						</g>
+						<g transform="translate(471, 732)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ReportSection">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSection">
+								<text x="56.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSection">ReportSection</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IFormData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IFormData">
+							<rect x="486.0" y="91.0" height="31.0" width="98.0" data-name="IFormData"></rect>
+						</g>
+						<g transform="translate(486, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormData">
+								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="IFormData">IFormData</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportItemFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormView">
+							<rect x="1302.5" y="253.0" height="168.0" width="467.0" data-name="ReportItemFormView"></rect>
+							<path d="M1302.5 284.0 L1769.5 284.0" fill="none" data-name="ReportItemFormView"></path>
+							<path d="M1302.5 360.0 L1769.5 360.0" fill="none" data-name="ReportItemFormView"></path>
+						</g>
+						<g transform="translate(1302.5, 253)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormView">
+								<text x="225.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormView">ReportItemFormView</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1302.5, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormView">+formViewModel: ReportItemFormViewModel</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormView">+studyId: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportItemFormView">+reportSectionColumnWidth: dynamic</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportItemFormView">+sectionTypeBodyBuilder: Widget Function(BuildContext)</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1302.5, 360)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormView">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormView">-dynamic _buildSectionText()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportItemFormView">-dynamic _buildSectionTypeHeader()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="ReportItemFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormViewModel">
-							<rect x="3197.3" y="461.0" height="573.0" width="987.0" data-name="ReportItemFormViewModel"></rect>
-							<path d="M3197.3 492.0 L4184.3 492.0" fill="none" data-name="ReportItemFormViewModel"></path>
-							<path d="M3197.3 928.0 L4184.3 928.0" fill="none" data-name="ReportItemFormViewModel"></path>
+							<rect x="1984.8" y="461.0" height="573.0" width="987.0" data-name="ReportItemFormViewModel"></rect>
+							<path d="M1984.8 492.0 L2971.8 492.0" fill="none" data-name="ReportItemFormViewModel"></path>
+							<path d="M1984.8 928.0 L2971.8 928.0" fill="none" data-name="ReportItemFormViewModel"></path>
 						</g>
-						<g transform="translate(3197.25, 461)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormViewModel">
+						<g transform="translate(1984.75, 461)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormViewModel">
 								<text x="485.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormViewModel">ReportItemFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3197.25, 492)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormViewModel">
+						<g transform="translate(1984.75, 492)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormViewModel">&lt;static&gt;+defaultSectionType: ReportSectionType</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormViewModel">+sectionIdControl: FormControl&lt;String&gt;</text>
@@ -778,7 +615,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3197.25, 928)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormViewModel">
+						<g transform="translate(1984.75, 928)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormViewModel">-List&lt;FormControlValidation&gt; _getValidationConfig()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormViewModel">+ReportItemFormData buildFormData()</text>
@@ -790,153 +627,154 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="ReportSectionType">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSectionType">
-							<rect x="3206.8" y="1127.0" height="107.0" width="383.0" data-name="ReportSectionType"></rect>
-							<path d="M3206.8 1158.0 L3589.8 1158.0" fill="none" data-name="ReportSectionType"></path>
-						</g>
-						<g transform="translate(3206.75, 1127)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportSectionType">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSectionType">
-								<text x="183.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSectionType">ReportSectionType</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3206.75, 1158)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportSectionType">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportSectionType">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportSectionType">+index: int</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportSectionType">&lt;static&gt;+values: List&lt;ReportSectionType&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportSectionType">&lt;static&gt;+average: ReportSectionType</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportSectionType">&lt;static&gt;+linearRegression: ReportSectionType</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FormControl">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
-							<rect x="4078.3" y="1165.0" height="31.0" width="113.0" data-name="FormControl"></rect>
-						</g>
-						<g transform="translate(4078.25, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
-								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ManagedFormViewModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
-							<rect x="2956.0" y="321.5" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
-						</g>
-						<g transform="translate(2956, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
-								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ReportItemFormData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormData">
-							<rect x="6411.0" y="268.0" height="138.0" width="314.0" data-name="ReportItemFormData"></rect>
-							<path d="M6411.0 299.0 L6725.0 299.0" fill="none" data-name="ReportItemFormData"></path>
-							<path d="M6411.0 360.0 L6725.0 360.0" fill="none" data-name="ReportItemFormData"></path>
-						</g>
-						<g transform="translate(6411, 268)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormData">
-								<text x="149.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormData">ReportItemFormData</text>
-								
-							</g>
-						</g>
-						<g transform="translate(6411, 299)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormData">+isPrimary: bool</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormData">+section: ReportSection</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportItemFormData">+id: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(6411, 360)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormData">&lt;static&gt;+dynamic fromDomainModel()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormData">+ReportItemFormData copy()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ReportSection">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSection">
-							<rect x="6504.0" y="732.0" height="31.0" width="128.0" data-name="ReportSection"></rect>
-						</g>
-						<g transform="translate(6504, 732)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ReportSection">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSection">
-								<text x="56.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSection">ReportSection</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IFormData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IFormData">
-							<rect x="6519.0" y="91.0" height="31.0" width="98.0" data-name="IFormData"></rect>
-						</g>
-						<g transform="translate(6519, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormData">
-								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="IFormData">IFormData</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ReportItemFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormView">
-							<rect x="3756.0" y="253.0" height="168.0" width="467.0" data-name="ReportItemFormView"></rect>
-							<path d="M3756.0 284.0 L4223.0 284.0" fill="none" data-name="ReportItemFormView"></path>
-							<path d="M3756.0 360.0 L4223.0 360.0" fill="none" data-name="ReportItemFormView"></path>
-						</g>
-						<g transform="translate(3756, 253)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormView">
-								<text x="225.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormView">ReportItemFormView</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3756, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormView">+formViewModel: ReportItemFormViewModel</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormView">+studyId: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportItemFormView">+reportSectionColumnWidth: dynamic</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="ReportItemFormView">+sectionTypeBodyBuilder: Widget Function(BuildContext)</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3756, 360)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormView">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ReportItemFormView">-dynamic _buildSectionText()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ReportItemFormView">-dynamic _buildSectionTypeHeader()</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="Widget Function(BuildContext)">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext)">
-							<rect x="4973.3" y="732.0" height="31.0" width="256.0" data-name="Widget Function(BuildContext)"></rect>
+							<rect x="1388.0" y="732.0" height="31.0" width="256.0" data-name="Widget Function(BuildContext)"></rect>
 						</g>
-						<g transform="translate(4973.25, 732)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext)">
+						<g transform="translate(1388, 732)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext)">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext)">
 								<text x="120.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext)">Widget Function(BuildContext)</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="DataReferenceEditor">
+						<g fill="#eee8d5" stroke="#33322E" data-name="DataReferenceEditor">
+							<rect x="639.0" y="678.5" height="138.0" width="709.0" data-name="DataReferenceEditor"></rect>
+							<path d="M639.0 709.5 L1348.0 709.5" fill="none" data-name="DataReferenceEditor"></path>
+							<path d="M639.0 770.5 L1348.0 770.5" fill="none" data-name="DataReferenceEditor"></path>
+						</g>
+						<g transform="translate(639, 678.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReferenceEditor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReferenceEditor">
+								<text x="346.5" y="13.5" stroke="none" text-anchor="middle" data-name="DataReferenceEditor">DataReferenceEditor</text>
+								
+							</g>
+						</g>
+						<g transform="translate(639, 709.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceEditor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceEditor">
+								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceEditor">+formControl: FormControl&lt;DataReferenceIdentifier&lt;T&gt;&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="DataReferenceEditor">+availableTasks: List&lt;Task&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="DataReferenceEditor">+buildReactiveDropdownField: ReactiveDropdownField&lt;dynamic&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(639, 770.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceEditor">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceEditor">
+								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceEditor">+FormTableRow buildFormTableRow()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="DataReferenceEditor">-List&lt;DropdownMenuItem&lt;DataReferenceIdentifier&lt;dynamic&gt;&gt;&gt; _dataReferenceItems()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
+							<rect x="2152.3" y="1165.0" height="31.0" width="113.0" data-name="FormControl"></rect>
+						</g>
+						<g transform="translate(2152.25, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
+								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReactiveDropdownField">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReactiveDropdownField">
+							<rect x="2611.8" y="1165.0" height="31.0" width="203.0" data-name="ReactiveDropdownField"></rect>
+						</g>
+						<g transform="translate(2611.75, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReactiveDropdownField">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReactiveDropdownField">
+								<text x="93.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReactiveDropdownField">ReactiveDropdownField</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AverageSectionFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AverageSectionFormView">
+							<rect x="1883.8" y="275.5" height="123.0" width="479.0" data-name="AverageSectionFormView"></rect>
+							<path d="M1883.8 306.5 L2362.8 306.5" fill="none" data-name="AverageSectionFormView"></path>
+							<path d="M1883.8 367.5 L2362.8 367.5" fill="none" data-name="AverageSectionFormView"></path>
+						</g>
+						<g transform="translate(1883.75, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSectionFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AverageSectionFormView">
+								<text x="231.5" y="13.5" stroke="none" text-anchor="middle" data-name="AverageSectionFormView">AverageSectionFormView</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1883.75, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionFormView">+formViewModel: ReportItemFormViewModel</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AverageSectionFormView">+studyId: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AverageSectionFormView">+reportSectionColumnWidth: Map&lt;int, TableColumnWidth&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1883.75, 367.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionFormView">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ConsumerWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ConsumerWidget">
+							<rect x="2719.8" y="91.0" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
+						</g>
+						<g transform="translate(2719.75, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsumerWidget">
+								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="ConsumerWidget">ConsumerWidget</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="DataReferenceIdentifier">
+						<g fill="#eee8d5" stroke="#33322E" data-name="DataReferenceIdentifier">
+							<rect x="2402.8" y="290.5" height="93.0" width="204.0" data-name="DataReferenceIdentifier"></rect>
+							<path d="M2402.8 321.5 L2606.8 321.5" fill="none" data-name="DataReferenceIdentifier"></path>
+							<path d="M2402.8 352.5 L2606.8 352.5" fill="none" data-name="DataReferenceIdentifier"></path>
+						</g>
+						<g transform="translate(2402.75, 290.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReferenceIdentifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReferenceIdentifier">
+								<text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="DataReferenceIdentifier">DataReferenceIdentifier</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2402.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceIdentifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceIdentifier">
+								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceIdentifier">+hashCode: int</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2402.75, 352.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceIdentifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceIdentifier">
+								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceIdentifier">+bool ==()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="DataReference">
+						<g fill="#eee8d5" stroke="#33322E" data-name="DataReference">
+							<rect x="1910.8" y="91.0" height="31.0" width="135.0" data-name="DataReference"></rect>
+						</g>
+						<g transform="translate(1910.75, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReference">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReference">
+								<text x="59.5" y="13.5" stroke="none" text-anchor="middle" data-name="DataReference">DataReference</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="TemporalAggregationFormatted">
 						<g fill="#eee8d5" stroke="#33322E" data-name="TemporalAggregationFormatted">
-							<rect x="3569.0" y="0.0" height="213.0" width="448.0" data-name="TemporalAggregationFormatted"></rect>
-							<path d="M3569.0 31.0 L4017.0 31.0" fill="none" data-name="TemporalAggregationFormatted"></path>
-							<path d="M3569.0 137.0 L4017.0 137.0" fill="none" data-name="TemporalAggregationFormatted"></path>
+							<rect x="2085.8" y="0.0" height="213.0" width="448.0" data-name="TemporalAggregationFormatted"></rect>
+							<path d="M2085.8 31.0 L2533.8 31.0" fill="none" data-name="TemporalAggregationFormatted"></path>
+							<path d="M2085.8 137.0 L2533.8 137.0" fill="none" data-name="TemporalAggregationFormatted"></path>
 						</g>
-						<g transform="translate(3569, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TemporalAggregationFormatted">
+						<g transform="translate(2085.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TemporalAggregationFormatted">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TemporalAggregationFormatted">
 								<text x="216.0" y="13.5" stroke="none" text-anchor="middle" data-name="TemporalAggregationFormatted">TemporalAggregationFormatted</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3569, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TemporalAggregationFormatted">
+						<g transform="translate(2085.75, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TemporalAggregationFormatted">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TemporalAggregationFormatted">
 								<text x="0.0" y="13.5" stroke="none" data-name="TemporalAggregationFormatted">-_value: TemporalAggregation</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="TemporalAggregationFormatted">&lt;static&gt;+values: List&lt;TemporalAggregationFormatted&gt;</text>
@@ -947,7 +785,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3569, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TemporalAggregationFormatted">
+						<g transform="translate(2085.75, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TemporalAggregationFormatted">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TemporalAggregationFormatted">
 								<text x="0.0" y="13.5" stroke="none" data-name="TemporalAggregationFormatted">+bool ==()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="TemporalAggregationFormatted">+String toString()</text>
@@ -959,9 +797,9 @@
 					</g>
 					<g data-name="TemporalAggregation">
 						<g fill="#eee8d5" stroke="#33322E" data-name="TemporalAggregation">
-							<rect x="3211.0" y="321.5" height="31.0" width="186.0" data-name="TemporalAggregation"></rect>
+							<rect x="2646.8" y="321.5" height="31.0" width="186.0" data-name="TemporalAggregation"></rect>
 						</g>
-						<g transform="translate(3211, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TemporalAggregation">
+						<g transform="translate(2646.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TemporalAggregation">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TemporalAggregation">
 								<text x="85.0" y="13.5" stroke="none" text-anchor="middle" data-name="TemporalAggregation">TemporalAggregation</text>
 								
@@ -970,9 +808,9 @@
 					</g>
 					<g data-name="IconData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IconData">
-							<rect x="5167.0" y="321.5" height="31.0" width="87.0" data-name="IconData"></rect>
+							<rect x="2872.8" y="321.5" height="31.0" width="87.0" data-name="IconData"></rect>
 						</g>
-						<g transform="translate(5167, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
+						<g transform="translate(2872.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IconData">
 								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="IconData">IconData</text>
 								
@@ -981,17 +819,17 @@
 					</g>
 					<g data-name="ImprovementDirectionFormatted">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ImprovementDirectionFormatted">
-							<rect x="5455.0" y="0.0" height="213.0" width="451.0" data-name="ImprovementDirectionFormatted"></rect>
-							<path d="M5455.0 31.0 L5906.0 31.0" fill="none" data-name="ImprovementDirectionFormatted"></path>
-							<path d="M5455.0 137.0 L5906.0 137.0" fill="none" data-name="ImprovementDirectionFormatted"></path>
+							<rect x="3206.5" y="0.0" height="213.0" width="451.0" data-name="ImprovementDirectionFormatted"></rect>
+							<path d="M3206.5 31.0 L3657.5 31.0" fill="none" data-name="ImprovementDirectionFormatted"></path>
+							<path d="M3206.5 137.0 L3657.5 137.0" fill="none" data-name="ImprovementDirectionFormatted"></path>
 						</g>
-						<g transform="translate(5455, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImprovementDirectionFormatted">
+						<g transform="translate(3206.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImprovementDirectionFormatted">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ImprovementDirectionFormatted">
 								<text x="217.5" y="13.5" stroke="none" text-anchor="middle" data-name="ImprovementDirectionFormatted">ImprovementDirectionFormatted</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5455, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ImprovementDirectionFormatted">
+						<g transform="translate(3206.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ImprovementDirectionFormatted">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ImprovementDirectionFormatted">
 								<text x="0.0" y="13.5" stroke="none" data-name="ImprovementDirectionFormatted">-_value: ImprovementDirection</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ImprovementDirectionFormatted">&lt;static&gt;+values: List&lt;ImprovementDirectionFormatted&gt;</text>
@@ -1002,7 +840,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(5455, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ImprovementDirectionFormatted">
+						<g transform="translate(3206.5, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ImprovementDirectionFormatted">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ImprovementDirectionFormatted">
 								<text x="0.0" y="13.5" stroke="none" data-name="ImprovementDirectionFormatted">+bool ==()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ImprovementDirectionFormatted">+String toString()</text>
@@ -1014,64 +852,49 @@
 					</g>
 					<g data-name="ImprovementDirection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ImprovementDirection">
-							<rect x="5821.5" y="321.5" height="31.0" width="189.0" data-name="ImprovementDirection"></rect>
+							<rect x="2999.8" y="321.5" height="31.0" width="189.0" data-name="ImprovementDirection"></rect>
 						</g>
-						<g transform="translate(5821.5, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImprovementDirection">
+						<g transform="translate(2999.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ImprovementDirection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ImprovementDirection">
 								<text x="86.5" y="13.5" stroke="none" text-anchor="middle" data-name="ImprovementDirection">ImprovementDirection</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="DataReferenceIdentifier">
-						<g fill="#eee8d5" stroke="#33322E" data-name="DataReferenceIdentifier">
-							<rect x="6167.0" y="290.5" height="93.0" width="204.0" data-name="DataReferenceIdentifier"></rect>
-							<path d="M6167.0 321.5 L6371.0 321.5" fill="none" data-name="DataReferenceIdentifier"></path>
-							<path d="M6167.0 352.5 L6371.0 352.5" fill="none" data-name="DataReferenceIdentifier"></path>
+					<g data-name="ReportSectionType">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSectionType">
+							<rect x="2854.8" y="1127.0" height="107.0" width="383.0" data-name="ReportSectionType"></rect>
+							<path d="M2854.8 1158.0 L3237.8 1158.0" fill="none" data-name="ReportSectionType"></path>
 						</g>
-						<g transform="translate(6167, 290.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReferenceIdentifier">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReferenceIdentifier">
-								<text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="DataReferenceIdentifier">DataReferenceIdentifier</text>
+						<g transform="translate(2854.75, 1127)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportSectionType">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSectionType">
+								<text x="183.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSectionType">ReportSectionType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(6167, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceIdentifier">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceIdentifier">
-								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceIdentifier">+hashCode: int</text>
-								
-							</g>
-						</g>
-						<g transform="translate(6167, 352.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceIdentifier">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceIdentifier">
-								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceIdentifier">+bool ==()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="DataReference">
-						<g fill="#eee8d5" stroke="#33322E" data-name="DataReference">
-							<rect x="6201.5" y="91.0" height="31.0" width="135.0" data-name="DataReference"></rect>
-						</g>
-						<g transform="translate(6201.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReference">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReference">
-								<text x="59.5" y="13.5" stroke="none" text-anchor="middle" data-name="DataReference">DataReference</text>
+						<g transform="translate(2854.75, 1158)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportSectionType">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportSectionType">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportSectionType">+index: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportSectionType">&lt;static&gt;+values: List&lt;ReportSectionType&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportSectionType">&lt;static&gt;+average: ReportSectionType</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportSectionType">&lt;static&gt;+linearRegression: ReportSectionType</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="LinearRegressionSectionFormView">
 						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSectionFormView">
-							<rect x="4648.0" y="275.5" height="123.0" width="479.0" data-name="LinearRegressionSectionFormView"></rect>
-							<path d="M4648.0 306.5 L5127.0 306.5" fill="none" data-name="LinearRegressionSectionFormView"></path>
-							<path d="M4648.0 367.5 L5127.0 367.5" fill="none" data-name="LinearRegressionSectionFormView"></path>
+							<rect x="3228.8" y="275.5" height="123.0" width="479.0" data-name="LinearRegressionSectionFormView"></rect>
+							<path d="M3228.8 306.5 L3707.8 306.5" fill="none" data-name="LinearRegressionSectionFormView"></path>
+							<path d="M3228.8 367.5 L3707.8 367.5" fill="none" data-name="LinearRegressionSectionFormView"></path>
 						</g>
-						<g transform="translate(4648, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSectionFormView">
+						<g transform="translate(3228.75, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSectionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSectionFormView">
 								<text x="231.5" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSectionFormView">LinearRegressionSectionFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4648, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionFormView">
+						<g transform="translate(3228.75, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionFormView">+formViewModel: ReportItemFormViewModel</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="LinearRegressionSectionFormView">+studyId: String</text>
@@ -1079,86 +902,263 @@
 								
 							</g>
 						</g>
-						<g transform="translate(4648, 367.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionFormView">
+						<g transform="translate(3228.75, 367.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionFormView">+Widget build()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ConsumerWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ConsumerWidget">
-							<rect x="5226.8" y="91.0" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
+					<g data-name="FormGroup">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
+							<rect x="3661.5" y="1165.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
 						</g>
-						<g transform="translate(5226.75, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsumerWidget">
-								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="ConsumerWidget">ConsumerWidget</text>
+						<g transform="translate(3661.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
+								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="DataReferenceEditor">
-						<g fill="#eee8d5" stroke="#33322E" data-name="DataReferenceEditor">
-							<rect x="4224.3" y="678.5" height="138.0" width="709.0" data-name="DataReferenceEditor"></rect>
-							<path d="M4224.3 709.5 L4933.3 709.5" fill="none" data-name="DataReferenceEditor"></path>
-							<path d="M4224.3 770.5 L4933.3 770.5" fill="none" data-name="DataReferenceEditor"></path>
+					<g data-name="ManagedFormViewModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
+							<rect x="3747.8" y="321.5" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
 						</g>
-						<g transform="translate(4224.25, 678.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReferenceEditor">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReferenceEditor">
-								<text x="346.5" y="13.5" stroke="none" text-anchor="middle" data-name="DataReferenceEditor">DataReferenceEditor</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4224.25, 709.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceEditor">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceEditor">
-								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceEditor">+formControl: FormControl&lt;DataReferenceIdentifier&lt;T&gt;&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="DataReferenceEditor">+availableTasks: List&lt;Task&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="DataReferenceEditor">+buildReactiveDropdownField: ReactiveDropdownField&lt;dynamic&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4224.25, 770.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DataReferenceEditor">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DataReferenceEditor">
-								<text x="0.0" y="13.5" stroke="none" data-name="DataReferenceEditor">+FormTableRow buildFormTableRow()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="DataReferenceEditor">-List&lt;DropdownMenuItem&lt;DataReferenceIdentifier&lt;dynamic&gt;&gt;&gt; _dataReferenceItems()</text>
+						<g transform="translate(3747.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
+								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ReactiveDropdownField">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReactiveDropdownField">
-							<rect x="4596.3" y="1165.0" height="31.0" width="203.0" data-name="ReactiveDropdownField"></rect>
+					<g data-name="ReportsFormViewModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportsFormViewModel">
+							<rect x="4009.3" y="573.5" height="348.0" width="860.0" data-name="ReportsFormViewModel"></rect>
+							<path d="M4009.3 604.5 L4869.3 604.5" fill="none" data-name="ReportsFormViewModel"></path>
+							<path d="M4009.3 770.5 L4869.3 770.5" fill="none" data-name="ReportsFormViewModel"></path>
 						</g>
-						<g transform="translate(4596.25, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReactiveDropdownField">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReactiveDropdownField">
-								<text x="93.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReactiveDropdownField">ReactiveDropdownField</text>
+						<g transform="translate(4009.25, 573.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportsFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportsFormViewModel">
+								<text x="422.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportsFormViewModel">ReportsFormViewModel</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4009.25, 604.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportsFormViewModel">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportsFormViewModel">+study: Study</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportsFormViewModel">+router: GoRouter</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportsFormViewModel">+reportItemDelegate: ReportFormItemDelegate</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportsFormViewModel">+reportItemArray: FormArray&lt;dynamic&gt;</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="ReportsFormViewModel">+reportItemFormViewModels: FormViewModelCollection&lt;ReportItemFormViewModel, ReportItemFormData&gt;</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="ReportsFormViewModel">+form: FormGroup</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="ReportsFormViewModel">+reportItemModels: List&lt;ReportItemFormViewModel&gt;</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="ReportsFormViewModel">+sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="ReportsFormViewModel">+titles: Map&lt;FormMode, String&gt;</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="ReportsFormViewModel">+canTestConsent: bool</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4009.25, 770.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportsFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportsFormViewModel">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportsFormViewModel">+void setControlsFrom()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportsFormViewModel">+ReportsFormData buildFormData()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportsFormViewModel">+void read()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportsFormViewModel">+ReportItemFormRouteArgs buildNewReportItemFormRouteArgs()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="ReportsFormViewModel">+ReportItemFormRouteArgs buildReportItemFormRouteArgs()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="ReportsFormViewModel">+dynamic testReport()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="ReportsFormViewModel">+void onCancel()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="ReportsFormViewModel">+dynamic onSave()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="ReportsFormViewModel">+ReportItemFormViewModel provide()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="AverageSectionFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AverageSectionFormView">
-							<rect x="5302.5" y="275.5" height="123.0" width="479.0" data-name="AverageSectionFormView"></rect>
-							<path d="M5302.5 306.5 L5781.5 306.5" fill="none" data-name="AverageSectionFormView"></path>
-							<path d="M5302.5 367.5 L5781.5 367.5" fill="none" data-name="AverageSectionFormView"></path>
+					<g data-name="Study">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
+							<rect x="3806.5" y="1165.0" height="31.0" width="61.0" data-name="Study"></rect>
 						</g>
-						<g transform="translate(5302.5, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSectionFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AverageSectionFormView">
-								<text x="231.5" y="13.5" stroke="none" text-anchor="middle" data-name="AverageSectionFormView">AverageSectionFormView</text>
+						<g transform="translate(3806.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
+								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5302.5, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionFormView">+formViewModel: ReportItemFormViewModel</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AverageSectionFormView">+studyId: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="AverageSectionFormView">+reportSectionColumnWidth: Map&lt;int, TableColumnWidth&gt;</text>
+					</g>
+					<g data-name="GoRouter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
+							<rect x="3907.5" y="1165.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
+						</g>
+						<g transform="translate(3907.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
+								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5302.5, 367.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionFormView">+Widget build()</text>
+					</g>
+					<g data-name="ReportFormItemDelegate">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportFormItemDelegate">
+							<rect x="4627.3" y="1074.0" height="213.0" width="843.0" data-name="ReportFormItemDelegate"></rect>
+							<path d="M4627.3 1105.0 L5470.3 1105.0" fill="none" data-name="ReportFormItemDelegate"></path>
+							<path d="M4627.3 1181.0 L5470.3 1181.0" fill="none" data-name="ReportFormItemDelegate"></path>
+						</g>
+						<g transform="translate(4627.25, 1074)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportFormItemDelegate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportFormItemDelegate">
+								<text x="413.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportFormItemDelegate">ReportFormItemDelegate</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4627.25, 1105)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportFormItemDelegate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportFormItemDelegate">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportFormItemDelegate">+formViewModelCollection: FormViewModelCollection&lt;ReportItemFormViewModel, ReportItemFormData&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportFormItemDelegate">+owner: ReportsFormViewModel</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportFormItemDelegate">+propagateOnSave: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportFormItemDelegate">+validationSet: dynamic</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4627.25, 1181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportFormItemDelegate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportFormItemDelegate">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportFormItemDelegate">+void onCancel()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportFormItemDelegate">+dynamic onSave()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportFormItemDelegate">+ReportItemFormViewModel provide()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportFormItemDelegate">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="ReportFormItemDelegate">+void onNewItem()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="ReportFormItemDelegate">+void onSelectItem()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormArray">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormArray">
+							<rect x="4079.5" y="1165.0" height="31.0" width="98.0" data-name="FormArray"></rect>
+						</g>
+						<g transform="translate(4079.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArray">
+								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArray">FormArray</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormViewModelCollection">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModelCollection">
+							<rect x="4788.3" y="1327.0" height="31.0" width="219.0" data-name="FormViewModelCollection"></rect>
+						</g>
+						<g transform="translate(4788.25, 1327)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModelCollection">
+								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModelCollection">FormViewModelCollection</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormViewModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModel">
+							<rect x="4002.8" y="321.5" height="31.0" width="141.0" data-name="FormViewModel"></rect>
+						</g>
+						<g transform="translate(4002.75, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModel">
+								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModel">FormViewModel</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IFormViewModelDelegate">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IFormViewModelDelegate">
+							<rect x="4675.3" y="321.5" height="31.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
+						</g>
+						<g transform="translate(4675.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormViewModelDelegate">
+								<text x="100.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormViewModelDelegate">IFormViewModelDelegate</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IProviderArgsResolver">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IProviderArgsResolver">
+							<rect x="4932.3" y="321.5" height="31.0" width="193.0" data-name="IProviderArgsResolver"></rect>
+						</g>
+						<g transform="translate(4932.25, 321.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IProviderArgsResolver">
+								<text x="88.5" y="13.5" stroke="none" text-anchor="middle" data-name="IProviderArgsResolver">IProviderArgsResolver</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IListActionProvider">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IListActionProvider">
+							<rect x="4966.3" y="732.0" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
+						</g>
+						<g transform="translate(4966.25, 732)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IListActionProvider">
+								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="IListActionProvider">IListActionProvider</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportBadge">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportBadge">
+							<rect x="3603.8" y="678.5" height="138.0" width="197.0" data-name="ReportBadge"></rect>
+							<path d="M3603.8 709.5 L3800.8 709.5" fill="none" data-name="ReportBadge"></path>
+							<path d="M3603.8 785.5 L3800.8 785.5" fill="none" data-name="ReportBadge"></path>
+						</g>
+						<g transform="translate(3603.75, 678.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportBadge">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportBadge">
+								<text x="90.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportBadge">ReportBadge</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3603.75, 709.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportBadge">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportBadge">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportBadge">+status: ReportStatus?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ReportBadge">+type: BadgeType</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ReportBadge">+showPrefixIcon: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="ReportBadge">+showTooltip: bool</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3603.75, 785.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportBadge">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportBadge">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportBadge">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="BadgeType">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BadgeType">
+							<rect x="4217.5" y="1165.0" height="31.0" width="106.0" data-name="BadgeType"></rect>
+						</g>
+						<g transform="translate(4217.5, 1165)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BadgeType">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BadgeType">
+								<text x="45.0" y="13.5" stroke="none" text-anchor="middle" data-name="BadgeType">BadgeType</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyDesignReportsFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignReportsFormView">
+							<rect x="5165.3" y="298.5" height="77.0" width="393.0" data-name="StudyDesignReportsFormView"></rect>
+							<path d="M5165.3 329.5 L5558.3 329.5" fill="none" data-name="StudyDesignReportsFormView"></path>
+						</g>
+						<g transform="translate(5165.25, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyDesignReportsFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignReportsFormView">
+								<text x="188.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignReportsFormView">StudyDesignReportsFormView</text>
+								
+							</g>
+						</g>
+						<g transform="translate(5165.25, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyDesignReportsFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyDesignReportsFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyDesignReportsFormView">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyDesignReportsFormView">-dynamic _showReportItemSidesheetWithArgs()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyDesignPageWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignPageWidget">
+							<rect x="5255.8" y="91.0" height="31.0" width="212.0" data-name="StudyDesignPageWidget"></rect>
+						</g>
+						<g transform="translate(5255.75, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyDesignPageWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignPageWidget">
+								<text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignPageWidget">StudyDesignPageWidget</text>
 								
 							</g>
 						</g>

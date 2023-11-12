@@ -296,7 +296,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
+              onPressed: () => Navigator.pushNamed(context, Routes.studySelection),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
               label: Text(AppLocalizations.of(context)!.study_selection, style: textStyle),
             ),
