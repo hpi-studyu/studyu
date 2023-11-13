@@ -37,7 +37,7 @@ void main() {
     //  it could be a good practice to keep it so that the test instances
     //  do not share any information in the app cache
     setUp(() async => await sharedPreferences.clear()); // RM
-    
+
     // Disable semantics because of known Flutter test issue:
     // https://github.com/flutter/flutter/issues/97606
     patrolWidgetTest('Sign up -> Sign out flow test', semanticsEnabled: false, ($) async {
