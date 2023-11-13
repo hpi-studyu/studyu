@@ -162,7 +162,7 @@ void main() {
       await studyDesignRobot.validateChangesSaved();
 
       await studyDesignRobot.navigateToParticipationScreen();
-      // NO-OP because exception in participation screening questionnare
+      // NO-OP because exception in participation screening questionnaire
 
       await studyDesignRobot.navigateToInterventionsScreen();
       // Repeat twice for two interventions
