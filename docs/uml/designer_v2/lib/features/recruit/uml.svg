@@ -31,34 +31,6 @@
 	[InviteCodeFormViewModel]o-[FormGroup]
 	[&lt;abstract&gt;FormViewModel]&lt;:-[InviteCodeFormViewModel]
 	
-	[EnrolledBadge
-	  |
-	  +enrolledCount: int
-	  |
-	  +Widget build()
-	]
-	
-	[InviteCodeFormView
-	  |
-	  +formViewModel: InviteCodeFormViewModel
-	  |
-	  +Widget build();
-	  -List&lt;FormTableRow&gt; _conditionalInterventionRows()
-	]
-	
-	[InviteCodeFormView]o-[InviteCodeFormViewModel]
-	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[InviteCodeFormView]
-	
-	[StudyRecruitScreen
-	  |
-	  +Widget build();
-	  -Widget _inviteCodesSectionHeader();
-	  -Widget _newInviteCodeButton();
-	  -dynamic _onSelectInvite()
-	]
-	
-	[&lt;abstract&gt;StudyPageWidget]&lt;:-[StudyRecruitScreen]
-	
 	[StudyRecruitController
 	  |
 	  +inviteCodeRepository: IInviteCodeRepository;
@@ -76,6 +48,34 @@
 	[StudyRecruitController]o-[StreamSubscription]
 	[StudyBaseController]&lt;:-[StudyRecruitController]
 	[&lt;abstract&gt;IModelActionProvider]&lt;:--[StudyRecruitController]
+	
+	[EnrolledBadge
+	  |
+	  +enrolledCount: int
+	  |
+	  +Widget build()
+	]
+	
+	[StudyRecruitScreen
+	  |
+	  +Widget build();
+	  -Widget _inviteCodesSectionHeader();
+	  -Widget _newInviteCodeButton();
+	  -dynamic _onSelectInvite()
+	]
+	
+	[&lt;abstract&gt;StudyPageWidget]&lt;:-[StudyRecruitScreen]
+	
+	[InviteCodeFormView
+	  |
+	  +formViewModel: InviteCodeFormViewModel
+	  |
+	  +Widget build();
+	  -List&lt;FormTableRow&gt; _conditionalInterventionRows()
+	]
+	
+	[InviteCodeFormView]o-[InviteCodeFormViewModel]
+	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[InviteCodeFormView]
 	
 	[StudyInvitesTable
 	  |
@@ -111,53 +111,53 @@
 					<g fill="#eee8d5">
 						<path d="M188.3 759.7 L178.4 763.9 L179.8 753.2 L189.7 749.0 Z"></path>
 					</g>
-					<path d="M683.9 721.8 L786.25 769 L786.25 789 L786.3 789.0 " fill="none"></path>
+					<path d="M607.7 760.0 L620 769 L620 789 L620.0 789.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M677.7 713.0 L683.9 721.8 L673.2 722.7 L667.0 714.0 Z"></path>
+						<path d="M603.3 750.2 L607.7 760.0 L597.0 758.8 L592.6 749.0 Z"></path>
 					</g>
-					<path d="M684.6 682.0 L935.25 769 L935.25 789 L935.3 789.0 " fill="none"></path>
+					<path d="M683.8 728.1 L769 769 L769 789 L769.0 789.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M677.6 673.9 L684.6 682.0 L674.1 683.9 L667.0 675.8 Z"></path>
+						<path d="M677.7 719.3 L683.8 728.1 L673.1 728.9 L667.0 720.0 Z"></path>
 					</g>
 					<path d="M100.0 305.8 L100 351 L122.34449760765551 371 L122.3 371.0 " fill="none"></path>
 					<path d="M105.3 305.8 L100.0 305.8 L94.7 305.8 L100.0 292.5 Z"></path>
+					<path d="M846.3 657.3 L504 769 L333 791.7786116322702 L333.0 791.8 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M856.9 659.5 L846.3 657.3 L853.6 649.3 L864.1 651.5 Z"></path>
+					</g>
+					<path d="M1237.0 665.5 L1327.75 769 L1327.75 789 L1327.8 789.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1234.9 655.0 L1237.0 665.5 L1226.9 662.0 L1224.7 651.5 Z"></path>
+					</g>
+					<path d="M777.5 305.8 L777.5 351 L983.8277511961722 468.5 L983.8 468.5 " fill="none"></path>
+					<path d="M782.8 305.8 L777.5 305.8 L772.2 305.8 L777.5 292.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1352.5 305.8 L1352.5 351 L1235.5622009569379 468.5 L1235.6 468.5 " fill="none"></path>
+					</g>
+					<path d="M1357.8 305.8 L1352.5 305.8 L1347.2 305.8 L1352.5 292.5 Z"></path>
+					<path d="M1063.5 120.3 L1063.5 203 L1063.5 223.5 L1063.5 223.5 " fill="none"></path>
+					<path d="M1068.8 120.3 L1063.5 120.3 L1058.2 120.3 L1063.5 107.0 Z"></path>
 					<path d="M429.5 349.7 L429.5 351 L420.31339712918657 371 L420.3 371.0 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M434.8 340.3 L429.5 349.7 L424.2 340.3 L429.5 331.0 Z"></path>
 					</g>
 					<path d="M429.5 120.3 L429.5 203 L429.5 223 L429.5 223.0 " fill="none"></path>
 					<path d="M434.8 120.3 L429.5 120.3 L424.2 120.3 L429.5 107.0 Z"></path>
-					<path d="M845.5 120.3 L845.5 203 L845.5 223.5 L845.5 223.5 " fill="none"></path>
-					<path d="M850.8 120.3 L845.5 120.3 L840.2 120.3 L845.5 107.0 Z"></path>
-					<path d="M1012.6 657.3 L670.25 769 L333 796.6658001155402 L333.0 796.7 " fill="none"></path>
+					<path d="M1922.4 145.0 L1595.5 203 L1595.5 261.5 L1595.5 261.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1023.1 659.5 L1012.6 657.3 L1019.8 649.3 L1030.3 651.5 Z"></path>
+						<path d="M1932.5 148.6 L1922.4 145.0 L1930.6 138.1 L1940.8 141.7 Z"></path>
 					</g>
-					<path d="M1362.7 668.3 L1411 769 L1411 789 L1411.0 789.0 " fill="none"></path>
+					<path d="M1987.2 190.2 L1956.5 203 L1956.5 261.5 L1956.5 261.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1363.5 657.6 L1362.7 668.3 L1353.9 662.2 L1354.6 651.5 Z"></path>
+						<path d="M1997.9 191.5 L1987.2 190.2 L1993.8 181.7 L2004.4 183.0 Z"></path>
 					</g>
-					<path d="M1131.5 305.8 L1131.5 351 L1232.2745215311004 468.5 L1232.3 468.5 " fill="none"></path>
-					<path d="M1136.8 305.8 L1131.5 305.8 L1126.2 305.8 L1131.5 292.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M1352.5 305.8 L1352.5 351 L1329.028110047847 468.5 L1329.0 468.5 " fill="none"></path>
-					</g>
-					<path d="M1357.8 305.8 L1352.5 305.8 L1347.2 305.8 L1352.5 292.5 Z"></path>
-					<path d="M1911.6 145.9 L1595.5 203 L1595.5 261.5 L1595.5 261.5 " fill="none"></path>
+					<path d="M2325.6 196.4 L2332 203 L2332 261.5 L2332.0 261.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1921.8 149.5 L1911.6 145.9 L1919.9 139.0 L1930.0 142.6 Z"></path>
+						<path d="M2322.9 186.0 L2325.6 196.4 L2315.3 193.4 L2312.6 183.0 Z"></path>
 					</g>
-					<path d="M1985.4 190.4 L1956.5 203 L1956.5 261.5 L1956.5 261.5 " fill="none"></path>
+					<path d="M2524.7 180.3 L2601.5 203 L2601.5 261.5 L2601.5 261.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1996.1 191.6 L1985.4 190.4 L1991.8 181.8 L2002.5 183.0 Z"></path>
-					</g>
-					<path d="M2324.3 195.8 L2332 203 L2332 261.5 L2332.0 261.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2321.1 185.5 L2324.3 195.8 L2313.8 193.3 L2310.7 183.0 Z"></path>
-					</g>
-					<path d="M2513.9 177.9 L2601.5 203 L2601.5 261.5 L2601.5 261.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2506.4 170.2 L2513.9 177.9 L2503.5 180.4 L2496.0 172.7 Z"></path>
+						<path d="M2517.2 172.6 L2524.7 180.3 L2514.2 182.8 L2506.8 175.0 Z"></path>
 					</g>
 					<g data-name="InviteCodeFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InviteCodeFormViewModel">
@@ -227,9 +227,9 @@
 					</g>
 					<g data-name="FormControl">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
-							<rect x="729.8" y="789.0" height="31.0" width="113.0" data-name="FormControl"></rect>
+							<rect x="563.5" y="789.0" height="31.0" width="113.0" data-name="FormControl"></rect>
 						</g>
-						<g transform="translate(729.75, 789)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
+						<g transform="translate(563.5, 789)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
 								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
 								
@@ -238,9 +238,9 @@
 					</g>
 					<g data-name="FormGroup">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
-							<rect x="882.8" y="789.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
+							<rect x="716.5" y="789.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
 						</g>
-						<g transform="translate(882.75, 789)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+						<g transform="translate(716.5, 789)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
 								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
 								
@@ -254,6 +254,70 @@
 						<g transform="translate(29.5, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModel">
 								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModel">FormViewModel</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyRecruitController">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyRecruitController">
+							<rect x="819.0" y="468.5" height="183.0" width="651.0" data-name="StudyRecruitController"></rect>
+							<path d="M819.0 499.5 L1470.0 499.5" fill="none" data-name="StudyRecruitController"></path>
+							<path d="M819.0 545.5 L1470.0 545.5" fill="none" data-name="StudyRecruitController"></path>
+						</g>
+						<g transform="translate(819, 468.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRecruitController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyRecruitController">
+								<text x="317.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyRecruitController">StudyRecruitController</text>
+								
+							</g>
+						</g>
+						<g transform="translate(819, 499.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRecruitController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRecruitController">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyRecruitController">+inviteCodeRepository: IInviteCodeRepository</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyRecruitController">-_invitesSubscription: StreamSubscription&lt;List&lt;WrappedModel&lt;StudyInvite&gt;&gt;&gt;?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(819, 545.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRecruitController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRecruitController">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyRecruitController">-dynamic _subscribeInvites()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyRecruitController">+Intervention? getIntervention()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyRecruitController">+int getParticipantCountForInvite()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyRecruitController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyRecruitController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableInlineActions()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudyRecruitController">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StreamSubscription">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StreamSubscription">
+							<rect x="1242.8" y="789.0" height="31.0" width="170.0" data-name="StreamSubscription"></rect>
+						</g>
+						<g transform="translate(1242.75, 789)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamSubscription">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StreamSubscription">
+								<text x="77.0" y="13.5" stroke="none" text-anchor="middle" data-name="StreamSubscription">StreamSubscription</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyBaseController">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyBaseController">
+							<rect x="688.5" y="261.5" height="31.0" width="178.0" data-name="StudyBaseController"></rect>
+						</g>
+						<g transform="translate(688.5, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyBaseController">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyBaseController">
+								<text x="81.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyBaseController">StudyBaseController</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IModelActionProvider">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IModelActionProvider">
+							<rect x="1260.5" y="261.5" height="31.0" width="184.0" data-name="IModelActionProvider"></rect>
+						</g>
+						<g transform="translate(1260.5, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelActionProvider">
+								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelActionProvider">IModelActionProvider</text>
 								
 							</g>
 						</g>
@@ -279,6 +343,38 @@
 						<g transform="translate(127.5, 107)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EnrolledBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EnrolledBadge">
 								<text x="0.0" y="13.5" stroke="none" data-name="EnrolledBadge">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyRecruitScreen">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyRecruitScreen">
+							<rect x="906.5" y="223.5" height="107.0" width="314.0" data-name="StudyRecruitScreen"></rect>
+							<path d="M906.5 254.5 L1220.5 254.5" fill="none" data-name="StudyRecruitScreen"></path>
+						</g>
+						<g transform="translate(906.5, 223.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRecruitScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyRecruitScreen">
+								<text x="149.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyRecruitScreen">StudyRecruitScreen</text>
+								
+							</g>
+						</g>
+						<g transform="translate(906.5, 254.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRecruitScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRecruitScreen">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyRecruitScreen">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyRecruitScreen">-Widget _inviteCodesSectionHeader()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyRecruitScreen">-Widget _newInviteCodeButton()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyRecruitScreen">-dynamic _onSelectInvite()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyPageWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyPageWidget">
+							<rect x="985.0" y="76.0" height="31.0" width="157.0" data-name="StudyPageWidget"></rect>
+						</g>
+						<g transform="translate(985, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyPageWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyPageWidget">
+								<text x="70.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyPageWidget">StudyPageWidget</text>
 								
 							</g>
 						</g>
@@ -320,115 +416,19 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="StudyRecruitScreen">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyRecruitScreen">
-							<rect x="688.5" y="223.5" height="107.0" width="314.0" data-name="StudyRecruitScreen"></rect>
-							<path d="M688.5 254.5 L1002.5 254.5" fill="none" data-name="StudyRecruitScreen"></path>
-						</g>
-						<g transform="translate(688.5, 223.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRecruitScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyRecruitScreen">
-								<text x="149.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyRecruitScreen">StudyRecruitScreen</text>
-								
-							</g>
-						</g>
-						<g transform="translate(688.5, 254.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRecruitScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRecruitScreen">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyRecruitScreen">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyRecruitScreen">-Widget _inviteCodesSectionHeader()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyRecruitScreen">-Widget _newInviteCodeButton()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyRecruitScreen">-dynamic _onSelectInvite()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyPageWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyPageWidget">
-							<rect x="767.0" y="76.0" height="31.0" width="157.0" data-name="StudyPageWidget"></rect>
-						</g>
-						<g transform="translate(767, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyPageWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyPageWidget">
-								<text x="70.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyPageWidget">StudyPageWidget</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyRecruitController">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyRecruitController">
-							<rect x="985.3" y="468.5" height="183.0" width="651.0" data-name="StudyRecruitController"></rect>
-							<path d="M985.3 499.5 L1636.3 499.5" fill="none" data-name="StudyRecruitController"></path>
-							<path d="M985.3 545.5 L1636.3 545.5" fill="none" data-name="StudyRecruitController"></path>
-						</g>
-						<g transform="translate(985.25, 468.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRecruitController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyRecruitController">
-								<text x="317.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyRecruitController">StudyRecruitController</text>
-								
-							</g>
-						</g>
-						<g transform="translate(985.25, 499.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRecruitController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRecruitController">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyRecruitController">+inviteCodeRepository: IInviteCodeRepository</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyRecruitController">-_invitesSubscription: StreamSubscription&lt;List&lt;WrappedModel&lt;StudyInvite&gt;&gt;&gt;?</text>
-								
-							</g>
-						</g>
-						<g transform="translate(985.25, 545.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRecruitController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRecruitController">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyRecruitController">-dynamic _subscribeInvites()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyRecruitController">+Intervention? getIntervention()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyRecruitController">+int getParticipantCountForInvite()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyRecruitController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="StudyRecruitController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableInlineActions()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="StudyRecruitController">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StreamSubscription">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StreamSubscription">
-							<rect x="1326.0" y="789.0" height="31.0" width="170.0" data-name="StreamSubscription"></rect>
-						</g>
-						<g transform="translate(1326, 789)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamSubscription">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StreamSubscription">
-								<text x="77.0" y="13.5" stroke="none" text-anchor="middle" data-name="StreamSubscription">StreamSubscription</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyBaseController">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyBaseController">
-							<rect x="1042.5" y="261.5" height="31.0" width="178.0" data-name="StudyBaseController"></rect>
-						</g>
-						<g transform="translate(1042.5, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyBaseController">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyBaseController">
-								<text x="81.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyBaseController">StudyBaseController</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IModelActionProvider">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IModelActionProvider">
-							<rect x="1260.5" y="261.5" height="31.0" width="184.0" data-name="IModelActionProvider"></rect>
-						</g>
-						<g transform="translate(1260.5, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelActionProvider">
-								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelActionProvider">IModelActionProvider</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="StudyInvitesTable">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyInvitesTable">
-							<rect x="1930.0" y="0.0" height="183.0" width="566.0" data-name="StudyInvitesTable"></rect>
-							<path d="M1930.0 31.0 L2496.0 31.0" fill="none" data-name="StudyInvitesTable"></path>
-							<path d="M1930.0 137.0 L2496.0 137.0" fill="none" data-name="StudyInvitesTable"></path>
+							<rect x="1940.8" y="0.0" height="183.0" width="566.0" data-name="StudyInvitesTable"></rect>
+							<path d="M1940.8 31.0 L2506.8 31.0" fill="none" data-name="StudyInvitesTable"></path>
+							<path d="M1940.8 137.0 L2506.8 137.0" fill="none" data-name="StudyInvitesTable"></path>
 						</g>
-						<g transform="translate(1930, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyInvitesTable">
+						<g transform="translate(1940.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyInvitesTable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyInvitesTable">
 								<text x="275.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyInvitesTable">StudyInvitesTable</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1930, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyInvitesTable">
+						<g transform="translate(1940.75, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyInvitesTable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyInvitesTable">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyInvitesTable">+invites: List&lt;StudyInvite&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyInvitesTable">+onSelect: void Function(StudyInvite)</text>
@@ -439,7 +439,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(1930, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyInvitesTable">
+						<g transform="translate(1940.75, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyInvitesTable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyInvitesTable">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyInvitesTable">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyInvitesTable">-List&lt;Widget&gt; _buildRow()</text>
