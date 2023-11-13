@@ -96,7 +96,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 class StudyDetailsView extends StatelessWidget {
   final Study? study;
 
-  const StudyDetailsView({required this.study, Key? key}) : super(key: key);
+  const StudyDetailsView({required this.study, super.key});
 
   double get iconSize => 40;
 
