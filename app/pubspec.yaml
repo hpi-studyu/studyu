@@ -28,7 +28,7 @@ dependencies:
   package_info_plus: ^4.2.0
   pdf: ^3.10.6
   permission_handler: ^11.0.1
-  provider: ^6.0.5
+  provider: ^6.1.1
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   sentry_flutter: ^7.12.0
@@ -37,7 +37,7 @@ dependencies:
   studyu_core: ^4.3.0
   studyu_flutter_common: ^1.6.2
   supabase: ^1.11.11
-  supabase_flutter: ^1.10.24
+  supabase_flutter: ^1.10.25
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
   universal_html: ^2.2.4

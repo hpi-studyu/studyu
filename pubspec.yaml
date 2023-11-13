@@ -8,5 +8,5 @@ environment:
 
 dev_dependencies:
   flutter_lints: ^3.0.1
-  lint: ^2.1.2
+  lint: ^2.2.0
   melos: ^3.2.0
