@@ -21,7 +21,7 @@ class Collapsible extends StatefulWidget {
     this.isCollapsed = true,
     this.maintainState = true,
     super.key,
-  })  : assert((headerBuilder != null && title == null) || (headerBuilder == null && title != null),
+  }) : assert((headerBuilder != null && title == null) || (headerBuilder == null && title != null),
             "Must provide either headerBuilder or title");
 
   final CollapsibleSectionBuilder contentBuilder;
