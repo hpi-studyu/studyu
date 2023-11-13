@@ -4,7 +4,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 
 import '../../common_views/action_popup_menu.dart';
-import '../../common_views/mouse_events.dart';
 import '../../theme.dart';
 import '../../utils/model_action.dart';
 import '../study/study_participation_badge.dart';
@@ -97,6 +96,14 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       );
     }
 
+    Icon smallIcon(IconData iconData) {
+      return Icon(
+        iconData,
+        color: Colors.grey,
+        size: 12,
+      );
+    }
+
     final normalTextStyle = isExpanded && !studyGroup.isSingleStudy
         ? const TextStyle(fontWeight: FontWeight.bold)
         : null;
@@ -105,15 +112,6 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       return (value > 0)
           ? normalTextStyle
           : ThemeConfig.bodyTextBackground(theme).merge(normalTextStyle);
-    }
-
-    // TODO: Add pin feature again
-    Widget getRespectivePinIcon(Set<MaterialState> state) {
-      if (isHoveringPin) {
-        return widget.isPinned ? icon(MdiIcons.pinOff) : icon(MdiIcons.pin);
-      } else {
-        return widget.isPinned ? icon(MdiIcons.pin) : const SizedBox.shrink();
-      }
     }
 
     final row = InkWell(
@@ -142,11 +140,22 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 widget.columnSizes[0].createContainer(
-                  height: widget.itemHeight,
-                  child: !studyGroup.isSingleStudy
-                      ? (isExpanded ? icon(MdiIcons.chevronDown) : icon(MdiIcons.chevronRight))
-                      : const SizedBox.shrink(),
-                ),
+                    height: widget.itemHeight,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        !studyGroup.isSingleStudy
+                            ? (isExpanded
+                                ? icon(MdiIcons.chevronDown)
+                                : icon(MdiIcons.chevronRight))
+                            : const SizedBox.shrink(),
+                        Positioned(
+                            left: 4,
+                            top: 0,
+                            child:
+                                widget.isPinned ? smallIcon(MdiIcons.pin) : const SizedBox.shrink())
+                      ],
+                    )),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[1].createContainer(
                   child: Text(
