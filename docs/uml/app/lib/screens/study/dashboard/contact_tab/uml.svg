@@ -1,5 +1,26 @@
-<svg version="1.1" baseProfile="full" width="1218.3" height="386.0" viewbox="0 0 1218.25 386" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[ContactScreen
+<svg version="1.1" baseProfile="full" width="1377.3" height="386.0" viewbox="0 0 1377.25 386" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[FAQ
+	  |
+	  +Widget build()
+	]
+	
+	[Entry
+	  |
+	  +title: String;
+	  +children: List&lt;Entry&gt;
+	]
+	
+	[EntryItem
+	  |
+	  +entry: Entry
+	  |
+	  -Widget _buildTiles();
+	  +Widget build()
+	]
+	
+	[EntryItem]o-[Entry]
+	
+	[ContactScreen
 	]
 	
 	[ContactWidget
@@ -43,72 +64,114 @@
 	[ContactItemType]o-[ContactItemType]
 	[Enum]&lt;:--[ContactItemType]
 	
-	[FAQ
-	  |
-	  +Widget build()
-	]
-	
-	[Entry
-	  |
-	  +title: String;
-	  +children: List&lt;Entry&gt;
-	]
-	
-	[EntryItem
-	  |
-	  +entry: Entry
-	  |
-	  -Widget _buildTiles();
-	  +Widget build()
-	]
-	
-	[EntryItem]o-[Entry]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="386.0" width="1218.3" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="386.0" width="1377.3" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M233.1 171.1 L228.75 188 L228.75 253.5 L228.8 253.5 " fill="none"></path>
+				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M265.5 156.7 L265.5 188 L265.5 230.5 L265.5 230.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M240.6 163.4 L233.1 171.1 L230.3 160.7 L237.8 153.0 Z"></path>
+						<path d="M270.8 147.3 L265.5 156.7 L260.2 147.3 L265.5 138.0 Z"></path>
 					</g>
-					<path d="M305.2 169.1 L316.25 188 L338.0833333333333 253.5 L338.1 253.5 " fill="none"></path>
+					<path d="M566.7 166.1 L544.25 188 L544.25 253.5 L544.3 253.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M305.1 158.4 L305.2 169.1 L295.9 163.7 L295.8 153.0 Z"></path>
+						<path d="M577.1 163.3 L566.7 166.1 L569.6 155.7 L580.0 153.0 Z"></path>
 					</g>
-					<path d="M456.5 185.8 L455.75 188 L455.75 253.5 L455.8 253.5 " fill="none"></path>
+					<path d="M700.2 169.1 L711.25 188 L727.4228395061729 253.5 L727.4 253.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M464.4 178.5 L456.5 185.8 L454.3 175.2 L462.2 168.0 Z"></path>
+						<path d="M700.1 158.4 L700.2 169.1 L690.9 163.7 L690.8 153.0 Z"></path>
 					</g>
-					<path d="M604.6 180.0 L614.25 188 L636.7191358024692 208 L636.7 208.0 " fill="none"></path>
+					<path d="M851.5 185.8 L850.75 188 L850.75 253.5 L850.8 253.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M600.8 169.9 L604.6 180.0 L594.0 178.1 L590.3 168.0 Z"></path>
+						<path d="M859.4 178.5 L851.5 185.8 L849.3 175.2 L857.2 168.0 Z"></path>
 					</g>
-					<path d="M387.1 180.8 L379.5 188 L350.1867283950617 253.5 L350.2 253.5 " fill="none"></path>
+					<path d="M999.6 180.0 L1009.25 188 L1031.719135802469 208 L1031.7 208.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M397.5 178.3 L387.1 180.8 L390.2 170.5 L400.7 168.0 Z"></path>
+						<path d="M995.8 169.9 L999.6 180.0 L989.0 178.1 L985.3 168.0 Z"></path>
 					</g>
-					<path d="M889.1 214.2 L909.9166666666666 208 L919.5833333333334 208 L919.5833333333334 208 L929.25 269 L929.25 269 L919.5833333333334 330 L919.5833333333334 330 L909.9166666666666 330 L909.9166666666666 330 L871.25 318.4755700325733 L871.3 318.5 " fill="none"></path>
+					<path d="M776.0 180.4 L767.5 188 L738.1867283950618 253.5 L738.2 253.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M878.7 211.7 L889.1 214.2 L881.7 222.0 L871.3 219.5 Z"></path>
+						<path d="M786.6 178.2 L776.0 180.4 L779.5 170.2 L790.0 168.0 Z"></path>
+					</g>
+					<path d="M1284.1 211.8 L1296.25 208 L1303.75 208 L1303.75 208 L1311.25 269 L1311.25 269 L1303.75 330 L1303.75 330 L1296.25 330 L1296.25 330 L1266.25 320.66326530612247 L1266.3 320.7 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1273.6 209.5 L1284.1 211.8 L1276.7 219.7 L1266.3 217.3 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M725.3 112.8 L725.25 188 L720.3117283950618 208 L720.3 208.0 " fill="none"></path>
+						<path d="M1120.3 112.8 L1120.25 188 L1115.3117283950617 208 L1115.3 208.0 " fill="none"></path>
 					</g>
-					<path d="M730.6 112.8 L725.3 112.8 L719.9 112.8 L725.3 99.5 Z"></path>
-					<path d="M1068.3 156.7 L1068.25 188 L1068.25 230.5 L1068.3 230.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1073.6 147.3 L1068.3 156.7 L1062.9 147.3 L1068.3 138.0 Z"></path>
+					<path d="M1125.6 112.8 L1120.3 112.8 L1114.9 112.8 L1120.3 99.5 Z"></path>
+					<g data-name="FAQ">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FAQ">
+							<rect x="0.0" y="53.0" height="62.0" width="136.0" data-name="FAQ"></rect>
+							<path d="M0.0 84.0 L136.0 84.0" fill="none" data-name="FAQ"></path>
+						</g>
+						<g transform="translate(0, 53)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FAQ">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FAQ">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="FAQ">FAQ</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 84)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FAQ">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FAQ">
+								<text x="0.0" y="13.5" stroke="none" data-name="FAQ">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Entry">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Entry">
+							<rect x="171.5" y="230.5" height="77.0" width="188.0" data-name="Entry"></rect>
+							<path d="M171.5 261.5 L359.5 261.5" fill="none" data-name="Entry"></path>
+						</g>
+						<g transform="translate(171.5, 230.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Entry">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Entry">
+								<text x="86.0" y="13.5" stroke="none" text-anchor="middle" data-name="Entry">Entry</text>
+								
+							</g>
+						</g>
+						<g transform="translate(171.5, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Entry">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Entry">
+								<text x="0.0" y="13.5" stroke="none" data-name="Entry">+title: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Entry">+children: List&lt;Entry&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="EntryItem">
+						<g fill="#eee8d5" stroke="#33322E" data-name="EntryItem">
+							<rect x="176.0" y="30.0" height="108.0" width="179.0" data-name="EntryItem"></rect>
+							<path d="M176.0 61.0 L355.0 61.0" fill="none" data-name="EntryItem"></path>
+							<path d="M176.0 92.0 L355.0 92.0" fill="none" data-name="EntryItem"></path>
+						</g>
+						<g transform="translate(176, 30)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EntryItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EntryItem">
+								<text x="81.5" y="13.5" stroke="none" text-anchor="middle" data-name="EntryItem">EntryItem</text>
+								
+							</g>
+						</g>
+						<g transform="translate(176, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EntryItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EntryItem">
+								<text x="0.0" y="13.5" stroke="none" data-name="EntryItem">+entry: Entry</text>
+								
+							</g>
+						</g>
+						<g transform="translate(176, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EntryItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EntryItem">
+								<text x="0.0" y="13.5" stroke="none" data-name="EntryItem">-Widget _buildTiles()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="EntryItem">+Widget build()</text>
+								
+							</g>
+						</g>
 					</g>
 					<g data-name="ContactScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ContactScreen">
-							<rect x="0.0" y="68.5" height="31.0" width="133.0" data-name="ContactScreen"></rect>
+							<rect x="395.0" y="68.5" height="31.0" width="133.0" data-name="ContactScreen"></rect>
 						</g>
-						<g transform="translate(0, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactScreen">
+						<g transform="translate(395, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ContactScreen">
 								<text x="58.5" y="13.5" stroke="none" text-anchor="middle" data-name="ContactScreen">ContactScreen</text>
 								
@@ -117,17 +180,17 @@
 					</g>
 					<g data-name="ContactWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ContactWidget">
-							<rect x="173.0" y="15.0" height="138.0" width="165.0" data-name="ContactWidget"></rect>
-							<path d="M173.0 46.0 L338.0 46.0" fill="none" data-name="ContactWidget"></path>
-							<path d="M173.0 122.0 L338.0 122.0" fill="none" data-name="ContactWidget"></path>
+							<rect x="568.0" y="15.0" height="138.0" width="165.0" data-name="ContactWidget"></rect>
+							<path d="M568.0 46.0 L733.0 46.0" fill="none" data-name="ContactWidget"></path>
+							<path d="M568.0 122.0 L733.0 122.0" fill="none" data-name="ContactWidget"></path>
 						</g>
-						<g transform="translate(173, 15)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactWidget">
+						<g transform="translate(568, 15)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ContactWidget">
 								<text x="74.5" y="13.5" stroke="none" text-anchor="middle" data-name="ContactWidget">ContactWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(173, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactWidget">
+						<g transform="translate(568, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContactWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="ContactWidget">+contact: Contact?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ContactWidget">+title: String</text>
@@ -136,7 +199,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(173, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactWidget">
+						<g transform="translate(568, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContactWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="ContactWidget">+Widget build()</text>
 								
@@ -145,9 +208,9 @@
 					</g>
 					<g data-name="Contact">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Contact">
-							<rect x="190.3" y="253.5" height="31.0" width="77.0" data-name="Contact"></rect>
+							<rect x="505.8" y="253.5" height="31.0" width="77.0" data-name="Contact"></rect>
 						</g>
-						<g transform="translate(190.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Contact">
+						<g transform="translate(505.75, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Contact">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Contact">
 								<text x="30.5" y="13.5" stroke="none" text-anchor="middle" data-name="Contact">Contact</text>
 								
@@ -156,9 +219,9 @@
 					</g>
 					<g data-name="Color">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Color">
-							<rect x="314.3" y="253.5" height="31.0" width="58.0" data-name="Color"></rect>
+							<rect x="702.3" y="253.5" height="31.0" width="58.0" data-name="Color"></rect>
 						</g>
-						<g transform="translate(314.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Color">
+						<g transform="translate(702.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Color">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Color">
 								<text x="21.0" y="13.5" stroke="none" text-anchor="middle" data-name="Color">Color</text>
 								
@@ -167,17 +230,17 @@
 					</g>
 					<g data-name="ContactItem">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ContactItem">
-							<rect x="378.0" y="0.0" height="168.0" width="223.0" data-name="ContactItem"></rect>
-							<path d="M378.0 31.0 L601.0 31.0" fill="none" data-name="ContactItem"></path>
-							<path d="M378.0 122.0 L601.0 122.0" fill="none" data-name="ContactItem"></path>
+							<rect x="773.0" y="0.0" height="168.0" width="223.0" data-name="ContactItem"></rect>
+							<path d="M773.0 31.0 L996.0 31.0" fill="none" data-name="ContactItem"></path>
+							<path d="M773.0 122.0 L996.0 122.0" fill="none" data-name="ContactItem"></path>
 						</g>
-						<g transform="translate(378, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactItem">
+						<g transform="translate(773, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactItem">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ContactItem">
 								<text x="103.5" y="13.5" stroke="none" text-anchor="middle" data-name="ContactItem">ContactItem</text>
 								
 							</g>
 						</g>
-						<g transform="translate(378, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactItem">
+						<g transform="translate(773, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactItem">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContactItem">
 								<text x="0.0" y="13.5" stroke="none" data-name="ContactItem">+iconData: IconData</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ContactItem">+itemName: String</text>
@@ -187,7 +250,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(378, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactItem">
+						<g transform="translate(773, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactItem">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContactItem">
 								<text x="0.0" y="13.5" stroke="none" data-name="ContactItem">+dynamic launchContact()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ContactItem">+Widget build()</text>
@@ -197,9 +260,9 @@
 					</g>
 					<g data-name="IconData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IconData">
-							<rect x="412.3" y="253.5" height="31.0" width="87.0" data-name="IconData"></rect>
+							<rect x="807.3" y="253.5" height="31.0" width="87.0" data-name="IconData"></rect>
 						</g>
-						<g transform="translate(412.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
+						<g transform="translate(807.25, 253.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IconData">
 								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="IconData">IconData</text>
 								
@@ -208,16 +271,16 @@
 					</g>
 					<g data-name="ContactItemType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ContactItemType">
-							<rect x="539.3" y="208.0" height="122.0" width="332.0" data-name="ContactItemType"></rect>
-							<path d="M539.3 239.0 L871.3 239.0" fill="none" data-name="ContactItemType"></path>
+							<rect x="934.3" y="208.0" height="122.0" width="332.0" data-name="ContactItemType"></rect>
+							<path d="M934.3 239.0 L1266.3 239.0" fill="none" data-name="ContactItemType"></path>
 						</g>
-						<g transform="translate(539.25, 208)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactItemType">
+						<g transform="translate(934.25, 208)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContactItemType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ContactItemType">
 								<text x="158.0" y="13.5" stroke="none" text-anchor="middle" data-name="ContactItemType">ContactItemType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(539.25, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactItemType">
+						<g transform="translate(934.25, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContactItemType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContactItemType">
 								<text x="0.0" y="13.5" stroke="none" data-name="ContactItemType">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ContactItemType">&lt;static&gt;+values: List&lt;ContactItemType&gt;</text>
@@ -230,74 +293,11 @@
 					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="694.8" y="68.5" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="1089.8" y="68.5" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(694.75, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(1089.75, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FAQ">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FAQ">
-							<rect x="795.8" y="53.0" height="62.0" width="136.0" data-name="FAQ"></rect>
-							<path d="M795.8 84.0 L931.8 84.0" fill="none" data-name="FAQ"></path>
-						</g>
-						<g transform="translate(795.75, 53)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FAQ">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FAQ">
-								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="FAQ">FAQ</text>
-								
-							</g>
-						</g>
-						<g transform="translate(795.75, 84)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FAQ">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FAQ">
-								<text x="0.0" y="13.5" stroke="none" data-name="FAQ">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Entry">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Entry">
-							<rect x="974.3" y="230.5" height="77.0" width="188.0" data-name="Entry"></rect>
-							<path d="M974.3 261.5 L1162.3 261.5" fill="none" data-name="Entry"></path>
-						</g>
-						<g transform="translate(974.25, 230.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Entry">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Entry">
-								<text x="86.0" y="13.5" stroke="none" text-anchor="middle" data-name="Entry">Entry</text>
-								
-							</g>
-						</g>
-						<g transform="translate(974.25, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Entry">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Entry">
-								<text x="0.0" y="13.5" stroke="none" data-name="Entry">+title: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Entry">+children: List&lt;Entry&gt;</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="EntryItem">
-						<g fill="#eee8d5" stroke="#33322E" data-name="EntryItem">
-							<rect x="978.8" y="30.0" height="108.0" width="179.0" data-name="EntryItem"></rect>
-							<path d="M978.8 61.0 L1157.8 61.0" fill="none" data-name="EntryItem"></path>
-							<path d="M978.8 92.0 L1157.8 92.0" fill="none" data-name="EntryItem"></path>
-						</g>
-						<g transform="translate(978.75, 30)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EntryItem">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EntryItem">
-								<text x="81.5" y="13.5" stroke="none" text-anchor="middle" data-name="EntryItem">EntryItem</text>
-								
-							</g>
-						</g>
-						<g transform="translate(978.75, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EntryItem">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EntryItem">
-								<text x="0.0" y="13.5" stroke="none" data-name="EntryItem">+entry: Entry</text>
-								
-							</g>
-						</g>
-						<g transform="translate(978.75, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EntryItem">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EntryItem">
-								<text x="0.0" y="13.5" stroke="none" data-name="EntryItem">-Widget _buildTiles()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="EntryItem">+Widget build()</text>
 								
 							</g>
 						</g>
