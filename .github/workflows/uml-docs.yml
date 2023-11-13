@@ -11,7 +11,7 @@ on:
       - 'core/**/*.dart'
       - 'designer_v2/**/*.dart'
       - '!designer_v2/integration_test/**'
-      - '!designer_v2/integration_driver/**'
+      - '!designer_v2/test_driver/**'
       - 'app/**/*.dart'
 
 concurrency:
