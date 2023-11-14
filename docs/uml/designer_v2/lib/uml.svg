@@ -69,6 +69,7 @@
 	  +study: Study;
 	  +measurementsData: List&lt;Map&lt;String, dynamic&gt;&gt;;
 	  +interventionsData: List&lt;Map&lt;String, dynamic&gt;&gt;;
+	  +mediaData: List&lt;String&gt;;
 	  +isEmpty: bool
 	]
 	
@@ -4272,9 +4273,9 @@
 					<path d="M1121.0 153.4 L1118.5 158.2 L1116.1 162.9 L1106.7 152.0 Z"></path>
 					<path d="M1077.0 165.3 L1077 293 L1077 591 L1077.0 591.0 " fill="none"></path>
 					<path d="M1082.3 165.3 L1077.0 165.3 L1071.7 165.3 L1077.0 152.0 Z"></path>
-					<path d="M2599.0 2577.2 L2599 3074 L61542.5 3260.403546478109 L61542.5 3260.4 " fill="none"></path>
+					<path d="M2599.0 2584.7 L2599 3074 L61542.5 3260.403546478109 L61542.5 3260.4 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2604.3 2567.8 L2599.0 2577.2 L2593.7 2567.8 L2599.0 2558.5 Z"></path>
+						<path d="M2604.3 2575.3 L2599.0 2584.7 L2593.7 2575.3 L2599.0 2566.0 Z"></path>
 					</g>
 					<path d="M2631.8 3182.3 L2682.6666666666715 3162 L2699.7083333333285 3162 L2699.7083333333285 3162 L2716.75 3260.5 L2716.75 3260.5 L2699.7083333333285 3359 L2699.7083333333285 3359 L2682.6666666666715 3359 L2682.6666666666715 3359 L2614.5 3331.8344571813877 L2614.5 3331.8 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -6639,21 +6640,22 @@
 					</g>
 					<g data-name="StudyExportData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyExportData">
-							<rect x="2392.0" y="2451.5" height="107.0" width="414.0" data-name="StudyExportData"></rect>
-							<path d="M2392.0 2482.5 L2806.0 2482.5" fill="none" data-name="StudyExportData"></path>
+							<rect x="2392.0" y="2444.0" height="122.0" width="414.0" data-name="StudyExportData"></rect>
+							<path d="M2392.0 2475.0 L2806.0 2475.0" fill="none" data-name="StudyExportData"></path>
 						</g>
-						<g transform="translate(2392, 2451.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyExportData">
+						<g transform="translate(2392, 2444)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyExportData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyExportData">
 								<text x="199.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyExportData">StudyExportData</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2392, 2482.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyExportData">
+						<g transform="translate(2392, 2475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyExportData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyExportData">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyExportData">+study: Study</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyExportData">+measurementsData: List&lt;Map&lt;String, dynamic&gt;&gt;</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="StudyExportData">+interventionsData: List&lt;Map&lt;String, dynamic&gt;&gt;</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyExportData">+isEmpty: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyExportData">+mediaData: List&lt;String&gt;</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyExportData">+isEmpty: bool</text>
 								
 							</g>
 						</g>
