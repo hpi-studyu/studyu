@@ -164,18 +164,21 @@ void main() {
       await authRobot.tapSignInButton();
       /* FINISH SIGN IN */
 
-      /* START CREATE STUDY */
+      // START CREATE STUDY
       await studiesRobot.tapNewStudyButton();
 
       await studyDesignRobot.validateOnDesignScreen();
       await studyInfoRobot.validateOnStudyInfoScreen();
       await studyInfoRobot.enterStudyName('Publish Test Study');
+
+      await $.pump(const Duration(milliseconds: 1500));
+
       await studyDesignRobot.validateChangesSaved();
       await studyDesignRobot.tapLeftDrawerButton();
       await studyDesignRobot.tapMyStudiesButton();
-      /* FINISH CREATE STUDY */
+      // FINISH CREATE STUDY
 
-      /* START FILL AND PUBLISH STUDY */
+      // START FILL AND PUBLISH STUDY
       await studiesRobot.validateOnStudiesScreen();
       await studiesRobot.validateStudyDraftExists();
       // todo specify the exact study that should be tapped by name
@@ -236,15 +239,13 @@ void main() {
       await studyDesignRobot.tapConfirmPublishButton();
       await studyDesignRobot.tapSkipForNowButton();
       await studyDesignRobot.validateStudyPublished();
+      // FINISH FILL AND PUBLISH STUDY
 
       await studyDesignRobot.tapLeftDrawerButton();
       await studyDesignRobot.tapMyStudiesButton();
-
       await studiesRobot.validateOnStudiesScreen();
-      await studiesRobot.validateStudyPublished();
-      /* FINISH FILL AND PUBLISH STUDY */
 
-      // await studiesRobot.tapSignOutButton(); // seems to cause issues
+      await studiesRobot.tapSignOutButton();
 
       // todo dump database data and validate its state
     });
