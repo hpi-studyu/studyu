@@ -26,13 +26,13 @@ PODS:
   - permission_handler_apple (9.1.1):
     - Flutter
   - ReachabilitySwift (5.0.0)
-  - Sentry/HybridSDK (8.11.0):
-    - SentryPrivate (= 8.11.0)
+  - Sentry/HybridSDK (8.14.2):
+    - SentryPrivate (= 8.14.2)
   - sentry_flutter (0.0.1):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.11.0)
-  - SentryPrivate (8.11.0)
+    - Sentry/HybridSDK (= 8.14.2)
+  - SentryPrivate (8.14.2)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -45,6 +45,7 @@ PODS:
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - wakelock_plus (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
@@ -67,7 +68,7 @@ DEPENDENCIES:
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
@@ -112,7 +113,7 @@ EXTERNAL SOURCES:
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
   wakelock_plus:
     :path: ".symlinks/plugins/wakelock_plus/ios"
   webview_flutter_wkwebview:
@@ -121,28 +122,28 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
-  connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
+  connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_file_dialog: 4c014a45b105709a27391e266c277d7e588e9299
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_timezone: ffb07bdad3c6276af8dada0f11978d8a1f8a20bb
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
-  package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
+  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  Sentry: 39d57e691e311bdb73bc1ab5bbebbd6bc890050d
-  sentry_flutter: b2feefdad5b0f06602347172bc7257e8e9da5562
-  SentryPrivate: 48712023cdfd523735c2edb6b06bedf26c4730a3
+  Sentry: e0ea366f95ebb68f26d6030d8c22d6b2e6d23dd0
+  sentry_flutter: 9a04c51c373d76ee22167bf1e65bc468c0a91fed
+  SentryPrivate: 949a21fa59872427edc73b524c3ec8456761d97f
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
-  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
-  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  url_launcher_ios: 68d46cc9766d0c41dbdc884310529557e3cd7a86
+  video_player_avfoundation: 8563f13d8fc8b2c29dc2d09e60b660e4e8128837
   wakelock_plus: 8b09852c8876491e4b6d179e17dfe2a0b5f60d47
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 
 PODFILE CHECKSUM: b9aa1befd1c52243287ff33dfd92a95f7c51206e
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.2
