@@ -44,7 +44,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
   @override
   void didUpdateWidget(PreviewFrame oldWidget) {
-    runAsync(() => _subscribeStudyChanges());
+    if (mounted) runAsync(() => _subscribeStudyChanges());
     super.didUpdateWidget(oldWidget);
   }
 
