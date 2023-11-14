@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyUJobsToBeDone extends StatelessWidget {
-  const StudyUJobsToBeDone({Key? key}) : super(key: key);
+  const StudyUJobsToBeDone({super.key});
 
   @override
   Widget build(BuildContext context) {

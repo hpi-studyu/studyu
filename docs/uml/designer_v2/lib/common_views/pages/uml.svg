@@ -1,5 +1,10 @@
 <svg version="1.1" baseProfile="full" width="389.0" height="251.0" viewbox="0 0 389 251" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[ErrorPage
+	<desc >[SplashPage
+	  |
+	  +Widget build()
+	]
+	
+	[ErrorPage
 	  |
 	  +error: Exception?
 	  |
@@ -8,40 +13,53 @@
 	
 	[&lt;abstract&gt;ConsumerWidget]&lt;:-[ErrorPage]
 	
-	[SplashPage
-	  |
-	  +Widget build()
-	]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
 				<rect x="0.0" y="0.0" height="251.0" width="389.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M81.0 59.8 L81 82 L81 102 L81.0 102.0 " fill="none"></path>
-					<path d="M86.3 59.8 L81.0 59.8 L75.7 59.8 L81.0 46.5 Z"></path>
+					<path d="M252.0 59.8 L252 82 L252 102 L252.0 102.0 " fill="none"></path>
+					<path d="M257.3 59.8 L252.0 59.8 L246.7 59.8 L252.0 46.5 Z"></path>
+					<g data-name="SplashPage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SplashPage">
+							<rect x="0.0" y="0.0" height="62.0" width="136.0" data-name="SplashPage"></rect>
+							<path d="M0.0 31.0 L136.0 31.0" fill="none" data-name="SplashPage"></path>
+						</g>
+						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SplashPage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SplashPage">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="SplashPage">SplashPage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SplashPage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SplashPage">
+								<text x="0.0" y="13.5" stroke="none" data-name="SplashPage">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="ErrorPage">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ErrorPage">
-							<rect x="0.0" y="102.0" height="93.0" width="162.0" data-name="ErrorPage"></rect>
-							<path d="M0.0 133.0 L162.0 133.0" fill="none" data-name="ErrorPage"></path>
-							<path d="M0.0 164.0 L162.0 164.0" fill="none" data-name="ErrorPage"></path>
+							<rect x="171.0" y="102.0" height="93.0" width="162.0" data-name="ErrorPage"></rect>
+							<path d="M171.0 133.0 L333.0 133.0" fill="none" data-name="ErrorPage"></path>
+							<path d="M171.0 164.0 L333.0 164.0" fill="none" data-name="ErrorPage"></path>
 						</g>
-						<g transform="translate(0, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ErrorPage">
+						<g transform="translate(171, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ErrorPage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ErrorPage">
 								<text x="73.0" y="13.5" stroke="none" text-anchor="middle" data-name="ErrorPage">ErrorPage</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ErrorPage">
+						<g transform="translate(171, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ErrorPage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ErrorPage">
 								<text x="0.0" y="13.5" stroke="none" data-name="ErrorPage">+error: Exception?</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 164)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ErrorPage">
+						<g transform="translate(171, 164)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ErrorPage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ErrorPage">
 								<text x="0.0" y="13.5" stroke="none" data-name="ErrorPage">+Widget build()</text>
 								
@@ -50,29 +68,11 @@
 					</g>
 					<g data-name="ConsumerWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ConsumerWidget">
-							<rect x="5.0" y="15.5" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
+							<rect x="176.0" y="15.5" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
 						</g>
-						<g transform="translate(5, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
+						<g transform="translate(176, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsumerWidget">
 								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="ConsumerWidget">ConsumerWidget</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="SplashPage">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SplashPage">
-							<rect x="197.0" y="0.0" height="62.0" width="136.0" data-name="SplashPage"></rect>
-							<path d="M197.0 31.0 L333.0 31.0" fill="none" data-name="SplashPage"></path>
-						</g>
-						<g transform="translate(197, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SplashPage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SplashPage">
-								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="SplashPage">SplashPage</text>
-								
-							</g>
-						</g>
-						<g transform="translate(197, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SplashPage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SplashPage">
-								<text x="0.0" y="13.5" stroke="none" data-name="SplashPage">+Widget build()</text>
 								
 							</g>
 						</g>

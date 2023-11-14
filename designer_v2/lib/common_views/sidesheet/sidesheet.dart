@@ -29,11 +29,10 @@ class Sidesheet extends StatefulWidget {
     this.collapseSingleTab = false,
     this.bodyPadding = const EdgeInsets.symmetric(vertical: 32.0, horizontal: 48.0),
     this.wrapContent,
-    Key? key,
+    super.key,
   })  : assert((body != null && tabs == null) || (body == null && tabs != null),
             "Must provide either body or tabs to build sidesheet content"),
-        assert(tabs == null || tabs.length >= 1, "Must provide at least one tab to build sidesheet content"),
-        super(key: key);
+        assert(tabs == null || tabs.length >= 1, "Must provide at least one tab to build sidesheet content");
 
   final String titleText;
   final Widget? body;

@@ -28,8 +28,8 @@ class SingleColumnLayout extends StatefulWidget {
     this.constraints = defaultConstraints,
     this.scroll = true,
     this.padding = TwoColumnLayout.defaultContentPadding,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget body;
   final Widget? header;

@@ -22,7 +22,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 /// consider using [ReactiveFormConsumer] selectively.
 ///
 abstract class FormConsumerWidget extends StatefulWidget {
-  const FormConsumerWidget({Key? key}) : super(key: key);
+  const FormConsumerWidget({super.key});
 
   Widget build(BuildContext context, FormGroup form);
 
@@ -42,7 +42,7 @@ class _FormConsumerWidgetState extends State<FormConsumerWidget> {
 /// Utility widget that combines Riverpod's [ConsumerStatefulWidget] with
 /// our reactive forms [FormConsumerWidget] helper
 abstract class FormConsumerRefWidget extends ConsumerStatefulWidget {
-  const FormConsumerRefWidget({Key? key}) : super(key: key);
+  const FormConsumerRefWidget({super.key});
 
   Widget build(BuildContext context, FormGroup form, WidgetRef ref);
 

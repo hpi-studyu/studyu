@@ -1,3 +1,26 @@
+## 1.6.1
+
+ - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))
+ - **FIX**: convert status code to int. ([6b8fc2d2](https://github.com/hpi-studyu/studyu/commit/6b8fc2d29a9a190a3966ba7e0d6bf9404298e9b6))
+ - **FIX**: dart fix. ([d184c43b](https://github.com/hpi-studyu/studyu/commit/d184c43bafd0229a799ec835b16c3dcb851016b9))
+ - **FIX**: combine all integration tests due to lack of sequential testing. ([0b291cd8](https://github.com/hpi-studyu/studyu/commit/0b291cd8a2cccb6ae6b68f41466d9c9f9808cef4))
+ - **FIX**: study test frame exception and lints. ([9a2ee3a5](https://github.com/hpi-studyu/studyu/commit/9a2ee3a589b8b5a44dfd74b3977bc1512f0dbee4))
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+ - **FIX**: convert status code to int. ([38f66b30](https://github.com/hpi-studyu/studyu/commit/38f66b3006dbe6dc74672cb6a9169ac77f050709))
+ - **FIX**: dart fix. ([8d81f96c](https://github.com/hpi-studyu/studyu/commit/8d81f96c0caf63df04fc41f156d3312e5b09c076))
+
+## 1.6.0
+
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+ - **FIX**: convert status code to int. ([38f66b30](https://github.com/hpi-studyu/studyu/commit/38f66b3006dbe6dc74672cb6a9169ac77f050709))
+ - **FIX**: dart fix. ([8d81f96c](https://github.com/hpi-studyu/studyu/commit/8d81f96c0caf63df04fc41f156d3312e5b09c076))
+ - **FIX**: added missing test files. ([e6b4d401](https://github.com/hpi-studyu/studyu/commit/e6b4d401c66a33be6ea40d8dedc84f5fddecac49))
+ - **FIX**: form fields unfindable by patrol_finders. ([96db2a88](https://github.com/hpi-studyu/studyu/commit/96db2a88f884d21dcb2e70c1e9af94c72582ba75))
+ - **FIX**: router cannot be reassigned between tests. ([8fae8dad](https://github.com/hpi-studyu/studyu/commit/8fae8dada32e8efed1f21f3b5493fe123cef67d9))
+ - **FIX**: authFormController incorrect disposal. ([def9ace1](https://github.com/hpi-studyu/studyu/commit/def9ace12eb8b4f12772cbffe8ee7dc26b21e1bc))
+ - **FIX**: constant animation in background. ([0ad4c13b](https://github.com/hpi-studyu/studyu/commit/0ad4c13b0e8db3a6016a328da5871040a6e949a7))
+ - **FEAT**: completed e2e tests + script. ([4953e8fe](https://github.com/hpi-studyu/studyu/commit/4953e8feec5dc150543fe107309ea013e7c3adf9))
+
 ## 1.5.3
 
  - **FIX**: update descriptions and rename imprint. ([6d3757f4](https://github.com/hpi-studyu/studyu/commit/6d3757f425dd5b95ee581e10b6ad675f8e71786a))

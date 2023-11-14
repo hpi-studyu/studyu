@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class InviteCodeFormView extends FormConsumerWidget {
-  const InviteCodeFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const InviteCodeFormView({required this.formViewModel, super.key});
 
   final InviteCodeFormViewModel formViewModel;
 

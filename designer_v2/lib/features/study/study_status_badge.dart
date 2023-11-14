@@ -16,8 +16,7 @@ class StudyStatusBadge extends StatelessWidget {
       this.type = studybadge.BadgeType.outlineFill,
       this.showPrefixIcon = true,
       this.showTooltip = true,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final Participation? participation;
   final StudyStatus? status;

@@ -6,7 +6,7 @@ class QuestionHeader extends StatelessWidget {
   final String? subtitle;
   final String? rationale;
 
-  const QuestionHeader({Key? key, this.prompt, this.subtitle, this.rationale}) : super(key: key);
+  const QuestionHeader({super.key, this.prompt, this.subtitle, this.rationale});
 
   List<Widget> _buildSubtitle(BuildContext context) {
     if (subtitle == null || subtitle!.isEmpty) return [];

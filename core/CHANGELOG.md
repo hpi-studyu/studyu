@@ -1,3 +1,12 @@
+## 4.3.2
+
+ - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+
+## 4.3.1
+
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+
 ## 4.3.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

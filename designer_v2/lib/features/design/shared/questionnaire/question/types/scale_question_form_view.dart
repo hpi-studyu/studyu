@@ -22,8 +22,8 @@ abstract class IScaleQuestionFormViewModel {
 class ScaleQuestionFormView extends ConsumerStatefulWidget {
   const ScaleQuestionFormView({
     required this.formViewModel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final QuestionFormViewModel formViewModel;
 

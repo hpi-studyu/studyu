@@ -19,10 +19,9 @@ class Hyperlink extends StatefulWidget {
     this.visitedStyle,
     this.icon,
     this.iconSize,
-    Key? key,
-  })  : assert((url != null && onClick == null) || (url == null && onClick != null),
-            "Must provide either url or onClick handler"),
-        super(key: key);
+    super.key,
+  }) : assert((url != null && onClick == null) || (url == null && onClick != null),
+            "Must provide either url or onClick handler");
 
   final String text;
   final String? url;

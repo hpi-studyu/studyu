@@ -1,7 +1,7 @@
 name: studyu_flutter_common
-version: 1.6.2
+version: 1.6.4
 description: StudyU common flutter components and functions for app and designer
-homepage: https://hpi.de/lippert/projects/studyu.html
+homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
@@ -12,12 +12,12 @@ dependencies:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.2
-  studyu_core: ^4.3.0
-  supabase_flutter: ^1.10.22
-  uuid: ^3.0.0 # sentry <= ^7.10.1
+  studyu_core: ^4.3.2
+  supabase_flutter: ^1.10.25
+  uuid: ^4.1.0 # flutter_test
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
 

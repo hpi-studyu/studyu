@@ -1,5 +1,16 @@
 <svg version="1.1" baseProfile="full" width="857.5" height="709.0" viewbox="0 0 857.5 709" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;WithScheduleControls
+	<desc >[ScheduleControls
+	  |
+	  +formViewModel: WithScheduleControls
+	  |
+	  +Widget build();
+	  -List&lt;FormTableRow&gt; _conditionalTimeRestrictions()
+	]
+	
+	[ScheduleControls]o-[&lt;abstract&gt;WithScheduleControls]
+	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[ScheduleControls]
+	
+	[&lt;abstract&gt;WithScheduleControls
 	  |
 	  +isTimeRestrictedControl: FormControl&lt;bool&gt;;
 	  +instanceID: FormControl&lt;String&gt;;
@@ -38,17 +49,6 @@
 	[&lt;abstract&gt;IFormDataWithSchedule]o-[StudyUTimeOfDay]
 	[&lt;abstract&gt;IFormData]&lt;:--[&lt;abstract&gt;IFormDataWithSchedule]
 	
-	[ScheduleControls
-	  |
-	  +formViewModel: WithScheduleControls
-	  |
-	  +Widget build();
-	  -List&lt;FormTableRow&gt; _conditionalTimeRestrictions()
-	]
-	
-	[ScheduleControls]o-[&lt;abstract&gt;WithScheduleControls]
-	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[ScheduleControls]
-	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
@@ -57,6 +57,12 @@
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M247.5 227.7 L247.5 259 L247.5 279 L247.5 279.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M252.8 218.3 L247.5 227.7 L242.2 218.3 L247.5 209.0 Z"></path>
+					</g>
+					<path d="M247.5 44.3 L247.5 51 L247.5 101 L247.5 101.0 " fill="none"></path>
+					<path d="M252.8 44.3 L247.5 44.3 L242.2 44.3 L247.5 31.0 Z"></path>
 					<path d="M158.6 598.5 L156.75 602 L156.75 622 L156.8 622.0 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M167.7 592.7 L158.6 598.5 L158.3 587.8 L167.3 582.0 Z"></path>
@@ -73,12 +79,32 @@
 						<path d="M652.5 44.3 L652.5 51 L652.5 71 L652.5 71.0 " fill="none"></path>
 					</g>
 					<path d="M657.8 44.3 L652.5 44.3 L647.2 44.3 L652.5 31.0 Z"></path>
-					<path d="M247.5 227.7 L247.5 259 L247.5 279 L247.5 279.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M252.8 218.3 L247.5 227.7 L242.2 218.3 L247.5 209.0 Z"></path>
+					<g data-name="ScheduleControls">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ScheduleControls">
+							<rect x="31.5" y="101.0" height="108.0" width="432.0" data-name="ScheduleControls"></rect>
+							<path d="M31.5 132.0 L463.5 132.0" fill="none" data-name="ScheduleControls"></path>
+							<path d="M31.5 163.0 L463.5 163.0" fill="none" data-name="ScheduleControls"></path>
+						</g>
+						<g transform="translate(31.5, 101)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScheduleControls">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScheduleControls">
+								<text x="208.0" y="13.5" stroke="none" text-anchor="middle" data-name="ScheduleControls">ScheduleControls</text>
+								
+							</g>
+						</g>
+						<g transform="translate(31.5, 132)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScheduleControls">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScheduleControls">
+								<text x="0.0" y="13.5" stroke="none" data-name="ScheduleControls">+formViewModel: WithScheduleControls</text>
+								
+							</g>
+						</g>
+						<g transform="translate(31.5, 163)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScheduleControls">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScheduleControls">
+								<text x="0.0" y="13.5" stroke="none" data-name="ScheduleControls">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ScheduleControls">-List&lt;FormTableRow&gt; _conditionalTimeRestrictions()</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M247.5 44.3 L247.5 51 L247.5 101 L247.5 101.0 " fill="none"></path>
-					<path d="M252.8 44.3 L247.5 44.3 L242.2 44.3 L247.5 31.0 Z"></path>
 					<g data-name="WithScheduleControls">
 						<g fill="#eee8d5" stroke="#33322E" data-name="WithScheduleControls">
 							<rect x="0.0" y="279.0" height="303.0" width="495.0" data-name="WithScheduleControls"></rect>
@@ -114,6 +140,17 @@
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WithScheduleControls">
 								<text x="0.0" y="13.5" stroke="none" data-name="WithScheduleControls">+void setScheduleControlsFrom()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="WithScheduleControls">-dynamic _initReminderControl()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormConsumerWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormConsumerWidget">
+							<rect x="151.5" y="0.0" height="31.0" width="192.0" data-name="FormConsumerWidget"></rect>
+						</g>
+						<g transform="translate(151.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormConsumerWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormConsumerWidget">
+								<text x="88.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormConsumerWidget">FormConsumerWidget</text>
 								
 							</g>
 						</g>
@@ -188,43 +225,6 @@
 						<g transform="translate(603.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormData">
 								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="IFormData">IFormData</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ScheduleControls">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ScheduleControls">
-							<rect x="31.5" y="101.0" height="108.0" width="432.0" data-name="ScheduleControls"></rect>
-							<path d="M31.5 132.0 L463.5 132.0" fill="none" data-name="ScheduleControls"></path>
-							<path d="M31.5 163.0 L463.5 163.0" fill="none" data-name="ScheduleControls"></path>
-						</g>
-						<g transform="translate(31.5, 101)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScheduleControls">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScheduleControls">
-								<text x="208.0" y="13.5" stroke="none" text-anchor="middle" data-name="ScheduleControls">ScheduleControls</text>
-								
-							</g>
-						</g>
-						<g transform="translate(31.5, 132)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScheduleControls">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScheduleControls">
-								<text x="0.0" y="13.5" stroke="none" data-name="ScheduleControls">+formViewModel: WithScheduleControls</text>
-								
-							</g>
-						</g>
-						<g transform="translate(31.5, 163)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ScheduleControls">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ScheduleControls">
-								<text x="0.0" y="13.5" stroke="none" data-name="ScheduleControls">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ScheduleControls">-List&lt;FormTableRow&gt; _conditionalTimeRestrictions()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FormConsumerWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormConsumerWidget">
-							<rect x="151.5" y="0.0" height="31.0" width="192.0" data-name="FormConsumerWidget"></rect>
-						</g>
-						<g transform="translate(151.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormConsumerWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormConsumerWidget">
-								<text x="88.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormConsumerWidget">FormConsumerWidget</text>
 								
 							</g>
 						</g>

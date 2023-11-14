@@ -45,11 +45,11 @@ class NotificationAction {
 /// Encapsulates a call to [showSnackbar]
 class SnackbarIntent extends NotificationIntent {
   SnackbarIntent({
-    required String message,
-    IconData? icon,
-    List<NotificationAction>? actions,
+    required String super.message,
+    super.icon,
+    super.actions,
     this.duration,
-  }) : super(message: message, icon: icon, actions: actions, type: NotificationType.snackbar);
+  }) : super(type: NotificationType.snackbar);
 
   final int? duration;
 }
@@ -58,13 +58,12 @@ class SnackbarIntent extends NotificationIntent {
 class AlertIntent extends NotificationIntent {
   AlertIntent({
     required this.title,
-    String? message,
-    Widget? customContent,
-    IconData? icon,
-    List<NotificationAction>? actions,
+    super.message,
+    super.customContent,
+    super.icon,
+    super.actions,
     this.dismissOnAction = true,
-  }) : super(
-            message: message, customContent: customContent, icon: icon, actions: actions, type: NotificationType.alert);
+  }) : super(type: NotificationType.alert);
 
   final String title;
   final bool dismissOnAction;

@@ -23,8 +23,8 @@ class AuthScaffold extends ConsumerStatefulWidget {
     this.leftContentMinWidth = 424.0,
     this.leftPanelMinWidth = 500.0,
     this.leftPanelPadding = const EdgeInsets.fromLTRB(88.0, 54.0, 88.0, 40.0),
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget body;
   final AuthFormKey formKey;
