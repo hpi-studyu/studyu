@@ -27,6 +27,9 @@ jobs:
 
       - name: Initialize Supabase
         run: |
+          dart pub global activate melos
+          melos bootstrap
+          dart pub get
           docker network create studyu_network || true
           cp docker/supabase/.env.example docker/supabase/.env
           docker compose -f docker/supabase/docker-compose-db.yml up -d
