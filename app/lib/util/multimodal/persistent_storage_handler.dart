@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:cross_file/cross_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'blob_storage_handler.dart';
+import 'package:studyu_core/core.dart';
 import 'encrypted_audio_file.dart';
 import 'encrypter_handler.dart';
 
