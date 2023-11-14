@@ -30,6 +30,7 @@ jobs:
           POSTGRES_DB: postgres
           DB_DOCS_DEST: ${{ github.workspace }}/docs/database
         run: |
+          docker network create studyu_network || true
           docker compose -f docker/supabase/docker-compose-db.yml -f .github/docker/db-docs.yml up --abort-on-container-exit
 
       - name: Commit documentation

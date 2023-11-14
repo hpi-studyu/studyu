@@ -40,6 +40,9 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
               labelHelpText: tr.form_field_intervention_task_title_tooltip,
               input: ReactiveTextField(
                 formControl: widget.formViewModel.taskTitleControl,
+                decoration: InputDecoration(
+                  hintText: tr.form_field_intervention_task_title,
+                ),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(200),
                 ],
@@ -76,6 +79,9 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
               ),
               input: ReactiveTextField(
                 formControl: widget.formViewModel.taskDescriptionControl,
+                decoration: InputDecoration(
+                  hintText: tr.form_field_intervention_task_description_hint,
+                ),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
@@ -83,9 +89,6 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: tr.form_field_intervention_task_description_hint,
-                ),
               ),
             ),
           ]),

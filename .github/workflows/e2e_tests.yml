@@ -1,0 +1,54 @@
+name: E2E tests
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!dev'
+      - '!main'
+    paths:
+      - 'designer_v2/**'
+      - 'core/**'
+      - 'flutter_common/**'
+
+concurrency:
+  group: ${{ github.ref }}-e2e-tests
+  cancel-in-progress: true
+
+jobs:
+  drive_web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nanasess/setup-chromedriver@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Initialize Supabase
+        run: |
+          docker network create studyu_network || true
+          cp docker/supabase/.env.example docker/supabase/.env
+          docker compose -f docker/supabase/docker-compose-db.yml up -d
+          docker compose -f docker/supabase/docker-compose.yml up -d
+          docker compose -f docker/nginx/docker-compose-proxy.yml up -d
+          while [ "$(docker inspect --format='{{.State.Health.Status}}' supabase-db)" != "healthy" ]; do sleep 1; done
+          cat ./database/app_config.sql | docker exec -i supabase-db psql -U postgres -d postgres
+
+      - name: Start Chrome Driver
+        run: |
+          export DISPLAY=:99
+          chromedriver --port=4444 &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+
+      - name: Await potential publishing on Pub.dev
+        uses: johannesvedder/await-workflow@v1
+        with:
+          workflowId: 'publish_pubdev.yml'
+
+      - name: Run Flutter E2E tests
+        working-directory: ./designer_v2
+        run: |
+          flutter drive --driver=test_driver/integration_driver.dart \
+            --target=integration_test/app_test.dart -d web-server \
+            --dart-define="STUDYU_ENV=.env.local"

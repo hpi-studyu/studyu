@@ -1,3 +1,15 @@
+## 2.6.4
+
+ - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))
+ - **FIX**: dart fix. ([d184c43b](https://github.com/hpi-studyu/studyu/commit/d184c43bafd0229a799ec835b16c3dcb851016b9))
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+ - **FIX**: dart fix. ([8d81f96c](https://github.com/hpi-studyu/studyu/commit/8d81f96c0caf63df04fc41f156d3312e5b09c076))
+
+## 2.6.3
+
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+ - **FIX**: dart fix. ([8d81f96c](https://github.com/hpi-studyu/studyu/commit/8d81f96c0caf63df04fc41f156d3312e5b09c076))
+
 ## 2.6.2
 
  - **FIX**: update descriptions and rename imprint. ([6d3757f4](https://github.com/hpi-studyu/studyu/commit/6d3757f425dd5b95ee581e10b6ad675f8e71786a))

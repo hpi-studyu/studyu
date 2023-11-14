@@ -43,6 +43,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       Expanded(
                           child: ReactiveTextField(
                         formControl: formViewModel.titleControl,
+                        decoration: InputDecoration(
+                          hintText: tr.form_field_study_title,
+                        ),
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(100),
                         ],
@@ -69,6 +72,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   labelHelpText: tr.form_field_study_description_tooltip,
                   input: ReactiveTextField(
                     formControl: formViewModel.descriptionControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_study_description_hint,
+                    ),
                     validationMessages: formViewModel.descriptionControl.validationMessages,
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
@@ -76,7 +82,6 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(500),
                     ],
-                    decoration: InputDecoration(hintText: tr.form_field_study_description_hint),
                   ),
                 ),
               ], columnWidths: const {
@@ -94,6 +99,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_organization,
                   input: ReactiveTextField(
                     formControl: formViewModel.organizationControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_organization,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -105,6 +113,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_review_board,
                   input: ReactiveTextField(
                     formControl: formViewModel.reviewBoardControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_review_board,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -116,6 +127,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_review_board_number,
                   input: ReactiveTextField(
                     formControl: formViewModel.reviewBoardNumberControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_review_board_number,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -127,6 +141,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_researchers,
                   input: ReactiveTextField(
                     formControl: formViewModel.researchersControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_researchers,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -138,6 +155,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_website,
                   input: ReactiveTextField(
                     formControl: formViewModel.websiteControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_website,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(300),
                     ],
@@ -149,6 +169,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_email,
                   input: ReactiveTextField(
                     formControl: formViewModel.emailControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_contact_email,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -160,6 +183,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_phone,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_contact_phone,
+                    ),
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50),
                     ],
@@ -171,6 +197,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_additional_info,
                   input: ReactiveTextField(
                     formControl: formViewModel.additionalInfoControl,
+                    decoration: InputDecoration(
+                      hintText: tr.form_field_contact_additional_info,
+                    ),
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,

@@ -2,7 +2,7 @@
 
 import 'dart:html' as html;
 import 'dart:js' as js;
-import 'dart:ui_web' as ui;
+import 'dart:ui_web' as ui_web;
 
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;
@@ -53,7 +53,7 @@ class WebController extends PlatformController {
   activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    print("Register view with: $previewSrc");
+    // print("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -65,8 +65,7 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
-    // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
+    ui_web.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
   }
 
   @override
