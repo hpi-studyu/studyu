@@ -8,7 +8,7 @@ repository: https://github.com/hpi-studyu/studyu
 environment: 
   sdk: '>=3.0.0 <4.0.0'
 dependencies:
-  audioplayers: ^5.2.0
+  audioplayers: ^5.2.1
   camera: ^0.10.5+5
   collection: ^1.17.2 # flutter_test
   connectivity_plus: ^5.0.1
