@@ -10,6 +10,7 @@ on:
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}-e2e-tests
