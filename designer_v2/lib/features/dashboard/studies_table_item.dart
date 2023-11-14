@@ -65,45 +65,34 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
   }
 
   Widget _buildRow(ThemeData theme, StudyGroup studyGroup) {
-    if (!isExpanded || studyGroup.isSingleStudy) {
-      return _buildSingleStudyOrGroupHeaderRow(theme, studyGroup);
-    }
+    final row = _buildSingleStudyOrGroupHeaderRow(theme, studyGroup);
+    final List<Widget> subRows = [];
 
-    final rows = [_buildSingleStudyOrGroupHeaderRow(theme, studyGroup)];
-    for (final study in studyGroup.studies) {
-      rows.add(_buildSingleStudyOrGroupHeaderRow(theme, StudyGroup.single(study)));
-      rows.add(const Divider(
+    if (!studyGroup.isSingleStudy && isExpanded) {
+      for (final study in studyGroup.studies) {
+        subRows.add(_buildSingleStudyOrGroupHeaderRow(theme, StudyGroup.single(study)));
+        subRows.add(const Divider(
+          thickness: 0.3,
+        ));
+      }
+      subRows.removeLast();
+      subRows.add(const Divider(
         thickness: 0.3,
+        color: Colors.transparent,
       ));
     }
-    rows.removeLast();
-    rows.add(const Divider(
-      thickness: 0.3,
-      color: Colors.transparent,
-    ));
 
     return Column(
-      children: rows,
+      children: [
+        row,
+        Column(
+          children: subRows,
+        )
+      ],
     );
   }
 
   Widget _buildSingleStudyOrGroupHeaderRow(ThemeData theme, StudyGroup studyGroup) {
-    Icon icon(IconData iconData) {
-      return Icon(
-        iconData,
-        color: Colors.grey,
-        size: 25,
-      );
-    }
-
-    Icon smallIcon(IconData iconData) {
-      return Icon(
-        iconData,
-        color: Colors.grey,
-        size: 12,
-      );
-    }
-
     final normalTextStyle = isExpanded && !studyGroup.isSingleStudy
         ? const TextStyle(fontWeight: FontWeight.bold)
         : null;
@@ -141,21 +130,17 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               children: [
                 widget.columnSizes[0].createContainer(
                     height: widget.itemHeight,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        !studyGroup.isSingleStudy
-                            ? (isExpanded
-                                ? icon(MdiIcons.chevronDown)
-                                : icon(MdiIcons.chevronRight))
-                            : const SizedBox.shrink(),
-                        Positioned(
-                            left: 4,
-                            top: 0,
-                            child:
-                                widget.isPinned ? smallIcon(MdiIcons.pin) : const SizedBox.shrink())
-                      ],
-                    )),
+                    child: !studyGroup.isSingleStudy
+                        ? AnimatedRotation(
+                            turns: isExpanded ? 0.25 : 0,
+                            duration: const Duration(milliseconds: 250),
+                            child: const Icon(
+                              Icons.chevron_right_rounded,
+                              color: Colors.grey,
+                              size: 25,
+                            ),
+                          )
+                        : const SizedBox.shrink()),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[1].createContainer(
                   child: Text(
