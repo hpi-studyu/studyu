@@ -133,7 +133,7 @@ class StudiesTable extends StatelessWidget {
 
     // Set column definitions
     final columnDefinitionsMap = {
-      StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(itemHeight),
+      StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(40),
       StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
       StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
       StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(participationColumnWidth),
