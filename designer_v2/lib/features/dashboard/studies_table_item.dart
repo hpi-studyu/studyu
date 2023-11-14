@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 
@@ -131,13 +130,16 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                 widget.columnSizes[0].createContainer(
                     height: widget.itemHeight,
                     child: !studyGroup.isSingleStudy
-                        ? AnimatedRotation(
-                            turns: isExpanded ? 0.25 : 0,
-                            duration: const Duration(milliseconds: 250),
-                            child: const Icon(
-                              Icons.chevron_right_rounded,
-                              color: Colors.grey,
-                              size: 25,
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: AnimatedRotation(
+                              turns: isExpanded ? 0.25 : 0,
+                              duration: const Duration(milliseconds: 250),
+                              child: const Icon(
+                                Icons.chevron_right_rounded,
+                                color: Colors.grey,
+                                size: 24,
+                              ),
                             ),
                           )
                         : const SizedBox.shrink()),
