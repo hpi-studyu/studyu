@@ -55,7 +55,13 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       child: LayoutBuilder(builder: (_, constraints) {
         return Material(
           color: theme.colorScheme.onPrimary,
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+            side: BorderSide(
+                color:
+                    widget.isPinned ? theme.colorScheme.primary.withAlpha(70) : Colors.transparent,
+                width: 1.0),
+          ),
           elevation: isHovering ? 4.0 : 1.5,
           child: _buildRow(theme, widget.studyGroup),
         );
