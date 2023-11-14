@@ -118,8 +118,7 @@
 	  |
 	  +participation: Participation;
 	  +type: BadgeType;
-	  +showPrefixIcon: bool;
-	  +center: bool
+	  +showPrefixIcon: bool
 	  |
 	  +Widget build()
 	]
@@ -370,13 +369,13 @@
 					<g fill="#eee8d5">
 						<path d="M1673.7 210.8 L1679.7 219.8 L1668.9 220.3 L1663.0 211.4 Z"></path>
 					</g>
-					<path d="M2370.6 213.7 L2329.25 278 L2594.9060402684563 411.5 L2594.9 411.5 " fill="none"></path>
+					<path d="M2375.4 206.2 L2329.25 278 L2594.9060402684563 411.5 L2594.9 411.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2380.1 208.7 L2370.6 213.7 L2371.1 203.0 L2380.7 198.0 Z"></path>
+						<path d="M2384.9 201.2 L2375.4 206.2 L2375.9 195.5 L2385.5 190.5 Z"></path>
 					</g>
-					<path d="M2461.4 215.2 L2488 278 L2477.0243288590605 411.5 L2477.0 411.5 " fill="none"></path>
+					<path d="M2458.3 207.7 L2488 278 L2477.0243288590605 411.5 L2477.0 411.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2462.7 204.5 L2461.4 215.2 L2452.9 208.7 L2454.2 198.0 Z"></path>
+						<path d="M2459.6 197.0 L2458.3 207.7 L2449.7 201.2 L2451.0 190.5 Z"></path>
 					</g>
 					<path d="M3994.3 175.3 L3771.5 278 L2682.75 419.5873881736854 L2682.8 419.6 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -851,26 +850,25 @@
 					</g>
 					<g data-name="StudyParticipationBadge">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyParticipationBadge">
-							<rect x="2309.5" y="60.0" height="138.0" width="231.0" data-name="StudyParticipationBadge"></rect>
-							<path d="M2309.5 91.0 L2540.5 91.0" fill="none" data-name="StudyParticipationBadge"></path>
-							<path d="M2309.5 167.0 L2540.5 167.0" fill="none" data-name="StudyParticipationBadge"></path>
+							<rect x="2309.5" y="67.5" height="123.0" width="231.0" data-name="StudyParticipationBadge"></rect>
+							<path d="M2309.5 98.5 L2540.5 98.5" fill="none" data-name="StudyParticipationBadge"></path>
+							<path d="M2309.5 159.5 L2540.5 159.5" fill="none" data-name="StudyParticipationBadge"></path>
 						</g>
-						<g transform="translate(2309.5, 60)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyParticipationBadge">
+						<g transform="translate(2309.5, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyParticipationBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyParticipationBadge">
 								<text x="107.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyParticipationBadge">StudyParticipationBadge</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2309.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
+						<g transform="translate(2309.5, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyParticipationBadge">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyParticipationBadge">+participation: Participation</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyParticipationBadge">+type: BadgeType</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="StudyParticipationBadge">+showPrefixIcon: bool</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyParticipationBadge">+center: bool</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2309.5, 167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
+						<g transform="translate(2309.5, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyParticipationBadge">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyParticipationBadge">+Widget build()</text>
 								
