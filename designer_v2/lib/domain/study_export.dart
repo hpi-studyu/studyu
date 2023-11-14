@@ -66,7 +66,6 @@ extension StudyExportX on Study {
         surveyColumns['survey${i}_question${j}_text'] = question.prompt;
         surveyColumns['survey${i}_question${j}_response'] = '';
         responseColumnById[question.id] = 'survey${i}_question${j}_response';
-        // Check if question is of media type
         if (question.type == AudioRecordingQuestion.questionType ||
             question.type == ImageCapturingQuestion.questionType) {
           mediaIndices.add(question.id);
