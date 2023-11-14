@@ -12,7 +12,8 @@ CREATE VIEW masking_rule AS (
             'encrypt +with +key +column +([\w\"\-$]+)'::text AS pattern_key_id_column,
             '(?<=associated) +\(([\w\"\-$, ]+)\)'::text AS pattern_associated_columns,
             '(?<=nonce) +([\w\"\-$]+)'::text AS pattern_nonce_column,
-            '(?<=decrypt with view) +([\w\"\-$]+\.[\w\"\-$]+)'::text AS pattern_view_name
+            '(?<=decrypt with view) +([\w\"\-$]+\.[\w\"\-$]+)'::text AS pattern_view_name,
+            '(?<=security invoker)'::text AS pattern_security_invoker
         ), rules_from_seclabels AS (
          SELECT sl.objoid AS attrelid,
             sl.objsubid AS attnum,
@@ -26,7 +27,8 @@ CREATE VIEW masking_rule AS (
             (regexp_match(sl.label, k.pattern_associated_columns, 'i'::text))[1] AS associated_columns,
             (regexp_match(sl.label, k.pattern_nonce_column, 'i'::text))[1] AS nonce_column,
             COALESCE((regexp_match(sl2.label, k.pattern_view_name, 'i'::text))[1], (((c.relnamespace)::regnamespace || '.'::text) || quote_ident(('decrypted_'::text || (c.relname)::text)))) AS view_name,
-            100 AS priority
+            100 AS priority,
+            ((regexp_match(sl.label, k.pattern_security_invoker, 'i'::text))[1] IS NOT NULL) AS security_invoker
            FROM const k,
             (((pg_seclabel sl
              JOIN pg_class c ON (((sl.classoid = c.tableoid) AND (sl.objoid = c.oid))))
@@ -46,7 +48,8 @@ CREATE VIEW masking_rule AS (
     rules_from_seclabels.associated_columns,
     rules_from_seclabels.nonce_column,
     rules_from_seclabels.view_name,
-    rules_from_seclabels.priority
+    rules_from_seclabels.priority,
+    rules_from_seclabels.security_invoker
    FROM rules_from_seclabels
   ORDER BY rules_from_seclabels.attrelid, rules_from_seclabels.attnum, rules_from_seclabels.priority DESC
 )
@@ -71,6 +74,7 @@ CREATE VIEW masking_rule AS (
 | nonce_column | text |  | true |  |  |  |
 | view_name | text |  | true |  |  |  |
 | priority | integer |  | true |  |  |  |
+| security_invoker | boolean |  | true |  |  |  |
 
 ## Relations
 

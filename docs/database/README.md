@@ -28,7 +28,7 @@
 | [extensions.pg_stat_statements](extensions.pg_stat_statements.md) | 43 |  | VIEW |
 | [pgsodium.key](pgsodium.key.md) | 14 | This table holds metadata for derived keys given a key_id and key_context. The raw key is never stored. | BASE TABLE |
 | [pgsodium.valid_key](pgsodium.valid_key.md) | 9 |  | VIEW |
-| [pgsodium.masking_rule](pgsodium.masking_rule.md) | 13 |  | VIEW |
+| [pgsodium.masking_rule](pgsodium.masking_rule.md) | 14 |  | VIEW |
 | [pgsodium.mask_columns](pgsodium.mask_columns.md) | 7 |  | VIEW |
 | [pgsodium.decrypted_key](pgsodium.decrypted_key.md) | 14 |  | VIEW |
 | [vault.secrets](vault.secrets.md) | 8 | Table with encrypted `secret` column for storing sensitive information on disk. | BASE TABLE |
@@ -38,7 +38,6 @@
 
 | Name | ReturnType | Arguments | Type |
 | ---- | ------- | ------- | ---- |
-| pgsodium.crypto_box_noncegen | bytea |  | FUNCTION |
 | extensions.uuid_generate_v4 | uuid |  | FUNCTION |
 | pgbouncer.get_auth | record | p_usename text | FUNCTION |
 | storage.filename | text | name text | FUNCTION |
@@ -128,19 +127,21 @@
 | pgsodium.crypto_box_new_seed | bytea |  | FUNCTION |
 | pgsodium.crypto_sign_new_seed | bytea |  | FUNCTION |
 | extensions.set_graphql_placeholder | event_trigger |  | FUNCTION |
-| extensions.grant_pg_graphql_access | event_trigger |  | FUNCTION |
-| graphql_public.graphql | jsonb | "operationName" text DEFAULT NULL::text, query text DEFAULT NULL::text, variables jsonb DEFAULT NULL::jsonb, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
-| graphql.resolve | jsonb | query text, variables jsonb DEFAULT '{}'::jsonb, "operationName" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| graphql._internal_resolve | jsonb | query text, variables jsonb DEFAULT '{}'::jsonb, "operationName" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| graphql.exception | text | message text | FUNCTION |
 | graphql.increment_schema_version | event_trigger |  | FUNCTION |
 | graphql.get_schema_version | int4 |  | FUNCTION |
-| graphql.comment_directive | jsonb | comment_ text | FUNCTION |
-| graphql.exception | text | message text | FUNCTION |
-| net.http_post | int8 | url text, body jsonb DEFAULT '{}'::jsonb, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{"Content-Type": "application/json"}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
 | pgsodium.derive_key | bytea | key_id bigint, key_len integer DEFAULT 32, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
+| extensions.grant_pg_graphql_access | event_trigger |  | FUNCTION |
+| graphql_public.graphql | jsonb | "operationName" text DEFAULT NULL::text, query text DEFAULT NULL::text, variables jsonb DEFAULT NULL::jsonb, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| graphql.comment_directive | jsonb | comment_ text | FUNCTION |
+| graphql.resolve | jsonb | query text, variables jsonb DEFAULT '{}'::jsonb, "operationName" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| net.http_post | int8 | url text, body jsonb DEFAULT '{}'::jsonb, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{"Content-Type": "application/json"}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
 | pgsodium.pgsodium_derive | bytea | key_id bigint, key_len integer DEFAULT 32, context bytea DEFAULT decode('pgsodium'::text, 'escape'::text) | FUNCTION |
 | pgsodium.randombytes_new_seed | bytea |  | FUNCTION |
 | pgsodium.crypto_secretbox_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_auth_keygen | bytea |  | FUNCTION |
+| pgsodium.crypto_box_noncegen | bytea |  | FUNCTION |
 | pgsodium.crypto_aead_ietf_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_shorthash_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_generichash_keygen | bytea |  | FUNCTION |
@@ -167,28 +168,21 @@
 | pgsodium.crypto_aead_det_decrypt | bytea | message bytea, additional bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea, nonce bytea DEFAULT NULL::bytea | FUNCTION |
 | pgsodium.version | text |  | FUNCTION |
 | pgsodium.crypto_aead_det_noncegen | bytea |  | FUNCTION |
-| pgsodium.crypto_pwhash_str | bytea | password bytea | FUNCTION |
 | pgsodium.has_mask | bool | role regrole, source_name text | FUNCTION |
 | pgsodium.mask_columns | record | source_relid oid | FUNCTION |
 | pgsodium.create_mask_view | void | relid oid, debug boolean DEFAULT false | FUNCTION |
 | pgsodium.create_key | valid_key | key_type pgsodium.key_type DEFAULT 'aead-det'::pgsodium.key_type, name text DEFAULT NULL::text, raw_key bytea DEFAULT NULL::bytea, raw_key_nonce bytea DEFAULT NULL::bytea, parent_key uuid DEFAULT NULL::uuid, key_context bytea DEFAULT '\x7067736f6469756d'::bytea, expires timestamp with time zone DEFAULT NULL::timestamp with time zone, associated_data text DEFAULT ''::text | FUNCTION |
-| pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key bytea | FUNCTION |
-| pgsodium.crypto_pwhash_str_verify | bool | hashed_password bytea, password bytea | FUNCTION |
 | pgsodium.quote_assoc | text | text, boolean DEFAULT false | FUNCTION |
-| pgsodium.crypto_shorthash | bytea | message bytea, key bytea | FUNCTION |
+| pgsodium.crypto_auth_hmacsha512_verify | bool | hash bytea, message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_kdf_derive_from_key | bytea | subkey_size integer, subkey_id bigint, context bytea, primary_key uuid | FUNCTION |
-| pgsodium.crypto_pwhash | bytea | password bytea, salt bytea | FUNCTION |
 | pgsodium.crypto_aead_det_encrypt | bytea | message bytea, additional bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_aead_det_decrypt | bytea | message bytea, additional bytea, key_uuid uuid | FUNCTION |
-| pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.get_key_by_id | valid_key | uuid | FUNCTION |
 | pgsodium.get_key_by_name | valid_key | text | FUNCTION |
 | pgsodium.get_named_keys | valid_key | filter text DEFAULT '%'::text | FUNCTION |
-| pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_uuid uuid | FUNCTION |
 | pgsodium.enable_security_label_trigger | void |  | FUNCTION |
 | pgsodium.disable_security_label_trigger | void |  | FUNCTION |
 | pgsodium.update_mask | void | target oid, debug boolean DEFAULT false | FUNCTION |
-| pgsodium.mask_role | void | masked_role regrole, source_name text, view_name text | FUNCTION |
 | pgsodium.crypto_sign_update_agg1 | bytea | state bytea, message bytea | FUNCTION |
 | pgsodium.crypto_sign_update_agg2 | bytea | cur_state bytea, initial_state bytea, message bytea | FUNCTION |
 | pgsodium.crypto_sign_update_agg | bytea | message bytea | a |
@@ -196,6 +190,9 @@
 | pgsodium.encrypted_columns | text | relid oid | FUNCTION |
 | pgsodium.decrypted_columns | text | relid oid | FUNCTION |
 | pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key bytea | FUNCTION |
+| pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
+| pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_uuid uuid | FUNCTION |
+| pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key bytea | FUNCTION |
 | pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_auth | bytea | message bytea, key bytea | FUNCTION |
@@ -203,6 +200,7 @@
 | pgsodium.crypto_auth | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_auth_verify | bool | mac bytea, message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_auth_verify | bool | mac bytea, message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
+| pgsodium.crypto_stream_xchacha20_xor_ic | bytea | bytea, bytea, bigint, bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_auth_verify | bool | mac bytea, message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_box_seed_new_keypair | crypto_box_keypair | seed bytea | FUNCTION |
 | pgsodium.crypto_box | bytea | message bytea, nonce bytea, public bytea, secret bytea | FUNCTION |
@@ -213,6 +211,7 @@
 | pgsodium.crypto_generichash | bytea | message bytea, key bytea DEFAULT NULL::bytea | FUNCTION |
 | pgsodium.crypto_generichash | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_shorthash | bytea | message bytea, key bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
+| pgsodium.crypto_shorthash | bytea | message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_shorthash | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.sodium_bin2base64 | text | bin bytea | FUNCTION |
 | pgsodium.sodium_base642bin | bytea | base64 text | FUNCTION |
@@ -220,7 +219,6 @@
 | pgsodium.crypto_auth_hmacsha512 | bytea | message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha512 | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_auth_hmacsha512_verify | bool | hash bytea, message bytea, secret bytea | FUNCTION |
-| pgsodium.crypto_auth_hmacsha512_verify | bool | hash bytea, message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha512_verify | bool | signature bytea, message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256 | bytea | message bytea, secret bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256 | bytea | message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
@@ -229,6 +227,9 @@
 | pgsodium.crypto_auth_hmacsha256_verify | bool | hash bytea, message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256_verify | bool | signature bytea, message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_kdf_derive_from_key | bytea | subkey_size bigint, subkey_id bigint, context bytea, primary_key bytea | FUNCTION |
+| pgsodium.crypto_pwhash | bytea | password bytea, salt bytea | FUNCTION |
+| pgsodium.crypto_pwhash_str | bytea | password bytea | FUNCTION |
+| pgsodium.crypto_pwhash_str_verify | bool | hashed_password bytea, password bytea | FUNCTION |
 | pgsodium.randombytes_uniform | int4 | upper_bound integer | FUNCTION |
 | pgsodium.randombytes_buf | bytea | size integer | FUNCTION |
 | pgsodium.randombytes_buf_deterministic | bytea | size integer, seed bytea | FUNCTION |
@@ -257,12 +258,12 @@
 | pgsodium.crypto_stream_xchacha20_xor | bytea | bytea, bytea, bytea | FUNCTION |
 | pgsodium.crypto_stream_xchacha20_xor | bytea | bytea, bytea, bigint, context bytea DEFAULT '\x70676f736469756d'::bytea | FUNCTION |
 | pgsodium.crypto_stream_xchacha20_xor_ic | bytea | bytea, bytea, bigint, bytea | FUNCTION |
-| pgsodium.crypto_stream_xchacha20_xor_ic | bytea | bytea, bytea, bigint, bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.encrypted_column | text | relid oid, m record | FUNCTION |
 | pgsodium.update_masks | void | debug boolean DEFAULT false | FUNCTION |
 | pgsodium.key_encrypt_secret_raw_key | trigger |  | FUNCTION |
-| pgsodium.trg_mask_update | event_trigger |  | FUNCTION |
+| pgsodium.mask_role | void | masked_role regrole, source_name text, view_name text | FUNCTION |
 | pgsodium.create_mask_view | void | relid oid, subid integer, debug boolean DEFAULT false | FUNCTION |
+| pgsodium.trg_mask_update | event_trigger |  | FUNCTION |
 | pgsodium.crypto_aead_det_decrypt | bytea | message bytea, additional bytea, key_uuid uuid, nonce bytea | FUNCTION |
 | pgsodium.crypto_aead_det_encrypt | bytea | message bytea, additional bytea, key_uuid uuid, nonce bytea | FUNCTION |
 | pgsodium.crypto_aead_det_keygen | bytea |  | FUNCTION |

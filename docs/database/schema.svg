@@ -930,50 +930,53 @@
 <!-- pgsodium.masking_rule -->
 <g id="node25" class="node">
 <title>pgsodium.masking_rule</title>
-<polygon fill="#efefef" stroke="transparent" points="7462,-3280.5 7462,-3315.5 7743,-3315.5 7743,-3280.5 7462,-3280.5"/>
-<polygon fill="none" stroke="#000000" points="7462,-3280.5 7462,-3315.5 7743,-3315.5 7743,-3280.5 7462,-3280.5"/>
-<text text-anchor="start" x="7468.603" y="-3293.3" font-family="Arial Bold" font-size="18.00" fill="#000000">pgsodium.masking_rule</text>
-<text text-anchor="start" x="7658.6326" y="-3293.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
-<text text-anchor="start" x="7692.8374" y="-3293.3" font-family="Arial" font-size="14.00" fill="#666666">[VIEW]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3250.5 7462,-3280.5 7743,-3280.5 7743,-3250.5 7462,-3250.5"/>
-<text text-anchor="start" x="7469" y="-3261.9" font-family="Arial" font-size="14.00" fill="#000000">attrelid    </text>
-<text text-anchor="start" x="7545.2076" y="-3261.9" font-family="Arial" font-size="14.00" fill="#666666">[oid]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3220.5 7462,-3250.5 7743,-3250.5 7743,-3220.5 7462,-3220.5"/>
-<text text-anchor="start" x="7469" y="-3231.9" font-family="Arial" font-size="14.00" fill="#000000">attnum    </text>
-<text text-anchor="start" x="7545.9944" y="-3231.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3190.5 7462,-3220.5 7743,-3220.5 7743,-3190.5 7462,-3190.5"/>
-<text text-anchor="start" x="7469" y="-3201.9" font-family="Arial" font-size="14.00" fill="#000000">relnamespace    </text>
-<text text-anchor="start" x="7591.1108" y="-3201.9" font-family="Arial" font-size="14.00" fill="#666666">[regnamespace]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3160.5 7462,-3190.5 7743,-3190.5 7743,-3160.5 7462,-3160.5"/>
-<text text-anchor="start" x="7469" y="-3171.9" font-family="Arial" font-size="14.00" fill="#000000">relname    </text>
-<text text-anchor="start" x="7553.763" y="-3171.9" font-family="Arial" font-size="14.00" fill="#666666">[name]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3130.5 7462,-3160.5 7743,-3160.5 7743,-3130.5 7462,-3130.5"/>
-<text text-anchor="start" x="7469" y="-3141.9" font-family="Arial" font-size="14.00" fill="#000000">attname    </text>
-<text text-anchor="start" x="7553.777" y="-3141.9" font-family="Arial" font-size="14.00" fill="#666666">[name]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3100.5 7462,-3130.5 7743,-3130.5 7743,-3100.5 7462,-3100.5"/>
-<text text-anchor="start" x="7469" y="-3111.9" font-family="Arial" font-size="14.00" fill="#000000">format_type    </text>
-<text text-anchor="start" x="7577.1108" y="-3111.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3070.5 7462,-3100.5 7743,-3100.5 7743,-3070.5 7462,-3070.5"/>
-<text text-anchor="start" x="7469" y="-3081.9" font-family="Arial" font-size="14.00" fill="#000000">col_description    </text>
-<text text-anchor="start" x="7596.554" y="-3081.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3040.5 7462,-3070.5 7743,-3070.5 7743,-3040.5 7462,-3040.5"/>
-<text text-anchor="start" x="7469" y="-3051.9" font-family="Arial" font-size="14.00" fill="#000000">key_id_column    </text>
-<text text-anchor="start" x="7596.5568" y="-3051.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-3010.5 7462,-3040.5 7743,-3040.5 7743,-3010.5 7462,-3010.5"/>
-<text text-anchor="start" x="7469" y="-3021.9" font-family="Arial" font-size="14.00" fill="#000000">key_id    </text>
-<text text-anchor="start" x="7543.6592" y="-3021.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-2980.5 7462,-3010.5 7743,-3010.5 7743,-2980.5 7462,-2980.5"/>
-<text text-anchor="start" x="7469" y="-2991.9" font-family="Arial" font-size="14.00" fill="#000000">associated_columns    </text>
-<text text-anchor="start" x="7630.0126" y="-2991.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-2950.5 7462,-2980.5 7743,-2980.5 7743,-2950.5 7462,-2950.5"/>
-<text text-anchor="start" x="7469" y="-2961.9" font-family="Arial" font-size="14.00" fill="#000000">nonce_column    </text>
-<text text-anchor="start" x="7594.2328" y="-2961.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-2920.5 7462,-2950.5 7743,-2950.5 7743,-2920.5 7462,-2920.5"/>
-<text text-anchor="start" x="7469" y="-2931.9" font-family="Arial" font-size="14.00" fill="#000000">view_name    </text>
-<text text-anchor="start" x="7573.9916" y="-2931.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
-<polygon fill="none" stroke="#000000" points="7462,-2890.5 7462,-2920.5 7743,-2920.5 7743,-2890.5 7462,-2890.5"/>
-<text text-anchor="start" x="7469" y="-2901.9" font-family="Arial" font-size="14.00" fill="#000000">priority    </text>
-<text text-anchor="start" x="7545.195" y="-2901.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
+<polygon fill="#efefef" stroke="transparent" points="7462,-3295.5 7462,-3330.5 7743,-3330.5 7743,-3295.5 7462,-3295.5"/>
+<polygon fill="none" stroke="#000000" points="7462,-3295.5 7462,-3330.5 7743,-3330.5 7743,-3295.5 7462,-3295.5"/>
+<text text-anchor="start" x="7468.603" y="-3308.3" font-family="Arial Bold" font-size="18.00" fill="#000000">pgsodium.masking_rule</text>
+<text text-anchor="start" x="7658.6326" y="-3308.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
+<text text-anchor="start" x="7692.8374" y="-3308.3" font-family="Arial" font-size="14.00" fill="#666666">[VIEW]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3265.5 7462,-3295.5 7743,-3295.5 7743,-3265.5 7462,-3265.5"/>
+<text text-anchor="start" x="7469" y="-3276.9" font-family="Arial" font-size="14.00" fill="#000000">attrelid    </text>
+<text text-anchor="start" x="7545.2076" y="-3276.9" font-family="Arial" font-size="14.00" fill="#666666">[oid]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3235.5 7462,-3265.5 7743,-3265.5 7743,-3235.5 7462,-3235.5"/>
+<text text-anchor="start" x="7469" y="-3246.9" font-family="Arial" font-size="14.00" fill="#000000">attnum    </text>
+<text text-anchor="start" x="7545.9944" y="-3246.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3205.5 7462,-3235.5 7743,-3235.5 7743,-3205.5 7462,-3205.5"/>
+<text text-anchor="start" x="7469" y="-3216.9" font-family="Arial" font-size="14.00" fill="#000000">relnamespace    </text>
+<text text-anchor="start" x="7591.1108" y="-3216.9" font-family="Arial" font-size="14.00" fill="#666666">[regnamespace]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3175.5 7462,-3205.5 7743,-3205.5 7743,-3175.5 7462,-3175.5"/>
+<text text-anchor="start" x="7469" y="-3186.9" font-family="Arial" font-size="14.00" fill="#000000">relname    </text>
+<text text-anchor="start" x="7553.763" y="-3186.9" font-family="Arial" font-size="14.00" fill="#666666">[name]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3145.5 7462,-3175.5 7743,-3175.5 7743,-3145.5 7462,-3145.5"/>
+<text text-anchor="start" x="7469" y="-3156.9" font-family="Arial" font-size="14.00" fill="#000000">attname    </text>
+<text text-anchor="start" x="7553.777" y="-3156.9" font-family="Arial" font-size="14.00" fill="#666666">[name]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3115.5 7462,-3145.5 7743,-3145.5 7743,-3115.5 7462,-3115.5"/>
+<text text-anchor="start" x="7469" y="-3126.9" font-family="Arial" font-size="14.00" fill="#000000">format_type    </text>
+<text text-anchor="start" x="7577.1108" y="-3126.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3085.5 7462,-3115.5 7743,-3115.5 7743,-3085.5 7462,-3085.5"/>
+<text text-anchor="start" x="7469" y="-3096.9" font-family="Arial" font-size="14.00" fill="#000000">col_description    </text>
+<text text-anchor="start" x="7596.554" y="-3096.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3055.5 7462,-3085.5 7743,-3085.5 7743,-3055.5 7462,-3055.5"/>
+<text text-anchor="start" x="7469" y="-3066.9" font-family="Arial" font-size="14.00" fill="#000000">key_id_column    </text>
+<text text-anchor="start" x="7596.5568" y="-3066.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-3025.5 7462,-3055.5 7743,-3055.5 7743,-3025.5 7462,-3025.5"/>
+<text text-anchor="start" x="7469" y="-3036.9" font-family="Arial" font-size="14.00" fill="#000000">key_id    </text>
+<text text-anchor="start" x="7543.6592" y="-3036.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-2995.5 7462,-3025.5 7743,-3025.5 7743,-2995.5 7462,-2995.5"/>
+<text text-anchor="start" x="7469" y="-3006.9" font-family="Arial" font-size="14.00" fill="#000000">associated_columns    </text>
+<text text-anchor="start" x="7630.0126" y="-3006.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-2965.5 7462,-2995.5 7743,-2995.5 7743,-2965.5 7462,-2965.5"/>
+<text text-anchor="start" x="7469" y="-2976.9" font-family="Arial" font-size="14.00" fill="#000000">nonce_column    </text>
+<text text-anchor="start" x="7594.2328" y="-2976.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-2935.5 7462,-2965.5 7743,-2965.5 7743,-2935.5 7462,-2935.5"/>
+<text text-anchor="start" x="7469" y="-2946.9" font-family="Arial" font-size="14.00" fill="#000000">view_name    </text>
+<text text-anchor="start" x="7573.9916" y="-2946.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="none" stroke="#000000" points="7462,-2905.5 7462,-2935.5 7743,-2935.5 7743,-2905.5 7462,-2905.5"/>
+<text text-anchor="start" x="7469" y="-2916.9" font-family="Arial" font-size="14.00" fill="#000000">priority    </text>
+<text text-anchor="start" x="7545.195" y="-2916.9" font-family="Arial" font-size="14.00" fill="#666666">[integer]</text>
+<polygon fill="none" stroke="#000000" points="7462,-2875.5 7462,-2905.5 7743,-2905.5 7743,-2875.5 7462,-2875.5"/>
+<text text-anchor="start" x="7469" y="-2886.9" font-family="Arial" font-size="14.00" fill="#000000">security_invoker    </text>
+<text text-anchor="start" x="7604.3254" y="-2886.9" font-family="Arial" font-size="14.00" fill="#666666">[boolean]</text>
 </g>
 <!-- pgsodium.mask_columns -->
 <g id="node26" class="node">
