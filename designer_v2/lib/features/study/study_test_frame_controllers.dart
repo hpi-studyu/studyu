@@ -2,7 +2,7 @@
 
 import 'dart:html' as html;
 import 'dart:js' as js;
-import 'dart:ui' as ui;
+import 'dart:ui_web' as ui_web;
 
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;
@@ -44,7 +44,7 @@ abstract class PlatformController {
 class WebController extends PlatformController {
   late html.IFrameElement iFrameElement;
 
-  WebController(String baseSrc, String studyId) : super(baseSrc, studyId) {
+  WebController(super.baseSrc, super.studyId) {
     super.frameWidget = Container();
     routeInformation = RouteInformation(null, null, null, null);
   }
@@ -53,7 +53,7 @@ class WebController extends PlatformController {
   activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    print("Register view with: $previewSrc");
+    // print("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -65,8 +65,7 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
-    // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
+    ui_web.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
   }
 
   @override
@@ -148,7 +147,7 @@ class WebController extends PlatformController {
 
 // Mostly unfinished, since we only support Desktop for now
 class MobileController extends PlatformController {
-  MobileController(String previewSrc, studyId) : super(previewSrc, studyId) {
+  MobileController(super.previewSrc, super.studyId) {
     frameWidget = const MobileFrame();
   }
 
