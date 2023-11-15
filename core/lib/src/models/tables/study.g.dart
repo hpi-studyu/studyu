@@ -10,6 +10,13 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
       json['id'] as String,
       json['user_id'] as String,
     )
+      ..parentTemplate = json['parent_template'] == null
+          ? null
+          : Study.fromJson(json['parent_template'] as Map<String, dynamic>)
+      ..templateConfiguration = json['template_configuration'] == null
+          ? null
+          : TemplateConfiguration.fromJson(
+              json['template_configuration'] as Map<String, dynamic>)
       ..title = json['title'] as String?
       ..description = json['description'] as String?
       ..participation =
@@ -56,6 +63,9 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
     }
   }
 
+  writeNotNull('parent_template', instance.parentTemplate?.toJson());
+  writeNotNull(
+      'template_configuration', instance.templateConfiguration?.toJson());
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['user_id'] = instance.userId;
