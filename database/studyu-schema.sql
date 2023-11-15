@@ -74,6 +74,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.study (
     id uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
+    parent_template uuid,
+    template_configuration jsonb,
     contact jsonb NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
@@ -677,6 +679,11 @@ ALTER TABLE ONLY public.subject_progress
 
 ALTER TABLE ONLY public.repo
     ADD CONSTRAINT "repo_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
+
+
+
+ALTER TABLE ONLY public.study
+    ADD CONSTRAINT "study_parent_template_fkey" FOREIGN KEY (parent_template) REFERENCES public.study(id);
 
 
 --
