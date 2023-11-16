@@ -836,11 +836,7 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
 -- Name: Allow users to manage their own user; Type: POLICY; Schema: public; Owner:
 --
 
-CREATE POLICY "Allow users to manage their own user"
-ON public."user" FOR ALL
-USING (
-  auth.uid() = id
-);
+CREATE POLICY "Allow users to manage their own user" ON public."user" FOR ALL USING (auth.uid() = id);
 
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
@@ -885,6 +881,11 @@ ALTER TABLE public.subject_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
 
 --
--- PostgreSQL database dump complete
+-- Name: study_progress_export; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
+ALTER VIEW public.study_progress_export SET (security_invoker = on);
+
+--
+-- PostgreSQL database dump complete
+--
