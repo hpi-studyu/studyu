@@ -14,7 +14,7 @@ SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
-SET row_security = off;
+SET row_security = on;
 
 --
 -- Name: moddatetime; Type: EXTENSION; Schema: -; Owner: -
