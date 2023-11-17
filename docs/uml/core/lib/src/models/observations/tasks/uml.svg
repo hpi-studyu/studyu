@@ -1,84 +1,11 @@
-<svg version="1.1" baseProfile="full" width="428.0" height="351.0" viewbox="0 0 428 351" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[QuestionnaireTask
-	  |
-	  &lt;static&gt;+taskType: String;
-	  +questions: StudyUQuestionnaire
-	  |
-	  +Map&lt;String, dynamic&gt; toJson();
-	  +Map&lt;DateTime, T&gt; extractPropertyResults();
-	  +Map&lt;String, Type&gt; getAvailableProperties();
-	  +String? getHumanReadablePropertyName()
-	]
-	
-	[QuestionnaireTask]o-[StudyUQuestionnaire]
-	[&lt;abstract&gt;Observation]&lt;:-[QuestionnaireTask]
-	
-	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="351.0" width="428.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M186.0 242.7 L186 244 L186 264 L186.0 264.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M191.3 233.3 L186.0 242.7 L180.7 233.3 L186.0 224.0 Z"></path>
-					</g>
-					<path d="M186.0 44.3 L186 51 L186 71 L186.0 71.0 " fill="none"></path>
-					<path d="M191.3 44.3 L186.0 44.3 L180.7 44.3 L186.0 31.0 Z"></path>
-					<g data-name="QuestionnaireTask">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTask">
-							<rect x="0.0" y="71.0" height="153.0" width="372.0" data-name="QuestionnaireTask"></rect>
-							<path d="M0.0 102.0 L372.0 102.0" fill="none" data-name="QuestionnaireTask"></path>
-							<path d="M0.0 148.0 L372.0 148.0" fill="none" data-name="QuestionnaireTask"></path>
-						</g>
-						<g transform="translate(0, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTask">
-								<text x="178.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTask">QuestionnaireTask</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireTask">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireTask">&lt;static&gt;+taskType: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireTask">+questions: StudyUQuestionnaire</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireTask">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireTask">+Map&lt;String, dynamic&gt; toJson()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireTask">+Map&lt;DateTime, T&gt; extractPropertyResults()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="QuestionnaireTask">+Map&lt;String, Type&gt; getAvailableProperties()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="QuestionnaireTask">+String? getHumanReadablePropertyName()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyUQuestionnaire">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUQuestionnaire">
-							<rect x="94.0" y="264.0" height="31.0" width="184.0" data-name="StudyUQuestionnaire"></rect>
-						</g>
-						<g transform="translate(94, 264)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUQuestionnaire">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUQuestionnaire">
-								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUQuestionnaire">StudyUQuestionnaire</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Observation">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Observation">
-							<rect x="130.0" y="0.0" height="31.0" width="112.0" data-name="Observation"></rect>
-						</g>
-						<g transform="translate(130, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Observation">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Observation">
-								<text x="48.0" y="13.5" stroke="none" text-anchor="middle" data-name="Observation">Observation</text>
-								
-							</g>
-						</g>
-					</g>
-				</g>
+				
 			</g>
 		</g>
 	</g>
