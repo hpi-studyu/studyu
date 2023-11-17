@@ -37,11 +37,37 @@ class OverflowMenuItem {
   OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObserver {
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
 
   get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject!.completedStudy;
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        setState(() {
+          scheduleToday = subject!.scheduleFor(DateTime.now());
+        });
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        break;
+      case AppLifecycleState.detached:
+        break;
+      case AppLifecycleState.hidden:
+        break;
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -55,6 +81,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
       }
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<bool> receivePermission() async {
