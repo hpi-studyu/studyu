@@ -26,6 +26,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
+    // todo this seems to be triggered multiple times when resuming the app from background
+    print("initStudy()");
     initStudy();
   }
 
