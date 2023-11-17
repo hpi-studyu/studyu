@@ -1,3 +1,5 @@
+BEGIN;
+
 --
 -- PostgreSQL database dump
 --
@@ -923,3 +925,5 @@ ALTER VIEW public.study_progress_export SET (security_invoker = on);
 --
 -- PostgreSQL database dump complete
 --
+
+COMMIT;
