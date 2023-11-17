@@ -43,7 +43,6 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
 
   get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject!.completedStudy;
 
-
   @override
   void initState() {
     super.initState();
