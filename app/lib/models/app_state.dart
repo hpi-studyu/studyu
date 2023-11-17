@@ -56,4 +56,13 @@ class AppState with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void leaveStudy() {
+    selectedStudy = null;
+    selectedInterventions = null;
+    activeSubject = null;
+    inviteCode = null;
+    preselectedInterventionIds = null;
+    studyNotifications = null;
+  }
 }
