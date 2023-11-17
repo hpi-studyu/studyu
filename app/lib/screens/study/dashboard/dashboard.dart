@@ -43,6 +43,32 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
 
   get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject!.completedStudy;
 
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        setState(() {
+          scheduleToday = subject!.scheduleFor(DateTime.now());
+        });
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.paused:
+        break;
+      case AppLifecycleState.detached:
+        break;
+      case AppLifecycleState.hidden:
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
