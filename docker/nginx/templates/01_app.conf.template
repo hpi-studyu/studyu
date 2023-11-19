@@ -6,9 +6,9 @@
 # }
 
 server {
-    listen       8080; # 80
+    listen       8080;
     # listen       443 ssl;
-    server_name  localhost; # app.example.com
+    server_name  ${STUDYU_APP_HOST}; # app.example.com
 
     # access_log /var/log/nginx/app.access.log main;
     error_log /var/log/nginx/app.error.log;
