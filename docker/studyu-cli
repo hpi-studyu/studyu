@@ -269,7 +269,7 @@ status() {
 
 # Start given components with docker compose
 start() {
-  # Check if studyu_network exists, if not create it
+  # Check if studyu_network exists, otherwise create it
   docker network inspect studyu_network >/dev/null 2>&1 || \
       docker network create --driver bridge studyu_network
   manage_components 'up -d' "${@:2}"
@@ -423,6 +423,7 @@ backup() {
 
 # Function to display help
 print_help() {
+  echo "Welcome to the StudyU CLI. Run '$0 config' to configure the CLI before using it for the first time."
   echo "Usage: $0 [options]"
   echo "Options:"
   echo "  config [--list]         Configure StudyU CLI settings"
@@ -430,6 +431,7 @@ print_help() {
   echo "  restart <components>    Restart components"
   echo "  stop <components>       Stop components"
   echo "  down <components>       Stop and remove components"
+  echo "  status                  Check if components are running healthy"
   echo "  update                  Perform StudyU update from specified branch"
   echo "  backup                  Dump StudyU data"
   echo "  delete                  Delete components and data (use with caution!)"
