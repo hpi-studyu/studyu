@@ -144,7 +144,7 @@ configure() {
   fi
 
   # STUDYU_BASE_BRANCH
-  read -rp "$(echo -e 'Enter the StudyU repository base branch for updating (default: dev): ')" base_branch
+  read -rp "$(echo -e 'Enter the StudyU repository base branch for updating (default: main): ')" base_branch
   current_branch=$(git rev-parse --abbrev-ref HEAD)
   # Set base_branch to name of current branch, or "main" if current_branch is empty
   base_branch="${current_branch:-'main'}"
@@ -219,19 +219,24 @@ manage_components() {
       local supabase_path
       supabase_path="$STUDYU_PATH/docker/supabase"
       if [ ! -f "$supabase_path/.env" ]; then
-        echo -e "${yellow}Warning: Could not find a Supabase .env file at: $supabase_path${reset}"
-        read -rp "$(echo -e "${bold}Should a default .env file be created? (y/n): ${reset}")" create_supabase_env
-        if [[ "$create_supabase_env" =~ ^[Yy]$ ]]; then
-          cp "$supabase_path/.env.example" "$supabase_path/.env"
-          echo -e "${green}Supabase .env file successfully created at: $supabase_path/.env${reset}"
-          echo -e "Please modify the default secrets before starting the containers for the first time."
-          exit 0
-        else
-          echo -e "${red}Error: Supabase .env file is needed to run.${reset}"
-          exit 1
-        fi
+        echo -e "Could not find a Supabase .env file. Creating a default one at: $supabase_path${reset}"
+        cp "$supabase_path/.env.example" "$supabase_path/.env"
+        echo -e "${green}Supabase .env file created at: $supabase_path/.env${reset}"
+        echo -e "Please modify the default secrets before starting the containers for the first time."
+        exit 0
       fi
     fi
+
+    if [[ "$action" == 'up'* && "$component" == 'proxy'* ]]; then
+      local proxy_path
+      proxy_path="$STUDYU_PATH/docker/nginx"
+      if [ ! -f "$proxy_path/.env" ]; then
+          cp "$proxy_path/.env.example" "$proxy_path/.env"
+          echo -e "Proxy .env file created at: $$proxy_path/.env${reset}"
+          echo -e "Modify it if you wish to deploy to remote."
+      fi
+    fi
+
     run_docker_compose "$compose_file" "$action"
   done
 }
@@ -349,28 +354,28 @@ update() {
 
 # Delete docker container, images, and volumes
 delete() {
-  local down_args
+  local down_cmd="down "
 
   read -rp "Do you want to create a backup of the StudyU database? (y/n): " BACKUP
   if [[ "$BACKUP" =~ ^[Yy]$ ]]; then
     backup
   fi
 
-  read -rp "Do you want to remove all containers and images? This does not affect the StudyU data volumes. (y/n): " DELETE_CONTAINER_1
+  read -rp "Do you want to remove all containers and images used by StudyU services? This does not affect the StudyU data volumes. (y/n): " DELETE_CONTAINER_1
   if [[ "$DELETE_CONTAINER_1" =~ ^[Yy]$ ]]; then
-    down_args+=" --rmi all --remove-orphans"
+    down_cmd+="--rmi all --remove-orphans"
   fi
 
-  read -rp "Do you want to delete the StudyU Supabase database volumes and the storage data? (y/n): " DELETE_VOLUMES_1
+  read -rp "Do you want to delete the StudyU Supabase volumes and the storage data? (y/n): " DELETE_VOLUMES_1
   if [[ "$DELETE_VOLUMES_1" =~ ^[Yy]$ ]]; then
     read -rp "Are you REALLY sure you want to delete all data? This includes all created studies, users, and their data. (y/n): " DELETE_VOLUMES_2
     if [[ "$DELETE_VOLUMES_2" =~ ^[Yy]$ ]]; then
-      down_args+=" --volumes"
+      down_cmd+=" --volumes"
     fi
   fi
 
-  if [ -n "$down_args" ]; then
-    manage_components "down$down_args"
+  if [ -n "$down_cmd" ]; then
+    manage_components "$down_cmd"
     echo -e "${green}Success${reset}"
   else
     echo -e "No action taken."
@@ -426,7 +431,7 @@ print_help() {
   echo "  stop <components>       Stop components"
   echo "  down <components>       Stop and remove components"
   echo "  update                  Perform StudyU update from specified branch"
-  echo "  backup                  Backup StudyU data"
+  echo "  backup                  Dump StudyU data"
   echo "  delete                  Delete components and data (use with caution!)"
   echo "  help                    Display this help message"
   echo -e "$available_components"
