@@ -66,6 +66,7 @@ for key in "${!component_descriptions[@]}"; do
   formatted_component="  $key$spaces   $value\n"
   available_components+="$formatted_component"
 done
+available_components+="All components should be specified as a space-separated list. If no components are specified, the default components will be used."
 
 function multiselect {
     # little helpers for terminal print control and key input
@@ -339,7 +340,7 @@ configure() {
     echo "STUDYU_SECRETS_MANAGER=\"$secrets_manager\"" >> "$CONFIG_FILE"
   fi
 
-  echo -e "\n${green}Configuration written to $CONFIG_FILE${reset}"
+  echo -e "${green}Configuration written to $CONFIG_FILE${reset}"
 }
 
 
@@ -377,13 +378,35 @@ run_docker_compose() {
 # Run given docker compose commands such as start/restart/stop
 manage_components() {
   local action=$1
-  local components="${*:2}" # Get components, excluding the first argument (action)
+  shift
+  local clean_flag=false
+
+  if [[ $# -gt 0 ]]; then
+      case "$1" in
+          -c | --clean)
+            if [[ "$action" == "up"* ]] || [[ "$action" == "restart" ]]; then
+              clean_flag=true
+              shift
+            else
+              echo -e "${red}Error: Invalid argument -c. Use '$0 --help' to see available options.${reset}"
+              exit 1
+            fi
+            ;;
+      esac
+  fi
+  components=$*
+
+  if [ "$clean_flag" = true ]; then
+    echo -e "${yellow}Option -c detected. Orphan containers will be cleaned up.${reset}"
+    action+=' --remove-orphans'
+  fi
 
   # If no components are specified, use the default components
   if [ -z "${components[*]}" ]; then
     components=("$STUDYU_DEFAULT_COMPONENTS")
   fi
 
+  # Check if the components are valid
   for component in ${components[*]}; do
     local compose_file="${compose_files[$component]}"
     if [ -z "$compose_file" ]; then
@@ -392,27 +415,45 @@ manage_components() {
       exit 1;
     fi
 
-    if [[ "$action" == 'up'* && "$component" == 'supabase'* ]]; then
-      local supabase_path
-      supabase_path="$STUDYU_PATH/docker/supabase"
-      if [ ! -f "$supabase_path/.env" ]; then
-        echo -e "Could not find a Supabase .env file. Creating a default one at: $supabase_path${reset}"
-        cp "$supabase_path/.env.example" "$supabase_path/.env"
-        echo -e "${green}Supabase .env file created at: $supabase_path/.env${reset}"
-        echo -e "Please modify the default secrets before starting the containers for the first time."
-        exit 0
-      fi
-    fi
-
-    if [[ "$action" == 'up'* && "$component" == 'proxy'* ]]; then
-      local proxy_path
-      proxy_path="$STUDYU_PATH/docker/nginx"
-      if [ ! -f "$proxy_path/.env" ]; then
-          cp "$proxy_path/.env.example" "$proxy_path/.env"
-          echo -e "Proxy .env file created at: $$proxy_path/.env${reset}"
-          echo -e "Modify it if you wish to deploy to remote."
-      fi
-    fi
+    case "$action" in
+      "up"* )
+        case "$component" in
+          "supabase")
+            local supabase_path
+            supabase_path="$STUDYU_PATH/docker/supabase"
+            if [ ! -f "$supabase_path/.env" ]; then
+              echo -e "${yellow}Could not find a Supabase .env file. Creating a default one at: $supabase_path${reset}"
+              cp "$supabase_path/.env.example" "$supabase_path/.env"
+              echo -e "${purple}Please open the .env file and modify the default secrets before starting the components.${reset}"
+              exit 0
+            fi
+            ;;
+          "proxy")
+            local proxy_path
+              proxy_path="$STUDYU_PATH/docker/nginx"
+              if [ ! -f "$proxy_path/.env" ]; then
+                  cp "$proxy_path/.env.example" "$proxy_path/.env"
+                  echo -e "${yellow}Default deployment settings stored at: $proxy_path/.env${reset}"
+                  echo -e "${yellow}Modify the file if you want to change ports or hostnames.${reset}"
+              fi
+          ;;
+        esac
+        echo -e "${green}Starting $component...${reset}"
+        ;;
+      "restart" )
+        echo -e "${green}Restarting $component...${reset}"
+        ;;
+      "stop" )
+        echo -e "${green}Stopping $component...${reset}"
+        ;;
+      "down" )
+        echo -e "${green}Stopping and removing $component...${reset}"
+        ;;
+      * )
+        echo -e "${red}Error: Invalid action '$action'${reset}"
+        exit 1
+        ;;
+    esac
 
     run_docker_compose "$compose_file" "$action"
   done
@@ -431,16 +472,18 @@ status() {
   for name in $container_names; do
     health_status=$(docker inspect --format='{{.State.Running}}' "$name")
 
-    if [ "$health_status" != "true" ]; then
+    if [ "$health_status" = true ]; then
+      echo -e "$name (${green}running${reset})"
+    else
+      echo -e "$name (${red}Issue detected${reset})"
       all_containers_healthy=false
-      echo -e "${red}Error: $name is not running healthy. Check 'docker-compose ps' for troubleshooting.${reset}"
     fi
   done
-
-  if [ "$all_containers_healthy" = true ]; then
-    echo -e "${green}The following components are currently running healthy:${reset} ${container_names[*]}"
+  echo ""
+  if [ "$all_containers_healthy" = false ]; then
+    echo -e "${red}Some components are not running healthy. Check 'docker-compose ps' for troubleshooting and try to restart the components with '$0 restart'.${reset}"
   else
-    exit 1
+    echo -e "${green}All components are running healthy.${reset}"
   fi
 }
 
@@ -449,6 +492,7 @@ start() {
   # Check if studyu_network exists, otherwise create it
   docker network inspect studyu_network >/dev/null 2>&1 || \
       docker network create --driver bridge studyu_network
+
   manage_components 'up -d' "${@:2}"
 }
 
@@ -603,16 +647,16 @@ print_help() {
   echo "Welcome to the StudyU CLI"
   echo "Usage: $0 [options]"
   echo "Options:"
-  echo "  config [--list]         Configure StudyU CLI settings"
-  echo "  start <components>      Start components"
-  echo "  restart <components>    Restart components"
-  echo "  stop <components>       Stop components"
-  echo "  down <components>       Stop and remove components"
-  echo "  status                  Check if components are running healthy"
-  echo "  update                  Perform StudyU update from specified branch"
-  echo "  backup                  Dump StudyU data"
-  echo "  delete                  Delete components and data (use with caution!)"
-  echo "  help                    Display this help message"
+  echo "  config [--list]              Configure StudyU CLI settings"
+  echo "  start <components> [-c]      Start components. -c cleans up orphaned containers"
+  echo "  restart <components> [-c]    Restart components. -c cleans up orphaned containers"
+  echo "  stop <components>            Stop components"
+  echo "  down <components>            Stop and remove components"
+  echo "  status                       Check if components are running healthy"
+  echo "  update                       Perform StudyU update from specified branch"
+  echo "  backup                       Dump StudyU data"
+  echo "  delete                       Delete components and data (use with caution!)"
+  echo "  help                         Display this help message"
   echo -e "$available_components"
 }
 
