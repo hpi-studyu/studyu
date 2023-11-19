@@ -47,7 +47,7 @@ read_config() {
     if [[ "$failOnError" == false ]]; then
       return 0
     else
-      echo -e "${red}Error: Configuration file not found. Run 'config' to create one.${reset}"
+      echo -e "${red}Error: Configuration file not found. Run '$0 config' to create one.${reset}"
       exit 1
     fi
   fi
@@ -61,7 +61,7 @@ read_config() {
   # Check if the required variables are present
   if [[ "$failOnError" = true && -z "$STUDYU_DEFAULT_COMPONENTS" || -z "$STUDYU_PATH" || -z "$STUDYU_BASE_BRANCH" ]]; then
     echo -e "${red}Error: Configuration file $CONFIG_FILE is missing some entries.${reset}"
-    echo "Please run 'config' to set the required options."
+    echo "Run '$0 config' to set the required options."
     exit 1
   fi
 
