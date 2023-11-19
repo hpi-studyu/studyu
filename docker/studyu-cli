@@ -572,7 +572,7 @@ backup() {
 
 # Function to display help
 print_help() {
-  echo "Welcome to the StudyU CLI. Run '$0 config' to configure the CLI before using it for the first time."
+  echo "Welcome to the StudyU CLI"
   echo "Usage: $0 [options]"
   echo "Options:"
   echo "  config [--list]         Configure StudyU CLI settings"
