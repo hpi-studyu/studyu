@@ -9,6 +9,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PARENT_DIR=$(dirname "$SCRIPT_DIR")
 
 # Color codes for better output
+blue='\e[0;34m'
 green='\e[0;32m'
 yellow='\e[1;33m'
 red='\e[0;31m'
@@ -26,18 +27,148 @@ fi
 
 # Dictionary to map components to Docker Compose files
 declare -A compose_files=(
+  ["proxy"]="nginx/docker-compose-proxy.yml"
   ["supabase-db"]="supabase/docker-compose-db.yml"
   ["supabase"]="supabase/docker-compose.yml"
-  ["proxy"]="nginx/docker-compose-proxy.yml"
   ["studyu-app"]="studyu/docker-compose-app.yml"
   ["studyu-designer"]="studyu/docker-compose-designer.yml"
 )
-available_components="${bold}Available components:\n${reset}"
-available_components+="  supabase-db        Postgres database used as Supabase backend\n"
-available_components+="  supabase           Supabase middleware (needs supabase-db)\n"
-available_components+="  proxy              Nginx reverse proxy to access the Supabase\n"
-available_components+="  studyu-app         StudyU App (includes proxy)\n"
-available_components+="  studyu-designer    StudyU Designer (includes proxy)"
+
+declare -A component_descriptions=(
+  ["proxy"]="Proxy is needed to access the components (only deselect if you know what you are doing)"
+  ["supabase-db"]="Database storing the Supabase data"
+  ["supabase"]="Supabase services (need supabase-db)"
+  ["studyu-app"]="StudyU App"
+  ["studyu-designer"]="StudyU Designer"
+)
+
+declare -A default_component_values=(
+  ["proxy"]="true"
+  ["supabase-db"]="true"
+  ["supabase"]="true"
+  ["studyu-app"]="true"
+  ["studyu-designer"]="true"
+)
+
+# Calculate the maximum length of the keys for formatting
+max_length=0
+for key in "${!component_descriptions[@]}"; do
+  length=${#key}
+  if ((length > max_length)); then
+    max_length=$length
+  fi
+done
+
+available_components="${bold}Available components:${reset}\n"
+for key in "${!component_descriptions[@]}"; do
+  value="${component_descriptions[$key]}"
+  spaces=$(printf "%*s" $((max_length - ${#key})) "")
+  formatted_component="  $key$spaces   $value\n"
+  available_components+="$formatted_component"
+done
+
+function multiselect {
+    # little helpers for terminal print control and key input
+    ESC=$( printf "\033")
+    cursor_blink_on()   { printf "%s" "${ESC}[?25h"; }
+    cursor_blink_off()  { printf "%s" "${ESC}[?25l"; }
+    cursor_to()         { printf "%s" "${ESC}[$1;${2:-1}H"; }
+    # shellcheck disable=SC2059
+    print_inactive()    { printf "$2   $1 "; }
+    # shellcheck disable=SC2059
+    print_active()      { printf "$2  ${ESC}[7m $1 ${ESC}[27m"; }
+    # shellcheck disable=SC2034
+    get_cursor_row()    { IFS=';' read -srdR -p $'\E[6n' ROW COL; echo "${ROW#*[}"; }
+
+    local return_value=$1
+    local -n options=$2
+    local -n defaults=$3
+
+    local selected=()
+    for ((i=0; i<${#options[@]}; i++)); do
+        if [[ ${defaults[i]} = "true" ]]; then
+          selected+=("true")
+           #selected+=("${options[i]}")
+        else
+            selected+=("false")
+        fi
+        printf "\n"
+    done
+
+    # determine current screen position for overwriting the options
+    local lastrow
+    lastrow=$(get_cursor_row)
+    local startrow
+    startrow=$((lastrow - ${#options[@]}))
+
+    # ensure cursor and input echoing back on upon a ctrl+c during read -s
+    trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
+    cursor_blink_off
+
+    key_input() {
+        local key
+        IFS= read -rsn1 key 2>/dev/null >&2
+        if [[ $key = ""      ]]; then echo enter; fi;
+        if [[ $key = $'\x20' ]]; then echo space; fi;
+        if [[ $key = "k" ]]; then echo up; fi;
+        if [[ $key = "j" ]]; then echo down; fi;
+        if [[ $key = $'\x1b' ]]; then
+            read -rsn2 key
+            if [[ $key = [A || $key = k ]]; then echo up;    fi;
+            if [[ $key = [B || $key = j ]]; then echo down;  fi;
+        fi
+    }
+
+    toggle_option() {
+        local option=$1
+        if [[ ${selected[option]} == true ]]; then
+            selected[option]=false
+        else
+            selected[option]=true
+        fi
+    }
+
+    print_options() {
+        # print options by overwriting the last lines
+        local idx=0
+        for option in "${options[@]}"; do
+            local prefix="[ ]"
+            if [[ ${selected[idx]} == true ]]; then
+              prefix="[\e[38;5;46m✔\e[0m]"
+            fi
+
+            cursor_to $((startrow + idx))
+            if [ $idx -eq "$1" ]; then
+                print_active "$option" "$prefix"
+            else
+                print_inactive "$option" "$prefix"
+            fi
+            ((idx++))
+        done
+    }
+
+    local active=0
+    while true; do
+        print_options $active
+
+        # user key control
+        case $(key_input) in
+            space)  toggle_option $active;;
+            enter)  print_options -1; break;;
+            up)     ((active--));
+                    if [ $active -lt 0 ]; then active=$((${#options[@]} - 1)); fi;;
+            down)   ((active++));
+                    if [ "$active" -ge ${#options[@]} ]; then active=0; fi;;
+        esac
+    done
+
+    # cursor position back to normal
+    cursor_to "$lastrow"
+    printf "\n"
+    cursor_blink_on
+
+    eval "$return_value"='("${selected[@]}")'
+}
 
 # Function to read configuration values from the file
 read_config() {
@@ -117,16 +248,34 @@ configure() {
   echo ""
 
   # Start the interactive configuration process
-  echo -e "${bold}Configuring the StudyU CLI. Leave empty for defaults.\n${reset}"
+  echo -e "${bold}Configuring the StudyU CLI. Leave fields blank to use default settings.\n${reset}"
 
   # STUDYU_DEFAULT_COMPONENTS
-  echo "Define the components that should be managed by the CLI if no components are specified."
-  echo -e "$available_components"
-  read -rp "$(echo -e "${bold}Choose components (default: supabase-db supabase proxy studyu-app studyu-designer): ${reset}")" default_components
-  default_components=${default_components:-"supabase-db supabase proxy studyu-app studyu-designer"} # Set default if empty input
+  echo -e "${blue}Select the components that should be managed when none are explicitly defined.${reset}"
+  echo -e "Multiselect help:"
+  echo -e "j or ↓ => Go down";
+  echo -e "k or ↑ => Go up";
+  echo -e "␣ (Space) => Toggle selection";
+  echo -e "↵ (Enter) => Confirm selection\n";
+  local key_array=("${!component_descriptions[@]}")
+  for key in "${!component_descriptions[@]}"; do
+    multi_options+=("${bold}$key${reset} - ${component_descriptions[$key]}")
+  done
+
+  # shellcheck disable=SC2034
+  local default_component_array=("${default_component_values[@]}")
+  multiselect result multi_options default_component_array
+  # shellcheck disable=SC2154
+  for ((index=0; index<${#key_array[@]}; index++)); do
+    key=${key_array[$index]}
+    if [[ "${result[index]}" == true ]]; then
+        default_components+=("$key")
+    fi
+  done
+  echo -e "Selected components: ${default_components[*]}\n"
 
   # Validate selected components
-  for component in $default_components; do
+  for component in "${default_components[@]}"; do
   if [[ ! ${compose_files[$component]+_} ]]; then
       echo -e "${red}Error: '$component' is not a valid component.${reset}"
       exit 1
@@ -153,7 +302,7 @@ configure() {
   read -rp "$(echo -e 'Enter an optional secrets manager to run with '\''docker compose'\'' (default: empty): ')" secrets_manager
 
   # Write the configuration to the file
-  echo "STUDYU_DEFAULT_COMPONENTS=\"$default_components\"" > "$CONFIG_FILE"
+  echo "STUDYU_DEFAULT_COMPONENTS=\"${default_components[*]}\"" > "$CONFIG_FILE"
   echo "STUDYU_PATH=\"$studyu_path\"" >> "$CONFIG_FILE"
   echo "STUDYU_BASE_BRANCH=\"$base_branch\"" >> "$CONFIG_FILE"
 
