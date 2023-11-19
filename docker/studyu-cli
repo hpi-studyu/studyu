@@ -35,7 +35,7 @@ declare -A compose_files=(
 )
 
 declare -A component_descriptions=(
-  ["proxy"]="Proxy is needed to access the components (only deselect if you know what you are doing)"
+  ["proxy"]="Necessary to access the components"
   ["supabase-db"]="Database storing the Supabase data"
   ["supabase"]="Supabase services (need supabase-db)"
   ["studyu-app"]="StudyU App"
