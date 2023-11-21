@@ -65,11 +65,11 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 
   onSelectStudy(Study study) {
-    router.dispatch(RoutingIntents.studyEdit(study.id));
+    router.dispatch(RoutingIntents.studyEdit(study.id, study.isTemplate));
   }
 
-  onClickNewStudy() {
-    router.dispatch(RoutingIntents.studyNew);
+  onClickNewStudy(bool isTemplate) {
+    router.dispatch(RoutingIntents.studyNew(isTemplate));
   }
 
   Future<void> pinStudy(String modelId) async {

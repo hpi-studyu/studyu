@@ -51,11 +51,12 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
-  static final studyEdit = (StudyID studyId) => RoutingIntent(
+  static final studyEdit = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
+        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
       );
   static final studyEditInfo = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyEditInfoRouteName),
@@ -75,13 +76,14 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
-  static final studyEditIntervention = (StudyID studyId, InterventionID interventionId) => RoutingIntent(
-        route: RouterConf.route(studyEditInterventionRouteName),
-        params: {
-          RouteParams.studyId: studyId,
-          RouteParams.interventionId: interventionId,
-        },
-      );
+  static final studyEditIntervention =
+      (StudyID studyId, InterventionID interventionId) => RoutingIntent(
+            route: RouterConf.route(studyEditInterventionRouteName),
+            params: {
+              RouteParams.studyId: studyId,
+              RouteParams.interventionId: interventionId,
+            },
+          );
   static final studyEditMeasurements = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyEditMeasurementsRouteName),
         params: {
@@ -94,19 +96,20 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
-  static final studyEditMeasurement = (StudyID studyId, MeasurementID measurementId) => RoutingIntent(
-        route: RouterConf.route(studyEditMeasurementRouteName),
-        params: {
-          RouteParams.studyId: studyId,
-          RouteParams.measurementId: measurementId,
-        },
-      );
-  static final studyTest =
-      (StudyID studyId, {String? appRoute}) => RoutingIntent(route: RouterConf.route(studyTestRouteName), params: {
-            RouteParams.studyId: studyId,
-          }, queryParams: {
-            if (appRoute != null) RouteParams.testAppRoute: appRoute,
-          });
+  static final studyEditMeasurement =
+      (StudyID studyId, MeasurementID measurementId) => RoutingIntent(
+            route: RouterConf.route(studyEditMeasurementRouteName),
+            params: {
+              RouteParams.studyId: studyId,
+              RouteParams.measurementId: measurementId,
+            },
+          );
+  static final studyTest = (StudyID studyId, {String? appRoute}) =>
+      RoutingIntent(route: RouterConf.route(studyTestRouteName), params: {
+        RouteParams.studyId: studyId,
+      }, queryParams: {
+        if (appRoute != null) RouteParams.testAppRoute: appRoute,
+      });
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyRecruitRouteName),
         params: {
@@ -134,7 +137,7 @@ class RoutingIntents {
     route: RouterConf.route(accountSettingsRouteName),
     dispatch: RoutingIntentDispatch.push, // modal route
   );
-  static final studyNew = studyEdit(Config.newStudyId);
+  static final studyNew = (bool isTemplate) => studyEdit(Config.newStudyId, isTemplate);
   static final login = RoutingIntent(route: RouterConf.route(loginRouteName));
   static final signup = RoutingIntent(route: RouterConf.route(signupRouteName));
   static final passwordForgot = RoutingIntent(route: RouterConf.route(forgotPasswordRouteName));

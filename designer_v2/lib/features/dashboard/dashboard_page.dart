@@ -26,6 +26,8 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   late final DashboardController controller;
   late final DashboardState state;
+  final _link = LayerLink();
+  final _overlayController = OverlayPortalController();
 
   @override
   void initState() {
@@ -57,10 +59,70 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              PrimaryButton(
-                icon: Icons.add,
-                text: tr.action_button_new_study,
-                onPressed: controller.onClickNewStudy,
+              CompositedTransformTarget(
+                link: _link,
+                child: OverlayPortal(
+                  controller: _overlayController,
+                  child: PrimaryButton(
+                    icon: Icons.add,
+                    text: "Create",
+                    onPressed: () => _overlayController.toggle(),
+                  ),
+                  overlayChildBuilder: (context) {
+                    return GestureDetector(
+                      onTap: () => _overlayController.hide(),
+                      child: Container(
+                        color: Colors.transparent,
+                        child: CompositedTransformFollower(
+                          link: _link,
+                          offset: const Offset(0, 10),
+                          targetAnchor: Alignment.bottomLeft,
+                          child: Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: Align(
+                              alignment: AlignmentDirectional.topStart,
+                              child: SizedBox(
+                                width: 600,
+                                child: Material(
+                                  color: theme.colorScheme.onPrimary,
+                                  borderRadius: BorderRadius.circular(16),
+                                  elevation: 20.0,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        _buildCreateNewDropdownItem(
+                                          title: "Standalone study",
+                                          subtitle:
+                                              "Create a new fully customizable, independent study.",
+                                          onTap: controller.onClickNewStudy(false),
+                                        ),
+                                        const Divider(
+                                          height: 0,
+                                        ),
+                                        _buildCreateNewDropdownItem(
+                                          title: "Template for sub-studies",
+                                          subtitle:
+                                              "Create a new template for template-driven sub-studies.\nThe template can restrict the customization of the sub-studies.\nThe sub-studies are prefilled with the configuration of the template.\nThe template itself is not a study and cannot be run.",
+                                          hint:
+                                              "Hint: Use the three dots menu next to a template to create a sub-study.",
+                                          onTap: controller.onClickNewStudy(true),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),
@@ -112,6 +174,54 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 return const SizedBox.shrink();
               }),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCreateNewDropdownItem(
+      {required String title, required String subtitle, String? hint, GestureTapCallback? onTap}) {
+    final theme = Theme.of(context);
+    return Material(
+      elevation: 0,
+      color: theme.colorScheme.onPrimary,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary),
+                  ),
+                  Text(subtitle),
+                  hint != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            hint,
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+              const Spacer(),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: theme.colorScheme.primary,
+                size: 28,
+              ),
+              const SizedBox(
+                width: 8,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

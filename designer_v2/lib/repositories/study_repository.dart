@@ -100,8 +100,9 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
   @override
   List<ModelAction> availableActions(Study model) {
     Future<void> onDeleteCallback() {
-      return delete(model.id).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
-          Future.delayed(const Duration(milliseconds: 200),
+      return delete(model.id)
+          .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies))
+          .then((value) => Future.delayed(const Duration(milliseconds: 200),
               () => ref.read(notificationServiceProvider).show(Notifications.studyDeleted)));
     }
 
@@ -113,7 +114,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.edit,
         label: StudyActionType.edit.string,
         onExecute: () {
-          ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(model.id));
+          ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(model.id, model.isTemplate));
         },
         isAvailable: model.canEditDraft(currentUser),
       ),
@@ -122,7 +123,8 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
         onExecute: () {
-          return duplicateAndSave(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(model)
+              .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
         isAvailable: model.status != StudyStatus.draft && model.canCopy(currentUser),
       ),
@@ -130,7 +132,8 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
         onExecute: () {
-          return duplicateAndSave(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(model)
+              .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
         },
         isAvailable: model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
@@ -157,12 +160,14 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
         onExecute: () {
-          return ref
-              .read(notificationServiceProvider)
-              .show(Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-                  actions: [
+          return ref.read(notificationServiceProvider).show(
+              Notifications
+                  .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+              actions: [
                 NotificationAction(
-                    label: StudyActionType.delete.string, onSelect: onDeleteCallback, isDestructive: true),
+                    label: StudyActionType.delete.string,
+                    onSelect: onDeleteCallback,
+                    isDestructive: true),
               ]);
         },
         isAvailable: model.canDelete(currentUser),
@@ -206,8 +211,22 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
   }
 
   @override
-  Study createNewInstance() {
-    return StudyTemplates.emptyDraft(authRepository.currentUser!.id);
+  Study createNewInstance({ModelInstanceCreationArgs args = const NoArgs()}) {
+    if (args is! StudyCreationArgs) {
+      throw ArgumentError("args should be StudyCreationArgs");
+    }
+
+    final userId = authRepository.currentUser!.id;
+
+    if (args.isTemplate) {
+      return StudyTemplates.emptyTemplateDraft(userId);
+    }
+
+    if (args.parentTemplate != null) {
+      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplate!);
+    }
+
+    return StudyTemplates.emptyStandaloneDraft(userId);
   }
 
   @override

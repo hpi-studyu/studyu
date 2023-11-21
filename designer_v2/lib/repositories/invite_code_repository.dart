@@ -25,7 +25,9 @@ class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInvi
     required this.studyRepository,
     required this.ref,
   }) : super(InviteCodeRepositoryDelegate(
-            study: studyRepository.get(studyId)!.model, apiClient: apiClient, studyRepository: studyRepository));
+            study: studyRepository.get(studyId)!.model,
+            apiClient: apiClient,
+            studyRepository: studyRepository));
 
   /// The [Study] this repository operates on
   final StudyID studyId;
@@ -71,9 +73,13 @@ class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInvi
           label: ModelActionType.delete.string,
           onExecute: () {
             return delete(getKey(model))
-                .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studyRecruit(model.studyId)))
-                .then((value) => Future.delayed(const Duration(milliseconds: 200),
-                    () => ref.read(notificationServiceProvider).show(Notifications.inviteCodeDeleted)));
+                .then((value) =>
+                    ref.read(routerProvider).dispatch(RoutingIntents.studyRecruit(model.studyId)))
+                .then((value) => Future.delayed(
+                    const Duration(milliseconds: 200),
+                    () => ref
+                        .read(notificationServiceProvider)
+                        .show(Notifications.inviteCodeDeleted)));
           },
           isAvailable: study.isOwner(authRepository.currentUser!),
           isDestructive: true),
@@ -181,12 +187,13 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   }
 
   @override
-  StudyInvite createNewInstance() {
+  StudyInvite createNewInstance({ModelInstanceCreationArgs args = const NoArgs()}) {
     throw UnimplementedError(); // not available
   }
 }
 
-final inviteCodeRepositoryProvider = Provider.autoDispose.family<IInviteCodeRepository, StudyID>((ref, studyId) {
+final inviteCodeRepositoryProvider =
+    Provider.autoDispose.family<IInviteCodeRepository, StudyID>((ref, studyId) {
   print("inviteCodeRepositoryProvider($studyId");
   // Initialize repository for a given study
   final repository = InviteCodeRepository(

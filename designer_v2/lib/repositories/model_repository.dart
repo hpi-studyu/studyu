@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
+
+import '../domain/study.dart';
 
 typedef ModelID = String;
 
@@ -54,6 +57,22 @@ class WrappedModel<T> {
   }
 }
 
+sealed class ModelInstanceCreationArgs {
+  const ModelInstanceCreationArgs();
+}
+
+class NoArgs extends ModelInstanceCreationArgs {
+  const NoArgs();
+}
+
+class StudyCreationArgs extends ModelInstanceCreationArgs {
+  final StudyID studyID;
+  final Study? parentTemplate;
+  final bool isTemplate;
+
+  StudyCreationArgs({required this.studyID, this.parentTemplate, required this.isTemplate});
+}
+
 class ModelRepositoryException implements Exception {}
 
 class ModelNotFoundException implements ModelRepositoryException {}
@@ -67,7 +86,8 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   Future<void> delete(ModelID modelId);
   Future<void> duplicateAndSave(T model);
   Future<void> duplicateAndSaveFromRemote(ModelID modelId);
-  Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true});
+  Stream<WrappedModel<T>> watch(ModelID modelId,
+      {fetchOnSubscribe = true, ModelInstanceCreationArgs args = const NoArgs()});
   Stream<List<WrappedModel<T>>> watchAll({fetchOnSubscribe = true});
   Stream<ModelEvent<T>> watchChanges(ModelID modelId);
   Stream<ModelEvent<T>> watchAllChanges();
@@ -82,7 +102,7 @@ abstract class IModelRepositoryDelegate<T> {
   // todo saveAll(List<T> models);
   Future<void> delete(T model);
   // todo deleteAll(List<T> models);
-  T createNewInstance();
+  T createNewInstance({ModelInstanceCreationArgs args = const NoArgs()});
   T createDuplicate(T model);
   onError(Object error, StackTrace? stackTrace);
 }
@@ -276,12 +296,15 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   /// If the requested [ModelId] is not available, the stream will be created
   /// anyway, but emit a [ModelNotFoundException] error event.
   @override
-  Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true, emitLastEvent = true}) {
+  Stream<WrappedModel<T>> watch(ModelID modelId,
+      {fetchOnSubscribe = true,
+      emitLastEvent = true,
+      ModelInstanceCreationArgs args = const NoArgs()}) {
     WrappedModel<T>? wrappedModel;
 
     if (modelId == Config.newModelId) {
       // Create new model to subscribe to
-      final newModel = delegate.createNewInstance();
+      final newModel = delegate.createNewInstance(args: args);
       wrappedModel = upsertLocally(newModel, emitUpdate: true);
       modelId = getKey(newModel); // subscribe to the newly created study
     } else {
@@ -298,8 +321,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       return null;
     }
 
-    final modelController =
-        _buildModelSpecificController(modelId, _allModelsStreamController, modelStreamControllers, selectModel);
+    final modelController = _buildModelSpecificController(
+        modelId, _allModelsStreamController, modelStreamControllers, selectModel);
 
     if (fetchOnSubscribe) {
       if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
@@ -329,8 +352,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       return null;
     }
 
-    final modelEventsController = _buildModelSpecificController(
-        modelId, _allModelEventsStreamController, modelEventsStreamControllers, selectModelChangeEvent);
+    final modelEventsController = _buildModelSpecificController(modelId,
+        _allModelEventsStreamController, modelEventsStreamControllers, selectModelChangeEvent);
     return modelEventsController;
   }
 

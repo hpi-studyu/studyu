@@ -44,6 +44,7 @@ extension StudyActionTypeFormatted on StudyActionType {
 }
 
 typedef StudyID = String;
+typedef StudyAndOptionalTemplateID = ({StudyID studyId, StudyID? parentTemplateId});
 typedef MeasurementID = String;
 typedef InstanceID = String;
 
@@ -188,9 +189,24 @@ extension StudyRegistryX on Study {
 
 class StudyTemplates {
   static String get kUnnamedStudyTitle => tr.form_field_study_title_default;
+  static String get kUnnamedTemplateTitle => "Unnamed template";
 
-  static Study emptyDraft(String userId) {
-    final newDraft = Study.withId(userId);
+  static Study emptyStandaloneDraft(String userId) {
+    final newDraft = Study.newStandalone(userId);
+    newDraft.title = StudyTemplates.kUnnamedStudyTitle;
+    newDraft.iconName = '';
+    return newDraft;
+  }
+
+  static Study emptyTemplateDraft(String userId) {
+    final newDraft = Study.newTemplate(userId);
+    newDraft.title = StudyTemplates.kUnnamedTemplateTitle;
+    newDraft.iconName = '';
+    return newDraft;
+  }
+
+  static Study emptySubStudyDraft(String userId, Study parentTemplate) {
+    final newDraft = Study.newSubStudy(userId, parentTemplate);
     newDraft.title = StudyTemplates.kUnnamedStudyTitle;
     newDraft.iconName = '';
     return newDraft;

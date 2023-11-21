@@ -51,6 +51,7 @@ class RouterKeys {
 class RouteParams {
   static const studiesFilter = 'filter';
   static const studyId = 'studyId';
+  static const isTemplate = 'isTemplate';
   static const measurementId = 'measurementId';
   static const interventionId = 'interventionId';
   static const testAppRoute = 'appRoute';
@@ -155,12 +156,14 @@ class RouterConf {
       name: studyEditInfoRouteName,
       pageBuilder: (context, state) {
         final studyId = state.pathParameters[RouteParams.studyId]!;
+        final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyId: studyId,
+              isTemplate: isTemplate,
               tabsSubnav: StudyDesignNav.tabs(studyId),
-              selectedTab: StudyNav.edit(studyId),
+              selectedTab: StudyNav.edit(studyId, isTemplate),
               selectedTabSubnav: StudyDesignNav.info(studyId),
               body: StudyDesignInfoFormView(studyId),
               layoutType: SingleColumnLayoutType.boundedNarrow,
@@ -172,12 +175,14 @@ class RouterConf {
         name: studyEditEnrollmentRouteName,
         pageBuilder: (context, state) {
           final studyId = state.pathParameters[RouteParams.studyId]!;
+          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: isTemplate,
                 tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
+                selectedTab: StudyNav.edit(studyId, isTemplate),
                 selectedTabSubnav: StudyDesignNav.enrollment(studyId),
                 body: StudyDesignEnrollmentFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
@@ -188,12 +193,14 @@ class RouterConf {
         name: studyEditInterventionsRouteName,
         pageBuilder: (context, state) {
           final studyId = state.pathParameters[RouteParams.studyId]!;
+          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: isTemplate,
                 tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
+                selectedTab: StudyNav.edit(studyId, isTemplate),
                 selectedTabSubnav: StudyDesignNav.interventions(studyId),
                 body: StudyDesignInterventionsFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
@@ -210,7 +217,8 @@ class RouterConf {
                 return MaterialPage(
                     child: StudyFormScaffold<InterventionFormViewModel>(
                   studyId: routeArgs.studyId,
-                  formViewModelBuilder: (ref) => ref.read(interventionFormViewModelProvider(routeArgs)),
+                  formViewModelBuilder: (ref) =>
+                      ref.read(interventionFormViewModelProvider(routeArgs)),
                   formViewBuilder: (formViewModel) => TwoColumnLayout.split(
                     leftWidget: InterventionFormView(formViewModel: formViewModel),
                     rightWidget: InterventionPreview(routeArgs: routeArgs),
@@ -229,12 +237,14 @@ class RouterConf {
         name: studyEditMeasurementsRouteName,
         pageBuilder: (context, state) {
           final studyId = state.pathParameters[RouteParams.studyId]!;
+          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: isTemplate,
                 tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
+                selectedTab: StudyNav.edit(studyId, isTemplate),
                 selectedTabSubnav: StudyDesignNav.measurements(studyId),
                 body: StudyDesignMeasurementsFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
@@ -270,12 +280,14 @@ class RouterConf {
         name: studyEditReportsRouteName,
         pageBuilder: (context, state) {
           final studyId = state.pathParameters[RouteParams.studyId]!;
+          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: isTemplate,
                 tabsSubnav: StudyDesignNav.tabs(studyId),
-                selectedTab: StudyNav.edit(studyId),
+                selectedTab: StudyNav.edit(studyId, isTemplate),
                 selectedTabSubnav: StudyDesignNav.reports(studyId),
                 body: StudyDesignReportsFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
@@ -291,6 +303,7 @@ class RouterConf {
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: false,
                 selectedTab: StudyNav.test(studyId),
                 body: StudyTestScreen(studyId, previewRoute: appRoute),
                 layoutType: SingleColumnLayoutType.stretched,
@@ -305,6 +318,7 @@ class RouterConf {
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: false,
                 selectedTab: StudyNav.recruit(studyId),
                 body: StudyRecruitScreen(studyId),
                 layoutType: SingleColumnLayoutType.boundedWide,
@@ -319,6 +333,7 @@ class RouterConf {
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: false,
                 selectedTab: StudyNav.monitor(studyId),
                 body: StudyMonitorScreen(studyId),
                 layoutType: SingleColumnLayoutType.boundedWide,
@@ -333,6 +348,7 @@ class RouterConf {
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyId: studyId,
+                isTemplate: false,
                 selectedTab: StudyNav.analyze(studyId),
                 body: StudyAnalyzeScreen(studyId),
                 layoutType: SingleColumnLayoutType.boundedWide,
@@ -417,7 +433,8 @@ class MeasurementFormRouteArgs extends StudyFormRouteArgs {
   final MeasurementID measurementId;
 }
 
-class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs implements QuestionFormRouteArgs {
+class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs
+    implements QuestionFormRouteArgs {
   SurveyQuestionFormRouteArgs({
     required this.questionId,
     required super.studyId,

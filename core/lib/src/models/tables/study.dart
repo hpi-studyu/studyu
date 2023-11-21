@@ -100,7 +100,11 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   Study(this.id, this.userId);
 
-  Study.withId(this.userId) : id = const Uuid().v4();
+  Study.newStandalone(this.userId) : id = const Uuid().v4();
+  Study.newTemplate(this.userId)
+      : id = const Uuid().v4(),
+        templateConfiguration = TemplateConfiguration();
+  Study.newSubStudy(this.userId, this.parentTemplate) : id = const Uuid().v4();
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);

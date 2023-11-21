@@ -31,6 +31,7 @@ abstract class IStudyAppBarViewModel implements IStudyStatusBadgeViewModel, IStu
 class StudyScaffold extends ConsumerStatefulWidget {
   const StudyScaffold({
     this.studyId = Config.newStudyId,
+    required this.isTemplate,
     required this.body,
     this.layoutType,
     this.tabs,
@@ -43,12 +44,14 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.actionsPadding = 4.0,
     this.appbarHeight = 56.0,
     this.appbarSubnavHeight = 44.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
   final String studyId;
+
+  final bool isTemplate;
 
   final List<NavbarTab>? tabs;
   final List<NavbarTab>? tabsSubnav;
@@ -79,7 +82,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     final theme = Theme.of(context);
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
-    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyId, state);
+    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyId, widget.isTemplate, state);
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +136,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
-                    (state.isSyncIndicatorVisible) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
+                    (state.isSyncIndicatorVisible)
+                        ? const SizedBox(width: 8.0)
+                        : const SizedBox.shrink(),
                     (state.isSyncIndicatorVisible)
                         ? IntrinsicWidth(
                             child: SyncIndicator(
@@ -179,7 +184,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                                   showPrefixIcon: true,
                                 )
                               : const SizedBox.shrink(),
-                          (state.isStatusBadgeVisible) ? const SizedBox(width: 12.0) : const SizedBox.shrink(),
+                          (state.isStatusBadgeVisible)
+                              ? const SizedBox(width: 12.0)
+                              : const SizedBox.shrink(),
                           ...actionButtons(context),
                         ],
                         spacing: widget.actionsSpacing,
