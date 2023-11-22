@@ -114,13 +114,13 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   void onSelectItem(MeasurementSurveyFormViewModel item) {
     final studyId = study.id;
     final measurementId = item.measurementId;
-    router.dispatch(RoutingIntents.studyEditMeasurement(studyId, measurementId));
+    router.dispatch(RoutingIntents.studyEditMeasurement(studyId, measurementId, study.isTemplate));
   }
 
   @override
   void onNewItem() {
     final studyId = study.id;
-    router.dispatch(RoutingIntents.studyEditMeasurement(studyId, Config.newModelId));
+    router.dispatch(RoutingIntents.studyEditMeasurement(studyId, Config.newModelId, study.isTemplate));
   }
 
   // - IProviderArgsResolver

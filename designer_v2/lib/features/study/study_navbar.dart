@@ -13,20 +13,17 @@ abstract class IStudyNavViewModel {
 }
 
 class StudyNav {
-  static tabs(StudyCreationArgs studyCreationArgs, IStudyNavViewModel viewModel) =>
-      studyCreationArgs.isTemplate
-          ? <NavbarTab>[
-              edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate,
-                  enabled: viewModel.isEditTabEnabled),
-            ]
-          : <NavbarTab>[
-              edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate,
-                  enabled: viewModel.isEditTabEnabled),
-              test(studyCreationArgs.studyID, enabled: viewModel.isTestTabEnabled),
-              recruit(studyCreationArgs.studyID, enabled: viewModel.isRecruitTabEnabled),
-              monitor(studyCreationArgs.studyID, enabled: viewModel.isMonitorTabEnabled),
-              analyze(studyCreationArgs.studyID, enabled: viewModel.isAnalyzeTabEnabled)
-            ];
+  static tabs(StudyCreationArgs studyCreationArgs, IStudyNavViewModel viewModel) => studyCreationArgs.isTemplate
+      ? <NavbarTab>[
+          edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate, enabled: viewModel.isEditTabEnabled),
+        ]
+      : <NavbarTab>[
+          edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate, enabled: viewModel.isEditTabEnabled),
+          test(studyCreationArgs.studyID, enabled: viewModel.isTestTabEnabled),
+          recruit(studyCreationArgs.studyID, enabled: viewModel.isRecruitTabEnabled),
+          monitor(studyCreationArgs.studyID, enabled: viewModel.isMonitorTabEnabled),
+          analyze(studyCreationArgs.studyID, enabled: viewModel.isAnalyzeTabEnabled)
+        ];
 
   static edit(studyId, bool isTemplate, {enabled = true}) => NavbarTab(
         index: 0,
@@ -61,28 +58,28 @@ class StudyNav {
 }
 
 class StudyDesignNav {
-  static tabs(studyId) => <NavbarTab>[
-        info(studyId),
-        enrollment(studyId),
-        interventions(studyId),
-        measurements(studyId),
-        reports(studyId),
+  static tabs(studyId, bool isTemplate) => <NavbarTab>[
+        info(studyId, isTemplate),
+        enrollment(studyId, isTemplate),
+        interventions(studyId, isTemplate),
+        measurements(studyId, isTemplate),
+        reports(studyId, isTemplate),
       ];
 
-  static info(studyId) => NavbarTab(
-      index: 0, title: tr.navlink_study_design_info, intent: RoutingIntents.studyEditInfo(studyId));
-  static enrollment(studyId) => NavbarTab(
+  static info(studyId, bool isTemplate) => NavbarTab(
+      index: 0, title: tr.navlink_study_design_info, intent: RoutingIntents.studyEditInfo(studyId, isTemplate));
+  static enrollment(studyId, bool isTemplate) => NavbarTab(
       index: 1,
       title: tr.navlink_study_design_enrollment,
-      intent: RoutingIntents.studyEditEnrollment(studyId));
-  static interventions(studyId) => NavbarTab(
+      intent: RoutingIntents.studyEditEnrollment(studyId, isTemplate));
+  static interventions(studyId, bool isTemplate) => NavbarTab(
       index: 2,
       title: tr.navlink_study_design_interventions,
-      intent: RoutingIntents.studyEditInterventions(studyId));
-  static measurements(studyId) => NavbarTab(
+      intent: RoutingIntents.studyEditInterventions(studyId, isTemplate));
+  static measurements(studyId, bool isTemplate) => NavbarTab(
       index: 3,
       title: tr.navlink_study_design_measurements,
-      intent: RoutingIntents.studyEditMeasurements(studyId));
-  static reports(studyId) =>
-      NavbarTab(index: 4, title: "Reports", intent: RoutingIntents.studyEditReports(studyId));
+      intent: RoutingIntents.studyEditMeasurements(studyId, isTemplate));
+  static reports(studyId, bool isTemplate) =>
+      NavbarTab(index: 4, title: "Reports", intent: RoutingIntents.studyEditReports(studyId, isTemplate));
 }
