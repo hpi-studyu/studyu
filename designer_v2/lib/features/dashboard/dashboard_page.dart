@@ -65,7 +65,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   controller: _overlayController,
                   child: PrimaryButton(
                     icon: Icons.add,
-                    text: "Create",
+                    text: tr.action_button_create,
                     onPressed: () => _overlayController.toggle(),
                   ),
                   overlayChildBuilder: (context) {
@@ -95,20 +95,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         _buildCreateNewDropdownItem(
-                                          title: "Standalone study",
-                                          subtitle:
-                                              "Create a new fully customizable, independent study.",
+                                          title: tr.action_button_standalone_study_title,
+                                          subtitle: tr.action_button_standalone_study_subtitle,
                                           onTap: () => controller.onClickNewStudy(false),
                                         ),
                                         const Divider(
                                           height: 0,
                                         ),
                                         _buildCreateNewDropdownItem(
-                                          title: "Template for sub-studies",
-                                          subtitle:
-                                              "Create a new template for template-driven sub-studies.\nThe template can restrict the customization of the sub-studies.\nThe sub-studies are prefilled with the configuration of the template.\nThe template itself is not a study and cannot be run.",
-                                          hint:
-                                              "Hint: Use the three dots menu next to a template to create a sub-study.",
+                                          title: tr.action_button_template_title,
+                                          subtitle: tr.action_button_template_subtitle,
+                                          hint: tr.action_button_template_hint,
                                           onTap: () => controller.onClickNewStudy(true),
                                         ),
                                       ],
@@ -139,36 +136,34 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return AsyncValueWidget<List<StudyGroup>>(
-                      value: state.displayedStudies(
-                          snapshot.data!.preferences.pinnedStudies, state.query),
+                      value: state.displayedStudies(snapshot.data!.preferences.pinnedStudies, state.query),
                       data: (visibleStudies) => StudiesTable(
                             studyGroups: visibleStudies,
                             pinnedStudies: snapshot.data!.preferences.pinnedStudies,
                             dashboardController: ref.read(dashboardControllerProvider.notifier),
                             onSelect: controller.onSelectStudy,
                             getActions: controller.availableActions,
-                            emptyWidget:
-                                (widget.filter == null || widget.filter == StudiesFilter.owned)
-                                    ? (state.query.isNotEmpty)
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(top: 24.0),
-                                            child: EmptyBody(
-                                              icon: Icons.content_paste_search_rounded,
-                                              title: tr.studies_not_found,
-                                              description: tr.modify_query,
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.only(top: 24.0),
-                                            child: EmptyBody(
-                                              icon: Icons.content_paste_search_rounded,
-                                              title: tr.studies_empty,
-                                              description: tr.studies_empty_description,
-                                              // "...or create a new draft copy from an already published study!",
-                                              /* button: PrimaryButton(text: "From template",); */
-                                            ),
-                                          )
-                                    : const SizedBox.shrink(),
+                            emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
+                                ? (state.query.isNotEmpty)
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(top: 24.0),
+                                        child: EmptyBody(
+                                          icon: Icons.content_paste_search_rounded,
+                                          title: tr.studies_not_found,
+                                          description: tr.modify_query,
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.only(top: 24.0),
+                                        child: EmptyBody(
+                                          icon: Icons.content_paste_search_rounded,
+                                          title: tr.studies_empty,
+                                          description: tr.studies_empty_description,
+                                          // "...or create a new draft copy from an already published study!",
+                                          /* button: PrimaryButton(text: "From template",); */
+                                        ),
+                                      )
+                                : const SizedBox.shrink(),
                           ));
                 }
                 return const SizedBox.shrink();
@@ -191,7 +186,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -209,8 +205,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         )
                       : const SizedBox.shrink(),
                 ],
+              )),
+              const SizedBox(
+                width: 20,
               ),
-              const Spacer(),
               Icon(
                 Icons.chevron_right_rounded,
                 color: theme.colorScheme.primary,
@@ -218,7 +216,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(
                 width: 8,
-              )
+              ),
             ],
           ),
         ),
