@@ -50,35 +50,35 @@ class RoutingIntents {
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEdit = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEditInfo = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditInfoRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEditEnrollment = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditEnrollmentRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEditInterventions = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditInterventionsRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEditIntervention =
       (StudyID studyId, InterventionID interventionId, bool isTemplate) => RoutingIntent(
@@ -87,21 +87,21 @@ class RoutingIntents {
               RouteParams.studyId: studyId,
               RouteParams.interventionId: interventionId,
             },
-            queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+            queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
           );
   static final studyEditMeasurements = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditMeasurementsRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEditReports = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditReportsRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyEditMeasurement = (StudyID studyId, MeasurementID measurementId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditMeasurementRouteName),
@@ -109,7 +109,7 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
           RouteParams.measurementId: measurementId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
   static final studyTest =
       (StudyID studyId, {String? appRoute}) => RoutingIntent(route: RouterConf.route(studyTestRouteName), params: {
@@ -138,7 +138,7 @@ class RoutingIntents {
         params: {
           RouteParams.studyId: studyId,
         },
-        queryParams: {RouteParams.isTemplate: isTemplate.toString()},
+        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
         dispatch: RoutingIntentDispatch.push, // modal route
       );
   static final accountSettings = RoutingIntent(
